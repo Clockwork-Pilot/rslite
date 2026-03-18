@@ -302,7 +302,6 @@ extern "C" {
     ) -> ::core::ffi::c_int;
     fn sqlite3Fts3ExprFree(_: *mut Fts3Expr);
     fn sqlite3Fts3ExprInitTestInterface(db: *mut sqlite3, _: *mut Fts3Hash) -> ::core::ffi::c_int;
-    //fn sqlite3Fts3InitTerm(db: *mut sqlite3) -> ::core::ffi::c_int;
     fn sqlite3Fts3MallocZero(nByte: i64_0) -> *mut ::core::ffi::c_void;
     fn sqlite3Fts3InitAux(db: *mut sqlite3) -> ::core::ffi::c_int;
     fn sqlite3Fts3MsrIncrStart(
@@ -349,6 +348,12 @@ extern "C" {
     fn sqlite3Fts3PorterTokenizerModule(ppModule: *mut *const sqlite3_tokenizer_module);
     fn sqlite3Fts3UnicodeTokenizer(ppModule: *mut *const sqlite3_tokenizer_module);
 }
+
+#[cfg(feature = "test")]
+extern "C" {
+    fn sqlite3Fts3InitTerm(db: *mut sqlite3) -> ::core::ffi::c_int;
+}
+
 pub type __builtin_va_list = [__va_list_tag; 1];
 #[derive(Copy, Clone)]
 #[repr(C)]
@@ -4860,6 +4865,7 @@ unsafe extern "C" fn hashDestroy(mut p: *mut ::core::ffi::c_void) {
         sqlite3_free(pHash as *mut ::core::ffi::c_void);
     }
 }
+
 #[no_mangle]
 pub unsafe extern "C" fn sqlite3Fts3Init(mut db: *mut sqlite3) -> ::core::ffi::c_int {
     let mut rc: ::core::ffi::c_int = SQLITE_OK;
@@ -4871,10 +4877,13 @@ pub unsafe extern "C" fn sqlite3Fts3Init(mut db: *mut sqlite3) -> ::core::ffi::c
     let mut pUnicode: *const sqlite3_tokenizer_module =
         ::core::ptr::null::<sqlite3_tokenizer_module>();
     sqlite3Fts3UnicodeTokenizer(&raw mut pUnicode);
-    // rc = sqlite3Fts3InitTerm(db);
-    // if rc != SQLITE_OK {
-    //     return rc;
-    // }
+    #[cfg(feature = "test")]
+    {
+        rc = sqlite3Fts3InitTerm(db);
+        if rc != SQLITE_OK {
+            return rc;
+        }
+    }
     rc = sqlite3Fts3InitAux(db);
     if rc != SQLITE_OK {
         return rc;

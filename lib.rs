@@ -7,7 +7,6 @@
 #![feature(c_variadic)]
 #![feature(core_intrinsics)]
 #![feature(extern_types)]
-#![feature(label_break_value)]
 #![feature(raw_ref_op)]
 
 #[macro_use]
