@@ -48,7 +48,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "sqlite_noamalgam_testfixture"
+name = "sqlite_noamalgam"
 version = "0.0.0"
 dependencies = [
  "c2rust-bitfields",

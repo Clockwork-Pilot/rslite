@@ -78,7 +78,7 @@ cc -fPIC -O2 -g \
   "$SRC/ext/misc/zipfile.c" \
   "$SRC/ext/rtree/test_rtreedoc.c" \
   "$SRC/src/tclsqlite.c" \
-  -L"$PROJ/sqlite-testfixture/release" -lsqlite_noamalgam_testfixture \
+  -L"$PROJ/sqlite-testfixture/release" -lsqlite_noamalgam \
   -Wl,-rpath,"$PROJ/sqlite-testfixture/release" \
   -Wl,--allow-multiple-definition \
   $TCL_LIB_SPEC $TCL_INCLUDE_SPEC \

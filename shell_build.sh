@@ -16,6 +16,6 @@ cc -o "$SRC/sqlite3" \
     "${FLAGS[@]}" \
     -DSQLITE_API= \
     -I"$(readlink -f "$SRC")" \
-    -L"$PROJ/sqlite-shell/release" -lsqlite_noamalgam_testfixture \
+    -L"$PROJ/sqlite-shell/release" -lsqlite_noamalgam \
     -Wl,-rpath,"$PROJ/sqlite-shell/release" \
     -lm -lpthread -ldl -lz
