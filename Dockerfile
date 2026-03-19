@@ -4,6 +4,7 @@ ARG TZ
 ENV TZ="$TZ"
 
 ARG CLAUDE_CODE_VERSION=latest
+ENV DEVCONTAINER=true
 
 # Install basic development tools and iptables/ipset
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -54,22 +55,28 @@ RUN useradd -m -u 1000 $USERNAME
 #   && echo "$SNIPPET" >> /home/$USERNAME/.bashrc \
 #   && chown -R $USERNAME /commandhistory
 
-# Set DEVCONTAINER environment variable
-ENV DEVCONTAINER=true
 
 # Create workspace and config directories
 RUN mkdir -p /workspace /home/node/ && \
   chown -R node:node /workspace /home/node/
 
 
-WORKDIR /workspace
-RUN chown -R node:node /workspace
-
-
-
-USER node
-
 RUN curl -fsSL https://claude.ai/install.sh | bash
+
+RUN mkdir -p /sqlite && \
+  chown -R node:node /sqlite
+  
+USER node
+RUN cd /sqlite && \
+    wget https://sqlite.org/2026/sqlite-src-3510200.zip && \
+    ls /sqlite && \
+    unzip /sqlite/sqlite-src-3510200.zip -d /sqlite && \
+    rm /sqlite/sqlite-src-3510200.zip && \
+    mv /sqlite/sqlite-src-3510200/* /sqlite/ && \
+    rm -rf /sqlite/sqlite-src-3510200 && \
+    cd /sqlite && \
+    ./configure --all --disable-amalgamation && make && rm *.o
+
 
 # Pull init-firewall.sh directly from the upstream repository
 # ARG CLAUDE_CODE_REPO_REF=main
@@ -80,11 +87,10 @@ RUN curl -fsSL https://claude.ai/install.sh | bash
 # Set up non-root user
 
 
-USER root
+USER root 
 
-RUN mkdir -p /sqlite && \
-  chown -R node:node /sqlite
-  
+RUN chown -R node:node /home/node
+
 RUN ln -s /usr/include/tcl/tcl.h /usr/include/tcl.h \
 	&& ln -s /usr/include/tcl/tclOODecls.h /usr/include/tclOODecls.h \
 	&& ln -s /usr/include/tcl/tclPlatDecls.h /usr/include/tclPlatDecls.h \
@@ -97,14 +103,5 @@ RUN usermod -aG tty $USERNAME
 
 WORKDIR /workspace
 USER node
-RUN cd /sqlite && \
-    wget https://sqlite.org/2026/sqlite-src-3510200.zip && \
-    ls /sqlite && \
-    unzip /sqlite/sqlite-src-3510200.zip -d /sqlite && \
-    rm /sqlite/sqlite-src-3510200.zip && \
-    mv /sqlite/sqlite-src-3510200/* /sqlite/ && \
-    rm -rf /sqlite/sqlite-src-3510200 && \
-    cd /sqlite && \
-    ./configure --all --disable-amalgamation && make && rm *.o
 
 ENTRYPOINT ["/bin/bash"]
