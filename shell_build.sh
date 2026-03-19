@@ -7,7 +7,7 @@ SRC="/sqlite"
 mkdir -p "$PROJ/target"
 mkdir -p "$PROJ/sqlite-shell"
 
-CARGO_TARGET_DIR="$PROJ/sqlite-shell" cargo build --release
+CARGO_TARGET_DIR="$PROJ/sqlite-shell" cargo build -q --release
 
 mapfile -t FLAGS < <(sed 's/\r//' "$PROJ/defines_shell.txt" | grep -v '^$')
 

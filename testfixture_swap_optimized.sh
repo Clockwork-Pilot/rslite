@@ -36,7 +36,8 @@ mapfile -t FLAGS < <(sed 's/\r//' "$PROJ/defines_testfixture.txt" | grep -v '^$'
 TCL_CFLAGS=$(pkg-config --cflags tcl)
 TCL_LIBS=$(pkg-config --libs tcl)
 
-. ./sqlite-src-3510200/.tclenv.sh || exit $?
+chmod +x $SRC/.tclenv.sh
+. $SRC/.tclenv.sh || exit $?
 
 cc -fPIC -O2 -g \
   "${FLAGS[@]}" \

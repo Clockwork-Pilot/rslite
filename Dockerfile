@@ -105,6 +105,6 @@ RUN cd /sqlite && \
     mv /sqlite/sqlite-src-3510200/* /sqlite/ && \
     rm -rf /sqlite/sqlite-src-3510200 && \
     cd /sqlite && \
-    ./configure --all --disable-amalgamation
+    ./configure --all --disable-amalgamation && make && rm *.o
 
 ENTRYPOINT ["/bin/bash"]
