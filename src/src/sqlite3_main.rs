@@ -2147,7 +2147,7 @@ pub const TF_WithoutRowid: ::core::ffi::c_int = 0x80 as ::core::ffi::c_int;
 pub const TABTYP_VTAB: ::core::ffi::c_int = 1 as ::core::ffi::c_int;
 pub const TABTYP_VIEW: ::core::ffi::c_int = 2 as ::core::ffi::c_int;
 pub const SQLITE_NOMEM_BKPT: ::core::ffi::c_int = SQLITE_NOMEM;
-unsafe extern "C" fn sqlite3TestExtInit(mut db: *mut sqlite3) -> ::core::ffi::c_int {
+unsafe extern "C" fn sqlite3TestExtInit(mut _db: *mut sqlite3) -> ::core::ffi::c_int {
     return sqlite3FaultSim(500 as ::core::ffi::c_int);
 }
 static mut sqlite3BuiltinExtensions: [Option<
@@ -2741,7 +2741,7 @@ pub unsafe extern "C" fn sqlite3_db_config(
     return rc;
 }
 unsafe extern "C" fn binCollFunc(
-    mut NotUsed: *mut ::core::ffi::c_void,
+    mut _NotUsed: *mut ::core::ffi::c_void,
     mut nKey1: ::core::ffi::c_int,
     mut pKey1: *const ::core::ffi::c_void,
     mut nKey2: ::core::ffi::c_int,
@@ -2795,7 +2795,7 @@ pub unsafe extern "C" fn sqlite3IsBinary(mut p: *const CollSeq) -> ::core::ffi::
             )) as ::core::ffi::c_int;
 }
 unsafe extern "C" fn nocaseCollatingFunc(
-    mut NotUsed: *mut ::core::ffi::c_void,
+    mut _NotUsed: *mut ::core::ffi::c_void,
     mut nKey1: ::core::ffi::c_int,
     mut pKey1: *const ::core::ffi::c_void,
     mut nKey2: ::core::ffi::c_int,
@@ -3610,9 +3610,9 @@ pub unsafe extern "C" fn sqlite3_busy_timeout(
 }
 #[no_mangle]
 pub unsafe extern "C" fn sqlite3_setlk_timeout(
-    mut db: *mut sqlite3,
+    mut _db: *mut sqlite3,
     mut ms: ::core::ffi::c_int,
-    mut flags: ::core::ffi::c_int,
+    mut _flags: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
     if ms < -(1 as ::core::ffi::c_int) {
         return SQLITE_RANGE;
@@ -3967,8 +3967,8 @@ pub unsafe extern "C" fn sqlite3_create_function16(
 }
 unsafe extern "C" fn sqlite3InvalidFunction(
     mut context: *mut sqlite3_context,
-    mut NotUsed: ::core::ffi::c_int,
-    mut NotUsed2: *mut *mut sqlite3_value,
+    mut _NotUsed: ::core::ffi::c_int,
+    mut _NotUsed2: *mut *mut sqlite3_value,
 ) {
     let mut zName: *const ::core::ffi::c_char =
         sqlite3_user_data(context) as *const ::core::ffi::c_char;
@@ -5827,11 +5827,11 @@ pub unsafe extern "C" fn sqlite3_sleep(mut ms: ::core::ffi::c_int) -> ::core::ff
     }
     rc = sqlite3OsSleep(
         pVfs,
-        (if ms < 0 as ::core::ffi::c_int {
+        if ms < 0 as ::core::ffi::c_int {
             0 as ::core::ffi::c_int
         } else {
             1000 as ::core::ffi::c_int * ms
-        }),
+        },
     ) / 1000 as ::core::ffi::c_int;
     return rc;
 }
@@ -6077,7 +6077,7 @@ pub unsafe extern "C" fn sqlite3_test_control(
             sqlite3ResultIntReal(pCtx);
         }
         SQLITE_TESTCTRL_SEEK_COUNT => {
-            let mut db_6: *mut sqlite3 = ap.arg::<*mut sqlite3>();
+            let mut _db_6: *mut sqlite3 = ap.arg::<*mut sqlite3>();
             let mut pn: *mut u64_0 = ap.arg::<*mut sqlite3_uint64>();
             *pn = 0 as u64_0;
         }

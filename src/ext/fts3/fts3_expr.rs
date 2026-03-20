@@ -1,4 +1,4 @@
-use ::libc;
+
 extern "C" {
     pub type sqlite3;
     pub type sqlite3_value;

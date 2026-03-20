@@ -1,5 +1,5 @@
 use ::c2rust_bitfields;
-use ::libc;
+
 extern "C" {
     pub type sqlite3_value;
     pub type sqlite3_context;
@@ -6903,7 +6903,7 @@ unsafe extern "C" fn jsonReturnParse(mut ctx: *mut sqlite3_context, mut p: *mut 
 }
 unsafe extern "C" fn jsonQuoteFunc(
     mut ctx: *mut sqlite3_context,
-    mut argc: ::core::ffi::c_int,
+    mut _argc: ::core::ffi::c_int,
     mut argv: *mut *mut sqlite3_value,
 ) {
     let mut jx: JsonString = JsonString {
@@ -7478,7 +7478,7 @@ unsafe extern "C" fn jsonMergePatch(
 }
 unsafe extern "C" fn jsonPatchFunc(
     mut ctx: *mut sqlite3_context,
-    mut argc: ::core::ffi::c_int,
+    mut _argc: ::core::ffi::c_int,
     mut argv: *mut *mut sqlite3_value,
 ) {
     let mut pTarget: *mut JsonParse = ::core::ptr::null_mut::<JsonParse>();
@@ -7949,7 +7949,7 @@ unsafe extern "C" fn jsonValidFunc(
 }
 unsafe extern "C" fn jsonErrorFunc(
     mut ctx: *mut sqlite3_context,
-    mut argc: ::core::ffi::c_int,
+    mut _argc: ::core::ffi::c_int,
     mut argv: *mut *mut sqlite3_value,
 ) {
     let mut iErrPos: i64_0 = 0 as i64_0;
@@ -8017,7 +8017,7 @@ unsafe extern "C" fn jsonErrorFunc(
 }
 unsafe extern "C" fn jsonArrayStep(
     mut ctx: *mut sqlite3_context,
-    mut argc: ::core::ffi::c_int,
+    mut _argc: ::core::ffi::c_int,
     mut argv: *mut *mut sqlite3_value,
 ) {
     let mut pStr: *mut JsonString = ::core::ptr::null_mut::<JsonString>();
@@ -8109,8 +8109,8 @@ unsafe extern "C" fn jsonArrayFinal(mut ctx: *mut sqlite3_context) {
 }
 unsafe extern "C" fn jsonGroupInverse(
     mut ctx: *mut sqlite3_context,
-    mut argc: ::core::ffi::c_int,
-    mut argv: *mut *mut sqlite3_value,
+    mut _argc: ::core::ffi::c_int,
+    mut _argv: *mut *mut sqlite3_value,
 ) {
     let mut i: ::core::ffi::c_uint = 0;
     let mut inStr: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
@@ -8158,7 +8158,7 @@ unsafe extern "C" fn jsonGroupInverse(
 }
 unsafe extern "C" fn jsonObjectStep(
     mut ctx: *mut sqlite3_context,
-    mut argc: ::core::ffi::c_int,
+    mut _argc: ::core::ffi::c_int,
     mut argv: *mut *mut sqlite3_value,
 ) {
     let mut pStr: *mut JsonString = ::core::ptr::null_mut::<JsonString>();
@@ -8259,11 +8259,11 @@ unsafe extern "C" fn jsonObjectFinal(mut ctx: *mut sqlite3_context) {
 }
 unsafe extern "C" fn jsonEachConnect(
     mut db: *mut sqlite3,
-    mut pAux: *mut ::core::ffi::c_void,
-    mut argc: ::core::ffi::c_int,
+    mut _pAux: *mut ::core::ffi::c_void,
+    mut _argc: ::core::ffi::c_int,
     mut argv: *const *const ::core::ffi::c_char,
     mut ppVtab: *mut *mut sqlite3_vtab,
-    mut pzErr: *mut *mut ::core::ffi::c_char,
+    mut _pzErr: *mut *mut ::core::ffi::c_char,
 ) -> ::core::ffi::c_int {
     let mut pNew: *mut JsonEachConnection = ::core::ptr::null_mut::<JsonEachConnection>();
     let mut rc: ::core::ffi::c_int = 0;
@@ -8740,7 +8740,7 @@ unsafe extern "C" fn jsonEachRowid(
     return SQLITE_OK;
 }
 unsafe extern "C" fn jsonEachBestIndex(
-    mut tab: *mut sqlite3_vtab,
+    mut _tab: *mut sqlite3_vtab,
     mut pIdxInfo: *mut sqlite3_index_info,
 ) -> ::core::ffi::c_int {
     let mut i: ::core::ffi::c_int = 0;
@@ -8807,8 +8807,8 @@ unsafe extern "C" fn jsonEachBestIndex(
 unsafe extern "C" fn jsonEachFilter(
     mut cur: *mut sqlite3_vtab_cursor,
     mut idxNum: ::core::ffi::c_int,
-    mut idxStr: *const ::core::ffi::c_char,
-    mut argc: ::core::ffi::c_int,
+    mut _idxStr: *const ::core::ffi::c_char,
+    mut _argc: ::core::ffi::c_int,
     mut argv: *mut *mut sqlite3_value,
 ) -> ::core::ffi::c_int {
     let mut p: *mut JsonEachCursor = cur as *mut JsonEachCursor;

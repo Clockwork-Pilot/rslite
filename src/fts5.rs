@@ -1,4 +1,4 @@
-use ::libc;
+
 extern "C" {
     pub type sqlite3;
     pub type sqlite3_stmt;
@@ -2264,7 +2264,7 @@ unsafe extern "C" fn fts5_isdigit(mut a: ::core::ffi::c_char) -> ::core::ffi::c_
         as ::core::ffi::c_int;
 }
 unsafe extern "C" fn fts5AsciiCreate(
-    mut pUnused: *mut ::core::ffi::c_void,
+    mut _pUnused: *mut ::core::ffi::c_void,
     mut azArg: *mut *const ::core::ffi::c_char,
     mut nArg: ::core::ffi::c_int,
     mut ppOut: *mut *mut Fts5Tokenizer,
@@ -2874,7 +2874,7 @@ pub const FTS5_ROWID_NAME: [::core::ffi::c_char; 6] =
 unsafe extern "C" fn fts5AsciiTokenize(
     mut pTokenizer: *mut Fts5Tokenizer,
     mut pCtx: *mut ::core::ffi::c_void,
-    mut iUnused: ::core::ffi::c_int,
+    mut _iUnused: ::core::ffi::c_int,
     mut pText: *const ::core::ffi::c_char,
     mut nText: ::core::ffi::c_int,
     mut xToken: Option<
@@ -4042,8 +4042,8 @@ unsafe extern "C" fn sqlite3Fts5BufferZero(mut pBuf: *mut Fts5Buffer) {
 unsafe extern "C" fn fts5HighlightCb(
     mut pContext: *mut ::core::ffi::c_void,
     mut tflags: ::core::ffi::c_int,
-    mut pToken: *const ::core::ffi::c_char,
-    mut nToken: ::core::ffi::c_int,
+    mut _pToken: *const ::core::ffi::c_char,
+    mut _nToken: ::core::ffi::c_int,
     mut iStartOff: ::core::ffi::c_int,
     mut iEndOff: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
@@ -5842,7 +5842,7 @@ static mut fts5yy_action: [::core::ffi::c_uchar; 105] = [
     71 as ::core::ffi::c_int as ::core::ffi::c_uchar,
 ];
 unsafe extern "C" fn fts5VocabBestIndexMethod(
-    mut pUnused: *mut sqlite3_vtab,
+    mut _pUnused: *mut sqlite3_vtab,
     mut pInfo: *mut sqlite3_index_info,
 ) -> ::core::ffi::c_int {
     let mut i: ::core::ffi::c_int = 0;
@@ -6609,10 +6609,10 @@ unsafe extern "C" fn sqlite3Fts5PutVarint(
 unsafe extern "C" fn fts5SentenceFinderCb(
     mut pContext: *mut ::core::ffi::c_void,
     mut tflags: ::core::ffi::c_int,
-    mut pToken: *const ::core::ffi::c_char,
-    mut nToken: ::core::ffi::c_int,
+    mut _pToken: *const ::core::ffi::c_char,
+    mut _nToken: ::core::ffi::c_int,
     mut iStartOff: ::core::ffi::c_int,
-    mut iEndOff: ::core::ffi::c_int,
+    mut _iEndOff: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
     let mut rc: ::core::ffi::c_int = SQLITE_OK;
     if tflags & FTS5_TOKEN_COLOCATED == 0 as ::core::ffi::c_int {
@@ -7010,7 +7010,7 @@ unsafe extern "C" fn fts5FreeVtab(mut pTab: *mut Fts5FullTable) {
     }
 }
 unsafe extern "C" fn fts5UnicodeCreate(
-    mut pUnused: *mut ::core::ffi::c_void,
+    mut _pUnused: *mut ::core::ffi::c_void,
     mut azArg: *mut *const ::core::ffi::c_char,
     mut nArg: ::core::ffi::c_int,
     mut ppOut: *mut *mut Fts5Tokenizer,
@@ -9676,7 +9676,7 @@ pub const FTS5INDEX_QUERY_SCAN: ::core::ffi::c_int = 0x8 as ::core::ffi::c_int;
 unsafe extern "C" fn fts5UnicodeTokenize(
     mut pTokenizer: *mut Fts5Tokenizer,
     mut pCtx: *mut ::core::ffi::c_void,
-    mut iUnused: ::core::ffi::c_int,
+    mut _iUnused: ::core::ffi::c_int,
     mut pText: *const ::core::ffi::c_char,
     mut nText: ::core::ffi::c_int,
     mut xToken: Option<
@@ -10047,8 +10047,8 @@ unsafe extern "C" fn fts5StorageInsertCallback(
     mut tflags: ::core::ffi::c_int,
     mut pToken: *const ::core::ffi::c_char,
     mut nToken: ::core::ffi::c_int,
-    mut iUnused1: ::core::ffi::c_int,
-    mut iUnused2: ::core::ffi::c_int,
+    mut _iUnused1: ::core::ffi::c_int,
+    mut _iUnused2: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
     let mut pCtx: *mut Fts5InsertCtx = pContext as *mut Fts5InsertCtx;
     let mut pIdx: *mut Fts5Index = (*(*pCtx).pStorage).pIndex;
@@ -13026,7 +13026,7 @@ unsafe extern "C" fn fts5yy_destructor(
     mut fts5yymajor: ::core::ffi::c_uchar,
     mut fts5yypminor: *mut fts5YYMINORTYPE,
 ) {
-    let mut pParse: *mut Fts5Parse = (*fts5yypParser).pParse;
+    let mut _pParse: *mut Fts5Parse = (*fts5yypParser).pParse;
     match fts5yymajor as ::core::ffi::c_int {
         17 | 18 | 19 => {
             sqlite3Fts5ParseNodeFree((*fts5yypminor).fts5yy24);
@@ -13253,8 +13253,8 @@ unsafe extern "C" fn fts5BestIndexMethod(
     return SQLITE_OK;
 }
 unsafe extern "C" fn fts5CountCb(
-    mut pApi: *const Fts5ExtensionApi,
-    mut pFts: *mut Fts5Context,
+    mut _pApi: *const Fts5ExtensionApi,
+    mut _pFts: *mut Fts5Context,
     mut pUserData: *mut ::core::ffi::c_void,
 ) -> ::core::ffi::c_int {
     let mut pn: *mut sqlite3_int64 = pUserData as *mut sqlite3_int64;
@@ -13515,8 +13515,8 @@ unsafe extern "C" fn fts5Bm25GetData(
 unsafe extern "C" fn fts5VocabFilterMethod(
     mut pCursor: *mut sqlite3_vtab_cursor,
     mut idxNum: ::core::ffi::c_int,
-    mut zUnused: *const ::core::ffi::c_char,
-    mut nUnused: ::core::ffi::c_int,
+    mut _zUnused: *const ::core::ffi::c_char,
+    mut _nUnused: ::core::ffi::c_int,
     mut apVal: *mut *mut sqlite3_value,
 ) -> ::core::ffi::c_int {
     let mut pTab: *mut Fts5VocabTable = (*pCursor).pVtab as *mut Fts5VocabTable;
@@ -17039,8 +17039,8 @@ unsafe extern "C" fn fts5DataRemoveSegment(
 unsafe extern "C" fn fts5yy_reduce(
     mut fts5yypParser: *mut fts5yyParser,
     mut fts5yyruleno: ::core::ffi::c_uint,
-    mut fts5yyLookahead: ::core::ffi::c_int,
-    mut fts5yyLookaheadToken: Fts5Token,
+    mut _fts5yyLookahead: ::core::ffi::c_int,
+    mut _fts5yyLookaheadToken: Fts5Token,
 ) -> ::core::ffi::c_uchar {
     let mut fts5yygoto: ::core::ffi::c_int = 0;
     let mut fts5yyact: ::core::ffi::c_uchar = 0;
@@ -18455,8 +18455,8 @@ unsafe extern "C" fn fts5StorageIntegrityCallback(
     mut tflags: ::core::ffi::c_int,
     mut pToken: *const ::core::ffi::c_char,
     mut nToken: ::core::ffi::c_int,
-    mut iUnused1: ::core::ffi::c_int,
-    mut iUnused2: ::core::ffi::c_int,
+    mut _iUnused1: ::core::ffi::c_int,
+    mut _iUnused2: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
     let mut pCtx: *mut Fts5IntegrityCtx = pContext as *mut Fts5IntegrityCtx;
     let mut pTermset: *mut Fts5Termset = (*pCtx).pTermset;
@@ -19265,7 +19265,7 @@ unsafe extern "C" fn fts5ExprNodeTest_OR(mut pExpr: *mut Fts5Expr, mut pNode: *m
     (*pNode).bNomatch = (*pNext).bNomatch;
 }
 unsafe extern "C" fn fts5TriCreate(
-    mut pUnused: *mut ::core::ffi::c_void,
+    mut _pUnused: *mut ::core::ffi::c_void,
     mut azArg: *mut *const ::core::ffi::c_char,
     mut nArg: ::core::ffi::c_int,
     mut ppOut: *mut *mut Fts5Tokenizer,
@@ -19351,7 +19351,7 @@ unsafe extern "C" fn fts5TriCreate(
 }
 unsafe extern "C" fn fts5yy_syntax_error(
     mut fts5yypParser: *mut fts5yyParser,
-    mut fts5yymajor: ::core::ffi::c_int,
+    mut _fts5yymajor: ::core::ffi::c_int,
     mut fts5yyminor: Fts5Token,
 ) {
     let mut pParse: *mut Fts5Parse = (*fts5yypParser).pParse;
@@ -19527,7 +19527,7 @@ unsafe extern "C" fn fts5StructureRead(mut p: *mut Fts5Index) -> *mut Fts5Struct
 unsafe extern "C" fn fts5TriTokenize(
     mut pTok: *mut Fts5Tokenizer,
     mut pCtx: *mut ::core::ffi::c_void,
-    mut unusedFlags: ::core::ffi::c_int,
+    mut _unusedFlags: ::core::ffi::c_int,
     mut pText: *const ::core::ffi::c_char,
     mut nText: ::core::ffi::c_int,
     mut xToken: Option<
@@ -20968,7 +20968,7 @@ unsafe extern "C" fn sqlite3Fts5ExprFirst(
     return rc;
 }
 unsafe extern "C" fn sqlite3Fts5ParserFallback(
-    mut iToken: ::core::ffi::c_int,
+    mut _iToken: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
     return 0 as ::core::ffi::c_int;
 }
@@ -21400,8 +21400,8 @@ unsafe extern "C" fn fts5ParseTokenize(
     mut tflags: ::core::ffi::c_int,
     mut pToken: *const ::core::ffi::c_char,
     mut nToken: ::core::ffi::c_int,
-    mut iUnused1: ::core::ffi::c_int,
-    mut iUnused2: ::core::ffi::c_int,
+    mut _iUnused1: ::core::ffi::c_int,
+    mut _iUnused2: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
     let mut rc: ::core::ffi::c_int = SQLITE_OK;
     let SZALLOC: ::core::ffi::c_int = 8 as ::core::ffi::c_int;
@@ -22862,7 +22862,7 @@ unsafe extern "C" fn fts5SegIterReverseNewPage(mut p: *mut Fts5Index, mut pIter:
         fts5SegIterReverseInitPage(p, pIter);
     }
 }
-unsafe extern "C" fn fts5CommitMethod(mut pVtab: *mut sqlite3_vtab) -> ::core::ffi::c_int {
+unsafe extern "C" fn fts5CommitMethod(mut _pVtab: *mut sqlite3_vtab) -> ::core::ffi::c_int {
     return SQLITE_OK;
 }
 unsafe extern "C" fn fts5RollbackMethod(mut pVtab: *mut sqlite3_vtab) -> ::core::ffi::c_int {
@@ -22993,7 +22993,7 @@ unsafe extern "C" fn fts5MultiIterIsEmpty(
 unsafe extern "C" fn fts5SegIterNext_Reverse(
     mut p: *mut Fts5Index,
     mut pIter: *mut Fts5SegIter,
-    mut pbUnused: *mut ::core::ffi::c_int,
+    mut _pbUnused: *mut ::core::ffi::c_int,
 ) {
     if (*pIter).iRowidOffset > 0 as ::core::ffi::c_int {
         let mut a: *mut u8_0 = (*(*pIter).pLeaf).p;
@@ -24109,10 +24109,10 @@ unsafe extern "C" fn fts5ApiRowid(mut pCtx: *mut Fts5Context) -> sqlite3_int64 {
 unsafe extern "C" fn fts5ColumnSizeCb(
     mut pContext: *mut ::core::ffi::c_void,
     mut tflags: ::core::ffi::c_int,
-    mut pUnused: *const ::core::ffi::c_char,
-    mut nUnused: ::core::ffi::c_int,
-    mut iUnused1: ::core::ffi::c_int,
-    mut iUnused2: ::core::ffi::c_int,
+    mut _pUnused: *const ::core::ffi::c_char,
+    mut _nUnused: ::core::ffi::c_int,
+    mut _iUnused1: ::core::ffi::c_int,
+    mut _iUnused2: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
     let mut pCnt: *mut ::core::ffi::c_int = pContext as *mut ::core::ffi::c_int;
     if tflags & FTS5_TOKEN_COLOCATED == 0 as ::core::ffi::c_int {
@@ -26205,8 +26205,8 @@ unsafe extern "C" fn fts5ExprPopulatePoslistsCb(
     mut tflags: ::core::ffi::c_int,
     mut pToken: *const ::core::ffi::c_char,
     mut nToken: ::core::ffi::c_int,
-    mut iUnused1: ::core::ffi::c_int,
-    mut iUnused2: ::core::ffi::c_int,
+    mut _iUnused1: ::core::ffi::c_int,
+    mut _iUnused2: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
     let mut p: *mut Fts5ExprCtx = pCtx as *mut Fts5ExprCtx;
     let mut pExpr: *mut Fts5Expr = (*p).pExpr;
@@ -26376,7 +26376,7 @@ unsafe extern "C" fn sqlite3Fts5ExprPopulatePoslists(
 }
 unsafe extern "C" fn fts5FindFunctionMethod(
     mut pVtab: *mut sqlite3_vtab,
-    mut nUnused: ::core::ffi::c_int,
+    mut _nUnused: ::core::ffi::c_int,
     mut zName: *const ::core::ffi::c_char,
     mut pxFunc: *mut Option<
         unsafe extern "C" fn(
@@ -27115,8 +27115,8 @@ unsafe extern "C" fn fts5V2toV1Tokenize(
     mut flags: ::core::ffi::c_int,
     mut pText: *const ::core::ffi::c_char,
     mut nText: ::core::ffi::c_int,
-    mut pLocale: *const ::core::ffi::c_char,
-    mut nLocale: ::core::ffi::c_int,
+    mut _pLocale: *const ::core::ffi::c_char,
+    mut _nLocale: ::core::ffi::c_int,
     mut xToken: Option<
         unsafe extern "C" fn(
             *mut ::core::ffi::c_void,
@@ -27394,8 +27394,8 @@ unsafe extern "C" fn fts5LocateTokenizer(
     return pMod;
 }
 unsafe extern "C" fn fts5IterSetOutputs_Noop(
-    mut pUnused1: *mut Fts5Iter,
-    mut pUnused2: *mut Fts5SegIter,
+    mut _pUnused1: *mut Fts5Iter,
+    mut _pUnused2: *mut Fts5SegIter,
 ) {
 }
 unsafe extern "C" fn fts5FindTokenizer_v2(
@@ -27459,7 +27459,7 @@ unsafe extern "C" fn fts5MultiIterAlloc(
     return pNew;
 }
 unsafe extern "C" fn fts5PoslistCallback(
-    mut pUnused: *mut Fts5Index,
+    mut _pUnused: *mut Fts5Index,
     mut pContext: *mut ::core::ffi::c_void,
     mut pChunk: *const u8_0,
     mut nChunk: ::core::ffi::c_int,
@@ -27587,7 +27587,7 @@ unsafe extern "C" fn sqlite3Fts5LoadTokenizer(mut pConfig: *mut Fts5Config) -> :
     return rc;
 }
 unsafe extern "C" fn fts5PoslistOffsetsCallback(
-    mut pUnused: *mut Fts5Index,
+    mut _pUnused: *mut Fts5Index,
     mut pContext: *mut ::core::ffi::c_void,
     mut pChunk: *const u8_0,
     mut nChunk: ::core::ffi::c_int,
@@ -27615,7 +27615,7 @@ unsafe extern "C" fn fts5PoslistOffsetsCallback(
     }
 }
 unsafe extern "C" fn fts5PoslistFilterCallback(
-    mut pUnused: *mut Fts5Index,
+    mut _pUnused: *mut Fts5Index,
     mut pContext: *mut ::core::ffi::c_void,
     mut pChunk: *const u8_0,
     mut nChunk: ::core::ffi::c_int,
@@ -27732,7 +27732,7 @@ unsafe extern "C" fn fts5ModuleDestroy(mut pCtx: *mut ::core::ffi::c_void) {
 }
 unsafe extern "C" fn fts5Fts5Func(
     mut pCtx: *mut sqlite3_context,
-    mut nArg: ::core::ffi::c_int,
+    mut _nArg: ::core::ffi::c_int,
     mut apArg: *mut *mut sqlite3_value,
 ) {
     let mut pGlobal: *mut Fts5Global = sqlite3_user_data(pCtx) as *mut Fts5Global;
@@ -27811,8 +27811,8 @@ unsafe extern "C" fn fts5ChunkIterate(
 }
 unsafe extern "C" fn fts5SourceIdFunc(
     mut pCtx: *mut sqlite3_context,
-    mut nArg: ::core::ffi::c_int,
-    mut apUnused: *mut *mut sqlite3_value,
+    mut _nArg: ::core::ffi::c_int,
+    mut _apUnused: *mut *mut sqlite3_value,
 ) {
     sqlite3_result_text(
         pCtx,
@@ -27827,7 +27827,7 @@ unsafe extern "C" fn fts5SourceIdFunc(
 }
 unsafe extern "C" fn fts5LocaleFunc(
     mut pCtx: *mut sqlite3_context,
-    mut nArg: ::core::ffi::c_int,
+    mut _nArg: ::core::ffi::c_int,
     mut apArg: *mut *mut sqlite3_value,
 ) {
     let mut zLocale: *const ::core::ffi::c_char = ::core::ptr::null::<::core::ffi::c_char>();
@@ -27990,7 +27990,7 @@ unsafe extern "C" fn fts5SegiterPoslist(
 }
 unsafe extern "C" fn fts5InsttokenFunc(
     mut pCtx: *mut sqlite3_context,
-    mut nArg: ::core::ffi::c_int,
+    mut _nArg: ::core::ffi::c_int,
     mut apArg: *mut *mut sqlite3_value,
 ) {
     sqlite3_result_value(pCtx, *apArg.offset(0 as ::core::ffi::c_int as isize));
@@ -28099,7 +28099,7 @@ unsafe extern "C" fn fts5IntegrityMethod(
     mut pVtab: *mut sqlite3_vtab,
     mut zSchema: *const ::core::ffi::c_char,
     mut zTabname: *const ::core::ffi::c_char,
-    mut isQuick: ::core::ffi::c_int,
+    mut _isQuick: ::core::ffi::c_int,
     mut pzErr: *mut *mut ::core::ffi::c_char,
 ) -> ::core::ffi::c_int {
     let mut pTab: *mut Fts5FullTable = pVtab as *mut Fts5FullTable;
@@ -28544,7 +28544,7 @@ unsafe extern "C" fn fts5IterSetOutputs_Nocolset(
 }
 unsafe extern "C" fn fts5IterSetOutputs_ZeroColset(
     mut pIter: *mut Fts5Iter,
-    mut pSeg: *mut Fts5SegIter,
+    mut _pSeg: *mut Fts5SegIter,
 ) {
     (*pIter).base.nData = 0 as ::core::ffi::c_int;
 }
@@ -31026,7 +31026,7 @@ unsafe extern "C" fn sqlite3Fts5IndexMerge(
 unsafe extern "C" fn fts5AppendRowid(
     mut p: *mut Fts5Index,
     mut iDelta: u64_0,
-    mut pUnused: *mut Fts5Iter,
+    mut _pUnused: *mut Fts5Iter,
     mut pBuf: *mut Fts5Buffer,
 ) {
     sqlite3Fts5BufferAppendVarint(&raw mut (*p).rc, pBuf, iDelta as i64_0);
@@ -31138,7 +31138,7 @@ unsafe extern "C" fn fts5NextRowid(
 unsafe extern "C" fn fts5MergeRowidLists(
     mut p: *mut Fts5Index,
     mut p1: *mut Fts5Buffer,
-    mut nBuf: ::core::ffi::c_int,
+    mut _nBuf: ::core::ffi::c_int,
     mut aBuf: *mut Fts5Buffer,
 ) {
     let mut i1: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
@@ -34249,7 +34249,7 @@ unsafe extern "C" fn fts5BufferAppendTerm(
 }
 unsafe extern "C" fn fts5DecodeFunction(
     mut pCtx: *mut sqlite3_context,
-    mut nArg: ::core::ffi::c_int,
+    mut _nArg: ::core::ffi::c_int,
     mut apVal: *mut *mut sqlite3_value,
 ) {
     let mut current_block: u64;
@@ -34705,11 +34705,11 @@ unsafe extern "C" fn fts5RowidFunction(
 }
 unsafe extern "C" fn fts5structConnectMethod(
     mut db: *mut sqlite3,
-    mut pAux: *mut ::core::ffi::c_void,
-    mut argc: ::core::ffi::c_int,
-    mut argv: *const *const ::core::ffi::c_char,
+    mut _pAux: *mut ::core::ffi::c_void,
+    mut _argc: ::core::ffi::c_int,
+    mut _argv: *const *const ::core::ffi::c_char,
     mut ppVtab: *mut *mut sqlite3_vtab,
-    mut pzErr: *mut *mut ::core::ffi::c_char,
+    mut _pzErr: *mut *mut ::core::ffi::c_char,
 ) -> ::core::ffi::c_int {
     let mut pNew: *mut Fts5StructVtab = ::core::ptr::null_mut::<Fts5StructVtab>();
     let mut rc: ::core::ffi::c_int = SQLITE_OK;
@@ -34728,7 +34728,7 @@ unsafe extern "C" fn fts5structConnectMethod(
     return rc;
 }
 unsafe extern "C" fn fts5structBestIndexMethod(
-    mut tab: *mut sqlite3_vtab,
+    mut _tab: *mut sqlite3_vtab,
     mut pIdxInfo: *mut sqlite3_index_info,
 ) -> ::core::ffi::c_int {
     let mut i: ::core::ffi::c_int = 0;
@@ -34764,7 +34764,7 @@ unsafe extern "C" fn fts5structDisconnectMethod(
     return SQLITE_OK;
 }
 unsafe extern "C" fn fts5structOpenMethod(
-    mut p: *mut sqlite3_vtab,
+    mut _p: *mut sqlite3_vtab,
     mut ppCsr: *mut *mut sqlite3_vtab_cursor,
 ) -> ::core::ffi::c_int {
     let mut rc: ::core::ffi::c_int = SQLITE_OK;
@@ -34872,9 +34872,9 @@ unsafe extern "C" fn fts5structColumnMethod(
 }
 unsafe extern "C" fn fts5structFilterMethod(
     mut pVtabCursor: *mut sqlite3_vtab_cursor,
-    mut idxNum: ::core::ffi::c_int,
-    mut idxStr: *const ::core::ffi::c_char,
-    mut argc: ::core::ffi::c_int,
+    mut _idxNum: ::core::ffi::c_int,
+    mut _idxStr: *const ::core::ffi::c_char,
+    mut _argc: ::core::ffi::c_int,
     mut argv: *mut *mut sqlite3_value,
 ) -> ::core::ffi::c_int {
     let mut pCsr: *mut Fts5StructVcsr = pVtabCursor as *mut Fts5StructVcsr;

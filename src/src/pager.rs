@@ -2226,7 +2226,7 @@ unsafe extern "C" fn pagerLockDb(
     }
     return rc;
 }
-unsafe extern "C" fn jrnlBufferSize(mut pPager: *mut Pager) -> ::core::ffi::c_int {
+unsafe extern "C" fn jrnlBufferSize(mut _pPager: *mut Pager) -> ::core::ffi::c_int {
     return 0 as ::core::ffi::c_int;
 }
 unsafe extern "C" fn readSuperJournal(
@@ -5069,9 +5069,9 @@ unsafe extern "C" fn getPageMMap(
 }
 unsafe extern "C" fn getPageError(
     mut pPager: *mut Pager,
-    mut pgno: Pgno,
+    mut _pgno: Pgno,
     mut ppPage: *mut *mut DbPage,
-    mut flags: ::core::ffi::c_int,
+    mut _flags: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
     *ppPage = ::core::ptr::null_mut::<DbPage>();
     return (*pPager).errCode;
@@ -5364,7 +5364,7 @@ pub unsafe extern "C" fn sqlite3PagerDontWrite(mut pPg: *mut PgHdr) {
 }
 unsafe extern "C" fn pager_incr_changecounter(
     mut pPager: *mut Pager,
-    mut isDirectMode: ::core::ffi::c_int,
+    mut _isDirectMode: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
     let mut rc: ::core::ffi::c_int = SQLITE_OK;
     if (*pPager).changeCountDone == 0 && (*pPager).dbSize > 0 as Pgno {

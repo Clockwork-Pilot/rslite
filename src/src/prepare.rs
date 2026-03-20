@@ -1813,9 +1813,9 @@ pub unsafe extern "C" fn sqlite3IndexHasDuplicateRootPage(
 #[no_mangle]
 pub unsafe extern "C" fn sqlite3InitCallback(
     mut pInit: *mut ::core::ffi::c_void,
-    mut argc: ::core::ffi::c_int,
+    mut _argc: ::core::ffi::c_int,
     mut argv: *mut *mut ::core::ffi::c_char,
-    mut NotUsed: *mut *mut ::core::ffi::c_char,
+    mut _NotUsed: *mut *mut ::core::ffi::c_char,
 ) -> ::core::ffi::c_int {
     let mut pData: *mut InitData = pInit as *mut InitData;
     let mut db: *mut sqlite3 = (*pData).db;

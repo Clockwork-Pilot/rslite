@@ -1,5 +1,5 @@
 use ::c2rust_bitfields;
-use ::libc;
+
 extern "C" {
     pub type VdbeSorter;
     pub type BtCursor;
@@ -2427,7 +2427,7 @@ pub unsafe extern "C" fn sqlite3MemSetArrayInt64(
     sqlite3VdbeMemSetInt64(aMem.offset(iIdx as isize) as *mut Mem, val);
 }
 #[no_mangle]
-pub unsafe extern "C" fn sqlite3NoopDestructor(mut p: *mut ::core::ffi::c_void) {}
+pub unsafe extern "C" fn sqlite3NoopDestructor(mut _p: *mut ::core::ffi::c_void) {}
 #[no_mangle]
 pub unsafe extern "C" fn sqlite3VdbeMemSetPointer(
     mut pMem: *mut Mem,
@@ -2799,7 +2799,7 @@ pub unsafe extern "C" fn sqlite3ValueNew(mut db: *mut sqlite3) -> *mut sqlite3_v
 }
 unsafe extern "C" fn valueNew(
     mut db: *mut sqlite3,
-    mut p: *mut ValueNewStat4Ctx,
+    mut _p: *mut ValueNewStat4Ctx,
 ) -> *mut sqlite3_value {
     return sqlite3ValueNew(db);
 }

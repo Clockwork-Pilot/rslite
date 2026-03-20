@@ -1,4 +1,4 @@
-use ::libc;
+
 extern "C" {
     pub type sqlite3;
     pub type sqlite3_stmt;
@@ -236,11 +236,11 @@ pub const SQLITE_STMTSTATUS_RUN: ::core::ffi::c_int = 6 as ::core::ffi::c_int;
 pub const SQLITE_STMTSTATUS_MEMUSED: ::core::ffi::c_int = 99 as ::core::ffi::c_int;
 unsafe extern "C" fn stmtConnect(
     mut db: *mut sqlite3,
-    mut pAux: *mut ::core::ffi::c_void,
-    mut argc: ::core::ffi::c_int,
-    mut argv: *const *const ::core::ffi::c_char,
+    mut _pAux: *mut ::core::ffi::c_void,
+    mut _argc: ::core::ffi::c_int,
+    mut _argv: *const *const ::core::ffi::c_char,
     mut ppVtab: *mut *mut sqlite3_vtab,
-    mut pzErr: *mut *mut ::core::ffi::c_char,
+    mut _pzErr: *mut *mut ::core::ffi::c_char,
 ) -> ::core::ffi::c_int {
     let mut pNew: *mut stmt_vtab = ::core::ptr::null_mut::<stmt_vtab>();
     let mut rc: ::core::ffi::c_int = 0;
@@ -358,10 +358,10 @@ unsafe extern "C" fn stmtEof(mut cur: *mut sqlite3_vtab_cursor) -> ::core::ffi::
 }
 unsafe extern "C" fn stmtFilter(
     mut pVtabCursor: *mut sqlite3_vtab_cursor,
-    mut idxNum: ::core::ffi::c_int,
-    mut idxStr: *const ::core::ffi::c_char,
-    mut argc: ::core::ffi::c_int,
-    mut argv: *mut *mut sqlite3_value,
+    mut _idxNum: ::core::ffi::c_int,
+    mut _idxStr: *const ::core::ffi::c_char,
+    mut _argc: ::core::ffi::c_int,
+    mut _argv: *mut *mut sqlite3_value,
 ) -> ::core::ffi::c_int {
     let mut pCur: *mut stmt_cursor = pVtabCursor as *mut stmt_cursor;
     let mut p: *mut sqlite3_stmt = ::core::ptr::null_mut::<sqlite3_stmt>();
@@ -425,7 +425,7 @@ unsafe extern "C" fn stmtFilter(
     return SQLITE_OK;
 }
 unsafe extern "C" fn stmtBestIndex(
-    mut tab: *mut sqlite3_vtab,
+    mut _tab: *mut sqlite3_vtab,
     mut pIdxInfo: *mut sqlite3_index_info,
 ) -> ::core::ffi::c_int {
     (*pIdxInfo).estimatedCost = 500 as ::core::ffi::c_int as ::core::ffi::c_double;

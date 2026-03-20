@@ -8081,7 +8081,7 @@ pub unsafe extern "C" fn sqlite3SrcListFuncArgs(
     };
 }
 #[no_mangle]
-pub unsafe extern "C" fn sqlite3SrcListShiftJoinType(mut pParse: *mut Parse, mut p: *mut SrcList) {
+pub unsafe extern "C" fn sqlite3SrcListShiftJoinType(mut _pParse: *mut Parse, mut p: *mut SrcList) {
     if !p.is_null() && (*p).nSrc > 1 as ::core::ffi::c_int {
         let mut i: ::core::ffi::c_int = (*p).nSrc - 1 as ::core::ffi::c_int;
         let mut allFlags: u8_0 = 0 as u8_0;

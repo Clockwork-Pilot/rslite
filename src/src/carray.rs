@@ -1,5 +1,5 @@
 use ::c2rust_bitfields;
-use ::libc;
+
 extern "C" {
     pub type sqlite3_value;
     pub type sqlite3_context;
@@ -1530,11 +1530,11 @@ static mut azCarrayType: [*const ::core::ffi::c_char; 5] = [
 ];
 unsafe extern "C" fn carrayConnect(
     mut db: *mut sqlite3,
-    mut pAux: *mut ::core::ffi::c_void,
-    mut argc: ::core::ffi::c_int,
-    mut argv: *const *const ::core::ffi::c_char,
+    mut _pAux: *mut ::core::ffi::c_void,
+    mut _argc: ::core::ffi::c_int,
+    mut _argv: *const *const ::core::ffi::c_char,
     mut ppVtab: *mut *mut sqlite3_vtab,
-    mut pzErr: *mut *mut ::core::ffi::c_char,
+    mut _pzErr: *mut *mut ::core::ffi::c_char,
 ) -> ::core::ffi::c_int {
     let mut pNew: *mut sqlite3_vtab = ::core::ptr::null_mut::<sqlite3_vtab>();
     let mut rc: ::core::ffi::c_int = 0;
@@ -1566,7 +1566,7 @@ unsafe extern "C" fn carrayDisconnect(mut pVtab: *mut sqlite3_vtab) -> ::core::f
     return SQLITE_OK;
 }
 unsafe extern "C" fn carrayOpen(
-    mut p: *mut sqlite3_vtab,
+    mut _p: *mut sqlite3_vtab,
     mut ppCursor: *mut *mut sqlite3_vtab_cursor,
 ) -> ::core::ffi::c_int {
     let mut pCur: *mut carray_cursor = ::core::ptr::null_mut::<carray_cursor>();
@@ -1687,8 +1687,8 @@ unsafe extern "C" fn carrayEof(mut cur: *mut sqlite3_vtab_cursor) -> ::core::ffi
 unsafe extern "C" fn carrayFilter(
     mut pVtabCursor: *mut sqlite3_vtab_cursor,
     mut idxNum: ::core::ffi::c_int,
-    mut idxStr: *const ::core::ffi::c_char,
-    mut argc: ::core::ffi::c_int,
+    mut _idxStr: *const ::core::ffi::c_char,
+    mut _argc: ::core::ffi::c_int,
     mut argv: *mut *mut sqlite3_value,
 ) -> ::core::ffi::c_int {
     let mut pCur: *mut carray_cursor = pVtabCursor as *mut carray_cursor;
@@ -1754,7 +1754,7 @@ unsafe extern "C" fn carrayFilter(
     return SQLITE_OK;
 }
 unsafe extern "C" fn carrayBestIndex(
-    mut tab: *mut sqlite3_vtab,
+    mut _tab: *mut sqlite3_vtab,
     mut pIdxInfo: *mut sqlite3_index_info,
 ) -> ::core::ffi::c_int {
     let mut i: ::core::ffi::c_int = 0;

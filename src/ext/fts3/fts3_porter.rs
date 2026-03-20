@@ -84,8 +84,8 @@ pub const SQLITE_OK: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
 pub const SQLITE_NOMEM: ::core::ffi::c_int = 7 as ::core::ffi::c_int;
 pub const SQLITE_DONE: ::core::ffi::c_int = 101 as ::core::ffi::c_int;
 unsafe extern "C" fn porterCreate(
-    mut argc: ::core::ffi::c_int,
-    mut argv: *const *const ::core::ffi::c_char,
+    mut _argc: ::core::ffi::c_int,
+    mut _argv: *const *const ::core::ffi::c_char,
     mut ppTokenizer: *mut *mut sqlite3_tokenizer,
 ) -> ::core::ffi::c_int {
     let mut t: *mut porter_tokenizer = ::core::ptr::null_mut::<porter_tokenizer>();
@@ -107,7 +107,7 @@ unsafe extern "C" fn porterDestroy(mut pTokenizer: *mut sqlite3_tokenizer) -> ::
     return SQLITE_OK;
 }
 unsafe extern "C" fn porterOpen(
-    mut pTokenizer: *mut sqlite3_tokenizer,
+    mut _pTokenizer: *mut sqlite3_tokenizer,
     mut zInput: *const ::core::ffi::c_char,
     mut nInput: ::core::ffi::c_int,
     mut ppCursor: *mut *mut sqlite3_tokenizer_cursor,

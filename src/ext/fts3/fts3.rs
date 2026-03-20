@@ -2406,7 +2406,7 @@ unsafe extern "C" fn fts3BestIndexMethod(
     return SQLITE_OK;
 }
 unsafe extern "C" fn fts3OpenMethod(
-    mut pVTab: *mut sqlite3_vtab,
+    mut _pVTab: *mut sqlite3_vtab,
     mut ppCsr: *mut *mut sqlite3_vtab_cursor,
 ) -> ::core::ffi::c_int {
     let mut pCsr: *mut sqlite3_vtab_cursor = ::core::ptr::null_mut::<sqlite3_vtab_cursor>();
@@ -3207,11 +3207,11 @@ unsafe extern "C" fn fts3DoclistOrMerge(
         }) * (if i1 > i2 {
             1 as ::core::ffi::c_int
         } else {
-            (if i1 == i2 {
+            if i1 == i2 {
                 0 as ::core::ffi::c_int
             } else {
                 -(1 as ::core::ffi::c_int)
-            })
+            }
         })) as sqlite3_int64;
         if !p2.is_null() && !p1.is_null() && iDiff == 0 as sqlite3_int64 {
             fts3PutDeltaVarint3(
@@ -3307,11 +3307,11 @@ unsafe extern "C" fn fts3DoclistPhraseMerge(
         }) * (if i1 > i2 {
             1 as ::core::ffi::c_int
         } else {
-            (if i1 == i2 {
+            if i1 == i2 {
                 0 as ::core::ffi::c_int
             } else {
                 -(1 as ::core::ffi::c_int)
-            })
+            }
         })) as sqlite3_int64;
         if iDiff == 0 as sqlite3_int64 {
             let mut pSave: *mut ::core::ffi::c_char = p;
@@ -3918,7 +3918,7 @@ unsafe extern "C" fn fts3FilterMethod(
     mut pCursor: *mut sqlite3_vtab_cursor,
     mut idxNum: ::core::ffi::c_int,
     mut idxStr: *const ::core::ffi::c_char,
-    mut nVal: ::core::ffi::c_int,
+    mut _nVal: ::core::ffi::c_int,
     mut apVal: *mut *mut sqlite3_value,
 ) -> ::core::ffi::c_int {
     let mut rc: ::core::ffi::c_int = SQLITE_OK;
@@ -4187,7 +4187,7 @@ unsafe extern "C" fn fts3BeginMethod(mut pVtab: *mut sqlite3_vtab) -> ::core::ff
     rc = fts3SetHasStat(p);
     return rc;
 }
-unsafe extern "C" fn fts3CommitMethod(mut pVtab: *mut sqlite3_vtab) -> ::core::ffi::c_int {
+unsafe extern "C" fn fts3CommitMethod(mut _pVtab: *mut sqlite3_vtab) -> ::core::ffi::c_int {
     return SQLITE_OK;
 }
 unsafe extern "C" fn fts3RollbackMethod(mut pVtab: *mut sqlite3_vtab) -> ::core::ffi::c_int {
@@ -4352,7 +4352,7 @@ unsafe extern "C" fn fts3SnippetFunc(
 }
 unsafe extern "C" fn fts3OffsetsFunc(
     mut pContext: *mut sqlite3_context,
-    mut nVal: ::core::ffi::c_int,
+    mut _nVal: ::core::ffi::c_int,
     mut apVal: *mut *mut sqlite3_value,
 ) {
     let mut pCsr: *mut Fts3Cursor = ::core::ptr::null_mut::<Fts3Cursor>();
@@ -4371,7 +4371,7 @@ unsafe extern "C" fn fts3OffsetsFunc(
 }
 unsafe extern "C" fn fts3OptimizeFunc(
     mut pContext: *mut sqlite3_context,
-    mut nVal: ::core::ffi::c_int,
+    mut _nVal: ::core::ffi::c_int,
     mut apVal: *mut *mut sqlite3_value,
 ) {
     let mut rc: ::core::ffi::c_int = 0;
@@ -4433,8 +4433,8 @@ unsafe extern "C" fn fts3MatchinfoFunc(
     }
 }
 unsafe extern "C" fn fts3FindFunctionMethod(
-    mut pVtab: *mut sqlite3_vtab,
-    mut nArg: ::core::ffi::c_int,
+    mut _pVtab: *mut sqlite3_vtab,
+    mut _nArg: ::core::ffi::c_int,
     mut zName: *const ::core::ffi::c_char,
     mut pxFunc: *mut Option<
         unsafe extern "C" fn(
@@ -4443,7 +4443,7 @@ unsafe extern "C" fn fts3FindFunctionMethod(
             *mut *mut sqlite3_value,
         ) -> (),
     >,
-    mut ppArg: *mut *mut ::core::ffi::c_void,
+    mut _ppArg: *mut *mut ::core::ffi::c_void,
 ) -> ::core::ffi::c_int {
     let mut aOverload: [Overloaded; 4] = [
         Overloaded {
@@ -4655,7 +4655,7 @@ unsafe extern "C" fn fts3IntegrityMethod(
     mut pVtab: *mut sqlite3_vtab,
     mut zSchema: *const ::core::ffi::c_char,
     mut zTabname: *const ::core::ffi::c_char,
-    mut isQuick: ::core::ffi::c_int,
+    mut _isQuick: ::core::ffi::c_int,
     mut pzErr: *mut *mut ::core::ffi::c_char,
 ) -> ::core::ffi::c_int {
     let mut p: *mut Fts3Table = pVtab as *mut Fts3Table;
@@ -5538,11 +5538,11 @@ unsafe extern "C" fn fts3EvalIncrPhraseNext(
                         }) * (if iMax > a[i as usize].iDocid {
                             1 as ::core::ffi::c_int
                         } else {
-                            (if iMax == a[i as usize].iDocid {
+                            if iMax == a[i as usize].iDocid {
                                 0 as ::core::ffi::c_int
                             } else {
                                 -(1 as ::core::ffi::c_int)
-                            })
+                            }
                         }) < 0 as ::core::ffi::c_int)
                 {
                     iMax = a[i as usize].iDocid;
@@ -5562,11 +5562,11 @@ unsafe extern "C" fn fts3EvalIncrPhraseNext(
                     }) * (if a[i as usize].iDocid > iMax {
                         1 as ::core::ffi::c_int
                     } else {
-                        (if a[i as usize].iDocid == iMax {
+                        if a[i as usize].iDocid == iMax {
                             0 as ::core::ffi::c_int
                         } else {
                             -(1 as ::core::ffi::c_int)
-                        })
+                        }
                     }) < 0 as ::core::ffi::c_int
                 {
                     rc = incrPhraseTokenNext(
@@ -5583,11 +5583,11 @@ unsafe extern "C" fn fts3EvalIncrPhraseNext(
                     }) * (if a[i as usize].iDocid > iMax {
                         1 as ::core::ffi::c_int
                     } else {
-                        (if a[i as usize].iDocid == iMax {
+                        if a[i as usize].iDocid == iMax {
                             0 as ::core::ffi::c_int
                         } else {
                             -(1 as ::core::ffi::c_int)
-                        })
+                        }
                     }) > 0 as ::core::ffi::c_int
                     {
                         iMax = a[i as usize].iDocid;
@@ -6026,11 +6026,11 @@ unsafe extern "C" fn fts3EvalNextRow(
                         {
                             1 as ::core::ffi::c_int
                         } else {
-                            (if (*pLeft).iDocid == (*pRight).iDocid {
+                            if (*pLeft).iDocid == (*pRight).iDocid {
                                 0 as ::core::ffi::c_int
                             } else {
                                 -(1 as ::core::ffi::c_int)
-                            })
+                            }
                         })) as sqlite3_int64;
                         if iDiff == 0 as sqlite3_int64 {
                             break;
@@ -6089,11 +6089,11 @@ unsafe extern "C" fn fts3EvalNextRow(
                 }) * (if (*pLeft_0).iDocid > (*pRight_0).iDocid {
                     1 as ::core::ffi::c_int
                 } else {
-                    (if (*pLeft_0).iDocid == (*pRight_0).iDocid {
+                    if (*pLeft_0).iDocid == (*pRight_0).iDocid {
                         0 as ::core::ffi::c_int
                     } else {
                         -(1 as ::core::ffi::c_int)
-                    })
+                    }
                 })) as sqlite3_int64;
                 if (*pRight_0).bEof as ::core::ffi::c_int != 0
                     || (*pLeft_0).bEof as ::core::ffi::c_int == 0 as ::core::ffi::c_int
@@ -6116,11 +6116,11 @@ unsafe extern "C" fn fts3EvalNextRow(
                 }) * (if (*pLeft_0).iDocid > (*pRight_0).iDocid {
                     1 as ::core::ffi::c_int
                 } else {
-                    (if (*pLeft_0).iDocid == (*pRight_0).iDocid {
+                    if (*pLeft_0).iDocid == (*pRight_0).iDocid {
                         0 as ::core::ffi::c_int
                     } else {
                         -(1 as ::core::ffi::c_int)
-                    })
+                    }
                 })) as sqlite3_int64;
                 if (*pRight_0).bEof as ::core::ffi::c_int != 0
                     || (*pLeft_0).bEof as ::core::ffi::c_int == 0 as ::core::ffi::c_int
@@ -6148,11 +6148,11 @@ unsafe extern "C" fn fts3EvalNextRow(
                         }) * (if (*pLeft_1).iDocid > (*pRight_1).iDocid {
                             1 as ::core::ffi::c_int
                         } else {
-                            (if (*pLeft_1).iDocid == (*pRight_1).iDocid {
+                            if (*pLeft_1).iDocid == (*pRight_1).iDocid {
                                 0 as ::core::ffi::c_int
                             } else {
                                 -(1 as ::core::ffi::c_int)
-                            })
+                            }
                         }) > 0 as ::core::ffi::c_int
                     {
                         fts3EvalNextRow(pCsr, pRight_1, pRc);
@@ -6450,7 +6450,7 @@ unsafe extern "C" fn fts3EvalUpdateCounts(mut pExpr: *mut Fts3Expr, mut nCol: ::
 }
 unsafe extern "C" fn fts3AllocateMSI(
     mut pExpr: *mut Fts3Expr,
-    mut iPhrase: ::core::ffi::c_int,
+    mut _iPhrase: ::core::ffi::c_int,
     mut pCtx: *mut ::core::ffi::c_void,
 ) -> ::core::ffi::c_int {
     let mut pTab: *mut Fts3Table = pCtx as *mut Fts3Table;
@@ -6680,11 +6680,11 @@ pub unsafe extern "C" fn sqlite3Fts3EvalPhrasePoslist(
                     }) * (if iDocid > (*pCsr).iPrevId {
                         1 as ::core::ffi::c_int
                     } else {
-                        (if iDocid == (*pCsr).iPrevId {
+                        if iDocid == (*pCsr).iPrevId {
                             0 as ::core::ffi::c_int
                         } else {
                             -(1 as ::core::ffi::c_int)
-                        })
+                        }
                     }) < 0 as ::core::ffi::c_int)
                     && bEof as ::core::ffi::c_int == 0 as ::core::ffi::c_int
                 {
@@ -6709,11 +6709,11 @@ pub unsafe extern "C" fn sqlite3Fts3EvalPhrasePoslist(
                     }) * (if iDocid > (*pCsr).iPrevId {
                         1 as ::core::ffi::c_int
                     } else {
-                        (if iDocid == (*pCsr).iPrevId {
+                        if iDocid == (*pCsr).iPrevId {
                             0 as ::core::ffi::c_int
                         } else {
                             -(1 as ::core::ffi::c_int)
-                        })
+                        }
                     }) > 0 as ::core::ffi::c_int)
                     && bEof as ::core::ffi::c_int == 0 as ::core::ffi::c_int
                 {

@@ -1615,7 +1615,7 @@ pub const SQLITE_STATUS_MALLOC_COUNT: ::core::ffi::c_int = 9 as ::core::ffi::c_i
 pub const LOOKASIDE_SMALL: ::core::ffi::c_int = 128 as ::core::ffi::c_int;
 pub const SQLITE_NOMEM_BKPT: ::core::ffi::c_int = SQLITE_NOMEM;
 #[no_mangle]
-pub unsafe extern "C" fn sqlite3_release_memory(mut n: ::core::ffi::c_int) -> ::core::ffi::c_int {
+pub unsafe extern "C" fn sqlite3_release_memory(mut _n: ::core::ffi::c_int) -> ::core::ffi::c_int {
     return 0 as ::core::ffi::c_int;
 }
 pub const SQLITE_MAX_MEMORY: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
@@ -1631,11 +1631,11 @@ pub unsafe extern "C" fn sqlite3MallocMutex() -> *mut sqlite3_mutex {
 }
 #[no_mangle]
 pub unsafe extern "C" fn sqlite3_memory_alarm(
-    mut xCallback: Option<
+    mut _xCallback: Option<
         unsafe extern "C" fn(*mut ::core::ffi::c_void, sqlite3_int64, ::core::ffi::c_int) -> (),
     >,
-    mut pArg: *mut ::core::ffi::c_void,
-    mut iThreshold: sqlite3_int64,
+    mut _pArg: *mut ::core::ffi::c_void,
+    mut _iThreshold: sqlite3_int64,
 ) -> ::core::ffi::c_int {
     return SQLITE_OK;
 }

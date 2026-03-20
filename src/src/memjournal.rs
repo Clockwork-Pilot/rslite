@@ -470,8 +470,8 @@ unsafe extern "C" fn memjrnlClose(mut pJfd: *mut sqlite3_file) -> ::core::ffi::c
     return SQLITE_OK;
 }
 unsafe extern "C" fn memjrnlSync(
-    mut pJfd: *mut sqlite3_file,
-    mut flags: ::core::ffi::c_int,
+    mut _pJfd: *mut sqlite3_file,
+    mut _flags: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
     return SQLITE_OK;
 }

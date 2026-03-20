@@ -2655,7 +2655,7 @@ unsafe extern "C" fn btreePayloadToLocal(
     };
 }
 unsafe extern "C" fn btreeParseCellPtrNoPayload(
-    mut pPage: *mut MemPage,
+    mut _pPage: *mut MemPage,
     mut pCell: *mut u8_0,
     mut pInfo: *mut CellInfo,
 ) {
@@ -2897,7 +2897,7 @@ unsafe extern "C" fn cellSizePtrIdxLeaf(mut pPage: *mut MemPage, mut pCell: *mut
     }
     return nSize as u16_0;
 }
-unsafe extern "C" fn cellSizePtrNoPayload(mut pPage: *mut MemPage, mut pCell: *mut u8_0) -> u16_0 {
+unsafe extern "C" fn cellSizePtrNoPayload(mut _pPage: *mut MemPage, mut pCell: *mut u8_0) -> u16_0 {
     let mut pIter: *mut u8_0 = pCell.offset(4 as ::core::ffi::c_int as isize);
     let mut pEnd: *mut u8_0 = ::core::ptr::null_mut::<u8_0>();
     pEnd = pIter.offset(9 as ::core::ffi::c_int as isize);
@@ -7062,7 +7062,7 @@ unsafe extern "C" fn btreeNext(mut pCur: *mut BtCursor) -> ::core::ffi::c_int {
 #[no_mangle]
 pub unsafe extern "C" fn sqlite3BtreeNext(
     mut pCur: *mut BtCursor,
-    mut flags: ::core::ffi::c_int,
+    mut _flags: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
     let mut pPage: *mut MemPage = ::core::ptr::null_mut::<MemPage>();
     (*pCur).info.nSize = 0 as u16_0;
@@ -7161,7 +7161,7 @@ unsafe extern "C" fn btreePrevious(mut pCur: *mut BtCursor) -> ::core::ffi::c_in
 #[no_mangle]
 pub unsafe extern "C" fn sqlite3BtreePrevious(
     mut pCur: *mut BtCursor,
-    mut flags: ::core::ffi::c_int,
+    mut _flags: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
     (*pCur).curFlags = ((*pCur).curFlags as ::core::ffi::c_int
         & !(BTCF_AtLast | BTCF_ValidOvfl | BTCF_ValidNKey)) as u8_0;

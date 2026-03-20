@@ -3995,7 +3995,7 @@ pub unsafe extern "C" fn sqlite3WhereCodeOneLoopStart(
                     );
                     if !pSubWInfo.is_null() {
                         let mut pSubLoop: *mut WhereLoop = ::core::ptr::null_mut::<WhereLoop>();
-                        let mut addrExplain: ::core::ffi::c_int = sqlite3WhereExplainOneScan(
+                        let mut _addrExplain: ::core::ffi::c_int = sqlite3WhereExplainOneScan(
                             pParse,
                             pOrTab,
                             (&raw mut (*pSubWInfo).a as *mut WhereLevel)

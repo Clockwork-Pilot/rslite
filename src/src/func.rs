@@ -1,5 +1,5 @@
 use ::c2rust_bitfields;
-use ::libc;
+
 extern "C" {
     pub type VdbeSorter;
     pub type BtCursor;
@@ -2042,7 +2042,7 @@ unsafe extern "C" fn minmaxFunc(
 }
 unsafe extern "C" fn typeofFunc(
     mut context: *mut sqlite3_context,
-    mut NotUsed: ::core::ffi::c_int,
+    mut _NotUsed: ::core::ffi::c_int,
     mut argv: *mut *mut sqlite3_value,
 ) {
     static mut azType: [*const ::core::ffi::c_char; 5] = [
@@ -2064,7 +2064,7 @@ unsafe extern "C" fn typeofFunc(
 }
 unsafe extern "C" fn subtypeFunc(
     mut context: *mut sqlite3_context,
-    mut argc: ::core::ffi::c_int,
+    mut _argc: ::core::ffi::c_int,
     mut argv: *mut *mut sqlite3_value,
 ) {
     sqlite3_result_int(
@@ -2074,7 +2074,7 @@ unsafe extern "C" fn subtypeFunc(
 }
 unsafe extern "C" fn lengthFunc(
     mut context: *mut sqlite3_context,
-    mut argc: ::core::ffi::c_int,
+    mut _argc: ::core::ffi::c_int,
     mut argv: *mut *mut sqlite3_value,
 ) {
     match sqlite3_value_type(*argv.offset(0 as ::core::ffi::c_int as isize)) {
@@ -2120,7 +2120,7 @@ unsafe extern "C" fn lengthFunc(
 }
 unsafe extern "C" fn bytelengthFunc(
     mut context: *mut sqlite3_context,
-    mut argc: ::core::ffi::c_int,
+    mut _argc: ::core::ffi::c_int,
     mut argv: *mut *mut sqlite3_value,
 ) {
     match sqlite3_value_type(*argv.offset(0 as ::core::ffi::c_int as isize)) {
@@ -2166,7 +2166,7 @@ unsafe extern "C" fn bytelengthFunc(
 }
 unsafe extern "C" fn absFunc(
     mut context: *mut sqlite3_context,
-    mut argc: ::core::ffi::c_int,
+    mut _argc: ::core::ffi::c_int,
     mut argv: *mut *mut sqlite3_value,
 ) {
     match sqlite3_value_type(*argv.offset(0 as ::core::ffi::c_int as isize)) {
@@ -2201,7 +2201,7 @@ unsafe extern "C" fn absFunc(
 }
 unsafe extern "C" fn instrFunc(
     mut context: *mut sqlite3_context,
-    mut argc: ::core::ffi::c_int,
+    mut _argc: ::core::ffi::c_int,
     mut argv: *mut *mut sqlite3_value,
 ) {
     let mut current_block: u64;
@@ -2561,7 +2561,7 @@ unsafe extern "C" fn contextMalloc(
 }
 unsafe extern "C" fn upperFunc(
     mut context: *mut sqlite3_context,
-    mut argc: ::core::ffi::c_int,
+    mut _argc: ::core::ffi::c_int,
     mut argv: *mut *mut sqlite3_value,
 ) {
     let mut z1: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
@@ -2595,7 +2595,7 @@ unsafe extern "C" fn upperFunc(
 }
 unsafe extern "C" fn lowerFunc(
     mut context: *mut sqlite3_context,
-    mut argc: ::core::ffi::c_int,
+    mut _argc: ::core::ffi::c_int,
     mut argv: *mut *mut sqlite3_value,
 ) {
     let mut z1: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
@@ -2627,8 +2627,8 @@ unsafe extern "C" fn lowerFunc(
 }
 unsafe extern "C" fn randomFunc(
     mut context: *mut sqlite3_context,
-    mut NotUsed: ::core::ffi::c_int,
-    mut NotUsed2: *mut *mut sqlite3_value,
+    mut _NotUsed: ::core::ffi::c_int,
+    mut _NotUsed2: *mut *mut sqlite3_value,
 ) {
     let mut r: sqlite_int64 = 0;
     sqlite3_randomness(
@@ -2642,7 +2642,7 @@ unsafe extern "C" fn randomFunc(
 }
 unsafe extern "C" fn randomBlob(
     mut context: *mut sqlite3_context,
-    mut argc: ::core::ffi::c_int,
+    mut _argc: ::core::ffi::c_int,
     mut argv: *mut *mut sqlite3_value,
 ) {
     let mut n: sqlite3_int64 = 0;
@@ -2664,24 +2664,24 @@ unsafe extern "C" fn randomBlob(
 }
 unsafe extern "C" fn last_insert_rowid(
     mut context: *mut sqlite3_context,
-    mut NotUsed: ::core::ffi::c_int,
-    mut NotUsed2: *mut *mut sqlite3_value,
+    mut _NotUsed: ::core::ffi::c_int,
+    mut _NotUsed2: *mut *mut sqlite3_value,
 ) {
     let mut db: *mut sqlite3 = sqlite3_context_db_handle(context);
     sqlite3_result_int64(context, sqlite3_last_insert_rowid(db));
 }
 unsafe extern "C" fn changes(
     mut context: *mut sqlite3_context,
-    mut NotUsed: ::core::ffi::c_int,
-    mut NotUsed2: *mut *mut sqlite3_value,
+    mut _NotUsed: ::core::ffi::c_int,
+    mut _NotUsed2: *mut *mut sqlite3_value,
 ) {
     let mut db: *mut sqlite3 = sqlite3_context_db_handle(context);
     sqlite3_result_int64(context, sqlite3_changes64(db));
 }
 unsafe extern "C" fn total_changes(
     mut context: *mut sqlite3_context,
-    mut NotUsed: ::core::ffi::c_int,
-    mut NotUsed2: *mut *mut sqlite3_value,
+    mut _NotUsed: ::core::ffi::c_int,
+    mut _NotUsed2: *mut *mut sqlite3_value,
 ) {
     let mut db: *mut sqlite3 = sqlite3_context_db_handle(context);
     sqlite3_result_int64(context, sqlite3_total_changes64(db));
@@ -2720,7 +2720,7 @@ unsafe extern "C" fn patternCompare(
     let mut noCase: u8_0 = (*pInfo).noCase;
     let mut zEscaped: *const u8_0 = ::core::ptr::null::<u8_0>();
     loop {
-        c = (if (*zPattern.offset(0 as ::core::ffi::c_int as isize) as ::core::ffi::c_int)
+        c = if (*zPattern.offset(0 as ::core::ffi::c_int as isize) as ::core::ffi::c_int)
             < 0x80 as ::core::ffi::c_int
         {
             let fresh0 = zPattern;
@@ -2728,13 +2728,13 @@ unsafe extern "C" fn patternCompare(
             *fresh0 as u32_0
         } else {
             sqlite3Utf8Read(&raw mut zPattern)
-        });
+        };
         if !(c != 0 as u32_0) {
             break;
         }
         if c == matchAll {
             loop {
-                c = (if (*zPattern.offset(0 as ::core::ffi::c_int as isize) as ::core::ffi::c_int)
+                c = if (*zPattern.offset(0 as ::core::ffi::c_int as isize) as ::core::ffi::c_int)
                     < 0x80 as ::core::ffi::c_int
                 {
                     let fresh1 = zPattern;
@@ -2742,7 +2742,7 @@ unsafe extern "C" fn patternCompare(
                     *fresh1 as u32_0
                 } else {
                     sqlite3Utf8Read(&raw mut zPattern)
-                });
+                };
                 if !(c == matchAll || c == matchOne && matchOne != 0 as u32_0) {
                     break;
                 }
@@ -2820,7 +2820,7 @@ unsafe extern "C" fn patternCompare(
             } else {
                 let mut bMatch_1: ::core::ffi::c_int = 0;
                 loop {
-                    c2 = (if (*zString.offset(0 as ::core::ffi::c_int as isize)
+                    c2 = if (*zString.offset(0 as ::core::ffi::c_int as isize)
                         as ::core::ffi::c_int)
                         < 0x80 as ::core::ffi::c_int
                     {
@@ -2829,7 +2829,7 @@ unsafe extern "C" fn patternCompare(
                         *fresh3 as u32_0
                     } else {
                         sqlite3Utf8Read(&raw mut zString)
-                    });
+                    };
                     if !(c2 != 0 as u32_0) {
                         break;
                     }
@@ -3044,7 +3044,7 @@ unsafe extern "C" fn likeFunc(
 }
 unsafe extern "C" fn nullifFunc(
     mut context: *mut sqlite3_context,
-    mut NotUsed: ::core::ffi::c_int,
+    mut _NotUsed: ::core::ffi::c_int,
     mut argv: *mut *mut sqlite3_value,
 ) {
     let mut pColl: *mut CollSeq = sqlite3GetFuncCollSeq(context);
@@ -3059,8 +3059,8 @@ unsafe extern "C" fn nullifFunc(
 }
 unsafe extern "C" fn versionFunc(
     mut context: *mut sqlite3_context,
-    mut NotUsed: ::core::ffi::c_int,
-    mut NotUsed2: *mut *mut sqlite3_value,
+    mut _NotUsed: ::core::ffi::c_int,
+    mut _NotUsed2: *mut *mut sqlite3_value,
 ) {
     sqlite3_result_text(
         context,
@@ -3071,8 +3071,8 @@ unsafe extern "C" fn versionFunc(
 }
 unsafe extern "C" fn sourceidFunc(
     mut context: *mut sqlite3_context,
-    mut NotUsed: ::core::ffi::c_int,
-    mut NotUsed2: *mut *mut sqlite3_value,
+    mut _NotUsed: ::core::ffi::c_int,
+    mut _NotUsed2: *mut *mut sqlite3_value,
 ) {
     sqlite3_result_text(
         context,
@@ -3082,8 +3082,8 @@ unsafe extern "C" fn sourceidFunc(
     );
 }
 unsafe extern "C" fn errlogFunc(
-    mut context: *mut sqlite3_context,
-    mut argc: ::core::ffi::c_int,
+    mut _context: *mut sqlite3_context,
+    mut _argc: ::core::ffi::c_int,
     mut argv: *mut *mut sqlite3_value,
 ) {
     sqlite3_log(
@@ -3094,7 +3094,7 @@ unsafe extern "C" fn errlogFunc(
 }
 unsafe extern "C" fn compileoptionusedFunc(
     mut context: *mut sqlite3_context,
-    mut argc: ::core::ffi::c_int,
+    mut _argc: ::core::ffi::c_int,
     mut argv: *mut *mut sqlite3_value,
 ) {
     let mut zOptName: *const ::core::ffi::c_char = ::core::ptr::null::<::core::ffi::c_char>();
@@ -3106,7 +3106,7 @@ unsafe extern "C" fn compileoptionusedFunc(
 }
 unsafe extern "C" fn compileoptiongetFunc(
     mut context: *mut sqlite3_context,
-    mut argc: ::core::ffi::c_int,
+    mut _argc: ::core::ffi::c_int,
     mut argv: *mut *mut sqlite3_value,
 ) {
     let mut n: ::core::ffi::c_int = 0;
@@ -3256,7 +3256,7 @@ unsafe extern "C" fn isNHex(
 }
 unsafe extern "C" fn unistrFunc(
     mut context: *mut sqlite3_context,
-    mut argc: ::core::ffi::c_int,
+    mut _argc: ::core::ffi::c_int,
     mut argv: *mut *mut sqlite3_value,
 ) {
     let mut current_block: u64;
@@ -3428,7 +3428,7 @@ unsafe extern "C" fn unistrFunc(
 }
 unsafe extern "C" fn quoteFunc(
     mut context: *mut sqlite3_context,
-    mut argc: ::core::ffi::c_int,
+    mut _argc: ::core::ffi::c_int,
     mut argv: *mut *mut sqlite3_value,
 ) {
     let mut str: sqlite3_str = sqlite3_str {
@@ -3466,7 +3466,7 @@ unsafe extern "C" fn quoteFunc(
 }
 unsafe extern "C" fn unicodeFunc(
     mut context: *mut sqlite3_context,
-    mut argc: ::core::ffi::c_int,
+    mut _argc: ::core::ffi::c_int,
     mut argv: *mut *mut sqlite3_value,
 ) {
     let mut z: *const ::core::ffi::c_uchar =
@@ -3566,7 +3566,7 @@ unsafe extern "C" fn charFunc(
 }
 unsafe extern "C" fn hexFunc(
     mut context: *mut sqlite3_context,
-    mut argc: ::core::ffi::c_int,
+    mut _argc: ::core::ffi::c_int,
     mut argv: *mut *mut sqlite3_value,
 ) {
     let mut i: ::core::ffi::c_int = 0;
@@ -3722,7 +3722,7 @@ unsafe extern "C" fn unhexFunc(
 }
 unsafe extern "C" fn zeroblobFunc(
     mut context: *mut sqlite3_context,
-    mut argc: ::core::ffi::c_int,
+    mut _argc: ::core::ffi::c_int,
     mut argv: *mut *mut sqlite3_value,
 ) {
     let mut n: i64_0 = 0;
@@ -3738,7 +3738,7 @@ unsafe extern "C" fn zeroblobFunc(
 }
 unsafe extern "C" fn replaceFunc(
     mut context: *mut sqlite3_context,
-    mut argc: ::core::ffi::c_int,
+    mut _argc: ::core::ffi::c_int,
     mut argv: *mut *mut sqlite3_value,
 ) {
     let mut zStr: *const ::core::ffi::c_uchar = ::core::ptr::null::<::core::ffi::c_uchar>();
@@ -4190,7 +4190,7 @@ unsafe extern "C" fn kahanBabuskaNeumaierInit(mut p: *mut SumCtx, mut iVal: i64_
 }
 unsafe extern "C" fn sumStep(
     mut context: *mut sqlite3_context,
-    mut argc: ::core::ffi::c_int,
+    mut _argc: ::core::ffi::c_int,
     mut argv: *mut *mut sqlite3_value,
 ) {
     let mut p: *mut SumCtx = ::core::ptr::null_mut::<SumCtx>();
@@ -4245,7 +4245,7 @@ unsafe extern "C" fn sumStep(
 }
 unsafe extern "C" fn sumInverse(
     mut context: *mut sqlite3_context,
-    mut argc: ::core::ffi::c_int,
+    mut _argc: ::core::ffi::c_int,
     mut argv: *mut *mut sqlite3_value,
 ) {
     let mut p: *mut SumCtx = ::core::ptr::null_mut::<SumCtx>();
@@ -4384,7 +4384,7 @@ unsafe extern "C" fn countInverse(
 }
 unsafe extern "C" fn minmaxStep(
     mut context: *mut sqlite3_context,
-    mut NotUsed: ::core::ffi::c_int,
+    mut _NotUsed: ::core::ffi::c_int,
     mut argv: *mut *mut sqlite3_value,
 ) {
     let mut pArg: *mut Mem = *argv.offset(0 as ::core::ffi::c_int as isize) as *mut Mem;
@@ -4526,7 +4526,7 @@ unsafe extern "C" fn groupConcatStep(
 }
 unsafe extern "C" fn groupConcatInverse(
     mut context: *mut sqlite3_context,
-    mut argc: ::core::ffi::c_int,
+    mut _argc: ::core::ffi::c_int,
     mut argv: *mut *mut sqlite3_value,
 ) {
     let mut pGCC: *mut GroupConcatCtx = ::core::ptr::null_mut::<GroupConcatCtx>();
@@ -4735,7 +4735,7 @@ pub unsafe extern "C" fn sqlite3IsLikeFunction(
 }
 unsafe extern "C" fn ceilingFunc(
     mut context: *mut sqlite3_context,
-    mut argc: ::core::ffi::c_int,
+    mut _argc: ::core::ffi::c_int,
     mut argv: *mut *mut sqlite3_value,
 ) {
     match sqlite3_value_numeric_type(*argv.offset(0 as ::core::ffi::c_int as isize)) {
@@ -4823,7 +4823,7 @@ unsafe extern "C" fn radToDeg(mut x: ::core::ffi::c_double) -> ::core::ffi::c_do
 }
 unsafe extern "C" fn math1Func(
     mut context: *mut sqlite3_context,
-    mut argc: ::core::ffi::c_int,
+    mut _argc: ::core::ffi::c_int,
     mut argv: *mut *mut sqlite3_value,
 ) {
     let mut type0: ::core::ffi::c_int = 0;
@@ -4844,7 +4844,7 @@ unsafe extern "C" fn math1Func(
 }
 unsafe extern "C" fn math2Func(
     mut context: *mut sqlite3_context,
-    mut argc: ::core::ffi::c_int,
+    mut _argc: ::core::ffi::c_int,
     mut argv: *mut *mut sqlite3_value,
 ) {
     let mut type0: ::core::ffi::c_int = 0;
@@ -4879,14 +4879,14 @@ unsafe extern "C" fn math2Func(
 }
 unsafe extern "C" fn piFunc(
     mut context: *mut sqlite3_context,
-    mut argc: ::core::ffi::c_int,
-    mut argv: *mut *mut sqlite3_value,
+    mut _argc: ::core::ffi::c_int,
+    mut _argv: *mut *mut sqlite3_value,
 ) {
     sqlite3_result_double(context, M_PI);
 }
 unsafe extern "C" fn signFunc(
     mut context: *mut sqlite3_context,
-    mut argc: ::core::ffi::c_int,
+    mut _argc: ::core::ffi::c_int,
     mut argv: *mut *mut sqlite3_value,
 ) {
     let mut type0: ::core::ffi::c_int = 0;
@@ -5163,7 +5163,7 @@ unsafe extern "C" fn percentSort(mut a: *mut ::core::ffi::c_double, mut n: ::cor
 }
 unsafe extern "C" fn percentInverse(
     mut pCtx: *mut sqlite3_context,
-    mut argc: ::core::ffi::c_int,
+    mut _argc: ::core::ffi::c_int,
     mut argv: *mut *mut sqlite3_value,
 ) {
     let mut p: *mut Percentile = ::core::ptr::null_mut::<Percentile>();

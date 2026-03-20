@@ -611,7 +611,7 @@ unsafe extern "C" fn pcache1TruncateUnsafe(
             .wrapping_rem((*pCache).nHash);
     }
 }
-unsafe extern "C" fn pcache1Init(mut NotUsed: *mut ::core::ffi::c_void) -> ::core::ffi::c_int {
+unsafe extern "C" fn pcache1Init(mut _NotUsed: *mut ::core::ffi::c_void) -> ::core::ffi::c_int {
     memset(
         &raw mut pcache1_g as *mut ::core::ffi::c_void,
         0 as ::core::ffi::c_int,
@@ -636,7 +636,7 @@ unsafe extern "C" fn pcache1Init(mut NotUsed: *mut ::core::ffi::c_void) -> ::cor
     pcache1_g.isInit = 1 as ::core::ffi::c_int;
     return SQLITE_OK;
 }
-unsafe extern "C" fn pcache1Shutdown(mut NotUsed: *mut ::core::ffi::c_void) {
+unsafe extern "C" fn pcache1Shutdown(mut _NotUsed: *mut ::core::ffi::c_void) {
     memset(
         &raw mut pcache1_g as *mut ::core::ffi::c_void,
         0 as ::core::ffi::c_int,

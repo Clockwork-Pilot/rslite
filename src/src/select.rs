@@ -1,5 +1,5 @@
 use ::c2rust_bitfields;
-use ::libc;
+
 extern "C" {
     pub type sqlite3_value;
     pub type sqlite3_context;
@@ -8002,7 +8002,7 @@ unsafe extern "C" fn analyzeAggFuncArgs(mut pAggInfo: *mut AggInfo, mut pNC: *mu
     (*pNC).ncFlags &= !NC_InAggFunc;
 }
 unsafe extern "C" fn optimizeAggregateUseOfIndexedExpr(
-    mut pParse: *mut Parse,
+    mut _pParse: *mut Parse,
     mut pSelect: *mut Select,
     mut pAggInfo: *mut AggInfo,
     mut pNC: *mut NameContext,
@@ -8025,7 +8025,7 @@ unsafe extern "C" fn optimizeAggregateUseOfIndexedExpr(
     analyzeAggFuncArgs(pAggInfo, pNC);
 }
 unsafe extern "C" fn aggregateIdxEprRefToColCallback(
-    mut pWalker: *mut Walker,
+    mut _pWalker: *mut Walker,
     mut pExpr: *mut Expr,
 ) -> ::core::ffi::c_int {
     let mut pAggInfo: *mut AggInfo = ::core::ptr::null_mut::<AggInfo>();

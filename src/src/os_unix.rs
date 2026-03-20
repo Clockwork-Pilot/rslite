@@ -1508,7 +1508,7 @@ unsafe extern "C" fn robustFchown(
     };
 }
 unsafe extern "C" fn unixSetSystemCall(
-    mut pNotUsed: *mut sqlite3_vfs,
+    mut _pNotUsed: *mut sqlite3_vfs,
     mut zName: *const ::core::ffi::c_char,
     mut pNewFunc: sqlite3_syscall_ptr,
 ) -> ::core::ffi::c_int {
@@ -1550,7 +1550,7 @@ unsafe extern "C" fn unixSetSystemCall(
     return rc;
 }
 unsafe extern "C" fn unixGetSystemCall(
-    mut pNotUsed: *mut sqlite3_vfs,
+    mut _pNotUsed: *mut sqlite3_vfs,
     mut zName: *const ::core::ffi::c_char,
 ) -> sqlite3_syscall_ptr {
     let mut i: ::core::ffi::c_uint = 0;
@@ -1567,7 +1567,7 @@ unsafe extern "C" fn unixGetSystemCall(
     return None;
 }
 unsafe extern "C" fn unixNextSystemCall(
-    mut p: *mut sqlite3_vfs,
+    mut _p: *mut sqlite3_vfs,
     mut zName: *const ::core::ffi::c_char,
 ) -> *const ::core::ffi::c_char {
     let mut i: ::core::ffi::c_int = -(1 as ::core::ffi::c_int);
@@ -2350,7 +2350,7 @@ unsafe extern "C" fn setPendingFd(mut pFile: *mut unixFile) {
 unsafe extern "C" fn posixUnlock(
     mut id: *mut sqlite3_file,
     mut eFileLock: ::core::ffi::c_int,
-    mut handleNFSUnlock: ::core::ffi::c_int,
+    mut _handleNFSUnlock: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
     let mut current_block: u64;
     let mut pFile: *mut unixFile = id as *mut unixFile;
@@ -2494,21 +2494,21 @@ unsafe extern "C" fn unixClose(mut id: *mut sqlite3_file) -> ::core::ffi::c_int 
     return rc;
 }
 unsafe extern "C" fn nolockCheckReservedLock(
-    mut NotUsed: *mut sqlite3_file,
+    mut _NotUsed: *mut sqlite3_file,
     mut pResOut: *mut ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
     *pResOut = 0 as ::core::ffi::c_int;
     return SQLITE_OK;
 }
 unsafe extern "C" fn nolockLock(
-    mut NotUsed: *mut sqlite3_file,
-    mut NotUsed2: ::core::ffi::c_int,
+    mut _NotUsed: *mut sqlite3_file,
+    mut _NotUsed2: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
     return SQLITE_OK;
 }
 unsafe extern "C" fn nolockUnlock(
-    mut NotUsed: *mut sqlite3_file,
-    mut NotUsed2: ::core::ffi::c_int,
+    mut _NotUsed: *mut sqlite3_file,
+    mut _NotUsed2: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
     return SQLITE_OK;
 }
@@ -2855,7 +2855,7 @@ pub static mut sqlite3_fullsync_count: ::core::ffi::c_int = 0 as ::core::ffi::c_
 unsafe extern "C" fn full_fsync(
     mut fd: ::core::ffi::c_int,
     mut fullSync: ::core::ffi::c_int,
-    mut dataOnly: ::core::ffi::c_int,
+    mut _dataOnly: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
     let mut rc: ::core::ffi::c_int = 0;
     if fullSync != 0 {
@@ -4080,7 +4080,7 @@ unsafe extern "C" fn unixShmLock(
     }
     return rc;
 }
-unsafe extern "C" fn unixShmBarrier(mut fd: *mut sqlite3_file) {
+unsafe extern "C" fn unixShmBarrier(mut _fd: *mut sqlite3_file) {
     sqlite3MemoryBarrier();
     unixEnterMutex();
     unixLeaveMutex();
@@ -4305,7 +4305,7 @@ unsafe extern "C" fn unixFetch(
 }
 unsafe extern "C" fn unixUnfetch(
     mut fd: *mut sqlite3_file,
-    mut iOff: i64_0,
+    mut _iOff: i64_0,
     mut p: *mut ::core::ffi::c_void,
 ) -> ::core::ffi::c_int {
     let mut pFd: *mut unixFile = fd as *mut unixFile;
@@ -4446,8 +4446,8 @@ static mut posixIoFinder: Option<
     )
 };
 unsafe extern "C" fn posixIoFinderImpl(
-    mut z: *const ::core::ffi::c_char,
-    mut p: *mut unixFile,
+    mut _z: *const ::core::ffi::c_char,
+    mut _p: *mut unixFile,
 ) -> *const sqlite3_io_methods {
     return &raw const posixIoMethods;
 }
@@ -4572,8 +4572,8 @@ static mut nolockIoMethods: sqlite3_io_methods = unsafe {
     }
 };
 unsafe extern "C" fn nolockIoFinderImpl(
-    mut z: *const ::core::ffi::c_char,
-    mut p: *mut unixFile,
+    mut _z: *const ::core::ffi::c_char,
+    mut _p: *mut unixFile,
 ) -> *const sqlite3_io_methods {
     return &raw const nolockIoMethods;
 }
@@ -4698,8 +4698,8 @@ static mut dotlockIoFinder: Option<
     )
 };
 unsafe extern "C" fn dotlockIoFinderImpl(
-    mut z: *const ::core::ffi::c_char,
-    mut p: *mut unixFile,
+    mut _z: *const ::core::ffi::c_char,
+    mut _p: *mut unixFile,
 ) -> *const sqlite3_io_methods {
     return &raw const dotlockIoMethods;
 }
@@ -5294,7 +5294,7 @@ unsafe extern "C" fn unixOpen(
     return rc;
 }
 unsafe extern "C" fn unixDelete(
-    mut NotUsed: *mut sqlite3_vfs,
+    mut _NotUsed: *mut sqlite3_vfs,
     mut zPath: *const ::core::ffi::c_char,
     mut dirSync: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
@@ -5359,7 +5359,7 @@ unsafe extern "C" fn unixDelete(
     return rc;
 }
 unsafe extern "C" fn unixAccess(
-    mut NotUsed: *mut sqlite3_vfs,
+    mut _NotUsed: *mut sqlite3_vfs,
     mut zPath: *const ::core::ffi::c_char,
     mut flags: ::core::ffi::c_int,
     mut pResOut: *mut ::core::ffi::c_int,
@@ -5589,7 +5589,7 @@ unsafe extern "C" fn appendAllPathElements(
     }
 }
 unsafe extern "C" fn unixFullPathname(
-    mut pVfs: *mut sqlite3_vfs,
+    mut _pVfs: *mut sqlite3_vfs,
     mut zPath: *const ::core::ffi::c_char,
     mut nOut: ::core::ffi::c_int,
     mut zOut: *mut ::core::ffi::c_char,
@@ -5643,13 +5643,13 @@ unsafe extern "C" fn unixFullPathname(
 pub const RTLD_NOW: ::core::ffi::c_int = 0x2 as ::core::ffi::c_int;
 pub const RTLD_GLOBAL: ::core::ffi::c_int = 0x100 as ::core::ffi::c_int;
 unsafe extern "C" fn unixDlOpen(
-    mut NotUsed: *mut sqlite3_vfs,
+    mut _NotUsed: *mut sqlite3_vfs,
     mut zFilename: *const ::core::ffi::c_char,
 ) -> *mut ::core::ffi::c_void {
     return dlopen(zFilename, RTLD_NOW | RTLD_GLOBAL);
 }
 unsafe extern "C" fn unixDlError(
-    mut NotUsed: *mut sqlite3_vfs,
+    mut _NotUsed: *mut sqlite3_vfs,
     mut nBuf: ::core::ffi::c_int,
     mut zBufOut: *mut ::core::ffi::c_char,
 ) {
@@ -5667,7 +5667,7 @@ unsafe extern "C" fn unixDlError(
     unixLeaveMutex();
 }
 unsafe extern "C" fn unixDlSym(
-    mut NotUsed: *mut sqlite3_vfs,
+    mut _NotUsed: *mut sqlite3_vfs,
     mut p: *mut ::core::ffi::c_void,
     mut zSym: *const ::core::ffi::c_char,
 ) -> Option<unsafe extern "C" fn() -> ()> {
@@ -5702,13 +5702,13 @@ unsafe extern "C" fn unixDlSym(
     );
 }
 unsafe extern "C" fn unixDlClose(
-    mut NotUsed: *mut sqlite3_vfs,
+    mut _NotUsed: *mut sqlite3_vfs,
     mut pHandle: *mut ::core::ffi::c_void,
 ) {
     dlclose(pHandle);
 }
 unsafe extern "C" fn unixRandomness(
-    mut NotUsed: *mut sqlite3_vfs,
+    mut _NotUsed: *mut sqlite3_vfs,
     mut nBuf: ::core::ffi::c_int,
     mut zBuf: *mut ::core::ffi::c_char,
 ) -> ::core::ffi::c_int {
@@ -5721,7 +5721,7 @@ unsafe extern "C" fn unixRandomness(
     return nBuf;
 }
 unsafe extern "C" fn unixSleep(
-    mut NotUsed: *mut sqlite3_vfs,
+    mut _NotUsed: *mut sqlite3_vfs,
     mut microseconds: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
     let mut sp: timespec = timespec {
@@ -5737,7 +5737,7 @@ unsafe extern "C" fn unixSleep(
 #[no_mangle]
 pub static mut sqlite3_current_time: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
 unsafe extern "C" fn unixCurrentTimeInt64(
-    mut NotUsed: *mut sqlite3_vfs,
+    mut _NotUsed: *mut sqlite3_vfs,
     mut piNow: *mut sqlite3_int64,
 ) -> ::core::ffi::c_int {
     static mut unixEpoch: sqlite3_int64 =
@@ -5760,7 +5760,7 @@ unsafe extern "C" fn unixCurrentTimeInt64(
     return rc;
 }
 unsafe extern "C" fn unixCurrentTime(
-    mut NotUsed: *mut sqlite3_vfs,
+    mut _NotUsed: *mut sqlite3_vfs,
     mut prNow: *mut ::core::ffi::c_double,
 ) -> ::core::ffi::c_int {
     let mut i: sqlite3_int64 = 0 as sqlite3_int64;
@@ -5770,9 +5770,9 @@ unsafe extern "C" fn unixCurrentTime(
     return rc;
 }
 unsafe extern "C" fn unixGetLastError(
-    mut NotUsed: *mut sqlite3_vfs,
-    mut NotUsed2: ::core::ffi::c_int,
-    mut NotUsed3: *mut ::core::ffi::c_char,
+    mut _NotUsed: *mut sqlite3_vfs,
+    mut _NotUsed2: ::core::ffi::c_int,
+    mut _NotUsed3: *mut ::core::ffi::c_char,
 ) -> ::core::ffi::c_int {
     return *__errno_location();
 }

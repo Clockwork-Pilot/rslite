@@ -2388,7 +2388,7 @@ unsafe extern "C" fn walIndexRecover(mut pWal: *mut Wal) -> ::core::ffi::c_int {
                                     })
                                         as u32_0;
                                     let mut iFirst: u32_0 = (1 as usize).wrapping_add(
-                                        (if iPg == 0 as u32_0 {
+                                        if iPg == 0 as u32_0 {
                                             0 as usize
                                         } else {
                                             HASHTABLE_NPAGE_ONE.wrapping_add(
@@ -2396,7 +2396,7 @@ unsafe extern "C" fn walIndexRecover(mut pWal: *mut Wal) -> ::core::ffi::c_int {
                                                     .wrapping_mul(HASHTABLE_NPAGE as u32_0)
                                                     as usize,
                                             )
-                                        }),
+                                        },
                                     )
                                         as u32_0;
                                     let mut nHdr: u32_0 = 0;

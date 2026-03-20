@@ -793,7 +793,7 @@ pub unsafe extern "C" fn sqlite3Fts3ExprIterate(
 }
 unsafe extern "C" fn fts3ExprLoadDoclistsCb(
     mut pExpr: *mut Fts3Expr,
-    mut iPhrase: ::core::ffi::c_int,
+    mut _iPhrase: ::core::ffi::c_int,
     mut ctx: *mut ::core::ffi::c_void,
 ) -> ::core::ffi::c_int {
     let mut rc: ::core::ffi::c_int = SQLITE_OK;
@@ -2094,7 +2094,7 @@ pub unsafe extern "C" fn sqlite3Fts3Snippet(
 }
 unsafe extern "C" fn fts3ExprTermOffsetInit(
     mut pExpr: *mut Fts3Expr,
-    mut iPhrase: ::core::ffi::c_int,
+    mut _iPhrase: ::core::ffi::c_int,
     mut ctx: *mut ::core::ffi::c_void,
 ) -> ::core::ffi::c_int {
     let mut p: *mut TermOffsetCtx = ctx as *mut TermOffsetCtx;
@@ -2122,7 +2122,7 @@ unsafe extern "C" fn fts3ExprTermOffsetInit(
 }
 unsafe extern "C" fn fts3ExprRestartIfCb(
     mut pExpr: *mut Fts3Expr,
-    mut iPhrase: ::core::ffi::c_int,
+    mut _iPhrase: ::core::ffi::c_int,
     mut ctx: *mut ::core::ffi::c_void,
 ) -> ::core::ffi::c_int {
     let mut p: *mut TermOffsetCtx = ctx as *mut TermOffsetCtx;

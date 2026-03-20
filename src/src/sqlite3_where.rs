@@ -3947,8 +3947,8 @@ unsafe extern "C" fn whereRangeAdjust(mut pTerm: *mut WhereTerm, mut nNew: LogEs
     return nRet;
 }
 unsafe extern "C" fn whereRangeScanEst(
-    mut pParse: *mut Parse,
-    mut pBuilder: *mut WhereLoopBuilder,
+    mut _pParse: *mut Parse,
+    mut _pBuilder: *mut WhereLoopBuilder,
     mut pLower: *mut WhereTerm,
     mut pUpper: *mut WhereTerm,
     mut pLoop: *mut WhereLoop,
@@ -5500,11 +5500,11 @@ unsafe extern "C" fn whereLoopAddBtree(
                 }
             }
         }
-        pProbe = (if (*pSrc).fg.isIndexedBy() as ::core::ffi::c_int != 0 {
+        pProbe = if (*pSrc).fg.isIndexedBy() as ::core::ffi::c_int != 0 {
             ::core::ptr::null_mut::<Index>()
         } else {
             (*pProbe).pNext
-        });
+        };
         iSortIdx += 1;
     }
     return rc;

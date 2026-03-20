@@ -1,4 +1,4 @@
-use ::libc;
+
 extern "C" {
     pub type sqlite3;
     pub type sqlite3_value;
@@ -462,7 +462,7 @@ unsafe extern "C" fn fts3tokDisconnectMethod(mut pVtab: *mut sqlite3_vtab) -> ::
     return SQLITE_OK;
 }
 unsafe extern "C" fn fts3tokBestIndexMethod(
-    mut pVTab: *mut sqlite3_vtab,
+    mut _pVTab: *mut sqlite3_vtab,
     mut pInfo: *mut sqlite3_index_info,
 ) -> ::core::ffi::c_int {
     let mut i: ::core::ffi::c_int = 0;
@@ -485,7 +485,7 @@ unsafe extern "C" fn fts3tokBestIndexMethod(
     return SQLITE_OK;
 }
 unsafe extern "C" fn fts3tokOpenMethod(
-    mut pVTab: *mut sqlite3_vtab,
+    mut _pVTab: *mut sqlite3_vtab,
     mut ppCsr: *mut *mut sqlite3_vtab_cursor,
 ) -> ::core::ffi::c_int {
     let mut pCsr: *mut Fts3tokCursor = ::core::ptr::null_mut::<Fts3tokCursor>();
@@ -551,8 +551,8 @@ unsafe extern "C" fn fts3tokNextMethod(
 unsafe extern "C" fn fts3tokFilterMethod(
     mut pCursor: *mut sqlite3_vtab_cursor,
     mut idxNum: ::core::ffi::c_int,
-    mut idxStr: *const ::core::ffi::c_char,
-    mut nVal: ::core::ffi::c_int,
+    mut _idxStr: *const ::core::ffi::c_char,
+    mut _nVal: ::core::ffi::c_int,
     mut apVal: *mut *mut sqlite3_value,
 ) -> ::core::ffi::c_int {
     let mut rc: ::core::ffi::c_int = SQLITE_ERROR;

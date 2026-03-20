@@ -2065,8 +2065,8 @@ unsafe extern "C" fn memdbTruncate(
     return rc;
 }
 unsafe extern "C" fn memdbSync(
-    mut pFile: *mut sqlite3_file,
-    mut flags: ::core::ffi::c_int,
+    mut _pFile: *mut sqlite3_file,
+    mut _flags: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
     return SQLITE_OK;
 }
@@ -2186,7 +2186,7 @@ unsafe extern "C" fn memdbFileControl(
     return rc;
 }
 unsafe extern "C" fn memdbDeviceCharacteristics(
-    mut pFile: *mut sqlite3_file,
+    mut _pFile: *mut sqlite3_file,
 ) -> ::core::ffi::c_int {
     return SQLITE_IOCAP_ATOMIC
         | SQLITE_IOCAP_POWERSAFE_OVERWRITE
@@ -2215,8 +2215,8 @@ unsafe extern "C" fn memdbFetch(
 }
 unsafe extern "C" fn memdbUnfetch(
     mut pFile: *mut sqlite3_file,
-    mut iOfst: sqlite3_int64,
-    mut pPage: *mut ::core::ffi::c_void,
+    mut _iOfst: sqlite3_int64,
+    mut _pPage: *mut ::core::ffi::c_void,
 ) -> ::core::ffi::c_int {
     let mut p: *mut MemStore = (*(pFile as *mut MemFile)).pStore;
     memdbEnter(p);
@@ -2225,7 +2225,7 @@ unsafe extern "C" fn memdbUnfetch(
     return SQLITE_OK;
 }
 unsafe extern "C" fn memdbOpen(
-    mut pVfs: *mut sqlite3_vfs,
+    mut _pVfs: *mut sqlite3_vfs,
     mut zName: *const ::core::ffi::c_char,
     mut pFd: *mut sqlite3_file,
     mut flags: ::core::ffi::c_int,
@@ -2336,16 +2336,16 @@ unsafe extern "C" fn memdbOpen(
     return SQLITE_OK;
 }
 unsafe extern "C" fn memdbAccess(
-    mut pVfs: *mut sqlite3_vfs,
-    mut zPath: *const ::core::ffi::c_char,
-    mut flags: ::core::ffi::c_int,
+    mut _pVfs: *mut sqlite3_vfs,
+    mut _zPath: *const ::core::ffi::c_char,
+    mut _flags: ::core::ffi::c_int,
     mut pResOut: *mut ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
     *pResOut = 0 as ::core::ffi::c_int;
     return SQLITE_OK;
 }
 unsafe extern "C" fn memdbFullPathname(
-    mut pVfs: *mut sqlite3_vfs,
+    mut _pVfs: *mut sqlite3_vfs,
     mut zPath: *const ::core::ffi::c_char,
     mut nOut: ::core::ffi::c_int,
     mut zOut: *mut ::core::ffi::c_char,

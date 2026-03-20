@@ -1,4 +1,4 @@
-use ::libc;
+
 extern "C" {
     pub type sqlite3;
     pub type sqlite3_stmt;
@@ -918,8 +918,8 @@ unsafe extern "C" fn queryTokenizer(
 }
 unsafe extern "C" fn intTestFunc(
     mut context: *mut sqlite3_context,
-    mut argc: ::core::ffi::c_int,
-    mut argv: *mut *mut sqlite3_value,
+    mut _argc: ::core::ffi::c_int,
+    mut _argv: *mut *mut sqlite3_value,
 ) {
     let mut rc: ::core::ffi::c_int = 0;
     let mut p1: *const sqlite3_tokenizer_module = ::core::ptr::null::<sqlite3_tokenizer_module>();

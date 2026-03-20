@@ -1,4 +1,4 @@
-use ::libc;
+
 extern "C" {
     pub type sqlite3;
     pub type sqlite3_stmt;
@@ -4117,7 +4117,7 @@ unsafe extern "C" fn rtreeRename(
 }
 unsafe extern "C" fn rtreeSavepoint(
     mut pVtab: *mut sqlite3_vtab,
-    mut iSavepoint: ::core::ffi::c_int,
+    mut _iSavepoint: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
     let mut pRtree: *mut Rtree = pVtab as *mut Rtree;
     let mut iwt: u8_0 = (*pRtree).inWrTrans;
@@ -4805,7 +4805,7 @@ unsafe extern "C" fn rtreeInit(
 }
 unsafe extern "C" fn rtreenode(
     mut ctx: *mut sqlite3_context,
-    mut nArg: ::core::ffi::c_int,
+    mut _nArg: ::core::ffi::c_int,
     mut apArg: *mut *mut sqlite3_value,
 ) {
     let mut node: RtreeNode = RtreeNode {
@@ -4940,7 +4940,7 @@ unsafe extern "C" fn rtreenode(
 }
 unsafe extern "C" fn rtreedepth(
     mut ctx: *mut sqlite3_context,
-    mut nArg: ::core::ffi::c_int,
+    mut _nArg: ::core::ffi::c_int,
     mut apArg: *mut *mut sqlite3_value,
 ) {
     if sqlite3_value_type(*apArg.offset(0 as ::core::ffi::c_int as isize)) != SQLITE_BLOB
@@ -5423,9 +5423,9 @@ unsafe extern "C" fn rtreeCheckTable(
 }
 unsafe extern "C" fn rtreeIntegrity(
     mut pVtab: *mut sqlite3_vtab,
-    mut zSchema: *const ::core::ffi::c_char,
-    mut zName: *const ::core::ffi::c_char,
-    mut isQuick: ::core::ffi::c_int,
+    mut _zSchema: *const ::core::ffi::c_char,
+    mut _zName: *const ::core::ffi::c_char,
+    mut _isQuick: ::core::ffi::c_int,
     mut pzErr: *mut *mut ::core::ffi::c_char,
 ) -> ::core::ffi::c_int {
     let mut pRtree: *mut Rtree = pVtab as *mut Rtree;
@@ -6091,7 +6091,7 @@ unsafe extern "C" fn geopolyFuncParam(
 }
 unsafe extern "C" fn geopolyBlobFunc(
     mut context: *mut sqlite3_context,
-    mut argc: ::core::ffi::c_int,
+    mut _argc: ::core::ffi::c_int,
     mut argv: *mut *mut sqlite3_value,
 ) {
     let mut p: *mut GeoPoly = geopolyFuncParam(
@@ -6114,7 +6114,7 @@ unsafe extern "C" fn geopolyBlobFunc(
 }
 unsafe extern "C" fn geopolyJsonFunc(
     mut context: *mut sqlite3_context,
-    mut argc: ::core::ffi::c_int,
+    mut _argc: ::core::ffi::c_int,
     mut argv: *mut *mut sqlite3_value,
 ) {
     let mut p: *mut GeoPoly = geopolyFuncParam(
@@ -6239,7 +6239,7 @@ unsafe extern "C" fn geopolySvgFunc(
 }
 unsafe extern "C" fn geopolyXformFunc(
     mut context: *mut sqlite3_context,
-    mut argc: ::core::ffi::c_int,
+    mut _argc: ::core::ffi::c_int,
     mut argv: *mut *mut sqlite3_value,
 ) {
     let mut p: *mut GeoPoly = geopolyFuncParam(
@@ -6325,7 +6325,7 @@ unsafe extern "C" fn geopolyArea(mut p: *mut GeoPoly) -> ::core::ffi::c_double {
 }
 unsafe extern "C" fn geopolyAreaFunc(
     mut context: *mut sqlite3_context,
-    mut argc: ::core::ffi::c_int,
+    mut _argc: ::core::ffi::c_int,
     mut argv: *mut *mut sqlite3_value,
 ) {
     let mut p: *mut GeoPoly = geopolyFuncParam(
@@ -6340,7 +6340,7 @@ unsafe extern "C" fn geopolyAreaFunc(
 }
 unsafe extern "C" fn geopolyCcwFunc(
     mut context: *mut sqlite3_context,
-    mut argc: ::core::ffi::c_int,
+    mut _argc: ::core::ffi::c_int,
     mut argv: *mut *mut sqlite3_value,
 ) {
     let mut p: *mut GeoPoly = geopolyFuncParam(
@@ -6403,7 +6403,7 @@ unsafe extern "C" fn geopolySine(mut r: ::core::ffi::c_double) -> ::core::ffi::c
 }
 unsafe extern "C" fn geopolyRegularFunc(
     mut context: *mut sqlite3_context,
-    mut argc: ::core::ffi::c_int,
+    mut _argc: ::core::ffi::c_int,
     mut argv: *mut *mut sqlite3_value,
 ) {
     let mut x: ::core::ffi::c_double =
@@ -6601,7 +6601,7 @@ unsafe extern "C" fn geopolyBBox(
 }
 unsafe extern "C" fn geopolyBBoxFunc(
     mut context: *mut sqlite3_context,
-    mut argc: ::core::ffi::c_int,
+    mut _argc: ::core::ffi::c_int,
     mut argv: *mut *mut sqlite3_value,
 ) {
     let mut p: *mut GeoPoly = geopolyBBox(
@@ -6625,7 +6625,7 @@ unsafe extern "C" fn geopolyBBoxFunc(
 }
 unsafe extern "C" fn geopolyBBoxStep(
     mut context: *mut sqlite3_context,
-    mut argc: ::core::ffi::c_int,
+    mut _argc: ::core::ffi::c_int,
     mut argv: *mut *mut sqlite3_value,
 ) {
     let mut a: [RtreeCoord; 4] = [RtreeCoord { f: 0. }; 4];
@@ -6745,7 +6745,7 @@ unsafe extern "C" fn pointBeneathLine(
 }
 unsafe extern "C" fn geopolyContainsPointFunc(
     mut context: *mut sqlite3_context,
-    mut argc: ::core::ffi::c_int,
+    mut _argc: ::core::ffi::c_int,
     mut argv: *mut *mut sqlite3_value,
 ) {
     let mut p1: *mut GeoPoly = geopolyFuncParam(
@@ -6816,7 +6816,7 @@ unsafe extern "C" fn geopolyContainsPointFunc(
 }
 unsafe extern "C" fn geopolyWithinFunc(
     mut context: *mut sqlite3_context,
-    mut argc: ::core::ffi::c_int,
+    mut _argc: ::core::ffi::c_int,
     mut argv: *mut *mut sqlite3_value,
 ) {
     let mut p1: *mut GeoPoly = geopolyFuncParam(
@@ -7201,7 +7201,7 @@ unsafe extern "C" fn geopolyOverlap(
 }
 unsafe extern "C" fn geopolyOverlapFunc(
     mut context: *mut sqlite3_context,
-    mut argc: ::core::ffi::c_int,
+    mut _argc: ::core::ffi::c_int,
     mut argv: *mut *mut sqlite3_value,
 ) {
     let mut p1: *mut GeoPoly = geopolyFuncParam(
@@ -7226,14 +7226,14 @@ unsafe extern "C" fn geopolyOverlapFunc(
     sqlite3_free(p2 as *mut ::core::ffi::c_void);
 }
 unsafe extern "C" fn geopolyDebugFunc(
-    mut context: *mut sqlite3_context,
-    mut argc: ::core::ffi::c_int,
-    mut argv: *mut *mut sqlite3_value,
+    mut _context: *mut sqlite3_context,
+    mut _argc: ::core::ffi::c_int,
+    mut _argv: *mut *mut sqlite3_value,
 ) {
 }
 unsafe extern "C" fn geopolyInit(
     mut db: *mut sqlite3,
-    mut pAux: *mut ::core::ffi::c_void,
+    mut _pAux: *mut ::core::ffi::c_void,
     mut argc: ::core::ffi::c_int,
     mut argv: *const *const ::core::ffi::c_char,
     mut ppVtab: *mut *mut sqlite3_vtab,
@@ -7386,8 +7386,8 @@ unsafe extern "C" fn geopolyConnect(
 unsafe extern "C" fn geopolyFilter(
     mut pVtabCursor: *mut sqlite3_vtab_cursor,
     mut idxNum: ::core::ffi::c_int,
-    mut idxStr: *const ::core::ffi::c_char,
-    mut argc: ::core::ffi::c_int,
+    mut _idxStr: *const ::core::ffi::c_char,
+    mut _argc: ::core::ffi::c_int,
     mut argv: *mut *mut sqlite3_value,
 ) -> ::core::ffi::c_int {
     let mut current_block: u64;
@@ -7525,7 +7525,7 @@ unsafe extern "C" fn geopolyFilter(
     return rc;
 }
 unsafe extern "C" fn geopolyBestIndex(
-    mut tab: *mut sqlite3_vtab,
+    mut _tab: *mut sqlite3_vtab,
     mut pIdxInfo: *mut sqlite3_index_info,
 ) -> ::core::ffi::c_int {
     let mut ii: ::core::ffi::c_int = 0;
@@ -7817,8 +7817,8 @@ unsafe extern "C" fn geopolyUpdate(
     return rc;
 }
 unsafe extern "C" fn geopolyFindFunction(
-    mut pVtab: *mut sqlite3_vtab,
-    mut nArg: ::core::ffi::c_int,
+    mut _pVtab: *mut sqlite3_vtab,
+    mut _nArg: ::core::ffi::c_int,
     mut zName: *const ::core::ffi::c_char,
     mut pxFunc: *mut Option<
         unsafe extern "C" fn(

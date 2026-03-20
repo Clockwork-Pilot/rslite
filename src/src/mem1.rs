@@ -80,10 +80,10 @@ unsafe extern "C" fn sqlite3MemRealloc(
 unsafe extern "C" fn sqlite3MemRoundup(mut n: ::core::ffi::c_int) -> ::core::ffi::c_int {
     return n + 7 as ::core::ffi::c_int & !(7 as ::core::ffi::c_int);
 }
-unsafe extern "C" fn sqlite3MemInit(mut NotUsed: *mut ::core::ffi::c_void) -> ::core::ffi::c_int {
+unsafe extern "C" fn sqlite3MemInit(mut _NotUsed: *mut ::core::ffi::c_void) -> ::core::ffi::c_int {
     return SQLITE_OK;
 }
-unsafe extern "C" fn sqlite3MemShutdown(mut NotUsed: *mut ::core::ffi::c_void) {}
+unsafe extern "C" fn sqlite3MemShutdown(mut _NotUsed: *mut ::core::ffi::c_void) {}
 #[no_mangle]
 pub unsafe extern "C" fn sqlite3MemSetDefault() {
     static mut defaultMethods: sqlite3_mem_methods = unsafe {

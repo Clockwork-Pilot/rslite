@@ -3034,7 +3034,7 @@ unsafe extern "C" fn sqlite3ExpandReturning(
     return pNew;
 }
 unsafe extern "C" fn sqlite3ReturningSubqueryVarSelect(
-    mut NotUsed: *mut Walker,
+    mut _NotUsed: *mut Walker,
     mut pExpr: *mut Expr,
 ) -> ::core::ffi::c_int {
     if (*pExpr).flags & EP_xIsSelect as u32_0 != 0 as u32_0

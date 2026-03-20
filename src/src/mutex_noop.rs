@@ -21,15 +21,15 @@ unsafe extern "C" fn noopMutexInit() -> ::core::ffi::c_int {
 unsafe extern "C" fn noopMutexEnd() -> ::core::ffi::c_int {
     return SQLITE_OK;
 }
-unsafe extern "C" fn noopMutexAlloc(mut id: ::core::ffi::c_int) -> *mut sqlite3_mutex {
+unsafe extern "C" fn noopMutexAlloc(mut _id: ::core::ffi::c_int) -> *mut sqlite3_mutex {
     return 8 as ::core::ffi::c_int as *mut sqlite3_mutex;
 }
-unsafe extern "C" fn noopMutexFree(mut p: *mut sqlite3_mutex) {}
-unsafe extern "C" fn noopMutexEnter(mut p: *mut sqlite3_mutex) {}
-unsafe extern "C" fn noopMutexTry(mut p: *mut sqlite3_mutex) -> ::core::ffi::c_int {
+unsafe extern "C" fn noopMutexFree(mut _p: *mut sqlite3_mutex) {}
+unsafe extern "C" fn noopMutexEnter(mut _p: *mut sqlite3_mutex) {}
+unsafe extern "C" fn noopMutexTry(mut _p: *mut sqlite3_mutex) -> ::core::ffi::c_int {
     return SQLITE_OK;
 }
-unsafe extern "C" fn noopMutexLeave(mut p: *mut sqlite3_mutex) {}
+unsafe extern "C" fn noopMutexLeave(mut _p: *mut sqlite3_mutex) {}
 #[no_mangle]
 pub unsafe extern "C" fn sqlite3NoopMutex() -> *const sqlite3_mutex_methods {
     static mut sMutex: sqlite3_mutex_methods = unsafe {

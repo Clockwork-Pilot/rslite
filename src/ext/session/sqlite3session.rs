@@ -1,5 +1,5 @@
 use ::c2rust_bitfields;
-use ::libc;
+
 extern "C" {
     pub type VdbeSorter;
     pub type BtCursor;
@@ -3891,7 +3891,7 @@ unsafe extern "C" fn sessionFindTable(
 }
 unsafe extern "C" fn xPreUpdate(
     mut pCtx: *mut ::core::ffi::c_void,
-    mut db: *mut sqlite3,
+    mut _db: *mut sqlite3,
     mut op: ::core::ffi::c_int,
     mut zDb: *const ::core::ffi::c_char,
     mut zName: *const ::core::ffi::c_char,
@@ -4017,7 +4017,7 @@ unsafe extern "C" fn sessionDiffCount(mut pCtx: *mut ::core::ffi::c_void) -> ::c
         sqlite3_column_count((*p).pStmt)
     }) - (*p).bRowid;
 }
-unsafe extern "C" fn sessionDiffDepth(mut pCtx: *mut ::core::ffi::c_void) -> ::core::ffi::c_int {
+unsafe extern "C" fn sessionDiffDepth(mut _pCtx: *mut ::core::ffi::c_void) -> ::core::ffi::c_int {
     return 0 as ::core::ffi::c_int;
 }
 unsafe extern "C" fn sessionDiffHooks(
@@ -5014,7 +5014,7 @@ unsafe extern "C" fn sessionSelectStmt(
     mut bIgnoreNoop: ::core::ffi::c_int,
     mut zDb: *const ::core::ffi::c_char,
     mut zTab: *const ::core::ffi::c_char,
-    mut bRowid: ::core::ffi::c_int,
+    mut _bRowid: ::core::ffi::c_int,
     mut nCol: ::core::ffi::c_int,
     mut azCol: *mut *const ::core::ffi::c_char,
     mut abPK: *mut u8_0,

@@ -1,5 +1,5 @@
 use ::c2rust_bitfields;
-use ::libc;
+
 extern "C" {
     pub type VdbeSorter;
     pub type BtCursor;
@@ -2172,7 +2172,7 @@ pub unsafe extern "C" fn sqlite3VdbeSwap(mut pA: *mut Vdbe, mut pB: *mut Vdbe) {
 }
 unsafe extern "C" fn growOpArray(
     mut v: *mut Vdbe,
-    mut nOp: ::core::ffi::c_int,
+    mut _nOp: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
     let mut pNew: *mut VdbeOp = ::core::ptr::null_mut::<VdbeOp>();
     let mut p: *mut Parse = (*v).pParse;
@@ -2707,7 +2707,7 @@ pub unsafe extern "C" fn sqlite3VdbeAddOpList(
     mut p: *mut Vdbe,
     mut nOp: ::core::ffi::c_int,
     mut aOp: *const VdbeOpList,
-    mut iLineno: ::core::ffi::c_int,
+    mut _iLineno: ::core::ffi::c_int,
 ) -> *mut VdbeOp {
     let mut i: ::core::ffi::c_int = 0;
     let mut pOut: *mut VdbeOp = ::core::ptr::null_mut::<VdbeOp>();

@@ -1672,7 +1672,7 @@ pub unsafe extern "C" fn sqlite3DbIsNamed(
 }
 unsafe extern "C" fn attachFunc(
     mut context: *mut sqlite3_context,
-    mut NotUsed: ::core::ffi::c_int,
+    mut _NotUsed: ::core::ffi::c_int,
     mut argv: *mut *mut sqlite3_value,
 ) {
     let mut current_block: u64;
@@ -1929,7 +1929,7 @@ unsafe extern "C" fn attachFunc(
 }
 unsafe extern "C" fn detachFunc(
     mut context: *mut sqlite3_context,
-    mut NotUsed: ::core::ffi::c_int,
+    mut _NotUsed: ::core::ffi::c_int,
     mut argv: *mut *mut sqlite3_value,
 ) {
     let mut zName: *const ::core::ffi::c_char =

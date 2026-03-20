@@ -1,4 +1,4 @@
-use ::libc;
+
 extern "C" {
     pub type sqlite3;
     pub type sqlite3_stmt;
@@ -443,7 +443,7 @@ pub const FTS3_AUX_SCHEMA: [::core::ffi::c_char; 69] = unsafe {
 };
 unsafe extern "C" fn fts3auxConnectMethod(
     mut db: *mut sqlite3,
-    mut pUnused: *mut ::core::ffi::c_void,
+    mut _pUnused: *mut ::core::ffi::c_void,
     mut argc: ::core::ffi::c_int,
     mut argv: *const *const ::core::ffi::c_char,
     mut ppVtab: *mut *mut sqlite3_vtab,
@@ -556,7 +556,7 @@ pub const FTS4AUX_EQ_CONSTRAINT: ::core::ffi::c_int = 1 as ::core::ffi::c_int;
 pub const FTS4AUX_GE_CONSTRAINT: ::core::ffi::c_int = 2 as ::core::ffi::c_int;
 pub const FTS4AUX_LE_CONSTRAINT: ::core::ffi::c_int = 4 as ::core::ffi::c_int;
 unsafe extern "C" fn fts3auxBestIndexMethod(
-    mut pVTab: *mut sqlite3_vtab,
+    mut _pVTab: *mut sqlite3_vtab,
     mut pInfo: *mut sqlite3_index_info,
 ) -> ::core::ffi::c_int {
     let mut i: ::core::ffi::c_int = 0;
@@ -637,7 +637,7 @@ unsafe extern "C" fn fts3auxBestIndexMethod(
     return SQLITE_OK;
 }
 unsafe extern "C" fn fts3auxOpenMethod(
-    mut pVTab: *mut sqlite3_vtab,
+    mut _pVTab: *mut sqlite3_vtab,
     mut ppCsr: *mut *mut sqlite3_vtab_cursor,
 ) -> ::core::ffi::c_int {
     let mut pCsr: *mut Fts3auxCursor = ::core::ptr::null_mut::<Fts3auxCursor>();
@@ -817,7 +817,7 @@ unsafe extern "C" fn fts3auxNextMethod(
 unsafe extern "C" fn fts3auxFilterMethod(
     mut pCursor: *mut sqlite3_vtab_cursor,
     mut idxNum: ::core::ffi::c_int,
-    mut idxStr: *const ::core::ffi::c_char,
+    mut _idxStr: *const ::core::ffi::c_char,
     mut nVal: ::core::ffi::c_int,
     mut apVal: *mut *mut sqlite3_value,
 ) -> ::core::ffi::c_int {

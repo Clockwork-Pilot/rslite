@@ -1620,8 +1620,8 @@ pub unsafe extern "C" fn sqlite3WalkExprList(
 }
 #[no_mangle]
 pub unsafe extern "C" fn sqlite3WalkWinDefnDummyCallback(
-    mut pWalker: *mut Walker,
-    mut p: *mut Select,
+    mut _pWalker: *mut Walker,
+    mut _p: *mut Select,
 ) {
 }
 #[no_mangle]
@@ -1736,7 +1736,7 @@ pub unsafe extern "C" fn sqlite3WalkSelect(
 #[no_mangle]
 pub unsafe extern "C" fn sqlite3WalkerDepthIncrease(
     mut pWalker: *mut Walker,
-    mut pSelect: *mut Select,
+    mut _pSelect: *mut Select,
 ) -> ::core::ffi::c_int {
     (*pWalker).walkerDepth += 1;
     return WRC_Continue;
@@ -1744,21 +1744,21 @@ pub unsafe extern "C" fn sqlite3WalkerDepthIncrease(
 #[no_mangle]
 pub unsafe extern "C" fn sqlite3WalkerDepthDecrease(
     mut pWalker: *mut Walker,
-    mut pSelect: *mut Select,
+    mut _pSelect: *mut Select,
 ) {
     (*pWalker).walkerDepth -= 1;
 }
 #[no_mangle]
 pub unsafe extern "C" fn sqlite3ExprWalkNoop(
-    mut NotUsed: *mut Walker,
-    mut NotUsed2: *mut Expr,
+    mut _NotUsed: *mut Walker,
+    mut _NotUsed2: *mut Expr,
 ) -> ::core::ffi::c_int {
     return WRC_Continue;
 }
 #[no_mangle]
 pub unsafe extern "C" fn sqlite3SelectWalkNoop(
-    mut NotUsed: *mut Walker,
-    mut NotUsed2: *mut Select,
+    mut _NotUsed: *mut Walker,
+    mut _NotUsed2: *mut Select,
 ) -> ::core::ffi::c_int {
     return WRC_Continue;
 }

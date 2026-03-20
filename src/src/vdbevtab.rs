@@ -1748,10 +1748,10 @@ pub const TABTYP_VTAB: ::core::ffi::c_int = 1 as ::core::ffi::c_int;
 unsafe extern "C" fn bytecodevtabConnect(
     mut db: *mut sqlite3,
     mut pAux: *mut ::core::ffi::c_void,
-    mut argc: ::core::ffi::c_int,
-    mut argv: *const *const ::core::ffi::c_char,
+    mut _argc: ::core::ffi::c_int,
+    mut _argv: *const *const ::core::ffi::c_char,
     mut ppVtab: *mut *mut sqlite3_vtab,
-    mut pzErr: *mut *mut ::core::ffi::c_char,
+    mut _pzErr: *mut *mut ::core::ffi::c_char,
 ) -> ::core::ffi::c_int {
     let mut pNew: *mut bytecodevtab = ::core::ptr::null_mut::<bytecodevtab>();
     let mut rc: ::core::ffi::c_int = 0;
@@ -2016,8 +2016,8 @@ unsafe extern "C" fn bytecodevtabRowid(
 unsafe extern "C" fn bytecodevtabFilter(
     mut pVtabCursor: *mut sqlite3_vtab_cursor,
     mut idxNum: ::core::ffi::c_int,
-    mut idxStr: *const ::core::ffi::c_char,
-    mut argc: ::core::ffi::c_int,
+    mut _idxStr: *const ::core::ffi::c_char,
+    mut _argc: ::core::ffi::c_int,
     mut argv: *mut *mut sqlite3_value,
 ) -> ::core::ffi::c_int {
     let mut pCur: *mut bytecodevtab_cursor = pVtabCursor as *mut bytecodevtab_cursor;

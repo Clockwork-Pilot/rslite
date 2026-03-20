@@ -1,5 +1,5 @@
 use ::c2rust_bitfields;
-use ::libc;
+
 extern "C" {
     pub type sqlite3_value;
     pub type sqlite3_context;
@@ -6649,11 +6649,11 @@ pub unsafe extern "C" fn sqlite3Pragma(
                                                 as *const ::core::ffi::c_char;
                                         } else if sqlite3_file_control(
                                             db,
-                                            (if i_10 != 0 {
+                                            if i_10 != 0 {
                                                 (*(*db).aDb.offset(i_10 as isize)).zDbSName
                                             } else {
                                                 ::core::ptr::null_mut::<::core::ffi::c_char>()
-                                            }),
+                                            },
                                             SQLITE_FCNTL_LOCKSTATE,
                                             &raw mut j_4 as *mut ::core::ffi::c_void,
                                         ) == SQLITE_OK
@@ -6699,8 +6699,8 @@ pub const SQLITE_INTEGRITY_CHECK_ERROR_MAX: ::core::ffi::c_int = 100 as ::core::
 unsafe extern "C" fn pragmaVtabConnect(
     mut db: *mut sqlite3,
     mut pAux: *mut ::core::ffi::c_void,
-    mut argc: ::core::ffi::c_int,
-    mut argv: *const *const ::core::ffi::c_char,
+    mut _argc: ::core::ffi::c_int,
+    mut _argv: *const *const ::core::ffi::c_char,
     mut ppVtab: *mut *mut sqlite3_vtab,
     mut pzErr: *mut *mut ::core::ffi::c_char,
 ) -> ::core::ffi::c_int {
@@ -6908,8 +6908,8 @@ unsafe extern "C" fn pragmaVtabNext(
 }
 unsafe extern "C" fn pragmaVtabFilter(
     mut pVtabCursor: *mut sqlite3_vtab_cursor,
-    mut idxNum: ::core::ffi::c_int,
-    mut idxStr: *const ::core::ffi::c_char,
+    mut _idxNum: ::core::ffi::c_int,
+    mut _idxStr: *const ::core::ffi::c_char,
     mut argc: ::core::ffi::c_int,
     mut argv: *mut *mut sqlite3_value,
 ) -> ::core::ffi::c_int {

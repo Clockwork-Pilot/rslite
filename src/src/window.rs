@@ -1864,8 +1864,8 @@ pub const WRC_Prune: ::core::ffi::c_int = 1 as ::core::ffi::c_int;
 pub const WRC_Abort: ::core::ffi::c_int = 2 as ::core::ffi::c_int;
 unsafe extern "C" fn row_numberStepFunc(
     mut pCtx: *mut sqlite3_context,
-    mut nArg: ::core::ffi::c_int,
-    mut apArg: *mut *mut sqlite3_value,
+    mut _nArg: ::core::ffi::c_int,
+    mut _apArg: *mut *mut sqlite3_value,
 ) {
     let mut p: *mut i64_0 =
         sqlite3_aggregate_context(pCtx, ::core::mem::size_of::<i64_0>() as ::core::ffi::c_int)
@@ -1882,8 +1882,8 @@ unsafe extern "C" fn row_numberValueFunc(mut pCtx: *mut sqlite3_context) {
 }
 unsafe extern "C" fn dense_rankStepFunc(
     mut pCtx: *mut sqlite3_context,
-    mut nArg: ::core::ffi::c_int,
-    mut apArg: *mut *mut sqlite3_value,
+    mut _nArg: ::core::ffi::c_int,
+    mut _apArg: *mut *mut sqlite3_value,
 ) {
     let mut p: *mut CallCount = ::core::ptr::null_mut::<CallCount>();
     p = sqlite3_aggregate_context(
@@ -1910,7 +1910,7 @@ unsafe extern "C" fn dense_rankValueFunc(mut pCtx: *mut sqlite3_context) {
 }
 unsafe extern "C" fn nth_valueStepFunc(
     mut pCtx: *mut sqlite3_context,
-    mut nArg: ::core::ffi::c_int,
+    mut _nArg: ::core::ffi::c_int,
     mut apArg: *mut *mut sqlite3_value,
 ) {
     let mut current_block: u64;
@@ -1984,7 +1984,7 @@ unsafe extern "C" fn nth_valueFinalizeFunc(mut pCtx: *mut sqlite3_context) {
 }
 unsafe extern "C" fn first_valueStepFunc(
     mut pCtx: *mut sqlite3_context,
-    mut nArg: ::core::ffi::c_int,
+    mut _nArg: ::core::ffi::c_int,
     mut apArg: *mut *mut sqlite3_value,
 ) {
     let mut p: *mut NthValueCtx = ::core::ptr::null_mut::<NthValueCtx>();
@@ -2013,8 +2013,8 @@ unsafe extern "C" fn first_valueFinalizeFunc(mut pCtx: *mut sqlite3_context) {
 }
 unsafe extern "C" fn rankStepFunc(
     mut pCtx: *mut sqlite3_context,
-    mut nArg: ::core::ffi::c_int,
-    mut apArg: *mut *mut sqlite3_value,
+    mut _nArg: ::core::ffi::c_int,
+    mut _apArg: *mut *mut sqlite3_value,
 ) {
     let mut p: *mut CallCount = ::core::ptr::null_mut::<CallCount>();
     p = sqlite3_aggregate_context(
@@ -2041,8 +2041,8 @@ unsafe extern "C" fn rankValueFunc(mut pCtx: *mut sqlite3_context) {
 }
 unsafe extern "C" fn percent_rankStepFunc(
     mut pCtx: *mut sqlite3_context,
-    mut nArg: ::core::ffi::c_int,
-    mut apArg: *mut *mut sqlite3_value,
+    mut _nArg: ::core::ffi::c_int,
+    mut _apArg: *mut *mut sqlite3_value,
 ) {
     let mut p: *mut CallCount = ::core::ptr::null_mut::<CallCount>();
     p = sqlite3_aggregate_context(
@@ -2055,8 +2055,8 @@ unsafe extern "C" fn percent_rankStepFunc(
 }
 unsafe extern "C" fn percent_rankInvFunc(
     mut pCtx: *mut sqlite3_context,
-    mut nArg: ::core::ffi::c_int,
-    mut apArg: *mut *mut sqlite3_value,
+    mut _nArg: ::core::ffi::c_int,
+    mut _apArg: *mut *mut sqlite3_value,
 ) {
     let mut p: *mut CallCount = ::core::ptr::null_mut::<CallCount>();
     p = sqlite3_aggregate_context(
@@ -2084,8 +2084,8 @@ unsafe extern "C" fn percent_rankValueFunc(mut pCtx: *mut sqlite3_context) {
 }
 unsafe extern "C" fn cume_distStepFunc(
     mut pCtx: *mut sqlite3_context,
-    mut nArg: ::core::ffi::c_int,
-    mut apArg: *mut *mut sqlite3_value,
+    mut _nArg: ::core::ffi::c_int,
+    mut _apArg: *mut *mut sqlite3_value,
 ) {
     let mut p: *mut CallCount = ::core::ptr::null_mut::<CallCount>();
     p = sqlite3_aggregate_context(
@@ -2098,8 +2098,8 @@ unsafe extern "C" fn cume_distStepFunc(
 }
 unsafe extern "C" fn cume_distInvFunc(
     mut pCtx: *mut sqlite3_context,
-    mut nArg: ::core::ffi::c_int,
-    mut apArg: *mut *mut sqlite3_value,
+    mut _nArg: ::core::ffi::c_int,
+    mut _apArg: *mut *mut sqlite3_value,
 ) {
     let mut p: *mut CallCount = ::core::ptr::null_mut::<CallCount>();
     p = sqlite3_aggregate_context(
@@ -2119,7 +2119,7 @@ unsafe extern "C" fn cume_distValueFunc(mut pCtx: *mut sqlite3_context) {
 }
 unsafe extern "C" fn ntileStepFunc(
     mut pCtx: *mut sqlite3_context,
-    mut nArg: ::core::ffi::c_int,
+    mut _nArg: ::core::ffi::c_int,
     mut apArg: *mut *mut sqlite3_value,
 ) {
     let mut p: *mut NtileCtx = ::core::ptr::null_mut::<NtileCtx>();
@@ -2145,8 +2145,8 @@ unsafe extern "C" fn ntileStepFunc(
 }
 unsafe extern "C" fn ntileInvFunc(
     mut pCtx: *mut sqlite3_context,
-    mut nArg: ::core::ffi::c_int,
-    mut apArg: *mut *mut sqlite3_value,
+    mut _nArg: ::core::ffi::c_int,
+    mut _apArg: *mut *mut sqlite3_value,
 ) {
     let mut p: *mut NtileCtx = ::core::ptr::null_mut::<NtileCtx>();
     p = sqlite3_aggregate_context(
@@ -2190,7 +2190,7 @@ unsafe extern "C" fn ntileValueFunc(mut pCtx: *mut sqlite3_context) {
 }
 unsafe extern "C" fn last_valueStepFunc(
     mut pCtx: *mut sqlite3_context,
-    mut nArg: ::core::ffi::c_int,
+    mut _nArg: ::core::ffi::c_int,
     mut apArg: *mut *mut sqlite3_value,
 ) {
     let mut p: *mut LastValueCtx = ::core::ptr::null_mut::<LastValueCtx>();
@@ -2210,8 +2210,8 @@ unsafe extern "C" fn last_valueStepFunc(
 }
 unsafe extern "C" fn last_valueInvFunc(
     mut pCtx: *mut sqlite3_context,
-    mut nArg: ::core::ffi::c_int,
-    mut apArg: *mut *mut sqlite3_value,
+    mut _nArg: ::core::ffi::c_int,
+    mut _apArg: *mut *mut sqlite3_value,
 ) {
     let mut p: *mut LastValueCtx = ::core::ptr::null_mut::<LastValueCtx>();
     p = sqlite3_aggregate_context(
@@ -2268,12 +2268,12 @@ static mut leadName: [::core::ffi::c_char; 5] =
 static mut lagName: [::core::ffi::c_char; 4] =
     unsafe { ::core::mem::transmute::<[u8; 4], [::core::ffi::c_char; 4]>(*b"lag\0") };
 unsafe extern "C" fn noopStepFunc(
-    mut p: *mut sqlite3_context,
-    mut n: ::core::ffi::c_int,
-    mut a: *mut *mut sqlite3_value,
+    mut _p: *mut sqlite3_context,
+    mut _n: ::core::ffi::c_int,
+    mut _a: *mut *mut sqlite3_value,
 ) {
 }
-unsafe extern "C" fn noopValueFunc(mut p: *mut sqlite3_context) {}
+unsafe extern "C" fn noopValueFunc(mut _p: *mut sqlite3_context) {}
 #[no_mangle]
 pub unsafe extern "C" fn sqlite3WindowFunctions() {
     static mut aWindowFuncs: [FuncDef; 15] = unsafe {

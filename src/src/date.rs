@@ -1,5 +1,5 @@
 use ::c2rust_bitfields;
-use ::libc;
+
 extern "C" {
     pub type sqlite3_value;
     pub type sqlite3_context;
@@ -3592,8 +3592,8 @@ unsafe extern "C" fn strftimeFunc(
 }
 unsafe extern "C" fn ctimeFunc(
     mut context: *mut sqlite3_context,
-    mut NotUsed: ::core::ffi::c_int,
-    mut NotUsed2: *mut *mut sqlite3_value,
+    mut _NotUsed: ::core::ffi::c_int,
+    mut _NotUsed2: *mut *mut sqlite3_value,
 ) {
     timeFunc(
         context,
@@ -3603,8 +3603,8 @@ unsafe extern "C" fn ctimeFunc(
 }
 unsafe extern "C" fn cdateFunc(
     mut context: *mut sqlite3_context,
-    mut NotUsed: ::core::ffi::c_int,
-    mut NotUsed2: *mut *mut sqlite3_value,
+    mut _NotUsed: ::core::ffi::c_int,
+    mut _NotUsed2: *mut *mut sqlite3_value,
 ) {
     dateFunc(
         context,
@@ -3614,7 +3614,7 @@ unsafe extern "C" fn cdateFunc(
 }
 unsafe extern "C" fn timediffFunc(
     mut context: *mut sqlite3_context,
-    mut NotUsed1: ::core::ffi::c_int,
+    mut _NotUsed1: ::core::ffi::c_int,
     mut argv: *mut *mut sqlite3_value,
 ) {
     let mut sign: ::core::ffi::c_char = 0;
@@ -3780,8 +3780,8 @@ unsafe extern "C" fn timediffFunc(
 }
 unsafe extern "C" fn ctimestampFunc(
     mut context: *mut sqlite3_context,
-    mut NotUsed: ::core::ffi::c_int,
-    mut NotUsed2: *mut *mut sqlite3_value,
+    mut _NotUsed: ::core::ffi::c_int,
+    mut _NotUsed2: *mut *mut sqlite3_value,
 ) {
     datetimeFunc(
         context,

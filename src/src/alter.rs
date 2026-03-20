@@ -1,5 +1,5 @@
 use ::c2rust_bitfields;
-use ::libc;
+
 extern "C" {
     pub type sqlite3_value;
     pub type sqlite3_context;
@@ -3328,7 +3328,7 @@ unsafe extern "C" fn renameParseCleanup(mut pParse: *mut Parse) {
 }
 unsafe extern "C" fn renameColumnFunc(
     mut context: *mut sqlite3_context,
-    mut NotUsed: ::core::ffi::c_int,
+    mut _NotUsed: ::core::ffi::c_int,
     mut argv: *mut *mut sqlite3_value,
 ) {
     let mut current_block: u64;
@@ -3754,7 +3754,7 @@ unsafe extern "C" fn renameTableSelectCb(
 }
 unsafe extern "C" fn renameTableFunc(
     mut context: *mut sqlite3_context,
-    mut NotUsed: ::core::ffi::c_int,
+    mut _NotUsed: ::core::ffi::c_int,
     mut argv: *mut *mut sqlite3_value,
 ) {
     let mut db: *mut sqlite3 = sqlite3_context_db_handle(context);
@@ -4080,7 +4080,7 @@ unsafe extern "C" fn renameQuotefixExprCb(
 }
 unsafe extern "C" fn renameQuotefixFunc(
     mut context: *mut sqlite3_context,
-    mut NotUsed: ::core::ffi::c_int,
+    mut _NotUsed: ::core::ffi::c_int,
     mut argv: *mut *mut sqlite3_value,
 ) {
     let mut db: *mut sqlite3 = sqlite3_context_db_handle(context);
@@ -4297,7 +4297,7 @@ unsafe extern "C" fn renameQuotefixFunc(
 }
 unsafe extern "C" fn renameTableTest(
     mut context: *mut sqlite3_context,
-    mut NotUsed: ::core::ffi::c_int,
+    mut _NotUsed: ::core::ffi::c_int,
     mut argv: *mut *mut sqlite3_value,
 ) {
     let mut db: *mut sqlite3 = sqlite3_context_db_handle(context);
@@ -4479,7 +4479,7 @@ unsafe extern "C" fn renameTableTest(
 }
 unsafe extern "C" fn dropColumnFunc(
     mut context: *mut sqlite3_context,
-    mut NotUsed: ::core::ffi::c_int,
+    mut _NotUsed: ::core::ffi::c_int,
     mut argv: *mut *mut sqlite3_value,
 ) {
     let mut db: *mut sqlite3 = sqlite3_context_db_handle(context);

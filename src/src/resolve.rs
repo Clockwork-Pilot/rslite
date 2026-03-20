@@ -3302,7 +3302,7 @@ unsafe extern "C" fn resolveExprStep(
     };
 }
 unsafe extern "C" fn resolveAsName(
-    mut pParse: *mut Parse,
+    mut _pParse: *mut Parse,
     mut pEList: *mut ExprList,
     mut pE: *mut Expr,
 ) -> ::core::ffi::c_int {
@@ -3586,7 +3586,7 @@ pub unsafe extern "C" fn sqlite3ResolveOrderGroupBy(
     return 0 as ::core::ffi::c_int;
 }
 unsafe extern "C" fn resolveRemoveWindowsCb(
-    mut pWalker: *mut Walker,
+    mut _pWalker: *mut Walker,
     mut pExpr: *mut Expr,
 ) -> ::core::ffi::c_int {
     if (*pExpr).flags & 0x1000000 as ::core::ffi::c_int as u32_0 != 0 as u32_0 {

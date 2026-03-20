@@ -1787,7 +1787,7 @@ unsafe extern "C" fn statAccumDestructor(mut pOld: *mut ::core::ffi::c_void) {
 }
 unsafe extern "C" fn statInit(
     mut context: *mut sqlite3_context,
-    mut argc: ::core::ffi::c_int,
+    mut _argc: ::core::ffi::c_int,
     mut argv: *mut *mut sqlite3_value,
 ) {
     let mut p: *mut StatAccum = ::core::ptr::null_mut::<StatAccum>();
@@ -1852,7 +1852,7 @@ static mut statInitFuncdef: FuncDef = unsafe {
 };
 unsafe extern "C" fn statPush(
     mut context: *mut sqlite3_context,
-    mut argc: ::core::ffi::c_int,
+    mut _argc: ::core::ffi::c_int,
     mut argv: *mut *mut sqlite3_value,
 ) {
     let mut i: ::core::ffi::c_int = 0;
@@ -1909,7 +1909,7 @@ static mut statPushFuncdef: FuncDef = unsafe {
 pub const STAT_GET_STAT1: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
 unsafe extern "C" fn statGet(
     mut context: *mut sqlite3_context,
-    mut argc: ::core::ffi::c_int,
+    mut _argc: ::core::ffi::c_int,
     mut argv: *mut *mut sqlite3_value,
 ) {
     let mut p: *mut StatAccum =
@@ -1988,7 +1988,7 @@ static mut statGetFuncdef: FuncDef = unsafe {
 unsafe extern "C" fn callStatGet(
     mut pParse: *mut Parse,
     mut regStat: ::core::ffi::c_int,
-    mut iParam: ::core::ffi::c_int,
+    mut _iParam: ::core::ffi::c_int,
     mut regOut: ::core::ffi::c_int,
 ) {
     sqlite3VdbeAddFunctionCall(
@@ -2466,7 +2466,7 @@ pub unsafe extern "C" fn sqlite3Analyze(
 unsafe extern "C" fn decodeIntArray(
     mut zIntArray: *mut ::core::ffi::c_char,
     mut nOut: ::core::ffi::c_int,
-    mut aOut: *mut tRowcnt,
+    mut _aOut: *mut tRowcnt,
     mut aLog: *mut LogEst,
     mut pIndex: *mut Index,
 ) {
@@ -2532,9 +2532,9 @@ unsafe extern "C" fn decodeIntArray(
 }
 unsafe extern "C" fn analysisLoader(
     mut pData: *mut ::core::ffi::c_void,
-    mut argc: ::core::ffi::c_int,
+    mut _argc: ::core::ffi::c_int,
     mut argv: *mut *mut ::core::ffi::c_char,
-    mut NotUsed: *mut *mut ::core::ffi::c_char,
+    mut _NotUsed: *mut *mut ::core::ffi::c_char,
 ) -> ::core::ffi::c_int {
     let mut pInfo: *mut analysisInfo = pData as *mut analysisInfo;
     let mut pIndex: *mut Index = ::core::ptr::null_mut::<Index>();
@@ -2625,7 +2625,7 @@ unsafe extern "C" fn analysisLoader(
     return 0 as ::core::ffi::c_int;
 }
 #[no_mangle]
-pub unsafe extern "C" fn sqlite3DeleteIndexSamples(mut db: *mut sqlite3, mut pIdx: *mut Index) {}
+pub unsafe extern "C" fn sqlite3DeleteIndexSamples(mut _db: *mut sqlite3, mut _pIdx: *mut Index) {}
 #[no_mangle]
 pub unsafe extern "C" fn sqlite3AnalysisLoad(
     mut db: *mut sqlite3,

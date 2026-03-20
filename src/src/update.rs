@@ -1860,8 +1860,8 @@ unsafe extern "C" fn updateFromSelect(
     mut pChanges: *mut ExprList,
     mut pTabList: *mut SrcList,
     mut pWhere: *mut Expr,
-    mut pOrderBy: *mut ExprList,
-    mut pLimit: *mut Expr,
+    mut _pOrderBy: *mut ExprList,
+    mut _pLimit: *mut Expr,
 ) {
     let mut i: ::core::ffi::c_int = 0;
     let mut dest: SelectDest = SelectDest {

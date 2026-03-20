@@ -149,7 +149,7 @@ unsafe extern "C" fn simpleDestroy(mut pTokenizer: *mut sqlite3_tokenizer) -> ::
     return SQLITE_OK;
 }
 unsafe extern "C" fn simpleOpen(
-    mut pTokenizer: *mut sqlite3_tokenizer,
+    mut _pTokenizer: *mut sqlite3_tokenizer,
     mut pInput: *const ::core::ffi::c_char,
     mut nBytes: ::core::ffi::c_int,
     mut ppCursor: *mut *mut sqlite3_tokenizer_cursor,

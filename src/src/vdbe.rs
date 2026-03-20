@@ -6908,11 +6908,11 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut Vdbe) -> ::core::ffi::c_int
                         if x_2 <= 0 as i64_0
                             || sqlite3AddInt64(
                                 &raw mut x_2,
-                                (if (*pIn3).u.i > 0 as i64_0 {
+                                if (*pIn3).u.i > 0 as i64_0 {
                                     (*pIn3).u.i
                                 } else {
                                     0 as i64_0
-                                }),
+                                },
                             ) != 0
                         {
                             (*pOut).u.i = -(1 as ::core::ffi::c_int) as i64_0;
@@ -7750,11 +7750,11 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut Vdbe) -> ::core::ffi::c_int
                             && (*p).minWriteFileFormat as ::core::ffi::c_int
                                 != 254 as ::core::ffi::c_int
                             && {
-                                zTrace = (if !(*pOp).p4.z.is_null() {
+                                zTrace = if !(*pOp).p4.z.is_null() {
                                     (*pOp).p4.z
                                 } else {
                                     (*p).zSql
-                                });
+                                };
                                 !zTrace.is_null()
                             }
                         {

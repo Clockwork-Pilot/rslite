@@ -9573,7 +9573,7 @@ static mut yyRuleInfoNRhs: [::core::ffi::c_schar; 409] = [
 unsafe extern "C" fn yy_reduce(
     mut yypParser: *mut yyParser,
     mut yyruleno: ::core::ffi::c_uint,
-    mut yyLookahead: ::core::ffi::c_int,
+    mut _yyLookahead: ::core::ffi::c_int,
     mut yyLookaheadToken: Token,
     mut pParse: *mut Parse,
 ) -> ::core::ffi::c_ushort {
@@ -14366,7 +14366,7 @@ unsafe extern "C" fn yy_reduce(
 }
 unsafe extern "C" fn yy_syntax_error(
     mut yypParser: *mut yyParser,
-    mut yymajor: ::core::ffi::c_int,
+    mut _yymajor: ::core::ffi::c_int,
     mut yyminor: Token,
 ) {
     let mut pParse: *mut Parse = (*yypParser).pParse;

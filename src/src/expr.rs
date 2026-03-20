@@ -4125,7 +4125,7 @@ pub unsafe extern "C" fn sqlite3ExprListFlags(mut pList: *const ExprList) -> u32
 #[no_mangle]
 pub unsafe extern "C" fn sqlite3SelectWalkFail(
     mut pWalker: *mut Walker,
-    mut NotUsed: *mut Select,
+    mut _NotUsed: *mut Select,
 ) -> ::core::ffi::c_int {
     (*pWalker).eCode = 0 as u16_0;
     return WRC_Abort;

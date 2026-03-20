@@ -1,5 +1,5 @@
 use ::c2rust_bitfields;
-use ::libc;
+
 extern "C" {
     pub type sqlite3_value;
     pub type sqlite3_context;
@@ -1555,11 +1555,11 @@ pub const SQLITE_NOMEM_BKPT: ::core::ffi::c_int = SQLITE_NOMEM;
 pub const DBPAGE_COLUMN_SCHEMA: ::core::ffi::c_int = 2 as ::core::ffi::c_int;
 unsafe extern "C" fn dbpageConnect(
     mut db: *mut sqlite3,
-    mut pAux: *mut ::core::ffi::c_void,
-    mut argc: ::core::ffi::c_int,
-    mut argv: *const *const ::core::ffi::c_char,
+    mut _pAux: *mut ::core::ffi::c_void,
+    mut _argc: ::core::ffi::c_int,
+    mut _argv: *const *const ::core::ffi::c_char,
     mut ppVtab: *mut *mut sqlite3_vtab,
-    mut pzErr: *mut *mut ::core::ffi::c_char,
+    mut _pzErr: *mut *mut ::core::ffi::c_char,
 ) -> ::core::ffi::c_int {
     let mut pTab: *mut DbpageTable = ::core::ptr::null_mut::<DbpageTable>();
     let mut rc: ::core::ffi::c_int = SQLITE_OK;
@@ -1593,7 +1593,7 @@ unsafe extern "C" fn dbpageDisconnect(mut pVtab: *mut sqlite3_vtab) -> ::core::f
     return SQLITE_OK;
 }
 unsafe extern "C" fn dbpageBestIndex(
-    mut tab: *mut sqlite3_vtab,
+    mut _tab: *mut sqlite3_vtab,
     mut pIdxInfo: *mut sqlite3_index_info,
 ) -> ::core::ffi::c_int {
     let mut i: ::core::ffi::c_int = 0;
@@ -1699,8 +1699,8 @@ unsafe extern "C" fn dbpageEof(mut pCursor: *mut sqlite3_vtab_cursor) -> ::core:
 unsafe extern "C" fn dbpageFilter(
     mut pCursor: *mut sqlite3_vtab_cursor,
     mut idxNum: ::core::ffi::c_int,
-    mut idxStr: *const ::core::ffi::c_char,
-    mut argc: ::core::ffi::c_int,
+    mut _idxStr: *const ::core::ffi::c_char,
+    mut _argc: ::core::ffi::c_int,
     mut argv: *mut *mut sqlite3_value,
 ) -> ::core::ffi::c_int {
     let mut pCsr: *mut DbpageCursor = pCursor as *mut DbpageCursor;
@@ -1829,7 +1829,7 @@ unsafe extern "C" fn dbpageUpdate(
     mut pVtab: *mut sqlite3_vtab,
     mut argc: ::core::ffi::c_int,
     mut argv: *mut *mut sqlite3_value,
-    mut pRowid: *mut sqlite_int64,
+    mut _pRowid: *mut sqlite_int64,
 ) -> ::core::ffi::c_int {
     let mut current_block: u64;
     let mut pTab: *mut DbpageTable = pVtab as *mut DbpageTable;
@@ -1991,7 +1991,7 @@ unsafe extern "C" fn dbpageSync(mut pVtab: *mut sqlite3_vtab) -> ::core::ffi::c_
 }
 unsafe extern "C" fn dbpageRollbackTo(
     mut pVtab: *mut sqlite3_vtab,
-    mut notUsed1: ::core::ffi::c_int,
+    mut _notUsed1: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
     let mut pTab: *mut DbpageTable = pVtab as *mut DbpageTable;
     (*pTab).pgnoTrunc = 0 as Pgno;

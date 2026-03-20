@@ -1,5 +1,5 @@
 use ::c2rust_bitfields;
-use ::libc;
+
 extern "C" {
     pub type sqlite3_value;
     pub type sqlite3_context;
@@ -1619,7 +1619,7 @@ static mut zDbstatSchema: [::core::ffi::c_char; 258] = unsafe {
 };
 unsafe extern "C" fn statConnect(
     mut db: *mut sqlite3,
-    mut pAux: *mut ::core::ffi::c_void,
+    mut _pAux: *mut ::core::ffi::c_void,
     mut argc: ::core::ffi::c_int,
     mut argv: *const *const ::core::ffi::c_char,
     mut ppVtab: *mut *mut sqlite3_vtab,
@@ -1674,7 +1674,7 @@ unsafe extern "C" fn statDisconnect(mut pVtab: *mut sqlite3_vtab) -> ::core::ffi
     return SQLITE_OK;
 }
 unsafe extern "C" fn statBestIndex(
-    mut tab: *mut sqlite3_vtab,
+    mut _tab: *mut sqlite3_vtab,
     mut pIdxInfo: *mut sqlite3_index_info,
 ) -> ::core::ffi::c_int {
     let mut i: ::core::ffi::c_int = 0;
@@ -2399,8 +2399,8 @@ unsafe extern "C" fn statEof(mut pCursor: *mut sqlite3_vtab_cursor) -> ::core::f
 unsafe extern "C" fn statFilter(
     mut pCursor: *mut sqlite3_vtab_cursor,
     mut idxNum: ::core::ffi::c_int,
-    mut idxStr: *const ::core::ffi::c_char,
-    mut argc: ::core::ffi::c_int,
+    mut _idxStr: *const ::core::ffi::c_char,
+    mut _argc: ::core::ffi::c_int,
     mut argv: *mut *mut sqlite3_value,
 ) -> ::core::ffi::c_int {
     let mut pCsr: *mut StatCursor = pCursor as *mut StatCursor;

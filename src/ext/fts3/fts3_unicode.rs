@@ -393,7 +393,7 @@ unsafe extern "C" fn unicodeCreate(
     return rc;
 }
 unsafe extern "C" fn unicodeOpen(
-    mut p: *mut sqlite3_tokenizer,
+    mut _p: *mut sqlite3_tokenizer,
     mut aInput: *const ::core::ffi::c_char,
     mut nInput: ::core::ffi::c_int,
     mut pp: *mut *mut sqlite3_tokenizer_cursor,
