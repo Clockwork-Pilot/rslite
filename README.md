@@ -12,3 +12,10 @@ docker run -it --rm \
     -v $(pwd):/workspace:Z \
     sqlite-crust
 ```
+
+## For debug with Claude (from scripts folder)
+docker run --rm \
+    --user 1000:1000 \
+    -v $(pwd)/../crust-sqlite/.credentials:/home/node/:Z \
+    -v $(pwd)/../crust-sqlite:/workspace:Z \
+    sqlite-crust -c "./build_all.sh"
