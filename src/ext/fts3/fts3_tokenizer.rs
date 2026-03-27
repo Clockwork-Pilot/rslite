@@ -580,8 +580,9 @@ unsafe extern "C" fn testFunc(
         {
             zErr = b"error in xOpen()\0" as *const u8 as *const ::core::ffi::c_char;
         } else {
+            let __p_ref = unsafe { &mut *p };
             while crate::sqlite3_h::SQLITE_OK
-                == (*p).xNext.expect("non-null function pointer")(
+                == __p_ref.xNext.expect("non-null function pointer")(
                     pCsr,
                     &raw mut zToken,
                     &raw mut nToken,
@@ -608,9 +609,9 @@ unsafe extern "C" fn testFunc(
                     crate::stdlib::Tcl_NewStringObj(zToken, nToken as crate::stdlib::Tcl_Size),
                 );
             }
-            if crate::sqlite3_h::SQLITE_OK != (*p).xClose.expect("non-null function pointer")(pCsr) {
+            if crate::sqlite3_h::SQLITE_OK != __p_ref.xClose.expect("non-null function pointer")(pCsr) {
                 zErr = b"error in xClose()\0" as *const u8 as *const ::core::ffi::c_char;
-            } else if crate::sqlite3_h::SQLITE_OK != (*p).xDestroy.expect("non-null function pointer")(pTokenizer) {
+            } else if crate::sqlite3_h::SQLITE_OK != __p_ref.xDestroy.expect("non-null function pointer")(pTokenizer) {
                 zErr = b"error in xDestroy()\0" as *const u8 as *const ::core::ffi::c_char;
             }
         }
@@ -629,8 +630,9 @@ unsafe extern "C" fn testFunc(
         );
     }
     let mut _objPtr: *mut crate::stdlib::Tcl_Obj = pRet;
-    let fresh0 = (*_objPtr).refCount;
-    (*_objPtr).refCount = (*_objPtr).refCount - 1;
+    let ___objPtr_ref = unsafe { &mut *_objPtr };
+    let fresh0 = ___objPtr_ref.refCount;
+    ___objPtr_ref.refCount = ___objPtr_ref.refCount - 1;
     if fresh0 <= 1 as crate::stdlib::Tcl_Size {
         crate::stdlib::TclFreeObj(_objPtr);
     }

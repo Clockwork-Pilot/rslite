@@ -1925,29 +1925,30 @@ unsafe extern "C" fn sqlite3LoadExtension(
                     crate::src::src::os::sqlite3OsDlClose(pVfs as *mut crate::sqlite3_h::sqlite3_vfs, handle);
                     return crate::sqlite3_h::SQLITE_ERROR;
                 }
+                let __db_ref = unsafe { &mut *db };
                 aHandle = crate::src::src::malloc::sqlite3DbMallocZero(
                     
                     db as *mut crate::sqliteInt_h::sqlite3,
                     (::core::mem::size_of::<*mut ::core::ffi::c_void>() as usize)
-                        .wrapping_mul(((*db).nExtension + 1 as ::core::ffi::c_int) as usize)
+                        .wrapping_mul((__db_ref.nExtension + 1 as ::core::ffi::c_int) as usize)
                         as crate::src::ext::rtree::rtree::u64_0,
                 ) as *mut *mut ::core::ffi::c_void;
                 if aHandle.is_null() {
                     return crate::sqliteInt_h::SQLITE_NOMEM_BKPT;
                 }
-                if (*db).nExtension > 0 as ::core::ffi::c_int {
+                if __db_ref.nExtension > 0 as ::core::ffi::c_int {
                     ::libc::memcpy(
                         aHandle as *mut ::core::ffi::c_void,
-                        (*db).aExtension as *const ::core::ffi::c_void,
+                        __db_ref.aExtension as *const ::core::ffi::c_void,
                         (::core::mem::size_of::<*mut ::core::ffi::c_void>() as crate::__stddef_size_t_h::size_t)
-                            .wrapping_mul((*db).nExtension as crate::__stddef_size_t_h::size_t),
+                            .wrapping_mul(__db_ref.nExtension as crate::__stddef_size_t_h::size_t),
                     );
                 }
-                crate::src::src::malloc::sqlite3DbFree(db as *mut crate::sqliteInt_h::sqlite3, (*db).aExtension as *mut ::core::ffi::c_void);
-                (*db).aExtension = aHandle;
-                let fresh1 = (*db).nExtension;
-                (*db).nExtension = (*db).nExtension + 1;
-                let ref mut fresh2 = *(*db).aExtension.offset(fresh1 as isize);
+                crate::src::src::malloc::sqlite3DbFree(db as *mut crate::sqliteInt_h::sqlite3, __db_ref.aExtension as *mut ::core::ffi::c_void);
+                __db_ref.aExtension = aHandle;
+                let fresh1 = __db_ref.nExtension;
+                __db_ref.nExtension = __db_ref.nExtension + 1;
+                let ref mut fresh2 = *__db_ref.aExtension.offset(fresh1 as isize);
                 *fresh2 = handle;
                 return crate::sqlite3_h::SQLITE_OK;
             }

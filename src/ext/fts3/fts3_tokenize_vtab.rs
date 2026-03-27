@@ -182,9 +182,10 @@ unsafe extern "C" fn fts3tokConnectMethod(
             0 as ::core::ffi::c_int,
             ::core::mem::size_of::<Fts3tokTable>() as crate::__stddef_size_t_h::size_t,
         );
-        (*pTab).pMod = pMod;
-        (*pTab).pTok = pTok;
-        *ppVtab = &raw mut (*pTab).base;
+        let __pTab_ref = unsafe { &mut *pTab };
+        __pTab_ref.pMod = pMod;
+        __pTab_ref.pTok = pTok;
+        *ppVtab = &raw mut __pTab_ref.base;
     } else if !pTok.is_null() {
         (*pMod).xDestroy.expect("non-null function pointer")(pTok);
     }
@@ -206,15 +207,16 @@ unsafe extern "C" fn fts3tokBestIndexMethod(
     let mut i: ::core::ffi::c_int = 0;
     i = 0 as ::core::ffi::c_int;
     while i < (*pInfo).nConstraint {
-        if (*(*pInfo).aConstraint.offset(i as isize)).usable as ::core::ffi::c_int != 0
-            && (*(*pInfo).aConstraint.offset(i as isize)).iColumn == 0 as ::core::ffi::c_int
-            && (*(*pInfo).aConstraint.offset(i as isize)).op as ::core::ffi::c_int
+        let __pInfo_ref = unsafe { &mut *pInfo };
+        if (*__pInfo_ref.aConstraint.offset(i as isize)).usable as ::core::ffi::c_int != 0
+            && (*__pInfo_ref.aConstraint.offset(i as isize)).iColumn == 0 as ::core::ffi::c_int
+            && (*__pInfo_ref.aConstraint.offset(i as isize)).op as ::core::ffi::c_int
                 == crate::sqlite3_h::SQLITE_INDEX_CONSTRAINT_EQ
         {
-            (*pInfo).idxNum = 1 as ::core::ffi::c_int;
-            (*(*pInfo).aConstraintUsage.offset(i as isize)).argvIndex = 1 as ::core::ffi::c_int;
-            (*(*pInfo).aConstraintUsage.offset(i as isize)).omit = 1 as ::core::ffi::c_uchar;
-            (*pInfo).estimatedCost = 1 as ::core::ffi::c_int as ::core::ffi::c_double;
+            __pInfo_ref.idxNum = 1 as ::core::ffi::c_int;
+            (*__pInfo_ref.aConstraintUsage.offset(i as isize)).argvIndex = 1 as ::core::ffi::c_int;
+            (*__pInfo_ref.aConstraintUsage.offset(i as isize)).omit = 1 as ::core::ffi::c_uchar;
+            __pInfo_ref.estimatedCost = 1 as ::core::ffi::c_int as ::core::ffi::c_double;
             return crate::sqlite3_h::SQLITE_OK;
         }
         i += 1;
@@ -243,19 +245,20 @@ unsafe extern "C" fn fts3tokOpenMethod(
 }
 
 unsafe extern "C" fn fts3tokResetCursor(mut pCsr: *mut Fts3tokCursor) {
-    if !(*pCsr).pCsr.is_null() {
-        let mut pTab: *mut Fts3tokTable = (*pCsr).base.pVtab as *mut Fts3tokTable;
-        (*(*pTab).pMod).xClose.expect("non-null function pointer")((*pCsr).pCsr);
-        (*pCsr).pCsr = ::core::ptr::null_mut::<crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_cursor>();
+    let __pCsr_ref = unsafe { &mut *pCsr };
+    if !__pCsr_ref.pCsr.is_null() {
+        let mut pTab: *mut Fts3tokTable = __pCsr_ref.base.pVtab as *mut Fts3tokTable;
+        (*(*pTab).pMod).xClose.expect("non-null function pointer")(__pCsr_ref.pCsr);
+        __pCsr_ref.pCsr = ::core::ptr::null_mut::<crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_cursor>();
     }
-    crate::src::src::malloc::sqlite3_free((*pCsr).zInput as *mut ::core::ffi::c_void);
-    (*pCsr).zInput = ::core::ptr::null_mut::<::core::ffi::c_char>();
-    (*pCsr).zToken = ::core::ptr::null::<::core::ffi::c_char>();
-    (*pCsr).nToken = 0 as ::core::ffi::c_int;
-    (*pCsr).iStart = 0 as ::core::ffi::c_int;
-    (*pCsr).iEnd = 0 as ::core::ffi::c_int;
-    (*pCsr).iPos = 0 as ::core::ffi::c_int;
-    (*pCsr).iRowid = 0 as ::core::ffi::c_int;
+    crate::src::src::malloc::sqlite3_free(__pCsr_ref.zInput as *mut ::core::ffi::c_void);
+    __pCsr_ref.zInput = ::core::ptr::null_mut::<::core::ffi::c_char>();
+    __pCsr_ref.zToken = ::core::ptr::null::<::core::ffi::c_char>();
+    __pCsr_ref.nToken = 0 as ::core::ffi::c_int;
+    __pCsr_ref.iStart = 0 as ::core::ffi::c_int;
+    __pCsr_ref.iEnd = 0 as ::core::ffi::c_int;
+    __pCsr_ref.iPos = 0 as ::core::ffi::c_int;
+    __pCsr_ref.iRowid = 0 as ::core::ffi::c_int;
 }
 
 unsafe extern "C" fn fts3tokCloseMethod(
@@ -273,14 +276,15 @@ unsafe extern "C" fn fts3tokNextMethod(
     let mut pCsr: *mut Fts3tokCursor = pCursor as *mut Fts3tokCursor;
     let mut pTab: *mut Fts3tokTable = (*pCursor).pVtab as *mut Fts3tokTable;
     let mut rc: ::core::ffi::c_int = 0;
-    (*pCsr).iRowid += 1;
+    let __pCsr_ref = unsafe { &mut *pCsr };
+    __pCsr_ref.iRowid += 1;
     rc = (*(*pTab).pMod).xNext.expect("non-null function pointer")(
-        (*pCsr).pCsr,
-        &raw mut (*pCsr).zToken,
-        &raw mut (*pCsr).nToken,
-        &raw mut (*pCsr).iStart,
-        &raw mut (*pCsr).iEnd,
-        &raw mut (*pCsr).iPos,
+        __pCsr_ref.pCsr,
+        &raw mut __pCsr_ref.zToken,
+        &raw mut __pCsr_ref.nToken,
+        &raw mut __pCsr_ref.iStart,
+        &raw mut __pCsr_ref.iEnd,
+        &raw mut __pCsr_ref.iPos,
     );
     if rc != crate::sqlite3_h::SQLITE_OK {
         fts3tokResetCursor(pCsr);
@@ -313,22 +317,23 @@ unsafe extern "C" fn fts3tokFilterMethod(
         if (*pCsr).zInput.is_null() {
             rc = crate::sqlite3_h::SQLITE_NOMEM;
         } else {
+            let __pCsr_ref = unsafe { &mut *pCsr };
             if nByte > 0 as crate::sqlite3_h::sqlite3_int64 {
                 ::libc::memcpy(
-                    (*pCsr).zInput as *mut ::core::ffi::c_void,
+                    __pCsr_ref.zInput as *mut ::core::ffi::c_void,
                     zByte as *const ::core::ffi::c_void,
                     nByte as crate::__stddef_size_t_h::size_t,
                 );
             }
-            *(*pCsr).zInput.offset(nByte as isize) = 0 as ::core::ffi::c_char;
+            *__pCsr_ref.zInput.offset(nByte as isize) = 0 as ::core::ffi::c_char;
             rc = (*(*pTab).pMod).xOpen.expect("non-null function pointer")(
                 (*pTab).pTok,
-                (*pCsr).zInput,
+                __pCsr_ref.zInput,
                 nByte as ::core::ffi::c_int,
-                &raw mut (*pCsr).pCsr,
+                &raw mut __pCsr_ref.pCsr,
             );
             if rc == crate::sqlite3_h::SQLITE_OK {
-                (*(*pCsr).pCsr).pTokenizer = (*pTab).pTok;
+                (*__pCsr_ref.pCsr).pTokenizer = (*pTab).pTok;
             }
         }
     }

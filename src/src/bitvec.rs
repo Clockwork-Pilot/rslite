@@ -123,8 +123,9 @@ pub unsafe extern "C" fn sqlite3BitvecSet(mut p: *mut Bitvec, mut i: crate::src:
         let mut bin: crate::src::ext::rtree::rtree::u32_0 = i.wrapping_div((*p).iDivisor);
         i = i.wrapping_rem((*p).iDivisor);
         if (*p).u.apSub[bin as usize].is_null() {
-            (*p).u.apSub[bin as usize] = sqlite3BitvecCreate((*p).iDivisor);
-            if (*p).u.apSub[bin as usize].is_null() {
+            let __p_ref = unsafe { &mut *p };
+            __p_ref.u.apSub[bin as usize] = sqlite3BitvecCreate(__p_ref.iDivisor);
+            if __p_ref.u.apSub[bin as usize].is_null() {
                 return crate::sqliteInt_h::SQLITE_NOMEM_BKPT;
             }
         }
@@ -176,22 +177,23 @@ pub unsafe extern "C" fn sqlite3BitvecSet(mut p: *mut Bitvec, mut i: crate::src:
                 if aiValues.is_null() {
                     return crate::sqliteInt_h::SQLITE_NOMEM_BKPT;
                 } else {
+                    let __p_ref = unsafe { &mut *p };
                     ::libc::memcpy(
                         aiValues as *mut ::core::ffi::c_void,
-                        &raw mut (*p).u.aHash as *mut crate::src::ext::rtree::rtree::u32_0 as *const ::core::ffi::c_void,
+                        &raw mut __p_ref.u.aHash as *mut crate::src::ext::rtree::rtree::u32_0 as *const ::core::ffi::c_void,
                         ::core::mem::size_of::<[crate::src::ext::rtree::rtree::u32_0; 124]>() as crate::__stddef_size_t_h::size_t,
                     );
                     ::libc::memset(
-                        &raw mut (*p).u.apSub as *mut *mut Bitvec as *mut ::core::ffi::c_void,
+                        &raw mut __p_ref.u.apSub as *mut *mut Bitvec as *mut ::core::ffi::c_void,
                         0 as ::core::ffi::c_int,
                         ::core::mem::size_of::<[*mut Bitvec; 62]>() as crate::__stddef_size_t_h::size_t,
                     );
-                    (*p).iDivisor = (*p).iSize.wrapping_div(BITVEC_NPTR);
-                    if (*p).iSize.wrapping_rem(BITVEC_NPTR) != 0 as crate::src::ext::rtree::rtree::u32_0 {
-                        (*p).iDivisor = (*p).iDivisor.wrapping_add(1);
+                    __p_ref.iDivisor = __p_ref.iSize.wrapping_div(BITVEC_NPTR);
+                    if __p_ref.iSize.wrapping_rem(BITVEC_NPTR) != 0 as crate::src::ext::rtree::rtree::u32_0 {
+                        __p_ref.iDivisor = __p_ref.iDivisor.wrapping_add(1);
                     }
-                    if ((*p).iDivisor as usize) < BITVEC_NBIT {
-                        (*p).iDivisor = BITVEC_NBIT as crate::src::ext::rtree::rtree::u32_0;
+                    if (__p_ref.iDivisor as usize) < BITVEC_NBIT {
+                        __p_ref.iDivisor = BITVEC_NBIT as crate::src::ext::rtree::rtree::u32_0;
                     }
                     rc = sqlite3BitvecSet(p, i);
                     j = 0 as ::core::ffi::c_uint;
@@ -245,17 +247,18 @@ pub unsafe extern "C" fn sqlite3BitvecClear(
     } else {
         let mut j: ::core::ffi::c_uint = 0;
         let mut aiValues: *mut crate::src::ext::rtree::rtree::u32_0 = pBuf as *mut crate::src::ext::rtree::rtree::u32_0;
+        let __p_ref = unsafe { &mut *p };
         ::libc::memcpy(
             aiValues as *mut ::core::ffi::c_void,
-            &raw mut (*p).u.aHash as *mut crate::src::ext::rtree::rtree::u32_0 as *const ::core::ffi::c_void,
+            &raw mut __p_ref.u.aHash as *mut crate::src::ext::rtree::rtree::u32_0 as *const ::core::ffi::c_void,
             ::core::mem::size_of::<[crate::src::ext::rtree::rtree::u32_0; 124]>() as crate::__stddef_size_t_h::size_t,
         );
         ::libc::memset(
-            &raw mut (*p).u.aHash as *mut crate::src::ext::rtree::rtree::u32_0 as *mut ::core::ffi::c_void,
+            &raw mut __p_ref.u.aHash as *mut crate::src::ext::rtree::rtree::u32_0 as *mut ::core::ffi::c_void,
             0 as ::core::ffi::c_int,
             ::core::mem::size_of::<[crate::src::ext::rtree::rtree::u32_0; 124]>() as crate::__stddef_size_t_h::size_t,
         );
-        (*p).nSet = 0 as crate::src::ext::rtree::rtree::u32_0;
+        __p_ref.nSet = 0 as crate::src::ext::rtree::rtree::u32_0;
         j = 0 as ::core::ffi::c_uint;
         while (j as usize) < BITVEC_NINT {
             if *aiValues.offset(j as isize) != 0
@@ -265,14 +268,14 @@ pub unsafe extern "C" fn sqlite3BitvecClear(
                     .wrapping_sub(1 as crate::src::ext::rtree::rtree::u32_0)
                     .wrapping_mul(1 as crate::src::ext::rtree::rtree::u32_0) as usize)
                     .wrapping_rem(BITVEC_NINT) as crate::src::ext::rtree::rtree::u32_0;
-                (*p).nSet = (*p).nSet.wrapping_add(1);
-                while (*p).u.aHash[h as usize] != 0 {
+                __p_ref.nSet = __p_ref.nSet.wrapping_add(1);
+                while __p_ref.u.aHash[h as usize] != 0 {
                     h = h.wrapping_add(1);
                     if h as usize >= BITVEC_NINT {
                         h = 0 as crate::src::ext::rtree::rtree::u32_0;
                     }
                 }
-                (*p).u.aHash[h as usize] = *aiValues.offset(j as isize);
+                __p_ref.u.aHash[h as usize] = *aiValues.offset(j as isize);
             }
             j = j.wrapping_add(1);
         }

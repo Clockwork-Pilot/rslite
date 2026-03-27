@@ -97,49 +97,51 @@ unsafe extern "C" fn dbpageBestIndex(
     let mut i: ::core::ffi::c_int = 0;
     let mut iPlan: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
     i = 0 as ::core::ffi::c_int;
-    while i < (*pIdxInfo).nConstraint {
+    let __pIdxInfo_ref = unsafe { &mut *pIdxInfo };
+    while i < __pIdxInfo_ref.nConstraint {
         let mut p: *mut crate::sqlite3_h::sqlite3_index_constraint =
-            (*pIdxInfo).aConstraint.offset(i as isize) as *mut crate::sqlite3_h::sqlite3_index_constraint;
+            __pIdxInfo_ref.aConstraint.offset(i as isize) as *mut crate::sqlite3_h::sqlite3_index_constraint;
         if !((*p).iColumn != DBPAGE_COLUMN_SCHEMA) {
             if !((*p).op as ::core::ffi::c_int != crate::sqlite3_h::SQLITE_INDEX_CONSTRAINT_EQ) {
                 if (*p).usable == 0 {
                     return crate::sqlite3_h::SQLITE_CONSTRAINT;
                 }
                 iPlan = 2 as ::core::ffi::c_int;
-                (*(*pIdxInfo).aConstraintUsage.offset(i as isize)).argvIndex =
+                (*__pIdxInfo_ref.aConstraintUsage.offset(i as isize)).argvIndex =
                     1 as ::core::ffi::c_int;
-                (*(*pIdxInfo).aConstraintUsage.offset(i as isize)).omit = 1 as ::core::ffi::c_uchar;
+                (*__pIdxInfo_ref.aConstraintUsage.offset(i as isize)).omit = 1 as ::core::ffi::c_uchar;
                 break;
             }
         }
         i += 1;
     }
-    (*pIdxInfo).estimatedCost = 1.0e6f64;
+    __pIdxInfo_ref.estimatedCost = 1.0e6f64;
     i = 0 as ::core::ffi::c_int;
-    while i < (*pIdxInfo).nConstraint {
+    while i < __pIdxInfo_ref.nConstraint {
         let mut p_0: *mut crate::sqlite3_h::sqlite3_index_constraint =
-            (*pIdxInfo).aConstraint.offset(i as isize) as *mut crate::sqlite3_h::sqlite3_index_constraint;
-        if (*p_0).usable as ::core::ffi::c_int != 0
-            && (*p_0).iColumn <= 0 as ::core::ffi::c_int
-            && (*p_0).op as ::core::ffi::c_int == crate::sqlite3_h::SQLITE_INDEX_CONSTRAINT_EQ
+            __pIdxInfo_ref.aConstraint.offset(i as isize) as *mut crate::sqlite3_h::sqlite3_index_constraint;
+        let __p_0_ref = unsafe { &*p_0 };
+        if __p_0_ref.usable as ::core::ffi::c_int != 0
+            && __p_0_ref.iColumn <= 0 as ::core::ffi::c_int
+            && __p_0_ref.op as ::core::ffi::c_int == crate::sqlite3_h::SQLITE_INDEX_CONSTRAINT_EQ
         {
-            (*pIdxInfo).estimatedRows = 1 as crate::sqlite3_h::sqlite3_int64;
-            (*pIdxInfo).idxFlags = crate::sqlite3_h::SQLITE_INDEX_SCAN_UNIQUE;
-            (*pIdxInfo).estimatedCost = 1.0f64;
-            (*(*pIdxInfo).aConstraintUsage.offset(i as isize)).argvIndex = if iPlan != 0 {
+            __pIdxInfo_ref.estimatedRows = 1 as crate::sqlite3_h::sqlite3_int64;
+            __pIdxInfo_ref.idxFlags = crate::sqlite3_h::SQLITE_INDEX_SCAN_UNIQUE;
+            __pIdxInfo_ref.estimatedCost = 1.0f64;
+            (*__pIdxInfo_ref.aConstraintUsage.offset(i as isize)).argvIndex = if iPlan != 0 {
                 2 as ::core::ffi::c_int
             } else {
                 1 as ::core::ffi::c_int
             };
-            (*(*pIdxInfo).aConstraintUsage.offset(i as isize)).omit = 1 as ::core::ffi::c_uchar;
+            (*__pIdxInfo_ref.aConstraintUsage.offset(i as isize)).omit = 1 as ::core::ffi::c_uchar;
             iPlan |= 1 as ::core::ffi::c_int;
             break;
         } else {
             i += 1;
         }
     }
-    (*pIdxInfo).idxNum = iPlan;
-    if (*pIdxInfo).nOrderBy >= 1 as ::core::ffi::c_int
+    __pIdxInfo_ref.idxNum = iPlan;
+    if __pIdxInfo_ref.nOrderBy >= 1 as ::core::ffi::c_int
         && (*(*pIdxInfo)
             .aOrderBy
             .offset(0 as isize))
@@ -151,7 +153,7 @@ unsafe extern "C" fn dbpageBestIndex(
         .desc as ::core::ffi::c_int
             == 0 as ::core::ffi::c_int
     {
-        (*pIdxInfo).orderByConsumed = 1 as ::core::ffi::c_int;
+        __pIdxInfo_ref.orderByConsumed = 1 as ::core::ffi::c_int;
     }
     return crate::sqlite3_h::SQLITE_OK;
 }
@@ -211,44 +213,45 @@ unsafe extern "C" fn dbpageFilter(
     let mut rc: ::core::ffi::c_int = 0;
     let mut db: *mut crate::sqliteInt_h::sqlite3 = (*pTab).db;
     let mut pBt: *mut crate::btreeInt_h::Btree = ::core::ptr::null_mut::<crate::btreeInt_h::Btree>();
-    (*pCsr).pgno = 1 as crate::src::src::pager::Pgno;
-    (*pCsr).mxPgno = 0 as crate::src::src::pager::Pgno;
+    let __pCsr_ref = unsafe { &mut *pCsr };
+    __pCsr_ref.pgno = 1 as crate::src::src::pager::Pgno;
+    __pCsr_ref.mxPgno = 0 as crate::src::src::pager::Pgno;
     if idxNum & 2 as ::core::ffi::c_int != 0 {
         let mut zSchema: *const ::core::ffi::c_char = ::core::ptr::null::<::core::ffi::c_char>();
         zSchema = crate::src::src::vdbeapi::sqlite3_value_text(*argv.offset(0 as isize))
             as *const ::core::ffi::c_char;
-        (*pCsr).iDb = crate::src::src::build::sqlite3FindDbName(db as *mut crate::sqliteInt_h::sqlite3, zSchema);
-        if (*pCsr).iDb < 0 as ::core::ffi::c_int {
+        __pCsr_ref.iDb = crate::src::src::build::sqlite3FindDbName(db as *mut crate::sqliteInt_h::sqlite3, zSchema);
+        if __pCsr_ref.iDb < 0 as ::core::ffi::c_int {
             return crate::sqlite3_h::SQLITE_OK;
         }
     } else {
-        (*pCsr).iDb = 0 as ::core::ffi::c_int;
+        __pCsr_ref.iDb = 0 as ::core::ffi::c_int;
     }
-    pBt = (*(*db).aDb.offset((*pCsr).iDb as isize)).pBt;
+    pBt = (*(*db).aDb.offset(__pCsr_ref.iDb as isize)).pBt;
     if pBt.is_null() {
         return crate::sqlite3_h::SQLITE_OK;
     }
-    (*pCsr).pPager = crate::src::src::btree::sqlite3BtreePager(pBt) as *mut crate::src::src::pager::Pager;
-    (*pCsr).szPage = crate::src::src::btree::sqlite3BtreeGetPageSize(pBt);
-    (*pCsr).mxPgno = crate::src::src::btree::sqlite3BtreeLastPage(pBt);
+    __pCsr_ref.pPager = crate::src::src::btree::sqlite3BtreePager(pBt) as *mut crate::src::src::pager::Pager;
+    __pCsr_ref.szPage = crate::src::src::btree::sqlite3BtreeGetPageSize(pBt);
+    __pCsr_ref.mxPgno = crate::src::src::btree::sqlite3BtreeLastPage(pBt);
     if idxNum & 1 as ::core::ffi::c_int != 0 {
-        (*pCsr).pgno =
+        __pCsr_ref.pgno =
             crate::src::src::vdbeapi::sqlite3_value_int(*argv.offset((idxNum >> 1 as ::core::ffi::c_int) as isize)) as crate::src::src::pager::Pgno;
-        if (*pCsr).pgno < 1 as crate::src::src::pager::Pgno || (*pCsr).pgno > (*pCsr).mxPgno {
-            (*pCsr).pgno = 1 as crate::src::src::pager::Pgno;
-            (*pCsr).mxPgno = 0 as crate::src::src::pager::Pgno;
+        if __pCsr_ref.pgno < 1 as crate::src::src::pager::Pgno || __pCsr_ref.pgno > __pCsr_ref.mxPgno {
+            __pCsr_ref.pgno = 1 as crate::src::src::pager::Pgno;
+            __pCsr_ref.mxPgno = 0 as crate::src::src::pager::Pgno;
         } else {
-            (*pCsr).mxPgno = (*pCsr).pgno;
+            __pCsr_ref.mxPgno = __pCsr_ref.pgno;
         }
     }
-    if !(*pCsr).pPage1.is_null() {
-        crate::src::src::pager::sqlite3PagerUnrefPageOne((*pCsr).pPage1 as *mut crate::src::src::pcache::PgHdr);
+    if !__pCsr_ref.pPage1.is_null() {
+        crate::src::src::pager::sqlite3PagerUnrefPageOne(__pCsr_ref.pPage1 as *mut crate::src::src::pcache::PgHdr);
     }
     rc = crate::src::src::pager::sqlite3PagerGet(
-        (*pCsr).pPager,
+        __pCsr_ref.pPager,
         1 as crate::src::src::pager::Pgno,
         
-        &raw mut (*pCsr).pPage1 as *mut _ as *mut *mut crate::src::src::pcache::PgHdr,
+        &raw mut __pCsr_ref.pPage1 as *mut _ as *mut *mut crate::src::src::pcache::PgHdr,
         0 as ::core::ffi::c_int,
     );
     return rc;
@@ -491,11 +494,12 @@ unsafe extern "C" fn dbpageBegin(mut pVtab: *mut crate::sqlite3_h::sqlite3_vtab)
 unsafe extern "C" fn dbpageSync(mut pVtab: *mut crate::sqlite3_h::sqlite3_vtab) -> ::core::ffi::c_int {
     let mut pTab: *mut DbpageTable = pVtab as *mut DbpageTable;
     if (*pTab).pgnoTrunc > 0 as crate::src::src::pager::Pgno {
-        let mut pBt: *mut crate::btreeInt_h::Btree = (*(*(*pTab).db).aDb.offset((*pTab).iDbTrunc as isize)).pBt;
+        let __pTab_ref = unsafe { &mut *pTab };
+        let mut pBt: *mut crate::btreeInt_h::Btree = (*(*__pTab_ref.db).aDb.offset(__pTab_ref.iDbTrunc as isize)).pBt;
         let mut pPager: *mut crate::src::src::pager::Pager = crate::src::src::btree::sqlite3BtreePager(pBt) as *mut crate::src::src::pager::Pager;
         crate::src::src::btmutex::sqlite3BtreeEnter(pBt);
-        if (*pTab).pgnoTrunc < crate::src::src::btree::sqlite3BtreeLastPage(pBt) {
-            crate::src::src::pager::sqlite3PagerTruncateImage(pPager, (*pTab).pgnoTrunc);
+        if __pTab_ref.pgnoTrunc < crate::src::src::btree::sqlite3BtreeLastPage(pBt) {
+            crate::src::src::pager::sqlite3PagerTruncateImage(pPager, __pTab_ref.pgnoTrunc);
         }
         crate::src::src::btmutex::sqlite3BtreeLeave(pBt);
     }

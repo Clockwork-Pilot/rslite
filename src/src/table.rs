@@ -47,27 +47,28 @@ unsafe extern "C" fn sqlite3_get_table_cb(
     let mut need: ::core::ffi::c_int = 0;
     let mut i: ::core::ffi::c_int = 0;
     let mut z: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
-    if (*p).nRow == 0 as crate::src::ext::rtree::rtree::u32_0 && !argv.is_null() {
+    let __p_ref = unsafe { &mut *p };
+    if __p_ref.nRow == 0 as crate::src::ext::rtree::rtree::u32_0 && !argv.is_null() {
         need = nCol * 2 as ::core::ffi::c_int;
     } else {
         need = nCol;
     }
-    if (*p).nData.wrapping_add(need as crate::src::ext::rtree::rtree::u32_0) > (*p).nAlloc {
+    if __p_ref.nData.wrapping_add(need as crate::src::ext::rtree::rtree::u32_0) > __p_ref.nAlloc {
         let mut azNew: *mut *mut ::core::ffi::c_char =
             ::core::ptr::null_mut::<*mut ::core::ffi::c_char>();
-        (*p).nAlloc = (*p)
+        __p_ref.nAlloc = (*p)
             .nAlloc
             .wrapping_mul(2 as crate::src::ext::rtree::rtree::u32_0)
             .wrapping_add(need as crate::src::ext::rtree::rtree::u32_0);
         azNew = crate::src::src::malloc::sqlite3Realloc(
-            (*p).azResult as *mut ::core::ffi::c_void,
+            __p_ref.azResult as *mut ::core::ffi::c_void,
             (::core::mem::size_of::<*mut ::core::ffi::c_char>() as usize)
-                .wrapping_mul((*p).nAlloc as usize) as crate::src::ext::rtree::rtree::u64_0,
+                .wrapping_mul(__p_ref.nAlloc as usize) as crate::src::ext::rtree::rtree::u64_0,
         ) as *mut *mut ::core::ffi::c_char;
         if azNew.is_null() {
             current_block = 6187690635698806885;
         } else {
-            (*p).azResult = azNew;
+            __p_ref.azResult = azNew;
             current_block = 11812396948646013369;
         }
     } else {
@@ -75,8 +76,8 @@ unsafe extern "C" fn sqlite3_get_table_cb(
     }
     match current_block {
         11812396948646013369 => {
-            if (*p).nRow == 0 as crate::src::ext::rtree::rtree::u32_0 {
-                (*p).nColumn = nCol as crate::src::ext::rtree::rtree::u32_0;
+            if __p_ref.nRow == 0 as crate::src::ext::rtree::rtree::u32_0 {
+                __p_ref.nColumn = nCol as crate::src::ext::rtree::rtree::u32_0;
                 i = 0 as ::core::ffi::c_int;
                 loop {
                     if !(i < nCol) {
@@ -91,20 +92,20 @@ unsafe extern "C" fn sqlite3_get_table_cb(
                         current_block = 6187690635698806885;
                         break;
                     }
-                    let fresh2 = (*p).nData;
-                    (*p).nData = (*p).nData.wrapping_add(1);
-                    let ref mut fresh3 = *(*p).azResult.offset(fresh2 as isize);
+                    let fresh2 = __p_ref.nData;
+                    __p_ref.nData = __p_ref.nData.wrapping_add(1);
+                    let ref mut fresh3 = *__p_ref.azResult.offset(fresh2 as isize);
                     *fresh3 = z;
                     i += 1;
                 }
             } else {
-                if (*p).nColumn as ::core::ffi::c_int != nCol {
-                    crate::src::src::malloc::sqlite3_free((*p).zErrMsg as *mut ::core::ffi::c_void);
-                    (*p).zErrMsg = crate::src::src::printf::sqlite3_mprintf(
+                if __p_ref.nColumn as ::core::ffi::c_int != nCol {
+                    crate::src::src::malloc::sqlite3_free(__p_ref.zErrMsg as *mut ::core::ffi::c_void);
+                    __p_ref.zErrMsg = crate::src::src::printf::sqlite3_mprintf(
                         b"sqlite3_get_table() called with two or more incompatible queries\0"
                             as *const u8 as *const ::core::ffi::c_char,
                     );
-                    (*p).rc = crate::sqlite3_h::SQLITE_ERROR;
+                    __p_ref.rc = crate::sqlite3_h::SQLITE_ERROR;
                     return 1 as ::core::ffi::c_int;
                 }
                 current_block = 12147880666119273379;
@@ -137,16 +138,16 @@ unsafe extern "C" fn sqlite3_get_table_cb(
                                     n as crate::__stddef_size_t_h::size_t,
                                 );
                             }
-                            let fresh4 = (*p).nData;
-                            (*p).nData = (*p).nData.wrapping_add(1);
-                            let ref mut fresh5 = *(*p).azResult.offset(fresh4 as isize);
+                            let fresh4 = __p_ref.nData;
+                            __p_ref.nData = __p_ref.nData.wrapping_add(1);
+                            let ref mut fresh5 = *__p_ref.azResult.offset(fresh4 as isize);
                             *fresh5 = z;
                             i += 1;
                         }
                         match current_block {
                             6187690635698806885 => {}
                             _ => {
-                                (*p).nRow = (*p).nRow.wrapping_add(1);
+                                __p_ref.nRow = __p_ref.nRow.wrapping_add(1);
                                 current_block = 15897653523371991391;
                             }
                         }
@@ -162,7 +163,7 @@ unsafe extern "C" fn sqlite3_get_table_cb(
         }
         _ => {}
     }
-    (*p).rc = crate::sqliteInt_h::SQLITE_NOMEM_BKPT;
+    __p_ref.rc = crate::sqliteInt_h::SQLITE_NOMEM_BKPT;
     return 1 as ::core::ffi::c_int;
 }
 #[no_mangle]

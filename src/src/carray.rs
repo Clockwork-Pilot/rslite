@@ -187,11 +187,12 @@ unsafe extern "C" fn carrayColumn(
                 return crate::sqlite3_h::SQLITE_OK;
             }
     _ =>  {
-                let mut p_3: *const ::libc::iovec = (*pCur).pPtr as *mut ::libc::iovec;
+                let __pCur_ref = unsafe { &*pCur };
+                let mut p_3: *const ::libc::iovec = __pCur_ref.pPtr as *mut ::libc::iovec;
                 crate::src::src::vdbeapi::sqlite3_result_blob(
                     ctx,
-                    (*p_3.offset(((*pCur).iRowid - 1 as crate::sqlite3_h::sqlite3_int64) as isize)).iov_base,
-                    (*p_3.offset(((*pCur).iRowid - 1 as crate::sqlite3_h::sqlite3_int64) as isize)).iov_len
+                    (*p_3.offset((__pCur_ref.iRowid - 1 as crate::sqlite3_h::sqlite3_int64) as isize)).iov_base,
+                    (*p_3.offset((__pCur_ref.iRowid - 1 as crate::sqlite3_h::sqlite3_int64) as isize)).iov_len
                         as ::core::ffi::c_int,
                     ::core::mem::transmute::<
                         ::libc::intptr_t,
@@ -228,8 +229,9 @@ unsafe extern "C" fn carrayFilter(
     mut argv: *mut *mut crate::vdbeInt_h::sqlite3_value,
 ) -> ::core::ffi::c_int {
     let mut pCur: *mut carray_cursor = pVtabCursor as *mut carray_cursor;
-    (*pCur).pPtr = ::core::ptr::null_mut::<::core::ffi::c_void>();
-    (*pCur).iCnt = 0 as crate::sqlite3_h::sqlite3_int64;
+    let __pCur_ref = unsafe { &mut *pCur };
+    __pCur_ref.pPtr = ::core::ptr::null_mut::<::core::ffi::c_void>();
+    __pCur_ref.iCnt = 0 as crate::sqlite3_h::sqlite3_int64;
     match idxNum {
         1 => {
             let mut pBind: *mut carray_bind = crate::src::src::vdbeapi::sqlite3_value_pointer(
@@ -237,24 +239,25 @@ unsafe extern "C" fn carrayFilter(
                 b"carray-bind\0" as *const u8 as *const ::core::ffi::c_char,
             ) as *mut carray_bind;
             if !pBind.is_null() {
-                (*pCur).pPtr = (*pBind).aData;
-                (*pCur).iCnt = (*pBind).nData as crate::sqlite3_h::sqlite3_int64;
-                (*pCur).eType =
-                    ((*pBind).mFlags & 0x7 as ::core::ffi::c_int) as ::core::ffi::c_uchar;
+                let __pBind_ref = unsafe { &*pBind };
+                __pCur_ref.pPtr = __pBind_ref.aData;
+                __pCur_ref.iCnt = __pBind_ref.nData as crate::sqlite3_h::sqlite3_int64;
+                __pCur_ref.eType =
+                    (__pBind_ref.mFlags & 0x7 as ::core::ffi::c_int) as ::core::ffi::c_uchar;
             }
         }
         2 | 3 => {
-            (*pCur).pPtr = crate::src::src::vdbeapi::sqlite3_value_pointer(
+            __pCur_ref.pPtr = crate::src::src::vdbeapi::sqlite3_value_pointer(
                 *argv.offset(0 as isize),
                 b"carray\0" as *const u8 as *const ::core::ffi::c_char,
             );
-            (*pCur).iCnt = if !(*pCur).pPtr.is_null() {
+            __pCur_ref.iCnt = if !__pCur_ref.pPtr.is_null() {
                 crate::src::src::vdbeapi::sqlite3_value_int64(*argv.offset(1 as isize))
             } else {
                 0 as crate::sqlite3_h::sqlite3_int64
             };
             if idxNum < 3 as ::core::ffi::c_int {
-                (*pCur).eType = crate::sqlite3_h::CARRAY_INT32 as ::core::ffi::c_uchar;
+                __pCur_ref.eType = crate::sqlite3_h::CARRAY_INT32 as ::core::ffi::c_uchar;
             } else {
                 let mut i: ::core::ffi::c_uchar = 0;
                 let mut zType: *const ::core::ffi::c_char =
@@ -280,13 +283,13 @@ unsafe extern "C" fn carrayFilter(
                     );
                     return crate::sqlite3_h::SQLITE_ERROR;
                 } else {
-                    (*pCur).eType = i;
+                    __pCur_ref.eType = i;
                 }
             }
         }
         _ => {}
     }
-    (*pCur).iRowid = 1 as crate::sqlite3_h::sqlite3_int64;
+    __pCur_ref.iRowid = 1 as crate::sqlite3_h::sqlite3_int64;
     return crate::sqlite3_h::SQLITE_OK;
 }
 
@@ -328,23 +331,24 @@ unsafe extern "C" fn carrayBestIndex(
         pConstraint = pConstraint.offset(1);
     }
     if ptrIdx >= 0 as ::core::ffi::c_int {
-        (*(*pIdxInfo).aConstraintUsage.offset(ptrIdx as isize)).argvIndex = 1 as ::core::ffi::c_int;
-        (*(*pIdxInfo).aConstraintUsage.offset(ptrIdx as isize)).omit = 1 as ::core::ffi::c_uchar;
-        (*pIdxInfo).estimatedCost = 1 as ::core::ffi::c_int as ::core::ffi::c_double;
-        (*pIdxInfo).estimatedRows = 100 as crate::sqlite3_h::sqlite3_int64;
-        (*pIdxInfo).idxNum = 1 as ::core::ffi::c_int;
+        let __pIdxInfo_ref = unsafe { &mut *pIdxInfo };
+        (*__pIdxInfo_ref.aConstraintUsage.offset(ptrIdx as isize)).argvIndex = 1 as ::core::ffi::c_int;
+        (*__pIdxInfo_ref.aConstraintUsage.offset(ptrIdx as isize)).omit = 1 as ::core::ffi::c_uchar;
+        __pIdxInfo_ref.estimatedCost = 1 as ::core::ffi::c_int as ::core::ffi::c_double;
+        __pIdxInfo_ref.estimatedRows = 100 as crate::sqlite3_h::sqlite3_int64;
+        __pIdxInfo_ref.idxNum = 1 as ::core::ffi::c_int;
         if cntIdx >= 0 as ::core::ffi::c_int {
-            (*(*pIdxInfo).aConstraintUsage.offset(cntIdx as isize)).argvIndex =
+            (*__pIdxInfo_ref.aConstraintUsage.offset(cntIdx as isize)).argvIndex =
                 2 as ::core::ffi::c_int;
-            (*(*pIdxInfo).aConstraintUsage.offset(cntIdx as isize)).omit =
+            (*__pIdxInfo_ref.aConstraintUsage.offset(cntIdx as isize)).omit =
                 1 as ::core::ffi::c_uchar;
-            (*pIdxInfo).idxNum = 2 as ::core::ffi::c_int;
+            __pIdxInfo_ref.idxNum = 2 as ::core::ffi::c_int;
             if ctypeIdx >= 0 as ::core::ffi::c_int {
-                (*(*pIdxInfo).aConstraintUsage.offset(ctypeIdx as isize)).argvIndex =
+                (*__pIdxInfo_ref.aConstraintUsage.offset(ctypeIdx as isize)).argvIndex =
                     3 as ::core::ffi::c_int;
-                (*(*pIdxInfo).aConstraintUsage.offset(ctypeIdx as isize)).omit =
+                (*__pIdxInfo_ref.aConstraintUsage.offset(ctypeIdx as isize)).omit =
                     1 as ::core::ffi::c_uchar;
-                (*pIdxInfo).idxNum = 3 as ::core::ffi::c_int;
+                __pIdxInfo_ref.idxNum = 3 as ::core::ffi::c_int;
             } else if seen
                 & ((1 as ::core::ffi::c_int) << CARRAY_COLUMN_CTYPE) as ::core::ffi::c_uint
                 != 0
@@ -357,9 +361,10 @@ unsafe extern "C" fn carrayBestIndex(
             return crate::sqlite3_h::SQLITE_CONSTRAINT;
         }
     } else {
-        (*pIdxInfo).estimatedCost = 2147483647 as ::core::ffi::c_int as ::core::ffi::c_double;
-        (*pIdxInfo).estimatedRows = 2147483647 as crate::sqlite3_h::sqlite3_int64;
-        (*pIdxInfo).idxNum = 0 as ::core::ffi::c_int;
+        let __pIdxInfo_ref = unsafe { &mut *pIdxInfo };
+        __pIdxInfo_ref.estimatedCost = 2147483647 as ::core::ffi::c_int as ::core::ffi::c_double;
+        __pIdxInfo_ref.estimatedRows = 2147483647 as crate::sqlite3_h::sqlite3_int64;
+        __pIdxInfo_ref.idxNum = 0 as ::core::ffi::c_int;
     }
     return crate::sqlite3_h::SQLITE_OK;
 }

@@ -296,7 +296,8 @@ pub mod geopoly_c {
         mut pVal: *mut crate::geopoly_c::GeoCoord,
     ) -> ::core::ffi::c_int {
         let mut c: ::core::ffi::c_char = geopolySkipSpace(p);
-        let mut z: *const ::core::ffi::c_uchar = (*p).z;
+        let __p_ref = unsafe { &mut *p };
+        let mut z: *const ::core::ffi::c_uchar = __p_ref.z;
         let mut j: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
         let mut seenDP: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
         let mut seenE: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
@@ -365,9 +366,9 @@ pub mod geopoly_c {
             return 0 as ::core::ffi::c_int;
         }
         if !pVal.is_null() {
-            *pVal = atof((*p).z as *const ::core::ffi::c_char) as crate::geopoly_c::GeoCoord;
+            *pVal = atof(__p_ref.z as *const ::core::ffi::c_char) as crate::geopoly_c::GeoCoord;
         }
-        (*p).z = (*p).z.offset(j as isize);
+        __p_ref.z = __p_ref.z.offset(j as isize);
         return 1 as ::core::ffi::c_int;
     }
     
@@ -477,23 +478,24 @@ pub mod geopoly_c {
                         ) as *mut crate::geopoly_c::GeoPoly;
                         x = 1 as ::core::ffi::c_int;
                         if !pOut.is_null() {
-                            (*pOut).nVertex = s.nVertex;
+                            let __pOut_ref = unsafe { &mut *pOut };
+                            __pOut_ref.nVertex = s.nVertex;
                             ::libc::memcpy(
-                                &raw mut (*pOut).a as *mut crate::geopoly_c::GeoCoord as *mut ::core::ffi::c_void,
+                                &raw mut __pOut_ref.a as *mut crate::geopoly_c::GeoCoord as *mut ::core::ffi::c_void,
                                 s.a as *const ::core::ffi::c_void,
                                 ((s.nVertex * 2 as ::core::ffi::c_int) as crate::__stddef_size_t_h::size_t)
                                     .wrapping_mul(::core::mem::size_of::<crate::geopoly_c::GeoCoord>() as crate::__stddef_size_t_h::size_t),
                             );
-                            (*pOut).hdr[0 as ::core::ffi::c_int as usize] =
+                            __pOut_ref.hdr[0 as ::core::ffi::c_int as usize] =
                                 *(&raw mut x as *mut ::core::ffi::c_uchar);
-                            (*pOut).hdr[1 as ::core::ffi::c_int as usize] = (s.nVertex
+                            __pOut_ref.hdr[1 as ::core::ffi::c_int as usize] = (s.nVertex
                                 >> 16 as ::core::ffi::c_int
                                 & 0xff as ::core::ffi::c_int)
                                 as ::core::ffi::c_uchar;
-                            (*pOut).hdr[2 as ::core::ffi::c_int as usize] =
+                            __pOut_ref.hdr[2 as ::core::ffi::c_int as usize] =
                                 (s.nVertex >> 8 as ::core::ffi::c_int & 0xff as ::core::ffi::c_int)
                                     as ::core::ffi::c_uchar;
-                            (*pOut).hdr[3 as ::core::ffi::c_int as usize] =
+                            __pOut_ref.hdr[3 as ::core::ffi::c_int as usize] =
                                 (s.nVertex & 0xff as ::core::ffi::c_int) as ::core::ffi::c_uchar;
                             crate::src::src::malloc::sqlite3_free(s.a as *mut ::core::ffi::c_void);
                             if !pRc.is_null() {
@@ -663,14 +665,15 @@ pub mod geopoly_c {
                 1 as ::core::ffi::c_int,
             );
             i = 0 as ::core::ffi::c_int;
-            while i < (*p).nVertex {
+            let __p_ref = unsafe { &mut *p };
+            while i < __p_ref.nVertex {
                 crate::src::src::printf::sqlite3_str_appendf(
                     x,
                     b"[%!g,%!g],\0" as *const u8 as *const ::core::ffi::c_char,
-                    *(&raw mut (*p).a as *mut crate::geopoly_c::GeoCoord)
+                    *(&raw mut __p_ref.a as *mut crate::geopoly_c::GeoCoord)
                         .offset((i * 2 as ::core::ffi::c_int) as isize)
                         as ::core::ffi::c_double,
-                    *(&raw mut (*p).a as *mut crate::geopoly_c::GeoCoord)
+                    *(&raw mut __p_ref.a as *mut crate::geopoly_c::GeoCoord)
                         .offset((i * 2 as ::core::ffi::c_int + 1 as ::core::ffi::c_int) as isize)
                         as ::core::ffi::c_double,
                 );
@@ -679,10 +682,10 @@ pub mod geopoly_c {
             crate::src::src::printf::sqlite3_str_appendf(
                 x,
                 b"[%!g,%!g]]\0" as *const u8 as *const ::core::ffi::c_char,
-                *(&raw mut (*p).a as *mut crate::geopoly_c::GeoCoord)
+                *(&raw mut __p_ref.a as *mut crate::geopoly_c::GeoCoord)
                     .offset((0 as ::core::ffi::c_int * 2 as ::core::ffi::c_int) as isize)
                     as ::core::ffi::c_double,
-                *(&raw mut (*p).a as *mut crate::geopoly_c::GeoCoord).offset(
+                *(&raw mut __p_ref.a as *mut crate::geopoly_c::GeoCoord).offset(
                     (0 as ::core::ffi::c_int * 2 as ::core::ffi::c_int + 1 as ::core::ffi::c_int)
                         as isize,
                 ) as ::core::ffi::c_double,
@@ -721,15 +724,16 @@ pub mod geopoly_c {
                 b"<polyline points=\0" as *const u8 as *const ::core::ffi::c_char,
             );
             i = 0 as ::core::ffi::c_int;
-            while i < (*p).nVertex {
+            let __p_ref = unsafe { &mut *p };
+            while i < __p_ref.nVertex {
                 crate::src::src::printf::sqlite3_str_appendf(
                     x,
                     b"%c%g,%g\0" as *const u8 as *const ::core::ffi::c_char,
                     cSep as ::core::ffi::c_int,
-                    *(&raw mut (*p).a as *mut crate::geopoly_c::GeoCoord)
+                    *(&raw mut __p_ref.a as *mut crate::geopoly_c::GeoCoord)
                         .offset((i * 2 as ::core::ffi::c_int) as isize)
                         as ::core::ffi::c_double,
-                    *(&raw mut (*p).a as *mut crate::geopoly_c::GeoCoord)
+                    *(&raw mut __p_ref.a as *mut crate::geopoly_c::GeoCoord)
                         .offset((i * 2 as ::core::ffi::c_int + 1 as ::core::ffi::c_int) as isize)
                         as ::core::ffi::c_double,
                 );
@@ -739,10 +743,10 @@ pub mod geopoly_c {
             crate::src::src::printf::sqlite3_str_appendf(
                 x,
                 b" %g,%g'\0" as *const u8 as *const ::core::ffi::c_char,
-                *(&raw mut (*p).a as *mut crate::geopoly_c::GeoCoord)
+                *(&raw mut __p_ref.a as *mut crate::geopoly_c::GeoCoord)
                     .offset((0 as ::core::ffi::c_int * 2 as ::core::ffi::c_int) as isize)
                     as ::core::ffi::c_double,
-                *(&raw mut (*p).a as *mut crate::geopoly_c::GeoCoord).offset(
+                *(&raw mut __p_ref.a as *mut crate::geopoly_c::GeoCoord).offset(
                     (0 as ::core::ffi::c_int * 2 as ::core::ffi::c_int + 1 as ::core::ffi::c_int)
                         as isize,
                 ) as ::core::ffi::c_double,
@@ -801,25 +805,26 @@ pub mod geopoly_c {
         let mut ii: ::core::ffi::c_int = 0;
         if !p.is_null() {
             ii = 0 as ::core::ffi::c_int;
-            while ii < (*p).nVertex {
-                x0 = *(&raw mut (*p).a as *mut crate::geopoly_c::GeoCoord)
+            let __p_ref = unsafe { &mut *p };
+            while ii < __p_ref.nVertex {
+                x0 = *(&raw mut __p_ref.a as *mut crate::geopoly_c::GeoCoord)
                     .offset((ii * 2 as ::core::ffi::c_int) as isize);
-                y0 = *(&raw mut (*p).a as *mut crate::geopoly_c::GeoCoord)
+                y0 = *(&raw mut __p_ref.a as *mut crate::geopoly_c::GeoCoord)
                     .offset((ii * 2 as ::core::ffi::c_int + 1 as ::core::ffi::c_int) as isize);
                 x1 = (A * x0 as ::core::ffi::c_double + B * y0 as ::core::ffi::c_double + E)
                     as crate::geopoly_c::GeoCoord;
                 y1 = (C * x0 as ::core::ffi::c_double + D * y0 as ::core::ffi::c_double + F)
                     as crate::geopoly_c::GeoCoord;
-                *(&raw mut (*p).a as *mut crate::geopoly_c::GeoCoord)
+                *(&raw mut __p_ref.a as *mut crate::geopoly_c::GeoCoord)
                     .offset((ii * 2 as ::core::ffi::c_int) as isize) = x1;
-                *(&raw mut (*p).a as *mut crate::geopoly_c::GeoCoord)
+                *(&raw mut __p_ref.a as *mut crate::geopoly_c::GeoCoord)
                     .offset((ii * 2 as ::core::ffi::c_int + 1 as ::core::ffi::c_int) as isize) = y1;
                 ii += 1;
             }
             crate::src::src::vdbeapi::sqlite3_result_blob(
                 context,
-                &raw mut (*p).hdr as *mut ::core::ffi::c_uchar as *const ::core::ffi::c_void,
-                4 as ::core::ffi::c_int + 8 as ::core::ffi::c_int * (*p).nVertex,
+                &raw mut __p_ref.hdr as *mut ::core::ffi::c_uchar as *const ::core::ffi::c_void,
+                4 as ::core::ffi::c_int + 8 as ::core::ffi::c_int * __p_ref.nVertex,
                 ::core::mem::transmute::<
                     ::libc::intptr_t,
                     Option<unsafe extern "C" fn(*mut ::core::ffi::c_void) -> ()>,
@@ -833,27 +838,28 @@ pub mod geopoly_c {
         let mut rArea: ::core::ffi::c_double = 0.0f64;
         let mut ii: ::core::ffi::c_int = 0;
         ii = 0 as ::core::ffi::c_int;
-        while ii < (*p).nVertex - 1 as ::core::ffi::c_int {
-            rArea += ((*(&raw mut (*p).a as *mut crate::geopoly_c::GeoCoord)
+        let __p_ref = unsafe { &mut *p };
+        while ii < __p_ref.nVertex - 1 as ::core::ffi::c_int {
+            rArea += ((*(&raw mut __p_ref.a as *mut crate::geopoly_c::GeoCoord)
                 .offset((ii * 2 as ::core::ffi::c_int) as isize)
-                - *(&raw mut (*p).a as *mut crate::geopoly_c::GeoCoord)
+                - *(&raw mut __p_ref.a as *mut crate::geopoly_c::GeoCoord)
                     .offset(((ii + 1 as ::core::ffi::c_int) * 2 as ::core::ffi::c_int) as isize))
-                * (*(&raw mut (*p).a as *mut crate::geopoly_c::GeoCoord)
+                * (*(&raw mut __p_ref.a as *mut crate::geopoly_c::GeoCoord)
                     .offset((ii * 2 as ::core::ffi::c_int + 1 as ::core::ffi::c_int) as isize)
-                    + *(&raw mut (*p).a as *mut crate::geopoly_c::GeoCoord).offset(
+                    + *(&raw mut __p_ref.a as *mut crate::geopoly_c::GeoCoord).offset(
                         ((ii + 1 as ::core::ffi::c_int) * 2 as ::core::ffi::c_int
                             + 1 as ::core::ffi::c_int) as isize,
                     ))) as ::core::ffi::c_double
                 * 0.5f64;
             ii += 1;
         }
-        rArea += ((*(&raw mut (*p).a as *mut crate::geopoly_c::GeoCoord)
+        rArea += ((*(&raw mut __p_ref.a as *mut crate::geopoly_c::GeoCoord)
             .offset((ii * 2 as ::core::ffi::c_int) as isize)
-            - *(&raw mut (*p).a as *mut crate::geopoly_c::GeoCoord)
+            - *(&raw mut __p_ref.a as *mut crate::geopoly_c::GeoCoord)
                 .offset((0 as ::core::ffi::c_int * 2 as ::core::ffi::c_int) as isize))
-            * (*(&raw mut (*p).a as *mut crate::geopoly_c::GeoCoord)
+            * (*(&raw mut __p_ref.a as *mut crate::geopoly_c::GeoCoord)
                 .offset((ii * 2 as ::core::ffi::c_int + 1 as ::core::ffi::c_int) as isize)
-                + *(&raw mut (*p).a as *mut crate::geopoly_c::GeoCoord).offset(
+                + *(&raw mut __p_ref.a as *mut crate::geopoly_c::GeoCoord).offset(
                     (0 as ::core::ffi::c_int * 2 as ::core::ffi::c_int + 1 as ::core::ffi::c_int)
                         as isize,
                 ))) as ::core::ffi::c_double
@@ -894,21 +900,22 @@ pub mod geopoly_c {
                 ii = 1 as ::core::ffi::c_int;
                 jj = (*p).nVertex - 1 as ::core::ffi::c_int;
                 while ii < jj {
-                    let mut t: crate::geopoly_c::GeoCoord = *(&raw mut (*p).a as *mut crate::geopoly_c::GeoCoord)
+                    let __p_ref = unsafe { &mut *p };
+                    let mut t: crate::geopoly_c::GeoCoord = *(&raw mut __p_ref.a as *mut crate::geopoly_c::GeoCoord)
                         .offset((ii * 2 as ::core::ffi::c_int) as isize);
-                    *(&raw mut (*p).a as *mut crate::geopoly_c::GeoCoord)
-                        .offset((ii * 2 as ::core::ffi::c_int) as isize) = *(&raw mut (*p).a
+                    *(&raw mut __p_ref.a as *mut crate::geopoly_c::GeoCoord)
+                        .offset((ii * 2 as ::core::ffi::c_int) as isize) = *(&raw mut __p_ref.a
                         as *mut crate::geopoly_c::GeoCoord)
                         .offset((jj * 2 as ::core::ffi::c_int) as isize);
-                    *(&raw mut (*p).a as *mut crate::geopoly_c::GeoCoord)
+                    *(&raw mut __p_ref.a as *mut crate::geopoly_c::GeoCoord)
                         .offset((jj * 2 as ::core::ffi::c_int) as isize) = t;
-                    t = *(&raw mut (*p).a as *mut crate::geopoly_c::GeoCoord)
+                    t = *(&raw mut __p_ref.a as *mut crate::geopoly_c::GeoCoord)
                         .offset((ii * 2 as ::core::ffi::c_int + 1 as ::core::ffi::c_int) as isize);
-                    *(&raw mut (*p).a as *mut crate::geopoly_c::GeoCoord).offset(
+                    *(&raw mut __p_ref.a as *mut crate::geopoly_c::GeoCoord).offset(
                         (ii * 2 as ::core::ffi::c_int + 1 as ::core::ffi::c_int) as isize,
-                    ) = *(&raw mut (*p).a as *mut crate::geopoly_c::GeoCoord)
+                    ) = *(&raw mut __p_ref.a as *mut crate::geopoly_c::GeoCoord)
                         .offset((jj * 2 as ::core::ffi::c_int + 1 as ::core::ffi::c_int) as isize);
-                    *(&raw mut (*p).a as *mut crate::geopoly_c::GeoCoord).offset(
+                    *(&raw mut __p_ref.a as *mut crate::geopoly_c::GeoCoord).offset(
                         (jj * 2 as ::core::ffi::c_int + 1 as ::core::ffi::c_int) as isize,
                     ) = t;
                     ii += 1;
@@ -1029,18 +1036,19 @@ pub mod geopoly_c {
             p = geopolyFuncParam(context, pPoly, pRc);
             if !p.is_null() {
                 ii = 0;
-                mxX = *(&raw mut (*p).a as *mut crate::geopoly_c::GeoCoord)
+                let __p_ref = unsafe { &mut *p };
+                mxX = *(&raw mut __p_ref.a as *mut crate::geopoly_c::GeoCoord)
                     .offset((0 as ::core::ffi::c_int * 2 as ::core::ffi::c_int) as isize)
                     as ::core::ffi::c_float;
                 mnX = mxX;
-                mxY = *(&raw mut (*p).a as *mut crate::geopoly_c::GeoCoord).offset(
+                mxY = *(&raw mut __p_ref.a as *mut crate::geopoly_c::GeoCoord).offset(
                     (0 as ::core::ffi::c_int * 2 as ::core::ffi::c_int + 1 as ::core::ffi::c_int)
                         as isize,
                 ) as ::core::ffi::c_float;
                 mnY = mxY;
                 ii = 1 as ::core::ffi::c_int;
-                while ii < (*p).nVertex {
-                    let mut r: ::core::ffi::c_double = *(&raw mut (*p).a as *mut crate::geopoly_c::GeoCoord)
+                while ii < __p_ref.nVertex {
+                    let mut r: ::core::ffi::c_double = *(&raw mut __p_ref.a as *mut crate::geopoly_c::GeoCoord)
                         .offset((ii * 2 as ::core::ffi::c_int) as isize)
                         as ::core::ffi::c_double;
                     if r < mnX as ::core::ffi::c_double {
@@ -1048,7 +1056,7 @@ pub mod geopoly_c {
                     } else if r > mxX as ::core::ffi::c_double {
                         mxX = r as ::core::ffi::c_float;
                     }
-                    r = *(&raw mut (*p).a as *mut crate::geopoly_c::GeoCoord)
+                    r = *(&raw mut __p_ref.a as *mut crate::geopoly_c::GeoCoord)
                         .offset((ii * 2 as ::core::ffi::c_int + 1 as ::core::ffi::c_int) as isize)
                         as ::core::ffi::c_double;
                     if r < mnY as ::core::ffi::c_double {
@@ -1200,28 +1208,29 @@ pub mod geopoly_c {
                     (::core::mem::size_of::<RtreeCoord>() as crate::__stddef_size_t_h::size_t).wrapping_mul(4 as crate::__stddef_size_t_h::size_t),
                 );
             } else {
+                let __pBBox_ref = unsafe { &mut *pBBox };
                 if a[0 as ::core::ffi::c_int as usize].f
-                    < (*pBBox).a[0 as ::core::ffi::c_int as usize].f
+                    < __pBBox_ref.a[0 as ::core::ffi::c_int as usize].f
                 {
-                    (*pBBox).a[0 as ::core::ffi::c_int as usize] =
+                    __pBBox_ref.a[0 as ::core::ffi::c_int as usize] =
                         a[0 as ::core::ffi::c_int as usize];
                 }
                 if a[1 as ::core::ffi::c_int as usize].f
-                    > (*pBBox).a[1 as ::core::ffi::c_int as usize].f
+                    > __pBBox_ref.a[1 as ::core::ffi::c_int as usize].f
                 {
-                    (*pBBox).a[1 as ::core::ffi::c_int as usize] =
+                    __pBBox_ref.a[1 as ::core::ffi::c_int as usize] =
                         a[1 as ::core::ffi::c_int as usize];
                 }
                 if a[2 as ::core::ffi::c_int as usize].f
-                    < (*pBBox).a[2 as ::core::ffi::c_int as usize].f
+                    < __pBBox_ref.a[2 as ::core::ffi::c_int as usize].f
                 {
-                    (*pBBox).a[2 as ::core::ffi::c_int as usize] =
+                    __pBBox_ref.a[2 as ::core::ffi::c_int as usize] =
                         a[2 as ::core::ffi::c_int as usize];
                 }
                 if a[3 as ::core::ffi::c_int as usize].f
-                    > (*pBBox).a[3 as ::core::ffi::c_int as usize].f
+                    > __pBBox_ref.a[3 as ::core::ffi::c_int as usize].f
                 {
-                    (*pBBox).a[3 as ::core::ffi::c_int as usize] =
+                    __pBBox_ref.a[3 as ::core::ffi::c_int as usize] =
                         a[3 as ::core::ffi::c_int as usize];
                 }
             }
@@ -1319,18 +1328,19 @@ pub mod geopoly_c {
         }
         ii = 0 as ::core::ffi::c_int;
         while ii < (*p1).nVertex - 1 as ::core::ffi::c_int {
+            let __p1_ref = unsafe { &mut *p1 };
             v = pointBeneathLine(
                 x0,
                 y0,
-                *(&raw mut (*p1).a as *mut crate::geopoly_c::GeoCoord).offset((ii * 2 as ::core::ffi::c_int) as isize)
+                *(&raw mut __p1_ref.a as *mut crate::geopoly_c::GeoCoord).offset((ii * 2 as ::core::ffi::c_int) as isize)
                     as ::core::ffi::c_double,
-                *(&raw mut (*p1).a as *mut crate::geopoly_c::GeoCoord)
+                *(&raw mut __p1_ref.a as *mut crate::geopoly_c::GeoCoord)
                     .offset((ii * 2 as ::core::ffi::c_int + 1 as ::core::ffi::c_int) as isize)
                     as ::core::ffi::c_double,
-                *(&raw mut (*p1).a as *mut crate::geopoly_c::GeoCoord)
+                *(&raw mut __p1_ref.a as *mut crate::geopoly_c::GeoCoord)
                     .offset(((ii + 1 as ::core::ffi::c_int) * 2 as ::core::ffi::c_int) as isize)
                     as ::core::ffi::c_double,
-                *(&raw mut (*p1).a as *mut crate::geopoly_c::GeoCoord).offset(
+                *(&raw mut __p1_ref.a as *mut crate::geopoly_c::GeoCoord).offset(
                     ((ii + 1 as ::core::ffi::c_int) * 2 as ::core::ffi::c_int
                         + 1 as ::core::ffi::c_int) as isize,
                 ) as ::core::ffi::c_double,
@@ -1342,18 +1352,19 @@ pub mod geopoly_c {
             ii += 1;
         }
         if v != 2 as ::core::ffi::c_int {
+            let __p1_ref = unsafe { &mut *p1 };
             v = pointBeneathLine(
                 x0,
                 y0,
-                *(&raw mut (*p1).a as *mut crate::geopoly_c::GeoCoord).offset((ii * 2 as ::core::ffi::c_int) as isize)
+                *(&raw mut __p1_ref.a as *mut crate::geopoly_c::GeoCoord).offset((ii * 2 as ::core::ffi::c_int) as isize)
                     as ::core::ffi::c_double,
-                *(&raw mut (*p1).a as *mut crate::geopoly_c::GeoCoord)
+                *(&raw mut __p1_ref.a as *mut crate::geopoly_c::GeoCoord)
                     .offset((ii * 2 as ::core::ffi::c_int + 1 as ::core::ffi::c_int) as isize)
                     as ::core::ffi::c_double,
-                *(&raw mut (*p1).a as *mut crate::geopoly_c::GeoCoord)
+                *(&raw mut __p1_ref.a as *mut crate::geopoly_c::GeoCoord)
                     .offset((0 as ::core::ffi::c_int * 2 as ::core::ffi::c_int) as isize)
                     as ::core::ffi::c_double,
-                *(&raw mut (*p1).a as *mut crate::geopoly_c::GeoCoord).offset(
+                *(&raw mut __p1_ref.a as *mut crate::geopoly_c::GeoCoord).offset(
                     (0 as ::core::ffi::c_int * 2 as ::core::ffi::c_int + 1 as ::core::ffi::c_int)
                         as isize,
                 ) as ::core::ffi::c_double,
@@ -1427,20 +1438,21 @@ pub mod geopoly_c {
             y0 = y1;
             y1 = t;
         }
-        pSeg = (*p).aSegment.offset((*p).nSegment as isize);
-        (*p).nSegment += 1;
+        let __p_ref = unsafe { &mut *p };
+        pSeg = __p_ref.aSegment.offset(__p_ref.nSegment as isize);
+        __p_ref.nSegment += 1;
         (*pSeg).C = ((y1 - y0) / (x1 - x0)) as ::core::ffi::c_double;
         (*pSeg).B = y1 as ::core::ffi::c_double - x1 as ::core::ffi::c_double * (*pSeg).C;
         (*pSeg).y0 = y0 as ::core::ffi::c_float;
         (*pSeg).side = side;
         (*pSeg).idx = idx;
-        pEvent = (*p).aEvent.offset((*p).nEvent as isize);
-        (*p).nEvent += 1;
+        pEvent = __p_ref.aEvent.offset(__p_ref.nEvent as isize);
+        __p_ref.nEvent += 1;
         (*pEvent).x = x0 as ::core::ffi::c_double;
         (*pEvent).eType = 0 as ::core::ffi::c_int;
         (*pEvent).pSeg = pSeg;
-        pEvent = (*p).aEvent.offset((*p).nEvent as isize);
-        (*p).nEvent += 1;
+        pEvent = __p_ref.aEvent.offset(__p_ref.nEvent as isize);
+        __p_ref.nEvent += 1;
         (*pEvent).x = x1 as ::core::ffi::c_double;
         (*pEvent).eType = 1 as ::core::ffi::c_int;
         (*pEvent).pSeg = pSeg;
@@ -1454,8 +1466,9 @@ pub mod geopoly_c {
         let mut i: ::core::ffi::c_uint = 0;
         let mut x: *mut crate::geopoly_c::GeoCoord = ::core::ptr::null_mut::<crate::geopoly_c::GeoCoord>();
         i = 0 as ::core::ffi::c_uint;
-        while i < ((*pPoly).nVertex as ::core::ffi::c_uint).wrapping_sub(1 as ::core::ffi::c_uint) {
-            x = (&raw mut (*pPoly).a as *mut crate::geopoly_c::GeoCoord)
+        let __pPoly_ref = unsafe { &mut *pPoly };
+        while i < (__pPoly_ref.nVertex as ::core::ffi::c_uint).wrapping_sub(1 as ::core::ffi::c_uint) {
+            x = (&raw mut __pPoly_ref.a as *mut crate::geopoly_c::GeoCoord)
                 .offset(i.wrapping_mul(2 as ::core::ffi::c_uint) as isize)
                 as *mut crate::geopoly_c::GeoCoord;
             geopolyAddOneSegment(
@@ -1469,14 +1482,14 @@ pub mod geopoly_c {
             );
             i = i.wrapping_add(1);
         }
-        x = (&raw mut (*pPoly).a as *mut crate::geopoly_c::GeoCoord)
+        x = (&raw mut __pPoly_ref.a as *mut crate::geopoly_c::GeoCoord)
             .offset(i.wrapping_mul(2 as ::core::ffi::c_uint) as isize) as *mut crate::geopoly_c::GeoCoord;
         geopolyAddOneSegment(
             p,
             *x.offset(0 as isize),
             *x.offset(1 as isize),
-            (*pPoly).a[0 as ::core::ffi::c_int as usize],
-            (*pPoly).a[1 as ::core::ffi::c_int as usize],
+            __pPoly_ref.a[0 as ::core::ffi::c_int as usize],
+            __pPoly_ref.a[1 as ::core::ffi::c_int as usize],
             side,
             i,
         );
@@ -1683,14 +1696,16 @@ pub mod geopoly_c {
                     let mut y: ::core::ffi::c_double = (*pSeg).C * rX + (*pSeg).B;
                     (*pSeg).y = y;
                     if !pPrev.is_null() {
-                        if (*pPrev).y > (*pSeg).y
-                            && (*pPrev).side as ::core::ffi::c_int
-                                != (*pSeg).side as ::core::ffi::c_int
+                        let __pSeg_ref = unsafe { &*pSeg };
+                        let __pPrev_ref = unsafe { &*pPrev };
+                        if __pPrev_ref.y > __pSeg_ref.y
+                            && __pPrev_ref.side as ::core::ffi::c_int
+                                != __pSeg_ref.side as ::core::ffi::c_int
                         {
                             rc = 1 as ::core::ffi::c_int;
                             current_block = 7007508497437696113;
                             break 's_58;
-                        } else if (*pPrev).y != (*pSeg).y {
+                        } else if __pPrev_ref.y != __pSeg_ref.y {
                             aOverlap[iMask as usize] = 1 as ::core::ffi::c_uchar;
                         }
                     }
@@ -2086,9 +2101,10 @@ pub mod geopoly_c {
                         if pNew.is_null() {
                             rc = crate::sqlite3_h::SQLITE_NOMEM;
                         } else {
-                            (*pNew).id = 1 as crate::sqlite3_h::sqlite3_int64;
-                            (*pNew).iCell = 0 as u8_0;
-                            (*pNew).eWithin = crate::sqlite3_h::PARTLY_WITHIN as u8_0;
+                            let __pNew_ref = unsafe { &mut *pNew };
+                            __pNew_ref.id = 1 as crate::sqlite3_h::sqlite3_int64;
+                            __pNew_ref.iCell = 0 as u8_0;
+                            __pNew_ref.eWithin = crate::sqlite3_h::PARTLY_WITHIN as u8_0;
                             (*pCsr).aNode[0 as ::core::ffi::c_int as usize] = pRoot;
                             pRoot = ::core::ptr::null_mut::<RtreeNode>();
                             rc = rtreeStepToLeaf(pCsr);
@@ -2111,55 +2127,57 @@ pub mod geopoly_c {
         let mut iFuncTerm: ::core::ffi::c_int = -(1 as ::core::ffi::c_int);
         let mut idxNum: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
         ii = 0 as ::core::ffi::c_int;
-        while ii < (*pIdxInfo).nConstraint {
+        let __pIdxInfo_ref = unsafe { &mut *pIdxInfo };
+        while ii < __pIdxInfo_ref.nConstraint {
             let mut p: *mut crate::sqlite3_h::sqlite3_index_constraint =
-                (*pIdxInfo).aConstraint.offset(ii as isize) as *mut crate::sqlite3_h::sqlite3_index_constraint;
+                __pIdxInfo_ref.aConstraint.offset(ii as isize) as *mut crate::sqlite3_h::sqlite3_index_constraint;
             if !((*p).usable == 0) {
-                if (*p).iColumn < 0 as ::core::ffi::c_int
-                    && (*p).op as ::core::ffi::c_int == crate::sqlite3_h::SQLITE_INDEX_CONSTRAINT_EQ_1
+                let __p_ref = unsafe { &*p };
+                if __p_ref.iColumn < 0 as ::core::ffi::c_int
+                    && __p_ref.op as ::core::ffi::c_int == crate::sqlite3_h::SQLITE_INDEX_CONSTRAINT_EQ_1
                 {
                     iRowidTerm = ii;
                     break;
-                } else if (*p).iColumn == 0 as ::core::ffi::c_int
-                    && (*p).op as ::core::ffi::c_int >= crate::sqlite3_h::SQLITE_INDEX_CONSTRAINT_FUNCTION
+                } else if __p_ref.iColumn == 0 as ::core::ffi::c_int
+                    && __p_ref.op as ::core::ffi::c_int >= crate::sqlite3_h::SQLITE_INDEX_CONSTRAINT_FUNCTION
                 {
                     iFuncTerm = ii;
-                    idxNum = (*p).op as ::core::ffi::c_int - crate::sqlite3_h::SQLITE_INDEX_CONSTRAINT_FUNCTION
+                    idxNum = __p_ref.op as ::core::ffi::c_int - crate::sqlite3_h::SQLITE_INDEX_CONSTRAINT_FUNCTION
                         + 2 as ::core::ffi::c_int;
                 }
             }
             ii += 1;
         }
         if iRowidTerm >= 0 as ::core::ffi::c_int {
-            (*pIdxInfo).idxNum = 1 as ::core::ffi::c_int;
-            (*pIdxInfo).idxStr =
+            __pIdxInfo_ref.idxNum = 1 as ::core::ffi::c_int;
+            __pIdxInfo_ref.idxStr =
                 b"rowid\0" as *const u8 as *const ::core::ffi::c_char as *mut ::core::ffi::c_char;
-            (*(*pIdxInfo).aConstraintUsage.offset(iRowidTerm as isize)).argvIndex =
+            (*__pIdxInfo_ref.aConstraintUsage.offset(iRowidTerm as isize)).argvIndex =
                 1 as ::core::ffi::c_int;
-            (*(*pIdxInfo).aConstraintUsage.offset(iRowidTerm as isize)).omit =
+            (*__pIdxInfo_ref.aConstraintUsage.offset(iRowidTerm as isize)).omit =
                 1 as ::core::ffi::c_uchar;
-            (*pIdxInfo).estimatedCost = 30.0f64;
-            (*pIdxInfo).estimatedRows = 1 as crate::sqlite3_h::sqlite3_int64;
-            (*pIdxInfo).idxFlags = crate::sqlite3_h::SQLITE_INDEX_SCAN_UNIQUE;
+            __pIdxInfo_ref.estimatedCost = 30.0f64;
+            __pIdxInfo_ref.estimatedRows = 1 as crate::sqlite3_h::sqlite3_int64;
+            __pIdxInfo_ref.idxFlags = crate::sqlite3_h::SQLITE_INDEX_SCAN_UNIQUE;
             return crate::sqlite3_h::SQLITE_OK;
         }
         if iFuncTerm >= 0 as ::core::ffi::c_int {
-            (*pIdxInfo).idxNum = idxNum;
-            (*pIdxInfo).idxStr =
+            __pIdxInfo_ref.idxNum = idxNum;
+            __pIdxInfo_ref.idxStr =
                 b"rtree\0" as *const u8 as *const ::core::ffi::c_char as *mut ::core::ffi::c_char;
-            (*(*pIdxInfo).aConstraintUsage.offset(iFuncTerm as isize)).argvIndex =
+            (*__pIdxInfo_ref.aConstraintUsage.offset(iFuncTerm as isize)).argvIndex =
                 1 as ::core::ffi::c_int;
-            (*(*pIdxInfo).aConstraintUsage.offset(iFuncTerm as isize)).omit =
+            (*__pIdxInfo_ref.aConstraintUsage.offset(iFuncTerm as isize)).omit =
                 0 as ::core::ffi::c_uchar;
-            (*pIdxInfo).estimatedCost = 300.0f64;
-            (*pIdxInfo).estimatedRows = 10 as crate::sqlite3_h::sqlite3_int64;
+            __pIdxInfo_ref.estimatedCost = 300.0f64;
+            __pIdxInfo_ref.estimatedRows = 10 as crate::sqlite3_h::sqlite3_int64;
             return crate::sqlite3_h::SQLITE_OK;
         }
-        (*pIdxInfo).idxNum = 4 as ::core::ffi::c_int;
-        (*pIdxInfo).idxStr =
+        __pIdxInfo_ref.idxNum = 4 as ::core::ffi::c_int;
+        __pIdxInfo_ref.idxStr =
             b"fullscan\0" as *const u8 as *const ::core::ffi::c_char as *mut ::core::ffi::c_char;
-        (*pIdxInfo).estimatedCost = 3000000.0f64;
-        (*pIdxInfo).estimatedRows = 100000 as crate::sqlite3_h::sqlite3_int64;
+        __pIdxInfo_ref.estimatedCost = 3000000.0f64;
+        __pIdxInfo_ref.estimatedRows = 100000 as crate::sqlite3_h::sqlite3_int64;
         return crate::sqlite3_h::SQLITE_OK;
     }
     
@@ -2184,13 +2202,14 @@ pub mod geopoly_c {
         }
         if i <= (*pRtree).nAux as ::core::ffi::c_int {
             if (*pCsr).bAuxValid == 0 {
-                if (*pCsr).pReadAux.is_null() {
+                let __pCsr_ref = unsafe { &mut *pCsr };
+                if __pCsr_ref.pReadAux.is_null() {
                     rc = crate::src::src::prepare::sqlite3_prepare_v3(
                         (*pRtree).db,
                         (*pRtree).zReadAuxSql,
                         -(1 as ::core::ffi::c_int),
                         0 as ::core::ffi::c_uint,
-                        &raw mut (*pCsr).pReadAux,
+                        &raw mut __pCsr_ref.pReadAux,
                         ::core::ptr::null_mut::<*const ::core::ffi::c_char>(),
                     );
                     if rc != 0 {
@@ -2198,15 +2217,15 @@ pub mod geopoly_c {
                     }
                 }
                 crate::src::src::vdbeapi::sqlite3_bind_int64(
-                    (*pCsr).pReadAux,
+                    __pCsr_ref.pReadAux,
                     1 as ::core::ffi::c_int,
                     nodeGetRowid(pRtree, pNode, (*p).iCell as ::core::ffi::c_int) as crate::sqlite3_h::sqlite3_int64,
                 );
-                rc = crate::src::src::vdbeapi::sqlite3_step((*pCsr).pReadAux);
+                rc = crate::src::src::vdbeapi::sqlite3_step(__pCsr_ref.pReadAux);
                 if rc == crate::sqlite3_h::SQLITE_ROW {
-                    (*pCsr).bAuxValid = 1 as u8_0;
+                    __pCsr_ref.bAuxValid = 1 as u8_0;
                 } else {
-                    crate::src::src::vdbeapi::sqlite3_reset((*pCsr).pReadAux);
+                    crate::src::src::vdbeapi::sqlite3_reset(__pCsr_ref.pReadAux);
                     if rc == crate::sqlite3_h::SQLITE_DONE {
                         rc = crate::sqlite3_h::SQLITE_OK;
                     }
@@ -2282,15 +2301,16 @@ pub mod geopoly_c {
                 coordChange = 1 as ::core::ffi::c_int;
                 if newRowidValid != 0 && (oldRowidValid == 0 || oldRowid != newRowid) {
                     let mut steprc: ::core::ffi::c_int = 0;
+                    let __pRtree_ref = unsafe { &*pRtree };
                     crate::src::src::vdbeapi::sqlite3_bind_int64(
-                        (*pRtree).pReadRowid,
+                        __pRtree_ref.pReadRowid,
                         1 as ::core::ffi::c_int,
                         cell.iRowid as crate::sqlite3_h::sqlite3_int64,
                     );
-                    steprc = crate::src::src::vdbeapi::sqlite3_step((*pRtree).pReadRowid);
-                    rc = crate::src::src::vdbeapi::sqlite3_reset((*pRtree).pReadRowid);
+                    steprc = crate::src::src::vdbeapi::sqlite3_step(__pRtree_ref.pReadRowid);
+                    rc = crate::src::src::vdbeapi::sqlite3_reset(__pRtree_ref.pReadRowid);
                     if crate::sqlite3_h::SQLITE_ROW == steprc {
-                        if crate::src::src::vtab::sqlite3_vtab_on_conflict((*pRtree).db) == crate::sqlite3_h::SQLITE_REPLACE {
+                        if crate::src::src::vtab::sqlite3_vtab_on_conflict(__pRtree_ref.db) == crate::sqlite3_h::SQLITE_REPLACE {
                             rc = rtreeDeleteRowid(pRtree, cell.iRowid as crate::sqlite3_h::sqlite3_int64);
                         } else {
                             rc = rtreeConstraintError(pRtree, 0 as ::core::ffi::c_int);
@@ -3226,15 +3246,16 @@ unsafe extern "C" fn nodeHashInsert(mut pRtree: *mut Rtree, mut pNode: *mut Rtre
 unsafe extern "C" fn nodeHashDelete(mut pRtree: *mut Rtree, mut pNode: *mut RtreeNode) {
     let mut pp: *mut *mut RtreeNode = ::core::ptr::null_mut::<*mut RtreeNode>();
     if (*pNode).iNode != 0 as i64_0 {
+        let __pNode_ref = unsafe { &mut *pNode };
         pp = (&raw mut (*pRtree).aHash as *mut *mut RtreeNode).offset((nodeHash
             as unsafe extern "C" fn(i64_0) -> ::core::ffi::c_uint)(
-            (*pNode).iNode
+            __pNode_ref.iNode
         ) as isize) as *mut *mut RtreeNode;
         while *pp != pNode {
             pp = &raw mut (**pp).pNext;
         }
-        *pp = (*pNode).pNext;
-        (*pNode).pNext = ::core::ptr::null_mut::<RtreeNode>();
+        *pp = __pNode_ref.pNext;
+        __pNode_ref.pNext = ::core::ptr::null_mut::<RtreeNode>();
     }
 }
 
@@ -3248,18 +3269,20 @@ unsafe extern "C" fn nodeNew(
             as crate::sqlite3_h::sqlite3_uint64,
     ) as *mut RtreeNode;
     if !pNode.is_null() {
+        let __pRtree_ref = unsafe { &mut *pRtree };
         ::libc::memset(
             pNode as *mut ::core::ffi::c_void,
             0 as ::core::ffi::c_int,
             (::core::mem::size_of::<RtreeNode>() as crate::__stddef_size_t_h::size_t)
-                .wrapping_add((*pRtree).iNodeSize as crate::__stddef_size_t_h::size_t),
+                .wrapping_add(__pRtree_ref.iNodeSize as crate::__stddef_size_t_h::size_t),
         );
-        (*pNode).zData =
+        let __pNode_ref = unsafe { &mut *pNode };
+        __pNode_ref.zData =
             pNode.offset(1 as isize) as *mut RtreeNode as *mut u8_0;
-        (*pNode).nRef = 1 as ::core::ffi::c_int;
-        (*pRtree).nNodeRef = (*pRtree).nNodeRef.wrapping_add(1);
-        (*pNode).pParent = pParent;
-        (*pNode).isDirty = 1 as ::core::ffi::c_int;
+        __pNode_ref.nRef = 1 as ::core::ffi::c_int;
+        __pRtree_ref.nNodeRef = __pRtree_ref.nNodeRef.wrapping_add(1);
+        __pNode_ref.pParent = pParent;
+        __pNode_ref.isDirty = 1 as ::core::ffi::c_int;
         nodeReference(pParent);
     }
     return pNode;
@@ -3288,11 +3311,12 @@ unsafe extern "C" fn nodeAcquire(
         *ppNode = pNode;
         return crate::sqlite3_h::SQLITE_OK;
     }
-    if !(*pRtree).pNodeBlob.is_null() {
-        let mut pBlob: *mut crate::sqlite3_h::sqlite3_blob = (*pRtree).pNodeBlob;
-        (*pRtree).pNodeBlob = ::core::ptr::null_mut::<crate::sqlite3_h::sqlite3_blob>();
+    let __pRtree_ref = unsafe { &mut *pRtree };
+    if !__pRtree_ref.pNodeBlob.is_null() {
+        let mut pBlob: *mut crate::sqlite3_h::sqlite3_blob = __pRtree_ref.pNodeBlob;
+        __pRtree_ref.pNodeBlob = ::core::ptr::null_mut::<crate::sqlite3_h::sqlite3_blob>();
         rc = crate::src::src::vdbeblob::sqlite3_blob_reopen(pBlob, iNode as crate::sqlite3_h::sqlite3_int64);
-        (*pRtree).pNodeBlob = pBlob;
+        __pRtree_ref.pNodeBlob = pBlob;
         if rc != 0 {
             nodeBlobReset(pRtree);
             if rc == crate::sqlite3_h::SQLITE_NOMEM {
@@ -3300,15 +3324,15 @@ unsafe extern "C" fn nodeAcquire(
             }
         }
     }
-    if (*pRtree).pNodeBlob.is_null() {
+    if __pRtree_ref.pNodeBlob.is_null() {
         rc = crate::src::src::vdbeblob::sqlite3_blob_open(
-            (*pRtree).db,
-            (*pRtree).zDb,
-            (*pRtree).zNodeName,
+            __pRtree_ref.db,
+            __pRtree_ref.zDb,
+            __pRtree_ref.zNodeName,
             b"data\0" as *const u8 as *const ::core::ffi::c_char,
             iNode as crate::sqlite3_h::sqlite3_int64,
             0 as ::core::ffi::c_int,
-            &raw mut (*pRtree).pNodeBlob,
+            &raw mut __pRtree_ref.pNodeBlob,
         );
     }
     if rc != 0 {
@@ -3316,40 +3340,41 @@ unsafe extern "C" fn nodeAcquire(
         if rc == crate::sqlite3_h::SQLITE_ERROR {
             rc = crate::sqlite3_h::SQLITE_CORRUPT_VTAB;
         }
-    } else if (*pRtree).iNodeSize == crate::src::src::vdbeblob::sqlite3_blob_bytes((*pRtree).pNodeBlob) {
+    } else if __pRtree_ref.iNodeSize == crate::src::src::vdbeblob::sqlite3_blob_bytes(__pRtree_ref.pNodeBlob) {
         pNode = crate::src::src::malloc::sqlite3_malloc64(
             (::core::mem::size_of::<RtreeNode>() as usize)
-                .wrapping_add((*pRtree).iNodeSize as usize) as crate::sqlite3_h::sqlite3_uint64,
+                .wrapping_add(__pRtree_ref.iNodeSize as usize) as crate::sqlite3_h::sqlite3_uint64,
         ) as *mut RtreeNode;
         if pNode.is_null() {
             rc = crate::sqlite3_h::SQLITE_NOMEM;
         } else {
-            (*pNode).pParent = pParent;
-            (*pNode).zData =
+            let __pNode_ref = unsafe { &mut *pNode };
+            __pNode_ref.pParent = pParent;
+            __pNode_ref.zData =
                 pNode.offset(1 as isize) as *mut RtreeNode as *mut u8_0;
-            (*pNode).nRef = 1 as ::core::ffi::c_int;
-            (*pRtree).nNodeRef = (*pRtree).nNodeRef.wrapping_add(1);
-            (*pNode).iNode = iNode;
-            (*pNode).isDirty = 0 as ::core::ffi::c_int;
-            (*pNode).pNext = ::core::ptr::null_mut::<RtreeNode>();
+            __pNode_ref.nRef = 1 as ::core::ffi::c_int;
+            __pRtree_ref.nNodeRef = __pRtree_ref.nNodeRef.wrapping_add(1);
+            __pNode_ref.iNode = iNode;
+            __pNode_ref.isDirty = 0 as ::core::ffi::c_int;
+            __pNode_ref.pNext = ::core::ptr::null_mut::<RtreeNode>();
             rc = crate::src::src::vdbeblob::sqlite3_blob_read(
-                (*pRtree).pNodeBlob,
-                (*pNode).zData as *mut ::core::ffi::c_void,
-                (*pRtree).iNodeSize,
+                __pRtree_ref.pNodeBlob,
+                __pNode_ref.zData as *mut ::core::ffi::c_void,
+                __pRtree_ref.iNodeSize,
                 0 as ::core::ffi::c_int,
             );
         }
     }
     if rc == crate::sqlite3_h::SQLITE_OK && !pNode.is_null() && iNode == 1 as i64_0 {
-        (*pRtree).iDepth = readInt16((*pNode).zData);
-        if (*pRtree).iDepth > RTREE_MAX_DEPTH {
+        __pRtree_ref.iDepth = readInt16((*pNode).zData);
+        if __pRtree_ref.iDepth > RTREE_MAX_DEPTH {
             rc = crate::sqlite3_h::SQLITE_CORRUPT_VTAB;
         }
     }
     if !pNode.is_null() && rc == crate::sqlite3_h::SQLITE_OK {
         if readInt16((*pNode).zData.offset(2 as isize) as *mut u8_0)
-            > ((*pRtree).iNodeSize - 4 as ::core::ffi::c_int)
-                / (*pRtree).nBytesPerCell as ::core::ffi::c_int
+            > (__pRtree_ref.iNodeSize - 4 as ::core::ffi::c_int)
+                / __pRtree_ref.nBytesPerCell as ::core::ffi::c_int
         {
             rc = crate::sqlite3_h::SQLITE_CORRUPT_VTAB;
         }
@@ -3365,7 +3390,7 @@ unsafe extern "C" fn nodeAcquire(
     } else {
         nodeBlobReset(pRtree);
         if !pNode.is_null() {
-            (*pRtree).nNodeRef = (*pRtree).nNodeRef.wrapping_sub(1);
+            __pRtree_ref.nNodeRef = __pRtree_ref.nNodeRef.wrapping_sub(1);
             crate::src::src::malloc::sqlite3_free(pNode as *mut ::core::ffi::c_void);
         }
         *ppNode = ::core::ptr::null_mut::<RtreeNode>();
@@ -3400,26 +3425,28 @@ unsafe extern "C" fn nodeDeleteCell(
     mut pNode: *mut RtreeNode,
     mut iCell: ::core::ffi::c_int,
 ) {
-    let mut pDst: *mut u8_0 = (*pNode).zData.offset(
-        (4 as ::core::ffi::c_int + (*pRtree).nBytesPerCell as ::core::ffi::c_int * iCell) as isize,
+    let __pRtree_ref = unsafe { &*pRtree };
+    let __pNode_ref = unsafe { &mut *pNode };
+    let mut pDst: *mut u8_0 = __pNode_ref.zData.offset(
+        (4 as ::core::ffi::c_int + __pRtree_ref.nBytesPerCell as ::core::ffi::c_int * iCell) as isize,
     ) as *mut u8_0;
-    let mut pSrc: *mut u8_0 = pDst.offset((*pRtree).nBytesPerCell as isize) as *mut u8_0;
+    let mut pSrc: *mut u8_0 = pDst.offset(__pRtree_ref.nBytesPerCell as isize) as *mut u8_0;
     let mut nByte: ::core::ffi::c_int =
-        (readInt16((*pNode).zData.offset(2 as isize) as *mut u8_0)
+        (readInt16(__pNode_ref.zData.offset(2 as isize) as *mut u8_0)
             - iCell
             - 1 as ::core::ffi::c_int)
-            * (*pRtree).nBytesPerCell as ::core::ffi::c_int;
+            * __pRtree_ref.nBytesPerCell as ::core::ffi::c_int;
     ::libc::memmove(
         pDst as *mut ::core::ffi::c_void,
         pSrc as *const ::core::ffi::c_void,
         nByte as crate::__stddef_size_t_h::size_t,
     );
     writeInt16(
-        (*pNode).zData.offset(2 as isize) as *mut u8_0,
-        readInt16((*pNode).zData.offset(2 as isize) as *mut u8_0)
+        __pNode_ref.zData.offset(2 as isize) as *mut u8_0,
+        readInt16(__pNode_ref.zData.offset(2 as isize) as *mut u8_0)
             - 1 as ::core::ffi::c_int,
     );
-    (*pNode).isDirty = 1 as ::core::ffi::c_int;
+    __pNode_ref.isDirty = 1 as ::core::ffi::c_int;
 }
 
 unsafe extern "C" fn nodeInsertCell(
@@ -3450,24 +3477,25 @@ unsafe extern "C" fn nodeWrite(
     let mut rc: ::core::ffi::c_int = crate::sqlite3_h::SQLITE_OK;
     if (*pNode).isDirty != 0 {
         let mut p: *mut crate::sqlite3_h::sqlite3_stmt = (*pRtree).pWriteNode;
-        if (*pNode).iNode != 0 {
-            crate::src::src::vdbeapi::sqlite3_bind_int64(p, 1 as ::core::ffi::c_int, (*pNode).iNode as crate::sqlite3_h::sqlite3_int64);
+        let __pNode_ref = unsafe { &mut *pNode };
+        if __pNode_ref.iNode != 0 {
+            crate::src::src::vdbeapi::sqlite3_bind_int64(p, 1 as ::core::ffi::c_int, __pNode_ref.iNode as crate::sqlite3_h::sqlite3_int64);
         } else {
             crate::src::src::vdbeapi::sqlite3_bind_null(p, 1 as ::core::ffi::c_int);
         }
         crate::src::src::vdbeapi::sqlite3_bind_blob(
             p,
             2 as ::core::ffi::c_int,
-            (*pNode).zData as *const ::core::ffi::c_void,
+            __pNode_ref.zData as *const ::core::ffi::c_void,
             (*pRtree).iNodeSize,
             crate::sqlite3_h::SQLITE_STATIC,
         );
         crate::src::src::vdbeapi::sqlite3_step(p);
-        (*pNode).isDirty = 0 as ::core::ffi::c_int;
+        __pNode_ref.isDirty = 0 as ::core::ffi::c_int;
         rc = crate::src::src::vdbeapi::sqlite3_reset(p);
         crate::src::src::vdbeapi::sqlite3_bind_null(p, 2 as ::core::ffi::c_int);
-        if (*pNode).iNode == 0 as i64_0 && rc == crate::sqlite3_h::SQLITE_OK {
-            (*pNode).iNode = crate::src::src::main::sqlite3_last_insert_rowid((*pRtree).db) as i64_0;
+        if __pNode_ref.iNode == 0 as i64_0 && rc == crate::sqlite3_h::SQLITE_OK {
+            __pNode_ref.iNode = crate::src::src::main::sqlite3_last_insert_rowid((*pRtree).db) as i64_0;
             nodeHashInsert(pRtree, pNode);
         }
     }
@@ -3581,20 +3609,21 @@ unsafe extern "C" fn rtreeReference(mut pRtree: *mut Rtree) {
 }
 
 unsafe extern "C" fn rtreeRelease(mut pRtree: *mut Rtree) {
-    (*pRtree).nBusy = (*pRtree).nBusy.wrapping_sub(1);
-    if (*pRtree).nBusy == 0 as u32_0 {
-        (*pRtree).inWrTrans = 0 as u8_0;
+    let __pRtree_ref = unsafe { &mut *pRtree };
+    __pRtree_ref.nBusy = __pRtree_ref.nBusy.wrapping_sub(1);
+    if __pRtree_ref.nBusy == 0 as u32_0 {
+        __pRtree_ref.inWrTrans = 0 as u8_0;
         nodeBlobReset(pRtree);
-        crate::src::src::vdbeapi::sqlite3_finalize((*pRtree).pWriteNode);
-        crate::src::src::vdbeapi::sqlite3_finalize((*pRtree).pDeleteNode);
-        crate::src::src::vdbeapi::sqlite3_finalize((*pRtree).pReadRowid);
-        crate::src::src::vdbeapi::sqlite3_finalize((*pRtree).pWriteRowid);
-        crate::src::src::vdbeapi::sqlite3_finalize((*pRtree).pDeleteRowid);
-        crate::src::src::vdbeapi::sqlite3_finalize((*pRtree).pReadParent);
-        crate::src::src::vdbeapi::sqlite3_finalize((*pRtree).pWriteParent);
-        crate::src::src::vdbeapi::sqlite3_finalize((*pRtree).pDeleteParent);
-        crate::src::src::vdbeapi::sqlite3_finalize((*pRtree).pWriteAux);
-        crate::src::src::malloc::sqlite3_free((*pRtree).zReadAuxSql as *mut ::core::ffi::c_void);
+        crate::src::src::vdbeapi::sqlite3_finalize(__pRtree_ref.pWriteNode);
+        crate::src::src::vdbeapi::sqlite3_finalize(__pRtree_ref.pDeleteNode);
+        crate::src::src::vdbeapi::sqlite3_finalize(__pRtree_ref.pReadRowid);
+        crate::src::src::vdbeapi::sqlite3_finalize(__pRtree_ref.pWriteRowid);
+        crate::src::src::vdbeapi::sqlite3_finalize(__pRtree_ref.pDeleteRowid);
+        crate::src::src::vdbeapi::sqlite3_finalize(__pRtree_ref.pReadParent);
+        crate::src::src::vdbeapi::sqlite3_finalize(__pRtree_ref.pWriteParent);
+        crate::src::src::vdbeapi::sqlite3_finalize(__pRtree_ref.pDeleteParent);
+        crate::src::src::vdbeapi::sqlite3_finalize(__pRtree_ref.pWriteAux);
+        crate::src::src::malloc::sqlite3_free(__pRtree_ref.zReadAuxSql as *mut ::core::ffi::c_void);
         crate::src::src::malloc::sqlite3_free(pRtree as *mut ::core::ffi::c_void);
     }
 }
@@ -3607,22 +3636,23 @@ unsafe extern "C" fn rtreeDisconnect(mut pVtab: *mut crate::sqlite3_h::sqlite3_v
 unsafe extern "C" fn rtreeDestroy(mut pVtab: *mut crate::sqlite3_h::sqlite3_vtab) -> ::core::ffi::c_int {
     let mut pRtree: *mut Rtree = pVtab as *mut Rtree;
     let mut rc: ::core::ffi::c_int = 0;
+    let __pRtree_ref = unsafe { &*pRtree };
     let mut zCreate: *mut ::core::ffi::c_char = crate::src::src::printf::sqlite3_mprintf(
         b"DROP TABLE '%q'.'%q_node';DROP TABLE '%q'.'%q_rowid';DROP TABLE '%q'.'%q_parent';\0"
             as *const u8 as *const ::core::ffi::c_char,
-        (*pRtree).zDb,
-        (*pRtree).zName,
-        (*pRtree).zDb,
-        (*pRtree).zName,
-        (*pRtree).zDb,
-        (*pRtree).zName,
+        __pRtree_ref.zDb,
+        __pRtree_ref.zName,
+        __pRtree_ref.zDb,
+        __pRtree_ref.zName,
+        __pRtree_ref.zDb,
+        __pRtree_ref.zName,
     );
     if zCreate.is_null() {
         rc = crate::sqlite3_h::SQLITE_NOMEM;
     } else {
         nodeBlobReset(pRtree);
         rc = crate::src::src::legacy::sqlite3_exec(
-            (*pRtree).db,
+            __pRtree_ref.db,
             zCreate,
             None,
             ::core::ptr::null_mut::<::core::ffi::c_void>(),
@@ -3660,15 +3690,16 @@ unsafe extern "C" fn rtreeOpen(
 }
 
 unsafe extern "C" fn resetCursor(mut pCsr: *mut RtreeCursor) {
-    let mut pRtree: *mut Rtree = (*pCsr).base.pVtab as *mut Rtree;
+    let __pCsr_ref = unsafe { &mut *pCsr };
+    let mut pRtree: *mut Rtree = __pCsr_ref.base.pVtab as *mut Rtree;
     let mut ii: ::core::ffi::c_int = 0;
     let mut pStmt: *mut crate::sqlite3_h::sqlite3_stmt = ::core::ptr::null_mut::<crate::sqlite3_h::sqlite3_stmt>();
-    if !(*pCsr).aConstraint.is_null() {
+    if !__pCsr_ref.aConstraint.is_null() {
         let mut i: ::core::ffi::c_int = 0;
         i = 0 as ::core::ffi::c_int;
-        while i < (*pCsr).nConstraint {
+        while i < __pCsr_ref.nConstraint {
             let mut pInfo: *mut crate::sqlite3_h::sqlite3_rtree_query_info =
-                (*(*pCsr).aConstraint.offset(i as isize)).pInfo;
+                (*__pCsr_ref.aConstraint.offset(i as isize)).pInfo;
             if !pInfo.is_null() {
                 if (*pInfo).xDelUser.is_some() {
                     (*pInfo).xDelUser.expect("non-null function pointer")((*pInfo).pUser);
@@ -3677,23 +3708,23 @@ unsafe extern "C" fn resetCursor(mut pCsr: *mut RtreeCursor) {
             }
             i += 1;
         }
-        crate::src::src::malloc::sqlite3_free((*pCsr).aConstraint as *mut ::core::ffi::c_void);
-        (*pCsr).aConstraint = ::core::ptr::null_mut::<RtreeConstraint>();
+        crate::src::src::malloc::sqlite3_free(__pCsr_ref.aConstraint as *mut ::core::ffi::c_void);
+        __pCsr_ref.aConstraint = ::core::ptr::null_mut::<RtreeConstraint>();
     }
     ii = 0 as ::core::ffi::c_int;
     while ii < RTREE_CACHE_SZ {
-        nodeRelease(pRtree, (*pCsr).aNode[ii as usize]);
+        nodeRelease(pRtree, __pCsr_ref.aNode[ii as usize]);
         ii += 1;
     }
-    crate::src::src::malloc::sqlite3_free((*pCsr).aPoint as *mut ::core::ffi::c_void);
-    pStmt = (*pCsr).pReadAux;
+    crate::src::src::malloc::sqlite3_free(__pCsr_ref.aPoint as *mut ::core::ffi::c_void);
+    pStmt = __pCsr_ref.pReadAux;
     ::libc::memset(
         pCsr as *mut ::core::ffi::c_void,
         0 as ::core::ffi::c_int,
         ::core::mem::size_of::<RtreeCursor>() as crate::__stddef_size_t_h::size_t,
     );
-    (*pCsr).base.pVtab = pRtree as *mut crate::sqlite3_h::sqlite3_vtab;
-    (*pCsr).pReadAux = pStmt;
+    __pCsr_ref.base.pVtab = pRtree as *mut crate::sqlite3_h::sqlite3_vtab;
+    __pCsr_ref.pReadAux = pStmt;
     crate::src::src::vdbeapi::sqlite3_reset(pStmt);
 }
 
@@ -3703,9 +3734,10 @@ unsafe extern "C" fn rtreeClose(mut cur: *mut crate::sqlite3_h::sqlite3_vtab_cur
     resetCursor(pCsr);
     crate::src::src::vdbeapi::sqlite3_finalize((*pCsr).pReadAux);
     crate::src::src::malloc::sqlite3_free(pCsr as *mut ::core::ffi::c_void);
-    (*pRtree).nCursor = (*pRtree).nCursor.wrapping_sub(1);
-    if (*pRtree).nCursor == 0 as u32_0
-        && (*pRtree).inWrTrans as ::core::ffi::c_int == 0 as ::core::ffi::c_int
+    let __pRtree_ref = unsafe { &mut *pRtree };
+    __pRtree_ref.nCursor = __pRtree_ref.nCursor.wrapping_sub(1);
+    if __pRtree_ref.nCursor == 0 as u32_0
+        && __pRtree_ref.inWrTrans as ::core::ffi::c_int == 0 as ::core::ffi::c_int
     {
         nodeBlobReset(pRtree);
     }
@@ -3725,12 +3757,13 @@ unsafe extern "C" fn rtreeCallbackConstraint(
     mut prScore: *mut crate::sqlite3_h::sqlite3_rtree_dbl,
     mut peWithin: *mut ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
-    let mut pInfo: *mut crate::sqlite3_h::sqlite3_rtree_query_info = (*pConstraint).pInfo;
+    let __pConstraint_ref = unsafe { &mut *pConstraint };
+    let mut pInfo: *mut crate::sqlite3_h::sqlite3_rtree_query_info = __pConstraint_ref.pInfo;
     let mut nCoord: ::core::ffi::c_int = (*pInfo).nCoord;
     let mut rc: ::core::ffi::c_int = 0;
     let mut c: RtreeCoord = RtreeCoord { f: 0. };
     let mut aCoord: [crate::sqlite3_h::sqlite3_rtree_dbl; 10] = [0.; 10];
-    if (*pConstraint).op == RTREE_QUERY
+    if __pConstraint_ref.op == RTREE_QUERY
         && (*pSearch).iLevel as ::core::ffi::c_int == 1 as ::core::ffi::c_int
     {
         (*pInfo).iRowid = readInt64(pCellData) as crate::sqlite3_h::sqlite3_int64;
@@ -3903,9 +3936,9 @@ unsafe extern "C" fn rtreeCallbackConstraint(
         readCoord(pCellData, &raw mut c);
         aCoord[0 as ::core::ffi::c_int as usize] = c.i as crate::sqlite3_h::sqlite3_rtree_dbl;
     }
-    if (*pConstraint).op == RTREE_MATCH {
+    if __pConstraint_ref.op == RTREE_MATCH {
         let mut eWithin: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
-        rc = (*pConstraint).u.xGeom.expect("non-null function pointer")(
+        rc = __pConstraint_ref.u.xGeom.expect("non-null function pointer")(
             pInfo as *mut crate::sqlite3_h::sqlite3_rtree_geometry,
             nCoord,
             &raw mut aCoord as *mut RtreeDValue,
@@ -3916,21 +3949,23 @@ unsafe extern "C" fn rtreeCallbackConstraint(
         }
         *prScore = RTREE_ZERO as crate::sqlite3_h::sqlite3_rtree_dbl;
     } else {
-        (*pInfo).aCoord = &raw mut aCoord as *mut crate::sqlite3_h::sqlite3_rtree_dbl;
-        (*pInfo).iLevel = (*pSearch).iLevel as ::core::ffi::c_int - 1 as ::core::ffi::c_int;
-        (*pInfo).rParentScore = (*pSearch).rScore as crate::sqlite3_h::sqlite3_rtree_dbl;
-        (*pInfo).rScore = (*pInfo).rParentScore;
-        (*pInfo).eParentWithin = (*pSearch).eWithin as ::core::ffi::c_int;
-        (*pInfo).eWithin = (*pInfo).eParentWithin;
+        let __pInfo_ref = unsafe { &mut *pInfo };
+        __pInfo_ref.aCoord = &raw mut aCoord as *mut crate::sqlite3_h::sqlite3_rtree_dbl;
+        let __pSearch_ref = unsafe { &*pSearch };
+        __pInfo_ref.iLevel = __pSearch_ref.iLevel as ::core::ffi::c_int - 1 as ::core::ffi::c_int;
+        __pInfo_ref.rParentScore = __pSearch_ref.rScore as crate::sqlite3_h::sqlite3_rtree_dbl;
+        __pInfo_ref.rScore = __pInfo_ref.rParentScore;
+        __pInfo_ref.eParentWithin = __pSearch_ref.eWithin as ::core::ffi::c_int;
+        __pInfo_ref.eWithin = __pInfo_ref.eParentWithin;
         rc = (*pConstraint)
             .u
             .xQueryFunc
             .expect("non-null function pointer")(pInfo);
-        if (*pInfo).eWithin < *peWithin {
-            *peWithin = (*pInfo).eWithin;
+        if __pInfo_ref.eWithin < *peWithin {
+            *peWithin = __pInfo_ref.eWithin;
         }
-        if (*pInfo).rScore < *prScore || *prScore < RTREE_ZERO {
-            *prScore = (*pInfo).rScore;
+        if __pInfo_ref.rScore < *prScore || *prScore < RTREE_ZERO {
+            *prScore = __pInfo_ref.rScore;
         }
     }
     return rc;
@@ -4128,16 +4163,18 @@ unsafe extern "C" fn rtreeSearchPointCompare(
     mut pA: *const RtreeSearchPoint,
     mut pB: *const RtreeSearchPoint,
 ) -> ::core::ffi::c_int {
-    if (*pA).rScore < (*pB).rScore {
+    let __pB_ref = unsafe { &*pB };
+    let __pA_ref = unsafe { &*pA };
+    if __pA_ref.rScore < __pB_ref.rScore {
         return -(1 as ::core::ffi::c_int);
     }
-    if (*pA).rScore > (*pB).rScore {
+    if __pA_ref.rScore > __pB_ref.rScore {
         return 1 as ::core::ffi::c_int;
     }
-    if ((*pA).iLevel as ::core::ffi::c_int) < (*pB).iLevel as ::core::ffi::c_int {
+    if (__pA_ref.iLevel as ::core::ffi::c_int) < __pB_ref.iLevel as ::core::ffi::c_int {
         return -(1 as ::core::ffi::c_int);
     }
-    if (*pA).iLevel as ::core::ffi::c_int > (*pB).iLevel as ::core::ffi::c_int {
+    if __pA_ref.iLevel as ::core::ffi::c_int > __pB_ref.iLevel as ::core::ffi::c_int {
         return 1 as ::core::ffi::c_int;
     }
     return 0 as ::core::ffi::c_int;
@@ -4148,19 +4185,20 @@ unsafe extern "C" fn rtreeSearchPointSwap(
     mut i: ::core::ffi::c_int,
     mut j: ::core::ffi::c_int,
 ) {
-    let mut t: RtreeSearchPoint = *(*p).aPoint.offset(i as isize);
-    *(*p).aPoint.offset(i as isize) = *(*p).aPoint.offset(j as isize);
-    *(*p).aPoint.offset(j as isize) = t;
+    let __p_ref = unsafe { &mut *p };
+    let mut t: RtreeSearchPoint = *__p_ref.aPoint.offset(i as isize);
+    *__p_ref.aPoint.offset(i as isize) = *__p_ref.aPoint.offset(j as isize);
+    *__p_ref.aPoint.offset(j as isize) = t;
     i += 1;
     j += 1;
     if i < RTREE_CACHE_SZ {
         if j >= RTREE_CACHE_SZ {
-            nodeRelease((*p).base.pVtab as *mut Rtree, (*p).aNode[i as usize]);
-            (*p).aNode[i as usize] = ::core::ptr::null_mut::<RtreeNode>();
+            nodeRelease(__p_ref.base.pVtab as *mut Rtree, __p_ref.aNode[i as usize]);
+            __p_ref.aNode[i as usize] = ::core::ptr::null_mut::<RtreeNode>();
         } else {
-            let mut pTemp: *mut RtreeNode = (*p).aNode[i as usize];
-            (*p).aNode[i as usize] = (*p).aNode[j as usize];
-            (*p).aNode[j as usize] = pTemp;
+            let mut pTemp: *mut RtreeNode = __p_ref.aNode[i as usize];
+            __p_ref.aNode[i as usize] = __p_ref.aNode[j as usize];
+            __p_ref.aNode[j as usize] = pTemp;
         }
     }
 }
@@ -4180,22 +4218,23 @@ unsafe extern "C" fn rtreeNodeOfFirstSearchPoint(
     mut pRC: *mut ::core::ffi::c_int,
 ) -> *mut RtreeNode {
     let mut id: crate::sqlite3_h::sqlite3_int64 = 0;
-    let mut ii: ::core::ffi::c_int = 1 as ::core::ffi::c_int - (*pCur).bPoint as ::core::ffi::c_int;
-    if (*pCur).aNode[ii as usize].is_null() {
+    let __pCur_ref = unsafe { &mut *pCur };
+    let mut ii: ::core::ffi::c_int = 1 as ::core::ffi::c_int - __pCur_ref.bPoint as ::core::ffi::c_int;
+    if __pCur_ref.aNode[ii as usize].is_null() {
         id = if ii != 0 {
-            (*(*pCur).aPoint.offset(0 as isize)).id
+            (*__pCur_ref.aPoint.offset(0 as isize)).id
         } else {
-            (*pCur).sPoint.id
+            __pCur_ref.sPoint.id
         };
         *pRC = nodeAcquire(
-            (*pCur).base.pVtab as *mut Rtree,
+            __pCur_ref.base.pVtab as *mut Rtree,
             id as i64_0,
             ::core::ptr::null_mut::<RtreeNode>(),
-            (&raw mut (*pCur).aNode as *mut *mut RtreeNode).offset(ii as isize)
+            (&raw mut __pCur_ref.aNode as *mut *mut RtreeNode).offset(ii as isize)
                 as *mut *mut RtreeNode,
         );
     }
-    return (*pCur).aNode[ii as usize];
+    return __pCur_ref.aNode[ii as usize];
 }
 
 unsafe extern "C" fn rtreeEnqueue(
@@ -4206,30 +4245,31 @@ unsafe extern "C" fn rtreeEnqueue(
     let mut i: ::core::ffi::c_int = 0;
     let mut j: ::core::ffi::c_int = 0;
     let mut pNew: *mut RtreeSearchPoint = ::core::ptr::null_mut::<RtreeSearchPoint>();
-    if (*pCur).nPoint >= (*pCur).nPointAlloc {
+    let __pCur_ref = unsafe { &mut *pCur };
+    if __pCur_ref.nPoint >= __pCur_ref.nPointAlloc {
         let mut nNew: ::core::ffi::c_int =
-            (*pCur).nPointAlloc * 2 as ::core::ffi::c_int + 8 as ::core::ffi::c_int;
+            __pCur_ref.nPointAlloc * 2 as ::core::ffi::c_int + 8 as ::core::ffi::c_int;
         pNew = crate::src::src::malloc::sqlite3_realloc64(
-            (*pCur).aPoint as *mut ::core::ffi::c_void,
+            __pCur_ref.aPoint as *mut ::core::ffi::c_void,
             (nNew as usize).wrapping_mul(::core::mem::size_of::<RtreeSearchPoint>() as usize)
                 as crate::sqlite3_h::sqlite3_uint64,
         ) as *mut RtreeSearchPoint;
         if pNew.is_null() {
             return ::core::ptr::null_mut::<RtreeSearchPoint>();
         }
-        (*pCur).aPoint = pNew;
-        (*pCur).nPointAlloc = nNew;
+        __pCur_ref.aPoint = pNew;
+        __pCur_ref.nPointAlloc = nNew;
     }
-    let fresh2 = (*pCur).nPoint;
-    (*pCur).nPoint = (*pCur).nPoint + 1;
+    let fresh2 = __pCur_ref.nPoint;
+    __pCur_ref.nPoint = __pCur_ref.nPoint + 1;
     i = fresh2;
-    pNew = (*pCur).aPoint.offset(i as isize);
+    pNew = __pCur_ref.aPoint.offset(i as isize);
     (*pNew).rScore = rScore;
     (*pNew).iLevel = iLevel;
     while i > 0 as ::core::ffi::c_int {
         let mut pParent: *mut RtreeSearchPoint = ::core::ptr::null_mut::<RtreeSearchPoint>();
         j = (i - 1 as ::core::ffi::c_int) / 2 as ::core::ffi::c_int;
-        pParent = (*pCur).aPoint.offset(j as isize);
+        pParent = __pCur_ref.aPoint.offset(j as isize);
         if rtreeSearchPointCompare(pNew, pParent) >= 0 as ::core::ffi::c_int {
             break;
         }
@@ -4254,29 +4294,30 @@ unsafe extern "C" fn rtreeSearchPointNew(
         || (*pFirst).rScore == rScore
             && (*pFirst).iLevel as ::core::ffi::c_int > iLevel as ::core::ffi::c_int
     {
-        if (*pCur).bPoint != 0 {
+        let __pCur_ref = unsafe { &mut *pCur };
+        if __pCur_ref.bPoint != 0 {
             let mut ii: ::core::ffi::c_int = 0;
             pNew = rtreeEnqueue(pCur, rScore, iLevel);
             if pNew.is_null() {
                 return ::core::ptr::null_mut::<RtreeSearchPoint>();
             }
-            ii = pNew.offset_from((*pCur).aPoint) as ::core::ffi::c_long as ::core::ffi::c_int
+            ii = pNew.offset_from(__pCur_ref.aPoint) as ::core::ffi::c_long as ::core::ffi::c_int
                 + 1 as ::core::ffi::c_int;
             if ii < 5 as ::core::ffi::c_int {
-                (*pCur).aNode[ii as usize] = (*pCur).aNode[0 as ::core::ffi::c_int as usize];
+                __pCur_ref.aNode[ii as usize] = __pCur_ref.aNode[0 as ::core::ffi::c_int as usize];
             } else {
                 nodeRelease(
-                    (*pCur).base.pVtab as *mut Rtree,
-                    (*pCur).aNode[0 as ::core::ffi::c_int as usize],
+                    __pCur_ref.base.pVtab as *mut Rtree,
+                    __pCur_ref.aNode[0 as ::core::ffi::c_int as usize],
                 );
             }
-            (*pCur).aNode[0 as ::core::ffi::c_int as usize] = ::core::ptr::null_mut::<RtreeNode>();
-            *pNew = (*pCur).sPoint;
+            __pCur_ref.aNode[0 as ::core::ffi::c_int as usize] = ::core::ptr::null_mut::<RtreeNode>();
+            *pNew = __pCur_ref.sPoint;
         }
-        (*pCur).sPoint.rScore = rScore;
-        (*pCur).sPoint.iLevel = iLevel;
-        (*pCur).bPoint = 1 as u8_0;
-        return &raw mut (*pCur).sPoint;
+        __pCur_ref.sPoint.rScore = rScore;
+        __pCur_ref.sPoint.iLevel = iLevel;
+        __pCur_ref.bPoint = 1 as u8_0;
+        return &raw mut __pCur_ref.sPoint;
     } else {
         return rtreeEnqueue(pCur, rScore, iLevel);
     };
@@ -4287,26 +4328,27 @@ unsafe extern "C" fn rtreeSearchPointPop(mut p: *mut RtreeCursor) {
     let mut j: ::core::ffi::c_int = 0;
     let mut k: ::core::ffi::c_int = 0;
     let mut n: ::core::ffi::c_int = 0;
-    i = 1 as ::core::ffi::c_int - (*p).bPoint as ::core::ffi::c_int;
-    if !(*p).aNode[i as usize].is_null() {
-        nodeRelease((*p).base.pVtab as *mut Rtree, (*p).aNode[i as usize]);
-        (*p).aNode[i as usize] = ::core::ptr::null_mut::<RtreeNode>();
+    let __p_ref = unsafe { &mut *p };
+    i = 1 as ::core::ffi::c_int - __p_ref.bPoint as ::core::ffi::c_int;
+    if !__p_ref.aNode[i as usize].is_null() {
+        nodeRelease(__p_ref.base.pVtab as *mut Rtree, __p_ref.aNode[i as usize]);
+        __p_ref.aNode[i as usize] = ::core::ptr::null_mut::<RtreeNode>();
     }
-    if (*p).bPoint != 0 {
-        (*p).anQueue[(*p).sPoint.iLevel as usize] =
-            (*p).anQueue[(*p).sPoint.iLevel as usize].wrapping_sub(1);
-        (*p).bPoint = 0 as u8_0;
-    } else if (*p).nPoint != 0 {
-        (*p).anQueue[(*(*p).aPoint.offset(0 as isize)).iLevel as usize] =
-            (*p).anQueue[(*(*p).aPoint.offset(0 as isize)).iLevel as usize]
+    if __p_ref.bPoint != 0 {
+        __p_ref.anQueue[__p_ref.sPoint.iLevel as usize] =
+            __p_ref.anQueue[__p_ref.sPoint.iLevel as usize].wrapping_sub(1);
+        __p_ref.bPoint = 0 as u8_0;
+    } else if __p_ref.nPoint != 0 {
+        __p_ref.anQueue[(*__p_ref.aPoint.offset(0 as isize)).iLevel as usize] =
+            __p_ref.anQueue[(*__p_ref.aPoint.offset(0 as isize)).iLevel as usize]
                 .wrapping_sub(1);
-        (*p).nPoint -= 1;
-        n = (*p).nPoint;
-        *(*p).aPoint.offset(0 as isize) = *(*p).aPoint.offset(n as isize);
+        __p_ref.nPoint -= 1;
+        n = __p_ref.nPoint;
+        *__p_ref.aPoint.offset(0 as isize) = *__p_ref.aPoint.offset(n as isize);
         if n < RTREE_CACHE_SZ - 1 as ::core::ffi::c_int {
-            (*p).aNode[1 as ::core::ffi::c_int as usize] =
-                (*p).aNode[(n + 1 as ::core::ffi::c_int) as usize];
-            (*p).aNode[(n + 1 as ::core::ffi::c_int) as usize] =
+            __p_ref.aNode[1 as ::core::ffi::c_int as usize] =
+                __p_ref.aNode[(n + 1 as ::core::ffi::c_int) as usize];
+            __p_ref.aNode[(n + 1 as ::core::ffi::c_int) as usize] =
                 ::core::ptr::null_mut::<RtreeNode>();
         }
         i = 0 as ::core::ffi::c_int;
@@ -4318,13 +4360,13 @@ unsafe extern "C" fn rtreeSearchPointPop(mut p: *mut RtreeCursor) {
             k = j + 1 as ::core::ffi::c_int;
             if k < n
                 && rtreeSearchPointCompare(
-                    (*p).aPoint.offset(k as isize) as *mut RtreeSearchPoint,
-                    (*p).aPoint.offset(j as isize) as *mut RtreeSearchPoint,
+                    __p_ref.aPoint.offset(k as isize) as *mut RtreeSearchPoint,
+                    __p_ref.aPoint.offset(j as isize) as *mut RtreeSearchPoint,
                 ) < 0 as ::core::ffi::c_int
             {
                 if !(rtreeSearchPointCompare(
-                    (*p).aPoint.offset(k as isize) as *mut RtreeSearchPoint,
-                    (*p).aPoint.offset(i as isize) as *mut RtreeSearchPoint,
+                    __p_ref.aPoint.offset(k as isize) as *mut RtreeSearchPoint,
+                    __p_ref.aPoint.offset(i as isize) as *mut RtreeSearchPoint,
                 ) < 0 as ::core::ffi::c_int)
                 {
                     break;
@@ -4333,8 +4375,8 @@ unsafe extern "C" fn rtreeSearchPointPop(mut p: *mut RtreeCursor) {
                 i = k;
             } else {
                 if !(rtreeSearchPointCompare(
-                    (*p).aPoint.offset(j as isize) as *mut RtreeSearchPoint,
-                    (*p).aPoint.offset(i as isize) as *mut RtreeSearchPoint,
+                    __p_ref.aPoint.offset(j as isize) as *mut RtreeSearchPoint,
+                    __p_ref.aPoint.offset(i as isize) as *mut RtreeSearchPoint,
                 ) < 0 as ::core::ffi::c_int)
                 {
                     break;
@@ -4348,12 +4390,13 @@ unsafe extern "C" fn rtreeSearchPointPop(mut p: *mut RtreeCursor) {
 
 unsafe extern "C" fn rtreeStepToLeaf(mut pCur: *mut RtreeCursor) -> ::core::ffi::c_int {
     let mut p: *mut RtreeSearchPoint = ::core::ptr::null_mut::<RtreeSearchPoint>();
-    let mut pRtree: *mut Rtree = (*pCur).base.pVtab as *mut Rtree;
+    let __pCur_ref = unsafe { &mut *pCur };
+    let mut pRtree: *mut Rtree = __pCur_ref.base.pVtab as *mut Rtree;
     let mut pNode: *mut RtreeNode = ::core::ptr::null_mut::<RtreeNode>();
     let mut eWithin: ::core::ffi::c_int = 0;
     let mut rc: ::core::ffi::c_int = crate::sqlite3_h::SQLITE_OK;
     let mut nCell: ::core::ffi::c_int = 0;
-    let mut nConstraint: ::core::ffi::c_int = (*pCur).nConstraint;
+    let mut nConstraint: ::core::ffi::c_int = __pCur_ref.nConstraint;
     let mut ii: ::core::ffi::c_int = 0;
     let mut eInt: ::core::ffi::c_int = 0;
     let mut x: RtreeSearchPoint = RtreeSearchPoint {
@@ -4385,7 +4428,7 @@ unsafe extern "C" fn rtreeStepToLeaf(mut pCur: *mut RtreeCursor) -> ::core::ffi:
             eWithin = crate::sqlite3_h::FULLY_WITHIN;
             ii = 0 as ::core::ffi::c_int;
             while ii < nConstraint {
-                let mut pConstraint: *mut RtreeConstraint = (*pCur).aConstraint.offset(ii as isize);
+                let mut pConstraint: *mut RtreeConstraint = __pCur_ref.aConstraint.offset(ii as isize);
                 if (*pConstraint).op >= RTREE_MATCH {
                     rc = rtreeCallbackConstraint(
                         pConstraint,
@@ -4420,8 +4463,8 @@ unsafe extern "C" fn rtreeStepToLeaf(mut pCur: *mut RtreeCursor) -> ::core::ffi:
             if x.iLevel != 0 {
                 x.id = readInt64(pCellData) as crate::sqlite3_h::sqlite3_int64;
                 ii = 0 as ::core::ffi::c_int;
-                while ii < (*pCur).nPoint {
-                    if (*(*pCur).aPoint.offset(ii as isize)).id == x.id {
+                while ii < __pCur_ref.nPoint {
+                    if (*__pCur_ref.aPoint.offset(ii as isize)).id == x.id {
                         return crate::sqlite3_h::SQLITE_CORRUPT_VTAB;
                     }
                     ii += 1;
@@ -4450,7 +4493,7 @@ unsafe extern "C" fn rtreeStepToLeaf(mut pCur: *mut RtreeCursor) -> ::core::ffi:
             rtreeSearchPointPop(pCur);
         }
     }
-    (*pCur).atEOF =
+    __pCur_ref.atEOF =
         (p == ::core::ptr::null_mut::<RtreeSearchPoint>()) as ::core::ffi::c_int as u8_0;
     return crate::sqlite3_h::SQLITE_OK;
 }
@@ -4533,13 +4576,14 @@ unsafe extern "C" fn rtreeColumn(
         }
     } else {
         if (*pCsr).bAuxValid == 0 {
-            if (*pCsr).pReadAux.is_null() {
+            let __pCsr_ref = unsafe { &mut *pCsr };
+            if __pCsr_ref.pReadAux.is_null() {
                 rc = crate::src::src::prepare::sqlite3_prepare_v3(
                     (*pRtree).db,
                     (*pRtree).zReadAuxSql,
                     -(1 as ::core::ffi::c_int),
                     0 as ::core::ffi::c_uint,
-                    &raw mut (*pCsr).pReadAux,
+                    &raw mut __pCsr_ref.pReadAux,
                     ::core::ptr::null_mut::<*const ::core::ffi::c_char>(),
                 );
                 if rc != 0 {
@@ -4547,15 +4591,15 @@ unsafe extern "C" fn rtreeColumn(
                 }
             }
             crate::src::src::vdbeapi::sqlite3_bind_int64(
-                (*pCsr).pReadAux,
+                __pCsr_ref.pReadAux,
                 1 as ::core::ffi::c_int,
                 nodeGetRowid(pRtree, pNode, (*p).iCell as ::core::ffi::c_int) as crate::sqlite3_h::sqlite3_int64,
             );
-            rc = crate::src::src::vdbeapi::sqlite3_step((*pCsr).pReadAux);
+            rc = crate::src::src::vdbeapi::sqlite3_step(__pCsr_ref.pReadAux);
             if rc == crate::sqlite3_h::SQLITE_ROW {
-                (*pCsr).bAuxValid = 1 as u8_0;
+                __pCsr_ref.bAuxValid = 1 as u8_0;
             } else {
-                crate::src::src::vdbeapi::sqlite3_reset((*pCsr).pReadAux);
+                crate::src::src::vdbeapi::sqlite3_reset(__pCsr_ref.pReadAux);
                 if rc == crate::sqlite3_h::SQLITE_DONE {
                     rc = crate::sqlite3_h::SQLITE_OK;
                 }
@@ -4703,22 +4747,23 @@ unsafe extern "C" fn rtreeFilter(
             &raw mut pRoot,
         );
         if rc == crate::sqlite3_h::SQLITE_OK && argc > 0 as ::core::ffi::c_int {
-            (*pCsr).aConstraint = crate::src::src::malloc::sqlite3_malloc64(
+            let __pCsr_ref = unsafe { &mut *pCsr };
+            __pCsr_ref.aConstraint = crate::src::src::malloc::sqlite3_malloc64(
                 (::core::mem::size_of::<RtreeConstraint>() as usize).wrapping_mul(argc as usize)
                     as crate::sqlite3_h::sqlite3_uint64,
             ) as *mut RtreeConstraint;
-            (*pCsr).nConstraint = argc;
-            if (*pCsr).aConstraint.is_null() {
+            __pCsr_ref.nConstraint = argc;
+            if __pCsr_ref.aConstraint.is_null() {
                 rc = crate::sqlite3_h::SQLITE_NOMEM;
             } else {
                 ::libc::memset(
-                    (*pCsr).aConstraint as *mut ::core::ffi::c_void,
+                    __pCsr_ref.aConstraint as *mut ::core::ffi::c_void,
                     0 as ::core::ffi::c_int,
                     (::core::mem::size_of::<RtreeConstraint>() as crate::__stddef_size_t_h::size_t)
                         .wrapping_mul(argc as crate::__stddef_size_t_h::size_t),
                 );
                 ::libc::memset(
-                    &raw mut (*pCsr).anQueue as *mut u32_0 as *mut ::core::ffi::c_void,
+                    &raw mut __pCsr_ref.anQueue as *mut u32_0 as *mut ::core::ffi::c_void,
                     0 as ::core::ffi::c_int,
                     (::core::mem::size_of::<u32_0>() as crate::__stddef_size_t_h::size_t)
                         .wrapping_mul(((*pRtree).iDepth + 1 as ::core::ffi::c_int) as crate::__stddef_size_t_h::size_t),
@@ -4726,28 +4771,29 @@ unsafe extern "C" fn rtreeFilter(
                 ii = 0 as ::core::ffi::c_int;
                 while ii < argc {
                     let mut p_0: *mut RtreeConstraint =
-                        (*pCsr).aConstraint.offset(ii as isize) as *mut RtreeConstraint;
+                        __pCsr_ref.aConstraint.offset(ii as isize) as *mut RtreeConstraint;
                     let mut eType_0: ::core::ffi::c_int =
                         crate::src::src::vdbe::sqlite3_value_numeric_type(*argv.offset(ii as isize));
-                    (*p_0).op = *idxStr.offset((ii * 2 as ::core::ffi::c_int) as isize)
+                    let __p_0_ref = unsafe { &mut *p_0 };
+                    __p_0_ref.op = *idxStr.offset((ii * 2 as ::core::ffi::c_int) as isize)
                         as ::core::ffi::c_int;
-                    (*p_0).iCoord = *idxStr
+                    __p_0_ref.iCoord = *idxStr
                         .offset((ii * 2 as ::core::ffi::c_int + 1 as ::core::ffi::c_int) as isize)
                         as ::core::ffi::c_int
                         - '0' as i32;
-                    if (*p_0).op >= RTREE_MATCH {
+                    if __p_0_ref.op >= RTREE_MATCH {
                         rc = deserializeGeometry(*argv.offset(ii as isize), p_0);
                         if rc != crate::sqlite3_h::SQLITE_OK {
                             break;
                         }
-                        (*(*p_0).pInfo).nCoord = (*pRtree).nDim2 as ::core::ffi::c_int;
-                        (*(*p_0).pInfo).anQueue =
-                            &raw mut (*pCsr).anQueue as *mut u32_0 as *mut ::core::ffi::c_uint;
-                        (*(*p_0).pInfo).mxLevel = (*pRtree).iDepth + 1 as ::core::ffi::c_int;
+                        (*__p_0_ref.pInfo).nCoord = (*pRtree).nDim2 as ::core::ffi::c_int;
+                        (*__p_0_ref.pInfo).anQueue =
+                            &raw mut __pCsr_ref.anQueue as *mut u32_0 as *mut ::core::ffi::c_uint;
+                        (*__p_0_ref.pInfo).mxLevel = (*pRtree).iDepth + 1 as ::core::ffi::c_int;
                     } else if eType_0 == crate::sqlite3_h::SQLITE_INTEGER {
                         let mut iVal: crate::sqlite3_h::sqlite3_int64 =
                             crate::src::src::vdbeapi::sqlite3_value_int64(*argv.offset(ii as isize));
-                        (*p_0).u.rValue = iVal as ::core::ffi::c_double as RtreeDValue;
+                        __p_0_ref.u.rValue = iVal as ::core::ffi::c_double as RtreeDValue;
                         if iVal
                             >= (1 as ::core::ffi::c_int as crate::sqlite3_h::sqlite3_int64)
                                 << 48 as ::core::ffi::c_int
@@ -4755,24 +4801,24 @@ unsafe extern "C" fn rtreeFilter(
                                 <= -((1 as ::core::ffi::c_int as crate::sqlite3_h::sqlite3_int64)
                                     << 48 as ::core::ffi::c_int)
                         {
-                            if (*p_0).op == RTREE_LT {
-                                (*p_0).op = RTREE_LE;
+                            if __p_0_ref.op == RTREE_LT {
+                                __p_0_ref.op = RTREE_LE;
                             }
-                            if (*p_0).op == RTREE_GT {
-                                (*p_0).op = RTREE_GE;
+                            if __p_0_ref.op == RTREE_GT {
+                                __p_0_ref.op = RTREE_GE;
                             }
                         }
                     } else if eType_0 == crate::sqlite3_h::SQLITE_FLOAT {
-                        (*p_0).u.rValue =
+                        __p_0_ref.u.rValue =
                             crate::src::src::vdbeapi::sqlite3_value_double(*argv.offset(ii as isize)) as RtreeDValue;
                     } else {
-                        (*p_0).u.rValue = RTREE_ZERO as RtreeDValue;
+                        __p_0_ref.u.rValue = RTREE_ZERO as RtreeDValue;
                         if eType_0 == crate::sqlite3_h::SQLITE_NULL {
-                            (*p_0).op = RTREE_FALSE;
-                        } else if (*p_0).op == RTREE_LT || (*p_0).op == RTREE_LE {
-                            (*p_0).op = RTREE_TRUE;
+                            __p_0_ref.op = RTREE_FALSE;
+                        } else if __p_0_ref.op == RTREE_LT || __p_0_ref.op == RTREE_LE {
+                            __p_0_ref.op = RTREE_TRUE;
                         } else {
-                            (*p_0).op = RTREE_FALSE;
+                            __p_0_ref.op = RTREE_FALSE;
                         }
                     }
                     ii += 1;
@@ -4814,8 +4860,9 @@ unsafe extern "C" fn rtreeBestIndex(
     let mut iIdx: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
     let mut zIdxStr: [::core::ffi::c_char; 41] = unsafe { ::core::mem::zeroed() };
     ii = 0 as ::core::ffi::c_int;
-    while ii < (*pIdxInfo).nConstraint {
-        if (*(*pIdxInfo).aConstraint.offset(ii as isize)).op as ::core::ffi::c_int
+    let __pIdxInfo_ref = unsafe { &mut *pIdxInfo };
+    while ii < __pIdxInfo_ref.nConstraint {
+        if (*__pIdxInfo_ref.aConstraint.offset(ii as isize)).op as ::core::ffi::c_int
             == crate::sqlite3_h::SQLITE_INDEX_CONSTRAINT_MATCH_1
         {
             bMatch = 1 as ::core::ffi::c_int;
@@ -4823,43 +4870,44 @@ unsafe extern "C" fn rtreeBestIndex(
         ii += 1;
     }
     ii = 0 as ::core::ffi::c_int;
-    while ii < (*pIdxInfo).nConstraint
+    while ii < __pIdxInfo_ref.nConstraint
         && iIdx
             < (::core::mem::size_of::<[::core::ffi::c_char; 41]>() as usize)
                 .wrapping_sub(1 as usize) as ::core::ffi::c_int
     {
         let mut p: *mut crate::sqlite3_h::sqlite3_index_constraint =
-            (*pIdxInfo).aConstraint.offset(ii as isize) as *mut crate::sqlite3_h::sqlite3_index_constraint;
+            __pIdxInfo_ref.aConstraint.offset(ii as isize) as *mut crate::sqlite3_h::sqlite3_index_constraint;
+        let __p_ref = unsafe { &*p };
         if bMatch == 0 as ::core::ffi::c_int
-            && (*p).usable as ::core::ffi::c_int != 0
-            && (*p).iColumn <= 0 as ::core::ffi::c_int
-            && (*p).op as ::core::ffi::c_int == crate::sqlite3_h::SQLITE_INDEX_CONSTRAINT_EQ_1
+            && __p_ref.usable as ::core::ffi::c_int != 0
+            && __p_ref.iColumn <= 0 as ::core::ffi::c_int
+            && __p_ref.op as ::core::ffi::c_int == crate::sqlite3_h::SQLITE_INDEX_CONSTRAINT_EQ_1
         {
             let mut jj: ::core::ffi::c_int = 0;
             jj = 0 as ::core::ffi::c_int;
             while jj < ii {
-                (*(*pIdxInfo).aConstraintUsage.offset(jj as isize)).argvIndex =
+                (*__pIdxInfo_ref.aConstraintUsage.offset(jj as isize)).argvIndex =
                     0 as ::core::ffi::c_int;
-                (*(*pIdxInfo).aConstraintUsage.offset(jj as isize)).omit =
+                (*__pIdxInfo_ref.aConstraintUsage.offset(jj as isize)).omit =
                     0 as ::core::ffi::c_uchar;
                 jj += 1;
             }
-            (*pIdxInfo).idxNum = 1 as ::core::ffi::c_int;
-            (*(*pIdxInfo).aConstraintUsage.offset(ii as isize)).argvIndex = 1 as ::core::ffi::c_int;
-            (*(*pIdxInfo).aConstraintUsage.offset(jj as isize)).omit = 1 as ::core::ffi::c_uchar;
-            (*pIdxInfo).estimatedCost = 30.0f64;
-            (*pIdxInfo).estimatedRows = 1 as crate::sqlite3_h::sqlite3_int64;
-            (*pIdxInfo).idxFlags = crate::sqlite3_h::SQLITE_INDEX_SCAN_UNIQUE;
+            __pIdxInfo_ref.idxNum = 1 as ::core::ffi::c_int;
+            (*__pIdxInfo_ref.aConstraintUsage.offset(ii as isize)).argvIndex = 1 as ::core::ffi::c_int;
+            (*__pIdxInfo_ref.aConstraintUsage.offset(jj as isize)).omit = 1 as ::core::ffi::c_uchar;
+            __pIdxInfo_ref.estimatedCost = 30.0f64;
+            __pIdxInfo_ref.estimatedRows = 1 as crate::sqlite3_h::sqlite3_int64;
+            __pIdxInfo_ref.idxFlags = crate::sqlite3_h::SQLITE_INDEX_SCAN_UNIQUE;
             return crate::sqlite3_h::SQLITE_OK;
         }
-        if (*p).usable as ::core::ffi::c_int != 0
-            && ((*p).iColumn > 0 as ::core::ffi::c_int
-                && (*p).iColumn <= (*pRtree).nDim2 as ::core::ffi::c_int
-                || (*p).op as ::core::ffi::c_int == crate::sqlite3_h::SQLITE_INDEX_CONSTRAINT_MATCH_1)
+        if __p_ref.usable as ::core::ffi::c_int != 0
+            && (__p_ref.iColumn > 0 as ::core::ffi::c_int
+                && __p_ref.iColumn <= (*pRtree).nDim2 as ::core::ffi::c_int
+                || __p_ref.op as ::core::ffi::c_int == crate::sqlite3_h::SQLITE_INDEX_CONSTRAINT_MATCH_1)
         {
             let mut op: u8_0 = 0;
             let mut doOmit: u8_0 = 1 as u8_0;
-            match  (*p).op as ::core::ffi::c_int {
+            match  __p_ref.op as ::core::ffi::c_int {
     crate::sqlite3_h::SQLITE_INDEX_CONSTRAINT_EQ_1 =>  {
                     op = RTREE_EQ as u8_0;
                     doOmit = 0 as u8_0;
@@ -4892,32 +4940,32 @@ unsafe extern "C" fn rtreeBestIndex(
                 let fresh4 = iIdx;
                 iIdx = iIdx + 1;
                 zIdxStr[fresh4 as usize] =
-                    ((*p).iColumn - 1 as ::core::ffi::c_int + '0' as i32) as ::core::ffi::c_char;
-                (*(*pIdxInfo).aConstraintUsage.offset(ii as isize)).argvIndex =
+                    (__p_ref.iColumn - 1 as ::core::ffi::c_int + '0' as i32) as ::core::ffi::c_char;
+                (*__pIdxInfo_ref.aConstraintUsage.offset(ii as isize)).argvIndex =
                     iIdx / 2 as ::core::ffi::c_int;
-                (*(*pIdxInfo).aConstraintUsage.offset(ii as isize)).omit =
+                (*__pIdxInfo_ref.aConstraintUsage.offset(ii as isize)).omit =
                     doOmit as ::core::ffi::c_uchar;
             }
         }
         ii += 1;
     }
-    (*pIdxInfo).idxNum = 2 as ::core::ffi::c_int;
-    (*pIdxInfo).needToFreeIdxStr = 1 as ::core::ffi::c_int;
+    __pIdxInfo_ref.idxNum = 2 as ::core::ffi::c_int;
+    __pIdxInfo_ref.needToFreeIdxStr = 1 as ::core::ffi::c_int;
     if iIdx > 0 as ::core::ffi::c_int {
-        (*pIdxInfo).idxStr =
+        __pIdxInfo_ref.idxStr =
             crate::src::src::malloc::sqlite3_malloc(iIdx + 1 as ::core::ffi::c_int) as *mut ::core::ffi::c_char;
-        if (*pIdxInfo).idxStr.is_null() {
+        if __pIdxInfo_ref.idxStr.is_null() {
             return crate::sqlite3_h::SQLITE_NOMEM;
         }
         ::libc::memcpy(
-            (*pIdxInfo).idxStr as *mut ::core::ffi::c_void,
+            __pIdxInfo_ref.idxStr as *mut ::core::ffi::c_void,
             &raw mut zIdxStr as *mut ::core::ffi::c_char as *const ::core::ffi::c_void,
             (iIdx + 1 as ::core::ffi::c_int) as crate::__stddef_size_t_h::size_t,
         );
     }
     nRow = (*pRtree).nRowEst >> iIdx / 2 as ::core::ffi::c_int;
-    (*pIdxInfo).estimatedCost = 6.0f64 * nRow as ::core::ffi::c_double;
-    (*pIdxInfo).estimatedRows = nRow as crate::sqlite3_h::sqlite3_int64;
+    __pIdxInfo_ref.estimatedCost = 6.0f64 * nRow as ::core::ffi::c_double;
+    __pIdxInfo_ref.estimatedRows = nRow as crate::sqlite3_h::sqlite3_int64;
     return rc;
 }
 
@@ -5058,19 +5106,20 @@ unsafe extern "C" fn cellUnion(
     let mut ii: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
     if (*pRtree).eCoordType as ::core::ffi::c_int == RTREE_COORD_REAL32 {
         loop {
-            (*p1).aCoord[ii as usize].f =
-                if (*p1).aCoord[ii as usize].f > (*p2).aCoord[ii as usize].f {
+            let __p1_ref = unsafe { &mut *p1 };
+            __p1_ref.aCoord[ii as usize].f =
+                if __p1_ref.aCoord[ii as usize].f > (*p2).aCoord[ii as usize].f {
                     (*p2).aCoord[ii as usize].f
                 } else {
-                    (*p1).aCoord[ii as usize].f
+                    __p1_ref.aCoord[ii as usize].f
                 };
-            (*p1).aCoord[(ii + 1 as ::core::ffi::c_int) as usize].f =
-                if (*p1).aCoord[(ii + 1 as ::core::ffi::c_int) as usize].f
+            __p1_ref.aCoord[(ii + 1 as ::core::ffi::c_int) as usize].f =
+                if __p1_ref.aCoord[(ii + 1 as ::core::ffi::c_int) as usize].f
                     < (*p2).aCoord[(ii + 1 as ::core::ffi::c_int) as usize].f
                 {
                     (*p2).aCoord[(ii + 1 as ::core::ffi::c_int) as usize].f
                 } else {
-                    (*p1).aCoord[(ii + 1 as ::core::ffi::c_int) as usize].f
+                    __p1_ref.aCoord[(ii + 1 as ::core::ffi::c_int) as usize].f
                 };
             ii += 2 as ::core::ffi::c_int;
             if !(ii < (*pRtree).nDim2 as ::core::ffi::c_int) {
@@ -5079,19 +5128,20 @@ unsafe extern "C" fn cellUnion(
         }
     } else {
         loop {
-            (*p1).aCoord[ii as usize].i =
-                if (*p1).aCoord[ii as usize].i > (*p2).aCoord[ii as usize].i {
+            let __p1_ref = unsafe { &mut *p1 };
+            __p1_ref.aCoord[ii as usize].i =
+                if __p1_ref.aCoord[ii as usize].i > (*p2).aCoord[ii as usize].i {
                     (*p2).aCoord[ii as usize].i
                 } else {
-                    (*p1).aCoord[ii as usize].i
+                    __p1_ref.aCoord[ii as usize].i
                 };
-            (*p1).aCoord[(ii + 1 as ::core::ffi::c_int) as usize].i =
-                if (*p1).aCoord[(ii + 1 as ::core::ffi::c_int) as usize].i
+            __p1_ref.aCoord[(ii + 1 as ::core::ffi::c_int) as usize].i =
+                if __p1_ref.aCoord[(ii + 1 as ::core::ffi::c_int) as usize].i
                     < (*p2).aCoord[(ii + 1 as ::core::ffi::c_int) as usize].i
                 {
                     (*p2).aCoord[(ii + 1 as ::core::ffi::c_int) as usize].i
                 } else {
-                    (*p1).aCoord[(ii + 1 as ::core::ffi::c_int) as usize].i
+                    __p1_ref.aCoord[(ii + 1 as ::core::ffi::c_int) as usize].i
                 };
             ii += 2 as ::core::ffi::c_int;
             if !(ii < (*pRtree).nDim2 as ::core::ffi::c_int) {
@@ -5159,31 +5209,32 @@ unsafe extern "C" fn cellOverlap(
         while jj < (*pRtree).nDim2 as ::core::ffi::c_int {
             let mut x1: RtreeDValue = 0.;
             let mut x2: RtreeDValue = 0.;
-            x1 = (if (if (*pRtree).eCoordType as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
+            let __pRtree_ref = unsafe { &*pRtree };
+            x1 = (if (if __pRtree_ref.eCoordType as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
                 (*p).aCoord[jj as usize].f as ::core::ffi::c_double
             } else {
                 (*p).aCoord[jj as usize].i as ::core::ffi::c_double
-            }) < (if (*pRtree).eCoordType as ::core::ffi::c_int == 0 as ::core::ffi::c_int
+            }) < (if __pRtree_ref.eCoordType as ::core::ffi::c_int == 0 as ::core::ffi::c_int
             {
                 (*aCell.offset(ii as isize)).aCoord[jj as usize].f as ::core::ffi::c_double
             } else {
                 (*aCell.offset(ii as isize)).aCoord[jj as usize].i as ::core::ffi::c_double
             }) {
-                if (*pRtree).eCoordType as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
+                if __pRtree_ref.eCoordType as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
                     (*aCell.offset(ii as isize)).aCoord[jj as usize].f as ::core::ffi::c_double
                 } else {
                     (*aCell.offset(ii as isize)).aCoord[jj as usize].i as ::core::ffi::c_double
                 }
-            } else if (*pRtree).eCoordType as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
+            } else if __pRtree_ref.eCoordType as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
                 (*p).aCoord[jj as usize].f as ::core::ffi::c_double
             } else {
                 (*p).aCoord[jj as usize].i as ::core::ffi::c_double
             }) as RtreeDValue;
-            x2 = (if (if (*pRtree).eCoordType as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
+            x2 = (if (if __pRtree_ref.eCoordType as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
                 (*p).aCoord[(jj + 1 as ::core::ffi::c_int) as usize].f as ::core::ffi::c_double
             } else {
                 (*p).aCoord[(jj + 1 as ::core::ffi::c_int) as usize].i as ::core::ffi::c_double
-            }) > (if (*pRtree).eCoordType as ::core::ffi::c_int == 0 as ::core::ffi::c_int
+            }) > (if __pRtree_ref.eCoordType as ::core::ffi::c_int == 0 as ::core::ffi::c_int
             {
                 (*aCell.offset(ii as isize)).aCoord[(jj + 1 as ::core::ffi::c_int) as usize].f
                     as ::core::ffi::c_double
@@ -5191,14 +5242,14 @@ unsafe extern "C" fn cellOverlap(
                 (*aCell.offset(ii as isize)).aCoord[(jj + 1 as ::core::ffi::c_int) as usize].i
                     as ::core::ffi::c_double
             }) {
-                if (*pRtree).eCoordType as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
+                if __pRtree_ref.eCoordType as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
                     (*aCell.offset(ii as isize)).aCoord[(jj + 1 as ::core::ffi::c_int) as usize].f
                         as ::core::ffi::c_double
                 } else {
                     (*aCell.offset(ii as isize)).aCoord[(jj + 1 as ::core::ffi::c_int) as usize].i
                         as ::core::ffi::c_double
                 }
-            } else if (*pRtree).eCoordType as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
+            } else if __pRtree_ref.eCoordType as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
                 (*p).aCoord[(jj + 1 as ::core::ffi::c_int) as usize].f as ::core::ffi::c_double
             } else {
                 (*p).aCoord[(jj + 1 as ::core::ffi::c_int) as usize].i as ::core::ffi::c_double
@@ -5330,10 +5381,11 @@ unsafe extern "C" fn rowidWrite(
     mut iRowid: crate::sqlite3_h::sqlite3_int64,
     mut iNode: crate::sqlite3_h::sqlite3_int64,
 ) -> ::core::ffi::c_int {
-    crate::src::src::vdbeapi::sqlite3_bind_int64((*pRtree).pWriteRowid, 1 as ::core::ffi::c_int, iRowid);
-    crate::src::src::vdbeapi::sqlite3_bind_int64((*pRtree).pWriteRowid, 2 as ::core::ffi::c_int, iNode);
-    crate::src::src::vdbeapi::sqlite3_step((*pRtree).pWriteRowid);
-    return crate::src::src::vdbeapi::sqlite3_reset((*pRtree).pWriteRowid);
+    let __pRtree_ref = unsafe { &*pRtree };
+    crate::src::src::vdbeapi::sqlite3_bind_int64(__pRtree_ref.pWriteRowid, 1 as ::core::ffi::c_int, iRowid);
+    crate::src::src::vdbeapi::sqlite3_bind_int64(__pRtree_ref.pWriteRowid, 2 as ::core::ffi::c_int, iNode);
+    crate::src::src::vdbeapi::sqlite3_step(__pRtree_ref.pWriteRowid);
+    return crate::src::src::vdbeapi::sqlite3_reset(__pRtree_ref.pWriteRowid);
 }
 
 unsafe extern "C" fn parentWrite(
@@ -5341,10 +5393,11 @@ unsafe extern "C" fn parentWrite(
     mut iNode: crate::sqlite3_h::sqlite3_int64,
     mut iPar: crate::sqlite3_h::sqlite3_int64,
 ) -> ::core::ffi::c_int {
-    crate::src::src::vdbeapi::sqlite3_bind_int64((*pRtree).pWriteParent, 1 as ::core::ffi::c_int, iNode);
-    crate::src::src::vdbeapi::sqlite3_bind_int64((*pRtree).pWriteParent, 2 as ::core::ffi::c_int, iPar);
-    crate::src::src::vdbeapi::sqlite3_step((*pRtree).pWriteParent);
-    return crate::src::src::vdbeapi::sqlite3_reset((*pRtree).pWriteParent);
+    let __pRtree_ref = unsafe { &*pRtree };
+    crate::src::src::vdbeapi::sqlite3_bind_int64(__pRtree_ref.pWriteParent, 1 as ::core::ffi::c_int, iNode);
+    crate::src::src::vdbeapi::sqlite3_bind_int64(__pRtree_ref.pWriteParent, 2 as ::core::ffi::c_int, iPar);
+    crate::src::src::vdbeapi::sqlite3_step(__pRtree_ref.pWriteParent);
+    return crate::src::src::vdbeapi::sqlite3_reset(__pRtree_ref.pWriteParent);
 }
 
 unsafe extern "C" fn SortByDimension(
@@ -5372,8 +5425,9 @@ unsafe extern "C" fn SortByDimension(
         );
         aLeft = aSpare;
         while iLeft < nLeft || iRight < nRight {
+            let __pRtree_ref = unsafe { &*pRtree };
             let mut xleft1: RtreeDValue =
-                if (*pRtree).eCoordType as ::core::ffi::c_int == RTREE_COORD_REAL32 {
+                if __pRtree_ref.eCoordType as ::core::ffi::c_int == RTREE_COORD_REAL32 {
                     (*aCell.offset(*aLeft.offset(iLeft as isize) as isize)).aCoord
                         [(iDim * 2 as ::core::ffi::c_int) as usize]
                         .f as RtreeDValue
@@ -5383,7 +5437,7 @@ unsafe extern "C" fn SortByDimension(
                         .i as RtreeDValue
                 };
             let mut xleft2: RtreeDValue =
-                if (*pRtree).eCoordType as ::core::ffi::c_int == RTREE_COORD_REAL32 {
+                if __pRtree_ref.eCoordType as ::core::ffi::c_int == RTREE_COORD_REAL32 {
                     (*aCell.offset(*aLeft.offset(iLeft as isize) as isize)).aCoord
                         [(iDim * 2 as ::core::ffi::c_int + 1 as ::core::ffi::c_int) as usize]
                         .f as RtreeDValue
@@ -5393,7 +5447,7 @@ unsafe extern "C" fn SortByDimension(
                         .i as RtreeDValue
                 };
             let mut xright1: RtreeDValue =
-                if (*pRtree).eCoordType as ::core::ffi::c_int == RTREE_COORD_REAL32 {
+                if __pRtree_ref.eCoordType as ::core::ffi::c_int == RTREE_COORD_REAL32 {
                     (*aCell.offset(*aRight.offset(iRight as isize) as isize)).aCoord
                         [(iDim * 2 as ::core::ffi::c_int) as usize]
                         .f as RtreeDValue
@@ -5403,7 +5457,7 @@ unsafe extern "C" fn SortByDimension(
                         .i as RtreeDValue
                 };
             let mut xright2: RtreeDValue =
-                if (*pRtree).eCoordType as ::core::ffi::c_int == RTREE_COORD_REAL32 {
+                if __pRtree_ref.eCoordType as ::core::ffi::c_int == RTREE_COORD_REAL32 {
                     (*aCell.offset(*aRight.offset(iRight as isize) as isize)).aCoord
                         [(iDim * 2 as ::core::ffi::c_int + 1 as ::core::ffi::c_int) as usize]
                         .f as RtreeDValue
@@ -5441,8 +5495,9 @@ unsafe extern "C" fn splitNodeStartree(
     let mut iBestDim: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
     let mut iBestSplit: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
     let mut fBestMargin: RtreeDValue = RTREE_ZERO;
+    let __pRtree_ref = unsafe { &mut *pRtree };
     let mut nByte: crate::sqlite3_h::sqlite3_int64 =
-        (((*pRtree).nDim as ::core::ffi::c_int + 1 as ::core::ffi::c_int) as usize).wrapping_mul(
+        ((__pRtree_ref.nDim as ::core::ffi::c_int + 1 as ::core::ffi::c_int) as usize).wrapping_mul(
             (::core::mem::size_of::<*mut ::core::ffi::c_int>() as usize).wrapping_add(
                 (nCell as usize)
                     .wrapping_mul(::core::mem::size_of::<::core::ffi::c_int>() as usize),
@@ -5452,9 +5507,9 @@ unsafe extern "C" fn splitNodeStartree(
     if aaSorted.is_null() {
         return crate::sqlite3_h::SQLITE_NOMEM;
     }
-    aSpare = (aaSorted.offset((*pRtree).nDim as isize) as *mut *mut ::core::ffi::c_int
+    aSpare = (aaSorted.offset(__pRtree_ref.nDim as isize) as *mut *mut ::core::ffi::c_int
         as *mut ::core::ffi::c_int)
-        .offset(((*pRtree).nDim as ::core::ffi::c_int * nCell) as isize)
+        .offset((__pRtree_ref.nDim as ::core::ffi::c_int * nCell) as isize)
         as *mut ::core::ffi::c_int;
     ::libc::memset(
         aaSorted as *mut ::core::ffi::c_void,
@@ -5462,10 +5517,10 @@ unsafe extern "C" fn splitNodeStartree(
         nByte as crate::__stddef_size_t_h::size_t,
     );
     ii = 0 as ::core::ffi::c_int;
-    while ii < (*pRtree).nDim as ::core::ffi::c_int {
+    while ii < __pRtree_ref.nDim as ::core::ffi::c_int {
         let mut jj: ::core::ffi::c_int = 0;
         let ref mut fresh1 = *aaSorted.offset(ii as isize);
-        *fresh1 = (aaSorted.offset((*pRtree).nDim as isize) as *mut *mut ::core::ffi::c_int
+        *fresh1 = (aaSorted.offset(__pRtree_ref.nDim as isize) as *mut *mut ::core::ffi::c_int
             as *mut ::core::ffi::c_int)
             .offset((ii * nCell) as isize) as *mut ::core::ffi::c_int;
         jj = 0 as ::core::ffi::c_int;
@@ -5484,19 +5539,19 @@ unsafe extern "C" fn splitNodeStartree(
         ii += 1;
     }
     ii = 0 as ::core::ffi::c_int;
-    while ii < (*pRtree).nDim as ::core::ffi::c_int {
+    while ii < __pRtree_ref.nDim as ::core::ffi::c_int {
         let mut margin: RtreeDValue = RTREE_ZERO;
         let mut fBestOverlap: RtreeDValue = RTREE_ZERO;
         let mut fBestArea: RtreeDValue = RTREE_ZERO;
         let mut iBestLeft: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
         let mut nLeft: ::core::ffi::c_int = 0;
-        nLeft = ((*pRtree).iNodeSize - 4 as ::core::ffi::c_int)
-            / (*pRtree).nBytesPerCell as ::core::ffi::c_int
+        nLeft = (__pRtree_ref.iNodeSize - 4 as ::core::ffi::c_int)
+            / __pRtree_ref.nBytesPerCell as ::core::ffi::c_int
             / 3 as ::core::ffi::c_int;
         while nLeft
             <= nCell
-                - ((*pRtree).iNodeSize - 4 as ::core::ffi::c_int)
-                    / (*pRtree).nBytesPerCell as ::core::ffi::c_int
+                - (__pRtree_ref.iNodeSize - 4 as ::core::ffi::c_int)
+                    / __pRtree_ref.nBytesPerCell as ::core::ffi::c_int
                     / 3 as ::core::ffi::c_int
         {
             let mut left: RtreeCell = RtreeCell {
@@ -5556,8 +5611,8 @@ unsafe extern "C" fn splitNodeStartree(
             );
             area = cellArea(pRtree, &raw mut left) + cellArea(pRtree, &raw mut right);
             if nLeft
-                == ((*pRtree).iNodeSize - 4 as ::core::ffi::c_int)
-                    / (*pRtree).nBytesPerCell as ::core::ffi::c_int
+                == (__pRtree_ref.iNodeSize - 4 as ::core::ffi::c_int)
+                    / __pRtree_ref.nBytesPerCell as ::core::ffi::c_int
                     / 3 as ::core::ffi::c_int
                 || overlap < fBestOverlap
                 || overlap == fBestOverlap && area < fBestArea
@@ -5888,16 +5943,17 @@ unsafe extern "C" fn fixLeafParent(
     let mut pChild: *mut RtreeNode = pLeaf;
     while rc == crate::sqlite3_h::SQLITE_OK && (*pChild).iNode != 1 as i64_0 && (*pChild).pParent.is_null() {
         let mut rc2: ::core::ffi::c_int = crate::sqlite3_h::SQLITE_OK;
+        let __pRtree_ref = unsafe { &*pRtree };
         crate::src::src::vdbeapi::sqlite3_bind_int64(
-            (*pRtree).pReadParent,
+            __pRtree_ref.pReadParent,
             1 as ::core::ffi::c_int,
             (*pChild).iNode as crate::sqlite3_h::sqlite3_int64,
         );
-        rc = crate::src::src::vdbeapi::sqlite3_step((*pRtree).pReadParent);
+        rc = crate::src::src::vdbeapi::sqlite3_step(__pRtree_ref.pReadParent);
         if rc == crate::sqlite3_h::SQLITE_ROW {
             let mut pTest: *mut RtreeNode = ::core::ptr::null_mut::<RtreeNode>();
             let mut iNode: i64_0 = 0;
-            iNode = crate::src::src::vdbeapi::sqlite3_column_int64((*pRtree).pReadParent, 0 as ::core::ffi::c_int) as i64_0;
+            iNode = crate::src::src::vdbeapi::sqlite3_column_int64(__pRtree_ref.pReadParent, 0 as ::core::ffi::c_int) as i64_0;
             pTest = pLeaf;
             while !pTest.is_null() && (*pTest).iNode != iNode {
                 pTest = (*pTest).pParent;
@@ -5911,7 +5967,7 @@ unsafe extern "C" fn fixLeafParent(
                 );
             }
         }
-        rc = crate::src::src::vdbeapi::sqlite3_reset((*pRtree).pReadParent);
+        rc = crate::src::src::vdbeapi::sqlite3_reset(__pRtree_ref.pReadParent);
         if rc == crate::sqlite3_h::SQLITE_OK {
             rc = rc2;
         }
@@ -5933,9 +5989,10 @@ unsafe extern "C" fn removeNode(
     let mut pParent: *mut RtreeNode = ::core::ptr::null_mut::<RtreeNode>();
     let mut iCell: ::core::ffi::c_int = 0;
     rc = nodeParentIndex(pRtree, pNode, &raw mut iCell);
+    let __pNode_ref = unsafe { &mut *pNode };
     if rc == crate::sqlite3_h::SQLITE_OK {
-        pParent = (*pNode).pParent;
-        (*pNode).pParent = ::core::ptr::null_mut::<RtreeNode>();
+        pParent = __pNode_ref.pParent;
+        __pNode_ref.pParent = ::core::ptr::null_mut::<RtreeNode>();
         rc = deleteCell(pRtree, pParent, iCell, iHeight + 1 as ::core::ffi::c_int);
     }
     rc2 = nodeRelease(pRtree, pParent);
@@ -5945,31 +6002,32 @@ unsafe extern "C" fn removeNode(
     if rc != crate::sqlite3_h::SQLITE_OK {
         return rc;
     }
+    let __pRtree_ref = unsafe { &mut *pRtree };
     crate::src::src::vdbeapi::sqlite3_bind_int64(
-        (*pRtree).pDeleteNode,
+        __pRtree_ref.pDeleteNode,
         1 as ::core::ffi::c_int,
-        (*pNode).iNode as crate::sqlite3_h::sqlite3_int64,
+        __pNode_ref.iNode as crate::sqlite3_h::sqlite3_int64,
     );
-    crate::src::src::vdbeapi::sqlite3_step((*pRtree).pDeleteNode);
-    rc = crate::src::src::vdbeapi::sqlite3_reset((*pRtree).pDeleteNode);
+    crate::src::src::vdbeapi::sqlite3_step(__pRtree_ref.pDeleteNode);
+    rc = crate::src::src::vdbeapi::sqlite3_reset(__pRtree_ref.pDeleteNode);
     if crate::sqlite3_h::SQLITE_OK != rc {
         return rc;
     }
     crate::src::src::vdbeapi::sqlite3_bind_int64(
-        (*pRtree).pDeleteParent,
+        __pRtree_ref.pDeleteParent,
         1 as ::core::ffi::c_int,
-        (*pNode).iNode as crate::sqlite3_h::sqlite3_int64,
+        __pNode_ref.iNode as crate::sqlite3_h::sqlite3_int64,
     );
-    crate::src::src::vdbeapi::sqlite3_step((*pRtree).pDeleteParent);
-    rc = crate::src::src::vdbeapi::sqlite3_reset((*pRtree).pDeleteParent);
+    crate::src::src::vdbeapi::sqlite3_step(__pRtree_ref.pDeleteParent);
+    rc = crate::src::src::vdbeapi::sqlite3_reset(__pRtree_ref.pDeleteParent);
     if crate::sqlite3_h::SQLITE_OK != rc {
         return rc;
     }
     nodeHashDelete(pRtree, pNode);
-    (*pNode).iNode = iHeight as i64_0;
-    (*pNode).pNext = (*pRtree).pDeleted;
-    (*pNode).nRef += 1;
-    (*pRtree).pDeleted = pNode;
+    __pNode_ref.iNode = iHeight as i64_0;
+    __pNode_ref.pNext = __pRtree_ref.pDeleted;
+    __pNode_ref.nRef += 1;
+    __pRtree_ref.pDeleted = pNode;
     return crate::sqlite3_h::SQLITE_OK;
 }
 
@@ -6119,11 +6177,12 @@ unsafe extern "C" fn rtreeNewRowid(
     mut piRowid: *mut i64_0,
 ) -> ::core::ffi::c_int {
     let mut rc: ::core::ffi::c_int = 0;
-    crate::src::src::vdbeapi::sqlite3_bind_null((*pRtree).pWriteRowid, 1 as ::core::ffi::c_int);
-    crate::src::src::vdbeapi::sqlite3_bind_null((*pRtree).pWriteRowid, 2 as ::core::ffi::c_int);
-    crate::src::src::vdbeapi::sqlite3_step((*pRtree).pWriteRowid);
-    rc = crate::src::src::vdbeapi::sqlite3_reset((*pRtree).pWriteRowid);
-    *piRowid = crate::src::src::main::sqlite3_last_insert_rowid((*pRtree).db) as i64_0;
+    let __pRtree_ref = unsafe { &*pRtree };
+    crate::src::src::vdbeapi::sqlite3_bind_null(__pRtree_ref.pWriteRowid, 1 as ::core::ffi::c_int);
+    crate::src::src::vdbeapi::sqlite3_bind_null(__pRtree_ref.pWriteRowid, 2 as ::core::ffi::c_int);
+    crate::src::src::vdbeapi::sqlite3_step(__pRtree_ref.pWriteRowid);
+    rc = crate::src::src::vdbeapi::sqlite3_reset(__pRtree_ref.pWriteRowid);
+    *piRowid = crate::src::src::main::sqlite3_last_insert_rowid(__pRtree_ref.db) as i64_0;
     return rc;
 }
 
@@ -6161,9 +6220,10 @@ unsafe extern "C" fn rtreeDeleteRowid(
         }
     }
     if rc == crate::sqlite3_h::SQLITE_OK {
-        crate::src::src::vdbeapi::sqlite3_bind_int64((*pRtree).pDeleteRowid, 1 as ::core::ffi::c_int, iDelete);
-        crate::src::src::vdbeapi::sqlite3_step((*pRtree).pDeleteRowid);
-        rc = crate::src::src::vdbeapi::sqlite3_reset((*pRtree).pDeleteRowid);
+        let __pRtree_ref = unsafe { &*pRtree };
+        crate::src::src::vdbeapi::sqlite3_bind_int64(__pRtree_ref.pDeleteRowid, 1 as ::core::ffi::c_int, iDelete);
+        crate::src::src::vdbeapi::sqlite3_step(__pRtree_ref.pDeleteRowid);
+        rc = crate::src::src::vdbeapi::sqlite3_reset(__pRtree_ref.pDeleteRowid);
     }
     if rc == crate::sqlite3_h::SQLITE_OK
         && (*pRtree).iDepth > 0 as ::core::ffi::c_int
@@ -6192,10 +6252,11 @@ unsafe extern "C" fn rtreeDeleteRowid(
         if rc == crate::sqlite3_h::SQLITE_OK {
             rc = reinsertNodeContent(pRtree, pLeaf);
         }
-        (*pRtree).pDeleted = (*pLeaf).pNext;
-        (*pRtree).nNodeRef = (*pRtree).nNodeRef.wrapping_sub(1);
+        let __pRtree_ref = unsafe { &mut *pRtree };
+        __pRtree_ref.pDeleted = (*pLeaf).pNext;
+        __pRtree_ref.nNodeRef = __pRtree_ref.nNodeRef.wrapping_sub(1);
         crate::src::src::malloc::sqlite3_free(pLeaf as *mut ::core::ffi::c_void);
-        pLeaf = (*pRtree).pDeleted;
+        pLeaf = __pRtree_ref.pDeleted;
     }
     if rc == crate::sqlite3_h::SQLITE_OK {
         rc = nodeRelease(pRtree, pRoot);
@@ -6370,15 +6431,16 @@ unsafe extern "C" fn rtreeUpdate(
                             != cell.iRowid
                     {
                         let mut steprc: ::core::ffi::c_int = 0;
+                        let __pRtree_ref = unsafe { &*pRtree };
                         crate::src::src::vdbeapi::sqlite3_bind_int64(
-                            (*pRtree).pReadRowid,
+                            __pRtree_ref.pReadRowid,
                             1 as ::core::ffi::c_int,
                             cell.iRowid as crate::sqlite3_h::sqlite3_int64,
                         );
-                        steprc = crate::src::src::vdbeapi::sqlite3_step((*pRtree).pReadRowid);
-                        rc = crate::src::src::vdbeapi::sqlite3_reset((*pRtree).pReadRowid);
+                        steprc = crate::src::src::vdbeapi::sqlite3_step(__pRtree_ref.pReadRowid);
+                        rc = crate::src::src::vdbeapi::sqlite3_reset(__pRtree_ref.pReadRowid);
                         if crate::sqlite3_h::SQLITE_ROW == steprc {
-                            if crate::src::src::vtab::sqlite3_vtab_on_conflict((*pRtree).db) == crate::sqlite3_h::SQLITE_REPLACE {
+                            if crate::src::src::vtab::sqlite3_vtab_on_conflict(__pRtree_ref.db) == crate::sqlite3_h::SQLITE_REPLACE {
                                 rc = rtreeDeleteRowid(pRtree, cell.iRowid as crate::sqlite3_h::sqlite3_int64);
                                 current_block = 5494826135382683477;
                             } else {
@@ -6487,23 +6549,24 @@ unsafe extern "C" fn rtreeRename(
 ) -> ::core::ffi::c_int {
     let mut pRtree: *mut Rtree = pVtab as *mut Rtree;
     let mut rc: ::core::ffi::c_int = crate::sqlite3_h::SQLITE_NOMEM;
+    let __pRtree_ref = unsafe { &*pRtree };
     let mut zSql: *mut ::core::ffi::c_char = crate::src::src::printf::sqlite3_mprintf(
         b"ALTER TABLE %Q.'%q_node'   RENAME TO \"%w_node\";ALTER TABLE %Q.'%q_parent' RENAME TO \"%w_parent\";ALTER TABLE %Q.'%q_rowid'  RENAME TO \"%w_rowid\";\0"
             as *const u8 as *const ::core::ffi::c_char,
-        (*pRtree).zDb,
-        (*pRtree).zName,
+        __pRtree_ref.zDb,
+        __pRtree_ref.zName,
         zNewName,
-        (*pRtree).zDb,
-        (*pRtree).zName,
+        __pRtree_ref.zDb,
+        __pRtree_ref.zName,
         zNewName,
-        (*pRtree).zDb,
-        (*pRtree).zName,
+        __pRtree_ref.zDb,
+        __pRtree_ref.zName,
         zNewName,
     );
     if !zSql.is_null() {
         nodeBlobReset(pRtree);
         rc = crate::src::src::legacy::sqlite3_exec(
-            (*pRtree).db,
+            __pRtree_ref.db,
             zSql,
             None,
             ::core::ptr::null_mut::<::core::ffi::c_void>(),
@@ -6519,10 +6582,11 @@ unsafe extern "C" fn rtreeSavepoint(
     mut _iSavepoint: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
     let mut pRtree: *mut Rtree = pVtab as *mut Rtree;
-    let mut iwt: u8_0 = (*pRtree).inWrTrans;
-    (*pRtree).inWrTrans = 0 as u8_0;
+    let __pRtree_ref = unsafe { &mut *pRtree };
+    let mut iwt: u8_0 = __pRtree_ref.inWrTrans;
+    __pRtree_ref.inWrTrans = 0 as u8_0;
     nodeBlobReset(pRtree);
-    (*pRtree).inWrTrans = iwt;
+    __pRtree_ref.inWrTrans = iwt;
     return crate::sqlite3_h::SQLITE_OK;
 }
 
@@ -6537,9 +6601,10 @@ unsafe extern "C" fn rtreeQueryStat1(
     let mut p: *mut crate::sqlite3_h::sqlite3_stmt = ::core::ptr::null_mut::<crate::sqlite3_h::sqlite3_stmt>();
     let mut rc: ::core::ffi::c_int = 0;
     let mut nRow: i64_0 = RTREE_MIN_ROWEST as i64_0;
+    let __pRtree_ref = unsafe { &mut *pRtree };
     rc = crate::src::src::main::sqlite3_table_column_metadata(
         db,
-        (*pRtree).zDb,
+        __pRtree_ref.zDb,
         b"sqlite_stat1\0" as *const u8 as *const ::core::ffi::c_char,
         ::core::ptr::null::<::core::ffi::c_char>(),
         ::core::ptr::null_mut::<*const ::core::ffi::c_char>(),
@@ -6549,10 +6614,10 @@ unsafe extern "C" fn rtreeQueryStat1(
         ::core::ptr::null_mut::<::core::ffi::c_int>(),
     );
     if rc != crate::sqlite3_h::SQLITE_OK {
-        (*pRtree).nRowEst = RTREE_DEFAULT_ROWEST as i64_0;
+        __pRtree_ref.nRowEst = RTREE_DEFAULT_ROWEST as i64_0;
         return if rc == crate::sqlite3_h::SQLITE_ERROR { crate::sqlite3_h::SQLITE_OK } else { rc };
     }
-    zSql = crate::src::src::printf::sqlite3_mprintf(zFmt, (*pRtree).zDb, (*pRtree).zName);
+    zSql = crate::src::src::printf::sqlite3_mprintf(zFmt, __pRtree_ref.zDb, __pRtree_ref.zName);
     if zSql.is_null() {
         rc = crate::sqlite3_h::SQLITE_NOMEM;
     } else {
@@ -6571,7 +6636,7 @@ unsafe extern "C" fn rtreeQueryStat1(
         }
         crate::src::src::malloc::sqlite3_free(zSql as *mut ::core::ffi::c_void);
     }
-    (*pRtree).nRowEst = if nRow < 100 as i64_0 {
+    __pRtree_ref.nRowEst = if nRow < 100 as i64_0 {
         100 as i64_0
     } else {
         nRow
@@ -6763,7 +6828,8 @@ unsafe extern "C" fn rtreeSqlInit(
         [::core::ptr::null_mut::<*mut crate::sqlite3_h::sqlite3_stmt>(); 8];
     let mut i: ::core::ffi::c_int = 0;
     let f: ::core::ffi::c_int = crate::sqlite3_h::SQLITE_PREPARE_PERSISTENT | crate::sqlite3_h::SQLITE_PREPARE_NO_VTAB;
-    (*pRtree).db = db;
+    let __pRtree_ref = unsafe { &mut *pRtree };
+    __pRtree_ref.db = db;
     if isCreate != 0 {
         let mut zCreate: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
         let mut p: *mut crate::sqliteInt_h::sqlite3_str = crate::src::src::printf::sqlite3_str_new(db);
@@ -6776,7 +6842,7 @@ unsafe extern "C" fn rtreeSqlInit(
             zPrefix,
         );
         ii = 0 as ::core::ffi::c_int;
-        while ii < (*pRtree).nAux as ::core::ffi::c_int {
+        while ii < __pRtree_ref.nAux as ::core::ffi::c_int {
             crate::src::src::printf::sqlite3_str_appendf(p, b",a%d\0" as *const u8 as *const ::core::ffi::c_char, ii);
             ii += 1;
         }
@@ -6800,7 +6866,7 @@ unsafe extern "C" fn rtreeSqlInit(
                 as *const ::core::ffi::c_char,
             zDb,
             zPrefix,
-            (*pRtree).iNodeSize,
+            __pRtree_ref.iNodeSize,
         );
         zCreate = crate::src::src::printf::sqlite3_str_finish(p);
         if zCreate.is_null() {
@@ -6818,21 +6884,21 @@ unsafe extern "C" fn rtreeSqlInit(
             return rc;
         }
     }
-    appStmt[0 as ::core::ffi::c_int as usize] = &raw mut (*pRtree).pWriteNode;
-    appStmt[1 as ::core::ffi::c_int as usize] = &raw mut (*pRtree).pDeleteNode;
-    appStmt[2 as ::core::ffi::c_int as usize] = &raw mut (*pRtree).pReadRowid;
-    appStmt[3 as ::core::ffi::c_int as usize] = &raw mut (*pRtree).pWriteRowid;
-    appStmt[4 as ::core::ffi::c_int as usize] = &raw mut (*pRtree).pDeleteRowid;
-    appStmt[5 as ::core::ffi::c_int as usize] = &raw mut (*pRtree).pReadParent;
-    appStmt[6 as ::core::ffi::c_int as usize] = &raw mut (*pRtree).pWriteParent;
-    appStmt[7 as ::core::ffi::c_int as usize] = &raw mut (*pRtree).pDeleteParent;
+    appStmt[0 as ::core::ffi::c_int as usize] = &raw mut __pRtree_ref.pWriteNode;
+    appStmt[1 as ::core::ffi::c_int as usize] = &raw mut __pRtree_ref.pDeleteNode;
+    appStmt[2 as ::core::ffi::c_int as usize] = &raw mut __pRtree_ref.pReadRowid;
+    appStmt[3 as ::core::ffi::c_int as usize] = &raw mut __pRtree_ref.pWriteRowid;
+    appStmt[4 as ::core::ffi::c_int as usize] = &raw mut __pRtree_ref.pDeleteRowid;
+    appStmt[5 as ::core::ffi::c_int as usize] = &raw mut __pRtree_ref.pReadParent;
+    appStmt[6 as ::core::ffi::c_int as usize] = &raw mut __pRtree_ref.pWriteParent;
+    appStmt[7 as ::core::ffi::c_int as usize] = &raw mut __pRtree_ref.pDeleteParent;
     rc = rtreeQueryStat1(db, pRtree);
     i = 0 as ::core::ffi::c_int;
     while i < N_STATEMENT && rc == crate::sqlite3_h::SQLITE_OK {
         let mut zSql: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
         let mut zFormat: *const ::core::ffi::c_char = ::core::ptr::null::<::core::ffi::c_char>();
         if i != 3 as ::core::ffi::c_int
-            || (*pRtree).nAux as ::core::ffi::c_int == 0 as ::core::ffi::c_int
+            || __pRtree_ref.nAux as ::core::ffi::c_int == 0 as ::core::ffi::c_int
         {
             zFormat = azSql[i as usize];
         } else {
@@ -6855,14 +6921,14 @@ unsafe extern "C" fn rtreeSqlInit(
         crate::src::src::malloc::sqlite3_free(zSql as *mut ::core::ffi::c_void);
         i += 1;
     }
-    if (*pRtree).nAux as ::core::ffi::c_int != 0 && rc != crate::sqlite3_h::SQLITE_NOMEM {
-        (*pRtree).zReadAuxSql = crate::src::src::printf::sqlite3_mprintf(
+    if __pRtree_ref.nAux as ::core::ffi::c_int != 0 && rc != crate::sqlite3_h::SQLITE_NOMEM {
+        __pRtree_ref.zReadAuxSql = crate::src::src::printf::sqlite3_mprintf(
             b"SELECT * FROM \"%w\".\"%w_rowid\" WHERE rowid=?1\0" as *const u8
                 as *const ::core::ffi::c_char,
             zDb,
             zPrefix,
         );
-        if (*pRtree).zReadAuxSql.is_null() {
+        if __pRtree_ref.zReadAuxSql.is_null() {
             rc = crate::sqlite3_h::SQLITE_NOMEM;
         } else {
             let mut p_0: *mut crate::sqliteInt_h::sqlite3_str = crate::src::src::printf::sqlite3_str_new(db);
@@ -6876,7 +6942,7 @@ unsafe extern "C" fn rtreeSqlInit(
                 zPrefix,
             );
             ii_0 = 0 as ::core::ffi::c_int;
-            while ii_0 < (*pRtree).nAux as ::core::ffi::c_int {
+            while ii_0 < __pRtree_ref.nAux as ::core::ffi::c_int {
                 if ii_0 != 0 {
                     crate::src::src::printf::sqlite3_str_append(
                         p_0,
@@ -6884,7 +6950,7 @@ unsafe extern "C" fn rtreeSqlInit(
                         1 as ::core::ffi::c_int,
                     );
                 }
-                if ii_0 < (*pRtree).nAuxNotNull as ::core::ffi::c_int {
+                if ii_0 < __pRtree_ref.nAuxNotNull as ::core::ffi::c_int {
                     crate::src::src::printf::sqlite3_str_appendf(
                         p_0,
                         b"a%d=coalesce(?%d,a%d)\0" as *const u8 as *const ::core::ffi::c_char,
@@ -6915,7 +6981,7 @@ unsafe extern "C" fn rtreeSqlInit(
                     zSql_0,
                     -(1 as ::core::ffi::c_int),
                     f as ::core::ffi::c_uint,
-                    &raw mut (*pRtree).pWriteAux,
+                    &raw mut __pRtree_ref.pWriteAux,
                     ::core::ptr::null_mut::<*const ::core::ffi::c_char>(),
                 );
                 crate::src::src::malloc::sqlite3_free(zSql_0 as *mut ::core::ffi::c_void);
@@ -6968,13 +7034,14 @@ unsafe extern "C" fn getNodeSize(
         );
         rc = getIntFromStmt(db, zSql, &raw mut iPageSize);
         if rc == crate::sqlite3_h::SQLITE_OK {
-            (*pRtree).iNodeSize = iPageSize - 64 as ::core::ffi::c_int;
+            let __pRtree_ref = unsafe { &mut *pRtree };
+            __pRtree_ref.iNodeSize = iPageSize - 64 as ::core::ffi::c_int;
             if 4 as ::core::ffi::c_int
-                + (*pRtree).nBytesPerCell as ::core::ffi::c_int * RTREE_MAXCELLS
-                < (*pRtree).iNodeSize
+                + __pRtree_ref.nBytesPerCell as ::core::ffi::c_int * RTREE_MAXCELLS
+                < __pRtree_ref.iNodeSize
             {
-                (*pRtree).iNodeSize = 4 as ::core::ffi::c_int
-                    + (*pRtree).nBytesPerCell as ::core::ffi::c_int * RTREE_MAXCELLS;
+                __pRtree_ref.iNodeSize = 4 as ::core::ffi::c_int
+                    + __pRtree_ref.nBytesPerCell as ::core::ffi::c_int * RTREE_MAXCELLS;
             }
         } else {
             *pzErr = crate::src::src::printf::sqlite3_mprintf(
@@ -6983,24 +7050,25 @@ unsafe extern "C" fn getNodeSize(
             );
         }
     } else {
+        let __pRtree_ref = unsafe { &mut *pRtree };
         zSql = crate::src::src::printf::sqlite3_mprintf(
             b"SELECT length(data) FROM '%q'.'%q_node' WHERE nodeno = 1\0" as *const u8
                 as *const ::core::ffi::c_char,
-            (*pRtree).zDb,
-            (*pRtree).zName,
+            __pRtree_ref.zDb,
+            __pRtree_ref.zName,
         );
-        rc = getIntFromStmt(db, zSql, &raw mut (*pRtree).iNodeSize);
+        rc = getIntFromStmt(db, zSql, &raw mut __pRtree_ref.iNodeSize);
         if rc != crate::sqlite3_h::SQLITE_OK {
             *pzErr = crate::src::src::printf::sqlite3_mprintf(
                 b"%s\0" as *const u8 as *const ::core::ffi::c_char,
                 crate::src::src::main::sqlite3_errmsg(db),
             );
-        } else if (*pRtree).iNodeSize < 512 as ::core::ffi::c_int - 64 as ::core::ffi::c_int {
+        } else if __pRtree_ref.iNodeSize < 512 as ::core::ffi::c_int - 64 as ::core::ffi::c_int {
             rc = crate::sqlite3_h::SQLITE_CORRUPT_VTAB;
             *pzErr = crate::src::src::printf::sqlite3_mprintf(
                 b"undersize RTree blobs in \"%q_node\"\0" as *const u8
                     as *const ::core::ffi::c_char,
-                (*pRtree).zName,
+                __pRtree_ref.zName,
             );
         }
     }
@@ -7125,14 +7193,15 @@ unsafe extern "C" fn rtreeInit(
                 zArg.offset(1 as isize),
             );
         } else {
-            if (*pRtree).nAux as ::core::ffi::c_int > 0 as ::core::ffi::c_int {
+            let __pRtree_ref = unsafe { &mut *pRtree };
+            if __pRtree_ref.nAux as ::core::ffi::c_int > 0 as ::core::ffi::c_int {
                 break;
             }
             static mut azFormat: [*const ::core::ffi::c_char; 2] = [
                 b",%.*s REAL\0" as *const u8 as *const ::core::ffi::c_char,
                 b",%.*s INT\0" as *const u8 as *const ::core::ffi::c_char,
             ];
-            (*pRtree).nDim2 = (*pRtree).nDim2.wrapping_add(1);
+            __pRtree_ref.nDim2 = __pRtree_ref.nDim2.wrapping_add(1);
             crate::src::src::printf::sqlite3_str_appendf(
                 pSql,
                 azFormat[eCoordType as usize],
@@ -7163,14 +7232,15 @@ unsafe extern "C" fn rtreeInit(
     }
     crate::src::src::malloc::sqlite3_free(zSql as *mut ::core::ffi::c_void);
     if !(rc != 0) {
-        (*pRtree).nDim = ((*pRtree).nDim2 as ::core::ffi::c_int / 2 as ::core::ffi::c_int) as u8_0;
-        if ((*pRtree).nDim as ::core::ffi::c_int) < 1 as ::core::ffi::c_int {
+        let __pRtree_ref = unsafe { &mut *pRtree };
+        __pRtree_ref.nDim = (__pRtree_ref.nDim2 as ::core::ffi::c_int / 2 as ::core::ffi::c_int) as u8_0;
+        if (__pRtree_ref.nDim as ::core::ffi::c_int) < 1 as ::core::ffi::c_int {
             iErr = 2 as ::core::ffi::c_int;
-        } else if (*pRtree).nDim2 as ::core::ffi::c_int
+        } else if __pRtree_ref.nDim2 as ::core::ffi::c_int
             > RTREE_MAX_DIMENSIONS * 2 as ::core::ffi::c_int
         {
             iErr = 3 as ::core::ffi::c_int;
-        } else if (*pRtree).nDim2 as ::core::ffi::c_int % 2 as ::core::ffi::c_int != 0 {
+        } else if __pRtree_ref.nDim2 as ::core::ffi::c_int % 2 as ::core::ffi::c_int != 0 {
             iErr = 1 as ::core::ffi::c_int;
         } else {
             iErr = 0 as ::core::ffi::c_int;
@@ -7181,8 +7251,8 @@ unsafe extern "C" fn rtreeInit(
                 aErrMsg[iErr as usize],
             );
         } else {
-            (*pRtree).nBytesPerCell = (8 as ::core::ffi::c_int
-                + (*pRtree).nDim2 as ::core::ffi::c_int * 4 as ::core::ffi::c_int)
+            __pRtree_ref.nBytesPerCell = (8 as ::core::ffi::c_int
+                + __pRtree_ref.nDim2 as ::core::ffi::c_int * 4 as ::core::ffi::c_int)
                 as u8_0;
             rc = getNodeSize(db, pRtree, isCreate, pzErr);
             if !(rc != 0) {
@@ -7368,18 +7438,19 @@ unsafe extern "C" fn rtreeCheckAppendMsg(
         if z.is_null() {
             (*pCheck).rc = crate::sqlite3_h::SQLITE_NOMEM;
         } else {
-            (*pCheck).zReport = crate::src::src::printf::sqlite3_mprintf(
+            let __pCheck_ref = unsafe { &mut *pCheck };
+            __pCheck_ref.zReport = crate::src::src::printf::sqlite3_mprintf(
                 b"%z%s%z\0" as *const u8 as *const ::core::ffi::c_char,
-                (*pCheck).zReport,
-                if !(*pCheck).zReport.is_null() {
+                __pCheck_ref.zReport,
+                if !__pCheck_ref.zReport.is_null() {
                     b"\n\0" as *const u8 as *const ::core::ffi::c_char
                 } else {
                     b"\0" as *const u8 as *const ::core::ffi::c_char
                 },
                 z,
             );
-            if (*pCheck).zReport.is_null() {
-                (*pCheck).rc = crate::sqlite3_h::SQLITE_NOMEM;
+            if __pCheck_ref.zReport.is_null() {
+                __pCheck_ref.rc = crate::sqlite3_h::SQLITE_NOMEM;
             }
         }
         (*pCheck).nErr += 1;
@@ -7392,29 +7463,30 @@ unsafe extern "C" fn rtreeCheckGetNode(
     mut pnNode: *mut ::core::ffi::c_int,
 ) -> *mut u8_0 {
     let mut pRet: *mut u8_0 = ::core::ptr::null_mut::<u8_0>();
-    if (*pCheck).rc == crate::sqlite3_h::SQLITE_OK && (*pCheck).pGetNode.is_null() {
-        (*pCheck).pGetNode = rtreeCheckPrepare(
+    let __pCheck_ref = unsafe { &mut *pCheck };
+    if __pCheck_ref.rc == crate::sqlite3_h::SQLITE_OK && __pCheck_ref.pGetNode.is_null() {
+        __pCheck_ref.pGetNode = rtreeCheckPrepare(
             pCheck,
             b"SELECT data FROM %Q.'%q_node' WHERE nodeno=?\0" as *const u8
                 as *const ::core::ffi::c_char,
-            (*pCheck).zDb,
-            (*pCheck).zTab,
+            __pCheck_ref.zDb,
+            __pCheck_ref.zTab,
         );
     }
-    if (*pCheck).rc == crate::sqlite3_h::SQLITE_OK {
+    if __pCheck_ref.rc == crate::sqlite3_h::SQLITE_OK {
         crate::src::src::vdbeapi::sqlite3_bind_int64(
-            (*pCheck).pGetNode,
+            __pCheck_ref.pGetNode,
             1 as ::core::ffi::c_int,
             iNode as crate::sqlite3_h::sqlite3_int64,
         );
-        if crate::src::src::vdbeapi::sqlite3_step((*pCheck).pGetNode) == crate::sqlite3_h::SQLITE_ROW {
+        if crate::src::src::vdbeapi::sqlite3_step(__pCheck_ref.pGetNode) == crate::sqlite3_h::SQLITE_ROW {
             let mut nNode: ::core::ffi::c_int =
-                crate::src::src::vdbeapi::sqlite3_column_bytes((*pCheck).pGetNode, 0 as ::core::ffi::c_int);
+                crate::src::src::vdbeapi::sqlite3_column_bytes(__pCheck_ref.pGetNode, 0 as ::core::ffi::c_int);
             let mut pNode: *const u8_0 =
-                crate::src::src::vdbeapi::sqlite3_column_blob((*pCheck).pGetNode, 0 as ::core::ffi::c_int) as *const u8_0;
+                crate::src::src::vdbeapi::sqlite3_column_blob(__pCheck_ref.pGetNode, 0 as ::core::ffi::c_int) as *const u8_0;
             pRet = crate::src::src::malloc::sqlite3_malloc64(nNode as crate::sqlite3_h::sqlite3_uint64) as *mut u8_0;
             if pRet.is_null() {
-                (*pCheck).rc = crate::sqlite3_h::SQLITE_NOMEM;
+                __pCheck_ref.rc = crate::sqlite3_h::SQLITE_NOMEM;
             } else {
                 ::libc::memcpy(
                     pRet as *mut ::core::ffi::c_void,
@@ -7424,8 +7496,8 @@ unsafe extern "C" fn rtreeCheckGetNode(
                 *pnNode = nNode;
             }
         }
-        rtreeCheckReset(pCheck, (*pCheck).pGetNode);
-        if (*pCheck).rc == crate::sqlite3_h::SQLITE_OK && pRet.is_null() {
+        rtreeCheckReset(pCheck, __pCheck_ref.pGetNode);
+        if __pCheck_ref.rc == crate::sqlite3_h::SQLITE_OK && pRet.is_null() {
             rtreeCheckAppendMsg(
                 pCheck,
                 b"Node %lld missing from database\0" as *const u8 as *const ::core::ffi::c_char,
@@ -7450,14 +7522,15 @@ unsafe extern "C" fn rtreeCheckMapping(
         b"SELECT nodeno FROM %Q.'%q_rowid' WHERE rowid=?1\0" as *const u8
             as *const ::core::ffi::c_char,
     ];
-    if (*pCheck).aCheckMapping[bLeaf as usize].is_null() {
-        (*pCheck).aCheckMapping[bLeaf as usize] =
-            rtreeCheckPrepare(pCheck, azSql[bLeaf as usize], (*pCheck).zDb, (*pCheck).zTab);
+    let __pCheck_ref = unsafe { &mut *pCheck };
+    if __pCheck_ref.aCheckMapping[bLeaf as usize].is_null() {
+        __pCheck_ref.aCheckMapping[bLeaf as usize] =
+            rtreeCheckPrepare(pCheck, azSql[bLeaf as usize], __pCheck_ref.zDb, __pCheck_ref.zTab);
     }
-    if (*pCheck).rc != crate::sqlite3_h::SQLITE_OK {
+    if __pCheck_ref.rc != crate::sqlite3_h::SQLITE_OK {
         return;
     }
-    pStmt = (*pCheck).aCheckMapping[bLeaf as usize];
+    pStmt = __pCheck_ref.aCheckMapping[bLeaf as usize];
     crate::src::src::vdbeapi::sqlite3_bind_int64(pStmt, 1 as ::core::ffi::c_int, iKey as crate::sqlite3_h::sqlite3_int64);
     rc = crate::src::src::vdbeapi::sqlite3_step(pStmt);
     if rc == crate::sqlite3_h::SQLITE_DONE {
@@ -7780,12 +7853,13 @@ unsafe extern "C" fn rtreeIntegrity(
 ) -> ::core::ffi::c_int {
     let mut pRtree: *mut Rtree = pVtab as *mut Rtree;
     let mut rc: ::core::ffi::c_int = 0;
-    rc = rtreeCheckTable((*pRtree).db, (*pRtree).zDb, (*pRtree).zName, pzErr);
+    let __pRtree_ref = unsafe { &*pRtree };
+    rc = rtreeCheckTable(__pRtree_ref.db, __pRtree_ref.zDb, __pRtree_ref.zName, pzErr);
     if rc == crate::sqlite3_h::SQLITE_OK && !(*pzErr).is_null() {
         *pzErr = crate::src::src::printf::sqlite3_mprintf(
             b"In RTree %s.%s:\n%z\0" as *const u8 as *const ::core::ffi::c_char,
-            (*pRtree).zDb,
-            (*pRtree).zName,
+            __pRtree_ref.zDb,
+            __pRtree_ref.zName,
             *pzErr,
         );
         if (*pzErr).is_null() {
@@ -7968,19 +8042,20 @@ unsafe extern "C" fn geomCallback(
         crate::src::src::vdbeapi::sqlite3_result_error_nomem(ctx);
     } else {
         let mut i: ::core::ffi::c_int = 0;
-        (*pBlob).iSize = nBlob as u32_0;
-        (*pBlob).cb = *pGeomCtx.offset(0 as isize);
-        (*pBlob).apSqlParam = (&raw mut (*pBlob).aParam as *mut RtreeDValue).offset(nArg as isize)
+        let __pBlob_ref = unsafe { &mut *pBlob };
+        __pBlob_ref.iSize = nBlob as u32_0;
+        __pBlob_ref.cb = *pGeomCtx.offset(0 as isize);
+        __pBlob_ref.apSqlParam = (&raw mut __pBlob_ref.aParam as *mut RtreeDValue).offset(nArg as isize)
             as *mut RtreeDValue as *mut *mut crate::vdbeInt_h::sqlite3_value;
-        (*pBlob).nParam = nArg;
+        __pBlob_ref.nParam = nArg;
         i = 0 as ::core::ffi::c_int;
         while i < nArg {
-            let ref mut fresh0 = *(*pBlob).apSqlParam.offset(i as isize);
+            let ref mut fresh0 = *__pBlob_ref.apSqlParam.offset(i as isize);
             *fresh0 = crate::src::src::vdbeapi::sqlite3_value_dup(*aArg.offset(i as isize));
-            if (*(*pBlob).apSqlParam.offset(i as isize)).is_null() {
+            if (*__pBlob_ref.apSqlParam.offset(i as isize)).is_null() {
                 memErr = 1 as ::core::ffi::c_int;
             }
-            *(&raw mut (*pBlob).aParam as *mut RtreeDValue).offset(i as isize) =
+            *(&raw mut __pBlob_ref.aParam as *mut RtreeDValue).offset(i as isize) =
                 crate::src::src::vdbeapi::sqlite3_value_double(*aArg.offset(i as isize)) as RtreeDValue;
             i += 1;
         }

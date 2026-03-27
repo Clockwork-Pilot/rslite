@@ -885,14 +885,15 @@ unsafe extern "C" fn sessionGrowHash(
     mut bPatchset: ::core::ffi::c_int,
     mut pTab: *mut SessionTable,
 ) -> ::core::ffi::c_int {
-    if (*pTab).nChange == 0 as ::core::ffi::c_int
-        || (*pTab).nEntry >= (*pTab).nChange / 2 as ::core::ffi::c_int
+    let __pTab_ref = unsafe { &mut *pTab };
+    if __pTab_ref.nChange == 0 as ::core::ffi::c_int
+        || __pTab_ref.nEntry >= __pTab_ref.nChange / 2 as ::core::ffi::c_int
     {
         let mut i: ::core::ffi::c_int = 0;
         let mut apNew: *mut *mut SessionChange = ::core::ptr::null_mut::<*mut SessionChange>();
         let mut nNew: crate::sqlite3_h::sqlite3_int64 = 2 as crate::sqlite3_h::sqlite3_int64
-            * (if (*pTab).nChange != 0 {
-                (*pTab).nChange
+            * (if __pTab_ref.nChange != 0 {
+                __pTab_ref.nChange
             } else {
                 128 as ::core::ffi::c_int
             }) as crate::sqlite3_h::sqlite3_int64;
@@ -902,7 +903,7 @@ unsafe extern "C" fn sessionGrowHash(
                 .wrapping_mul(nNew as ::core::ffi::c_ulonglong) as crate::src::ext::rtree::rtree::i64_0,
         ) as *mut *mut SessionChange;
         if apNew.is_null() {
-            if (*pTab).nChange == 0 as ::core::ffi::c_int {
+            if __pTab_ref.nChange == 0 as ::core::ffi::c_int {
                 return crate::sqlite3_h::SQLITE_ERROR;
             }
             return crate::sqlite3_h::SQLITE_OK;
@@ -914,10 +915,10 @@ unsafe extern "C" fn sessionGrowHash(
                 .wrapping_mul(nNew as ::core::ffi::c_ulonglong) as crate::__stddef_size_t_h::size_t,
         );
         i = 0 as ::core::ffi::c_int;
-        while i < (*pTab).nChange {
+        while i < __pTab_ref.nChange {
             let mut p: *mut SessionChange = ::core::ptr::null_mut::<SessionChange>();
             let mut pNext: *mut SessionChange = ::core::ptr::null_mut::<SessionChange>();
-            p = *(*pTab).apChange.offset(i as isize);
+            p = *__pTab_ref.apChange.offset(i as isize);
             while !p.is_null() {
                 let mut bPkOnly: ::core::ffi::c_int =
                     ((*p).op as ::core::ffi::c_int == crate::sqlite3_h::SQLITE_DELETE && bPatchset != 0)
@@ -933,9 +934,9 @@ unsafe extern "C" fn sessionGrowHash(
             }
             i += 1;
         }
-        sessionFree(pSession, (*pTab).apChange as *mut ::core::ffi::c_void);
-        (*pTab).nChange = nNew as ::core::ffi::c_int;
-        (*pTab).apChange = apNew;
+        sessionFree(pSession, __pTab_ref.apChange as *mut ::core::ffi::c_void);
+        __pTab_ref.nChange = nNew as ::core::ffi::c_int;
+        __pTab_ref.apChange = apNew;
     }
     return crate::sqlite3_h::SQLITE_OK;
 }
@@ -1183,22 +1184,23 @@ unsafe extern "C" fn sessionInitTable(
     let mut rc: ::core::ffi::c_int = crate::sqlite3_h::SQLITE_OK;
     if (*pTab).nCol == 0 as ::core::ffi::c_int {
         let mut abPK: *mut crate::src::ext::rtree::rtree::u8_0 = ::core::ptr::null_mut::<crate::src::ext::rtree::rtree::u8_0>();
-        crate::src::src::malloc::sqlite3_free((*pTab).azCol as *mut ::core::ffi::c_void);
-        (*pTab).abPK = ::core::ptr::null_mut::<crate::src::ext::rtree::rtree::u8_0>();
+        let __pTab_ref = unsafe { &mut *pTab };
+        crate::src::src::malloc::sqlite3_free(__pTab_ref.azCol as *mut ::core::ffi::c_void);
+        __pTab_ref.abPK = ::core::ptr::null_mut::<crate::src::ext::rtree::rtree::u8_0>();
         rc = sessionTableInfo(
             pSession,
             db,
             zDb,
-            (*pTab).zName,
-            &raw mut (*pTab).nCol,
-            &raw mut (*pTab).nTotalCol,
+            __pTab_ref.zName,
+            &raw mut __pTab_ref.nCol,
+            &raw mut __pTab_ref.nTotalCol,
             ::core::ptr::null_mut::<*const ::core::ffi::c_char>(),
-            &raw mut (*pTab).azCol,
-            &raw mut (*pTab).azDflt,
-            &raw mut (*pTab).aiIdx,
+            &raw mut __pTab_ref.azCol,
+            &raw mut __pTab_ref.azDflt,
+            &raw mut __pTab_ref.aiIdx,
             &raw mut abPK,
             if pSession.is_null() || (*pSession).bImplicitPK != 0 {
-                &raw mut (*pTab).bRowid
+                &raw mut __pTab_ref.bRowid
             } else {
                 ::core::ptr::null_mut::<::core::ffi::c_int>()
             },
@@ -1206,9 +1208,9 @@ unsafe extern "C" fn sessionInitTable(
         if rc == crate::sqlite3_h::SQLITE_OK {
             let mut i: ::core::ffi::c_int = 0;
             i = 0 as ::core::ffi::c_int;
-            while i < (*pTab).nCol {
+            while i < __pTab_ref.nCol {
                 if *abPK.offset(i as isize) != 0 {
-                    (*pTab).abPK = abPK;
+                    __pTab_ref.abPK = abPK;
                     break;
                 } else {
                     i += 1;
@@ -1217,17 +1219,17 @@ unsafe extern "C" fn sessionInitTable(
             if 0 as ::core::ffi::c_int
                 == crate::src::src::util::sqlite3_stricmp(
                     b"sqlite_stat1\0" as *const u8 as *const ::core::ffi::c_char,
-                    (*pTab).zName,
+                    __pTab_ref.zName,
                 )
             {
-                (*pTab).bStat1 = 1 as ::core::ffi::c_int;
+                __pTab_ref.bStat1 = 1 as ::core::ffi::c_int;
             }
             if !pSession.is_null() && (*pSession).bEnableSize != 0 {
                 (*pSession).nMaxChangesetSize =
                     ((*pSession).nMaxChangesetSize as ::core::ffi::c_ulonglong).wrapping_add(
-                        ((1 as ::core::ffi::c_int + sessionVarintLen((*pTab).nCol) + (*pTab).nCol)
+                        ((1 as ::core::ffi::c_int + sessionVarintLen(__pTab_ref.nCol) + __pTab_ref.nCol)
                             as crate::__stddef_size_t_h::size_t)
-                            .wrapping_add(::libc::strlen((*pTab).zName))
+                            .wrapping_add(::libc::strlen(__pTab_ref.zName))
                             .wrapping_add(1 as crate::__stddef_size_t_h::size_t)
                             as ::core::ffi::c_ulonglong,
                     ) as crate::src::ext::rtree::rtree::i64_0 as crate::src::ext::rtree::rtree::i64_0;
@@ -1254,10 +1256,11 @@ unsafe extern "C" fn sessionReinitTable(
     let mut aiIdx: *mut ::core::ffi::c_int = ::core::ptr::null_mut::<::core::ffi::c_int>();
     let mut abPK: *mut crate::src::ext::rtree::rtree::u8_0 = ::core::ptr::null_mut::<crate::src::ext::rtree::rtree::u8_0>();
     let mut bRowid: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
-    (*pSession).rc = sessionTableInfo(
+    let __pSession_ref = unsafe { &mut *pSession };
+    __pSession_ref.rc = sessionTableInfo(
         pSession,
-        (*pSession).db,
-        (*pSession).zDb,
+        __pSession_ref.db,
+        __pSession_ref.zDb,
         (*pTab).zName,
         &raw mut nCol,
         &raw mut nTotalCol,
@@ -1266,15 +1269,15 @@ unsafe extern "C" fn sessionReinitTable(
         &raw mut azDflt,
         &raw mut aiIdx,
         &raw mut abPK,
-        if (*pSession).bImplicitPK != 0 {
+        if __pSession_ref.bImplicitPK != 0 {
             &raw mut bRowid
         } else {
             ::core::ptr::null_mut::<::core::ffi::c_int>()
         },
     );
-    if (*pSession).rc == crate::sqlite3_h::SQLITE_OK {
+    if __pSession_ref.rc == crate::sqlite3_h::SQLITE_OK {
         if (*pTab).nCol > nCol || (*pTab).bRowid != bRowid {
-            (*pSession).rc = crate::sqlite3_h::SQLITE_SCHEMA;
+            __pSession_ref.rc = crate::sqlite3_h::SQLITE_SCHEMA;
         } else {
             let mut ii: ::core::ffi::c_int = 0;
             let mut nOldCol: ::core::ffi::c_int = (*pTab).nCol;
@@ -1284,32 +1287,33 @@ unsafe extern "C" fn sessionReinitTable(
                     if *(*pTab).abPK.offset(ii as isize) as ::core::ffi::c_int
                         != *abPK.offset(ii as isize) as ::core::ffi::c_int
                     {
-                        (*pSession).rc = crate::sqlite3_h::SQLITE_SCHEMA;
+                        __pSession_ref.rc = crate::sqlite3_h::SQLITE_SCHEMA;
                     }
                 } else if *abPK.offset(ii as isize) != 0 {
-                    (*pSession).rc = crate::sqlite3_h::SQLITE_SCHEMA;
+                    __pSession_ref.rc = crate::sqlite3_h::SQLITE_SCHEMA;
                 }
                 ii += 1;
             }
-            if (*pSession).rc == crate::sqlite3_h::SQLITE_OK {
-                let mut a: *mut *const ::core::ffi::c_char = (*pTab).azCol;
-                (*pTab).azCol = azCol;
-                (*pTab).nCol = nCol;
-                (*pTab).nTotalCol = nTotalCol;
-                (*pTab).azDflt = azDflt;
-                (*pTab).abPK = abPK;
-                (*pTab).aiIdx = aiIdx;
+            if __pSession_ref.rc == crate::sqlite3_h::SQLITE_OK {
+                let __pTab_ref = unsafe { &mut *pTab };
+                let mut a: *mut *const ::core::ffi::c_char = __pTab_ref.azCol;
+                __pTab_ref.azCol = azCol;
+                __pTab_ref.nCol = nCol;
+                __pTab_ref.nTotalCol = nTotalCol;
+                __pTab_ref.azDflt = azDflt;
+                __pTab_ref.abPK = abPK;
+                __pTab_ref.aiIdx = aiIdx;
                 azCol = a;
             }
-            if (*pSession).bEnableSize != 0 {
-                (*pSession).nMaxChangesetSize += (nCol - nOldCol) as crate::src::ext::rtree::rtree::i64_0;
-                (*pSession).nMaxChangesetSize += sessionVarintLen(nCol) as crate::src::ext::rtree::rtree::i64_0;
-                (*pSession).nMaxChangesetSize -= sessionVarintLen(nOldCol) as crate::src::ext::rtree::rtree::i64_0;
+            if __pSession_ref.bEnableSize != 0 {
+                __pSession_ref.nMaxChangesetSize += (nCol - nOldCol) as crate::src::ext::rtree::rtree::i64_0;
+                __pSession_ref.nMaxChangesetSize += sessionVarintLen(nCol) as crate::src::ext::rtree::rtree::i64_0;
+                __pSession_ref.nMaxChangesetSize -= sessionVarintLen(nOldCol) as crate::src::ext::rtree::rtree::i64_0;
             }
         }
     }
     crate::src::src::malloc::sqlite3_free(azCol as *mut ::core::ffi::c_char as *mut ::core::ffi::c_void);
-    return (*pSession).rc;
+    return __pSession_ref.rc;
 }
 
 unsafe extern "C" fn sessionUpdateOneChange(
@@ -1352,24 +1356,25 @@ unsafe extern "C" fn sessionUpdateOneChange(
                 pOld as *const ::core::ffi::c_void,
                 ::core::mem::size_of::<SessionChange>() as crate::__stddef_size_t_h::size_t,
             );
-            (*pNew).aRecord =
+            let __pNew_ref = unsafe { &mut *pNew };
+            __pNew_ref.aRecord =
                 pNew.offset(1 as isize) as *mut SessionChange as *mut crate::src::ext::rtree::rtree::u8_0;
             ::libc::memcpy(
-                (*pNew).aRecord as *mut ::core::ffi::c_void,
+                __pNew_ref.aRecord as *mut ::core::ffi::c_void,
                 (*pOld).aRecord as *const ::core::ffi::c_void,
                 (*pOld).nRecord as crate::__stddef_size_t_h::size_t,
             );
-            let fresh4 = (*pNew).nRecord;
-            (*pNew).nRecord = (*pNew).nRecord + 1;
-            *(*pNew).aRecord.offset(fresh4 as isize) = eType as crate::src::ext::rtree::rtree::u8_0;
+            let fresh4 = __pNew_ref.nRecord;
+            __pNew_ref.nRecord = __pNew_ref.nRecord + 1;
+            *__pNew_ref.aRecord.offset(fresh4 as isize) = eType as crate::src::ext::rtree::rtree::u8_0;
             match  eType {
     crate::sqlite3_h::SQLITE_INTEGER =>  {
                     let mut iVal: crate::src::ext::rtree::rtree::i64_0 = crate::src::src::vdbeapi::sqlite3_column_int64(pDflt, iField) as crate::src::ext::rtree::rtree::i64_0;
                     sessionPutI64(
-                        (*pNew).aRecord.offset((*pNew).nRecord as isize) as *mut crate::src::ext::rtree::rtree::u8_0,
+                        __pNew_ref.aRecord.offset(__pNew_ref.nRecord as isize) as *mut crate::src::ext::rtree::rtree::u8_0,
                         iVal as crate::sqlite3_h::sqlite3_int64,
                     );
-                    (*pNew).nRecord += 8 as ::core::ffi::c_int;
+                    __pNew_ref.nRecord += 8 as ::core::ffi::c_int;
                 }
     crate::sqlite3_h::SQLITE_FLOAT_1 =>  {
                     let mut rVal: ::core::ffi::c_double = crate::src::src::vdbeapi::sqlite3_column_double(pDflt, iField);
@@ -1380,49 +1385,49 @@ unsafe extern "C" fn sessionUpdateOneChange(
                         ::core::mem::size_of::<::core::ffi::c_double>() as crate::__stddef_size_t_h::size_t,
                     );
                     sessionPutI64(
-                        (*pNew).aRecord.offset((*pNew).nRecord as isize) as *mut crate::src::ext::rtree::rtree::u8_0,
+                        __pNew_ref.aRecord.offset(__pNew_ref.nRecord as isize) as *mut crate::src::ext::rtree::rtree::u8_0,
                         iVal_0 as crate::sqlite3_h::sqlite3_int64,
                     );
-                    (*pNew).nRecord += 8 as ::core::ffi::c_int;
+                    __pNew_ref.nRecord += 8 as ::core::ffi::c_int;
                 }
     crate::sqlite3_h::SQLITE_TEXT =>  {
                     let mut n_0: ::core::ffi::c_int = crate::src::src::vdbeapi::sqlite3_column_bytes(pDflt, iField);
                     let mut z: *const ::core::ffi::c_char =
                         crate::src::src::vdbeapi::sqlite3_column_text(pDflt, iField) as *const ::core::ffi::c_char;
-                    (*pNew).nRecord += sessionVarintPut(
-                        (*pNew).aRecord.offset((*pNew).nRecord as isize) as *mut crate::src::ext::rtree::rtree::u8_0,
+                    __pNew_ref.nRecord += sessionVarintPut(
+                        __pNew_ref.aRecord.offset(__pNew_ref.nRecord as isize) as *mut crate::src::ext::rtree::rtree::u8_0,
                         n_0,
                     );
                     ::libc::memcpy(
-                        (*pNew).aRecord.offset((*pNew).nRecord as isize) as *mut crate::src::ext::rtree::rtree::u8_0
+                        __pNew_ref.aRecord.offset(__pNew_ref.nRecord as isize) as *mut crate::src::ext::rtree::rtree::u8_0
                             as *mut ::core::ffi::c_void,
                         z as *const ::core::ffi::c_void,
                         n_0 as crate::__stddef_size_t_h::size_t,
                     );
-                    (*pNew).nRecord += n_0;
+                    __pNew_ref.nRecord += n_0;
                 }
     crate::sqlite3_h::SQLITE_BLOB =>  {
                     let mut n_1: ::core::ffi::c_int = crate::src::src::vdbeapi::sqlite3_column_bytes(pDflt, iField);
                     let mut z_0: *const crate::src::ext::rtree::rtree::u8_0 = crate::src::src::vdbeapi::sqlite3_column_blob(pDflt, iField) as *const crate::src::ext::rtree::rtree::u8_0;
-                    (*pNew).nRecord += sessionVarintPut(
-                        (*pNew).aRecord.offset((*pNew).nRecord as isize) as *mut crate::src::ext::rtree::rtree::u8_0,
+                    __pNew_ref.nRecord += sessionVarintPut(
+                        __pNew_ref.aRecord.offset(__pNew_ref.nRecord as isize) as *mut crate::src::ext::rtree::rtree::u8_0,
                         n_1,
                     );
                     ::libc::memcpy(
-                        (*pNew).aRecord.offset((*pNew).nRecord as isize) as *mut crate::src::ext::rtree::rtree::u8_0
+                        __pNew_ref.aRecord.offset(__pNew_ref.nRecord as isize) as *mut crate::src::ext::rtree::rtree::u8_0
                             as *mut ::core::ffi::c_void,
                         z_0 as *const ::core::ffi::c_void,
                         n_1 as crate::__stddef_size_t_h::size_t,
                     );
-                    (*pNew).nRecord += n_1;
+                    __pNew_ref.nRecord += n_1;
                 }
     _ =>  {}
 }
             sessionFree(pSession, pOld as *mut ::core::ffi::c_void);
             pOld = pNew;
             *pp = pOld;
-            (*pNew).nRecordField = (*pNew).nRecordField.wrapping_add(1);
-            (*pNew).nMaxSize += nIncr;
+            __pNew_ref.nRecordField = __pNew_ref.nRecordField.wrapping_add(1);
+            __pNew_ref.nMaxSize += nIncr;
             if !pSession.is_null() {
                 (*pSession).nMaxChangesetSize += nIncr as crate::src::ext::rtree::rtree::i64_0;
             }
@@ -1482,13 +1487,14 @@ unsafe extern "C" fn sessionAppendStr(
     if 0 as ::core::ffi::c_int
         == sessionBufferGrow(p, (nStr + 1 as ::core::ffi::c_int) as crate::src::ext::rtree::rtree::i64_0, pRc)
     {
+        let __p_ref = unsafe { &mut *p };
         ::libc::memcpy(
-            (*p).aBuf.offset((*p).nBuf as isize) as *mut crate::src::ext::rtree::rtree::u8_0 as *mut ::core::ffi::c_void,
+            __p_ref.aBuf.offset(__p_ref.nBuf as isize) as *mut crate::src::ext::rtree::rtree::u8_0 as *mut ::core::ffi::c_void,
             zStr as *const ::core::ffi::c_void,
             nStr as crate::__stddef_size_t_h::size_t,
         );
-        (*p).nBuf += nStr;
-        *(*p).aBuf.offset((*p).nBuf as isize) = 0 as crate::src::ext::rtree::rtree::u8_0;
+        __p_ref.nBuf += nStr;
+        *__p_ref.aBuf.offset(__p_ref.nBuf as isize) = 0 as crate::src::ext::rtree::rtree::u8_0;
     }
 }
 
@@ -1568,8 +1574,9 @@ unsafe extern "C" fn sessionUpdateChanges(
     mut pTab: *mut SessionTable,
 ) -> ::core::ffi::c_int {
     let mut pStmt: *mut crate::sqlite3_h::sqlite3_stmt = ::core::ptr::null_mut::<crate::sqlite3_h::sqlite3_stmt>();
-    let mut rc: ::core::ffi::c_int = (*pSession).rc;
-    rc = sessionPrepareDfltStmt((*pSession).db, pTab, &raw mut pStmt);
+    let __pSession_ref = unsafe { &mut *pSession };
+    let mut rc: ::core::ffi::c_int = __pSession_ref.rc;
+    rc = sessionPrepareDfltStmt(__pSession_ref.db, pTab, &raw mut pStmt);
     if rc == crate::sqlite3_h::SQLITE_OK && crate::sqlite3_h::SQLITE_ROW == crate::src::src::vdbeapi::sqlite3_step(pStmt) {
         let mut ii: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
         let mut pp: *mut *mut SessionChange = ::core::ptr::null_mut::<*mut SessionChange>();
@@ -1585,12 +1592,12 @@ unsafe extern "C" fn sessionUpdateChanges(
             ii += 1;
         }
     }
-    (*pSession).rc = rc;
+    __pSession_ref.rc = rc;
     rc = crate::src::src::vdbeapi::sqlite3_finalize(pStmt);
-    if (*pSession).rc == crate::sqlite3_h::SQLITE_OK {
-        (*pSession).rc = rc;
+    if __pSession_ref.rc == crate::sqlite3_h::SQLITE_OK {
+        __pSession_ref.rc = rc;
     }
-    return (*pSession).rc;
+    return __pSession_ref.rc;
 }
 
 unsafe extern "C" fn sessionStat1Old(
@@ -1670,16 +1677,17 @@ unsafe extern "C" fn sessionUpdateMaxSize(
     } else {
         let mut ii_0: ::core::ffi::c_int = 0;
         let mut pCsr: *mut crate::src::ext::rtree::rtree::u8_0 = (*pC).aRecord;
-        if (*pTab).bRowid != 0 {
+        let __pTab_ref = unsafe { &mut *pTab };
+        if __pTab_ref.bRowid != 0 {
             nNew += (9 as ::core::ffi::c_int + 1 as ::core::ffi::c_int) as crate::src::ext::rtree::rtree::i64_0;
             pCsr = pCsr.offset(9 as isize);
         }
-        ii_0 = (*pTab).bRowid;
-        while ii_0 < (*pTab).nCol {
+        ii_0 = __pTab_ref.bRowid;
+        while ii_0 < __pTab_ref.nCol {
             let mut bChanged: ::core::ffi::c_int = 1 as ::core::ffi::c_int;
             let mut nOld: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
             let mut eType: ::core::ffi::c_int = 0;
-            let mut iIdx: ::core::ffi::c_int = *(*pTab).aiIdx.offset(ii_0 as isize);
+            let mut iIdx: ::core::ffi::c_int = *__pTab_ref.aiIdx.offset(ii_0 as isize);
             let mut p_0: *mut crate::vdbeInt_h::sqlite3_value = ::core::ptr::null_mut::<crate::vdbeInt_h::sqlite3_value>();
             (*pSession).hook.xNew.expect("non-null function pointer")(
                 (*pSession).hook.pCtx,
@@ -1734,14 +1742,14 @@ unsafe extern "C" fn sessionUpdateMaxSize(
                     pCsr = pCsr.offset(nByte as isize);
                 }
 }
-            if bChanged != 0 && *(*pTab).abPK.offset(ii_0 as isize) as ::core::ffi::c_int != 0 {
+            if bChanged != 0 && *__pTab_ref.abPK.offset(ii_0 as isize) as ::core::ffi::c_int != 0 {
                 nNew = ((*pC).nRecord + 2 as ::core::ffi::c_int) as crate::src::ext::rtree::rtree::i64_0;
                 break;
             } else {
                 if bChanged != 0 {
                     nNew += (1 as ::core::ffi::c_int + nOld) as crate::src::ext::rtree::rtree::i64_0;
                     sessionSerializeValue(::core::ptr::null_mut::<crate::src::ext::rtree::rtree::u8_0>(), p_0, &raw mut nNew);
-                } else if *(*pTab).abPK.offset(ii_0 as isize) != 0 {
+                } else if *__pTab_ref.abPK.offset(ii_0 as isize) != 0 {
                     nNew += (2 as ::core::ffi::c_int + nOld) as crate::src::ext::rtree::rtree::i64_0;
                 } else {
                     nNew += 2 as crate::src::ext::rtree::rtree::i64_0;
@@ -1779,14 +1787,16 @@ unsafe extern "C" fn sessionPreupdateOneChange(
         },
         pSession: ::core::ptr::null_mut::<sqlite3_session>(),
     };
-    if (*pSession).rc != 0 {
+    let __pSession_ref = unsafe { &mut *pSession };
+    if __pSession_ref.rc != 0 {
         return;
     }
-    if sessionInitTable(pSession, pTab, (*pSession).db, (*pSession).zDb) != 0 {
+    if sessionInitTable(pSession, pTab, __pSession_ref.db, __pSession_ref.zDb) != 0 {
         return;
     }
-    nExpect = (*pSession).hook.xCount.expect("non-null function pointer")((*pSession).hook.pCtx);
-    if (*pTab).nTotalCol < nExpect {
+    nExpect = __pSession_ref.hook.xCount.expect("non-null function pointer")(__pSession_ref.hook.pCtx);
+    let __pTab_ref = unsafe { &mut *pTab };
+    if __pTab_ref.nTotalCol < nExpect {
         if sessionReinitTable(pSession, pTab) != 0 {
             return;
         }
@@ -1794,19 +1804,19 @@ unsafe extern "C" fn sessionPreupdateOneChange(
             return;
         }
     }
-    if (*pTab).nTotalCol != nExpect {
-        (*pSession).rc = crate::sqlite3_h::SQLITE_SCHEMA;
+    if __pTab_ref.nTotalCol != nExpect {
+        __pSession_ref.rc = crate::sqlite3_h::SQLITE_SCHEMA;
         return;
     }
     if sessionGrowHash(pSession, 0 as ::core::ffi::c_int, pTab) != 0 {
-        (*pSession).rc = crate::sqlite3_h::SQLITE_NOMEM;
+        __pSession_ref.rc = crate::sqlite3_h::SQLITE_NOMEM;
         return;
     }
-    if (*pTab).bStat1 != 0 {
-        stat1.hook = (*pSession).hook;
+    if __pTab_ref.bStat1 != 0 {
+        stat1.hook = __pSession_ref.hook;
         stat1.pSession = pSession;
-        (*pSession).hook.pCtx = &raw mut stat1 as *mut ::core::ffi::c_void;
-        (*pSession).hook.xNew = Some(
+        __pSession_ref.hook.pCtx = &raw mut stat1 as *mut ::core::ffi::c_void;
+        __pSession_ref.hook.xNew = Some(
             sessionStat1New
                 as unsafe extern "C" fn(
                     *mut ::core::ffi::c_void,
@@ -1821,7 +1831,7 @@ unsafe extern "C" fn sessionPreupdateOneChange(
                     *mut *mut crate::vdbeInt_h::sqlite3_value,
                 ) -> ::core::ffi::c_int,
             >;
-        (*pSession).hook.xOld = Some(
+        __pSession_ref.hook.xOld = Some(
             sessionStat1Old
                 as unsafe extern "C" fn(
                     *mut ::core::ffi::c_void,
@@ -1836,17 +1846,17 @@ unsafe extern "C" fn sessionPreupdateOneChange(
                     *mut *mut crate::vdbeInt_h::sqlite3_value,
                 ) -> ::core::ffi::c_int,
             >;
-        (*pSession).hook.xCount = Some(
+        __pSession_ref.hook.xCount = Some(
             sessionStat1Count
                 as unsafe extern "C" fn(*mut ::core::ffi::c_void) -> ::core::ffi::c_int,
         )
             as Option<unsafe extern "C" fn(*mut ::core::ffi::c_void) -> ::core::ffi::c_int>;
-        (*pSession).hook.xDepth = Some(
+        __pSession_ref.hook.xDepth = Some(
             sessionStat1Depth
                 as unsafe extern "C" fn(*mut ::core::ffi::c_void) -> ::core::ffi::c_int,
         )
             as Option<unsafe extern "C" fn(*mut ::core::ffi::c_void) -> ::core::ffi::c_int>;
-        if (*pSession).pZeroBlob.is_null() {
+        if __pSession_ref.pZeroBlob.is_null() {
             let mut p: *mut crate::vdbeInt_h::sqlite3_value =  crate::src::src::vdbemem::sqlite3ValueNew(::core::ptr::null_mut::<crate::sqliteInt_h::sqlite3>() as
     *mut crate::sqliteInt_h::sqlite3) as
     *mut crate::vdbeInt_h::sqlite3_value;
@@ -1862,7 +1872,7 @@ unsafe extern "C" fn sessionPreupdateOneChange(
                     0 as crate::src::ext::rtree::rtree::u8_0,
                     crate::sqlite3_h::SQLITE_STATIC,
                 );
-                (*pSession).pZeroBlob = p;
+                __pSession_ref.pZeroBlob = p;
                 current_block = 7172762164747879670;
             }
         } else {
@@ -1884,7 +1894,7 @@ unsafe extern "C" fn sessionPreupdateOneChange(
             if !(rc != crate::sqlite3_h::SQLITE_OK) {
                 if bNull == 0 as ::core::ffi::c_int {
                     let mut pC: *mut SessionChange = ::core::ptr::null_mut::<SessionChange>();
-                    pC = *(*pTab).apChange.offset(iHash as isize);
+                    pC = *__pTab_ref.apChange.offset(iHash as isize);
                     while !pC.is_null() {
                         if sessionPreupdateEqual(pSession, iRowid, pTab, pC, op) != 0 {
                             break;
@@ -1894,26 +1904,26 @@ unsafe extern "C" fn sessionPreupdateOneChange(
                     if pC.is_null() {
                         let mut nByte: crate::sqlite3_h::sqlite3_int64 = 0;
                         let mut i: ::core::ffi::c_int = 0;
-                        (*pTab).nEntry += 1;
+                        __pTab_ref.nEntry += 1;
                         nByte = ::core::mem::size_of::<SessionChange>() as crate::sqlite3_h::sqlite3_int64;
-                        i = (*pTab).bRowid;
+                        i = __pTab_ref.bRowid;
                         loop {
-                            if !(i < (*pTab).nCol) {
+                            if !(i < __pTab_ref.nCol) {
                                 current_block = 313581471991351815;
                                 break;
                             }
-                            let mut iIdx: ::core::ffi::c_int = *(*pTab).aiIdx.offset(i as isize);
+                            let mut iIdx: ::core::ffi::c_int = *__pTab_ref.aiIdx.offset(i as isize);
                             let mut p_0: *mut crate::vdbeInt_h::sqlite3_value =
                                 ::core::ptr::null_mut::<crate::vdbeInt_h::sqlite3_value>();
                             if op != crate::sqlite3_h::SQLITE_INSERT {
-                                rc = (*pSession).hook.xOld.expect("non-null function pointer")(
-                                    (*pSession).hook.pCtx,
+                                rc = __pSession_ref.hook.xOld.expect("non-null function pointer")(
+                                    __pSession_ref.hook.pCtx,
                                     iIdx,
                                     &raw mut p_0,
                                 );
-                            } else if *(*pTab).abPK.offset(i as isize) != 0 {
-                                (*pSession).hook.xNew.expect("non-null function pointer")(
-                                    (*pSession).hook.pCtx,
+                            } else if *__pTab_ref.abPK.offset(i as isize) != 0 {
+                                __pSession_ref.hook.xNew.expect("non-null function pointer")(
+                                    __pSession_ref.hook.pCtx,
                                     iIdx,
                                     &raw mut p_0,
                                 );
@@ -1934,7 +1944,7 @@ unsafe extern "C" fn sessionPreupdateOneChange(
                         match current_block {
                             15922110044500416833 => {}
                             _ => {
-                                if (*pTab).bRowid != 0 {
+                                if __pTab_ref.bRowid != 0 {
                                     nByte += 9 as crate::sqlite3_h::sqlite3_int64;
                                 }
                                 pC =
@@ -1948,67 +1958,68 @@ unsafe extern "C" fn sessionPreupdateOneChange(
                                         0 as ::core::ffi::c_int,
                                         ::core::mem::size_of::<SessionChange>() as crate::__stddef_size_t_h::size_t,
                                     );
-                                    (*pC).aRecord = pC.offset(1 as isize)
+                                    let __pC_ref = unsafe { &mut *pC };
+                                    __pC_ref.aRecord = pC.offset(1 as isize)
                                         as *mut SessionChange
                                         as *mut crate::src::ext::rtree::rtree::u8_0;
                                     nByte = 0 as crate::sqlite3_h::sqlite3_int64;
-                                    if (*pTab).bRowid != 0 {
-                                        *(*pC).aRecord.offset(0 as isize) =
+                                    if __pTab_ref.bRowid != 0 {
+                                        *__pC_ref.aRecord.offset(0 as isize) =
                                             crate::sqlite3_h::SQLITE_INTEGER as crate::src::ext::rtree::rtree::u8_0;
                                         sessionPutI64(
-                                            (*pC).aRecord.offset(1 as isize)
+                                            __pC_ref.aRecord.offset(1 as isize)
                                                 as *mut crate::src::ext::rtree::rtree::u8_0,
                                             iRowid as crate::sqlite3_h::sqlite3_int64,
                                         );
                                         nByte = 9 as crate::sqlite3_h::sqlite3_int64;
                                     }
-                                    i = (*pTab).bRowid;
-                                    while i < (*pTab).nCol {
+                                    i = __pTab_ref.bRowid;
+                                    while i < __pTab_ref.nCol {
                                         let mut p_1: *mut crate::vdbeInt_h::sqlite3_value =
                                             ::core::ptr::null_mut::<crate::vdbeInt_h::sqlite3_value>();
                                         let mut iIdx_0: ::core::ffi::c_int =
-                                            *(*pTab).aiIdx.offset(i as isize);
+                                            *__pTab_ref.aiIdx.offset(i as isize);
                                         if op != crate::sqlite3_h::SQLITE_INSERT {
                                             (*pSession)
                                                 .hook
                                                 .xOld
                                                 .expect("non-null function pointer")(
-                                                (*pSession).hook.pCtx,
+                                                __pSession_ref.hook.pCtx,
                                                 iIdx_0,
                                                 &raw mut p_1,
                                             );
-                                        } else if *(*pTab).abPK.offset(i as isize) != 0 {
+                                        } else if *__pTab_ref.abPK.offset(i as isize) != 0 {
                                             (*pSession)
                                                 .hook
                                                 .xNew
                                                 .expect("non-null function pointer")(
-                                                (*pSession).hook.pCtx,
+                                                __pSession_ref.hook.pCtx,
                                                 iIdx_0,
                                                 &raw mut p_1,
                                             );
                                         }
                                         sessionSerializeValue(
-                                            (*pC).aRecord.offset(nByte as isize) as *mut crate::src::ext::rtree::rtree::u8_0,
+                                            __pC_ref.aRecord.offset(nByte as isize) as *mut crate::src::ext::rtree::rtree::u8_0,
                                             p_1,
                                             &raw mut nByte,
                                         );
                                         i += 1;
                                     }
-                                    if (*pSession).bIndirect != 0
+                                    if __pSession_ref.bIndirect != 0
                                         || (*pSession)
                                             .hook
                                             .xDepth
                                             .expect("non-null function pointer")(
-                                            (*pSession).hook.pCtx,
+                                            __pSession_ref.hook.pCtx,
                                         ) != 0
                                     {
-                                        (*pC).bIndirect = 1 as crate::src::ext::rtree::rtree::u8_0;
+                                        __pC_ref.bIndirect = 1 as crate::src::ext::rtree::rtree::u8_0;
                                     }
-                                    (*pC).nRecordField = (*pTab).nCol as crate::src::fts5::u16_0;
-                                    (*pC).nRecord = nByte as ::core::ffi::c_int;
-                                    (*pC).op = op as crate::src::ext::rtree::rtree::u8_0;
-                                    (*pC).pNext = *(*pTab).apChange.offset(iHash as isize);
-                                    let ref mut fresh0 = *(*pTab).apChange.offset(iHash as isize);
+                                    __pC_ref.nRecordField = __pTab_ref.nCol as crate::src::fts5::u16_0;
+                                    __pC_ref.nRecord = nByte as ::core::ffi::c_int;
+                                    __pC_ref.op = op as crate::src::ext::rtree::rtree::u8_0;
+                                    __pC_ref.pNext = *__pTab_ref.apChange.offset(iHash as isize);
+                                    let ref mut fresh0 = *__pTab_ref.apChange.offset(iHash as isize);
                                     *fresh0 = pC;
                                     current_block = 16108440464692313034;
                                 }
@@ -2016,10 +2027,10 @@ unsafe extern "C" fn sessionPreupdateOneChange(
                         }
                     } else {
                         if (*pC).bIndirect != 0 {
-                            if (*pSession).hook.xDepth.expect("non-null function pointer")(
-                                (*pSession).hook.pCtx,
+                            if __pSession_ref.hook.xDepth.expect("non-null function pointer")(
+                                __pSession_ref.hook.pCtx,
                             ) == 0 as ::core::ffi::c_int
-                                && (*pSession).bIndirect == 0 as ::core::ffi::c_int
+                                && __pSession_ref.bIndirect == 0 as ::core::ffi::c_int
                             {
                                 (*pC).bIndirect = 0 as crate::src::ext::rtree::rtree::u8_0;
                             }
@@ -2029,7 +2040,7 @@ unsafe extern "C" fn sessionPreupdateOneChange(
                     match current_block {
                         15922110044500416833 => {}
                         _ => {
-                            if (*pSession).bEnableSize != 0 {
+                            if __pSession_ref.bEnableSize != 0 {
                                 rc = sessionUpdateMaxSize(op, pSession, pTab, pC);
                             }
                         }
@@ -2039,11 +2050,11 @@ unsafe extern "C" fn sessionPreupdateOneChange(
         }
         _ => {}
     }
-    if (*pTab).bStat1 != 0 {
-        (*pSession).hook = stat1.hook;
+    if __pTab_ref.bStat1 != 0 {
+        __pSession_ref.hook = stat1.hook;
     }
     if rc != crate::sqlite3_h::SQLITE_OK {
-        (*pSession).rc = rc;
+        __pSession_ref.rc = rc;
     }
 }
 
@@ -2065,15 +2076,16 @@ unsafe extern "C" fn sessionFindTable(
         pRet = (*pRet).pNext;
     }
     if pRet.is_null() && (*pSession).bAutoAttach != 0 {
-        if (*pSession).xTableFilter.is_none()
-            || (*pSession).xTableFilter.expect("non-null function pointer")(
-                (*pSession).pFilterCtx,
+        let __pSession_ref = unsafe { &mut *pSession };
+        if __pSession_ref.xTableFilter.is_none()
+            || __pSession_ref.xTableFilter.expect("non-null function pointer")(
+                __pSession_ref.pFilterCtx,
                 zName,
             ) != 0
         {
             rc = sqlite3session_attach(pSession, zName);
             if rc == crate::sqlite3_h::SQLITE_OK {
-                pRet = (*pSession).pTable;
+                pRet = __pSession_ref.pTable;
                 while !pRet.is_null() && !(*pRet).pNext.is_null() {
                     pRet = (*pRet).pNext;
                 }
@@ -2149,8 +2161,9 @@ unsafe extern "C" fn sessionPreupdateDepth(
 }
 
 unsafe extern "C" fn sessionPreupdateHooks(mut pSession: *mut sqlite3_session) {
-    (*pSession).hook.pCtx = (*pSession).db as *mut ::core::ffi::c_void;
-    (*pSession).hook.xOld = Some(
+    let __pSession_ref = unsafe { &mut *pSession };
+    __pSession_ref.hook.pCtx = __pSession_ref.db as *mut ::core::ffi::c_void;
+    __pSession_ref.hook.xOld = Some(
         sessionPreupdateOld
             as unsafe extern "C" fn(
                 *mut ::core::ffi::c_void,
@@ -2165,7 +2178,7 @@ unsafe extern "C" fn sessionPreupdateHooks(mut pSession: *mut sqlite3_session) {
                 *mut *mut crate::vdbeInt_h::sqlite3_value,
             ) -> ::core::ffi::c_int,
         >;
-    (*pSession).hook.xNew = Some(
+    __pSession_ref.hook.xNew = Some(
         sessionPreupdateNew
             as unsafe extern "C" fn(
                 *mut ::core::ffi::c_void,
@@ -2180,12 +2193,12 @@ unsafe extern "C" fn sessionPreupdateHooks(mut pSession: *mut sqlite3_session) {
                 *mut *mut crate::vdbeInt_h::sqlite3_value,
             ) -> ::core::ffi::c_int,
         >;
-    (*pSession).hook.xCount = Some(
+    __pSession_ref.hook.xCount = Some(
         sessionPreupdateCount
             as unsafe extern "C" fn(*mut ::core::ffi::c_void) -> ::core::ffi::c_int,
     )
         as Option<unsafe extern "C" fn(*mut ::core::ffi::c_void) -> ::core::ffi::c_int>;
-    (*pSession).hook.xDepth = Some(
+    __pSession_ref.hook.xDepth = Some(
         sessionPreupdateDepth
             as unsafe extern "C" fn(*mut ::core::ffi::c_void) -> ::core::ffi::c_int,
     )
@@ -2198,7 +2211,8 @@ unsafe extern "C" fn sessionDiffOld(
     mut ppVal: *mut *mut crate::vdbeInt_h::sqlite3_value,
 ) -> ::core::ffi::c_int {
     let mut p: *mut SessionDiffCtx = pCtx as *mut SessionDiffCtx;
-    *ppVal =  crate::src::src::vdbeapi::sqlite3_column_value((*p).pStmt, iVal + (*p).nOldOff + (*p).bRowid) as
+    let __p_ref = unsafe { &*p };
+    *ppVal =  crate::src::src::vdbeapi::sqlite3_column_value(__p_ref.pStmt, iVal + __p_ref.nOldOff + __p_ref.bRowid) as
     *mut crate::vdbeInt_h::sqlite3_value;
     return crate::sqlite3_h::SQLITE_OK;
 }
@@ -2231,8 +2245,9 @@ unsafe extern "C" fn sessionDiffHooks(
     mut pSession: *mut sqlite3_session,
     mut pDiffCtx: *mut SessionDiffCtx,
 ) {
-    (*pSession).hook.pCtx = pDiffCtx as *mut ::core::ffi::c_void;
-    (*pSession).hook.xOld = Some(
+    let __pSession_ref = unsafe { &mut *pSession };
+    __pSession_ref.hook.pCtx = pDiffCtx as *mut ::core::ffi::c_void;
+    __pSession_ref.hook.xOld = Some(
         sessionDiffOld
             as unsafe extern "C" fn(
                 *mut ::core::ffi::c_void,
@@ -2247,7 +2262,7 @@ unsafe extern "C" fn sessionDiffHooks(
                 *mut *mut crate::vdbeInt_h::sqlite3_value,
             ) -> ::core::ffi::c_int,
         >;
-    (*pSession).hook.xNew = Some(
+    __pSession_ref.hook.xNew = Some(
         sessionDiffNew
             as unsafe extern "C" fn(
                 *mut ::core::ffi::c_void,
@@ -2262,11 +2277,11 @@ unsafe extern "C" fn sessionDiffHooks(
                 *mut *mut crate::vdbeInt_h::sqlite3_value,
             ) -> ::core::ffi::c_int,
         >;
-    (*pSession).hook.xCount = Some(
+    __pSession_ref.hook.xCount = Some(
         sessionDiffCount as unsafe extern "C" fn(*mut ::core::ffi::c_void) -> ::core::ffi::c_int,
     )
         as Option<unsafe extern "C" fn(*mut ::core::ffi::c_void) -> ::core::ffi::c_int>;
-    (*pSession).hook.xDepth = Some(
+    __pSession_ref.hook.xDepth = Some(
         sessionDiffDepth as unsafe extern "C" fn(*mut ::core::ffi::c_void) -> ::core::ffi::c_int,
     )
         as Option<unsafe extern "C" fn(*mut ::core::ffi::c_void) -> ::core::ffi::c_int>;
@@ -2399,9 +2414,10 @@ unsafe extern "C" fn sessionDiffFindNew(
         );
         if rc == crate::sqlite3_h::SQLITE_OK {
             let mut pDiffCtx: *mut SessionDiffCtx = (*pSession).hook.pCtx as *mut SessionDiffCtx;
-            (*pDiffCtx).pStmt = pStmt;
-            (*pDiffCtx).nOldOff = 0 as ::core::ffi::c_int;
-            (*pDiffCtx).bRowid = (*pTab).bRowid;
+            let __pDiffCtx_ref = unsafe { &mut *pDiffCtx };
+            __pDiffCtx_ref.pStmt = pStmt;
+            __pDiffCtx_ref.nOldOff = 0 as ::core::ffi::c_int;
+            __pDiffCtx_ref.bRowid = (*pTab).bRowid;
             while crate::sqlite3_h::SQLITE_ROW == crate::src::src::vdbeapi::sqlite3_step(pStmt) {
                 let mut iRowid: crate::src::ext::rtree::rtree::i64_0 = if (*pTab).bRowid != 0 {
                     crate::src::src::vdbeapi::sqlite3_column_int64(pStmt, 0 as ::core::ffi::c_int) as crate::src::ext::rtree::rtree::i64_0
@@ -2452,13 +2468,14 @@ unsafe extern "C" fn sessionDiffFindModified(
     mut zExpr: *const ::core::ffi::c_char,
 ) -> ::core::ffi::c_int {
     let mut rc: ::core::ffi::c_int = crate::sqlite3_h::SQLITE_OK;
+    let __pTab_ref = unsafe { &*pTab };
     let mut zExpr2: *mut ::core::ffi::c_char = sessionExprCompareOther(
-        (*pTab).nCol,
+        __pTab_ref.nCol,
         (*pSession).zDb,
         zFrom,
-        (*pTab).zName,
-        (*pTab).azCol,
-        (*pTab).abPK,
+        __pTab_ref.zName,
+        __pTab_ref.azCol,
+        __pTab_ref.abPK,
     );
     if zExpr2.is_null() {
         rc = crate::sqlite3_h::SQLITE_NOMEM;
@@ -2471,9 +2488,9 @@ unsafe extern "C" fn sessionDiffFindModified(
             z1,
             z2,
             (*pSession).zDb,
-            (*pTab).zName,
+            __pTab_ref.zName,
             zFrom,
-            (*pTab).zName,
+            __pTab_ref.zName,
             zExpr,
             zExpr2,
         );
@@ -2493,9 +2510,9 @@ unsafe extern "C" fn sessionDiffFindModified(
                 let mut pDiffCtx: *mut SessionDiffCtx =
                     (*pSession).hook.pCtx as *mut SessionDiffCtx;
                 (*pDiffCtx).pStmt = pStmt;
-                (*pDiffCtx).nOldOff = (*pTab).nCol;
+                (*pDiffCtx).nOldOff = __pTab_ref.nCol;
                 while crate::sqlite3_h::SQLITE_ROW == crate::src::src::vdbeapi::sqlite3_step(pStmt) {
-                    let mut iRowid: crate::src::ext::rtree::rtree::i64_0 = if (*pTab).bRowid != 0 {
+                    let mut iRowid: crate::src::ext::rtree::rtree::i64_0 = if __pTab_ref.bRowid != 0 {
                         crate::src::src::vdbeapi::sqlite3_column_int64(pStmt, 0 as ::core::ffi::c_int) as crate::src::ext::rtree::rtree::i64_0
                     } else {
                         0 as crate::src::ext::rtree::rtree::i64_0
@@ -2520,24 +2537,25 @@ pub unsafe extern "C" fn sqlite3session_diff(
     mut pzErrMsg: *mut *mut ::core::ffi::c_char,
 ) -> ::core::ffi::c_int {
     let mut current_block: u64;
-    let mut zDb: *const ::core::ffi::c_char = (*pSession).zDb;
-    let mut rc: ::core::ffi::c_int = (*pSession).rc;
+    let __pSession_ref = unsafe { &mut *pSession };
+    let mut zDb: *const ::core::ffi::c_char = __pSession_ref.zDb;
+    let mut rc: ::core::ffi::c_int = __pSession_ref.rc;
     let mut d: SessionDiffCtx = unsafe { ::core::mem::zeroed() };
     sessionDiffHooks(pSession, &raw mut d);
-    crate::src::src::mutex::sqlite3_mutex_enter(crate::src::src::main::sqlite3_db_mutex((*pSession).db as *mut crate::sqliteInt_h::sqlite3));
+    crate::src::src::mutex::sqlite3_mutex_enter(crate::src::src::main::sqlite3_db_mutex(__pSession_ref.db as *mut crate::sqliteInt_h::sqlite3));
     if !pzErrMsg.is_null() {
         *pzErrMsg = ::core::ptr::null_mut::<::core::ffi::c_char>();
     }
     if rc == crate::sqlite3_h::SQLITE_OK {
         let mut zExpr: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
-        let mut db: *mut crate::sqliteInt_h::sqlite3 = (*pSession).db;
+        let mut db: *mut crate::sqliteInt_h::sqlite3 = __pSession_ref.db;
         let mut pTo: *mut SessionTable = ::core::ptr::null_mut::<SessionTable>();
-        (*pSession).bAutoAttach += 1;
+        __pSession_ref.bAutoAttach += 1;
         rc = sessionFindTable(pSession, zTbl, &raw mut pTo);
-        (*pSession).bAutoAttach -= 1;
+        __pSession_ref.bAutoAttach -= 1;
         if !pTo.is_null() {
-            if sessionInitTable(pSession, pTo, (*pSession).db, (*pSession).zDb) != 0 {
-                rc = (*pSession).rc;
+            if sessionInitTable(pSession, pTo, __pSession_ref.db, __pSession_ref.zDb) != 0 {
+                rc = __pSession_ref.rc;
             } else {
                 if rc == crate::sqlite3_h::SQLITE_OK {
                     let mut bHasPk: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
@@ -2587,7 +2605,7 @@ pub unsafe extern "C" fn sqlite3session_diff(
                             ::core::ptr::null_mut::<*mut *const ::core::ffi::c_char>(),
                             ::core::ptr::null_mut::<*mut ::core::ffi::c_int>(),
                             &raw mut abPK,
-                            if (*pSession).bImplicitPK != 0 {
+                            if __pSession_ref.bImplicitPK != 0 {
                                 &raw mut bRowid
                             } else {
                                 ::core::ptr::null_mut::<::core::ffi::c_int>()
@@ -2654,13 +2672,14 @@ pub unsafe extern "C" fn sqlite3session_diff(
                     8342007778023407754 => {}
                     _ => {
                         if rc == crate::sqlite3_h::SQLITE_OK {
+                            let __pTo_ref = unsafe { &*pTo };
                             zExpr = sessionExprComparePK(
-                                (*pTo).nCol,
+                                __pTo_ref.nCol,
                                 zDb,
                                 zFrom,
-                                (*pTo).zName,
-                                (*pTo).azCol,
-                                (*pTo).abPK,
+                                __pTo_ref.zName,
+                                __pTo_ref.azCol,
+                                __pTo_ref.abPK,
                             );
                         }
                         if rc == crate::sqlite3_h::SQLITE_OK {
@@ -2681,7 +2700,7 @@ pub unsafe extern "C" fn sqlite3session_diff(
         }
     }
     sessionPreupdateHooks(pSession);
-    crate::src::src::mutex::sqlite3_mutex_leave(crate::src::src::main::sqlite3_db_mutex((*pSession).db as *mut crate::sqliteInt_h::sqlite3));
+    crate::src::src::mutex::sqlite3_mutex_leave(crate::src::src::main::sqlite3_db_mutex(__pSession_ref.db as *mut crate::sqliteInt_h::sqlite3));
     return rc;
 }
 #[no_mangle]
@@ -2780,7 +2799,8 @@ unsafe extern "C" fn sessionDeleteTable(
 #[no_mangle]
 
 pub unsafe extern "C" fn sqlite3session_delete(mut pSession: *mut sqlite3_session) {
-    let mut db: *mut crate::sqliteInt_h::sqlite3 = (*pSession).db;
+    let __pSession_ref = unsafe { &*pSession };
+    let mut db: *mut crate::sqliteInt_h::sqlite3 = __pSession_ref.db;
     let mut pHead: *mut sqlite3_session = ::core::ptr::null_mut::<sqlite3_session>();
     let mut pp: *mut *mut sqlite3_session = ::core::ptr::null_mut::<*mut sqlite3_session>();
     crate::src::src::mutex::sqlite3_mutex_enter(crate::src::src::main::sqlite3_db_mutex(db as *mut crate::sqliteInt_h::sqlite3));
@@ -2821,8 +2841,8 @@ pub unsafe extern "C" fn sqlite3session_delete(mut pSession: *mut sqlite3_sessio
         }
     }
     crate::src::src::mutex::sqlite3_mutex_leave(crate::src::src::main::sqlite3_db_mutex(db as *mut crate::sqliteInt_h::sqlite3));
-    crate::src::src::vdbemem::sqlite3ValueFree((*pSession).pZeroBlob as *mut crate::vdbeInt_h::sqlite3_value);
-    sessionDeleteTable(pSession, (*pSession).pTable);
+    crate::src::src::vdbemem::sqlite3ValueFree(__pSession_ref.pZeroBlob as *mut crate::vdbeInt_h::sqlite3_value);
+    sessionDeleteTable(pSession, __pSession_ref.pTable);
     crate::src::src::malloc::sqlite3_free(pSession as *mut ::core::ffi::c_void);
 }
 #[no_mangle]
@@ -2837,9 +2857,10 @@ pub unsafe extern "C" fn sqlite3session_table_filter(
     >,
     mut pCtx: *mut ::core::ffi::c_void,
 ) {
-    (*pSession).bAutoAttach = 1 as ::core::ffi::c_int;
-    (*pSession).pFilterCtx = pCtx;
-    (*pSession).xTableFilter = xFilter;
+    let __pSession_ref = unsafe { &mut *pSession };
+    __pSession_ref.bAutoAttach = 1 as ::core::ffi::c_int;
+    __pSession_ref.pFilterCtx = pCtx;
+    __pSession_ref.xTableFilter = xFilter;
 }
 #[no_mangle]
 
@@ -2910,12 +2931,13 @@ unsafe extern "C" fn sessionAppendValue(
         rc = sessionSerializeValue(::core::ptr::null_mut::<crate::src::ext::rtree::rtree::u8_0>(), pVal, &raw mut nByte);
         sessionBufferGrow(p, nByte as crate::src::ext::rtree::rtree::i64_0, &raw mut rc);
         if rc == crate::sqlite3_h::SQLITE_OK {
+            let __p_ref = unsafe { &mut *p };
             rc = sessionSerializeValue(
-                (*p).aBuf.offset((*p).nBuf as isize) as *mut crate::src::ext::rtree::rtree::u8_0,
+                __p_ref.aBuf.offset(__p_ref.nBuf as isize) as *mut crate::src::ext::rtree::rtree::u8_0,
                 pVal,
                 ::core::ptr::null_mut::<crate::sqlite3_h::sqlite3_int64>(),
             );
-            (*p).nBuf = ((*p).nBuf as crate::sqlite3_h::sqlite3_int64 + nByte) as ::core::ffi::c_int;
+            __p_ref.nBuf = (__p_ref.nBuf as crate::sqlite3_h::sqlite3_int64 + nByte) as ::core::ffi::c_int;
         } else {
             *pRc = rc;
         }
@@ -2928,9 +2950,10 @@ unsafe extern "C" fn sessionAppendByte(
     mut pRc: *mut ::core::ffi::c_int,
 ) {
     if 0 as ::core::ffi::c_int == sessionBufferGrow(p, 1 as crate::src::ext::rtree::rtree::i64_0, pRc) {
-        let fresh10 = (*p).nBuf;
-        (*p).nBuf = (*p).nBuf + 1;
-        *(*p).aBuf.offset(fresh10 as isize) = v;
+        let __p_ref = unsafe { &mut *p };
+        let fresh10 = __p_ref.nBuf;
+        __p_ref.nBuf = __p_ref.nBuf + 1;
+        *__p_ref.aBuf.offset(fresh10 as isize) = v;
     }
 }
 
@@ -2940,7 +2963,8 @@ unsafe extern "C" fn sessionAppendVarint(
     mut pRc: *mut ::core::ffi::c_int,
 ) {
     if 0 as ::core::ffi::c_int == sessionBufferGrow(p, 9 as crate::src::ext::rtree::rtree::i64_0, pRc) {
-        (*p).nBuf += sessionVarintPut((*p).aBuf.offset((*p).nBuf as isize) as *mut crate::src::ext::rtree::rtree::u8_0, v);
+        let __p_ref = unsafe { &mut *p };
+        __p_ref.nBuf += sessionVarintPut(__p_ref.aBuf.offset(__p_ref.nBuf as isize) as *mut crate::src::ext::rtree::rtree::u8_0, v);
     }
 }
 
@@ -2953,12 +2977,13 @@ unsafe extern "C" fn sessionAppendBlob(
     if nBlob > 0 as ::core::ffi::c_int
         && 0 as ::core::ffi::c_int == sessionBufferGrow(p, nBlob as crate::src::ext::rtree::rtree::i64_0, pRc)
     {
+        let __p_ref = unsafe { &mut *p };
         ::libc::memcpy(
-            (*p).aBuf.offset((*p).nBuf as isize) as *mut crate::src::ext::rtree::rtree::u8_0 as *mut ::core::ffi::c_void,
+            __p_ref.aBuf.offset(__p_ref.nBuf as isize) as *mut crate::src::ext::rtree::rtree::u8_0 as *mut ::core::ffi::c_void,
             aBlob as *const ::core::ffi::c_void,
             nBlob as crate::__stddef_size_t_h::size_t,
         );
-        (*p).nBuf += nBlob;
+        __p_ref.nBuf += nBlob;
     }
 }
 
@@ -2987,8 +3012,9 @@ unsafe extern "C" fn sessionAppendIdent(
         + 2 as ::core::ffi::c_int
         + 2 as ::core::ffi::c_int;
     if 0 as ::core::ffi::c_int == sessionBufferGrow(p, nStr as crate::src::ext::rtree::rtree::i64_0, pRc) {
+        let __p_ref = unsafe { &mut *p };
         let mut zOut: *mut ::core::ffi::c_char =
-            (*p).aBuf.offset((*p).nBuf as isize) as *mut crate::src::ext::rtree::rtree::u8_0 as *mut ::core::ffi::c_char;
+            __p_ref.aBuf.offset(__p_ref.nBuf as isize) as *mut crate::src::ext::rtree::rtree::u8_0 as *mut ::core::ffi::c_char;
         let mut zIn: *const ::core::ffi::c_char = zStr;
         let fresh12 = zOut;
         zOut = zOut.offset(1);
@@ -3010,9 +3036,9 @@ unsafe extern "C" fn sessionAppendIdent(
         let fresh16 = zOut;
         zOut = zOut.offset(1);
         *fresh16 = '"' as i32 as ::core::ffi::c_char;
-        (*p).nBuf =
-            (zOut as *mut crate::src::ext::rtree::rtree::u8_0).offset_from((*p).aBuf) as ::core::ffi::c_long as ::core::ffi::c_int;
-        *(*p).aBuf.offset((*p).nBuf as isize) = 0 as crate::src::ext::rtree::rtree::u8_0;
+        __p_ref.nBuf =
+            (zOut as *mut crate::src::ext::rtree::rtree::u8_0).offset_from(__p_ref.aBuf) as ::core::ffi::c_long as ::core::ffi::c_int;
+        *__p_ref.aBuf.offset(__p_ref.nBuf as isize) = 0 as crate::src::ext::rtree::rtree::u8_0;
     }
 }
 
@@ -3476,12 +3502,13 @@ unsafe extern "C" fn sessionAppendTableHdr(
         }) as crate::src::ext::rtree::rtree::u8_0,
         pRc,
     );
-    sessionAppendVarint(pBuf, (*pTab).nCol, pRc);
-    sessionAppendBlob(pBuf, (*pTab).abPK, (*pTab).nCol, pRc);
+    let __pTab_ref = unsafe { &*pTab };
+    sessionAppendVarint(pBuf, __pTab_ref.nCol, pRc);
+    sessionAppendBlob(pBuf, __pTab_ref.abPK, __pTab_ref.nCol, pRc);
     sessionAppendBlob(
         pBuf,
-        (*pTab).zName as *mut crate::src::ext::rtree::rtree::u8_0,
-        ::libc::strlen((*pTab).zName) as ::core::ffi::c_int + 1 as ::core::ffi::c_int,
+        __pTab_ref.zName as *mut crate::src::ext::rtree::rtree::u8_0,
+        ::libc::strlen(__pTab_ref.zName) as ::core::ffi::c_int + 1 as ::core::ffi::c_int,
         pRc,
     );
 }
@@ -3500,7 +3527,8 @@ unsafe extern "C" fn sessionGenerateChangeset(
     mut pnChangeset: *mut ::core::ffi::c_int,
     mut ppChangeset: *mut *mut ::core::ffi::c_void,
 ) -> ::core::ffi::c_int {
-    let mut db: *mut crate::sqliteInt_h::sqlite3 = (*pSession).db;
+    let __pSession_ref = unsafe { &*pSession };
+    let mut db: *mut crate::sqliteInt_h::sqlite3 = __pSession_ref.db;
     let mut pTab: *mut SessionTable = ::core::ptr::null_mut::<SessionTable>();
     let mut buf: SessionBuffer = SessionBuffer {
         aBuf: ::core::ptr::null_mut::<crate::src::ext::rtree::rtree::u8_0>(),
@@ -3512,12 +3540,12 @@ unsafe extern "C" fn sessionGenerateChangeset(
         *pnChangeset = 0 as ::core::ffi::c_int;
         *ppChangeset = ::core::ptr::null_mut::<::core::ffi::c_void>();
     }
-    if (*pSession).rc != 0 {
-        return (*pSession).rc;
+    if __pSession_ref.rc != 0 {
+        return __pSession_ref.rc;
     }
     rc = crate::src::src::legacy::sqlite3_exec(
         
-        (*pSession).db as *mut crate::sqliteInt_h::sqlite3,
+        __pSession_ref.db as *mut crate::sqliteInt_h::sqlite3,
         b"SAVEPOINT changeset\0" as *const u8 as *const ::core::ffi::c_char,
         None,
         ::core::ptr::null_mut::<::core::ffi::c_void>(),
@@ -3527,17 +3555,18 @@ unsafe extern "C" fn sessionGenerateChangeset(
         return rc;
     }
     crate::src::src::mutex::sqlite3_mutex_enter(crate::src::src::main::sqlite3_db_mutex(db as *mut crate::sqliteInt_h::sqlite3));
-    pTab = (*pSession).pTable;
+    pTab = __pSession_ref.pTable;
     while rc == crate::sqlite3_h::SQLITE_OK && !pTab.is_null() {
         if (*pTab).nEntry != 0 {
-            let mut zName: *const ::core::ffi::c_char = (*pTab).zName;
+            let __pTab_ref = unsafe { &mut *pTab };
+            let mut zName: *const ::core::ffi::c_char = __pTab_ref.zName;
             let mut i: ::core::ffi::c_int = 0;
             let mut pSel: *mut crate::sqlite3_h::sqlite3_stmt = ::core::ptr::null_mut::<crate::sqlite3_h::sqlite3_stmt>();
             let mut nRewind: ::core::ffi::c_int = buf.nBuf;
             let mut nNoop: ::core::ffi::c_int = 0;
-            let mut nOldCol: ::core::ffi::c_int = (*pTab).nCol;
+            let mut nOldCol: ::core::ffi::c_int = __pTab_ref.nCol;
             rc = sessionReinitTable(pSession, pTab);
-            if rc == crate::sqlite3_h::SQLITE_OK && (*pTab).nCol != nOldCol {
+            if rc == crate::sqlite3_h::SQLITE_OK && __pTab_ref.nCol != nOldCol {
                 rc = sessionUpdateChanges(pSession, pTab);
             }
             sessionAppendTableHdr(&raw mut buf, bPatchset, pTab, &raw mut rc);
@@ -3545,23 +3574,23 @@ unsafe extern "C" fn sessionGenerateChangeset(
                 rc = sessionSelectStmt(
                     db,
                     0 as ::core::ffi::c_int,
-                    (*pSession).zDb,
+                    __pSession_ref.zDb,
                     zName,
-                    (*pTab).bRowid,
-                    (*pTab).nCol,
-                    (*pTab).azCol,
-                    (*pTab).abPK,
+                    __pTab_ref.bRowid,
+                    __pTab_ref.nCol,
+                    __pTab_ref.azCol,
+                    __pTab_ref.abPK,
                     &raw mut pSel,
                     ::core::ptr::null_mut::<*mut ::core::ffi::c_char>(),
                 );
             }
             nNoop = buf.nBuf;
             i = 0 as ::core::ffi::c_int;
-            while i < (*pTab).nChange && rc == crate::sqlite3_h::SQLITE_OK {
+            while i < __pTab_ref.nChange && rc == crate::sqlite3_h::SQLITE_OK {
                 let mut p: *mut SessionChange = ::core::ptr::null_mut::<SessionChange>();
-                p = *(*pTab).apChange.offset(i as isize);
+                p = *__pTab_ref.apChange.offset(i as isize);
                 while rc == crate::sqlite3_h::SQLITE_OK && !p.is_null() {
-                    rc = sessionSelectBind(pSel, (*pTab).nCol, (*pTab).abPK, p);
+                    rc = sessionSelectBind(pSel, __pTab_ref.nCol, __pTab_ref.abPK, p);
                     if !(rc != crate::sqlite3_h::SQLITE_OK) {
                         if crate::src::src::vdbeapi::sqlite3_step(pSel) == crate::sqlite3_h::SQLITE_ROW {
                             if (*p).op as ::core::ffi::c_int == crate::sqlite3_h::SQLITE_INSERT {
@@ -3569,7 +3598,7 @@ unsafe extern "C" fn sessionGenerateChangeset(
                                 sessionAppendByte(&raw mut buf, crate::sqlite3_h::SQLITE_INSERT as crate::src::ext::rtree::rtree::u8_0, &raw mut rc);
                                 sessionAppendByte(&raw mut buf, (*p).bIndirect, &raw mut rc);
                                 iCol = 0 as ::core::ffi::c_int;
-                                while iCol < (*pTab).nCol {
+                                while iCol < __pTab_ref.nCol {
                                     sessionAppendCol(&raw mut buf, pSel, iCol, &raw mut rc);
                                     iCol += 1;
                                 }
@@ -3579,7 +3608,7 @@ unsafe extern "C" fn sessionGenerateChangeset(
                                     bPatchset,
                                     pSel,
                                     p,
-                                    (*pTab).abPK,
+                                    __pTab_ref.abPK,
                                 );
                             }
                         } else if (*p).op as ::core::ffi::c_int != crate::sqlite3_h::SQLITE_INSERT {
@@ -3587,8 +3616,8 @@ unsafe extern "C" fn sessionGenerateChangeset(
                                 &raw mut buf,
                                 bPatchset,
                                 p,
-                                (*pTab).nCol,
-                                (*pTab).abPK,
+                                __pTab_ref.nCol,
+                                __pTab_ref.abPK,
                             );
                         }
                         if rc == crate::sqlite3_h::SQLITE_OK {
@@ -3741,12 +3770,13 @@ pub unsafe extern "C" fn sqlite3session_enable(
     mut bEnable: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
     let mut ret: ::core::ffi::c_int = 0;
-    crate::src::src::mutex::sqlite3_mutex_enter(crate::src::src::main::sqlite3_db_mutex((*pSession).db as *mut crate::sqliteInt_h::sqlite3));
+    let __pSession_ref = unsafe { &mut *pSession };
+    crate::src::src::mutex::sqlite3_mutex_enter(crate::src::src::main::sqlite3_db_mutex(__pSession_ref.db as *mut crate::sqliteInt_h::sqlite3));
     if bEnable >= 0 as ::core::ffi::c_int {
-        (*pSession).bEnable = bEnable;
+        __pSession_ref.bEnable = bEnable;
     }
-    ret = (*pSession).bEnable;
-    crate::src::src::mutex::sqlite3_mutex_leave(crate::src::src::main::sqlite3_db_mutex((*pSession).db as *mut crate::sqliteInt_h::sqlite3));
+    ret = __pSession_ref.bEnable;
+    crate::src::src::mutex::sqlite3_mutex_leave(crate::src::src::main::sqlite3_db_mutex(__pSession_ref.db as *mut crate::sqliteInt_h::sqlite3));
     return ret;
 }
 #[no_mangle]
@@ -3756,12 +3786,13 @@ pub unsafe extern "C" fn sqlite3session_indirect(
     mut bIndirect: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
     let mut ret: ::core::ffi::c_int = 0;
-    crate::src::src::mutex::sqlite3_mutex_enter(crate::src::src::main::sqlite3_db_mutex((*pSession).db as *mut crate::sqliteInt_h::sqlite3));
+    let __pSession_ref = unsafe { &mut *pSession };
+    crate::src::src::mutex::sqlite3_mutex_enter(crate::src::src::main::sqlite3_db_mutex(__pSession_ref.db as *mut crate::sqliteInt_h::sqlite3));
     if bIndirect >= 0 as ::core::ffi::c_int {
-        (*pSession).bIndirect = bIndirect;
+        __pSession_ref.bIndirect = bIndirect;
     }
-    ret = (*pSession).bIndirect;
-    crate::src::src::mutex::sqlite3_mutex_leave(crate::src::src::main::sqlite3_db_mutex((*pSession).db as *mut crate::sqliteInt_h::sqlite3));
+    ret = __pSession_ref.bIndirect;
+    crate::src::src::mutex::sqlite3_mutex_leave(crate::src::src::main::sqlite3_db_mutex(__pSession_ref.db as *mut crate::sqliteInt_h::sqlite3));
     return ret;
 }
 #[no_mangle]
@@ -3771,13 +3802,14 @@ pub unsafe extern "C" fn sqlite3session_isempty(
 ) -> ::core::ffi::c_int {
     let mut ret: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
     let mut pTab: *mut SessionTable = ::core::ptr::null_mut::<SessionTable>();
-    crate::src::src::mutex::sqlite3_mutex_enter(crate::src::src::main::sqlite3_db_mutex((*pSession).db as *mut crate::sqliteInt_h::sqlite3));
-    pTab = (*pSession).pTable;
+    let __pSession_ref = unsafe { &*pSession };
+    crate::src::src::mutex::sqlite3_mutex_enter(crate::src::src::main::sqlite3_db_mutex(__pSession_ref.db as *mut crate::sqliteInt_h::sqlite3));
+    pTab = __pSession_ref.pTable;
     while !pTab.is_null() && ret == 0 as ::core::ffi::c_int {
         ret = ((*pTab).nEntry > 0 as ::core::ffi::c_int) as ::core::ffi::c_int;
         pTab = (*pTab).pNext;
     }
-    crate::src::src::mutex::sqlite3_mutex_leave(crate::src::src::main::sqlite3_db_mutex((*pSession).db as *mut crate::sqliteInt_h::sqlite3));
+    crate::src::src::mutex::sqlite3_mutex_leave(crate::src::src::main::sqlite3_db_mutex(__pSession_ref.db as *mut crate::sqliteInt_h::sqlite3));
     return (ret == 0 as ::core::ffi::c_int) as ::core::ffi::c_int;
 }
 #[no_mangle]
@@ -3967,19 +3999,20 @@ pub unsafe extern "C" fn sqlite3changeset_start_v2_strm(
 
 unsafe extern "C" fn sessionDiscardData(mut pIn: *mut SessionInput) {
     if (*pIn).xInput.is_some() && (*pIn).iCurrent >= sessions_strm_chunk_size {
-        let mut nMove: ::core::ffi::c_int = (*pIn).buf.nBuf - (*pIn).iCurrent;
+        let __pIn_ref = unsafe { &mut *pIn };
+        let mut nMove: ::core::ffi::c_int = __pIn_ref.buf.nBuf - __pIn_ref.iCurrent;
         if nMove > 0 as ::core::ffi::c_int {
             ::libc::memmove(
-                (*pIn).buf.aBuf as *mut ::core::ffi::c_void,
-                (*pIn).buf.aBuf.offset((*pIn).iCurrent as isize) as *mut crate::src::ext::rtree::rtree::u8_0
+                __pIn_ref.buf.aBuf as *mut ::core::ffi::c_void,
+                __pIn_ref.buf.aBuf.offset(__pIn_ref.iCurrent as isize) as *mut crate::src::ext::rtree::rtree::u8_0
                     as *const ::core::ffi::c_void,
                 nMove as crate::__stddef_size_t_h::size_t,
             );
         }
-        (*pIn).buf.nBuf -= (*pIn).iCurrent;
-        (*pIn).iNext -= (*pIn).iCurrent;
-        (*pIn).iCurrent = 0 as ::core::ffi::c_int;
-        (*pIn).nData = (*pIn).buf.nBuf;
+        __pIn_ref.buf.nBuf -= __pIn_ref.iCurrent;
+        __pIn_ref.iNext -= __pIn_ref.iCurrent;
+        __pIn_ref.iCurrent = 0 as ::core::ffi::c_int;
+        __pIn_ref.nData = __pIn_ref.buf.nBuf;
     }
 }
 
@@ -3989,26 +4022,27 @@ unsafe extern "C" fn sessionInputBuffer(
 ) -> ::core::ffi::c_int {
     let mut rc: ::core::ffi::c_int = crate::sqlite3_h::SQLITE_OK;
     if (*pIn).xInput.is_some() {
-        while (*pIn).bEof == 0 && (*pIn).iNext + nByte >= (*pIn).nData && rc == crate::sqlite3_h::SQLITE_OK {
+        let __pIn_ref = unsafe { &mut *pIn };
+        while __pIn_ref.bEof == 0 && __pIn_ref.iNext + nByte >= __pIn_ref.nData && rc == crate::sqlite3_h::SQLITE_OK {
             let mut nNew: ::core::ffi::c_int = sessions_strm_chunk_size;
-            if (*pIn).bNoDiscard == 0 as ::core::ffi::c_int {
+            if __pIn_ref.bNoDiscard == 0 as ::core::ffi::c_int {
                 sessionDiscardData(pIn);
             }
-            if crate::sqlite3_h::SQLITE_OK == sessionBufferGrow(&raw mut (*pIn).buf, nNew as crate::src::ext::rtree::rtree::i64_0, &raw mut rc) {
-                rc = (*pIn).xInput.expect("non-null function pointer")(
-                    (*pIn).pIn,
-                    (*pIn).buf.aBuf.offset((*pIn).buf.nBuf as isize) as *mut crate::src::ext::rtree::rtree::u8_0
+            if crate::sqlite3_h::SQLITE_OK == sessionBufferGrow(&raw mut __pIn_ref.buf, nNew as crate::src::ext::rtree::rtree::i64_0, &raw mut rc) {
+                rc = __pIn_ref.xInput.expect("non-null function pointer")(
+                    __pIn_ref.pIn,
+                    __pIn_ref.buf.aBuf.offset(__pIn_ref.buf.nBuf as isize) as *mut crate::src::ext::rtree::rtree::u8_0
                         as *mut ::core::ffi::c_void,
                     &raw mut nNew,
                 );
                 if nNew == 0 as ::core::ffi::c_int {
-                    (*pIn).bEof = 1 as ::core::ffi::c_int;
+                    __pIn_ref.bEof = 1 as ::core::ffi::c_int;
                 } else {
-                    (*pIn).buf.nBuf += nNew;
+                    __pIn_ref.buf.nBuf += nNew;
                 }
             }
-            (*pIn).aData = (*pIn).buf.aBuf;
-            (*pIn).nData = (*pIn).buf.nBuf;
+            __pIn_ref.aData = __pIn_ref.buf.aBuf;
+            __pIn_ref.nData = __pIn_ref.buf.nBuf;
         }
     }
     return rc;
@@ -4085,9 +4119,10 @@ unsafe extern "C" fn sessionReadRecord(
                 if (*pIn).iNext >= (*pIn).nData {
                     rc = crate::src::src::main::sqlite3CorruptError(3545 as ::core::ffi::c_int);
                 } else {
-                    let fresh23 = (*pIn).iNext;
-                    (*pIn).iNext = (*pIn).iNext + 1;
-                    eType = *(*pIn).aData.offset(fresh23 as isize) as ::core::ffi::c_int;
+                    let __pIn_ref = unsafe { &mut *pIn };
+                    let fresh23 = __pIn_ref.iNext;
+                    __pIn_ref.iNext = __pIn_ref.iNext + 1;
+                    eType = *__pIn_ref.aData.offset(fresh23 as isize) as ::core::ffi::c_int;
                     if eType != 0 {
                         if !pbEmpty.is_null() {
                             *pbEmpty = 0 as ::core::ffi::c_int;
@@ -4117,13 +4152,14 @@ unsafe extern "C" fn sessionReadRecord(
                             } else {
                                 0 as ::core::ffi::c_int
                             }) as crate::src::ext::rtree::rtree::u8_0;
+                            let __pIn_ref = unsafe { &mut *pIn };
                             rc = sessionValueSetStr(
                                 *apOut.offset(i as isize),
-                                (*pIn).aData.offset((*pIn).iNext as isize) as *mut crate::src::ext::rtree::rtree::u8_0,
+                                __pIn_ref.aData.offset(__pIn_ref.iNext as isize) as *mut crate::src::ext::rtree::rtree::u8_0,
                                 nByte,
                                 enc,
                             );
-                            (*pIn).iNext += nByte;
+                            __pIn_ref.iNext += nByte;
                         }
                     }
                 }
@@ -4178,12 +4214,13 @@ unsafe extern "C" fn sessionChangesetBufferTblhdr(
         }
     }
     while rc == crate::sqlite3_h::SQLITE_OK {
-        while (*pIn).iNext + nRead < (*pIn).nData
-            && *(*pIn).aData.offset(((*pIn).iNext + nRead) as isize) as ::core::ffi::c_int != 0
+        let __pIn_ref = unsafe { &mut *pIn };
+        while __pIn_ref.iNext + nRead < __pIn_ref.nData
+            && *__pIn_ref.aData.offset((__pIn_ref.iNext + nRead) as isize) as ::core::ffi::c_int != 0
         {
             nRead += 1;
         }
-        if (*pIn).iNext + nRead < (*pIn).nData {
+        if __pIn_ref.iNext + nRead < __pIn_ref.nData {
             break;
         }
         rc = sessionInputBuffer(pIn, nRead + 100 as ::core::ffi::c_int);
@@ -4231,61 +4268,62 @@ unsafe extern "C" fn sessionChangesetReadTblhdr(
 ) -> ::core::ffi::c_int {
     let mut rc: ::core::ffi::c_int = 0;
     let mut nCopy: ::core::ffi::c_int = 0;
-    rc = sessionChangesetBufferTblhdr(&raw mut (*p).in_0, &raw mut nCopy);
+    let __p_ref = unsafe { &mut *p };
+    rc = sessionChangesetBufferTblhdr(&raw mut __p_ref.in_0, &raw mut nCopy);
     if rc == crate::sqlite3_h::SQLITE_OK {
         let mut nByte: ::core::ffi::c_int = 0;
         let mut nVarint: ::core::ffi::c_int = 0;
         nVarint = sessionVarintGet(
-            (*p).in_0.aData.offset((*p).in_0.iNext as isize) as *mut crate::src::ext::rtree::rtree::u8_0,
-            &raw mut (*p).nCol,
+            __p_ref.in_0.aData.offset(__p_ref.in_0.iNext as isize) as *mut crate::src::ext::rtree::rtree::u8_0,
+            &raw mut __p_ref.nCol,
         );
-        if (*p).nCol > 0 as ::core::ffi::c_int {
+        if __p_ref.nCol > 0 as ::core::ffi::c_int {
             nCopy -= nVarint;
-            (*p).in_0.iNext += nVarint;
-            nByte = ((*p).nCol as usize)
+            __p_ref.in_0.iNext += nVarint;
+            nByte = (__p_ref.nCol as usize)
                 .wrapping_mul(::core::mem::size_of::<*mut crate::vdbeInt_h::sqlite3_value>() as usize)
                 .wrapping_mul(2 as usize)
                 .wrapping_add(nCopy as usize) as ::core::ffi::c_int;
-            (*p).tblhdr.nBuf = 0 as ::core::ffi::c_int;
-            sessionBufferGrow(&raw mut (*p).tblhdr, nByte as crate::src::ext::rtree::rtree::i64_0, &raw mut rc);
+            __p_ref.tblhdr.nBuf = 0 as ::core::ffi::c_int;
+            sessionBufferGrow(&raw mut __p_ref.tblhdr, nByte as crate::src::ext::rtree::rtree::i64_0, &raw mut rc);
         } else {
             rc = crate::src::src::main::sqlite3CorruptError(3711 as ::core::ffi::c_int);
         }
     }
     if rc == crate::sqlite3_h::SQLITE_OK {
         let mut iPK: crate::__stddef_size_t_h::size_t = (::core::mem::size_of::<*mut crate::vdbeInt_h::sqlite3_value>() as crate::__stddef_size_t_h::size_t)
-            .wrapping_mul((*p).nCol as crate::__stddef_size_t_h::size_t)
+            .wrapping_mul(__p_ref.nCol as crate::__stddef_size_t_h::size_t)
             .wrapping_mul(2 as crate::__stddef_size_t_h::size_t);
         ::libc::memset(
-            (*p).tblhdr.aBuf as *mut ::core::ffi::c_void,
+            __p_ref.tblhdr.aBuf as *mut ::core::ffi::c_void,
             0 as ::core::ffi::c_int,
             iPK,
         );
         ::libc::memcpy(
-            (*p).tblhdr.aBuf.offset(iPK as isize) as *mut crate::src::ext::rtree::rtree::u8_0 as *mut ::core::ffi::c_void,
-            (*p).in_0.aData.offset((*p).in_0.iNext as isize) as *mut crate::src::ext::rtree::rtree::u8_0
+            __p_ref.tblhdr.aBuf.offset(iPK as isize) as *mut crate::src::ext::rtree::rtree::u8_0 as *mut ::core::ffi::c_void,
+            __p_ref.in_0.aData.offset(__p_ref.in_0.iNext as isize) as *mut crate::src::ext::rtree::rtree::u8_0
                 as *const ::core::ffi::c_void,
             nCopy as crate::__stddef_size_t_h::size_t,
         );
-        (*p).in_0.iNext += nCopy;
+        __p_ref.in_0.iNext += nCopy;
     }
-    (*p).apValue = (*p).tblhdr.aBuf as *mut *mut crate::vdbeInt_h::sqlite3_value;
-    if (*p).apValue.is_null() {
-        (*p).abPK = ::core::ptr::null_mut::<crate::src::ext::rtree::rtree::u8_0>();
-        (*p).zTab = ::core::ptr::null_mut::<::core::ffi::c_char>();
+    __p_ref.apValue = __p_ref.tblhdr.aBuf as *mut *mut crate::vdbeInt_h::sqlite3_value;
+    if __p_ref.apValue.is_null() {
+        __p_ref.abPK = ::core::ptr::null_mut::<crate::src::ext::rtree::rtree::u8_0>();
+        __p_ref.zTab = ::core::ptr::null_mut::<::core::ffi::c_char>();
     } else {
-        (*p).abPK = (*p)
+        __p_ref.abPK = (*p)
             .apValue
-            .offset(((*p).nCol * 2 as ::core::ffi::c_int) as isize)
+            .offset((__p_ref.nCol * 2 as ::core::ffi::c_int) as isize)
             as *mut *mut crate::vdbeInt_h::sqlite3_value as *mut crate::src::ext::rtree::rtree::u8_0;
-        (*p).zTab = if !(*p).abPK.is_null() {
-            (*p).abPK.offset((*p).nCol as isize) as *mut crate::src::ext::rtree::rtree::u8_0 as *mut ::core::ffi::c_char
+        __p_ref.zTab = if !__p_ref.abPK.is_null() {
+            __p_ref.abPK.offset(__p_ref.nCol as isize) as *mut crate::src::ext::rtree::rtree::u8_0 as *mut ::core::ffi::c_char
         } else {
             ::core::ptr::null_mut::<::core::ffi::c_char>()
         };
     }
-    (*p).rc = rc;
-    return (*p).rc;
+    __p_ref.rc = rc;
+    return __p_ref.rc;
 }
 
 unsafe extern "C" fn sessionChangesetNextOne(
@@ -4297,161 +4335,162 @@ unsafe extern "C" fn sessionChangesetNextOne(
 ) -> ::core::ffi::c_int {
     let mut i: ::core::ffi::c_int = 0;
     let mut op: crate::src::ext::rtree::rtree::u8_0 = 0;
-    if (*p).rc != crate::sqlite3_h::SQLITE_OK {
-        return (*p).rc;
+    let __p_ref = unsafe { &mut *p };
+    if __p_ref.rc != crate::sqlite3_h::SQLITE_OK {
+        return __p_ref.rc;
     }
-    if !(*p).apValue.is_null() {
+    if !__p_ref.apValue.is_null() {
         i = 0 as ::core::ffi::c_int;
-        while i < (*p).nCol * 2 as ::core::ffi::c_int {
-            crate::src::src::vdbemem::sqlite3ValueFree(*(*p).apValue.offset(i as isize) as *mut crate::vdbeInt_h::sqlite3_value);
+        while i < __p_ref.nCol * 2 as ::core::ffi::c_int {
+            crate::src::src::vdbemem::sqlite3ValueFree(*__p_ref.apValue.offset(i as isize) as *mut crate::vdbeInt_h::sqlite3_value);
             i += 1;
         }
         ::libc::memset(
-            (*p).apValue as *mut ::core::ffi::c_void,
+            __p_ref.apValue as *mut ::core::ffi::c_void,
             0 as ::core::ffi::c_int,
             (::core::mem::size_of::<*mut crate::vdbeInt_h::sqlite3_value>() as crate::__stddef_size_t_h::size_t)
-                .wrapping_mul((*p).nCol as crate::__stddef_size_t_h::size_t)
+                .wrapping_mul(__p_ref.nCol as crate::__stddef_size_t_h::size_t)
                 .wrapping_mul(2 as crate::__stddef_size_t_h::size_t),
         );
     }
-    (*p).rc = sessionInputBuffer(&raw mut (*p).in_0, 2 as ::core::ffi::c_int);
-    if (*p).rc != crate::sqlite3_h::SQLITE_OK {
-        return (*p).rc;
+    __p_ref.rc = sessionInputBuffer(&raw mut __p_ref.in_0, 2 as ::core::ffi::c_int);
+    if __p_ref.rc != crate::sqlite3_h::SQLITE_OK {
+        return __p_ref.rc;
     }
-    (*p).in_0.iCurrent = (*p).in_0.iNext;
-    sessionDiscardData(&raw mut (*p).in_0);
-    if (*p).in_0.iNext >= (*p).in_0.nData {
+    __p_ref.in_0.iCurrent = __p_ref.in_0.iNext;
+    sessionDiscardData(&raw mut __p_ref.in_0);
+    if __p_ref.in_0.iNext >= __p_ref.in_0.nData {
         return crate::sqlite3_h::SQLITE_DONE;
     }
-    let fresh17 = (*p).in_0.iNext;
-    (*p).in_0.iNext = (*p).in_0.iNext + 1;
-    op = *(*p).in_0.aData.offset(fresh17 as isize);
+    let fresh17 = __p_ref.in_0.iNext;
+    __p_ref.in_0.iNext = __p_ref.in_0.iNext + 1;
+    op = *__p_ref.in_0.aData.offset(fresh17 as isize);
     while op as ::core::ffi::c_int == 'T' as i32 || op as ::core::ffi::c_int == 'P' as i32 {
         if !pbNew.is_null() {
             *pbNew = 1 as ::core::ffi::c_int;
         }
-        (*p).bPatchset = (op as ::core::ffi::c_int == 'P' as i32) as ::core::ffi::c_int;
+        __p_ref.bPatchset = (op as ::core::ffi::c_int == 'P' as i32) as ::core::ffi::c_int;
         if sessionChangesetReadTblhdr(p) != 0 {
-            return (*p).rc;
+            return __p_ref.rc;
         }
-        (*p).rc = sessionInputBuffer(&raw mut (*p).in_0, 2 as ::core::ffi::c_int);
-        if (*p).rc != 0 {
-            return (*p).rc;
+        __p_ref.rc = sessionInputBuffer(&raw mut __p_ref.in_0, 2 as ::core::ffi::c_int);
+        if __p_ref.rc != 0 {
+            return __p_ref.rc;
         }
-        (*p).in_0.iCurrent = (*p).in_0.iNext;
-        if (*p).in_0.iNext >= (*p).in_0.nData {
+        __p_ref.in_0.iCurrent = __p_ref.in_0.iNext;
+        if __p_ref.in_0.iNext >= __p_ref.in_0.nData {
             return crate::sqlite3_h::SQLITE_DONE;
         }
-        let fresh18 = (*p).in_0.iNext;
-        (*p).in_0.iNext = (*p).in_0.iNext + 1;
-        op = *(*p).in_0.aData.offset(fresh18 as isize);
+        let fresh18 = __p_ref.in_0.iNext;
+        __p_ref.in_0.iNext = __p_ref.in_0.iNext + 1;
+        op = *__p_ref.in_0.aData.offset(fresh18 as isize);
     }
-    if (*p).zTab.is_null() || (*p).bPatchset != 0 && (*p).bInvert != 0 {
-        (*p).rc = crate::src::src::main::sqlite3CorruptError(3797 as ::core::ffi::c_int);
-        return (*p).rc;
+    if __p_ref.zTab.is_null() || __p_ref.bPatchset != 0 && __p_ref.bInvert != 0 {
+        __p_ref.rc = crate::src::src::main::sqlite3CorruptError(3797 as ::core::ffi::c_int);
+        return __p_ref.rc;
     }
-    (*p).op = op as ::core::ffi::c_int;
-    let fresh19 = (*p).in_0.iNext;
-    (*p).in_0.iNext = (*p).in_0.iNext + 1;
-    (*p).bIndirect = *(*p).in_0.aData.offset(fresh19 as isize) as ::core::ffi::c_int;
-    if (*p).op != crate::sqlite3_h::SQLITE_UPDATE && (*p).op != crate::sqlite3_h::SQLITE_DELETE && (*p).op != crate::sqlite3_h::SQLITE_INSERT {
-        (*p).rc = crate::src::src::main::sqlite3CorruptError(3803 as ::core::ffi::c_int);
-        return (*p).rc;
+    __p_ref.op = op as ::core::ffi::c_int;
+    let fresh19 = __p_ref.in_0.iNext;
+    __p_ref.in_0.iNext = __p_ref.in_0.iNext + 1;
+    __p_ref.bIndirect = *__p_ref.in_0.aData.offset(fresh19 as isize) as ::core::ffi::c_int;
+    if __p_ref.op != crate::sqlite3_h::SQLITE_UPDATE && __p_ref.op != crate::sqlite3_h::SQLITE_DELETE && __p_ref.op != crate::sqlite3_h::SQLITE_INSERT {
+        __p_ref.rc = crate::src::src::main::sqlite3CorruptError(3803 as ::core::ffi::c_int);
+        return __p_ref.rc;
     }
     if !paRec.is_null() {
         let mut nVal: ::core::ffi::c_int = 0;
-        if (*p).bPatchset == 0 as ::core::ffi::c_int && op as ::core::ffi::c_int == crate::sqlite3_h::SQLITE_UPDATE {
-            nVal = (*p).nCol * 2 as ::core::ffi::c_int;
-        } else if (*p).bPatchset != 0 && op as ::core::ffi::c_int == crate::sqlite3_h::SQLITE_DELETE {
+        if __p_ref.bPatchset == 0 as ::core::ffi::c_int && op as ::core::ffi::c_int == crate::sqlite3_h::SQLITE_UPDATE {
+            nVal = __p_ref.nCol * 2 as ::core::ffi::c_int;
+        } else if __p_ref.bPatchset != 0 && op as ::core::ffi::c_int == crate::sqlite3_h::SQLITE_DELETE {
             nVal = 0 as ::core::ffi::c_int;
             i = 0 as ::core::ffi::c_int;
-            while i < (*p).nCol {
-                if *(*p).abPK.offset(i as isize) != 0 {
+            while i < __p_ref.nCol {
+                if *__p_ref.abPK.offset(i as isize) != 0 {
                     nVal += 1;
                 }
                 i += 1;
             }
         } else {
-            nVal = (*p).nCol;
+            nVal = __p_ref.nCol;
         }
-        (*p).rc = sessionChangesetBufferRecord(&raw mut (*p).in_0, nVal, pnRec);
-        if (*p).rc != crate::sqlite3_h::SQLITE_OK {
-            return (*p).rc;
+        __p_ref.rc = sessionChangesetBufferRecord(&raw mut __p_ref.in_0, nVal, pnRec);
+        if __p_ref.rc != crate::sqlite3_h::SQLITE_OK {
+            return __p_ref.rc;
         }
-        *paRec = (*p).in_0.aData.offset((*p).in_0.iNext as isize) as *mut crate::src::ext::rtree::rtree::u8_0;
-        (*p).in_0.iNext += *pnRec;
+        *paRec = __p_ref.in_0.aData.offset(__p_ref.in_0.iNext as isize) as *mut crate::src::ext::rtree::rtree::u8_0;
+        __p_ref.in_0.iNext += *pnRec;
     } else {
-        let mut apOld: *mut *mut crate::vdbeInt_h::sqlite3_value = if (*p).bInvert != 0 {
-            (*p).apValue.offset((*p).nCol as isize) as *mut *mut crate::vdbeInt_h::sqlite3_value
+        let mut apOld: *mut *mut crate::vdbeInt_h::sqlite3_value = if __p_ref.bInvert != 0 {
+            __p_ref.apValue.offset(__p_ref.nCol as isize) as *mut *mut crate::vdbeInt_h::sqlite3_value
         } else {
-            (*p).apValue
+            __p_ref.apValue
         };
-        let mut apNew: *mut *mut crate::vdbeInt_h::sqlite3_value = if (*p).bInvert != 0 {
-            (*p).apValue
+        let mut apNew: *mut *mut crate::vdbeInt_h::sqlite3_value = if __p_ref.bInvert != 0 {
+            __p_ref.apValue
         } else {
-            (*p).apValue.offset((*p).nCol as isize) as *mut *mut crate::vdbeInt_h::sqlite3_value
+            __p_ref.apValue.offset(__p_ref.nCol as isize) as *mut *mut crate::vdbeInt_h::sqlite3_value
         };
-        if (*p).op != crate::sqlite3_h::SQLITE_INSERT
-            && ((*p).bPatchset == 0 as ::core::ffi::c_int || (*p).op == crate::sqlite3_h::SQLITE_DELETE)
+        if __p_ref.op != crate::sqlite3_h::SQLITE_INSERT
+            && (__p_ref.bPatchset == 0 as ::core::ffi::c_int || __p_ref.op == crate::sqlite3_h::SQLITE_DELETE)
         {
-            let mut abPK: *mut crate::src::ext::rtree::rtree::u8_0 = if (*p).bPatchset != 0 {
-                (*p).abPK
+            let mut abPK: *mut crate::src::ext::rtree::rtree::u8_0 = if __p_ref.bPatchset != 0 {
+                __p_ref.abPK
             } else {
                 ::core::ptr::null_mut::<crate::src::ext::rtree::rtree::u8_0>()
             };
-            (*p).rc = sessionReadRecord(
-                &raw mut (*p).in_0,
-                (*p).nCol,
+            __p_ref.rc = sessionReadRecord(
+                &raw mut __p_ref.in_0,
+                __p_ref.nCol,
                 abPK,
                 apOld,
                 ::core::ptr::null_mut::<::core::ffi::c_int>(),
             );
-            if (*p).rc != crate::sqlite3_h::SQLITE_OK {
-                return (*p).rc;
+            if __p_ref.rc != crate::sqlite3_h::SQLITE_OK {
+                return __p_ref.rc;
             }
         }
-        if (*p).op != crate::sqlite3_h::SQLITE_DELETE {
-            (*p).rc = sessionReadRecord(
-                &raw mut (*p).in_0,
-                (*p).nCol,
+        if __p_ref.op != crate::sqlite3_h::SQLITE_DELETE {
+            __p_ref.rc = sessionReadRecord(
+                &raw mut __p_ref.in_0,
+                __p_ref.nCol,
                 ::core::ptr::null_mut::<crate::src::ext::rtree::rtree::u8_0>(),
                 apNew,
                 pbEmpty,
             );
-            if (*p).rc != crate::sqlite3_h::SQLITE_OK {
-                return (*p).rc;
+            if __p_ref.rc != crate::sqlite3_h::SQLITE_OK {
+                return __p_ref.rc;
             }
         }
-        if ((*p).bPatchset != 0 || (*p).bInvert != 0) && (*p).op == crate::sqlite3_h::SQLITE_UPDATE {
+        if (__p_ref.bPatchset != 0 || __p_ref.bInvert != 0) && __p_ref.op == crate::sqlite3_h::SQLITE_UPDATE {
             i = 0 as ::core::ffi::c_int;
-            while i < (*p).nCol {
-                if *(*p).abPK.offset(i as isize) != 0 {
-                    let ref mut fresh20 = *(*p).apValue.offset(i as isize);
-                    *fresh20 = *(*p).apValue.offset((i + (*p).nCol) as isize);
-                    if (*(*p).apValue.offset(i as isize)).is_null() {
-                        (*p).rc = crate::src::src::main::sqlite3CorruptError(3847 as ::core::ffi::c_int);
-                        return (*p).rc;
+            while i < __p_ref.nCol {
+                if *__p_ref.abPK.offset(i as isize) != 0 {
+                    let ref mut fresh20 = *__p_ref.apValue.offset(i as isize);
+                    *fresh20 = *__p_ref.apValue.offset((i + __p_ref.nCol) as isize);
+                    if (*__p_ref.apValue.offset(i as isize)).is_null() {
+                        __p_ref.rc = crate::src::src::main::sqlite3CorruptError(3847 as ::core::ffi::c_int);
+                        return __p_ref.rc;
                     }
-                    let ref mut fresh21 = *(*p).apValue.offset((i + (*p).nCol) as isize);
+                    let ref mut fresh21 = *__p_ref.apValue.offset((i + __p_ref.nCol) as isize);
                     *fresh21 = ::core::ptr::null_mut::<crate::vdbeInt_h::sqlite3_value>();
                 }
                 i += 1;
             }
-        } else if (*p).bInvert != 0 {
-            if (*p).op == crate::sqlite3_h::SQLITE_INSERT {
-                (*p).op = crate::sqlite3_h::SQLITE_DELETE;
-            } else if (*p).op == crate::sqlite3_h::SQLITE_DELETE {
-                (*p).op = crate::sqlite3_h::SQLITE_INSERT;
+        } else if __p_ref.bInvert != 0 {
+            if __p_ref.op == crate::sqlite3_h::SQLITE_INSERT {
+                __p_ref.op = crate::sqlite3_h::SQLITE_DELETE;
+            } else if __p_ref.op == crate::sqlite3_h::SQLITE_DELETE {
+                __p_ref.op = crate::sqlite3_h::SQLITE_INSERT;
             }
         }
-        if (*p).bPatchset == 0 as ::core::ffi::c_int && (*p).op == crate::sqlite3_h::SQLITE_UPDATE {
+        if __p_ref.bPatchset == 0 as ::core::ffi::c_int && __p_ref.op == crate::sqlite3_h::SQLITE_UPDATE {
             i = 0 as ::core::ffi::c_int;
-            while i < (*p).nCol {
-                if *(*p).abPK.offset(i as isize) as ::core::ffi::c_int == 0 as ::core::ffi::c_int
-                    && (*(*p).apValue.offset((i + (*p).nCol) as isize)).is_null()
+            while i < __p_ref.nCol {
+                if *__p_ref.abPK.offset(i as isize) as ::core::ffi::c_int == 0 as ::core::ffi::c_int
+                    && (*__p_ref.apValue.offset((i + __p_ref.nCol) as isize)).is_null()
                 {
-                    crate::src::src::vdbemem::sqlite3ValueFree(*(*p).apValue.offset(i as isize) as *mut crate::vdbeInt_h::sqlite3_value);
-                    let ref mut fresh22 = *(*p).apValue.offset(i as isize);
+                    crate::src::src::vdbemem::sqlite3ValueFree(*__p_ref.apValue.offset(i as isize) as *mut crate::vdbeInt_h::sqlite3_value);
+                    let ref mut fresh22 = *__p_ref.apValue.offset(i as isize);
                     *fresh22 = ::core::ptr::null_mut::<crate::vdbeInt_h::sqlite3_value>();
                 }
                 i += 1;
@@ -4499,11 +4538,12 @@ pub unsafe extern "C" fn sqlite3changeset_op(
     mut pOp: *mut ::core::ffi::c_int,
     mut pbIndirect: *mut ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
-    *pOp = (*pIter).op;
-    *pnCol = (*pIter).nCol;
-    *pzTab = (*pIter).zTab;
+    let __pIter_ref = unsafe { &*pIter };
+    *pOp = __pIter_ref.op;
+    *pnCol = __pIter_ref.nCol;
+    *pzTab = __pIter_ref.zTab;
     if !pbIndirect.is_null() {
-        *pbIndirect = (*pIter).bIndirect;
+        *pbIndirect = __pIter_ref.bIndirect;
     }
     return crate::sqlite3_h::SQLITE_OK;
 }
@@ -4527,13 +4567,14 @@ pub unsafe extern "C" fn sqlite3changeset_old(
     mut iVal: ::core::ffi::c_int,
     mut ppValue: *mut *mut crate::vdbeInt_h::sqlite3_value,
 ) -> ::core::ffi::c_int {
-    if (*pIter).op != crate::sqlite3_h::SQLITE_UPDATE && (*pIter).op != crate::sqlite3_h::SQLITE_DELETE {
+    let __pIter_ref = unsafe { &mut *pIter };
+    if __pIter_ref.op != crate::sqlite3_h::SQLITE_UPDATE && __pIter_ref.op != crate::sqlite3_h::SQLITE_DELETE {
         return crate::sqlite3_h::SQLITE_MISUSE;
     }
-    if iVal < 0 as ::core::ffi::c_int || iVal >= (*pIter).nCol {
+    if iVal < 0 as ::core::ffi::c_int || iVal >= __pIter_ref.nCol {
         return crate::sqlite3_h::SQLITE_RANGE;
     }
-    *ppValue = *(*pIter).apValue.offset(iVal as isize);
+    *ppValue = *__pIter_ref.apValue.offset(iVal as isize);
     return crate::sqlite3_h::SQLITE_OK;
 }
 #[no_mangle]
@@ -4543,13 +4584,14 @@ pub unsafe extern "C" fn sqlite3changeset_new(
     mut iVal: ::core::ffi::c_int,
     mut ppValue: *mut *mut crate::vdbeInt_h::sqlite3_value,
 ) -> ::core::ffi::c_int {
-    if (*pIter).op != crate::sqlite3_h::SQLITE_UPDATE && (*pIter).op != crate::sqlite3_h::SQLITE_INSERT {
+    let __pIter_ref = unsafe { &mut *pIter };
+    if __pIter_ref.op != crate::sqlite3_h::SQLITE_UPDATE && __pIter_ref.op != crate::sqlite3_h::SQLITE_INSERT {
         return crate::sqlite3_h::SQLITE_MISUSE;
     }
-    if iVal < 0 as ::core::ffi::c_int || iVal >= (*pIter).nCol {
+    if iVal < 0 as ::core::ffi::c_int || iVal >= __pIter_ref.nCol {
         return crate::sqlite3_h::SQLITE_RANGE;
     }
-    *ppValue = *(*pIter).apValue.offset(((*pIter).nCol + iVal) as isize);
+    *ppValue = *__pIter_ref.apValue.offset((__pIter_ref.nCol + iVal) as isize);
     return crate::sqlite3_h::SQLITE_OK;
 }
 #[no_mangle]
@@ -4559,13 +4601,14 @@ pub unsafe extern "C" fn sqlite3changeset_conflict(
     mut iVal: ::core::ffi::c_int,
     mut ppValue: *mut *mut crate::vdbeInt_h::sqlite3_value,
 ) -> ::core::ffi::c_int {
-    if (*pIter).pConflict.is_null() {
+    let __pIter_ref = unsafe { &mut *pIter };
+    if __pIter_ref.pConflict.is_null() {
         return crate::sqlite3_h::SQLITE_MISUSE;
     }
-    if iVal < 0 as ::core::ffi::c_int || iVal >= (*pIter).nCol {
+    if iVal < 0 as ::core::ffi::c_int || iVal >= __pIter_ref.nCol {
         return crate::sqlite3_h::SQLITE_RANGE;
     }
-    *ppValue =  crate::src::src::vdbeapi::sqlite3_column_value((*pIter).pConflict, iVal) as
+    *ppValue =  crate::src::src::vdbeapi::sqlite3_column_value(__pIter_ref.pConflict, iVal) as
     *mut crate::vdbeInt_h::sqlite3_value;
     return crate::sqlite3_h::SQLITE_OK;
 }
@@ -4575,10 +4618,11 @@ pub unsafe extern "C" fn sqlite3changeset_fk_conflicts(
     mut pIter: *mut sqlite3_changeset_iter,
     mut pnOut: *mut ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
-    if !(*pIter).pConflict.is_null() || !(*pIter).apValue.is_null() {
+    let __pIter_ref = unsafe { &mut *pIter };
+    if !__pIter_ref.pConflict.is_null() || !__pIter_ref.apValue.is_null() {
         return crate::sqlite3_h::SQLITE_MISUSE;
     }
-    *pnOut = (*pIter).nCol;
+    *pnOut = __pIter_ref.nCol;
     return crate::sqlite3_h::SQLITE_OK;
 }
 #[no_mangle]
@@ -4589,16 +4633,17 @@ pub unsafe extern "C" fn sqlite3changeset_finalize(
     let mut rc: ::core::ffi::c_int = crate::sqlite3_h::SQLITE_OK;
     if !p.is_null() {
         let mut i: ::core::ffi::c_int = 0;
-        rc = (*p).rc;
-        if !(*p).apValue.is_null() {
+        let __p_ref = unsafe { &mut *p };
+        rc = __p_ref.rc;
+        if !__p_ref.apValue.is_null() {
             i = 0 as ::core::ffi::c_int;
-            while i < (*p).nCol * 2 as ::core::ffi::c_int {
-                crate::src::src::vdbemem::sqlite3ValueFree(*(*p).apValue.offset(i as isize) as *mut crate::vdbeInt_h::sqlite3_value);
+            while i < __p_ref.nCol * 2 as ::core::ffi::c_int {
+                crate::src::src::vdbemem::sqlite3ValueFree(*__p_ref.apValue.offset(i as isize) as *mut crate::vdbeInt_h::sqlite3_value);
                 i += 1;
             }
         }
-        crate::src::src::malloc::sqlite3_free((*p).tblhdr.aBuf as *mut ::core::ffi::c_void);
-        crate::src::src::malloc::sqlite3_free((*p).in_0.buf.aBuf as *mut ::core::ffi::c_void);
+        crate::src::src::malloc::sqlite3_free(__p_ref.tblhdr.aBuf as *mut ::core::ffi::c_void);
+        crate::src::src::malloc::sqlite3_free(__p_ref.in_0.buf.aBuf as *mut ::core::ffi::c_void);
         crate::src::src::malloc::sqlite3_free(p as *mut ::core::ffi::c_void);
     }
     return rc;
@@ -4639,37 +4684,38 @@ unsafe extern "C" fn sessionChangesetInvert(
             current_block = 7699217338199643514;
             break;
         }
-        if (*pInput).iNext >= (*pInput).nData {
+        let __pInput_ref = unsafe { &mut *pInput };
+        if __pInput_ref.iNext >= __pInput_ref.nData {
             current_block = 11441799814184323368;
             break;
         }
-        eType = *(*pInput).aData.offset((*pInput).iNext as isize);
+        eType = *__pInput_ref.aData.offset(__pInput_ref.iNext as isize);
         match  eType as ::core::ffi::c_int {
     
             84 =>  {
                 let mut nByte: ::core::ffi::c_int = 0;
                 let mut nVar: ::core::ffi::c_int = 0;
-                (*pInput).iNext += 1;
+                __pInput_ref.iNext += 1;
                 rc = sessionChangesetBufferTblhdr(pInput, &raw mut nByte);
                 if rc != 0 {
                     current_block = 7699217338199643514;
                     break;
                 }
                 nVar = sessionVarintGet(
-                    (*pInput).aData.offset((*pInput).iNext as isize) as *mut crate::src::ext::rtree::rtree::u8_0,
+                    __pInput_ref.aData.offset(__pInput_ref.iNext as isize) as *mut crate::src::ext::rtree::rtree::u8_0,
                     &raw mut nCol,
                 );
                 sPK.nBuf = 0 as ::core::ffi::c_int;
                 sessionAppendBlob(
                     &raw mut sPK,
-                    (*pInput).aData.offset(((*pInput).iNext + nVar) as isize) as *mut crate::src::ext::rtree::rtree::u8_0,
+                    __pInput_ref.aData.offset((__pInput_ref.iNext + nVar) as isize) as *mut crate::src::ext::rtree::rtree::u8_0,
                     nCol,
                     &raw mut rc,
                 );
                 sessionAppendByte(&raw mut sOut, eType, &raw mut rc);
                 sessionAppendBlob(
                     &raw mut sOut,
-                    (*pInput).aData.offset((*pInput).iNext as isize) as *mut crate::src::ext::rtree::rtree::u8_0,
+                    __pInput_ref.aData.offset(__pInput_ref.iNext as isize) as *mut crate::src::ext::rtree::rtree::u8_0,
                     nByte,
                     &raw mut rc,
                 );
@@ -4677,7 +4723,7 @@ unsafe extern "C" fn sessionChangesetInvert(
                     current_block = 7699217338199643514;
                     break;
                 }
-                (*pInput).iNext += nByte;
+                __pInput_ref.iNext += nByte;
                 crate::src::src::malloc::sqlite3_free(apVal as *mut ::core::ffi::c_void);
                 apVal = ::core::ptr::null_mut::<*mut crate::vdbeInt_h::sqlite3_value>();
                 abPK = sPK.aBuf;
@@ -4686,7 +4732,7 @@ unsafe extern "C" fn sessionChangesetInvert(
                 let mut nByte_0: ::core::ffi::c_int = 0;
                 let mut bIndirect: ::core::ffi::c_int = *(*pInput)
                     .aData
-                    .offset(((*pInput).iNext + 1 as ::core::ffi::c_int) as isize)
+                    .offset((__pInput_ref.iNext + 1 as ::core::ffi::c_int) as isize)
                     as ::core::ffi::c_int;
                 let mut eType2: ::core::ffi::c_int = if eType as ::core::ffi::c_int == crate::sqlite3_h::SQLITE_DELETE
                 {
@@ -4694,17 +4740,17 @@ unsafe extern "C" fn sessionChangesetInvert(
                 } else {
                     crate::sqlite3_h::SQLITE_DELETE
                 };
-                (*pInput).iNext += 2 as ::core::ffi::c_int;
+                __pInput_ref.iNext += 2 as ::core::ffi::c_int;
                 rc = sessionChangesetBufferRecord(pInput, nCol, &raw mut nByte_0);
                 sessionAppendByte(&raw mut sOut, eType2 as crate::src::ext::rtree::rtree::u8_0, &raw mut rc);
                 sessionAppendByte(&raw mut sOut, bIndirect as crate::src::ext::rtree::rtree::u8_0, &raw mut rc);
                 sessionAppendBlob(
                     &raw mut sOut,
-                    (*pInput).aData.offset((*pInput).iNext as isize) as *mut crate::src::ext::rtree::rtree::u8_0,
+                    __pInput_ref.aData.offset(__pInput_ref.iNext as isize) as *mut crate::src::ext::rtree::rtree::u8_0,
                     nByte_0,
                     &raw mut rc,
                 );
-                (*pInput).iNext += nByte_0;
+                __pInput_ref.iNext += nByte_0;
                 if rc != 0 {
                     current_block = 7699217338199643514;
                     break;
@@ -4737,10 +4783,10 @@ unsafe extern "C" fn sessionChangesetInvert(
                     &raw mut sOut,
                     *(*pInput)
                         .aData
-                        .offset(((*pInput).iNext + 1 as ::core::ffi::c_int) as isize),
+                        .offset((__pInput_ref.iNext + 1 as ::core::ffi::c_int) as isize),
                     &raw mut rc,
                 );
-                (*pInput).iNext += 2 as ::core::ffi::c_int;
+                __pInput_ref.iNext += 2 as ::core::ffi::c_int;
                 rc = sessionReadRecord(
                     pInput,
                     nCol,
@@ -5000,17 +5046,18 @@ unsafe extern "C" fn sessionUpdateFind(
                     b"UPDATE main.\0" as *const u8 as *const ::core::ffi::c_char,
                     &raw mut rc,
                 );
-                sessionAppendIdent(&raw mut buf, (*pIter).zTab, &raw mut rc);
+                let __pIter_ref = unsafe { &mut *pIter };
+                sessionAppendIdent(&raw mut buf, __pIter_ref.zTab, &raw mut rc);
                 sessionAppendStr(
                     &raw mut buf,
                     b" SET \0" as *const u8 as *const ::core::ffi::c_char,
                     &raw mut rc,
                 );
                 ii = 0 as ::core::ffi::c_int;
-                while ii < (*pIter).nCol {
+                while ii < __pIter_ref.nCol {
                     if *(*p).abPK.offset(ii as isize) as ::core::ffi::c_int
                         == 0 as ::core::ffi::c_int
-                        && !(*(*pIter).apValue.offset(((*pIter).nCol + ii) as isize)).is_null()
+                        && !(*__pIter_ref.apValue.offset((__pIter_ref.nCol + ii) as isize)).is_null()
                     {
                         sessionAppendStr(&raw mut buf, zSep, &raw mut rc);
                         sessionAppendIdent(
@@ -5039,10 +5086,10 @@ unsafe extern "C" fn sessionUpdateFind(
                     &raw mut rc,
                 );
                 ii = 0 as ::core::ffi::c_int;
-                while ii < (*pIter).nCol {
+                while ii < __pIter_ref.nCol {
                     if *(*p).abPK.offset(ii as isize) as ::core::ffi::c_int != 0
                         || bPatchset == 0 as ::core::ffi::c_int
-                            && !(*(*pIter).apValue.offset(ii as isize)).is_null()
+                            && !(*__pIter_ref.apValue.offset(ii as isize)).is_null()
                     {
                         sessionAppendStr(&raw mut buf, zSep, &raw mut rc);
                         if bStat1 != 0 && ii == 1 as ::core::ffi::c_int {
@@ -5106,16 +5153,17 @@ unsafe extern "C" fn sessionUpdateFind(
 unsafe extern "C" fn sessionUpdateFree(mut p: *mut SessionApplyCtx) {
     let mut pUp: *mut SessionUpdate = ::core::ptr::null_mut::<SessionUpdate>();
     let mut pNext: *mut SessionUpdate = ::core::ptr::null_mut::<SessionUpdate>();
-    pUp = (*p).pUp;
+    let __p_ref = unsafe { &mut *p };
+    pUp = __p_ref.pUp;
     while !pUp.is_null() {
         pNext = (*pUp).pNext;
         crate::src::src::vdbeapi::sqlite3_finalize((*pUp).pStmt);
         crate::src::src::malloc::sqlite3_free(pUp as *mut ::core::ffi::c_void);
         pUp = pNext;
     }
-    (*p).pUp = ::core::ptr::null_mut::<SessionUpdate>();
-    crate::src::src::malloc::sqlite3_free((*p).aUpdateMask as *mut ::core::ffi::c_void);
-    (*p).aUpdateMask = ::core::ptr::null_mut::<crate::src::ext::rtree::rtree::u32_0>();
+    __p_ref.pUp = ::core::ptr::null_mut::<SessionUpdate>();
+    crate::src::src::malloc::sqlite3_free(__p_ref.aUpdateMask as *mut ::core::ffi::c_void);
+    __p_ref.aUpdateMask = ::core::ptr::null_mut::<crate::src::ext::rtree::rtree::u32_0>();
 }
 
 unsafe extern "C" fn sessionDeleteRow(
@@ -5214,17 +5262,18 @@ unsafe extern "C" fn sessionSelectRow(
     mut zTab: *const ::core::ffi::c_char,
     mut p: *mut SessionApplyCtx,
 ) -> ::core::ffi::c_int {
+    let __p_ref = unsafe { &mut *p };
     return sessionSelectStmt(
         db,
-        (*p).bIgnoreNoop as ::core::ffi::c_int,
+        __p_ref.bIgnoreNoop as ::core::ffi::c_int,
         b"main\0" as *const u8 as *const ::core::ffi::c_char,
         zTab,
-        (*p).bRowid,
-        (*p).nCol,
-        (*p).azCol,
-        (*p).abPK,
-        &raw mut (*p).pSelect,
-        &raw mut (*p).zErr,
+        __p_ref.bRowid,
+        __p_ref.nCol,
+        __p_ref.azCol,
+        __p_ref.abPK,
+        &raw mut __p_ref.pSelect,
+        &raw mut __p_ref.zErr,
     );
 }
 
@@ -5371,7 +5420,8 @@ unsafe extern "C" fn sessionSeekToRow(
     mut pIter: *mut sqlite3_changeset_iter,
     mut p: *mut SessionApplyCtx,
 ) -> ::core::ffi::c_int {
-    let mut pSelect: *mut crate::sqlite3_h::sqlite3_stmt = (*p).pSelect;
+    let __p_ref = unsafe { &mut *p };
+    let mut pSelect: *mut crate::sqlite3_h::sqlite3_stmt = __p_ref.pSelect;
     let mut rc: ::core::ffi::c_int = 0;
     let mut nCol: ::core::ffi::c_int = 0;
     let mut op: ::core::ffi::c_int = 0;
@@ -5406,14 +5456,14 @@ unsafe extern "C" fn sessionSeekToRow(
             )
         },
         nCol,
-        (*p).abPK,
+        __p_ref.abPK,
         pSelect,
     );
-    if op != crate::sqlite3_h::SQLITE_DELETE && (*p).bIgnoreNoop as ::core::ffi::c_int != 0 {
+    if op != crate::sqlite3_h::SQLITE_DELETE && __p_ref.bIgnoreNoop as ::core::ffi::c_int != 0 {
         let mut ii: ::core::ffi::c_int = 0;
         ii = 0 as ::core::ffi::c_int;
         while rc == crate::sqlite3_h::SQLITE_OK && ii < nCol {
-            if *(*p).abPK.offset(ii as isize) as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
+            if *__p_ref.abPK.offset(ii as isize) as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
                 let mut pVal: *mut crate::vdbeInt_h::sqlite3_value = ::core::ptr::null_mut::<crate::vdbeInt_h::sqlite3_value>();
                 sqlite3changeset_new(pIter, ii, &raw mut pVal);
                 crate::src::src::vdbeapi::sqlite3_bind_int(
@@ -5446,21 +5496,22 @@ unsafe extern "C" fn sessionRebaseAdd(
     if (*p).bRebase != 0 {
         let mut i: ::core::ffi::c_int = 0;
         let mut eOp: ::core::ffi::c_int = (*pIter).op;
-        if (*p).bRebaseStarted as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
+        let __p_ref = unsafe { &mut *p };
+        if __p_ref.bRebaseStarted as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
             let mut zTab: *const ::core::ffi::c_char = (*pIter).zTab;
-            sessionAppendByte(&raw mut (*p).rebase, 'T' as i32 as crate::src::ext::rtree::rtree::u8_0, &raw mut rc);
-            sessionAppendVarint(&raw mut (*p).rebase, (*p).nCol, &raw mut rc);
-            sessionAppendBlob(&raw mut (*p).rebase, (*p).abPK, (*p).nCol, &raw mut rc);
+            sessionAppendByte(&raw mut __p_ref.rebase, 'T' as i32 as crate::src::ext::rtree::rtree::u8_0, &raw mut rc);
+            sessionAppendVarint(&raw mut __p_ref.rebase, __p_ref.nCol, &raw mut rc);
+            sessionAppendBlob(&raw mut __p_ref.rebase, __p_ref.abPK, __p_ref.nCol, &raw mut rc);
             sessionAppendBlob(
-                &raw mut (*p).rebase,
+                &raw mut __p_ref.rebase,
                 zTab as *mut crate::src::ext::rtree::rtree::u8_0,
                 ::libc::strlen(zTab) as ::core::ffi::c_int + 1 as ::core::ffi::c_int,
                 &raw mut rc,
             );
-            (*p).bRebaseStarted = 1 as crate::src::ext::rtree::rtree::u8_0;
+            __p_ref.bRebaseStarted = 1 as crate::src::ext::rtree::rtree::u8_0;
         }
         sessionAppendByte(
-            &raw mut (*p).rebase,
+            &raw mut __p_ref.rebase,
             (if eOp == crate::sqlite3_h::SQLITE_DELETE {
                 crate::sqlite3_h::SQLITE_DELETE
             } else {
@@ -5469,21 +5520,21 @@ unsafe extern "C" fn sessionRebaseAdd(
             &raw mut rc,
         );
         sessionAppendByte(
-            &raw mut (*p).rebase,
+            &raw mut __p_ref.rebase,
             (eType == crate::src::ext::session::sqlite3session::SQLITE_CHANGESET_REPLACE) as ::core::ffi::c_int as crate::src::ext::rtree::rtree::u8_0,
             &raw mut rc,
         );
         i = 0 as ::core::ffi::c_int;
-        while i < (*p).nCol {
+        while i < __p_ref.nCol {
             let mut pVal: *mut crate::vdbeInt_h::sqlite3_value = ::core::ptr::null_mut::<crate::vdbeInt_h::sqlite3_value>();
             if eOp == crate::sqlite3_h::SQLITE_DELETE
-                || eOp == crate::sqlite3_h::SQLITE_UPDATE && *(*p).abPK.offset(i as isize) as ::core::ffi::c_int != 0
+                || eOp == crate::sqlite3_h::SQLITE_UPDATE && *__p_ref.abPK.offset(i as isize) as ::core::ffi::c_int != 0
             {
                 sqlite3changeset_old(pIter, i, &raw mut pVal);
             } else {
                 sqlite3changeset_new(pIter, i, &raw mut pVal);
             }
-            sessionAppendValue(&raw mut (*p).rebase, pVal, &raw mut rc);
+            sessionAppendValue(&raw mut __p_ref.rebase, pVal, &raw mut rc);
             i += 1;
         }
     }
@@ -5522,23 +5573,25 @@ unsafe extern "C" fn sessionConflictHandler(
         rc = crate::sqlite3_h::SQLITE_OK;
     }
     if rc == crate::sqlite3_h::SQLITE_ROW {
-        if 0 as ::core::ffi::c_int == (*p).bIgnoreNoop as ::core::ffi::c_int
+        let __p_ref = unsafe { &*p };
+        if 0 as ::core::ffi::c_int == __p_ref.bIgnoreNoop as ::core::ffi::c_int
             || 0 as ::core::ffi::c_int
                 == crate::src::src::vdbeapi::sqlite3_column_int(
-                    (*p).pSelect,
-                    crate::src::src::vdbeapi::sqlite3_column_count((*p).pSelect) - 1 as ::core::ffi::c_int,
+                    __p_ref.pSelect,
+                    crate::src::src::vdbeapi::sqlite3_column_count(__p_ref.pSelect) - 1 as ::core::ffi::c_int,
                 )
         {
-            (*pIter).pConflict = (*p).pSelect;
+            (*pIter).pConflict = __p_ref.pSelect;
             res = xConflict.expect("non-null function pointer")(pCtx, eType, pIter);
             (*pIter).pConflict = ::core::ptr::null_mut::<crate::sqlite3_h::sqlite3_stmt>();
         }
-        rc = crate::src::src::vdbeapi::sqlite3_reset((*p).pSelect);
+        rc = crate::src::src::vdbeapi::sqlite3_reset(__p_ref.pSelect);
     } else if rc == crate::sqlite3_h::SQLITE_OK {
         if (*p).bDeferConstraints != 0 && eType == crate::src::ext::session::sqlite3session::SQLITE_CHANGESET_CONFLICT {
+            let __pIter_ref = unsafe { &mut *pIter };
             let mut aBlob: *mut crate::src::ext::rtree::rtree::u8_0 =
-                (*pIter).in_0.aData.offset((*pIter).in_0.iCurrent as isize) as *mut crate::src::ext::rtree::rtree::u8_0;
-            let mut nBlob: ::core::ffi::c_int = (*pIter).in_0.iNext - (*pIter).in_0.iCurrent;
+                __pIter_ref.in_0.aData.offset(__pIter_ref.in_0.iCurrent as isize) as *mut crate::src::ext::rtree::rtree::u8_0;
+            let mut nBlob: ::core::ffi::c_int = __pIter_ref.in_0.iNext - __pIter_ref.in_0.iCurrent;
             sessionAppendBlob(&raw mut (*p).constraints, aBlob, nBlob, &raw mut rc);
             return crate::sqlite3_h::SQLITE_OK;
         } else if (*p).bIgnoreNoop as ::core::ffi::c_int == 0 as ::core::ffi::c_int
@@ -5601,8 +5654,9 @@ unsafe extern "C" fn sessionApplyOneOp(
         ::core::ptr::null_mut::<::core::ffi::c_int>(),
     );
     if op == crate::sqlite3_h::SQLITE_DELETE {
+        let __p_ref = unsafe { &*p };
         let mut abPK: *mut crate::src::ext::rtree::rtree::u8_0 = if (*pIter).bPatchset != 0 {
-            (*p).abPK
+            __p_ref.abPK
         } else {
             ::core::ptr::null_mut::<crate::src::ext::rtree::rtree::u8_0>()
         };
@@ -5618,11 +5672,11 @@ unsafe extern "C" fn sessionApplyOneOp(
             ),
             nCol,
             abPK,
-            (*p).pDelete,
+            __p_ref.pDelete,
         );
-        if rc == crate::sqlite3_h::SQLITE_OK && crate::src::src::vdbeapi::sqlite3_bind_parameter_count((*p).pDelete) > nCol {
+        if rc == crate::sqlite3_h::SQLITE_OK && crate::src::src::vdbeapi::sqlite3_bind_parameter_count(__p_ref.pDelete) > nCol {
             rc = crate::src::src::vdbeapi::sqlite3_bind_int(
-                (*p).pDelete,
+                __p_ref.pDelete,
                 nCol + 1 as ::core::ffi::c_int,
                 (pbRetry.is_null() || !abPK.is_null()) as ::core::ffi::c_int,
             );
@@ -5630,9 +5684,9 @@ unsafe extern "C" fn sessionApplyOneOp(
         if rc != crate::sqlite3_h::SQLITE_OK {
             return rc;
         }
-        crate::src::src::vdbeapi::sqlite3_step((*p).pDelete);
-        rc = crate::src::src::vdbeapi::sqlite3_reset((*p).pDelete);
-        if rc == crate::sqlite3_h::SQLITE_OK && crate::src::src::main::sqlite3_changes((*p).db as *mut crate::sqliteInt_h::sqlite3) == 0 as ::core::ffi::c_int {
+        crate::src::src::vdbeapi::sqlite3_step(__p_ref.pDelete);
+        rc = crate::src::src::vdbeapi::sqlite3_reset(__p_ref.pDelete);
+        if rc == crate::sqlite3_h::SQLITE_OK && crate::src::src::main::sqlite3_changes(__p_ref.db as *mut crate::sqliteInt_h::sqlite3) == 0 as ::core::ffi::c_int {
             rc = sessionConflictHandler(crate::src::ext::session::sqlite3session::SQLITE_CHANGESET_DATA, p, pIter, xConflict, pCtx, pbRetry);
         } else if rc & 0xff as ::core::ffi::c_int == crate::sqlite3_h::SQLITE_CONSTRAINT {
             rc = sessionConflictHandler(
@@ -5652,9 +5706,10 @@ unsafe extern "C" fn sessionApplyOneOp(
         rc = sessionUpdateFind(pIter, p, bPatchset, &raw mut pUp);
         i = 0 as ::core::ffi::c_int;
         while rc == crate::sqlite3_h::SQLITE_OK && i < nCol {
-            let mut pOld: *mut crate::vdbeInt_h::sqlite3_value = *(*pIter).apValue.offset(i as isize);
+            let __pIter_ref = unsafe { &mut *pIter };
+            let mut pOld: *mut crate::vdbeInt_h::sqlite3_value = *__pIter_ref.apValue.offset(i as isize);
             let mut pNew: *mut crate::vdbeInt_h::sqlite3_value =
-                *(*pIter).apValue.offset(((*pIter).nCol + i) as isize);
+                *__pIter_ref.apValue.offset((__pIter_ref.nCol + i) as isize);
             if *(*p).abPK.offset(i as isize) as ::core::ffi::c_int != 0
                 || bPatchset == 0 as ::core::ffi::c_int && !pOld.is_null()
             {
@@ -5699,6 +5754,7 @@ unsafe extern "C" fn sessionApplyOneOp(
             }
         }
         if rc == crate::sqlite3_h::SQLITE_OK {
+            let __p_ref = unsafe { &*p };
             rc = sessionBindRow(
                 pIter,
                 Some(
@@ -5711,13 +5767,13 @@ unsafe extern "C" fn sessionApplyOneOp(
                 ),
                 nCol,
                 ::core::ptr::null_mut::<crate::src::ext::rtree::rtree::u8_0>(),
-                (*p).pInsert,
+                __p_ref.pInsert,
             );
             if rc != crate::sqlite3_h::SQLITE_OK {
                 return rc;
             }
-            crate::src::src::vdbeapi::sqlite3_step((*p).pInsert);
-            rc = crate::src::src::vdbeapi::sqlite3_reset((*p).pInsert);
+            crate::src::src::vdbeapi::sqlite3_step(__p_ref.pInsert);
+            rc = crate::src::src::vdbeapi::sqlite3_reset(__p_ref.pInsert);
         }
         if rc & 0xff as ::core::ffi::c_int == crate::sqlite3_h::SQLITE_CONSTRAINT {
             rc = sessionConflictHandler(
@@ -5777,6 +5833,7 @@ unsafe extern "C" fn sessionApplyOneWithRetry(
                 ::core::ptr::null_mut::<*mut ::core::ffi::c_char>(),
             );
             if rc == crate::sqlite3_h::SQLITE_OK {
+                let __pApply_ref = unsafe { &*pApply };
                 rc = sessionBindRow(
                     pIter,
                     Some(
@@ -5788,13 +5845,13 @@ unsafe extern "C" fn sessionApplyOneWithRetry(
                             )
                                 -> ::core::ffi::c_int,
                     ),
-                    (*pApply).nCol,
-                    (*pApply).abPK,
-                    (*pApply).pDelete,
+                    __pApply_ref.nCol,
+                    __pApply_ref.abPK,
+                    __pApply_ref.pDelete,
                 );
                 crate::src::src::vdbeapi::sqlite3_bind_int(
-                    (*pApply).pDelete,
-                    (*pApply).nCol + 1 as ::core::ffi::c_int,
+                    __pApply_ref.pDelete,
+                    __pApply_ref.nCol + 1 as ::core::ffi::c_int,
                     1 as ::core::ffi::c_int,
                 );
             }
@@ -5845,9 +5902,10 @@ unsafe extern "C" fn sessionRetryConstraints(
     while (*pApply).constraints.nBuf != 0 {
         let mut pIter2: *mut sqlite3_changeset_iter =
             ::core::ptr::null_mut::<sqlite3_changeset_iter>();
-        let mut cons: SessionBuffer = (*pApply).constraints;
+        let __pApply_ref = unsafe { &mut *pApply };
+        let mut cons: SessionBuffer = __pApply_ref.constraints;
         ::libc::memset(
-            &raw mut (*pApply).constraints as *mut ::core::ffi::c_void,
+            &raw mut __pApply_ref.constraints as *mut ::core::ffi::c_void,
             0 as ::core::ffi::c_int,
             ::core::mem::size_of::<SessionBuffer>() as crate::__stddef_size_t_h::size_t,
         );
@@ -5857,22 +5915,23 @@ unsafe extern "C" fn sessionRetryConstraints(
             ::core::ptr::null_mut::<::core::ffi::c_void>(),
             cons.nBuf,
             cons.aBuf as *mut ::core::ffi::c_void,
-            (*pApply).bInvertConstraints,
+            __pApply_ref.bInvertConstraints,
             1 as ::core::ffi::c_int,
         );
         if rc == crate::sqlite3_h::SQLITE_OK {
-            let mut nByte: crate::__stddef_size_t_h::size_t = ((2 as ::core::ffi::c_int * (*pApply).nCol) as crate::__stddef_size_t_h::size_t)
+            let mut nByte: crate::__stddef_size_t_h::size_t = ((2 as ::core::ffi::c_int * __pApply_ref.nCol) as crate::__stddef_size_t_h::size_t)
                 .wrapping_mul(::core::mem::size_of::<*mut crate::vdbeInt_h::sqlite3_value>() as crate::__stddef_size_t_h::size_t);
             let mut rc2: ::core::ffi::c_int = 0;
-            (*pIter2).bPatchset = bPatchset;
-            (*pIter2).zTab = zTab as *mut ::core::ffi::c_char;
-            (*pIter2).nCol = (*pApply).nCol;
-            (*pIter2).abPK = (*pApply).abPK;
-            sessionBufferGrow(&raw mut (*pIter2).tblhdr, nByte as crate::src::ext::rtree::rtree::i64_0, &raw mut rc);
-            (*pIter2).apValue = (*pIter2).tblhdr.aBuf as *mut *mut crate::vdbeInt_h::sqlite3_value;
+            let __pIter2_ref = unsafe { &mut *pIter2 };
+            __pIter2_ref.bPatchset = bPatchset;
+            __pIter2_ref.zTab = zTab as *mut ::core::ffi::c_char;
+            __pIter2_ref.nCol = __pApply_ref.nCol;
+            __pIter2_ref.abPK = __pApply_ref.abPK;
+            sessionBufferGrow(&raw mut __pIter2_ref.tblhdr, nByte as crate::src::ext::rtree::rtree::i64_0, &raw mut rc);
+            __pIter2_ref.apValue = __pIter2_ref.tblhdr.aBuf as *mut *mut crate::vdbeInt_h::sqlite3_value;
             if rc == crate::sqlite3_h::SQLITE_OK {
                 ::libc::memset(
-                    (*pIter2).apValue as *mut ::core::ffi::c_void,
+                    __pIter2_ref.apValue as *mut ::core::ffi::c_void,
                     0 as ::core::ffi::c_int,
                     nByte,
                 );
@@ -5889,8 +5948,8 @@ unsafe extern "C" fn sessionRetryConstraints(
         if rc != crate::sqlite3_h::SQLITE_OK {
             break;
         }
-        if (*pApply).constraints.nBuf >= cons.nBuf {
-            (*pApply).bDeferConstraints = 0 as ::core::ffi::c_int;
+        if __pApply_ref.constraints.nBuf >= cons.nBuf {
+            __pApply_ref.bDeferConstraints = 0 as ::core::ffi::c_int;
         }
     }
     return rc;
@@ -6578,7 +6637,8 @@ unsafe extern "C" fn sessionChangeMerge(
         } else {
             let mut i: ::core::ffi::c_int = 0;
             let mut pIn: *mut crate::src::ext::rtree::rtree::u8_0 = aRec;
-            let mut pOut: *mut crate::src::ext::rtree::rtree::u8_0 = (*pNew).aRecord;
+            let __pNew_ref = unsafe { &mut *pNew };
+            let mut pOut: *mut crate::src::ext::rtree::rtree::u8_0 = __pNew_ref.aRecord;
             i = 0 as ::core::ffi::c_int;
             while i < (*pTab).nCol {
                 let mut nIn: ::core::ffi::c_int = sessionSerialLen(pIn);
@@ -6603,8 +6663,8 @@ unsafe extern "C" fn sessionChangeMerge(
                 pIn = pIn.offset(nIn as isize);
                 i += 1;
             }
-            (*pNew).nRecord =
-                pOut.offset_from((*pNew).aRecord) as ::core::ffi::c_long as ::core::ffi::c_int;
+            __pNew_ref.nRecord =
+                pOut.offset_from(__pNew_ref.aRecord) as ::core::ffi::c_long as ::core::ffi::c_int;
         }
     } else if bRebase != 0 {
         if (*pExist).op as ::core::ffi::c_int == crate::sqlite3_h::SQLITE_DELETE
@@ -6628,13 +6688,14 @@ unsafe extern "C" fn sessionChangeMerge(
                     0 as ::core::ffi::c_int,
                     nByte as crate::__stddef_size_t_h::size_t,
                 );
-                (*pNew).bIndirect = (bIndirect != 0
+                let __pNew_ref = unsafe { &mut *pNew };
+                __pNew_ref.bIndirect = (bIndirect != 0
                     || (*pExist).bIndirect as ::core::ffi::c_int != 0)
                     as ::core::ffi::c_int as crate::src::ext::rtree::rtree::u8_0;
-                (*pNew).op = op2 as crate::src::ext::rtree::rtree::u8_0;
-                (*pNew).aRecord = pNew.offset(1 as isize)
+                __pNew_ref.op = op2 as crate::src::ext::rtree::rtree::u8_0;
+                __pNew_ref.aRecord = pNew.offset(1 as isize)
                     as *mut SessionChange as *mut crate::src::ext::rtree::rtree::u8_0;
-                pOut_0 = (*pNew).aRecord;
+                pOut_0 = __pNew_ref.aRecord;
                 i_0 = 0 as ::core::ffi::c_int;
                 while i_0 < (*pTab).nCol {
                     let mut n1: ::core::ffi::c_int = sessionSerialLen(a1);
@@ -6666,7 +6727,7 @@ unsafe extern "C" fn sessionChangeMerge(
                     a2 = a2.offset(n2 as isize);
                     i_0 += 1;
                 }
-                (*pNew).nRecord = pOut_0.offset_from((*pNew).aRecord) as ::core::ffi::c_long
+                __pNew_ref.nRecord = pOut_0.offset_from(__pNew_ref.aRecord) as ::core::ffi::c_long
                     as ::core::ffi::c_int;
             }
             crate::src::src::malloc::sqlite3_free(pExist as *mut ::core::ffi::c_void);
@@ -6682,11 +6743,12 @@ unsafe extern "C" fn sessionChangeMerge(
         } else if op1 == crate::sqlite3_h::SQLITE_INSERT && op2 == crate::sqlite3_h::SQLITE_DELETE {
             crate::src::src::malloc::sqlite3_free(pExist as *mut ::core::ffi::c_void);
         } else {
-            let mut aExist: *mut crate::src::ext::rtree::rtree::u8_0 = (*pExist).aRecord;
+            let __pExist_ref = unsafe { &mut *pExist };
+            let mut aExist: *mut crate::src::ext::rtree::rtree::u8_0 = __pExist_ref.aRecord;
             let mut nByte_0: crate::sqlite3_h::sqlite3_int64 = 0;
             let mut aCsr: *mut crate::src::ext::rtree::rtree::u8_0 = ::core::ptr::null_mut::<crate::src::ext::rtree::rtree::u8_0>();
             nByte_0 = (::core::mem::size_of::<SessionChange>() as usize)
-                .wrapping_add((*pExist).nRecord as usize)
+                .wrapping_add(__pExist_ref.nRecord as usize)
                 .wrapping_add(nRec as usize) as crate::sqlite3_h::sqlite3_int64;
             pNew = crate::src::src::malloc::sqlite3_malloc64(nByte_0 as crate::sqlite3_h::sqlite3_uint64) as *mut SessionChange;
             if pNew.is_null() {
@@ -6698,7 +6760,7 @@ unsafe extern "C" fn sessionChangeMerge(
                 0 as ::core::ffi::c_int,
                 ::core::mem::size_of::<SessionChange>() as crate::__stddef_size_t_h::size_t,
             );
-            (*pNew).bIndirect = (bIndirect != 0 && (*pExist).bIndirect as ::core::ffi::c_int != 0)
+            (*pNew).bIndirect = (bIndirect != 0 && __pExist_ref.bIndirect as ::core::ffi::c_int != 0)
                 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::u8_0;
             (*pNew).aRecord =
                 pNew.offset(1 as isize) as *mut SessionChange as *mut crate::src::ext::rtree::rtree::u8_0;
@@ -6776,16 +6838,17 @@ unsafe extern "C" fn sessionChangesetCheckCompat(
     mut nCol: ::core::ffi::c_int,
     mut abPK: *mut crate::src::ext::rtree::rtree::u8_0,
 ) -> ::core::ffi::c_int {
-    if !(*pTab).azCol.is_null() && nCol < (*pTab).nCol {
+    let __pTab_ref = unsafe { &mut *pTab };
+    if !__pTab_ref.azCol.is_null() && nCol < __pTab_ref.nCol {
         let mut ii: ::core::ffi::c_int = 0;
         ii = 0 as ::core::ffi::c_int;
-        while ii < (*pTab).nCol {
+        while ii < __pTab_ref.nCol {
             let mut bPK: crate::src::ext::rtree::rtree::u8_0 = (if ii < nCol {
                 *abPK.offset(ii as isize) as ::core::ffi::c_int
             } else {
                 0 as ::core::ffi::c_int
             }) as crate::src::ext::rtree::rtree::u8_0;
-            if *(*pTab).abPK.offset(ii as isize) as ::core::ffi::c_int != bPK as ::core::ffi::c_int
+            if *__pTab_ref.abPK.offset(ii as isize) as ::core::ffi::c_int != bPK as ::core::ffi::c_int
             {
                 return 0 as ::core::ffi::c_int;
             }
@@ -6793,11 +6856,11 @@ unsafe extern "C" fn sessionChangesetCheckCompat(
         }
         return 1 as ::core::ffi::c_int;
     }
-    return ((*pTab).nCol == nCol
+    return (__pTab_ref.nCol == nCol
         && 0 as ::core::ffi::c_int
             == ::libc::memcmp(
                 abPK as *const ::core::ffi::c_void,
-                (*pTab).abPK as *const ::core::ffi::c_void,
+                __pTab_ref.abPK as *const ::core::ffi::c_void,
                 nCol as crate::__stddef_size_t_h::size_t,
             )) as ::core::ffi::c_int;
 }
@@ -6841,11 +6904,12 @@ unsafe extern "C" fn sessionChangesetExtendRecord(
                         );
                     }
                     if crate::sqlite3_h::SQLITE_OK == sessionBufferGrow(pOut, 8 as crate::src::ext::rtree::rtree::i64_0, &raw mut rc) {
+                        let __pOut_ref = unsafe { &mut *pOut };
                         sessionPutI64(
-                            (*pOut).aBuf.offset((*pOut).nBuf as isize) as *mut crate::src::ext::rtree::rtree::u8_0,
+                            __pOut_ref.aBuf.offset(__pOut_ref.nBuf as isize) as *mut crate::src::ext::rtree::rtree::u8_0,
                             iVal as crate::sqlite3_h::sqlite3_int64,
                         );
-                        (*pOut).nBuf += 8 as ::core::ffi::c_int;
+                        __pOut_ref.nBuf += 8 as ::core::ffi::c_int;
                     }
                 }
     crate::sqlite3_h::SQLITE_BLOB | crate::sqlite3_h::SQLITE_TEXT =>  {
@@ -6989,16 +7053,17 @@ unsafe extern "C" fn sessionOneChangeToHash(
     let mut pExist: *mut SessionChange = ::core::ptr::null_mut::<SessionChange>();
     let mut pp: *mut *mut SessionChange = ::core::ptr::null_mut::<*mut SessionChange>();
     let mut pTab: *mut SessionTable = ::core::ptr::null_mut::<SessionTable>();
+    let __pIter_ref = unsafe { &mut *pIter };
     let mut aRec: *mut crate::src::ext::rtree::rtree::u8_0 = (*pIter)
         .in_0
         .aData
-        .offset(((*pIter).in_0.iCurrent + 2 as ::core::ffi::c_int) as isize)
+        .offset((__pIter_ref.in_0.iCurrent + 2 as ::core::ffi::c_int) as isize)
         as *mut crate::src::ext::rtree::rtree::u8_0;
     let mut nRec: ::core::ffi::c_int =
-        (*pIter).in_0.iNext - (*pIter).in_0.iCurrent - 2 as ::core::ffi::c_int;
+        __pIter_ref.in_0.iNext - __pIter_ref.in_0.iCurrent - 2 as ::core::ffi::c_int;
     if (*pGrp).pList.is_null() {
-        (*pGrp).bPatch = (*pIter).bPatchset;
-    } else if (*pIter).bPatchset != (*pGrp).bPatch {
+        (*pGrp).bPatch = __pIter_ref.bPatchset;
+    } else if __pIter_ref.bPatchset != (*pGrp).bPatch {
         rc = crate::sqlite3_h::SQLITE_ERROR;
     }
     if rc == crate::sqlite3_h::SQLITE_OK {
@@ -7021,7 +7086,7 @@ unsafe extern "C" fn sessionOneChangeToHash(
     if rc == crate::sqlite3_h::SQLITE_OK
         && sessionGrowHash(
             ::core::ptr::null_mut::<sqlite3_session>(),
-            (*pIter).bPatchset,
+            __pIter_ref.bPatchset,
             pTab,
         ) != 0
     {
@@ -7030,7 +7095,7 @@ unsafe extern "C" fn sessionOneChangeToHash(
     if rc == crate::sqlite3_h::SQLITE_OK {
         iHash = sessionChangeHash(
             pTab,
-            ((*pIter).bPatchset != 0 && op == crate::sqlite3_h::SQLITE_DELETE) as ::core::ffi::c_int,
+            (__pIter_ref.bPatchset != 0 && op == crate::sqlite3_h::SQLITE_DELETE) as ::core::ffi::c_int,
             aRec,
             (*pTab).nChange,
         ) as ::core::ffi::c_int;
@@ -7038,7 +7103,7 @@ unsafe extern "C" fn sessionOneChangeToHash(
         while !(*pp).is_null() {
             let mut bPkOnly1: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
             let mut bPkOnly2: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
-            if (*pIter).bPatchset != 0 {
+            if __pIter_ref.bPatchset != 0 {
                 bPkOnly1 = ((**pp).op as ::core::ffi::c_int == crate::sqlite3_h::SQLITE_DELETE) as ::core::ffi::c_int;
                 bPkOnly2 = (op == crate::sqlite3_h::SQLITE_DELETE) as ::core::ffi::c_int;
             }
@@ -7056,7 +7121,7 @@ unsafe extern "C" fn sessionOneChangeToHash(
         rc = sessionChangeMerge(
             pTab,
             bRebase,
-            (*pIter).bPatchset,
+            __pIter_ref.bPatchset,
             pExist,
             op,
             bIndirect,
@@ -7066,13 +7131,14 @@ unsafe extern "C" fn sessionOneChangeToHash(
         );
     }
     if rc == crate::sqlite3_h::SQLITE_OK && !pChange.is_null() {
-        (*pChange).pNext = *(*pTab).apChange.offset(iHash as isize);
-        let ref mut fresh26 = *(*pTab).apChange.offset(iHash as isize);
+        let __pTab_ref = unsafe { &mut *pTab };
+        (*pChange).pNext = *__pTab_ref.apChange.offset(iHash as isize);
+        let ref mut fresh26 = *__pTab_ref.apChange.offset(iHash as isize);
         *fresh26 = pChange;
-        (*pTab).nEntry += 1;
+        __pTab_ref.nEntry += 1;
     }
     if rc == crate::sqlite3_h::SQLITE_OK {
-        rc = (*pIter).rc;
+        rc = __pIter_ref.rc;
     }
     return rc;
 }
@@ -7238,13 +7304,14 @@ pub unsafe extern "C" fn sqlite3changegroup_add_change(
     mut pIter: *mut sqlite3_changeset_iter,
 ) -> ::core::ffi::c_int {
     let mut rc: ::core::ffi::c_int = crate::sqlite3_h::SQLITE_OK;
-    if (*pIter).in_0.iCurrent == (*pIter).in_0.iNext
-        || (*pIter).rc != crate::sqlite3_h::SQLITE_OK
-        || (*pIter).bInvert != 0
+    let __pIter_ref = unsafe { &mut *pIter };
+    if __pIter_ref.in_0.iCurrent == __pIter_ref.in_0.iNext
+        || __pIter_ref.rc != crate::sqlite3_h::SQLITE_OK
+        || __pIter_ref.bInvert != 0
     {
         rc = crate::sqlite3_h::SQLITE_ERROR;
     } else {
-        (*pIter).in_0.bNoDiscard = 1 as ::core::ffi::c_int;
+        __pIter_ref.in_0.bNoDiscard = 1 as ::core::ffi::c_int;
         rc = sessionOneChangeToHash(pGrp, pIter, 0 as ::core::ffi::c_int);
     }
     return rc;
@@ -7311,9 +7378,10 @@ pub unsafe extern "C" fn sqlite3changegroup_output_strm(
 
 pub unsafe extern "C" fn sqlite3changegroup_delete(mut pGrp: *mut sqlite3_changegroup) {
     if !pGrp.is_null() {
-        crate::src::src::malloc::sqlite3_free((*pGrp).zDb as *mut ::core::ffi::c_void);
-        sessionDeleteTable(::core::ptr::null_mut::<sqlite3_session>(), (*pGrp).pList);
-        crate::src::src::malloc::sqlite3_free((*pGrp).rec.aBuf as *mut ::core::ffi::c_void);
+        let __pGrp_ref = unsafe { &*pGrp };
+        crate::src::src::malloc::sqlite3_free(__pGrp_ref.zDb as *mut ::core::ffi::c_void);
+        sessionDeleteTable(::core::ptr::null_mut::<sqlite3_session>(), __pGrp_ref.pList);
+        crate::src::src::malloc::sqlite3_free(__pGrp_ref.rec.aBuf as *mut ::core::ffi::c_void);
         crate::src::src::malloc::sqlite3_free(pGrp as *mut ::core::ffi::c_void);
     }
 }
@@ -7398,7 +7466,8 @@ unsafe extern "C" fn sessionAppendRecordMerge(
     sessionBufferGrow(pBuf, (n1 + n2) as crate::src::ext::rtree::rtree::i64_0, pRc);
     if *pRc == crate::sqlite3_h::SQLITE_OK {
         let mut i: ::core::ffi::c_int = 0;
-        let mut pOut: *mut crate::src::ext::rtree::rtree::u8_0 = (*pBuf).aBuf.offset((*pBuf).nBuf as isize) as *mut crate::src::ext::rtree::rtree::u8_0;
+        let __pBuf_ref = unsafe { &mut *pBuf };
+        let mut pOut: *mut crate::src::ext::rtree::rtree::u8_0 = __pBuf_ref.aBuf.offset(__pBuf_ref.nBuf as isize) as *mut crate::src::ext::rtree::rtree::u8_0;
         i = 0 as ::core::ffi::c_int;
         while i < nCol {
             let mut nn1: ::core::ffi::c_int = sessionSerialLen(a1);
@@ -7424,7 +7493,7 @@ unsafe extern "C" fn sessionAppendRecordMerge(
             a2 = a2.offset(nn2 as isize);
             i += 1;
         }
-        (*pBuf).nBuf = pOut.offset_from((*pBuf).aBuf) as ::core::ffi::c_long as ::core::ffi::c_int;
+        __pBuf_ref.nBuf = pOut.offset_from(__pBuf_ref.aBuf) as ::core::ffi::c_long as ::core::ffi::c_int;
     }
 }
 
@@ -7548,7 +7617,8 @@ unsafe extern "C" fn sessionRebase(
         let mut pChange: *mut SessionChange = ::core::ptr::null_mut::<SessionChange>();
         let mut bDone: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
         if bNew != 0 {
-            let mut zTab: *const ::core::ffi::c_char = (*pIter).zTab;
+            let __pIter_ref = unsafe { &*pIter };
+            let mut zTab: *const ::core::ffi::c_char = __pIter_ref.zTab;
             pTab = (*p).grp.pList;
             while !pTab.is_null() {
                 if 0 as ::core::ffi::c_int == crate::src::src::util::sqlite3_stricmp((*pTab).zName, zTab) {
@@ -7557,24 +7627,24 @@ unsafe extern "C" fn sessionRebase(
                 pTab = (*pTab).pNext;
             }
             bNew = 0 as ::core::ffi::c_int;
-            if (*pIter).bPatchset != 0 {
+            if __pIter_ref.bPatchset != 0 {
                 rc = crate::sqlite3_h::SQLITE_ERROR;
             }
             sessionAppendByte(
                 &raw mut sOut,
-                (if (*pIter).bPatchset != 0 {
+                (if __pIter_ref.bPatchset != 0 {
                     'P' as i32
                 } else {
                     'T' as i32
                 }) as crate::src::ext::rtree::rtree::u8_0,
                 &raw mut rc,
             );
-            sessionAppendVarint(&raw mut sOut, (*pIter).nCol, &raw mut rc);
-            sessionAppendBlob(&raw mut sOut, (*pIter).abPK, (*pIter).nCol, &raw mut rc);
+            sessionAppendVarint(&raw mut sOut, __pIter_ref.nCol, &raw mut rc);
+            sessionAppendBlob(&raw mut sOut, __pIter_ref.abPK, __pIter_ref.nCol, &raw mut rc);
             sessionAppendBlob(
                 &raw mut sOut,
-                (*pIter).zTab as *mut crate::src::ext::rtree::rtree::u8_0,
-                ::libc::strlen((*pIter).zTab) as ::core::ffi::c_int + 1 as ::core::ffi::c_int,
+                __pIter_ref.zTab as *mut crate::src::ext::rtree::rtree::u8_0,
+                ::libc::strlen(__pIter_ref.zTab) as ::core::ffi::c_int + 1 as ::core::ffi::c_int,
                 &raw mut rc,
             );
         }
@@ -7624,16 +7694,17 @@ unsafe extern "C" fn sessionRebase(
                     if (*pChange).op as ::core::ffi::c_int == crate::sqlite3_h::SQLITE_DELETE {
                         if (*pChange).bIndirect as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
                             let mut pCsr: *mut crate::src::ext::rtree::rtree::u8_0 = aRec;
-                            sessionSkipRecord(&raw mut pCsr, (*pIter).nCol);
+                            let __pIter_ref = unsafe { &*pIter };
+                            sessionSkipRecord(&raw mut pCsr, __pIter_ref.nCol);
                             sessionAppendByte(&raw mut sOut, crate::sqlite3_h::SQLITE_INSERT as crate::src::ext::rtree::rtree::u8_0, &raw mut rc);
                             sessionAppendByte(
                                 &raw mut sOut,
-                                (*pIter).bIndirect as crate::src::ext::rtree::rtree::u8_0,
+                                __pIter_ref.bIndirect as crate::src::ext::rtree::rtree::u8_0,
                                 &raw mut rc,
                             );
                             sessionAppendRecordMerge(
                                 &raw mut sOut,
-                                (*pIter).nCol,
+                                __pIter_ref.nCol,
                                 pCsr,
                                 (nRec as ::core::ffi::c_long
                                     - pCsr.offset_from(aRec) as ::core::ffi::c_long)

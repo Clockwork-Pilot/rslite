@@ -140,36 +140,37 @@ unsafe extern "C" fn simpleNext(
 ) -> ::core::ffi::c_int {
     let mut c: *mut simple_tokenizer_cursor = pCursor as *mut simple_tokenizer_cursor;
     let mut t: *mut simple_tokenizer = (*pCursor).pTokenizer as *mut simple_tokenizer;
-    let mut p: *mut ::core::ffi::c_uchar = (*c).pInput as *mut ::core::ffi::c_uchar;
-    while (*c).iOffset < (*c).nBytes {
+    let __c_ref = unsafe { &mut *c };
+    let mut p: *mut ::core::ffi::c_uchar = __c_ref.pInput as *mut ::core::ffi::c_uchar;
+    while __c_ref.iOffset < __c_ref.nBytes {
         let mut iStartOffset: ::core::ffi::c_int = 0;
-        while (*c).iOffset < (*c).nBytes && simpleDelim(t, *p.offset((*c).iOffset as isize)) != 0 {
-            (*c).iOffset += 1;
+        while __c_ref.iOffset < __c_ref.nBytes && simpleDelim(t, *p.offset(__c_ref.iOffset as isize)) != 0 {
+            __c_ref.iOffset += 1;
         }
-        iStartOffset = (*c).iOffset;
-        while (*c).iOffset < (*c).nBytes && simpleDelim(t, *p.offset((*c).iOffset as isize)) == 0 {
-            (*c).iOffset += 1;
+        iStartOffset = __c_ref.iOffset;
+        while __c_ref.iOffset < __c_ref.nBytes && simpleDelim(t, *p.offset(__c_ref.iOffset as isize)) == 0 {
+            __c_ref.iOffset += 1;
         }
-        if (*c).iOffset > iStartOffset {
+        if __c_ref.iOffset > iStartOffset {
             let mut i: ::core::ffi::c_int = 0;
-            let mut n: ::core::ffi::c_int = (*c).iOffset - iStartOffset;
-            if n > (*c).nTokenAllocated {
+            let mut n: ::core::ffi::c_int = __c_ref.iOffset - iStartOffset;
+            if n > __c_ref.nTokenAllocated {
                 let mut pNew: *mut ::core::ffi::c_char =
                     ::core::ptr::null_mut::<::core::ffi::c_char>();
-                (*c).nTokenAllocated = n + 20 as ::core::ffi::c_int;
+                __c_ref.nTokenAllocated = n + 20 as ::core::ffi::c_int;
                 pNew = crate::src::src::malloc::sqlite3_realloc64(
-                    (*c).pToken as *mut ::core::ffi::c_void,
-                    (*c).nTokenAllocated as crate::sqlite3_h::sqlite3_uint64,
+                    __c_ref.pToken as *mut ::core::ffi::c_void,
+                    __c_ref.nTokenAllocated as crate::sqlite3_h::sqlite3_uint64,
                 ) as *mut ::core::ffi::c_char;
                 if pNew.is_null() {
                     return crate::sqlite3_h::SQLITE_NOMEM;
                 }
-                (*c).pToken = pNew;
+                __c_ref.pToken = pNew;
             }
             i = 0 as ::core::ffi::c_int;
             while i < n {
                 let mut ch: ::core::ffi::c_uchar = *p.offset((iStartOffset + i) as isize);
-                *(*c).pToken.offset(i as isize) = (if ch as ::core::ffi::c_int >= 'A' as i32
+                *__c_ref.pToken.offset(i as isize) = (if ch as ::core::ffi::c_int >= 'A' as i32
                     && ch as ::core::ffi::c_int <= 'Z' as i32
                 {
                     ch as ::core::ffi::c_int - 'A' as i32 + 'a' as i32
@@ -178,12 +179,12 @@ unsafe extern "C" fn simpleNext(
                 }) as ::core::ffi::c_char;
                 i += 1;
             }
-            *ppToken = (*c).pToken;
+            *ppToken = __c_ref.pToken;
             *pnBytes = n;
             *piStartOffset = iStartOffset;
-            *piEndOffset = (*c).iOffset;
-            let fresh0 = (*c).iToken;
-            (*c).iToken = (*c).iToken + 1;
+            *piEndOffset = __c_ref.iOffset;
+            let fresh0 = __c_ref.iToken;
+            __c_ref.iToken = __c_ref.iToken + 1;
             *piPosition = fresh0;
             return crate::sqlite3_h::SQLITE_OK;
         }

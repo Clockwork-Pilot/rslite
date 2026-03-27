@@ -1069,53 +1069,54 @@ unsafe extern "C" fn porterNext(
     mut piPosition: *mut ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
     let mut c: *mut porter_tokenizer_cursor = pCursor as *mut porter_tokenizer_cursor;
-    let mut z: *const ::core::ffi::c_char = (*c).zInput;
-    while (*c).iOffset < (*c).nInput {
+    let __c_ref = unsafe { &mut *c };
+    let mut z: *const ::core::ffi::c_char = __c_ref.zInput;
+    while __c_ref.iOffset < __c_ref.nInput {
         let mut iStartOffset: ::core::ffi::c_int = 0;
         let mut ch: ::core::ffi::c_int = 0;
-        while (*c).iOffset < (*c).nInput && {
-            ch = *z.offset((*c).iOffset as isize) as ::core::ffi::c_int;
+        while __c_ref.iOffset < __c_ref.nInput && {
+            ch = *z.offset(__c_ref.iOffset as isize) as ::core::ffi::c_int;
             ch & 0x80 as ::core::ffi::c_int == 0 as ::core::ffi::c_int
                 && (ch < 0x30 as ::core::ffi::c_int
                     || porterIdChar[(ch - 0x30 as ::core::ffi::c_int) as usize] == 0)
         } {
-            (*c).iOffset += 1;
+            __c_ref.iOffset += 1;
         }
-        iStartOffset = (*c).iOffset;
-        while (*c).iOffset < (*c).nInput && {
-            ch = *z.offset((*c).iOffset as isize) as ::core::ffi::c_int;
+        iStartOffset = __c_ref.iOffset;
+        while __c_ref.iOffset < __c_ref.nInput && {
+            ch = *z.offset(__c_ref.iOffset as isize) as ::core::ffi::c_int;
             !(ch & 0x80 as ::core::ffi::c_int == 0 as ::core::ffi::c_int
                 && (ch < 0x30 as ::core::ffi::c_int
                     || porterIdChar[(ch - 0x30 as ::core::ffi::c_int) as usize] == 0))
         } {
-            (*c).iOffset += 1;
+            __c_ref.iOffset += 1;
         }
-        if (*c).iOffset > iStartOffset {
-            let mut n: ::core::ffi::c_int = (*c).iOffset - iStartOffset;
-            if n > (*c).nAllocated {
+        if __c_ref.iOffset > iStartOffset {
+            let mut n: ::core::ffi::c_int = __c_ref.iOffset - iStartOffset;
+            if n > __c_ref.nAllocated {
                 let mut pNew: *mut ::core::ffi::c_char =
                     ::core::ptr::null_mut::<::core::ffi::c_char>();
-                (*c).nAllocated = n + 20 as ::core::ffi::c_int;
+                __c_ref.nAllocated = n + 20 as ::core::ffi::c_int;
                 pNew = crate::src::src::malloc::sqlite3_realloc64(
-                    (*c).zToken as *mut ::core::ffi::c_void,
-                    (*c).nAllocated as crate::sqlite3_h::sqlite3_uint64,
+                    __c_ref.zToken as *mut ::core::ffi::c_void,
+                    __c_ref.nAllocated as crate::sqlite3_h::sqlite3_uint64,
                 ) as *mut ::core::ffi::c_char;
                 if pNew.is_null() {
                     return crate::sqlite3_h::SQLITE_NOMEM;
                 }
-                (*c).zToken = pNew;
+                __c_ref.zToken = pNew;
             }
             porter_stemmer(
                 z.offset(iStartOffset as isize) as *const ::core::ffi::c_char,
                 n,
-                (*c).zToken,
+                __c_ref.zToken,
                 pnBytes,
             );
-            *pzToken = (*c).zToken;
+            *pzToken = __c_ref.zToken;
             *piStartOffset = iStartOffset;
-            *piEndOffset = (*c).iOffset;
-            let fresh2 = (*c).iToken;
-            (*c).iToken = (*c).iToken + 1;
+            *piEndOffset = __c_ref.iOffset;
+            let fresh2 = __c_ref.iToken;
+            __c_ref.iToken = __c_ref.iToken + 1;
             *piPosition = fresh2;
             return crate::sqlite3_h::SQLITE_OK;
         }

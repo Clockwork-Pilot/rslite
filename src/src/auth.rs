@@ -35,13 +35,14 @@ pub unsafe extern "C" fn sqlite3_set_authorizer(
     >,
     mut pArg: *mut ::core::ffi::c_void,
 ) -> ::core::ffi::c_int {
-    crate::src::src::mutex::sqlite3_mutex_enter((*db).mutex);
-    (*db).xAuth = xAuth;
-    (*db).pAuthArg = pArg;
-    if (*db).xAuth.is_some() {
+    let __db_ref = unsafe { &mut *db };
+    crate::src::src::mutex::sqlite3_mutex_enter(__db_ref.mutex);
+    __db_ref.xAuth = xAuth;
+    __db_ref.pAuthArg = pArg;
+    if __db_ref.xAuth.is_some() {
         crate::src::src::vdbeaux::sqlite3ExpirePreparedStatements(db as *mut crate::sqliteInt_h::sqlite3, 1 as ::core::ffi::c_int);
     }
-    crate::src::src::mutex::sqlite3_mutex_leave((*db).mutex);
+    crate::src::src::mutex::sqlite3_mutex_leave(__db_ref.mutex);
     return crate::sqlite3_h::SQLITE_OK;
 }
 
@@ -62,13 +63,14 @@ pub unsafe extern "C" fn sqlite3AuthReadCol(
     mut iDb: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
     let mut db: *mut crate::sqliteInt_h::sqlite3 = (*pParse).db;
-    let mut zDb: *mut ::core::ffi::c_char = (*(*db).aDb.offset(iDb as isize)).zDbSName;
+    let __db_ref = unsafe { &mut *db };
+    let mut zDb: *mut ::core::ffi::c_char = (*__db_ref.aDb.offset(iDb as isize)).zDbSName;
     let mut rc: ::core::ffi::c_int = 0;
-    if (*db).init.busy != 0 {
+    if __db_ref.init.busy != 0 {
         return crate::sqlite3_h::SQLITE_OK;
     }
-    rc = (*db).xAuth.expect("non-null function pointer")(
-        (*db).pAuthArg,
+    rc = __db_ref.xAuth.expect("non-null function pointer")(
+        __db_ref.pAuthArg,
         crate::sqlite3_h::SQLITE_READ,
         zTab,
         zCol,
@@ -81,7 +83,7 @@ pub unsafe extern "C" fn sqlite3AuthReadCol(
             zTab,
             zCol,
         );
-        if (*db).nDb > 2 as ::core::ffi::c_int || iDb != 0 as ::core::ffi::c_int {
+        if __db_ref.nDb > 2 as ::core::ffi::c_int || iDb != 0 as ::core::ffi::c_int {
             z = crate::src::src::printf::sqlite3_mprintf(
                 b"%s.%z\0" as *const u8 as *const ::core::ffi::c_char,
                 zDb,
@@ -156,21 +158,23 @@ pub unsafe extern "C" fn sqlite3AuthCheck(
     mut zArg2: *const ::core::ffi::c_char,
     mut zArg3: *const ::core::ffi::c_char,
 ) -> ::core::ffi::c_int {
-    let mut db: *mut crate::sqliteInt_h::sqlite3 = (*pParse).db;
+    let __pParse_ref = unsafe { &mut *pParse };
+    let mut db: *mut crate::sqliteInt_h::sqlite3 = __pParse_ref.db;
     let mut rc: ::core::ffi::c_int = 0;
-    if (*db).xAuth.is_none()
-        || (*db).init.busy as ::core::ffi::c_int != 0
-        || (*pParse).eParseMode as ::core::ffi::c_int != crate::sqliteInt_h::PARSE_MODE_NORMAL
+    let __db_ref = unsafe { &mut *db };
+    if __db_ref.xAuth.is_none()
+        || __db_ref.init.busy as ::core::ffi::c_int != 0
+        || __pParse_ref.eParseMode as ::core::ffi::c_int != crate::sqliteInt_h::PARSE_MODE_NORMAL
     {
         return crate::sqlite3_h::SQLITE_OK;
     }
-    rc = (*db).xAuth.expect("non-null function pointer")(
-        (*db).pAuthArg,
+    rc = __db_ref.xAuth.expect("non-null function pointer")(
+        __db_ref.pAuthArg,
         code,
         zArg1,
         zArg2,
         zArg3,
-        (*pParse).zAuthContext,
+        __pParse_ref.zAuthContext,
     );
     if rc == crate::sqlite3_h::SQLITE_DENY {
         crate::src::src::util::sqlite3ErrorMsg(
@@ -178,7 +182,7 @@ pub unsafe extern "C" fn sqlite3AuthCheck(
             pParse as *mut crate::sqliteInt_h::Parse,
             b"not authorized\0" as *const u8 as *const ::core::ffi::c_char,
         );
-        (*pParse).rc = crate::sqlite3_h::SQLITE_AUTH;
+        __pParse_ref.rc = crate::sqlite3_h::SQLITE_AUTH;
     } else if rc != crate::sqlite3_h::SQLITE_OK && rc != crate::sqlite3_h::SQLITE_IGNORE {
         rc = crate::sqlite3_h::SQLITE_DENY;
         sqliteAuthBadReturnCode(pParse);
@@ -200,7 +204,8 @@ pub unsafe extern "C" fn sqlite3AuthContextPush(
 
 pub unsafe extern "C" fn sqlite3AuthContextPop(mut pContext: *mut crate::sqliteInt_h::AuthContext) {
     if !(*pContext).pParse.is_null() {
-        (*(*pContext).pParse).zAuthContext = (*pContext).zAuthContext;
-        (*pContext).pParse = ::core::ptr::null_mut::<crate::sqliteInt_h::Parse>();
+        let __pContext_ref = unsafe { &mut *pContext };
+        (*__pContext_ref.pParse).zAuthContext = __pContext_ref.zAuthContext;
+        __pContext_ref.pParse = ::core::ptr::null_mut::<crate::sqliteInt_h::Parse>();
     }
 }

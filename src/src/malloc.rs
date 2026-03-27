@@ -559,32 +559,36 @@ pub unsafe extern "C" fn sqlite3DbMallocRawNN(
     if n <= crate::sqliteInt_h::LOOKASIDE_SMALL as crate::src::ext::rtree::rtree::u64_0 {
         pBuf = (*db).lookaside.pSmallFree;
         if !pBuf.is_null() {
-            (*db).lookaside.pSmallFree = (*pBuf).pNext;
-            (*db).lookaside.anStat[0 as ::core::ffi::c_int as usize] =
-                (*db).lookaside.anStat[0 as ::core::ffi::c_int as usize].wrapping_add(1);
+            let __db_ref = unsafe { &mut *db };
+            __db_ref.lookaside.pSmallFree = (*pBuf).pNext;
+            __db_ref.lookaside.anStat[0 as ::core::ffi::c_int as usize] =
+                __db_ref.lookaside.anStat[0 as ::core::ffi::c_int as usize].wrapping_add(1);
             return pBuf as *mut ::core::ffi::c_void;
         } else {
             pBuf = (*db).lookaside.pSmallInit;
             if !pBuf.is_null() {
-                (*db).lookaside.pSmallInit = (*pBuf).pNext;
-                (*db).lookaside.anStat[0 as ::core::ffi::c_int as usize] =
-                    (*db).lookaside.anStat[0 as ::core::ffi::c_int as usize].wrapping_add(1);
+                let __db_ref = unsafe { &mut *db };
+                __db_ref.lookaside.pSmallInit = (*pBuf).pNext;
+                __db_ref.lookaside.anStat[0 as ::core::ffi::c_int as usize] =
+                    __db_ref.lookaside.anStat[0 as ::core::ffi::c_int as usize].wrapping_add(1);
                 return pBuf as *mut ::core::ffi::c_void;
             }
         }
     }
     pBuf = (*db).lookaside.pFree;
     if !pBuf.is_null() {
-        (*db).lookaside.pFree = (*pBuf).pNext;
-        (*db).lookaside.anStat[0 as ::core::ffi::c_int as usize] =
-            (*db).lookaside.anStat[0 as ::core::ffi::c_int as usize].wrapping_add(1);
+        let __db_ref = unsafe { &mut *db };
+        __db_ref.lookaside.pFree = (*pBuf).pNext;
+        __db_ref.lookaside.anStat[0 as ::core::ffi::c_int as usize] =
+            __db_ref.lookaside.anStat[0 as ::core::ffi::c_int as usize].wrapping_add(1);
         return pBuf as *mut ::core::ffi::c_void;
     } else {
         pBuf = (*db).lookaside.pInit;
         if !pBuf.is_null() {
-            (*db).lookaside.pInit = (*pBuf).pNext;
-            (*db).lookaside.anStat[0 as ::core::ffi::c_int as usize] =
-                (*db).lookaside.anStat[0 as ::core::ffi::c_int as usize].wrapping_add(1);
+            let __db_ref = unsafe { &mut *db };
+            __db_ref.lookaside.pInit = (*pBuf).pNext;
+            __db_ref.lookaside.anStat[0 as ::core::ffi::c_int as usize] =
+                __db_ref.lookaside.anStat[0 as ::core::ffi::c_int as usize].wrapping_add(1);
             return pBuf as *mut ::core::ffi::c_void;
         } else {
             (*db).lookaside.anStat[2 as ::core::ffi::c_int as usize] =
@@ -743,24 +747,25 @@ pub unsafe extern "C" fn sqlite3OomFault(mut db: *mut crate::sqliteInt_h::sqlite
     if (*db).mallocFailed as ::core::ffi::c_int == 0 as ::core::ffi::c_int
         && (*db).bBenignMalloc as ::core::ffi::c_int == 0 as ::core::ffi::c_int
     {
-        (*db).mallocFailed = 1 as crate::src::ext::rtree::rtree::u8_0;
-        if (*db).nVdbeExec > 0 as ::core::ffi::c_int {
+        let __db_ref = unsafe { &mut *db };
+        __db_ref.mallocFailed = 1 as crate::src::ext::rtree::rtree::u8_0;
+        if __db_ref.nVdbeExec > 0 as ::core::ffi::c_int {
             ::core::intrinsics::atomic_store_relaxed(
-                &raw mut (*db).u1.isInterrupted,
+                &raw mut __db_ref.u1.isInterrupted,
                 1 as ::core::ffi::c_int,
             );
         }
-        (*db).lookaside.bDisable = (*db).lookaside.bDisable.wrapping_add(1);
-        (*db).lookaside.sz = 0 as crate::src::fts5::u16_0;
-        if !(*db).pParse.is_null() {
+        __db_ref.lookaside.bDisable = __db_ref.lookaside.bDisable.wrapping_add(1);
+        __db_ref.lookaside.sz = 0 as crate::src::fts5::u16_0;
+        if !__db_ref.pParse.is_null() {
             let mut pParse: *mut crate::sqliteInt_h::Parse = ::core::ptr::null_mut::<crate::sqliteInt_h::Parse>();
             crate::src::src::util::sqlite3ErrorMsg(
                 
-                (*db).pParse as *mut crate::sqliteInt_h::Parse,
+                __db_ref.pParse as *mut crate::sqliteInt_h::Parse,
                 b"out of memory\0" as *const u8 as *const ::core::ffi::c_char,
             );
-            (*(*db).pParse).rc = crate::sqliteInt_h::SQLITE_NOMEM_BKPT;
-            pParse = (*(*db).pParse).pOuterParse;
+            (*__db_ref.pParse).rc = crate::sqliteInt_h::SQLITE_NOMEM_BKPT;
+            pParse = (*__db_ref.pParse).pOuterParse;
             while !pParse.is_null() {
                 (*pParse).nErr += 1;
                 (*pParse).rc = crate::sqlite3_h::SQLITE_NOMEM;
@@ -774,16 +779,17 @@ pub unsafe extern "C" fn sqlite3OomFault(mut db: *mut crate::sqliteInt_h::sqlite
 
 pub unsafe extern "C" fn sqlite3OomClear(mut db: *mut crate::sqliteInt_h::sqlite3) {
     if (*db).mallocFailed as ::core::ffi::c_int != 0 && (*db).nVdbeExec == 0 as ::core::ffi::c_int {
-        (*db).mallocFailed = 0 as crate::src::ext::rtree::rtree::u8_0;
+        let __db_ref = unsafe { &mut *db };
+        __db_ref.mallocFailed = 0 as crate::src::ext::rtree::rtree::u8_0;
         ::core::intrinsics::atomic_store_relaxed(
-            &raw mut (*db).u1.isInterrupted,
+            &raw mut __db_ref.u1.isInterrupted,
             0 as ::core::ffi::c_int,
         );
-        (*db).lookaside.bDisable = (*db).lookaside.bDisable.wrapping_sub(1);
-        (*db).lookaside.sz = (if (*db).lookaside.bDisable != 0 {
+        __db_ref.lookaside.bDisable = __db_ref.lookaside.bDisable.wrapping_sub(1);
+        __db_ref.lookaside.sz = (if __db_ref.lookaside.bDisable != 0 {
             0 as ::core::ffi::c_int
         } else {
-            (*db).lookaside.szTrue as ::core::ffi::c_int
+            __db_ref.lookaside.szTrue as ::core::ffi::c_int
         }) as crate::src::fts5::u16_0;
     }
 }

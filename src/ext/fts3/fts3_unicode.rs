@@ -153,16 +153,17 @@ unsafe extern "C" fn unicodeAddExceptions(
     if nEntry != 0 {
         let mut aNew: *mut ::core::ffi::c_int = ::core::ptr::null_mut::<::core::ffi::c_int>();
         let mut nNew: ::core::ffi::c_int = 0;
+        let __p_ref = unsafe { &mut *p };
         aNew = crate::src::src::malloc::sqlite3_realloc64(
-            (*p).aiException as *mut ::core::ffi::c_void,
-            (((*p).nException + nEntry) as usize)
+            __p_ref.aiException as *mut ::core::ffi::c_void,
+            ((__p_ref.nException + nEntry) as usize)
                 .wrapping_mul(::core::mem::size_of::<::core::ffi::c_int>() as usize)
                 as crate::sqlite3_h::sqlite3_uint64,
         ) as *mut ::core::ffi::c_int;
         if aNew.is_null() {
             return crate::sqlite3_h::SQLITE_NOMEM;
         }
-        nNew = (*p).nException;
+        nNew = __p_ref.nException;
         z = zIn as *const ::core::ffi::c_uchar;
         while z < zTerm {
             let fresh2 = z;
@@ -208,8 +209,8 @@ unsafe extern "C" fn unicodeAddExceptions(
                 nNew += 1;
             }
         }
-        (*p).aiException = aNew;
-        (*p).nException = nNew;
+        __p_ref.aiException = aNew;
+        __p_ref.nException = nNew;
     }
     return crate::sqlite3_h::SQLITE_OK;
 }
@@ -383,15 +384,16 @@ unsafe extern "C" fn unicodeNext(
     mut piPos: *mut ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
     let mut pCsr: *mut unicode_cursor = pC as *mut unicode_cursor;
-    let mut p: *mut unicode_tokenizer = (*pCsr).base.pTokenizer as *mut unicode_tokenizer;
+    let __pCsr_ref = unsafe { &mut *pCsr };
+    let mut p: *mut unicode_tokenizer = __pCsr_ref.base.pTokenizer as *mut unicode_tokenizer;
     let mut iCode: ::core::ffi::c_uint = 0 as ::core::ffi::c_uint;
     let mut zOut: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
     let mut z: *const ::core::ffi::c_uchar =
-        (*pCsr).aInput.offset((*pCsr).iOff as isize) as *const ::core::ffi::c_uchar;
+        __pCsr_ref.aInput.offset(__pCsr_ref.iOff as isize) as *const ::core::ffi::c_uchar;
     let mut zStart: *const ::core::ffi::c_uchar = z;
     let mut zEnd: *const ::core::ffi::c_uchar = ::core::ptr::null::<::core::ffi::c_uchar>();
     let mut zTerm: *const ::core::ffi::c_uchar =
-        (*pCsr).aInput.offset((*pCsr).nInput as isize) as *const ::core::ffi::c_uchar;
+        __pCsr_ref.aInput.offset(__pCsr_ref.nInput as isize) as *const ::core::ffi::c_uchar;
     while z < zTerm {
         let fresh4 = z;
         z = z.offset(1);
@@ -425,23 +427,23 @@ unsafe extern "C" fn unicodeNext(
     if zStart >= zTerm {
         return crate::sqlite3_h::SQLITE_DONE;
     }
-    zOut = (*pCsr).zToken;
+    zOut = __pCsr_ref.zToken;
     loop {
         let mut iOut: ::core::ffi::c_int = 0;
-        if zOut.offset_from((*pCsr).zToken) as ::core::ffi::c_long
-            >= ((*pCsr).nAlloc - 4 as ::core::ffi::c_int) as ::core::ffi::c_long
+        if zOut.offset_from(__pCsr_ref.zToken) as ::core::ffi::c_long
+            >= (__pCsr_ref.nAlloc - 4 as ::core::ffi::c_int) as ::core::ffi::c_long
         {
             let mut zNew: *mut ::core::ffi::c_char = crate::src::src::malloc::sqlite3_realloc64(
-                (*pCsr).zToken as *mut ::core::ffi::c_void,
-                ((*pCsr).nAlloc + 64 as ::core::ffi::c_int) as crate::sqlite3_h::sqlite3_uint64,
+                __pCsr_ref.zToken as *mut ::core::ffi::c_void,
+                (__pCsr_ref.nAlloc + 64 as ::core::ffi::c_int) as crate::sqlite3_h::sqlite3_uint64,
             ) as *mut ::core::ffi::c_char;
             if zNew.is_null() {
                 return crate::sqlite3_h::SQLITE_NOMEM;
             }
-            zOut = zNew.offset(zOut.offset_from((*pCsr).zToken) as ::core::ffi::c_long as isize)
+            zOut = zNew.offset(zOut.offset_from(__pCsr_ref.zToken) as ::core::ffi::c_long as isize)
                 as *mut ::core::ffi::c_char;
-            (*pCsr).zToken = zNew;
-            (*pCsr).nAlloc += 64 as ::core::ffi::c_int;
+            __pCsr_ref.zToken = zNew;
+            __pCsr_ref.nAlloc += 64 as ::core::ffi::c_int;
         }
         zEnd = z;
         iOut = crate::src::ext::fts3::fts3_unicode2::sqlite3FtsUnicodeFold(iCode as ::core::ffi::c_int, (*p).eRemoveDiacritic);
@@ -533,13 +535,13 @@ unsafe extern "C" fn unicodeNext(
             break;
         }
     }
-    (*pCsr).iOff = z.offset_from((*pCsr).aInput) as ::core::ffi::c_long as ::core::ffi::c_int;
-    *paToken = (*pCsr).zToken;
-    *pnToken = zOut.offset_from((*pCsr).zToken) as ::core::ffi::c_long as ::core::ffi::c_int;
-    *piStart = zStart.offset_from((*pCsr).aInput) as ::core::ffi::c_long as ::core::ffi::c_int;
-    *piEnd = zEnd.offset_from((*pCsr).aInput) as ::core::ffi::c_long as ::core::ffi::c_int;
-    let fresh18 = (*pCsr).iToken;
-    (*pCsr).iToken = (*pCsr).iToken + 1;
+    __pCsr_ref.iOff = z.offset_from(__pCsr_ref.aInput) as ::core::ffi::c_long as ::core::ffi::c_int;
+    *paToken = __pCsr_ref.zToken;
+    *pnToken = zOut.offset_from(__pCsr_ref.zToken) as ::core::ffi::c_long as ::core::ffi::c_int;
+    *piStart = zStart.offset_from(__pCsr_ref.aInput) as ::core::ffi::c_long as ::core::ffi::c_int;
+    *piEnd = zEnd.offset_from(__pCsr_ref.aInput) as ::core::ffi::c_long as ::core::ffi::c_int;
+    let fresh18 = __pCsr_ref.iToken;
+    __pCsr_ref.iToken = __pCsr_ref.iToken + 1;
     *piPos = fresh18;
     return crate::sqlite3_h::SQLITE_OK;
 }

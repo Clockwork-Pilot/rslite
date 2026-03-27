@@ -230,17 +230,18 @@ unsafe extern "C" fn allocateCursor(
         *fresh19 = ::core::ptr::null_mut::<crate::vdbeInt_h::VdbeCursor>();
     }
     if ((*pMem).szMalloc as crate::src::ext::rtree::rtree::i64_0) < nByte {
-        if (*pMem).szMalloc > 0 as ::core::ffi::c_int {
-            crate::src::src::malloc::sqlite3DbFreeNN((*pMem).db as *mut crate::sqliteInt_h::sqlite3, (*pMem).zMalloc as *mut ::core::ffi::c_void);
+        let __pMem_ref = unsafe { &mut *pMem };
+        if __pMem_ref.szMalloc > 0 as ::core::ffi::c_int {
+            crate::src::src::malloc::sqlite3DbFreeNN(__pMem_ref.db as *mut crate::sqliteInt_h::sqlite3, __pMem_ref.zMalloc as *mut ::core::ffi::c_void);
         }
-        (*pMem).zMalloc =
-            crate::src::src::malloc::sqlite3DbMallocRaw((*pMem).db as *mut crate::sqliteInt_h::sqlite3, nByte as crate::src::ext::rtree::rtree::u64_0) as *mut ::core::ffi::c_char;
-        (*pMem).z = (*pMem).zMalloc;
-        if (*pMem).zMalloc.is_null() {
-            (*pMem).szMalloc = 0 as ::core::ffi::c_int;
+        __pMem_ref.zMalloc =
+            crate::src::src::malloc::sqlite3DbMallocRaw(__pMem_ref.db as *mut crate::sqliteInt_h::sqlite3, nByte as crate::src::ext::rtree::rtree::u64_0) as *mut ::core::ffi::c_char;
+        __pMem_ref.z = __pMem_ref.zMalloc;
+        if __pMem_ref.zMalloc.is_null() {
+            __pMem_ref.szMalloc = 0 as ::core::ffi::c_int;
             return ::core::ptr::null_mut::<crate::vdbeInt_h::VdbeCursor>();
         }
-        (*pMem).szMalloc = nByte as ::core::ffi::c_int;
+        __pMem_ref.szMalloc = nByte as ::core::ffi::c_int;
     }
     pCx = (*pMem).zMalloc as *mut crate::vdbeInt_h::VdbeCursor;
     let ref mut fresh20 = *(*p).apCsr.offset(iCur as isize);
@@ -277,28 +278,30 @@ unsafe extern "C" fn alsoAnInt(
         *piValue = iValue;
         return 1 as ::core::ffi::c_int;
     }
-    return (0 as ::core::ffi::c_int == crate::src::src::util::sqlite3Atoi64((*pRec).z, piValue, (*pRec).n, (*pRec).enc))
+    let __pRec_ref = unsafe { &*pRec };
+    return (0 as ::core::ffi::c_int == crate::src::src::util::sqlite3Atoi64(__pRec_ref.z, piValue, __pRec_ref.n, __pRec_ref.enc))
         as ::core::ffi::c_int;
 }
 
 unsafe extern "C" fn applyNumericAffinity(mut pRec: *mut crate::src::src::vdbe::Mem, mut bTryForInt: ::core::ffi::c_int) {
     let mut rValue: ::core::ffi::c_double = 0.;
-    let mut enc: crate::src::ext::rtree::rtree::u8_0 = (*pRec).enc;
+    let __pRec_ref = unsafe { &mut *pRec };
+    let mut enc: crate::src::ext::rtree::rtree::u8_0 = __pRec_ref.enc;
     let mut rc: ::core::ffi::c_int = 0;
-    rc = crate::src::src::util::sqlite3AtoF((*pRec).z, &raw mut rValue, (*pRec).n, enc);
+    rc = crate::src::src::util::sqlite3AtoF(__pRec_ref.z, &raw mut rValue, __pRec_ref.n, enc);
     if rc <= 0 as ::core::ffi::c_int {
         return;
     }
-    if rc == 1 as ::core::ffi::c_int && alsoAnInt(pRec, rValue, &raw mut (*pRec).u.i) != 0 {
-        (*pRec).flags = ((*pRec).flags as ::core::ffi::c_int | crate::vdbeInt_h::MEM_Int) as crate::src::fts5::u16_0;
+    if rc == 1 as ::core::ffi::c_int && alsoAnInt(pRec, rValue, &raw mut __pRec_ref.u.i) != 0 {
+        __pRec_ref.flags = (__pRec_ref.flags as ::core::ffi::c_int | crate::vdbeInt_h::MEM_Int) as crate::src::fts5::u16_0;
     } else {
-        (*pRec).u.r = rValue;
-        (*pRec).flags = ((*pRec).flags as ::core::ffi::c_int | crate::vdbeInt_h::MEM_Real) as crate::src::fts5::u16_0;
+        __pRec_ref.u.r = rValue;
+        __pRec_ref.flags = (__pRec_ref.flags as ::core::ffi::c_int | crate::vdbeInt_h::MEM_Real) as crate::src::fts5::u16_0;
         if bTryForInt != 0 {
             crate::src::src::vdbemem::sqlite3VdbeIntegerAffinity(pRec as *mut crate::vdbeInt_h::sqlite3_value);
         }
     }
-    (*pRec).flags = ((*pRec).flags as ::core::ffi::c_int & !crate::vdbeInt_h::MEM_Str) as crate::src::fts5::u16_0;
+    __pRec_ref.flags = (__pRec_ref.flags as ::core::ffi::c_int & !crate::vdbeInt_h::MEM_Str) as crate::src::fts5::u16_0;
 }
 
 unsafe extern "C" fn applyAffinity(
@@ -319,13 +322,14 @@ unsafe extern "C" fn applyAffinity(
             }
         }
     } else if affinity as ::core::ffi::c_int == crate::sqliteInt_h::SQLITE_AFF_TEXT {
-        if 0 as ::core::ffi::c_int == (*pRec).flags as ::core::ffi::c_int & crate::vdbeInt_h::MEM_Str {
-            if (*pRec).flags as ::core::ffi::c_int & (crate::vdbeInt_h::MEM_Real | crate::vdbeInt_h::MEM_Int | crate::vdbeInt_h::MEM_IntReal) != 0 {
+        let __pRec_ref = unsafe { &mut *pRec };
+        if 0 as ::core::ffi::c_int == __pRec_ref.flags as ::core::ffi::c_int & crate::vdbeInt_h::MEM_Str {
+            if __pRec_ref.flags as ::core::ffi::c_int & (crate::vdbeInt_h::MEM_Real | crate::vdbeInt_h::MEM_Int | crate::vdbeInt_h::MEM_IntReal) != 0 {
                 crate::src::src::vdbemem::sqlite3VdbeMemStringify(pRec as *mut crate::vdbeInt_h::sqlite3_value, enc, 1 as crate::src::ext::rtree::rtree::u8_0);
             }
         }
-        (*pRec).flags =
-            ((*pRec).flags as ::core::ffi::c_int & !(crate::vdbeInt_h::MEM_Real | crate::vdbeInt_h::MEM_Int | crate::vdbeInt_h::MEM_IntReal)) as crate::src::fts5::u16_0;
+        __pRec_ref.flags =
+            (__pRec_ref.flags as ::core::ffi::c_int & !(crate::vdbeInt_h::MEM_Real | crate::vdbeInt_h::MEM_Int | crate::vdbeInt_h::MEM_IntReal)) as crate::src::fts5::u16_0;
     }
 }
 #[no_mangle]
@@ -355,30 +359,31 @@ pub unsafe extern "C" fn sqlite3ValueApplyAffinity(
 unsafe extern "C" fn computeNumericType(mut pMem: *mut crate::src::src::vdbe::Mem) -> crate::src::fts5::u16_0 {
     let mut rc: ::core::ffi::c_int = 0;
     let mut ix: crate::sqlite3_h::sqlite3_int64 = 0;
-    if if (*pMem).flags as ::core::ffi::c_int & crate::vdbeInt_h::MEM_Zero != 0 {
+    let __pMem_ref = unsafe { &mut *pMem };
+    if if __pMem_ref.flags as ::core::ffi::c_int & crate::vdbeInt_h::MEM_Zero != 0 {
         crate::src::src::vdbemem::sqlite3VdbeMemExpandBlob(pMem as *mut crate::vdbeInt_h::sqlite3_value)
     } else {
         0 as ::core::ffi::c_int
     } != 0
     {
-        (*pMem).u.i = 0 as crate::src::ext::rtree::rtree::i64_0;
+        __pMem_ref.u.i = 0 as crate::src::ext::rtree::rtree::i64_0;
         return crate::vdbeInt_h::MEM_Int as crate::src::fts5::u16_0;
     }
-    rc = crate::src::src::util::sqlite3AtoF((*pMem).z, &raw mut (*pMem).u.r, (*pMem).n, (*pMem).enc);
+    rc = crate::src::src::util::sqlite3AtoF(__pMem_ref.z, &raw mut __pMem_ref.u.r, __pMem_ref.n, __pMem_ref.enc);
     if rc <= 0 as ::core::ffi::c_int {
         if rc == 0 as ::core::ffi::c_int
-            && crate::src::src::util::sqlite3Atoi64((*pMem).z, &raw mut ix, (*pMem).n, (*pMem).enc)
+            && crate::src::src::util::sqlite3Atoi64(__pMem_ref.z, &raw mut ix, __pMem_ref.n, __pMem_ref.enc)
                 <= 1 as ::core::ffi::c_int
         {
-            (*pMem).u.i = ix as crate::src::ext::rtree::rtree::i64_0;
+            __pMem_ref.u.i = ix as crate::src::ext::rtree::rtree::i64_0;
             return crate::vdbeInt_h::MEM_Int as crate::src::fts5::u16_0;
         } else {
             return crate::vdbeInt_h::MEM_Real as crate::src::fts5::u16_0;
         }
     } else if rc == 1 as ::core::ffi::c_int
-        && crate::src::src::util::sqlite3Atoi64((*pMem).z, &raw mut ix, (*pMem).n, (*pMem).enc) == 0 as ::core::ffi::c_int
+        && crate::src::src::util::sqlite3Atoi64(__pMem_ref.z, &raw mut ix, __pMem_ref.n, __pMem_ref.enc) == 0 as ::core::ffi::c_int
     {
-        (*pMem).u.i = ix as crate::src::ext::rtree::rtree::i64_0;
+        __pMem_ref.u.i = ix as crate::src::ext::rtree::rtree::i64_0;
         return crate::vdbeInt_h::MEM_Int as crate::src::fts5::u16_0;
     }
     return crate::vdbeInt_h::MEM_Real as crate::src::fts5::u16_0;
@@ -418,14 +423,15 @@ unsafe extern "C" fn filterHash(mut aMem: *const crate::src::src::vdbe::Mem, mut
     mx = i + (*pOp).p4.i;
     while i < mx {
         let mut p: *const crate::src::src::vdbe::Mem = aMem.offset(i as isize) as *const crate::src::src::vdbe::Mem;
-        if (*p).flags as ::core::ffi::c_int & (crate::vdbeInt_h::MEM_Int | crate::vdbeInt_h::MEM_IntReal) != 0 {
-            h = h.wrapping_add((*p).u.i as crate::src::ext::rtree::rtree::u64_0);
-        } else if (*p).flags as ::core::ffi::c_int & crate::vdbeInt_h::MEM_Real != 0 {
+        let __p_ref = unsafe { &*p };
+        if __p_ref.flags as ::core::ffi::c_int & (crate::vdbeInt_h::MEM_Int | crate::vdbeInt_h::MEM_IntReal) != 0 {
+            h = h.wrapping_add(__p_ref.u.i as crate::src::ext::rtree::rtree::u64_0);
+        } else if __p_ref.flags as ::core::ffi::c_int & crate::vdbeInt_h::MEM_Real != 0 {
             h = h.wrapping_add(crate::src::src::vdbemem::sqlite3VdbeIntValue(p as *const crate::vdbeInt_h::sqlite3_value) as crate::src::ext::rtree::rtree::u64_0);
-        } else if (*p).flags as ::core::ffi::c_int & (crate::vdbeInt_h::MEM_Str | crate::vdbeInt_h::MEM_Blob) != 0 {
+        } else if __p_ref.flags as ::core::ffi::c_int & (crate::vdbeInt_h::MEM_Str | crate::vdbeInt_h::MEM_Blob) != 0 {
             h = h.wrapping_add(
                 (4093 as ::core::ffi::c_int
-                    + ((*p).flags as ::core::ffi::c_int & (crate::vdbeInt_h::MEM_Str | crate::vdbeInt_h::MEM_Blob)))
+                    + (__p_ref.flags as ::core::ffi::c_int & (crate::vdbeInt_h::MEM_Str | crate::vdbeInt_h::MEM_Blob)))
                     as crate::src::ext::rtree::rtree::u64_0,
             );
         }
@@ -445,8 +451,9 @@ unsafe extern "C" fn vdbeColumnFromOverflow(
     mut pDest: *mut crate::src::src::vdbe::Mem,
 ) -> ::core::ffi::c_int {
     let mut rc: ::core::ffi::c_int = 0;
-    let mut db: *mut crate::sqliteInt_h::sqlite3 = (*pDest).db;
-    let mut encoding: ::core::ffi::c_int = (*pDest).enc as ::core::ffi::c_int;
+    let __pDest_ref = unsafe { &mut *pDest };
+    let mut db: *mut crate::sqliteInt_h::sqlite3 = __pDest_ref.db;
+    let mut encoding: ::core::ffi::c_int = __pDest_ref.enc as ::core::ffi::c_int;
     let mut len: ::core::ffi::c_int = crate::src::src::vdbeaux::sqlite3VdbeSerialTypeLen(t) as ::core::ffi::c_int;
     if len > (*db).aLimit[crate::sqlite3_h::SQLITE_LIMIT_LENGTH as usize] {
         return crate::sqlite3_h::SQLITE_TOOBIG;
@@ -454,32 +461,34 @@ unsafe extern "C" fn vdbeColumnFromOverflow(
     if len > 4000 as ::core::ffi::c_int && (*pC).pKeyInfo.is_null() {
         let mut pCache: *mut crate::vdbeInt_h::VdbeTxtBlbCache = ::core::ptr::null_mut::<crate::vdbeInt_h::VdbeTxtBlbCache>();
         let mut pBuf: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
-        if (*pC).colCache() as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
-            (*pC).pCache =
+        let __pC_ref = unsafe { &mut *pC };
+        if __pC_ref.colCache() as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
+            __pC_ref.pCache =
                 crate::src::src::malloc::sqlite3DbMallocZero(db as *mut crate::sqliteInt_h::sqlite3, ::core::mem::size_of::<crate::vdbeInt_h::VdbeTxtBlbCache>() as crate::src::ext::rtree::rtree::u64_0)
                     as *mut crate::vdbeInt_h::VdbeTxtBlbCache;
-            if (*pC).pCache.is_null() {
+            if __pC_ref.pCache.is_null() {
                 return crate::sqlite3_h::SQLITE_NOMEM;
             }
-            (*pC).set_colCache(1 as crate::vdbeInt_h::Bool as crate::vdbeInt_h::Bool);
+            __pC_ref.set_colCache(1 as crate::vdbeInt_h::Bool as crate::vdbeInt_h::Bool);
         }
-        pCache = (*pC).pCache;
+        pCache = __pC_ref.pCache;
         if (*pCache).pCValue.is_null()
             || (*pCache).iCol != iCol
             || (*pCache).cacheStatus != cacheStatus
             || (*pCache).colCacheCtr != colCacheCtr
-            || (*pCache).iOffset != crate::src::src::btree::sqlite3BtreeOffset((*pC).uc.pCursor)
+            || (*pCache).iOffset != crate::src::src::btree::sqlite3BtreeOffset(__pC_ref.uc.pCursor)
         {
-            if !(*pCache).pCValue.is_null() {
-                crate::src::src::printf::sqlite3RCStrUnref((*pCache).pCValue as *mut ::core::ffi::c_void);
+            let __pCache_ref = unsafe { &mut *pCache };
+            if !__pCache_ref.pCValue.is_null() {
+                crate::src::src::printf::sqlite3RCStrUnref(__pCache_ref.pCValue as *mut ::core::ffi::c_void);
             }
-            (*pCache).pCValue = crate::src::src::printf::sqlite3RCStrNew((len + 3 as ::core::ffi::c_int) as crate::src::ext::rtree::rtree::u64_0);
-            pBuf = (*pCache).pCValue;
+            __pCache_ref.pCValue = crate::src::src::printf::sqlite3RCStrNew((len + 3 as ::core::ffi::c_int) as crate::src::ext::rtree::rtree::u64_0);
+            pBuf = __pCache_ref.pCValue;
             if pBuf.is_null() {
                 return crate::sqlite3_h::SQLITE_NOMEM;
             }
             rc = crate::src::src::btree::sqlite3BtreePayload(
-                (*pC).uc.pCursor,
+                __pC_ref.uc.pCursor,
                 iOffset as crate::src::ext::rtree::rtree::u32_0,
                 len as crate::src::ext::rtree::rtree::u32_0,
                 pBuf as *mut ::core::ffi::c_void,
@@ -490,10 +499,10 @@ unsafe extern "C" fn vdbeColumnFromOverflow(
             *pBuf.offset(len as isize) = 0 as ::core::ffi::c_char;
             *pBuf.offset((len + 1 as ::core::ffi::c_int) as isize) = 0 as ::core::ffi::c_char;
             *pBuf.offset((len + 2 as ::core::ffi::c_int) as isize) = 0 as ::core::ffi::c_char;
-            (*pCache).iCol = iCol;
-            (*pCache).cacheStatus = cacheStatus;
-            (*pCache).colCacheCtr = colCacheCtr;
-            (*pCache).iOffset = crate::src::src::btree::sqlite3BtreeOffset((*pC).uc.pCursor);
+            __pCache_ref.iCol = iCol;
+            __pCache_ref.cacheStatus = cacheStatus;
+            __pCache_ref.colCacheCtr = colCacheCtr;
+            __pCache_ref.iOffset = crate::src::src::btree::sqlite3BtreeOffset(__pC_ref.uc.pCursor);
         } else {
             pBuf = (*pCache).pCValue;
         }
@@ -507,7 +516,7 @@ unsafe extern "C" fn vdbeColumnFromOverflow(
                 encoding as crate::src::ext::rtree::rtree::u8_0,
                 Some(crate::src::src::printf::sqlite3RCStrUnref as unsafe extern "C" fn(*mut ::core::ffi::c_void) -> ()),
             );
-            (*pDest).flags = ((*pDest).flags as ::core::ffi::c_int | crate::vdbeInt_h::MEM_Term) as crate::src::fts5::u16_0;
+            __pDest_ref.flags = (__pDest_ref.flags as ::core::ffi::c_int | crate::vdbeInt_h::MEM_Term) as crate::src::fts5::u16_0;
         } else {
             rc = crate::src::src::vdbemem::sqlite3VdbeMemSetStr(
                 
@@ -523,13 +532,13 @@ unsafe extern "C" fn vdbeColumnFromOverflow(
         if rc != 0 {
             return rc;
         }
-        crate::src::src::vdbeaux::sqlite3VdbeSerialGet((*pDest).z as *const ::core::ffi::c_uchar, t,  pDest as *mut crate::vdbeInt_h::sqlite3_value);
+        crate::src::src::vdbeaux::sqlite3VdbeSerialGet(__pDest_ref.z as *const ::core::ffi::c_uchar, t,  pDest as *mut crate::vdbeInt_h::sqlite3_value);
         if t & 1 as crate::src::ext::rtree::rtree::u32_0 != 0 as crate::src::ext::rtree::rtree::u32_0 && encoding == crate::sqlite3_h::SQLITE_UTF8 {
-            *(*pDest).z.offset(len as isize) = 0 as ::core::ffi::c_char;
-            (*pDest).flags = ((*pDest).flags as ::core::ffi::c_int | crate::vdbeInt_h::MEM_Term) as crate::src::fts5::u16_0;
+            *__pDest_ref.z.offset(len as isize) = 0 as ::core::ffi::c_char;
+            __pDest_ref.flags = (__pDest_ref.flags as ::core::ffi::c_int | crate::vdbeInt_h::MEM_Term) as crate::src::fts5::u16_0;
         }
     }
-    (*pDest).flags = ((*pDest).flags as ::core::ffi::c_int & !crate::vdbeInt_h::MEM_Ephem) as crate::src::fts5::u16_0;
+    __pDest_ref.flags = (__pDest_ref.flags as ::core::ffi::c_int & !crate::vdbeInt_h::MEM_Ephem) as crate::src::fts5::u16_0;
     return rc;
 }
 #[inline(never)]
@@ -540,11 +549,12 @@ unsafe extern "C" fn sqlite3VdbeLogAbort(
     mut pOp: *mut crate::vdbeInt_h::Op,
     mut aOp: *mut crate::vdbeInt_h::Op,
 ) {
-    let mut zSql: *const ::core::ffi::c_char = (*p).zSql;
+    let __p_ref = unsafe { &mut *p };
+    let mut zSql: *const ::core::ffi::c_char = __p_ref.zSql;
     let mut zPrefix: *const ::core::ffi::c_char = b"\0" as *const u8 as *const ::core::ffi::c_char;
     let mut pc: ::core::ffi::c_int = 0;
     let mut zXtra: [::core::ffi::c_char; 100] = [0; 100];
-    if !(*p).pFrame.is_null() {
+    if !__p_ref.pFrame.is_null() {
         if !(*aOp.offset(0 as isize))
             .p4
             .z
@@ -569,7 +579,7 @@ unsafe extern "C" fn sqlite3VdbeLogAbort(
         rc,
         b"statement aborts at %d: %s; [%s%s]\0" as *const u8 as *const ::core::ffi::c_char,
         pc,
-        (*p).zErrMsg,
+        __p_ref.zErrMsg,
         zPrefix,
         zSql,
     );
@@ -603,42 +613,43 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
     let mut pCur: *mut crate::vdbeInt_h::VdbeCursor = ::core::ptr::null_mut::<crate::vdbeInt_h::VdbeCursor>();
     let mut pDb_1: *mut crate::sqliteInt_h::Db = ::core::ptr::null_mut::<crate::sqliteInt_h::Db>();
     let mut current_block: u64;
-    let mut aOp: *mut crate::vdbeInt_h::Op = (*p).aOp;
+    let __p_ref = unsafe { &mut *p };
+    let mut aOp: *mut crate::vdbeInt_h::Op = __p_ref.aOp;
     let mut pOp: *mut crate::vdbeInt_h::Op = aOp;
     let mut rc: ::core::ffi::c_int = crate::sqlite3_h::SQLITE_OK;
-    let mut db: *mut crate::sqliteInt_h::sqlite3 = (*p).db;
+    let mut db: *mut crate::sqliteInt_h::sqlite3 = __p_ref.db;
     let mut resetSchemaOnFault: crate::src::ext::rtree::rtree::u8_0 = 0 as crate::src::ext::rtree::rtree::u8_0;
     let mut encoding: crate::src::ext::rtree::rtree::u8_0 = (*db).enc;
     let mut iCompare: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
     let mut nVmStep: crate::src::ext::rtree::rtree::u64_0 = 0 as crate::src::ext::rtree::rtree::u64_0;
     let mut nProgressLimit: crate::src::ext::rtree::rtree::u64_0 = 0;
-    let mut aMem: *mut crate::src::src::vdbe::Mem = (*p).aMem;
+    let mut aMem: *mut crate::src::src::vdbe::Mem = __p_ref.aMem;
     let mut pIn1: *mut crate::src::src::vdbe::Mem = ::core::ptr::null_mut::<crate::src::src::vdbe::Mem>();
     let mut pIn2: *mut crate::src::src::vdbe::Mem = ::core::ptr::null_mut::<crate::src::src::vdbe::Mem>();
     let mut pIn3: *mut crate::src::src::vdbe::Mem = ::core::ptr::null_mut::<crate::src::src::vdbe::Mem>();
     let mut pOut: *mut crate::src::src::vdbe::Mem = ::core::ptr::null_mut::<crate::src::src::vdbe::Mem>();
     let mut colCacheCtr: crate::src::ext::rtree::rtree::u32_0 = 0 as crate::src::ext::rtree::rtree::u32_0;
-    if (*p).lockMask != 0 as crate::sqliteInt_h::yDbMask {
+    if __p_ref.lockMask != 0 as crate::sqliteInt_h::yDbMask {
         crate::src::src::vdbeaux::sqlite3VdbeEnter(p as *mut crate::vdbeInt_h::Vdbe);
     }
     if (*db).xProgress.is_some() {
-        let mut iPrior: crate::src::ext::rtree::rtree::u32_0 = (*p).aCounter[crate::sqlite3_h::SQLITE_STMTSTATUS_VM_STEP as usize];
+        let mut iPrior: crate::src::ext::rtree::rtree::u32_0 = __p_ref.aCounter[crate::sqlite3_h::SQLITE_STMTSTATUS_VM_STEP as usize];
         nProgressLimit = ((*db).nProgressOps as crate::src::ext::rtree::rtree::u32_0)
             .wrapping_sub(iPrior.wrapping_rem((*db).nProgressOps as crate::src::ext::rtree::rtree::u32_0))
             as crate::src::ext::rtree::rtree::u64_0;
     } else {
         nProgressLimit = crate::sqliteInt_h::LARGEST_UINT64;
     }
-    if (*p).rc == crate::sqlite3_h::SQLITE_NOMEM {
+    if __p_ref.rc == crate::sqlite3_h::SQLITE_NOMEM {
         current_block = 2471432538116610086;
     } else {
-        (*p).rc = crate::sqlite3_h::SQLITE_OK;
-        (*p).iCurrentTime = 0 as crate::src::ext::rtree::rtree::i64_0;
+        __p_ref.rc = crate::sqlite3_h::SQLITE_OK;
+        __p_ref.iCurrentTime = 0 as crate::src::ext::rtree::rtree::i64_0;
         (*db).busyHandler.nBusy = 0 as ::core::ffi::c_int;
         if ::core::intrinsics::atomic_load_relaxed(&raw mut (*db).u1.isInterrupted) != 0 {
             current_block = 9771092749923633615;
         } else {
-            pOp = aOp.offset((*p).pc as isize) as *mut crate::vdbeInt_h::Op;
+            pOp = aOp.offset(__p_ref.pc as isize) as *mut crate::vdbeInt_h::Op;
             's_109: loop {
                 nVmStep = nVmStep.wrapping_add(1);
                 if sqlite3_interrupt_count > 0 as ::core::ffi::c_int {
@@ -669,10 +680,11 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                         current_block = 5783071609795492627;
                     }
     crate::opcodes_h::OP_InitCoroutine_1 =>  {
-                        pOut = aMem.offset((*pOp).p1 as isize) as *mut crate::src::src::vdbe::Mem;
-                        (*pOut).u.i = ((*pOp).p3 - 1 as ::core::ffi::c_int) as crate::src::ext::rtree::rtree::i64_0;
+                        let __pOp_ref = unsafe { &*pOp };
+                        pOut = aMem.offset(__pOp_ref.p1 as isize) as *mut crate::src::src::vdbe::Mem;
+                        (*pOut).u.i = (__pOp_ref.p3 - 1 as ::core::ffi::c_int) as crate::src::ext::rtree::rtree::i64_0;
                         (*pOut).flags = crate::vdbeInt_h::MEM_Int as crate::src::fts5::u16_0;
-                        if (*pOp).p2 == 0 as ::core::ffi::c_int {
+                        if __pOp_ref.p2 == 0 as ::core::ffi::c_int {
                             current_block = 5783071609795492627;
                         } else {
                             current_block = 9512719473022792396;
@@ -683,7 +695,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                         pIn1 = aMem.offset((*pOp).p1 as isize) as *mut crate::src::src::vdbe::Mem;
                         pCaller = aOp.offset((*pIn1).u.i as isize) as *mut crate::vdbeInt_h::Op as *mut crate::src::src::vdbe::VdbeOp;
                         (*pIn1).u.i =
-                            (pOp.offset_from((*p).aOp) as ::core::ffi::c_long as ::core::ffi::c_int
+                            (pOp.offset_from(__p_ref.aOp) as ::core::ffi::c_long as ::core::ffi::c_int
                                 - 1 as ::core::ffi::c_int) as crate::src::ext::rtree::rtree::i64_0;
                         pOp = aOp.offset(((*pCaller).p2 - 1 as ::core::ffi::c_int) as isize)
                             as *mut crate::vdbeInt_h::Op;
@@ -729,12 +741,13 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                     }
     crate::opcodes_h::OP_String8_1 =>  {
                         pOut = out2Prerelease(p, pOp as *mut crate::src::src::vdbe::VdbeOp);
-                        (*pOp).p1 = crate::src::src::util::sqlite3Strlen30((*pOp).p4.z);
+                        let __pOp_ref = unsafe { &mut *pOp };
+                        __pOp_ref.p1 = crate::src::src::util::sqlite3Strlen30(__pOp_ref.p4.z);
                         if encoding as ::core::ffi::c_int != crate::sqlite3_h::SQLITE_UTF8 {
                             rc = crate::src::src::vdbemem::sqlite3VdbeMemSetStr(
                                 
                                 pOut as *mut crate::vdbeInt_h::sqlite3_value,
-                                (*pOp).p4.z,
+                                __pOp_ref.p4.z,
                                 -(1 as ::core::ffi::c_int) as crate::src::ext::rtree::rtree::i64_0,
                                 crate::sqlite3_h::SQLITE_UTF8 as crate::src::ext::rtree::rtree::u8_0,
                                 crate::sqlite3_h::SQLITE_STATIC,
@@ -749,21 +762,22 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                                 current_block = 2471432538116610086;
                                 break;
                             }
-                            (*pOut).szMalloc = 0 as ::core::ffi::c_int;
-                            (*pOut).flags =
-                                ((*pOut).flags as ::core::ffi::c_int | crate::vdbeInt_h::MEM_Static) as crate::src::fts5::u16_0;
-                            if (*pOp).p4type as ::core::ffi::c_int == crate::src::src::vdbe::P4_DYNAMIC {
-                                crate::src::src::malloc::sqlite3DbFree(db as *mut crate::sqliteInt_h::sqlite3, (*pOp).p4.z as *mut ::core::ffi::c_void);
+                            let __pOut_ref = unsafe { &mut *pOut };
+                            __pOut_ref.szMalloc = 0 as ::core::ffi::c_int;
+                            __pOut_ref.flags =
+                                (__pOut_ref.flags as ::core::ffi::c_int | crate::vdbeInt_h::MEM_Static) as crate::src::fts5::u16_0;
+                            if __pOp_ref.p4type as ::core::ffi::c_int == crate::src::src::vdbe::P4_DYNAMIC {
+                                crate::src::src::malloc::sqlite3DbFree(db as *mut crate::sqliteInt_h::sqlite3, __pOp_ref.p4.z as *mut ::core::ffi::c_void);
                             }
-                            (*pOp).p4type = crate::src::src::vdbe::P4_DYNAMIC as ::core::ffi::c_schar;
-                            (*pOp).p4.z = (*pOut).z;
-                            (*pOp).p1 = (*pOut).n;
+                            __pOp_ref.p4type = crate::src::src::vdbe::P4_DYNAMIC as ::core::ffi::c_schar;
+                            __pOp_ref.p4.z = __pOut_ref.z;
+                            __pOp_ref.p1 = __pOut_ref.n;
                         }
-                        if (*pOp).p1 > (*db).aLimit[crate::sqlite3_h::SQLITE_LIMIT_LENGTH as usize] {
+                        if __pOp_ref.p1 > (*db).aLimit[crate::sqlite3_h::SQLITE_LIMIT_LENGTH as usize] {
                             current_block = 7113757447962609068;
                             break;
                         }
-                        (*pOp).opcode = crate::opcodes_h::OP_String as crate::src::ext::rtree::rtree::u8_0;
+                        __pOp_ref.opcode = crate::opcodes_h::OP_String as crate::src::ext::rtree::rtree::u8_0;
                         current_block = 16937825661756021828;
                     }
     crate::opcodes_h::OP_String =>  {
@@ -773,8 +787,9 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                         let mut cnt: ::core::ffi::c_int = 0;
                         let mut nullFlag: crate::src::fts5::u16_0 = 0;
                         pOut = out2Prerelease(p, pOp as *mut crate::src::src::vdbe::VdbeOp);
-                        cnt = (*pOp).p3 - (*pOp).p2;
-                        nullFlag = (if (*pOp).p1 != 0 {
+                        let __pOp_ref = unsafe { &*pOp };
+                        cnt = __pOp_ref.p3 - __pOp_ref.p2;
+                        nullFlag = (if __pOp_ref.p1 != 0 {
                             crate::vdbeInt_h::MEM_Null | crate::vdbeInt_h::MEM_Cleared
                         } else {
                             crate::vdbeInt_h::MEM_Null
@@ -852,9 +867,10 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                         let mut n: ::core::ffi::c_int = 0;
                         let mut p1: ::core::ffi::c_int = 0;
                         let mut p2: ::core::ffi::c_int = 0;
-                        n = (*pOp).p3;
-                        p1 = (*pOp).p1;
-                        p2 = (*pOp).p2;
+                        let __pOp_ref = unsafe { &*pOp };
+                        n = __pOp_ref.p3;
+                        p1 = __pOp_ref.p1;
+                        p2 = __pOp_ref.p2;
                         pIn1 = aMem.offset(p1 as isize) as *mut crate::src::src::vdbe::Mem;
                         pOut = aMem.offset(p2 as isize) as *mut crate::src::src::vdbe::Mem;
                         loop {
@@ -877,9 +893,10 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                     }
     crate::opcodes_h::OP_Copy_1 =>  {
                         let mut n_0: ::core::ffi::c_int = 0;
-                        n_0 = (*pOp).p3;
-                        pIn1 = aMem.offset((*pOp).p1 as isize) as *mut crate::src::src::vdbe::Mem;
-                        pOut = aMem.offset((*pOp).p2 as isize) as *mut crate::src::src::vdbe::Mem;
+                        let __pOp_ref = unsafe { &*pOp };
+                        n_0 = __pOp_ref.p3;
+                        pIn1 = aMem.offset(__pOp_ref.p1 as isize) as *mut crate::src::src::vdbe::Mem;
+                        pOut = aMem.offset(__pOp_ref.p2 as isize) as *mut crate::src::src::vdbe::Mem;
                         loop {
                             crate::src::src::vdbemem::sqlite3VdbeMemShallowCopy(pOut as *mut crate::vdbeInt_h::sqlite3_value,  pIn1 as *const crate::vdbeInt_h::sqlite3_value, crate::vdbeInt_h::MEM_Ephem);
                             if (*pOut).flags as ::core::ffi::c_int & crate::vdbeInt_h::MEM_Ephem
@@ -891,7 +908,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                             }
                             if (*pOut).flags as ::core::ffi::c_int & crate::vdbeInt_h::MEM_Subtype
                                 != 0 as ::core::ffi::c_int
-                                && (*pOp).p5 as ::core::ffi::c_int & 0x2 as ::core::ffi::c_int
+                                && __pOp_ref.p5 as ::core::ffi::c_int & 0x2 as ::core::ffi::c_int
                                     != 0 as ::core::ffi::c_int
                             {
                                 (*pOut).flags =
@@ -928,8 +945,8 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                         current_block = 5783071609795492627;
                     }
     crate::opcodes_h::OP_ResultRow_1 =>  {
-                        (*p).cacheCtr = (*p).cacheCtr.wrapping_add(2 as crate::src::ext::rtree::rtree::u32_0) | 1 as crate::src::ext::rtree::rtree::u32_0;
-                        (*p).pResultRow = aMem.offset((*pOp).p1 as isize) as *mut crate::src::src::vdbe::Mem;
+                        __p_ref.cacheCtr = __p_ref.cacheCtr.wrapping_add(2 as crate::src::ext::rtree::rtree::u32_0) | 1 as crate::src::ext::rtree::rtree::u32_0;
+                        __p_ref.pResultRow = aMem.offset((*pOp).p1 as isize) as *mut crate::src::src::vdbe::Mem;
                         if (*db).mallocFailed != 0 {
                             current_block = 2471432538116610086;
                             break;
@@ -942,7 +959,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                                 ::core::ptr::null_mut::<::core::ffi::c_void>(),
                             );
                         }
-                        (*p).pc = pOp.offset_from(aOp) as ::core::ffi::c_long as ::core::ffi::c_int
+                        __p_ref.pc = pOp.offset_from(aOp) as ::core::ffi::c_long as ::core::ffi::c_int
                             + 1 as ::core::ffi::c_int;
                         rc = crate::sqlite3_h::SQLITE_ROW;
                         current_block = 10408586827809538586;
@@ -952,9 +969,10 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                         let mut nByte: crate::src::ext::rtree::rtree::i64_0 = 0;
                         let mut flags1: crate::src::fts5::u16_0 = 0;
                         let mut flags2: crate::src::fts5::u16_0 = 0;
-                        pIn1 = aMem.offset((*pOp).p1 as isize) as *mut crate::src::src::vdbe::Mem;
-                        pIn2 = aMem.offset((*pOp).p2 as isize) as *mut crate::src::src::vdbe::Mem;
-                        pOut = aMem.offset((*pOp).p3 as isize) as *mut crate::src::src::vdbe::Mem;
+                        let __pOp_ref = unsafe { &*pOp };
+                        pIn1 = aMem.offset(__pOp_ref.p1 as isize) as *mut crate::src::src::vdbe::Mem;
+                        pIn2 = aMem.offset(__pOp_ref.p2 as isize) as *mut crate::src::src::vdbe::Mem;
+                        pOut = aMem.offset(__pOp_ref.p3 as isize) as *mut crate::src::src::vdbe::Mem;
                         flags1 = (*pIn1).flags;
                         if (flags1 as ::core::ffi::c_int | (*pIn2).flags as ::core::ffi::c_int)
                             & crate::vdbeInt_h::MEM_Null
@@ -962,6 +980,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                         {
                             crate::src::src::vdbemem::sqlite3VdbeMemSetNull(pOut as *mut crate::vdbeInt_h::sqlite3_value);
                         } else {
+                            let __pIn1_ref = unsafe { &mut *pIn1 };
                             if flags1 as ::core::ffi::c_int & (crate::vdbeInt_h::MEM_Str | crate::vdbeInt_h::MEM_Blob)
                                 == 0 as ::core::ffi::c_int
                             {
@@ -969,7 +988,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                                     current_block = 2471432538116610086;
                                     break;
                                 }
-                                flags1 = ((*pIn1).flags as ::core::ffi::c_int & !crate::vdbeInt_h::MEM_Str) as crate::src::fts5::u16_0;
+                                flags1 = (__pIn1_ref.flags as ::core::ffi::c_int & !crate::vdbeInt_h::MEM_Str) as crate::src::fts5::u16_0;
                             } else if flags1 as ::core::ffi::c_int & crate::vdbeInt_h::MEM_Zero
                                 != 0 as ::core::ffi::c_int
                             {
@@ -977,9 +996,10 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                                     current_block = 2471432538116610086;
                                     break;
                                 }
-                                flags1 = ((*pIn1).flags as ::core::ffi::c_int & !crate::vdbeInt_h::MEM_Str) as crate::src::fts5::u16_0;
+                                flags1 = (__pIn1_ref.flags as ::core::ffi::c_int & !crate::vdbeInt_h::MEM_Str) as crate::src::fts5::u16_0;
                             }
-                            flags2 = (*pIn2).flags;
+                            let __pIn2_ref = unsafe { &mut *pIn2 };
+                            flags2 = __pIn2_ref.flags;
                             if flags2 as ::core::ffi::c_int & (crate::vdbeInt_h::MEM_Str | crate::vdbeInt_h::MEM_Blob)
                                 == 0 as ::core::ffi::c_int
                             {
@@ -987,7 +1007,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                                     current_block = 2471432538116610086;
                                     break;
                                 }
-                                flags2 = ((*pIn2).flags as ::core::ffi::c_int & !crate::vdbeInt_h::MEM_Str) as crate::src::fts5::u16_0;
+                                flags2 = (__pIn2_ref.flags as ::core::ffi::c_int & !crate::vdbeInt_h::MEM_Str) as crate::src::fts5::u16_0;
                             } else if flags2 as ::core::ffi::c_int & crate::vdbeInt_h::MEM_Zero
                                 != 0 as ::core::ffi::c_int
                             {
@@ -995,10 +1015,10 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                                     current_block = 2471432538116610086;
                                     break;
                                 }
-                                flags2 = ((*pIn2).flags as ::core::ffi::c_int & !crate::vdbeInt_h::MEM_Str) as crate::src::fts5::u16_0;
+                                flags2 = (__pIn2_ref.flags as ::core::ffi::c_int & !crate::vdbeInt_h::MEM_Str) as crate::src::fts5::u16_0;
                             }
-                            nByte = (*pIn1).n as crate::src::ext::rtree::rtree::i64_0;
-                            nByte += (*pIn2).n as crate::src::ext::rtree::rtree::i64_0;
+                            nByte = __pIn1_ref.n as crate::src::ext::rtree::rtree::i64_0;
+                            nByte += __pIn2_ref.n as crate::src::ext::rtree::rtree::i64_0;
                             if nByte > (*db).aLimit[crate::sqlite3_h::SQLITE_LIMIT_LENGTH as usize] as crate::src::ext::rtree::rtree::i64_0 {
                                 current_block = 7113757447962609068;
                                 break;
@@ -1013,35 +1033,36 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                                 current_block = 2471432538116610086;
                                 break;
                             }
-                            (*pOut).flags = ((*pOut).flags as ::core::ffi::c_int
+                            let __pOut_ref = unsafe { &mut *pOut };
+                            __pOut_ref.flags = (__pOut_ref.flags as ::core::ffi::c_int
                                 & !(crate::vdbeInt_h::MEM_TypeMask | crate::vdbeInt_h::MEM_Zero)
                                 | 0x2 as ::core::ffi::c_int)
                                 as crate::src::fts5::u16_0;
                             if pOut != pIn2 {
                                 ::libc::memcpy(
-                                    (*pOut).z as *mut ::core::ffi::c_void,
-                                    (*pIn2).z as *const ::core::ffi::c_void,
-                                    (*pIn2).n as crate::__stddef_size_t_h::size_t,
+                                    __pOut_ref.z as *mut ::core::ffi::c_void,
+                                    __pIn2_ref.z as *const ::core::ffi::c_void,
+                                    __pIn2_ref.n as crate::__stddef_size_t_h::size_t,
                                 );
-                                (*pIn2).flags = flags2;
+                                __pIn2_ref.flags = flags2;
                             }
                             ::libc::memcpy(
-                                (*pOut).z.offset((*pIn2).n as isize) as *mut ::core::ffi::c_char
+                                __pOut_ref.z.offset(__pIn2_ref.n as isize) as *mut ::core::ffi::c_char
                                     as *mut ::core::ffi::c_void,
-                                (*pIn1).z as *const ::core::ffi::c_void,
-                                (*pIn1).n as crate::__stddef_size_t_h::size_t,
+                                __pIn1_ref.z as *const ::core::ffi::c_void,
+                                __pIn1_ref.n as crate::__stddef_size_t_h::size_t,
                             );
-                            (*pIn1).flags = flags1;
+                            __pIn1_ref.flags = flags1;
                             if encoding as ::core::ffi::c_int > crate::sqlite3_h::SQLITE_UTF8 {
                                 nByte &= !(1 as ::core::ffi::c_int) as crate::src::ext::rtree::rtree::i64_0;
                             }
-                            *(*pOut).z.offset(nByte as isize) = 0 as ::core::ffi::c_char;
-                            *(*pOut).z.offset((nByte + 1 as crate::src::ext::rtree::rtree::i64_0) as isize) =
+                            *__pOut_ref.z.offset(nByte as isize) = 0 as ::core::ffi::c_char;
+                            *__pOut_ref.z.offset((nByte + 1 as crate::src::ext::rtree::rtree::i64_0) as isize) =
                                 0 as ::core::ffi::c_char;
-                            (*pOut).flags =
-                                ((*pOut).flags as ::core::ffi::c_int | crate::vdbeInt_h::MEM_Term) as crate::src::fts5::u16_0;
-                            (*pOut).n = nByte as ::core::ffi::c_int;
-                            (*pOut).enc = encoding;
+                            __pOut_ref.flags =
+                                (__pOut_ref.flags as ::core::ffi::c_int | crate::vdbeInt_h::MEM_Term) as crate::src::fts5::u16_0;
+                            __pOut_ref.n = nByte as ::core::ffi::c_int;
+                            __pOut_ref.enc = encoding;
                             updateMaxBlobsize(pOut);
                         }
                         current_block = 5783071609795492627;
@@ -1187,7 +1208,8 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                         let mut pColl: *mut crate::sqliteInt_h::CollSeq = ::core::ptr::null_mut::<crate::sqliteInt_h::CollSeq>();
                         let mut bRev: ::core::ffi::c_int = 0;
                         let mut aPermute: *mut crate::src::ext::rtree::rtree::u32_0 = ::core::ptr::null_mut::<crate::src::ext::rtree::rtree::u32_0>();
-                        if (*pOp).p5 as ::core::ffi::c_int & crate::sqliteInt_h::OPFLAG_PERMUTE
+                        let __pOp_ref = unsafe { &*pOp };
+                        if __pOp_ref.p5 as ::core::ffi::c_int & crate::sqliteInt_h::OPFLAG_PERMUTE
                             == 0 as ::core::ffi::c_int
                         {
                             aPermute = ::core::ptr::null_mut::<crate::src::ext::rtree::rtree::u32_0>();
@@ -1197,10 +1219,10 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                                 .ai
                                 .offset(1 as isize);
                         }
-                        n_1 = (*pOp).p3;
-                        pKeyInfo = (*pOp).p4.pKeyInfo;
-                        p1_0 = (*pOp).p1;
-                        p2_0 = (*pOp).p2;
+                        n_1 = __pOp_ref.p3;
+                        pKeyInfo = __pOp_ref.p4.pKeyInfo;
+                        p1_0 = __pOp_ref.p1;
+                        p2_0 = __pOp_ref.p2;
                         i = 0 as ::core::ffi::c_int;
                         while i < n_1 {
                             idx = if !aPermute.is_null() {
@@ -1268,14 +1290,15 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                         current_block = 10856689599696957676;
                     }
     crate::opcodes_h::OP_IsTrue_1 =>  {
+                        let __pOp_ref = unsafe { &*pOp };
                         crate::src::src::vdbemem::sqlite3VdbeMemSetInt64(
                             
-                            aMem.offset((*pOp).p2 as isize) as *mut crate::src::src::vdbe::Mem as *mut crate::vdbeInt_h::sqlite3_value,
+                            aMem.offset(__pOp_ref.p2 as isize) as *mut crate::src::src::vdbe::Mem as *mut crate::vdbeInt_h::sqlite3_value,
                             (crate::src::src::vdbemem::sqlite3VdbeBooleanValue(
                                 
-                                aMem.offset((*pOp).p1 as isize) as *mut crate::src::src::vdbe::Mem as *mut crate::vdbeInt_h::sqlite3_value,
-                                (*pOp).p3,
-                            ) ^ (*pOp).p4.i) as crate::src::ext::rtree::rtree::i64_0,
+                                aMem.offset(__pOp_ref.p1 as isize) as *mut crate::src::src::vdbe::Mem as *mut crate::vdbeInt_h::sqlite3_value,
+                                __pOp_ref.p3,
+                            ) ^ __pOp_ref.p4.i) as crate::src::ext::rtree::rtree::i64_0,
                         );
                         current_block = 5783071609795492627;
                     }
@@ -1308,10 +1331,10 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                     }
     crate::opcodes_h::OP_Once =>  {
                         let mut iAddr: crate::src::ext::rtree::rtree::u32_0 = 0;
-                        if !(*p).pFrame.is_null() {
-                            iAddr = pOp.offset_from((*p).aOp) as ::core::ffi::c_long
+                        if !__p_ref.pFrame.is_null() {
+                            iAddr = pOp.offset_from(__p_ref.aOp) as ::core::ffi::c_long
                                 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::u32_0;
-                            if *(*(*p).pFrame)
+                            if *(*__p_ref.pFrame)
                                 .aOnce
                                 .offset(iAddr.wrapping_div(8 as crate::src::ext::rtree::rtree::u32_0) as isize)
                                 as ::core::ffi::c_int
@@ -1320,7 +1343,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                             {
                                 current_block = 9512719473022792396;
                             } else {
-                                let ref mut fresh2 = *(*(*p).pFrame)
+                                let ref mut fresh2 = *(*__p_ref.pFrame)
                                     .aOnce
                                     .offset(iAddr.wrapping_div(8 as crate::src::ext::rtree::rtree::u32_0) as isize);
                                 *fresh2 = (*fresh2 as ::core::ffi::c_int
@@ -1328,7 +1351,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                                     as crate::src::ext::rtree::rtree::u8_0;
                                 current_block = 11642008854238505342;
                             }
-                        } else if (*(*p).aOp.offset(0 as isize)).p1
+                        } else if (*__p_ref.aOp.offset(0 as isize)).p1
                             == (*pOp).p1
                         {
                             current_block = 9512719473022792396;
@@ -1338,7 +1361,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                         match current_block {
                             9512719473022792396 => {}
                             _ => {
-                                (*pOp).p1 = (*(*p).aOp.offset(0 as isize)).p1;
+                                (*pOp).p1 = (*__p_ref.aOp.offset(0 as isize)).p1;
                                 current_block = 5783071609795492627;
                             }
                         }
@@ -1383,7 +1406,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                         let mut typeMask: crate::src::fts5::u16_0 = 0;
                         let mut serialType: crate::src::ext::rtree::rtree::u32_0 = 0;
                         if (*pOp).p1 >= 0 as ::core::ffi::c_int {
-                            pC = *(*p).apCsr.offset((*pOp).p1 as isize);
+                            pC = *__p_ref.apCsr.offset((*pOp).p1 as isize);
                             if (*pOp).p3 < (*pC).nHdrParsed as ::core::ffi::c_int {
                                 serialType = *(&raw mut (*pC).aType as *mut crate::src::ext::rtree::rtree::u32_0)
                                     .offset((*pOp).p3 as isize);
@@ -1452,7 +1475,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                     }
     crate::opcodes_h::OP_IfNullRow_1 =>  {
                         let mut pC_0: *mut crate::vdbeInt_h::VdbeCursor = ::core::ptr::null_mut::<crate::vdbeInt_h::VdbeCursor>();
-                        pC_0 = *(*p).apCsr.offset((*pOp).p1 as isize);
+                        pC_0 = *__p_ref.apCsr.offset((*pOp).p1 as isize);
                         if !pC_0.is_null() && (*pC_0).nullRow as ::core::ffi::c_int != 0 {
                             crate::src::src::vdbemem::sqlite3VdbeMemSetNull(aMem.offset((*pOp).p3 as isize) as *mut crate::vdbeInt_h::sqlite3_value);
                             current_block = 9512719473022792396;
@@ -1475,11 +1498,11 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                         let mut offset64: crate::src::ext::rtree::rtree::u64_0 = 0;
                         let mut t: crate::src::ext::rtree::rtree::u32_0 = 0;
                         let mut pReg: *mut crate::src::src::vdbe::Mem = ::core::ptr::null_mut::<crate::src::src::vdbe::Mem>();
-                        pC_1 = *(*p).apCsr.offset((*pOp).p1 as isize);
+                        pC_1 = *__p_ref.apCsr.offset((*pOp).p1 as isize);
                         p2_1 = (*pOp).p2 as crate::src::ext::rtree::rtree::u32_0;
                         loop {
                             aOffset = (*pC_1).aOffset;
-                            if (*pC_1).cacheStatus != (*p).cacheCtr {
+                            if (*pC_1).cacheStatus != __p_ref.cacheCtr {
                                 if (*pC_1).nullRow != 0 {
                                     if (*pC_1).eCurType as ::core::ffi::c_int == crate::vdbeInt_h::CURTYPE_PSEUDO
                                         && (*pC_1).seekResult > 0 as ::core::ffi::c_int
@@ -1539,9 +1562,10 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                         }
                         match current_block {
                             13246752163818097729 => {
-                                (*pC_1).payloadSize = crate::src::src::btree::sqlite3BtreePayloadSize(pCrsr);
-                                (*pC_1).aRow =
-                                    crate::src::src::btree::sqlite3BtreePayloadFetch(pCrsr, &raw mut (*pC_1).szRow)
+                                let __pC_1_ref = unsafe { &mut *pC_1 };
+                                __pC_1_ref.payloadSize = crate::src::src::btree::sqlite3BtreePayloadSize(pCrsr);
+                                __pC_1_ref.aRow =
+                                    crate::src::src::btree::sqlite3BtreePayloadFetch(pCrsr, &raw mut __pC_1_ref.szRow)
                                         as *const crate::src::ext::rtree::rtree::u8_0;
                                 current_block = 4580464979391500237;
                             }
@@ -1551,46 +1575,48 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                                 current_block = 14389784149831352918;
                             }
                             9495722216958262053 => {
-                                pReg = aMem.offset((*pC_1).seekResult as isize) as *mut crate::src::src::vdbe::Mem;
-                                (*pC_1).szRow = (*pReg).n as crate::src::ext::rtree::rtree::u32_0;
-                                (*pC_1).payloadSize = (*pC_1).szRow;
-                                (*pC_1).aRow = (*pReg).z as *mut crate::src::ext::rtree::rtree::u8_0;
+                                let __pC_1_ref = unsafe { &mut *pC_1 };
+                                pReg = aMem.offset(__pC_1_ref.seekResult as isize) as *mut crate::src::src::vdbe::Mem;
+                                __pC_1_ref.szRow = (*pReg).n as crate::src::ext::rtree::rtree::u32_0;
+                                __pC_1_ref.payloadSize = __pC_1_ref.szRow;
+                                __pC_1_ref.aRow = (*pReg).z as *mut crate::src::ext::rtree::rtree::u8_0;
                                 current_block = 4580464979391500237;
                             }
                             _ => {}
                         }
                         match current_block {
                             4580464979391500237 => {
-                                (*pC_1).cacheStatus = (*p).cacheCtr;
+                                let __pC_1_ref = unsafe { &mut *pC_1 };
+                                __pC_1_ref.cacheStatus = __p_ref.cacheCtr;
                                 let ref mut fresh3 =
                                     *aOffset.offset(0 as isize);
                                 *fresh3 =
-                                    *(*pC_1).aRow.offset(0 as isize) as crate::src::ext::rtree::rtree::u32_0;
+                                    *__pC_1_ref.aRow.offset(0 as isize) as crate::src::ext::rtree::rtree::u32_0;
                                 if *fresh3 < 0x80 as crate::src::ext::rtree::rtree::u32_0 {
-                                    (*pC_1).iHdrOffset = 1 as crate::src::ext::rtree::rtree::u32_0;
+                                    __pC_1_ref.iHdrOffset = 1 as crate::src::ext::rtree::rtree::u32_0;
                                 } else {
-                                    (*pC_1).iHdrOffset = crate::src::src::util::sqlite3GetVarint32(
-                                        (*pC_1).aRow as *const ::core::ffi::c_uchar,
+                                    __pC_1_ref.iHdrOffset = crate::src::src::util::sqlite3GetVarint32(
+                                        __pC_1_ref.aRow as *const ::core::ffi::c_uchar,
                                         aOffset,
                                     )
                                         as crate::src::ext::rtree::rtree::u32_0;
                                 }
-                                (*pC_1).nHdrParsed = 0 as crate::src::fts5::u16_0;
-                                if (*pC_1).szRow < *aOffset.offset(0 as isize)
+                                __pC_1_ref.nHdrParsed = 0 as crate::src::fts5::u16_0;
+                                if __pC_1_ref.szRow < *aOffset.offset(0 as isize)
                                 {
-                                    (*pC_1).aRow = ::core::ptr::null::<crate::src::ext::rtree::rtree::u8_0>();
-                                    (*pC_1).szRow = 0 as crate::src::ext::rtree::rtree::u32_0;
+                                    __pC_1_ref.aRow = ::core::ptr::null::<crate::src::ext::rtree::rtree::u8_0>();
+                                    __pC_1_ref.szRow = 0 as crate::src::ext::rtree::rtree::u32_0;
                                     if *aOffset.offset(0 as isize)
                                         > 98307 as crate::src::ext::rtree::rtree::u32_0
                                         || *aOffset.offset(0 as isize)
-                                            > (*pC_1).payloadSize
+                                            > __pC_1_ref.payloadSize
                                     {
                                         current_block = 1447722815581200623;
                                     } else {
                                         current_block = 9147150541555199843;
                                     }
                                 } else {
-                                    zData = (*pC_1).aRow;
+                                    zData = __pC_1_ref.aRow;
                                     current_block = 13485359645741033759;
                                 }
                             }
@@ -1632,16 +1658,17 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                         }
                         match current_block {
                             13485359645741033759 => {
-                                i_0 = (*pC_1).nHdrParsed as ::core::ffi::c_int;
+                                let __pC_1_ref = unsafe { &mut *pC_1 };
+                                i_0 = __pC_1_ref.nHdrParsed as ::core::ffi::c_int;
                                 offset64 = *aOffset.offset(i_0 as isize) as crate::src::ext::rtree::rtree::u64_0;
-                                zHdr = zData.offset((*pC_1).iHdrOffset as isize);
+                                zHdr = zData.offset(__pC_1_ref.iHdrOffset as isize);
                                 zEndHdr =
                                     zData
                                         .offset(*aOffset.offset(0 as isize)
                                             as isize);
                                 loop {
                                     t = *zHdr.offset(0 as isize) as crate::src::ext::rtree::rtree::u32_0;
-                                    let ref mut fresh4 = *(&raw mut (*pC_1).aType as *mut crate::src::ext::rtree::rtree::u32_0)
+                                    let ref mut fresh4 = *(&raw mut __pC_1_ref.aType as *mut crate::src::ext::rtree::rtree::u32_0)
                                         .offset(i_0 as isize);
                                     *fresh4 = t;
                                     if *fresh4 < 0x80 as crate::src::ext::rtree::rtree::u32_0 {
@@ -1656,7 +1683,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                                         )
                                             as ::core::ffi::c_int
                                             as isize);
-                                        *(&raw mut (*pC_1).aType as *mut crate::src::ext::rtree::rtree::u32_0)
+                                        *(&raw mut __pC_1_ref.aType as *mut crate::src::ext::rtree::rtree::u32_0)
                                             .offset(i_0 as isize) = t;
                                         offset64 = offset64
                                             .wrapping_add(crate::src::src::vdbeaux::sqlite3VdbeSerialTypeLen(t) as crate::src::ext::rtree::rtree::u64_0);
@@ -1669,8 +1696,8 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                                     }
                                 }
                                 if zHdr >= zEndHdr
-                                    && (zHdr > zEndHdr || offset64 != (*pC_1).payloadSize as crate::src::ext::rtree::rtree::u64_0)
-                                    || offset64 > (*pC_1).payloadSize as crate::src::ext::rtree::rtree::u64_0
+                                    && (zHdr > zEndHdr || offset64 != __pC_1_ref.payloadSize as crate::src::ext::rtree::rtree::u64_0)
+                                    || offset64 > __pC_1_ref.payloadSize as crate::src::ext::rtree::rtree::u64_0
                                 {
                                     if *aOffset.offset(0 as isize)
                                         == 0 as crate::src::ext::rtree::rtree::u32_0
@@ -1679,7 +1706,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                                         zHdr = zEndHdr;
                                         current_block = 14847419611938267583;
                                     } else {
-                                        if (*pC_1).aRow.is_null() {
+                                        if __pC_1_ref.aRow.is_null() {
                                             crate::src::src::vdbemem::sqlite3VdbeMemRelease(&raw mut sMem as *mut _ as *mut crate::vdbeInt_h::sqlite3_value);
                                         }
                                         current_block = 1447722815581200623;
@@ -1690,10 +1717,10 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                                 match current_block {
                                     1447722815581200623 => {}
                                     _ => {
-                                        (*pC_1).nHdrParsed = i_0 as crate::src::fts5::u16_0;
-                                        (*pC_1).iHdrOffset =
+                                        __pC_1_ref.nHdrParsed = i_0 as crate::src::fts5::u16_0;
+                                        __pC_1_ref.iHdrOffset =
                                             zHdr.offset_from(zData) as ::core::ffi::c_long as crate::src::ext::rtree::rtree::u32_0;
-                                        if (*pC_1).aRow.is_null() {
+                                        if __pC_1_ref.aRow.is_null() {
                                             crate::src::src::vdbemem::sqlite3VdbeMemRelease(&raw mut sMem as *mut _ as *mut crate::vdbeInt_h::sqlite3_value);
                                         }
                                         current_block = 13908727566713266484;
@@ -1775,9 +1802,10 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                                                     .wrapping_sub(12 as crate::src::ext::rtree::rtree::u32_0)
                                                     .wrapping_div(2 as crate::src::ext::rtree::rtree::u32_0)
                                                     as ::core::ffi::c_int;
-                                                (*pDest).n = len;
-                                                (*pDest).enc = encoding;
-                                                if (*pDest).szMalloc < len + 2 as ::core::ffi::c_int
+                                                let __pDest_ref = unsafe { &mut *pDest };
+                                                __pDest_ref.n = len;
+                                                __pDest_ref.enc = encoding;
+                                                if __pDest_ref.szMalloc < len + 2 as ::core::ffi::c_int
                                                 {
                                                     if len
                                                         > (*db).aLimit[crate::sqlite3_h::SQLITE_LIMIT_LENGTH as usize]
@@ -1785,7 +1813,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                                                         current_block = 7113757447962609068;
                                                         break;
                                                     }
-                                                    (*pDest).flags = crate::vdbeInt_h::MEM_Null as crate::src::fts5::u16_0;
+                                                    __pDest_ref.flags = crate::vdbeInt_h::MEM_Null as crate::src::fts5::u16_0;
                                                     if crate::src::src::vdbemem::sqlite3VdbeMemGrow(
                                                         
                                                         pDest as *mut crate::vdbeInt_h::sqlite3_value,
@@ -1797,19 +1825,19 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                                                         break;
                                                     }
                                                 } else {
-                                                    (*pDest).z = (*pDest).zMalloc;
+                                                    __pDest_ref.z = __pDest_ref.zMalloc;
                                                 }
                                                 ::libc::memcpy(
-                                                    (*pDest).z as *mut ::core::ffi::c_void,
+                                                    __pDest_ref.z as *mut ::core::ffi::c_void,
                                                     zData as *const ::core::ffi::c_void,
                                                     len as crate::__stddef_size_t_h::size_t,
                                                 );
-                                                *(*pDest).z.offset(len as isize) =
+                                                *__pDest_ref.z.offset(len as isize) =
                                                     0 as ::core::ffi::c_char;
-                                                *(*pDest).z.offset(
+                                                *__pDest_ref.z.offset(
                                                     (len + 1 as ::core::ffi::c_int) as isize,
                                                 ) = 0 as ::core::ffi::c_char;
-                                                (*pDest).flags = aFlag[(t & 1 as crate::src::ext::rtree::rtree::u32_0) as usize];
+                                                __pDest_ref.flags = aFlag[(t & 1 as crate::src::ext::rtree::rtree::u32_0) as usize];
                                             }
                                         } else {
                                             let mut p5: crate::src::ext::rtree::rtree::u8_0 = 0;
@@ -1839,7 +1867,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                                                     p2_1 as ::core::ffi::c_int,
                                                     t,
                                                     *aOffset.offset(p2_1 as isize) as crate::src::ext::rtree::rtree::i64_0,
-                                                    (*p).cacheCtr,
+                                                    __p_ref.cacheCtr,
                                                     colCacheCtr,
                                                     pDest,
                                                 );
@@ -1871,14 +1899,15 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                         let mut aCol: *mut crate::sqliteInt_h::Column = ::core::ptr::null_mut::<crate::sqliteInt_h::Column>();
                         let mut i_1: ::core::ffi::c_int = 0;
                         let mut nCol: ::core::ffi::c_int = 0;
-                        pTab = (*pOp).p4.pTab;
+                        let __pOp_ref = unsafe { &*pOp };
+                        pTab = __pOp_ref.p4.pTab;
                         aCol = (*pTab).aCol;
-                        pIn1 = aMem.offset((*pOp).p1 as isize) as *mut crate::src::src::vdbe::Mem;
-                        if (*pOp).p3 < 2 as ::core::ffi::c_int {
+                        pIn1 = aMem.offset(__pOp_ref.p1 as isize) as *mut crate::src::src::vdbe::Mem;
+                        if __pOp_ref.p3 < 2 as ::core::ffi::c_int {
                             i_1 = 0 as ::core::ffi::c_int;
                             nCol = (*pTab).nCol as ::core::ffi::c_int;
                         } else {
-                            i_1 = (*pOp).p3 - 2 as ::core::ffi::c_int;
+                            i_1 = __pOp_ref.p3 - 2 as ::core::ffi::c_int;
                             nCol = i_1 + 1 as ::core::ffi::c_int;
                         }
                         loop {
@@ -1889,14 +1918,14 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                             if (*aCol.offset(i_1 as isize)).colFlags as ::core::ffi::c_int
                                 & crate::sqliteInt_h::COLFLAG_GENERATED
                                 != 0 as ::core::ffi::c_int
-                                && (*pOp).p3 < 2 as ::core::ffi::c_int
+                                && __pOp_ref.p3 < 2 as ::core::ffi::c_int
                             {
                                 if (*aCol.offset(i_1 as isize)).colFlags as ::core::ffi::c_int
                                     & crate::sqliteInt_h::COLFLAG_VIRTUAL
                                     != 0 as ::core::ffi::c_int
                                 {
                                     current_block = 9099392116323677207;
-                                } else if (*pOp).p3 != 0 {
+                                } else if __pOp_ref.p3 != 0 {
                                     pIn1 = pIn1.offset(1);
                                     current_block = 9099392116323677207;
                                 } else {
@@ -1959,22 +1988,24 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                                                                     >= -(140737488355328
                                                                         as ::core::ffi::c_longlong)
                                                             {
-                                                                (*pIn1).flags = ((*pIn1).flags
+                                                                let __pIn1_ref = unsafe { &mut *pIn1 };
+                                                                __pIn1_ref.flags = (__pIn1_ref.flags
                                                                     as ::core::ffi::c_int
                                                                     | crate::vdbeInt_h::MEM_IntReal)
                                                                     as crate::src::fts5::u16_0;
-                                                                (*pIn1).flags = ((*pIn1).flags
+                                                                __pIn1_ref.flags = (__pIn1_ref.flags
                                                                     as ::core::ffi::c_int
                                                                     & !crate::vdbeInt_h::MEM_Int)
                                                                     as crate::src::fts5::u16_0;
                                                             } else {
-                                                                (*pIn1).u.r = (*pIn1).u.i
+                                                                let __pIn1_ref = unsafe { &mut *pIn1 };
+                                                                __pIn1_ref.u.r = __pIn1_ref.u.i
                                                                     as ::core::ffi::c_double;
-                                                                (*pIn1).flags = ((*pIn1).flags
+                                                                __pIn1_ref.flags = (__pIn1_ref.flags
                                                                     as ::core::ffi::c_int
                                                                     | crate::vdbeInt_h::MEM_Real)
                                                                     as crate::src::fts5::u16_0;
-                                                                (*pIn1).flags = ((*pIn1).flags
+                                                                __pIn1_ref.flags = (__pIn1_ref.flags
                                                                     as ::core::ffi::c_int
                                                                     & !crate::vdbeInt_h::MEM_Int)
                                                                     as crate::src::fts5::u16_0;
@@ -2033,22 +2064,24 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                                                                     >= -(140737488355328
                                                                         as ::core::ffi::c_longlong)
                                                             {
-                                                                (*pIn1).flags = ((*pIn1).flags
+                                                                let __pIn1_ref = unsafe { &mut *pIn1 };
+                                                                __pIn1_ref.flags = (__pIn1_ref.flags
                                                                     as ::core::ffi::c_int
                                                                     | crate::vdbeInt_h::MEM_IntReal)
                                                                     as crate::src::fts5::u16_0;
-                                                                (*pIn1).flags = ((*pIn1).flags
+                                                                __pIn1_ref.flags = (__pIn1_ref.flags
                                                                     as ::core::ffi::c_int
                                                                     & !crate::vdbeInt_h::MEM_Int)
                                                                     as crate::src::fts5::u16_0;
                                                             } else {
-                                                                (*pIn1).u.r = (*pIn1).u.i
+                                                                let __pIn1_ref = unsafe { &mut *pIn1 };
+                                                                __pIn1_ref.u.r = __pIn1_ref.u.i
                                                                     as ::core::ffi::c_double;
-                                                                (*pIn1).flags = ((*pIn1).flags
+                                                                __pIn1_ref.flags = (__pIn1_ref.flags
                                                                     as ::core::ffi::c_int
                                                                     | crate::vdbeInt_h::MEM_Real)
                                                                     as crate::src::fts5::u16_0;
-                                                                (*pIn1).flags = ((*pIn1).flags
+                                                                __pIn1_ref.flags = (__pIn1_ref.flags
                                                                     as ::core::ffi::c_int
                                                                     & !crate::vdbeInt_h::MEM_Int)
                                                                     as crate::src::fts5::u16_0;
@@ -2106,22 +2139,24 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                                                                     >= -(140737488355328
                                                                         as ::core::ffi::c_longlong)
                                                             {
-                                                                (*pIn1).flags = ((*pIn1).flags
+                                                                let __pIn1_ref = unsafe { &mut *pIn1 };
+                                                                __pIn1_ref.flags = (__pIn1_ref.flags
                                                                     as ::core::ffi::c_int
                                                                     | crate::vdbeInt_h::MEM_IntReal)
                                                                     as crate::src::fts5::u16_0;
-                                                                (*pIn1).flags = ((*pIn1).flags
+                                                                __pIn1_ref.flags = (__pIn1_ref.flags
                                                                     as ::core::ffi::c_int
                                                                     & !crate::vdbeInt_h::MEM_Int)
                                                                     as crate::src::fts5::u16_0;
                                                             } else {
-                                                                (*pIn1).u.r = (*pIn1).u.i
+                                                                let __pIn1_ref = unsafe { &mut *pIn1 };
+                                                                __pIn1_ref.u.r = __pIn1_ref.u.i
                                                                     as ::core::ffi::c_double;
-                                                                (*pIn1).flags = ((*pIn1).flags
+                                                                __pIn1_ref.flags = (__pIn1_ref.flags
                                                                     as ::core::ffi::c_int
                                                                     | crate::vdbeInt_h::MEM_Real)
                                                                     as crate::src::fts5::u16_0;
-                                                                (*pIn1).flags = ((*pIn1).flags
+                                                                __pIn1_ref.flags = (__pIn1_ref.flags
                                                                     as ::core::ffi::c_int
                                                                     & !crate::vdbeInt_h::MEM_Int)
                                                                     as crate::src::fts5::u16_0;
@@ -2179,22 +2214,24 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                                                                     >= -(140737488355328
                                                                         as ::core::ffi::c_longlong)
                                                             {
-                                                                (*pIn1).flags = ((*pIn1).flags
+                                                                let __pIn1_ref = unsafe { &mut *pIn1 };
+                                                                __pIn1_ref.flags = (__pIn1_ref.flags
                                                                     as ::core::ffi::c_int
                                                                     | crate::vdbeInt_h::MEM_IntReal)
                                                                     as crate::src::fts5::u16_0;
-                                                                (*pIn1).flags = ((*pIn1).flags
+                                                                __pIn1_ref.flags = (__pIn1_ref.flags
                                                                     as ::core::ffi::c_int
                                                                     & !crate::vdbeInt_h::MEM_Int)
                                                                     as crate::src::fts5::u16_0;
                                                             } else {
-                                                                (*pIn1).u.r = (*pIn1).u.i
+                                                                let __pIn1_ref = unsafe { &mut *pIn1 };
+                                                                __pIn1_ref.u.r = __pIn1_ref.u.i
                                                                     as ::core::ffi::c_double;
-                                                                (*pIn1).flags = ((*pIn1).flags
+                                                                __pIn1_ref.flags = (__pIn1_ref.flags
                                                                     as ::core::ffi::c_int
                                                                     | crate::vdbeInt_h::MEM_Real)
                                                                     as crate::src::fts5::u16_0;
-                                                                (*pIn1).flags = ((*pIn1).flags
+                                                                __pIn1_ref.flags = (__pIn1_ref.flags
                                                                     as ::core::ffi::c_int
                                                                     & !crate::vdbeInt_h::MEM_Int)
                                                                     as crate::src::fts5::u16_0;
@@ -2264,16 +2301,18 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                                 if (*pIn1).u.i <= 140737488355327 as ::core::ffi::c_longlong
                                     && (*pIn1).u.i >= -(140737488355328 as ::core::ffi::c_longlong)
                                 {
-                                    (*pIn1).flags = ((*pIn1).flags as ::core::ffi::c_int
+                                    let __pIn1_ref = unsafe { &mut *pIn1 };
+                                    __pIn1_ref.flags = (__pIn1_ref.flags as ::core::ffi::c_int
                                         | crate::vdbeInt_h::MEM_IntReal)
                                         as crate::src::fts5::u16_0;
-                                    (*pIn1).flags =
-                                        ((*pIn1).flags as ::core::ffi::c_int & !crate::vdbeInt_h::MEM_Int) as crate::src::fts5::u16_0;
+                                    __pIn1_ref.flags =
+                                        (__pIn1_ref.flags as ::core::ffi::c_int & !crate::vdbeInt_h::MEM_Int) as crate::src::fts5::u16_0;
                                 } else {
-                                    (*pIn1).u.r = (*pIn1).u.i as ::core::ffi::c_double;
-                                    (*pIn1).flags =
-                                        ((*pIn1).flags as ::core::ffi::c_int | crate::vdbeInt_h::MEM_Real) as crate::src::fts5::u16_0;
-                                    (*pIn1).flags = ((*pIn1).flags as ::core::ffi::c_int
+                                    let __pIn1_ref = unsafe { &mut *pIn1 };
+                                    __pIn1_ref.u.r = __pIn1_ref.u.i as ::core::ffi::c_double;
+                                    __pIn1_ref.flags =
+                                        (__pIn1_ref.flags as ::core::ffi::c_int | crate::vdbeInt_h::MEM_Real) as crate::src::fts5::u16_0;
+                                    __pIn1_ref.flags = (__pIn1_ref.flags as ::core::ffi::c_int
                                         & !(crate::vdbeInt_h::MEM_Int | crate::vdbeInt_h::MEM_Str))
                                         as crate::src::fts5::u16_0;
                                 }
@@ -2308,13 +2347,14 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                         nData = 0 as crate::src::ext::rtree::rtree::u64_0;
                         nHdr = 0 as ::core::ffi::c_int;
                         nZero = 0 as crate::src::ext::rtree::rtree::i64_0;
-                        nField = (*pOp).p1;
-                        zAffinity_0 = (*pOp).p4.z;
+                        let __pOp_ref = unsafe { &*pOp };
+                        nField = __pOp_ref.p1;
+                        zAffinity_0 = __pOp_ref.p4.z;
                         pData0 = aMem.offset(nField as isize) as *mut crate::src::src::vdbe::Mem;
-                        nField = (*pOp).p2;
+                        nField = __pOp_ref.p2;
                         pLast =
                             pData0.offset((nField - 1 as ::core::ffi::c_int) as isize) as *mut crate::src::src::vdbe::Mem;
-                        pOut = aMem.offset((*pOp).p3 as isize) as *mut crate::src::src::vdbe::Mem;
+                        pOut = aMem.offset(__pOp_ref.p3 as isize) as *mut crate::src::src::vdbe::Mem;
                         if !zAffinity_0.is_null() {
                             pRec = pData0;
                             loop {
@@ -2328,10 +2368,11 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                                     == crate::sqliteInt_h::SQLITE_AFF_REAL
                                     && (*pRec).flags as ::core::ffi::c_int & crate::vdbeInt_h::MEM_Int != 0
                                 {
-                                    (*pRec).flags = ((*pRec).flags as ::core::ffi::c_int
+                                    let __pRec_ref = unsafe { &mut *pRec };
+                                    __pRec_ref.flags = (__pRec_ref.flags as ::core::ffi::c_int
                                         | crate::vdbeInt_h::MEM_IntReal)
                                         as crate::src::fts5::u16_0;
-                                    (*pRec).flags = ((*pRec).flags as ::core::ffi::c_int
+                                    __pRec_ref.flags = (__pRec_ref.flags as ::core::ffi::c_int
                                         & !(0x4 as ::core::ffi::c_int))
                                         as crate::src::fts5::u16_0;
                                 }
@@ -2364,7 +2405,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                                 nHdr += 1;
                                 if uu <= 127 as crate::src::ext::rtree::rtree::u64_0 {
                                     if i_2 & 1 as crate::src::ext::rtree::rtree::i64_0 == i_2
-                                        && (*p).minWriteFileFormat as ::core::ffi::c_int
+                                        && __p_ref.minWriteFileFormat as ::core::ffi::c_int
                                             >= 4 as ::core::ffi::c_int
                                     {
                                         (*pRec).uTemp = (8 as crate::src::ext::rtree::rtree::u32_0).wrapping_add(uu as crate::src::ext::rtree::rtree::u32_0);
@@ -2387,14 +2428,15 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                                 } else {
                                     nData = nData.wrapping_add(8 as crate::src::ext::rtree::rtree::u64_0);
                                     if (*pRec).flags as ::core::ffi::c_int & crate::vdbeInt_h::MEM_IntReal != 0 {
-                                        (*pRec).u.r = (*pRec).u.i as ::core::ffi::c_double;
-                                        (*pRec).flags = ((*pRec).flags as ::core::ffi::c_int
+                                        let __pRec_ref = unsafe { &mut *pRec };
+                                        __pRec_ref.u.r = __pRec_ref.u.i as ::core::ffi::c_double;
+                                        __pRec_ref.flags = (__pRec_ref.flags as ::core::ffi::c_int
                                             & !crate::vdbeInt_h::MEM_IntReal)
                                             as crate::src::fts5::u16_0;
-                                        (*pRec).flags = ((*pRec).flags as ::core::ffi::c_int
+                                        __pRec_ref.flags = (__pRec_ref.flags as ::core::ffi::c_int
                                             | crate::vdbeInt_h::MEM_Real)
                                             as crate::src::fts5::u16_0;
-                                        (*pRec).uTemp = 7 as crate::src::ext::rtree::rtree::u32_0;
+                                        __pRec_ref.uTemp = 7 as crate::src::ext::rtree::rtree::u32_0;
                                     } else {
                                         (*pRec).uTemp = 6 as crate::src::ext::rtree::rtree::u32_0;
                                     }
@@ -2404,33 +2446,34 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                                 nData = nData.wrapping_add(8 as crate::src::ext::rtree::rtree::u64_0);
                                 (*pRec).uTemp = 7 as crate::src::ext::rtree::rtree::u32_0;
                             } else {
-                                len_0 = (*pRec).n as crate::src::ext::rtree::rtree::u32_0;
+                                let __pRec_ref = unsafe { &mut *pRec };
+                                len_0 = __pRec_ref.n as crate::src::ext::rtree::rtree::u32_0;
                                 serial_type = len_0
                                     .wrapping_mul(2 as crate::src::ext::rtree::rtree::u32_0)
                                     .wrapping_add(12 as crate::src::ext::rtree::rtree::u32_0)
                                     .wrapping_add(
-                                        ((*pRec).flags as ::core::ffi::c_int & crate::vdbeInt_h::MEM_Str
+                                        (__pRec_ref.flags as ::core::ffi::c_int & crate::vdbeInt_h::MEM_Str
                                             != 0 as ::core::ffi::c_int)
                                             as ::core::ffi::c_int
                                             as crate::src::ext::rtree::rtree::u32_0,
                                     );
-                                if (*pRec).flags as ::core::ffi::c_int & crate::vdbeInt_h::MEM_Zero != 0 {
+                                if __pRec_ref.flags as ::core::ffi::c_int & crate::vdbeInt_h::MEM_Zero != 0 {
                                     serial_type = serial_type.wrapping_add(
-                                        ((*pRec).u.nZero as crate::src::ext::rtree::rtree::u32_0).wrapping_mul(2 as crate::src::ext::rtree::rtree::u32_0),
+                                        (__pRec_ref.u.nZero as crate::src::ext::rtree::rtree::u32_0).wrapping_mul(2 as crate::src::ext::rtree::rtree::u32_0),
                                     );
                                     if nData != 0 {
                                         if crate::src::src::vdbemem::sqlite3VdbeMemExpandBlob(pRec as *mut crate::vdbeInt_h::sqlite3_value) != 0 {
                                             current_block = 2471432538116610086;
                                             break 's_109;
                                         }
-                                        len_0 = len_0.wrapping_add((*pRec).u.nZero as crate::src::ext::rtree::rtree::u32_0);
+                                        len_0 = len_0.wrapping_add(__pRec_ref.u.nZero as crate::src::ext::rtree::rtree::u32_0);
                                     } else {
-                                        nZero += (*pRec).u.nZero as crate::src::ext::rtree::rtree::i64_0;
+                                        nZero += __pRec_ref.u.nZero as crate::src::ext::rtree::rtree::i64_0;
                                     }
                                 }
                                 nData = nData.wrapping_add(len_0 as crate::src::ext::rtree::rtree::u64_0);
                                 nHdr += crate::src::src::util::sqlite3VarintLen(serial_type as crate::src::ext::rtree::rtree::u64_0);
-                                (*pRec).uTemp = serial_type;
+                                __pRec_ref.uTemp = serial_type;
                             }
                             if pRec == pData0 {
                                 break;
@@ -2465,9 +2508,10 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                         (*pOut).n = nByte_0 as ::core::ffi::c_int;
                         (*pOut).flags = crate::vdbeInt_h::MEM_Blob as crate::src::fts5::u16_0;
                         if nZero != 0 {
-                            (*pOut).u.nZero = nZero as ::core::ffi::c_int;
-                            (*pOut).flags =
-                                ((*pOut).flags as ::core::ffi::c_int | crate::vdbeInt_h::MEM_Zero) as crate::src::fts5::u16_0;
+                            let __pOut_ref = unsafe { &mut *pOut };
+                            __pOut_ref.u.nZero = nZero as ::core::ffi::c_int;
+                            __pOut_ref.flags =
+                                (__pOut_ref.flags as ::core::ffi::c_int | crate::vdbeInt_h::MEM_Zero) as crate::src::fts5::u16_0;
                         }
                         updateMaxBlobsize(pOut);
                         zHdr_0 = (*pOut).z as *mut crate::src::ext::rtree::rtree::u8_0;
@@ -2578,12 +2622,13 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                                 *fresh7 = serial_type as crate::src::ext::rtree::rtree::u8_0;
                                 if serial_type >= 14 as crate::src::ext::rtree::rtree::u32_0 && (*pRec).n > 0 as ::core::ffi::c_int
                                 {
+                                    let __pRec_ref = unsafe { &*pRec };
                                     ::libc::memcpy(
                                         zPayload as *mut ::core::ffi::c_void,
-                                        (*pRec).z as *const ::core::ffi::c_void,
-                                        (*pRec).n as crate::__stddef_size_t_h::size_t,
+                                        __pRec_ref.z as *const ::core::ffi::c_void,
+                                        __pRec_ref.n as crate::__stddef_size_t_h::size_t,
                                     );
-                                    zPayload = zPayload.offset((*pRec).n as isize);
+                                    zPayload = zPayload.offset(__pRec_ref.n as isize);
                                 }
                             } else {
                                 zHdr_0 = zHdr_0.offset(crate::src::src::util::sqlite3PutVarint(
@@ -2591,12 +2636,13 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                                     serial_type as crate::src::ext::rtree::rtree::u64_0,
                                 ) as isize);
                                 if (*pRec).n != 0 {
+                                    let __pRec_ref = unsafe { &*pRec };
                                     ::libc::memcpy(
                                         zPayload as *mut ::core::ffi::c_void,
-                                        (*pRec).z as *const ::core::ffi::c_void,
-                                        (*pRec).n as crate::__stddef_size_t_h::size_t,
+                                        __pRec_ref.z as *const ::core::ffi::c_void,
+                                        __pRec_ref.n as crate::__stddef_size_t_h::size_t,
                                     );
-                                    zPayload = zPayload.offset((*pRec).n as isize);
+                                    zPayload = zPayload.offset(__pRec_ref.n as isize);
                                 }
                             }
                             if pRec == pLast {
@@ -2609,7 +2655,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
     crate::opcodes_h::OP_Count_1 =>  {
                         let mut nEntry: crate::src::ext::rtree::rtree::i64_0 = 0;
                         let mut pCrsr_0: *mut crate::btreeInt_h::BtCursor = ::core::ptr::null_mut::<crate::btreeInt_h::BtCursor>();
-                        pCrsr_0 = (**(*p).apCsr.offset((*pOp).p1 as isize)).uc.pCursor;
+                        pCrsr_0 = (**__p_ref.apCsr.offset((*pOp).p1 as isize)).uc.pCursor;
                         if (*pOp).p3 != 0 {
                             nEntry = crate::src::src::btree::sqlite3BtreeRowCountEst(pCrsr_0);
                         } else {
@@ -2667,24 +2713,26 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                                         as crate::src::ext::rtree::rtree::u64_0,
                                 ) as *mut crate::sqliteInt_h::Savepoint;
                                 if !pNew.is_null() {
-                                    (*pNew).zName = pNew.offset(1 as isize)
+                                    let __pNew_ref = unsafe { &mut *pNew };
+                                    __pNew_ref.zName = pNew.offset(1 as isize)
                                         as *mut crate::sqliteInt_h::Savepoint
                                         as *mut ::core::ffi::c_char;
                                     ::libc::memcpy(
-                                        (*pNew).zName as *mut ::core::ffi::c_void,
+                                        __pNew_ref.zName as *mut ::core::ffi::c_void,
                                         zName as *const ::core::ffi::c_void,
                                         (nName + 1 as ::core::ffi::c_int) as crate::__stddef_size_t_h::size_t,
                                     );
-                                    if (*db).autoCommit != 0 {
-                                        (*db).autoCommit = 0 as crate::src::ext::rtree::rtree::u8_0;
-                                        (*db).isTransactionSavepoint = 1 as crate::src::ext::rtree::rtree::u8_0;
+                                    let __db_ref = unsafe { &mut *db };
+                                    if __db_ref.autoCommit != 0 {
+                                        __db_ref.autoCommit = 0 as crate::src::ext::rtree::rtree::u8_0;
+                                        __db_ref.isTransactionSavepoint = 1 as crate::src::ext::rtree::rtree::u8_0;
                                     } else {
-                                        (*db).nSavepoint += 1;
+                                        __db_ref.nSavepoint += 1;
                                     }
-                                    (*pNew).pNext = (*db).pSavepoint;
-                                    (*db).pSavepoint = pNew;
-                                    (*pNew).nDeferredCons = (*db).nDeferredCons;
-                                    (*pNew).nDeferredImmCons = (*db).nDeferredImmCons;
+                                    __pNew_ref.pNext = __db_ref.pSavepoint;
+                                    __db_ref.pSavepoint = pNew;
+                                    __pNew_ref.nDeferredCons = __db_ref.nDeferredCons;
+                                    __pNew_ref.nDeferredImmCons = __db_ref.nDeferredImmCons;
                                 }
                             }
                         } else {
@@ -2729,15 +2777,15 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                                     }
                                     (*db).autoCommit = 1 as crate::src::ext::rtree::rtree::u8_0;
                                     if crate::src::src::vdbeaux::sqlite3VdbeHalt(p as *mut crate::vdbeInt_h::Vdbe) == crate::sqlite3_h::SQLITE_BUSY {
-                                        (*p).pc = pOp.offset_from(aOp) as ::core::ffi::c_long
+                                        __p_ref.pc = pOp.offset_from(aOp) as ::core::ffi::c_long
                                             as ::core::ffi::c_int;
                                         (*db).autoCommit = 0 as crate::src::ext::rtree::rtree::u8_0;
                                         rc = crate::sqlite3_h::SQLITE_BUSY;
-                                        (*p).rc = rc;
+                                        __p_ref.rc = rc;
                                         current_block = 10408586827809538586;
                                         break;
                                     } else {
-                                        rc = (*p).rc;
+                                        rc = __p_ref.rc;
                                         if rc != 0 {
                                             (*db).autoCommit = 0 as crate::src::ext::rtree::rtree::u8_0;
                                         } else {
@@ -2798,10 +2846,11 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                                     break;
                                 }
                                 while (*db).pSavepoint != pSavepoint {
-                                    pTmp = (*db).pSavepoint;
-                                    (*db).pSavepoint = (*pTmp).pNext;
+                                    let __db_ref = unsafe { &mut *db };
+                                    pTmp = __db_ref.pSavepoint;
+                                    __db_ref.pSavepoint = (*pTmp).pNext;
                                     crate::src::src::malloc::sqlite3DbFree(db as *mut crate::sqliteInt_h::sqlite3, pTmp as *mut ::core::ffi::c_void);
-                                    (*db).nSavepoint -= 1;
+                                    __db_ref.nSavepoint -= 1;
                                 }
                                 if p1_1 == crate::sqliteInt_h::SAVEPOINT_RELEASE {
                                     (*db).pSavepoint = (*pSavepoint).pNext;
@@ -2826,7 +2875,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                             current_block = 9863799879598557851;
                             break;
                         }
-                        if (*p).eVdbeState as ::core::ffi::c_int == crate::vdbeInt_h::VDBE_HALT_STATE {
+                        if __p_ref.eVdbeState as ::core::ffi::c_int == crate::vdbeInt_h::VDBE_HALT_STATE {
                             rc = crate::sqlite3_h::SQLITE_DONE;
                             current_block = 10408586827809538586;
                             break;
@@ -2865,17 +2914,17 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                                 (*db).autoCommit = desiredAutoCommit as crate::src::ext::rtree::rtree::u8_0;
                             }
                             if crate::src::src::vdbeaux::sqlite3VdbeHalt(p as *mut crate::vdbeInt_h::Vdbe) == crate::sqlite3_h::SQLITE_BUSY {
-                                (*p).pc = pOp.offset_from(aOp) as ::core::ffi::c_long
+                                __p_ref.pc = pOp.offset_from(aOp) as ::core::ffi::c_long
                                     as ::core::ffi::c_int;
                                 (*db).autoCommit =
                                     (1 as ::core::ffi::c_int - desiredAutoCommit) as crate::src::ext::rtree::rtree::u8_0;
                                 rc = crate::sqlite3_h::SQLITE_BUSY;
-                                (*p).rc = rc;
+                                __p_ref.rc = rc;
                                 current_block = 10408586827809538586;
                                 break;
                             } else {
                                 crate::src::src::main::sqlite3CloseSavepoints(db as *mut crate::sqliteInt_h::sqlite3);
-                                if (*p).rc == crate::sqlite3_h::SQLITE_OK {
+                                if __p_ref.rc == crate::sqlite3_h::SQLITE_OK {
                                     rc = crate::sqlite3_h::SQLITE_DONE;
                                 } else {
                                     rc = crate::sqlite3_h::SQLITE_ERROR;
@@ -2920,63 +2969,65 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                             current_block = 9863799879598557851;
                             break;
                         } else {
-                            pDb = (*db).aDb.offset((*pOp).p1 as isize) as *mut crate::sqliteInt_h::Db;
+                            let __pOp_ref = unsafe { &*pOp };
+                            pDb = (*db).aDb.offset(__pOp_ref.p1 as isize) as *mut crate::sqliteInt_h::Db;
                             pBt = (*pDb).pBt;
                             if !pBt.is_null() {
-                                rc = crate::src::src::btree::sqlite3BtreeBeginTrans(pBt, (*pOp).p2, &raw mut iMeta);
+                                rc = crate::src::src::btree::sqlite3BtreeBeginTrans(pBt, __pOp_ref.p2, &raw mut iMeta);
                                 if rc != crate::sqlite3_h::SQLITE_OK {
                                     if !(rc & 0xff as ::core::ffi::c_int == crate::sqlite3_h::SQLITE_BUSY) {
                                         current_block = 9863799879598557851;
                                         break;
                                     }
-                                    (*p).pc = pOp.offset_from(aOp) as ::core::ffi::c_long
+                                    __p_ref.pc = pOp.offset_from(aOp) as ::core::ffi::c_long
                                         as ::core::ffi::c_int;
-                                    (*p).rc = rc;
+                                    __p_ref.rc = rc;
                                     current_block = 10408586827809538586;
                                     break;
-                                } else if (*p).usesStmtJournal() as ::core::ffi::c_int != 0
-                                    && (*pOp).p2 != 0
+                                } else if __p_ref.usesStmtJournal() as ::core::ffi::c_int != 0
+                                    && __pOp_ref.p2 != 0
                                     && ((*db).autoCommit as ::core::ffi::c_int
                                         == 0 as ::core::ffi::c_int
                                         || (*db).nVdbeRead > 1 as ::core::ffi::c_int)
                                 {
-                                    if (*p).iStatement == 0 as ::core::ffi::c_int {
-                                        (*db).nStatement += 1;
-                                        (*p).iStatement = (*db).nSavepoint + (*db).nStatement;
+                                    if __p_ref.iStatement == 0 as ::core::ffi::c_int {
+                                        let __db_ref = unsafe { &mut *db };
+                                        __db_ref.nStatement += 1;
+                                        __p_ref.iStatement = __db_ref.nSavepoint + __db_ref.nStatement;
                                     }
                                     rc = crate::src::src::vtab::sqlite3VtabSavepoint(
                                         
                                         db as *mut crate::sqliteInt_h::sqlite3,
                                         crate::sqliteInt_h::SAVEPOINT_BEGIN,
-                                        (*p).iStatement - 1 as ::core::ffi::c_int,
+                                        __p_ref.iStatement - 1 as ::core::ffi::c_int,
                                     );
                                     if rc == crate::sqlite3_h::SQLITE_OK {
-                                        rc = crate::src::src::btree::sqlite3BtreeBeginStmt(pBt, (*p).iStatement);
+                                        rc = crate::src::src::btree::sqlite3BtreeBeginStmt(pBt, __p_ref.iStatement);
                                     }
-                                    (*p).nStmtDefCons = (*db).nDeferredCons;
-                                    (*p).nStmtDefImmCons = (*db).nDeferredImmCons;
+                                    __p_ref.nStmtDefCons = (*db).nDeferredCons;
+                                    __p_ref.nStmtDefImmCons = (*db).nDeferredImmCons;
                                 }
                             }
                             if rc == crate::sqlite3_h::SQLITE_OK
-                                && (*pOp).p5 as ::core::ffi::c_int != 0
-                                && (iMeta != (*pOp).p3
-                                    || (*(*pDb).pSchema).iGeneration != (*pOp).p4.i)
+                                && __pOp_ref.p5 as ::core::ffi::c_int != 0
+                                && (iMeta != __pOp_ref.p3
+                                    || (*(*pDb).pSchema).iGeneration != __pOp_ref.p4.i)
                             {
-                                crate::src::src::malloc::sqlite3DbFree(db as *mut crate::sqliteInt_h::sqlite3, (*p).zErrMsg as *mut ::core::ffi::c_void);
-                                (*p).zErrMsg = crate::src::src::malloc::sqlite3DbStrDup(
+                                crate::src::src::malloc::sqlite3DbFree(db as *mut crate::sqliteInt_h::sqlite3, __p_ref.zErrMsg as *mut ::core::ffi::c_void);
+                                __p_ref.zErrMsg = crate::src::src::malloc::sqlite3DbStrDup(
                                     
                                     db as *mut crate::sqliteInt_h::sqlite3,
                                     b"database schema has changed\0" as *const u8
                                         as *const ::core::ffi::c_char,
                                 );
-                                if (*(*(*db).aDb.offset((*pOp).p1 as isize)).pSchema).schema_cookie
+                                if (*(*(*db).aDb.offset(__pOp_ref.p1 as isize)).pSchema).schema_cookie
                                     != iMeta
                                 {
-                                    crate::src::src::build::sqlite3ResetOneSchema(db as *mut crate::sqliteInt_h::sqlite3, (*pOp).p1);
+                                    crate::src::src::build::sqlite3ResetOneSchema(db as *mut crate::sqliteInt_h::sqlite3, __pOp_ref.p1);
                                 }
-                                (*p).set_expired(1 as crate::sqliteInt_h::bft as crate::sqliteInt_h::bft);
+                                __p_ref.set_expired(1 as crate::sqliteInt_h::bft as crate::sqliteInt_h::bft);
                                 rc = crate::sqlite3_h::SQLITE_SCHEMA;
-                                (*p).set_changeCntOn(0 as crate::sqliteInt_h::bft as crate::sqliteInt_h::bft);
+                                __p_ref.set_changeCntOn(0 as crate::sqliteInt_h::bft as crate::sqliteInt_h::bft);
                             }
                             if rc != 0 {
                                 current_block = 9863799879598557851;
@@ -3002,20 +3053,21 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                     }
     crate::opcodes_h::OP_SetCookie_1 =>  {
                         let mut pDb_0: *mut crate::sqliteInt_h::Db = ::core::ptr::null_mut::<crate::sqliteInt_h::Db>();
-                        pDb_0 = (*db).aDb.offset((*pOp).p1 as isize) as *mut crate::sqliteInt_h::Db;
-                        rc = crate::src::src::btree::sqlite3BtreeUpdateMeta((*pDb_0).pBt, (*pOp).p2, (*pOp).p3 as crate::src::ext::rtree::rtree::u32_0);
-                        if (*pOp).p2 == crate::src::src::btree::BTREE_SCHEMA_VERSION {
+                        let __pOp_ref = unsafe { &mut *pOp };
+                        pDb_0 = (*db).aDb.offset(__pOp_ref.p1 as isize) as *mut crate::sqliteInt_h::Db;
+                        rc = crate::src::src::btree::sqlite3BtreeUpdateMeta((*pDb_0).pBt, __pOp_ref.p2, __pOp_ref.p3 as crate::src::ext::rtree::rtree::u32_0);
+                        if __pOp_ref.p2 == crate::src::src::btree::BTREE_SCHEMA_VERSION {
                             *(&raw mut (*(*pDb_0).pSchema).schema_cookie as *mut crate::src::ext::rtree::rtree::u32_0) =
-                                (*(&raw mut (*pOp).p3 as *mut crate::src::ext::rtree::rtree::u32_0))
-                                    .wrapping_sub((*pOp).p5 as crate::src::ext::rtree::rtree::u32_0);
+                                (*(&raw mut __pOp_ref.p3 as *mut crate::src::ext::rtree::rtree::u32_0))
+                                    .wrapping_sub(__pOp_ref.p5 as crate::src::ext::rtree::rtree::u32_0);
                             (*db).mDbFlags |= crate::sqliteInt_h::DBFLAG_SchemaChange as crate::src::ext::rtree::rtree::u32_0;
-                            crate::src::src::fkey::sqlite3FkClearTriggerCache(db as *mut crate::sqliteInt_h::sqlite3, (*pOp).p1);
-                        } else if (*pOp).p2 == crate::src::src::btree::BTREE_FILE_FORMAT {
-                            (*(*pDb_0).pSchema).file_format = (*pOp).p3 as crate::src::ext::rtree::rtree::u8_0;
+                            crate::src::src::fkey::sqlite3FkClearTriggerCache(db as *mut crate::sqliteInt_h::sqlite3, __pOp_ref.p1);
+                        } else if __pOp_ref.p2 == crate::src::src::btree::BTREE_FILE_FORMAT {
+                            (*(*pDb_0).pSchema).file_format = __pOp_ref.p3 as crate::src::ext::rtree::rtree::u8_0;
                         }
-                        if (*pOp).p1 == 1 as ::core::ffi::c_int {
+                        if __pOp_ref.p1 == 1 as ::core::ffi::c_int {
                             crate::src::src::vdbeaux::sqlite3ExpirePreparedStatements(db as *mut crate::sqliteInt_h::sqlite3, 0 as ::core::ffi::c_int);
-                            (*p).set_expired(0 as crate::sqliteInt_h::bft as crate::sqliteInt_h::bft);
+                            __p_ref.set_expired(0 as crate::sqliteInt_h::bft as crate::sqliteInt_h::bft);
                         }
                         if rc != 0 {
                             current_block = 9863799879598557851;
@@ -3032,7 +3084,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                         pX = ::core::ptr::null_mut::<crate::btreeInt_h::Btree>();
                         pCur = ::core::ptr::null_mut::<crate::vdbeInt_h::VdbeCursor>();
                         pDb_1 = ::core::ptr::null_mut::<crate::sqliteInt_h::Db>();
-                        pCur = *(*p).apCsr.offset((*pOp).p1 as isize);
+                        pCur = *__p_ref.apCsr.offset((*pOp).p1 as isize);
                         if !pCur.is_null() && (*pCur).pgnoRoot == (*pOp).p2 as crate::src::ext::rtree::rtree::u32_0 {
                             crate::src::src::btree::sqlite3BtreeClearCursor((*pCur).uc.pCursor);
                             current_block = 2376416726268577300;
@@ -3046,7 +3098,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
     crate::opcodes_h::OP_OpenDup_1 =>  {
                         let mut pOrig: *mut crate::vdbeInt_h::VdbeCursor = ::core::ptr::null_mut::<crate::vdbeInt_h::VdbeCursor>();
                         let mut pCx: *mut crate::vdbeInt_h::VdbeCursor = ::core::ptr::null_mut::<crate::vdbeInt_h::VdbeCursor>();
-                        pOrig = *(*p).apCsr.offset((*pOp).p2 as isize);
+                        pOrig = *__p_ref.apCsr.offset((*pOp).p2 as isize);
                         pCx = allocateCursor(
                             p,
                             (*pOp).p1,
@@ -3084,13 +3136,14 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                     }
     crate::opcodes_h::OP_SorterOpen_1 =>  {
                         let mut pCx_1: *mut crate::vdbeInt_h::VdbeCursor = ::core::ptr::null_mut::<crate::vdbeInt_h::VdbeCursor>();
-                        pCx_1 = allocateCursor(p, (*pOp).p1, (*pOp).p2, crate::vdbeInt_h::CURTYPE_SORTER as crate::src::ext::rtree::rtree::u8_0);
+                        let __pOp_ref = unsafe { &*pOp };
+                        pCx_1 = allocateCursor(p, __pOp_ref.p1, __pOp_ref.p2, crate::vdbeInt_h::CURTYPE_SORTER as crate::src::ext::rtree::rtree::u8_0);
                         if pCx_1.is_null() {
                             current_block = 2471432538116610086;
                             break;
                         }
-                        (*pCx_1).pKeyInfo = (*pOp).p4.pKeyInfo;
-                        rc = crate::src::src::vdbesort::sqlite3VdbeSorterInit(db as *mut crate::sqliteInt_h::sqlite3, (*pOp).p3,  pCx_1 as *mut crate::vdbeInt_h::VdbeCursor);
+                        (*pCx_1).pKeyInfo = __pOp_ref.p4.pKeyInfo;
+                        rc = crate::src::src::vdbesort::sqlite3VdbeSorterInit(db as *mut crate::sqliteInt_h::sqlite3, __pOp_ref.p3,  pCx_1 as *mut crate::vdbeInt_h::VdbeCursor);
                         if rc != 0 {
                             current_block = 9863799879598557851;
                             break;
@@ -3099,7 +3152,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                     }
     crate::opcodes_h::OP_SequenceTest_1 =>  {
                         let mut pC_2: *mut crate::vdbeInt_h::VdbeCursor = ::core::ptr::null_mut::<crate::vdbeInt_h::VdbeCursor>();
-                        pC_2 = *(*p).apCsr.offset((*pOp).p1 as isize);
+                        pC_2 = *__p_ref.apCsr.offset((*pOp).p1 as isize);
                         let fresh10 = (*pC_2).seqCount;
                         (*pC_2).seqCount = (*pC_2).seqCount + 1;
                         if fresh10 == 0 as crate::src::ext::rtree::rtree::i64_0 {
@@ -3110,20 +3163,21 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                     }
     crate::opcodes_h::OP_OpenPseudo_1 =>  {
                         let mut pCx_2: *mut crate::vdbeInt_h::VdbeCursor = ::core::ptr::null_mut::<crate::vdbeInt_h::VdbeCursor>();
-                        pCx_2 = allocateCursor(p, (*pOp).p1, (*pOp).p3, crate::vdbeInt_h::CURTYPE_PSEUDO as crate::src::ext::rtree::rtree::u8_0);
+                        let __pOp_ref = unsafe { &*pOp };
+                        pCx_2 = allocateCursor(p, __pOp_ref.p1, __pOp_ref.p3, crate::vdbeInt_h::CURTYPE_PSEUDO as crate::src::ext::rtree::rtree::u8_0);
                         if pCx_2.is_null() {
                             current_block = 2471432538116610086;
                             break;
                         }
                         (*pCx_2).nullRow = 1 as crate::src::ext::rtree::rtree::u8_0;
-                        (*pCx_2).seekResult = (*pOp).p2;
+                        (*pCx_2).seekResult = __pOp_ref.p2;
                         (*pCx_2).isTable = 1 as crate::src::ext::rtree::rtree::u8_0;
                         (*pCx_2).uc.pCursor = crate::src::src::btree::sqlite3BtreeFakeValidCursor();
                         current_block = 5783071609795492627;
                     }
     crate::opcodes_h::OP_Close_1 =>  {
-                        crate::src::src::vdbeaux::sqlite3VdbeFreeCursor(p as *mut crate::vdbeInt_h::Vdbe,  *(*p).apCsr.offset((*pOp).p1 as isize) as *mut crate::vdbeInt_h::VdbeCursor);
-                        let ref mut fresh11 = *(*p).apCsr.offset((*pOp).p1 as isize);
+                        crate::src::src::vdbeaux::sqlite3VdbeFreeCursor(p as *mut crate::vdbeInt_h::Vdbe,  *__p_ref.apCsr.offset((*pOp).p1 as isize) as *mut crate::vdbeInt_h::VdbeCursor);
+                        let ref mut fresh11 = *__p_ref.apCsr.offset((*pOp).p1 as isize);
                         *fresh11 = ::core::ptr::null_mut::<crate::vdbeInt_h::VdbeCursor>();
                         current_block = 5783071609795492627;
                     }
@@ -3221,17 +3275,18 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                     }
     crate::opcodes_h::OP_SeekHit =>  {
                         let mut pC_5: *mut crate::vdbeInt_h::VdbeCursor = ::core::ptr::null_mut::<crate::vdbeInt_h::VdbeCursor>();
-                        pC_5 = *(*p).apCsr.offset((*pOp).p1 as isize);
-                        if ((*pC_5).seekHit as ::core::ffi::c_int) < (*pOp).p2 {
-                            (*pC_5).seekHit = (*pOp).p2 as crate::src::fts5::u16_0;
-                        } else if (*pC_5).seekHit as ::core::ffi::c_int > (*pOp).p3 {
-                            (*pC_5).seekHit = (*pOp).p3 as crate::src::fts5::u16_0;
+                        let __pOp_ref = unsafe { &*pOp };
+                        pC_5 = *__p_ref.apCsr.offset(__pOp_ref.p1 as isize);
+                        if ((*pC_5).seekHit as ::core::ffi::c_int) < __pOp_ref.p2 {
+                            (*pC_5).seekHit = __pOp_ref.p2 as crate::src::fts5::u16_0;
+                        } else if (*pC_5).seekHit as ::core::ffi::c_int > __pOp_ref.p3 {
+                            (*pC_5).seekHit = __pOp_ref.p3 as crate::src::fts5::u16_0;
                         }
                         current_block = 5783071609795492627;
                     }
     crate::opcodes_h::OP_IfNotOpen =>  {
                         let mut pCur_0: *mut crate::vdbeInt_h::VdbeCursor = ::core::ptr::null_mut::<crate::vdbeInt_h::VdbeCursor>();
-                        pCur_0 = *(*p).apCsr.offset((*pOp).p1 as isize);
+                        pCur_0 = *__p_ref.apCsr.offset((*pOp).p1 as isize);
                         if pCur_0.is_null() || (*pCur_0).nullRow as ::core::ffi::c_int != 0 {
                             current_block = 16391045501586817625;
                         } else {
@@ -3240,7 +3295,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                     }
     crate::opcodes_h::OP_IfNoHope =>  {
                         let mut pC_6: *mut crate::vdbeInt_h::VdbeCursor = ::core::ptr::null_mut::<crate::vdbeInt_h::VdbeCursor>();
-                        pC_6 = *(*p).apCsr.offset((*pOp).p1 as isize);
+                        pC_6 = *__p_ref.apCsr.offset((*pOp).p1 as isize);
                         if (*pC_6).seekHit as ::core::ffi::c_int >= (*pOp).p4.i {
                             current_block = 5783071609795492627;
                         } else {
@@ -3286,7 +3341,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                     }
     crate::opcodes_h::OP_Sequence_1 =>  {
                         pOut = out2Prerelease(p, pOp as *mut crate::src::src::vdbe::VdbeOp);
-                        let ref mut fresh12 = (**(*p).apCsr.offset((*pOp).p1 as isize)).seqCount;
+                        let ref mut fresh12 = (**__p_ref.apCsr.offset((*pOp).p1 as isize)).seqCount;
                         let fresh13 = *fresh12;
                         *fresh12 = *fresh12 + 1;
                         (*pOut).u.i = fresh13;
@@ -3302,7 +3357,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                         v_0 = 0 as crate::src::ext::rtree::rtree::i64_0;
                         res_3 = 0 as ::core::ffi::c_int;
                         pOut = out2Prerelease(p, pOp as *mut crate::src::src::vdbe::VdbeOp);
-                        pC_9 = *(*p).apCsr.offset((*pOp).p1 as isize);
+                        pC_9 = *__p_ref.apCsr.offset((*pOp).p1 as isize);
                         if (*pC_9).useRandomRowid() == 0 {
                             rc = crate::src::src::btree::sqlite3BtreeLast((*pC_9).uc.pCursor, &raw mut res_3);
                             if rc != crate::sqlite3_h::SQLITE_OK {
@@ -3321,8 +3376,8 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                             }
                         }
                         if (*pOp).p3 != 0 {
-                            if !(*p).pFrame.is_null() {
-                                pFrame_0 = (*p).pFrame;
+                            if !__p_ref.pFrame.is_null() {
+                                pFrame_0 = __p_ref.pFrame;
                                 while !(*pFrame_0).pParent.is_null() {
                                     pFrame_0 = (*pFrame_0).pParent;
                                 }
@@ -3398,23 +3453,24 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
     nData:  0,
     nZero:  0,
 };
-                        pData = aMem.offset((*pOp).p2 as isize) as *mut crate::src::src::vdbe::Mem;
-                        pC_10 = *(*p).apCsr.offset((*pOp).p1 as isize);
-                        pKey = aMem.offset((*pOp).p3 as isize) as *mut crate::src::src::vdbe::Mem;
+                        let __pOp_ref = unsafe { &*pOp };
+                        pData = aMem.offset(__pOp_ref.p2 as isize) as *mut crate::src::src::vdbe::Mem;
+                        pC_10 = *__p_ref.apCsr.offset(__pOp_ref.p1 as isize);
+                        pKey = aMem.offset(__pOp_ref.p3 as isize) as *mut crate::src::src::vdbe::Mem;
                         x_0.nKey = (*pKey).u.i as crate::sqlite3_h::sqlite3_int64;
-                        if (*pOp).p4type as ::core::ffi::c_int == crate::src::src::vdbe::P4_TABLE
+                        if __pOp_ref.p4type as ::core::ffi::c_int == crate::src::src::vdbe::P4_TABLE
                             && ((*db).xPreUpdateCallback.is_some()
                                 || (*db).xUpdateCallback.is_some())
                         {
                             zDb = (*(*db).aDb.offset((*pC_10).iDb as isize)).zDbSName;
-                            pTab_0 = (*pOp).p4.pTab;
+                            pTab_0 = __pOp_ref.p4.pTab;
                         } else {
                             pTab_0 = ::core::ptr::null_mut::<crate::sqliteInt_h::Table>();
                             zDb = ::core::ptr::null::<::core::ffi::c_char>();
                         }
                         if !pTab_0.is_null() {
                             if (*db).xPreUpdateCallback.is_some()
-                                && (*pOp).p5 as ::core::ffi::c_int & crate::sqliteInt_h::OPFLAG_ISUPDATE == 0
+                                && __pOp_ref.p5 as ::core::ffi::c_int & crate::sqliteInt_h::OPFLAG_ISUPDATE == 0
                             {
                                 crate::src::src::vdbeaux::sqlite3VdbePreUpdateHook(
                                     
@@ -3426,7 +3482,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                                     
                                     pTab_0 as *mut crate::sqliteInt_h::Table,
                                     x_0.nKey as crate::src::ext::rtree::rtree::i64_0,
-                                    (*pOp).p2,
+                                    __pOp_ref.p2,
                                     -(1 as ::core::ffi::c_int),
                                 );
                             }
@@ -3434,39 +3490,41 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                                 pTab_0 = ::core::ptr::null_mut::<crate::sqliteInt_h::Table>();
                             }
                         }
-                        if (*pOp).p5 as ::core::ffi::c_int & crate::sqliteInt_h::OPFLAG_ISNOOP != 0 {
+                        if __pOp_ref.p5 as ::core::ffi::c_int & crate::sqliteInt_h::OPFLAG_ISNOOP != 0 {
                             current_block = 5783071609795492627;
                         } else {
-                            if (*pOp).p5 as ::core::ffi::c_int & crate::sqliteInt_h::OPFLAG_NCHANGE != 0 {
-                                (*p).nChange += 1;
-                                if (*pOp).p5 as ::core::ffi::c_int & crate::sqliteInt_h::OPFLAG_LASTROWID != 0 {
+                            if __pOp_ref.p5 as ::core::ffi::c_int & crate::sqliteInt_h::OPFLAG_NCHANGE != 0 {
+                                __p_ref.nChange += 1;
+                                if __pOp_ref.p5 as ::core::ffi::c_int & crate::sqliteInt_h::OPFLAG_LASTROWID != 0 {
                                     (*db).lastRowid = x_0.nKey as crate::src::ext::rtree::rtree::i64_0;
                                 }
                             }
-                            x_0.pData = (*pData).z as *const ::core::ffi::c_void;
-                            x_0.nData = (*pData).n;
+                            let __pData_ref = unsafe { &*pData };
+                            x_0.pData = __pData_ref.z as *const ::core::ffi::c_void;
+                            x_0.nData = __pData_ref.n;
+                            let __pC_10_ref = unsafe { &mut *pC_10 };
                             seekResult =
-                                if (*pOp).p5 as ::core::ffi::c_int & crate::sqliteInt_h::OPFLAG_USESEEKRESULT != 0 {
-                                    (*pC_10).seekResult
+                                if __pOp_ref.p5 as ::core::ffi::c_int & crate::sqliteInt_h::OPFLAG_USESEEKRESULT != 0 {
+                                    __pC_10_ref.seekResult
                                 } else {
                                     0 as ::core::ffi::c_int
                                 };
-                            if (*pData).flags as ::core::ffi::c_int & crate::vdbeInt_h::MEM_Zero != 0 {
-                                x_0.nZero = (*pData).u.nZero;
+                            if __pData_ref.flags as ::core::ffi::c_int & crate::vdbeInt_h::MEM_Zero != 0 {
+                                x_0.nZero = __pData_ref.u.nZero;
                             } else {
                                 x_0.nZero = 0 as ::core::ffi::c_int;
                             }
                             x_0.pKey = ::core::ptr::null::<::core::ffi::c_void>();
                             rc = crate::src::src::btree::sqlite3BtreeInsert(
-                                (*pC_10).uc.pCursor,
+                                __pC_10_ref.uc.pCursor,
                                 
                                 &raw mut x_0 as *mut _ as *const crate::src::src::btree::BtreePayload,
-                                (*pOp).p5 as ::core::ffi::c_int
+                                __pOp_ref.p5 as ::core::ffi::c_int
                                     & (crate::sqliteInt_h::OPFLAG_APPEND | crate::sqliteInt_h::OPFLAG_SAVEPOSITION | crate::sqliteInt_h::OPFLAG_PREFORMAT),
                                 seekResult,
                             );
-                            (*pC_10).deferredMoveto = 0 as crate::src::ext::rtree::rtree::u8_0;
-                            (*pC_10).cacheStatus = crate::vdbeInt_h::CACHE_STALE as crate::src::ext::rtree::rtree::u32_0;
+                            __pC_10_ref.deferredMoveto = 0 as crate::src::ext::rtree::rtree::u8_0;
+                            __pC_10_ref.cacheStatus = crate::vdbeInt_h::CACHE_STALE as crate::src::ext::rtree::rtree::u32_0;
                             colCacheCtr = colCacheCtr.wrapping_add(1);
                             if rc != 0 {
                                 current_block = 9863799879598557851;
@@ -3475,7 +3533,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                             if !pTab_0.is_null() {
                                 (*db).xUpdateCallback.expect("non-null function pointer")(
                                     (*db).pUpdateArg,
-                                    if (*pOp).p5 as ::core::ffi::c_int & crate::sqliteInt_h::OPFLAG_ISUPDATE != 0 {
+                                    if __pOp_ref.p5 as ::core::ffi::c_int & crate::sqliteInt_h::OPFLAG_ISUPDATE != 0 {
                                         crate::sqlite3_h::SQLITE_UPDATE
                                     } else {
                                         crate::sqlite3_h::SQLITE_INSERT
@@ -3492,10 +3550,11 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                         let mut pDest_0: *mut crate::vdbeInt_h::VdbeCursor = ::core::ptr::null_mut::<crate::vdbeInt_h::VdbeCursor>();
                         let mut pSrc: *mut crate::vdbeInt_h::VdbeCursor = ::core::ptr::null_mut::<crate::vdbeInt_h::VdbeCursor>();
                         let mut iKey_1: crate::src::ext::rtree::rtree::i64_0 = 0;
-                        pDest_0 = *(*p).apCsr.offset((*pOp).p1 as isize);
-                        pSrc = *(*p).apCsr.offset((*pOp).p2 as isize);
-                        iKey_1 = if (*pOp).p3 != 0 {
-                            (*aMem.offset((*pOp).p3 as isize)).u.i
+                        let __pOp_ref = unsafe { &*pOp };
+                        pDest_0 = *__p_ref.apCsr.offset(__pOp_ref.p1 as isize);
+                        pSrc = *__p_ref.apCsr.offset(__pOp_ref.p2 as isize);
+                        iKey_1 = if __pOp_ref.p3 != 0 {
+                            (*aMem.offset(__pOp_ref.p3 as isize)).u.i
                         } else {
                             0 as crate::src::ext::rtree::rtree::i64_0
                         };
@@ -3516,15 +3575,17 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                             ::core::ptr::null::<::core::ffi::c_char>();
                         let mut pTab_1: *mut crate::sqliteInt_h::Table = ::core::ptr::null_mut::<crate::sqliteInt_h::Table>();
                         let mut opflags: ::core::ffi::c_int = 0;
-                        opflags = (*pOp).p2;
-                        pC_11 = *(*p).apCsr.offset((*pOp).p1 as isize);
-                        if (*pOp).p4type as ::core::ffi::c_int == crate::src::src::vdbe::P4_TABLE
-                            && ((*db).xPreUpdateCallback.is_some()
-                                || (*db).xUpdateCallback.is_some())
+                        let __pOp_ref = unsafe { &*pOp };
+                        opflags = __pOp_ref.p2;
+                        pC_11 = *__p_ref.apCsr.offset(__pOp_ref.p1 as isize);
+                        let __db_ref = unsafe { &mut *db };
+                        if __pOp_ref.p4type as ::core::ffi::c_int == crate::src::src::vdbe::P4_TABLE
+                            && (__db_ref.xPreUpdateCallback.is_some()
+                                || __db_ref.xUpdateCallback.is_some())
                         {
-                            zDb_0 = (*(*db).aDb.offset((*pC_11).iDb as isize)).zDbSName;
-                            pTab_1 = (*pOp).p4.pTab;
-                            if (*pOp).p5 as ::core::ffi::c_int & crate::sqliteInt_h::OPFLAG_SAVEPOSITION
+                            zDb_0 = (*__db_ref.aDb.offset((*pC_11).iDb as isize)).zDbSName;
+                            pTab_1 = __pOp_ref.p4.pTab;
+                            if __pOp_ref.p5 as ::core::ffi::c_int & crate::sqliteInt_h::OPFLAG_SAVEPOSITION
                                 != 0 as ::core::ffi::c_int
                                 && (*pC_11).isTable as ::core::ffi::c_int != 0
                             {
@@ -3534,7 +3595,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                             zDb_0 = ::core::ptr::null::<::core::ffi::c_char>();
                             pTab_1 = ::core::ptr::null_mut::<crate::sqliteInt_h::Table>();
                         }
-                        if (*db).xPreUpdateCallback.is_some() && !pTab_1.is_null() {
+                        if __db_ref.xPreUpdateCallback.is_some() && !pTab_1.is_null() {
                             crate::src::src::vdbeaux::sqlite3VdbePreUpdateHook(
                                 
                                 p as *mut crate::vdbeInt_h::Vdbe,
@@ -3549,33 +3610,34 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                                 
                                 pTab_1 as *mut crate::sqliteInt_h::Table,
                                 (*pC_11).movetoTarget,
-                                (*pOp).p3,
+                                __pOp_ref.p3,
                                 -(1 as ::core::ffi::c_int),
                             );
                         }
                         if opflags & crate::sqliteInt_h::OPFLAG_ISNOOP != 0 {
                             current_block = 5783071609795492627;
                         } else {
-                            rc = crate::src::src::btree::sqlite3BtreeDelete((*pC_11).uc.pCursor, (*pOp).p5 as crate::src::ext::rtree::rtree::u8_0);
-                            (*pC_11).cacheStatus = crate::vdbeInt_h::CACHE_STALE as crate::src::ext::rtree::rtree::u32_0;
+                            let __pC_11_ref = unsafe { &mut *pC_11 };
+                            rc = crate::src::src::btree::sqlite3BtreeDelete(__pC_11_ref.uc.pCursor, __pOp_ref.p5 as crate::src::ext::rtree::rtree::u8_0);
+                            __pC_11_ref.cacheStatus = crate::vdbeInt_h::CACHE_STALE as crate::src::ext::rtree::rtree::u32_0;
                             colCacheCtr = colCacheCtr.wrapping_add(1);
-                            (*pC_11).seekResult = 0 as ::core::ffi::c_int;
+                            __pC_11_ref.seekResult = 0 as ::core::ffi::c_int;
                             if rc != 0 {
                                 current_block = 9863799879598557851;
                                 break;
                             }
                             if opflags & crate::sqliteInt_h::OPFLAG_NCHANGE != 0 {
-                                (*p).nChange += 1;
-                                if (*db).xUpdateCallback.is_some()
+                                __p_ref.nChange += 1;
+                                if __db_ref.xUpdateCallback.is_some()
                                     && !pTab_1.is_null()
                                     && (*pTab_1).tabFlags & crate::sqliteInt_h::TF_WithoutRowid as crate::src::ext::rtree::rtree::u32_0 == 0 as crate::src::ext::rtree::rtree::u32_0
                                 {
-                                    (*db).xUpdateCallback.expect("non-null function pointer")(
-                                        (*db).pUpdateArg,
+                                    __db_ref.xUpdateCallback.expect("non-null function pointer")(
+                                        __db_ref.pUpdateArg,
                                         crate::sqlite3_h::SQLITE_DELETE,
                                         zDb_0,
                                         (*pTab_1).zName,
-                                        (*pC_11).movetoTarget as crate::sqlite3_h::sqlite_int64,
+                                        __pC_11_ref.movetoTarget as crate::sqlite3_h::sqlite_int64,
                                     );
                                 }
                             }
@@ -3583,17 +3645,18 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                         }
                     }
     crate::opcodes_h::OP_ResetCount_1 =>  {
-                        crate::src::src::vdbeaux::sqlite3VdbeSetChanges(db as *mut crate::sqliteInt_h::sqlite3, (*p).nChange);
-                        (*p).nChange = 0 as crate::src::ext::rtree::rtree::i64_0;
+                        crate::src::src::vdbeaux::sqlite3VdbeSetChanges(db as *mut crate::sqliteInt_h::sqlite3, __p_ref.nChange);
+                        __p_ref.nChange = 0 as crate::src::ext::rtree::rtree::i64_0;
                         current_block = 5783071609795492627;
                     }
     crate::opcodes_h::OP_SorterCompare_1 =>  {
                         let mut pC_12: *mut crate::vdbeInt_h::VdbeCursor = ::core::ptr::null_mut::<crate::vdbeInt_h::VdbeCursor>();
                         let mut res_4: ::core::ffi::c_int = 0;
                         let mut nKeyCol: ::core::ffi::c_int = 0;
-                        pC_12 = *(*p).apCsr.offset((*pOp).p1 as isize);
-                        pIn3 = aMem.offset((*pOp).p3 as isize) as *mut crate::src::src::vdbe::Mem;
-                        nKeyCol = (*pOp).p4.i;
+                        let __pOp_ref = unsafe { &*pOp };
+                        pC_12 = *__p_ref.apCsr.offset(__pOp_ref.p1 as isize);
+                        pIn3 = aMem.offset(__pOp_ref.p3 as isize) as *mut crate::src::src::vdbe::Mem;
+                        nKeyCol = __pOp_ref.p4.i;
                         res_4 = 0 as ::core::ffi::c_int;
                         rc = crate::src::src::vdbesort::sqlite3VdbeSorterCompare(pC_12 as *const crate::vdbeInt_h::VdbeCursor,  pIn3 as *mut crate::vdbeInt_h::sqlite3_value, nKeyCol, &raw mut res_4);
                         if rc != 0 {
@@ -3608,14 +3671,15 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                     }
     crate::opcodes_h::OP_SorterData_1 =>  {
                         let mut pC_13: *mut crate::vdbeInt_h::VdbeCursor = ::core::ptr::null_mut::<crate::vdbeInt_h::VdbeCursor>();
-                        pOut = aMem.offset((*pOp).p2 as isize) as *mut crate::src::src::vdbe::Mem;
-                        pC_13 = *(*p).apCsr.offset((*pOp).p1 as isize);
+                        let __pOp_ref = unsafe { &mut *pOp };
+                        pOut = aMem.offset(__pOp_ref.p2 as isize) as *mut crate::src::src::vdbe::Mem;
+                        pC_13 = *__p_ref.apCsr.offset(__pOp_ref.p1 as isize);
                         rc = crate::src::src::vdbesort::sqlite3VdbeSorterRowkey(pC_13 as *const crate::vdbeInt_h::VdbeCursor,  pOut as *mut crate::vdbeInt_h::sqlite3_value);
                         if rc != 0 {
                             current_block = 9863799879598557851;
                             break;
                         }
-                        (**(*p).apCsr.offset((*pOp).p3 as isize)).cacheStatus =
+                        (**__p_ref.apCsr.offset(__pOp_ref.p3 as isize)).cacheStatus =
                             crate::vdbeInt_h::CACHE_STALE as crate::src::ext::rtree::rtree::u32_0;
                         current_block = 5783071609795492627;
                     }
@@ -3624,7 +3688,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                         let mut pCrsr_2: *mut crate::btreeInt_h::BtCursor = ::core::ptr::null_mut::<crate::btreeInt_h::BtCursor>();
                         let mut n_2: crate::src::ext::rtree::rtree::u32_0 = 0;
                         pOut = out2Prerelease(p, pOp as *mut crate::src::src::vdbe::VdbeOp);
-                        pC_14 = *(*p).apCsr.offset((*pOp).p1 as isize);
+                        pC_14 = *__p_ref.apCsr.offset((*pOp).p1 as isize);
                         pCrsr_2 = (*pC_14).uc.pCursor;
                         n_2 = crate::src::src::btree::sqlite3BtreePayloadSize(pCrsr_2);
                         if n_2 > (*db).aLimit[crate::sqlite3_h::SQLITE_LIMIT_LENGTH as usize] as crate::src::ext::rtree::rtree::u32_0 {
@@ -3655,7 +3719,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                         let mut pModule: *const crate::sqlite3_h::sqlite3_module =
                             ::core::ptr::null::<crate::sqlite3_h::sqlite3_module>();
                         pOut = out2Prerelease(p, pOp as *mut crate::src::src::vdbe::VdbeOp);
-                        pC_15 = *(*p).apCsr.offset((*pOp).p1 as isize);
+                        pC_15 = *__p_ref.apCsr.offset((*pOp).p1 as isize);
                         if (*pC_15).nullRow != 0 {
                             (*pOut).flags = crate::vdbeInt_h::MEM_Null as crate::src::fts5::u16_0;
                         } else {
@@ -3700,7 +3764,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                     }
     crate::opcodes_h::OP_NullRow_1 =>  {
                         let mut pC_16: *mut crate::vdbeInt_h::VdbeCursor = ::core::ptr::null_mut::<crate::vdbeInt_h::VdbeCursor>();
-                        pC_16 = *(*p).apCsr.offset((*pOp).p1 as isize);
+                        pC_16 = *__p_ref.apCsr.offset((*pOp).p1 as isize);
                         if pC_16.is_null() {
                             pC_16 = allocateCursor(
                                 p,
@@ -3735,7 +3799,8 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                         let mut pCrsr_4: *mut crate::btreeInt_h::BtCursor = ::core::ptr::null_mut::<crate::btreeInt_h::BtCursor>();
                         let mut res_6: ::core::ffi::c_int = 0;
                         let mut sz: crate::src::ext::rtree::rtree::i64_0 = 0;
-                        pC_18 = *(*p).apCsr.offset((*pOp).p1 as isize);
+                        let __pOp_ref = unsafe { &*pOp };
+                        pC_18 = *__p_ref.apCsr.offset(__pOp_ref.p1 as isize);
                         pCrsr_4 = (*pC_18).uc.pCursor;
                         rc = crate::src::src::btree::sqlite3BtreeFirst(pCrsr_4, &raw mut res_6);
                         if rc != 0 {
@@ -3748,7 +3813,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                             sz = crate::src::src::btree::sqlite3BtreeRowCountEst(pCrsr_4);
                             sz = crate::src::src::util::sqlite3LogEst(sz as crate::src::ext::rtree::rtree::u64_0) as crate::src::ext::rtree::rtree::i64_0;
                         }
-                        res_6 = (sz >= (*pOp).p3 as crate::src::ext::rtree::rtree::i64_0 && sz <= (*pOp).p4.i as crate::src::ext::rtree::rtree::i64_0)
+                        res_6 = (sz >= __pOp_ref.p3 as crate::src::ext::rtree::rtree::i64_0 && sz <= __pOp_ref.p4.i as crate::src::ext::rtree::rtree::i64_0)
                             as ::core::ffi::c_int;
                         if res_6 != 0 {
                             current_block = 9512719473022792396;
@@ -3759,8 +3824,8 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
     crate::opcodes_h::OP_SorterSort_1 | crate::opcodes_h::OP_Sort_1 =>  {
                         sqlite3_sort_count += 1;
                         sqlite3_search_count -= 1;
-                        (*p).aCounter[crate::sqlite3_h::SQLITE_STMTSTATUS_SORT as usize] =
-                            (*p).aCounter[crate::sqlite3_h::SQLITE_STMTSTATUS_SORT as usize].wrapping_add(1);
+                        __p_ref.aCounter[crate::sqlite3_h::SQLITE_STMTSTATUS_SORT as usize] =
+                            __p_ref.aCounter[crate::sqlite3_h::SQLITE_STMTSTATUS_SORT as usize].wrapping_add(1);
                         current_block = 3082952251283703534;
                     }
     crate::opcodes_h::OP_Rewind_1 =>  {
@@ -3770,7 +3835,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                         let mut pC_20: *mut crate::vdbeInt_h::VdbeCursor = ::core::ptr::null_mut::<crate::vdbeInt_h::VdbeCursor>();
                         let mut pCrsr_6: *mut crate::btreeInt_h::BtCursor = ::core::ptr::null_mut::<crate::btreeInt_h::BtCursor>();
                         let mut res_8: ::core::ffi::c_int = 0;
-                        pC_20 = *(*p).apCsr.offset((*pOp).p1 as isize);
+                        pC_20 = *__p_ref.apCsr.offset((*pOp).p1 as isize);
                         pCrsr_6 = (*pC_20).uc.pCursor;
                         rc = crate::src::src::btree::sqlite3BtreeIsEmpty(pCrsr_6, &raw mut res_8);
                         if rc != 0 {
@@ -3785,17 +3850,17 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                     }
     crate::opcodes_h::OP_SorterNext_1 =>  {
                         pC_21 = ::core::ptr::null_mut::<crate::vdbeInt_h::VdbeCursor>();
-                        pC_21 = *(*p).apCsr.offset((*pOp).p1 as isize);
+                        pC_21 = *__p_ref.apCsr.offset((*pOp).p1 as isize);
                         rc = crate::src::src::vdbesort::sqlite3VdbeSorterNext(db as *mut crate::sqliteInt_h::sqlite3,  pC_21 as *const crate::vdbeInt_h::VdbeCursor);
                         current_block = 13527485019907976489;
                     }
     crate::opcodes_h::OP_Prev =>  {
-                        pC_21 = *(*p).apCsr.offset((*pOp).p1 as isize);
+                        pC_21 = *__p_ref.apCsr.offset((*pOp).p1 as isize);
                         rc = crate::src::src::btree::sqlite3BtreePrevious((*pC_21).uc.pCursor, (*pOp).p3);
                         current_block = 13527485019907976489;
                     }
     crate::opcodes_h::OP_Next_1 =>  {
-                        pC_21 = *(*p).apCsr.offset((*pOp).p1 as isize);
+                        pC_21 = *__p_ref.apCsr.offset((*pOp).p1 as isize);
                         rc = crate::src::src::btree::sqlite3BtreeNext((*pC_21).uc.pCursor, (*pOp).p3);
                         current_block = 13527485019907976489;
                     }
@@ -3810,10 +3875,11 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
     nData:  0,
     nZero:  0,
 };
-                        pC_22 = *(*p).apCsr.offset((*pOp).p1 as isize);
-                        pIn2 = aMem.offset((*pOp).p2 as isize) as *mut crate::src::src::vdbe::Mem;
-                        if (*pOp).p5 as ::core::ffi::c_int & crate::sqliteInt_h::OPFLAG_NCHANGE != 0 {
-                            (*p).nChange += 1;
+                        let __pOp_ref = unsafe { &*pOp };
+                        pC_22 = *__p_ref.apCsr.offset(__pOp_ref.p1 as isize);
+                        pIn2 = aMem.offset(__pOp_ref.p2 as isize) as *mut crate::src::src::vdbe::Mem;
+                        if __pOp_ref.p5 as ::core::ffi::c_int & crate::sqliteInt_h::OPFLAG_NCHANGE != 0 {
+                            __p_ref.nChange += 1;
                         }
                         rc = if (*pIn2).flags as ::core::ffi::c_int & crate::vdbeInt_h::MEM_Zero != 0 {
                             crate::src::src::vdbemem::sqlite3VdbeMemExpandBlob(pIn2 as *mut crate::vdbeInt_h::sqlite3_value)
@@ -3826,15 +3892,15 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                         }
                         x_1.nKey = (*pIn2).n as crate::sqlite3_h::sqlite3_int64;
                         x_1.pKey = (*pIn2).z as *const ::core::ffi::c_void;
-                        x_1.aMem = aMem.offset((*pOp).p3 as isize) as *mut crate::vdbeInt_h::sqlite3_value;
-                        x_1.nMem = (*pOp).p4.i as crate::src::fts5::u16_0;
+                        x_1.aMem = aMem.offset(__pOp_ref.p3 as isize) as *mut crate::vdbeInt_h::sqlite3_value;
+                        x_1.nMem = __pOp_ref.p4.i as crate::src::fts5::u16_0;
                         rc = crate::src::src::btree::sqlite3BtreeInsert(
                             (*pC_22).uc.pCursor,
                             
                             &raw mut x_1 as *mut _ as *const crate::src::src::btree::BtreePayload,
-                            (*pOp).p5 as ::core::ffi::c_int
+                            __pOp_ref.p5 as ::core::ffi::c_int
                                 & (crate::sqliteInt_h::OPFLAG_APPEND | crate::sqliteInt_h::OPFLAG_SAVEPOSITION | crate::sqliteInt_h::OPFLAG_PREFORMAT),
-                            if (*pOp).p5 as ::core::ffi::c_int & crate::sqliteInt_h::OPFLAG_USESEEKRESULT != 0 {
+                            if __pOp_ref.p5 as ::core::ffi::c_int & crate::sqliteInt_h::OPFLAG_USESEEKRESULT != 0 {
                                 (*pC_22).seekResult
                             } else {
                                 0 as ::core::ffi::c_int
@@ -3849,7 +3915,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                     }
     crate::opcodes_h::OP_SorterInsert_1 =>  {
                         let mut pC_23: *mut crate::vdbeInt_h::VdbeCursor = ::core::ptr::null_mut::<crate::vdbeInt_h::VdbeCursor>();
-                        pC_23 = *(*p).apCsr.offset((*pOp).p1 as isize);
+                        pC_23 = *__p_ref.apCsr.offset((*pOp).p1 as isize);
                         pIn2 = aMem.offset((*pOp).p2 as isize) as *mut crate::src::src::vdbe::Mem;
                         rc = if (*pIn2).flags as ::core::ffi::c_int & crate::vdbeInt_h::MEM_Zero != 0 {
                             crate::src::src::vdbemem::sqlite3VdbeMemExpandBlob(pIn2 as *mut crate::vdbeInt_h::sqlite3_value)
@@ -3885,12 +3951,13 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
     r2:  0,
     eqSeen:  0,
 };
-                        pC_24 = *(*p).apCsr.offset((*pOp).p1 as isize);
+                        let __pOp_ref = unsafe { &*pOp };
+                        pC_24 = *__p_ref.apCsr.offset(__pOp_ref.p1 as isize);
                         pCrsr_7 = (*pC_24).uc.pCursor;
                         r_2.pKeyInfo = (*pC_24).pKeyInfo;
-                        r_2.nField = (*pOp).p3 as crate::src::fts5::u16_0;
+                        r_2.nField = __pOp_ref.p3 as crate::src::fts5::u16_0;
                         r_2.default_rc = 0 as crate::sqliteInt_h::i8_0;
-                        r_2.aMem = aMem.offset((*pOp).p2 as isize) as *mut crate::src::src::vdbe::Mem;
+                        r_2.aMem = aMem.offset(__pOp_ref.p2 as isize) as *mut crate::src::src::vdbe::Mem;
                         rc = crate::src::src::btree::sqlite3BtreeIndexMoveto(pCrsr_7,  &raw mut r_2 as *mut _ as *mut crate::sqliteInt_h::UnpackedRecord, &raw mut res_9);
                         if rc != 0 {
                             current_block = 9863799879598557851;
@@ -3902,7 +3969,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                                 current_block = 9863799879598557851;
                                 break;
                             }
-                        } else if (*pOp).p5 as ::core::ffi::c_int != 0
+                        } else if __pOp_ref.p5 as ::core::ffi::c_int != 0
                             && crate::src::src::build::sqlite3WritableSchema(db as *mut crate::sqliteInt_h::sqlite3) == 0
                         {
                             rc = crate::src::src::main::sqlite3ReportError(
@@ -3925,7 +3992,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                     }
     crate::opcodes_h::OP_FinishSeek_1 =>  {
                         let mut pC_26: *mut crate::vdbeInt_h::VdbeCursor = ::core::ptr::null_mut::<crate::vdbeInt_h::VdbeCursor>();
-                        pC_26 = *(*p).apCsr.offset((*pOp).p1 as isize);
+                        pC_26 = *__p_ref.apCsr.offset((*pOp).p1 as isize);
                         if (*pC_26).deferredMoveto != 0 {
                             rc = crate::src::src::vdbeaux::sqlite3VdbeFinishMoveto(pC_26 as *mut crate::vdbeInt_h::VdbeCursor);
                             if rc != 0 {
@@ -3956,7 +4023,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                         (*pOut).flags = crate::vdbeInt_h::MEM_Null as crate::src::fts5::u16_0;
                         if (*db).nVdbeRead > (*db).nVDestroy + 1 as ::core::ffi::c_int {
                             rc = crate::sqlite3_h::SQLITE_LOCKED;
-                            (*p).errorAction = crate::sqliteInt_h::OE_Abort as crate::src::ext::rtree::rtree::u8_0;
+                            __p_ref.errorAction = crate::sqliteInt_h::OE_Abort as crate::src::ext::rtree::rtree::u8_0;
                             current_block = 9863799879598557851;
                             break;
                         } else {
@@ -3983,15 +4050,16 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
     crate::opcodes_h::OP_Clear_1 =>  {
                         let mut nChange: crate::src::ext::rtree::rtree::i64_0 = 0;
                         nChange = 0 as crate::src::ext::rtree::rtree::i64_0;
+                        let __pOp_ref = unsafe { &mut *pOp };
                         rc = crate::src::src::btree::sqlite3BtreeClearTable(
-                            (*(*db).aDb.offset((*pOp).p2 as isize)).pBt,
-                            (*pOp).p1 as crate::src::ext::rtree::rtree::u32_0 as ::core::ffi::c_int,
+                            (*(*db).aDb.offset(__pOp_ref.p2 as isize)).pBt,
+                            __pOp_ref.p1 as crate::src::ext::rtree::rtree::u32_0 as ::core::ffi::c_int,
                             &raw mut nChange,
                         );
-                        if (*pOp).p3 != 0 {
-                            (*p).nChange += nChange;
-                            if (*pOp).p3 > 0 as ::core::ffi::c_int {
-                                (*aMem.offset((*pOp).p3 as isize)).u.i += nChange;
+                        if __pOp_ref.p3 != 0 {
+                            __p_ref.nChange += nChange;
+                            if __pOp_ref.p3 > 0 as ::core::ffi::c_int {
+                                (*aMem.offset(__pOp_ref.p3 as isize)).u.i += nChange;
                             }
                         }
                         if rc != 0 {
@@ -4002,7 +4070,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                     }
     crate::opcodes_h::OP_ResetSorter_1 =>  {
                         let mut pC_28: *mut crate::vdbeInt_h::VdbeCursor = ::core::ptr::null_mut::<crate::vdbeInt_h::VdbeCursor>();
-                        pC_28 = *(*p).apCsr.offset((*pOp).p1 as isize);
+                        pC_28 = *__p_ref.apCsr.offset((*pOp).p1 as isize);
                         if (*pC_28).eCurType as ::core::ffi::c_int == crate::vdbeInt_h::CURTYPE_SORTER {
                             crate::src::src::vdbesort::sqlite3VdbeSorterReset(db as *mut crate::sqliteInt_h::sqlite3, (*pC_28).uc.pSorter);
                         } else {
@@ -4034,30 +4102,32 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                         let mut xAuth: crate::sqliteInt_h::sqlite3_xauth = None;
                         let mut mTrace: crate::src::ext::rtree::rtree::u8_0 = 0;
                         let mut savedAnalysisLimit: ::core::ffi::c_int = 0;
-                        (*db).nSqlExec = (*db).nSqlExec.wrapping_add(1);
+                        let __db_ref = unsafe { &mut *db };
+                        __db_ref.nSqlExec = __db_ref.nSqlExec.wrapping_add(1);
                         zErr_0 = ::core::ptr::null_mut::<::core::ffi::c_char>();
-                        xAuth = (*db).xAuth;
-                        mTrace = (*db).mTrace;
-                        savedAnalysisLimit = (*db).nAnalysisLimit;
-                        if (*pOp).p1 & 0x1 as ::core::ffi::c_int != 0 {
-                            (*db).xAuth = None;
-                            (*db).mTrace = 0 as crate::src::ext::rtree::rtree::u8_0;
+                        xAuth = __db_ref.xAuth;
+                        mTrace = __db_ref.mTrace;
+                        savedAnalysisLimit = __db_ref.nAnalysisLimit;
+                        let __pOp_ref = unsafe { &*pOp };
+                        if __pOp_ref.p1 & 0x1 as ::core::ffi::c_int != 0 {
+                            __db_ref.xAuth = None;
+                            __db_ref.mTrace = 0 as crate::src::ext::rtree::rtree::u8_0;
                         }
-                        if (*pOp).p1 & 0x2 as ::core::ffi::c_int != 0 {
-                            (*db).nAnalysisLimit = (*pOp).p2;
+                        if __pOp_ref.p1 & 0x2 as ::core::ffi::c_int != 0 {
+                            __db_ref.nAnalysisLimit = __pOp_ref.p2;
                         }
                         rc = crate::src::src::legacy::sqlite3_exec(
                             
                             db as *mut crate::sqliteInt_h::sqlite3,
-                            (*pOp).p4.z,
+                            __pOp_ref.p4.z,
                             None,
                             ::core::ptr::null_mut::<::core::ffi::c_void>(),
                             &raw mut zErr_0,
                         );
-                        (*db).nSqlExec = (*db).nSqlExec.wrapping_sub(1);
-                        (*db).xAuth = xAuth;
-                        (*db).mTrace = mTrace;
-                        (*db).nAnalysisLimit = savedAnalysisLimit;
+                        __db_ref.nSqlExec = __db_ref.nSqlExec.wrapping_sub(1);
+                        __db_ref.xAuth = xAuth;
+                        __db_ref.mTrace = mTrace;
+                        __db_ref.nAnalysisLimit = savedAnalysisLimit;
                         if !zErr_0.is_null() || rc != 0 {
                             crate::src::src::vdbeaux::sqlite3VdbeError(
                                 
@@ -4094,25 +4164,26 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
 };
                         iDb_2 = (*pOp).p1;
                         if (*pOp).p4.z.is_null() {
+                            let __db_ref = unsafe { &mut *db };
                             crate::src::src::callback::sqlite3SchemaClear(
-                                (*(*db).aDb.offset(iDb_2 as isize)).pSchema
+                                (*__db_ref.aDb.offset(iDb_2 as isize)).pSchema
                                     as *mut ::core::ffi::c_void,
                             );
-                            (*db).mDbFlags &= !crate::sqliteInt_h::DBFLAG_SchemaKnownOk as crate::src::ext::rtree::rtree::u32_0;
+                            __db_ref.mDbFlags &= !crate::sqliteInt_h::DBFLAG_SchemaKnownOk as crate::src::ext::rtree::rtree::u32_0;
                             rc = crate::src::src::prepare::sqlite3InitOne(
                                 
                                 db as *mut crate::sqliteInt_h::sqlite3,
                                 iDb_2,
-                                &raw mut (*p).zErrMsg,
+                                &raw mut __p_ref.zErrMsg,
                                 (*pOp).p5 as crate::src::ext::rtree::rtree::u32_0,
                             );
-                            (*db).mDbFlags |= crate::sqliteInt_h::DBFLAG_SchemaChange as crate::src::ext::rtree::rtree::u32_0;
-                            (*p).set_expired(0 as crate::sqliteInt_h::bft as crate::sqliteInt_h::bft);
+                            __db_ref.mDbFlags |= crate::sqliteInt_h::DBFLAG_SchemaChange as crate::src::ext::rtree::rtree::u32_0;
+                            __p_ref.set_expired(0 as crate::sqliteInt_h::bft as crate::sqliteInt_h::bft);
                         } else {
                             zSchema = crate::sqliteInt_h::LEGACY_SCHEMA_TABLE.as_ptr();
                             initData.db = db;
                             initData.iDb = iDb_2;
-                            initData.pzErrMsg = &raw mut (*p).zErrMsg;
+                            initData.pzErrMsg = &raw mut __p_ref.zErrMsg;
                             initData.mInitFlags = 0 as crate::src::ext::rtree::rtree::u32_0;
                             initData.mxPage =
                                 crate::src::src::btree::sqlite3BtreeLastPage((*(*db).aDb.offset(iDb_2 as isize)).pBt);
@@ -4198,17 +4269,18 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                         let mut z: *mut ::core::ffi::c_char =
                             ::core::ptr::null_mut::<::core::ffi::c_char>();
                         let mut pnErr: *mut crate::src::src::vdbe::Mem = ::core::ptr::null_mut::<crate::src::src::vdbe::Mem>();
-                        nRoot = (*pOp).p2;
-                        aRoot = (*pOp).p4.ai as *mut crate::src::src::pager::Pgno;
-                        pnErr = aMem.offset((*pOp).p1 as isize) as *mut crate::src::src::vdbe::Mem;
+                        let __pOp_ref = unsafe { &*pOp };
+                        nRoot = __pOp_ref.p2;
+                        aRoot = __pOp_ref.p4.ai as *mut crate::src::src::pager::Pgno;
+                        pnErr = aMem.offset(__pOp_ref.p1 as isize) as *mut crate::src::src::vdbe::Mem;
                         pIn1 =
-                            aMem.offset(((*pOp).p1 + 1 as ::core::ffi::c_int) as isize) as *mut crate::src::src::vdbe::Mem;
+                            aMem.offset((__pOp_ref.p1 + 1 as ::core::ffi::c_int) as isize) as *mut crate::src::src::vdbe::Mem;
                         rc = crate::src::src::btree::sqlite3BtreeIntegrityCheck(
                             
                             db as *mut crate::sqliteInt_h::sqlite3,
-                            (*(*db).aDb.offset((*pOp).p5 as isize)).pBt,
+                            (*(*db).aDb.offset(__pOp_ref.p5 as isize)).pBt,
                             aRoot.offset(1 as isize) as *mut crate::src::src::pager::Pgno,
-                            aMem.offset((*pOp).p3 as isize) as *mut crate::vdbeInt_h::sqlite3_value,
+                            aMem.offset(__pOp_ref.p3 as isize) as *mut crate::vdbeInt_h::sqlite3_value,
                             nRoot,
                             (*pnErr).u.i as ::core::ffi::c_int + 1 as ::core::ffi::c_int,
                             &raw mut nErr,
@@ -4273,9 +4345,10 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
     crate::opcodes_h::OP_RowSetTest =>  {
                         let mut iSet: ::core::ffi::c_int = 0;
                         let mut exists: ::core::ffi::c_int = 0;
-                        pIn1 = aMem.offset((*pOp).p1 as isize) as *mut crate::src::src::vdbe::Mem;
-                        pIn3 = aMem.offset((*pOp).p3 as isize) as *mut crate::src::src::vdbe::Mem;
-                        iSet = (*pOp).p4.i;
+                        let __pOp_ref = unsafe { &*pOp };
+                        pIn1 = aMem.offset(__pOp_ref.p1 as isize) as *mut crate::src::src::vdbe::Mem;
+                        pIn3 = aMem.offset(__pOp_ref.p3 as isize) as *mut crate::src::src::vdbe::Mem;
+                        iSet = __pOp_ref.p4.i;
                         if (*pIn1).flags as ::core::ffi::c_int & crate::vdbeInt_h::MEM_Blob == 0 as ::core::ffi::c_int
                         {
                             if crate::src::src::vdbemem::sqlite3VdbeMemSetRowSet(pIn1 as *mut crate::vdbeInt_h::sqlite3_value) != 0 {
@@ -4317,7 +4390,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                         pRt = aMem.offset((*pOp).p3 as isize) as *mut crate::src::src::vdbe::Mem;
                         if (*pOp).p5 != 0 {
                             t_0 = (*pProgram).token;
-                            pFrame_1 = (*p).pFrame;
+                            pFrame_1 = __p_ref.pFrame;
                             while !pFrame_1.is_null() && (*pFrame_1).token != t_0 {
                                 pFrame_1 = (*pFrame_1).pParent;
                             }
@@ -4332,7 +4405,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                         match current_block {
                             5783071609795492627 => {}
                             _ => {
-                                if (*p).nFrame >= (*db).aLimit[crate::sqlite3_h::SQLITE_LIMIT_TRIGGER_DEPTH as usize]
+                                if __p_ref.nFrame >= (*db).aLimit[crate::sqlite3_h::SQLITE_LIMIT_TRIGGER_DEPTH as usize]
                                 {
                                     rc = crate::sqlite3_h::SQLITE_ERROR;
                                     crate::src::src::vdbeaux::sqlite3VdbeError(
@@ -4344,11 +4417,12 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                                     current_block = 9863799879598557851;
                                     break;
                                 } else {
+                                    let __pProgram_ref = unsafe { &mut *pProgram };
                                     if (*pRt).flags as ::core::ffi::c_int & crate::vdbeInt_h::MEM_Blob
                                         == 0 as ::core::ffi::c_int
                                     {
-                                        nMem = (*pProgram).nMem + (*pProgram).nCsr;
-                                        if (*pProgram).nCsr == 0 as ::core::ffi::c_int {
+                                        nMem = __pProgram_ref.nMem + __pProgram_ref.nCsr;
+                                        if __pProgram_ref.nCsr == 0 as ::core::ffi::c_int {
                                             nMem += 1;
                                         }
                                         nByte_1 = (((::core::mem::size_of::<crate::vdbeInt_h::VdbeFrame>() as usize)
@@ -4357,12 +4431,12 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                                             .wrapping_add((nMem as usize).wrapping_mul(
                                                 ::core::mem::size_of::<crate::src::src::vdbe::Mem>() as usize,
                                             ))
-                                            .wrapping_add(((*pProgram).nCsr as usize).wrapping_mul(
+                                            .wrapping_add((__pProgram_ref.nCsr as usize).wrapping_mul(
                                                 ::core::mem::size_of::<*mut crate::vdbeInt_h::VdbeCursor>() as usize,
                                             ))
                                             as ::core::ffi::c_ulonglong)
                                             .wrapping_add(
-                                                ((7 as crate::src::ext::rtree::rtree::i64_0 + (*pProgram).nOp as crate::src::ext::rtree::rtree::i64_0)
+                                                ((7 as crate::src::ext::rtree::rtree::i64_0 + __pProgram_ref.nOp as crate::src::ext::rtree::rtree::i64_0)
                                                     / 8 as crate::src::ext::rtree::rtree::i64_0)
                                                     as ::core::ffi::c_ulonglong,
                                             )
@@ -4374,10 +4448,11 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                                             break;
                                         }
                                         crate::src::src::vdbemem::sqlite3VdbeMemRelease(pRt as *mut crate::vdbeInt_h::sqlite3_value);
-                                        (*pRt).flags = (crate::vdbeInt_h::MEM_Blob | crate::vdbeInt_h::MEM_Dyn) as crate::src::fts5::u16_0;
-                                        (*pRt).z = pFrame_1 as *mut ::core::ffi::c_char;
-                                        (*pRt).n = nByte_1 as ::core::ffi::c_int;
-                                        (*pRt).xDel = Some(
+                                        let __pRt_ref = unsafe { &mut *pRt };
+                                        __pRt_ref.flags = (crate::vdbeInt_h::MEM_Blob | crate::vdbeInt_h::MEM_Dyn) as crate::src::fts5::u16_0;
+                                        __pRt_ref.z = pFrame_1 as *mut ::core::ffi::c_char;
+                                        __pRt_ref.n = nByte_1 as ::core::ffi::c_int;
+                                        __pRt_ref.xDel = Some(
                                             crate::src::src::vdbeaux::sqlite3VdbeFrameMemDel
                                                 as unsafe extern "C" fn(
                                                     *mut ::core::ffi::c_void,
@@ -4392,16 +4467,16 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                                             >;
                                         (*pFrame_1).v = p;
                                         (*pFrame_1).nChildMem = nMem;
-                                        (*pFrame_1).nChildCsr = (*pProgram).nCsr;
+                                        (*pFrame_1).nChildCsr = __pProgram_ref.nCsr;
                                         (*pFrame_1).pc = pOp.offset_from(aOp) as ::core::ffi::c_long
                                             as ::core::ffi::c_int;
-                                        (*pFrame_1).aMem = (*p).aMem;
-                                        (*pFrame_1).nMem = (*p).nMem;
-                                        (*pFrame_1).apCsr = (*p).apCsr;
-                                        (*pFrame_1).nCursor = (*p).nCursor;
-                                        (*pFrame_1).aOp = (*p).aOp;
-                                        (*pFrame_1).nOp = (*p).nOp;
-                                        (*pFrame_1).token = (*pProgram).token;
+                                        (*pFrame_1).aMem = __p_ref.aMem;
+                                        (*pFrame_1).nMem = __p_ref.nMem;
+                                        (*pFrame_1).apCsr = __p_ref.apCsr;
+                                        (*pFrame_1).nCursor = __p_ref.nCursor;
+                                        (*pFrame_1).aOp = __p_ref.aOp;
+                                        (*pFrame_1).nOp = __p_ref.nOp;
+                                        (*pFrame_1).token = __pProgram_ref.token;
                                         pEnd = ((pFrame_1 as *mut crate::src::ext::rtree::rtree::u8_0).offset(
                                             ((::core::mem::size_of::<crate::vdbeInt_h::VdbeFrame>() as usize)
                                                 .wrapping_add(7 as usize)
@@ -4428,15 +4503,15 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                                     } else {
                                         pFrame_1 = (*pRt).z as *mut crate::vdbeInt_h::VdbeFrame;
                                     }
-                                    (*p).nFrame += 1;
-                                    (*pFrame_1).pParent = (*p).pFrame;
+                                    __p_ref.nFrame += 1;
+                                    (*pFrame_1).pParent = __p_ref.pFrame;
                                     (*pFrame_1).lastRowid = (*db).lastRowid;
-                                    (*pFrame_1).nChange = (*p).nChange;
-                                    (*pFrame_1).nDbChange = (*(*p).db).nChange;
-                                    (*pFrame_1).pAuxData = (*p).pAuxData;
-                                    (*p).pAuxData = ::core::ptr::null_mut::<crate::vdbeInt_h::AuxData>();
-                                    (*p).nChange = 0 as crate::src::ext::rtree::rtree::i64_0;
-                                    (*p).pFrame = pFrame_1;
+                                    (*pFrame_1).nChange = __p_ref.nChange;
+                                    (*pFrame_1).nDbChange = (*__p_ref.db).nChange;
+                                    (*pFrame_1).pAuxData = __p_ref.pAuxData;
+                                    __p_ref.pAuxData = ::core::ptr::null_mut::<crate::vdbeInt_h::AuxData>();
+                                    __p_ref.nChange = 0 as crate::src::ext::rtree::rtree::i64_0;
+                                    __p_ref.pFrame = pFrame_1;
                                     aMem = (pFrame_1 as *mut crate::src::ext::rtree::rtree::u8_0).offset(
                                         ((::core::mem::size_of::<crate::vdbeInt_h::VdbeFrame>() as usize)
                                             .wrapping_add(7 as usize)
@@ -4444,25 +4519,25 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                                             as isize,
                                     ) as *mut crate::src::ext::rtree::rtree::u8_0
                                         as *mut crate::src::src::vdbe::Mem;
-                                    (*p).aMem = aMem;
-                                    (*p).nMem = (*pFrame_1).nChildMem;
-                                    (*p).nCursor =
+                                    __p_ref.aMem = aMem;
+                                    __p_ref.nMem = (*pFrame_1).nChildMem;
+                                    __p_ref.nCursor =
                                         (*pFrame_1).nChildCsr as crate::src::fts5::u16_0 as ::core::ffi::c_int;
-                                    (*p).apCsr = aMem.offset((*p).nMem as isize) as *mut crate::src::src::vdbe::Mem
+                                    __p_ref.apCsr = aMem.offset(__p_ref.nMem as isize) as *mut crate::src::src::vdbe::Mem
                                         as *mut *mut crate::vdbeInt_h::VdbeCursor;
-                                    (*pFrame_1).aOnce = (*p).apCsr.offset((*pProgram).nCsr as isize)
+                                    (*pFrame_1).aOnce = __p_ref.apCsr.offset(__pProgram_ref.nCsr as isize)
                                         as *mut *mut crate::vdbeInt_h::VdbeCursor
                                         as *mut crate::src::ext::rtree::rtree::u8_0;
                                     ::libc::memset(
                                         (*pFrame_1).aOnce as *mut ::core::ffi::c_void,
                                         0 as ::core::ffi::c_int,
-                                        (((*pProgram).nOp + 7 as ::core::ffi::c_int)
+                                        ((__pProgram_ref.nOp + 7 as ::core::ffi::c_int)
                                             / 8 as ::core::ffi::c_int)
                                             as crate::__stddef_size_t_h::size_t,
                                     );
-                                    aOp = (*pProgram).aOp as *mut crate::vdbeInt_h::Op;
-                                    (*p).aOp = aOp;
-                                    (*p).nOp = (*pProgram).nOp;
+                                    aOp = __pProgram_ref.aOp as *mut crate::vdbeInt_h::Op;
+                                    __p_ref.aOp = aOp;
+                                    __p_ref.nOp = __pProgram_ref.nOp;
                                     pOp =
                                         aOp.offset(-(1 as ::core::ffi::c_int) as isize) as *mut crate::vdbeInt_h::Op;
                                 }
@@ -4474,7 +4549,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                         let mut pFrame_2: *mut crate::vdbeInt_h::VdbeFrame = ::core::ptr::null_mut::<crate::vdbeInt_h::VdbeFrame>();
                         let mut pIn: *mut crate::src::src::vdbe::Mem = ::core::ptr::null_mut::<crate::src::src::vdbe::Mem>();
                         pOut = out2Prerelease(p, pOp as *mut crate::src::src::vdbe::VdbeOp);
-                        pFrame_2 = (*p).pFrame;
+                        pFrame_2 = __p_ref.pFrame;
                         pIn = (*pFrame_2).aMem.offset(
                             ((*pOp).p1 + (*(*pFrame_2).aOp.offset((*pFrame_2).pc as isize)).p1)
                                 as isize,
@@ -4488,7 +4563,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                         } else if (*db).flags & crate::sqliteInt_h::SQLITE_DeferFKs as crate::src::ext::rtree::rtree::u64_0 != 0 {
                             (*db).nDeferredImmCons += (*pOp).p2 as crate::src::ext::rtree::rtree::i64_0;
                         } else {
-                            (*p).nFkConstraint += (*pOp).p2 as crate::src::ext::rtree::rtree::i64_0;
+                            __p_ref.nFkConstraint += (*pOp).p2 as crate::src::ext::rtree::rtree::i64_0;
                         }
                         current_block = 5783071609795492627;
                     }
@@ -4501,7 +4576,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                             } else {
                                 current_block = 5783071609795492627;
                             }
-                        } else if (*p).nFkConstraint == 0 as crate::src::ext::rtree::rtree::i64_0
+                        } else if __p_ref.nFkConstraint == 0 as crate::src::ext::rtree::rtree::i64_0
                             && (*db).nDeferredImmCons == 0 as crate::src::ext::rtree::rtree::i64_0
                         {
                             current_block = 9512719473022792396;
@@ -4511,8 +4586,8 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                     }
     crate::opcodes_h::OP_MemMax_1 =>  {
                         let mut pFrame_3: *mut crate::vdbeInt_h::VdbeFrame = ::core::ptr::null_mut::<crate::vdbeInt_h::VdbeFrame>();
-                        if !(*p).pFrame.is_null() {
-                            pFrame_3 = (*p).pFrame;
+                        if !__p_ref.pFrame.is_null() {
+                            pFrame_3 = __p_ref.pFrame;
                             while !(*pFrame_3).pParent.is_null() {
                                 pFrame_3 = (*pFrame_3).pParent;
                             }
@@ -4586,7 +4661,8 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                         let mut pCtx: *mut crate::vdbeInt_h::sqlite3_context =
                             ::core::ptr::null_mut::<crate::vdbeInt_h::sqlite3_context>();
                         let mut nAlloc: crate::src::ext::rtree::rtree::u64_0 = 0;
-                        n_3 = (*pOp).p5 as ::core::ffi::c_int;
+                        let __pOp_ref = unsafe { &mut *pOp };
+                        n_3 = __pOp_ref.p5 as ::core::ffi::c_int;
                         nAlloc = (48 as usize)
                             .wrapping_add((n_3 as usize).wrapping_mul(::core::mem::size_of::<
                             *mut crate::vdbeInt_h::sqlite3_value,
@@ -4605,7 +4681,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                         (*pCtx).pOut = (pCtx as *mut crate::src::ext::rtree::rtree::u8_0).offset(nAlloc as isize) as *mut crate::src::src::vdbe::Mem;
                         crate::src::src::vdbemem::sqlite3VdbeMemInit((*pCtx).pOut as *mut crate::vdbeInt_h::sqlite3_value,  db as *mut crate::sqliteInt_h::sqlite3, crate::vdbeInt_h::MEM_Null as crate::src::fts5::u16_0);
                         (*pCtx).pMem = ::core::ptr::null_mut::<crate::src::src::vdbe::Mem>();
-                        (*pCtx).pFunc = (*pOp).p4.pFunc;
+                        (*pCtx).pFunc = __pOp_ref.p4.pFunc;
                         (*pCtx).iOp =
                             pOp.offset_from(aOp) as ::core::ffi::c_long as ::core::ffi::c_int;
                         (*pCtx).pVdbe = p;
@@ -4613,9 +4689,9 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                         (*pCtx).isError = 0 as ::core::ffi::c_int;
                         (*pCtx).enc = encoding;
                         (*pCtx).argc = n_3 as crate::src::fts5::u16_0;
-                        (*pOp).p4type = crate::src::src::vdbe::P4_FUNCCTX as ::core::ffi::c_schar;
-                        (*pOp).p4.pCtx = pCtx;
-                        (*pOp).opcode = crate::opcodes_h::OP_AggStep1 as crate::src::ext::rtree::rtree::u8_0;
+                        __pOp_ref.p4type = crate::src::src::vdbe::P4_FUNCCTX as ::core::ffi::c_schar;
+                        __pOp_ref.p4.pCtx = pCtx;
+                        __pOp_ref.opcode = crate::opcodes_h::OP_AggStep1 as crate::src::ext::rtree::rtree::u8_0;
                         current_block = 1931008622201330627;
                     }
     crate::opcodes_h::OP_AggStep1 =>  {
@@ -4625,15 +4701,16 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                         let mut pMem_2: *mut crate::src::src::vdbe::Mem = ::core::ptr::null_mut::<crate::src::src::vdbe::Mem>();
                         pMem_2 = aMem.offset((*pOp).p1 as isize) as *mut crate::src::src::vdbe::Mem;
                         if (*pOp).p3 != 0 {
+                            let __pOp_ref = unsafe { &*pOp };
                             rc = crate::src::src::vdbemem::sqlite3VdbeMemAggValue(
                                 
                                 pMem_2 as *mut crate::vdbeInt_h::sqlite3_value,
                                 
-                                aMem.offset((*pOp).p3 as isize) as *mut crate::src::src::vdbe::Mem as *mut crate::vdbeInt_h::sqlite3_value,
+                                aMem.offset(__pOp_ref.p3 as isize) as *mut crate::src::src::vdbe::Mem as *mut crate::vdbeInt_h::sqlite3_value,
                                 
-                                (*pOp).p4.pFunc as *mut crate::sqliteInt_h::FuncDef,
+                                __pOp_ref.p4.pFunc as *mut crate::sqliteInt_h::FuncDef,
                             );
-                            pMem_2 = aMem.offset((*pOp).p3 as isize) as *mut crate::src::src::vdbe::Mem;
+                            pMem_2 = aMem.offset(__pOp_ref.p3 as isize) as *mut crate::src::src::vdbe::Mem;
                         } else {
                             rc = crate::src::src::vdbemem::sqlite3VdbeMemFinalize(pMem_2 as *mut crate::vdbeInt_h::sqlite3_value,  (*pOp).p4.pFunc as *mut crate::sqliteInt_h::FuncDef);
                         }
@@ -4660,11 +4737,12 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                         aRes[2 as ::core::ffi::c_int as usize] = -(1 as ::core::ffi::c_int);
                         aRes[1 as ::core::ffi::c_int as usize] =
                             aRes[2 as ::core::ffi::c_int as usize];
+                        let __pOp_ref = unsafe { &*pOp };
                         rc = crate::src::src::main::sqlite3Checkpoint(
                             
                             db as *mut crate::sqliteInt_h::sqlite3,
-                            (*pOp).p1,
-                            (*pOp).p2,
+                            __pOp_ref.p1,
+                            __pOp_ref.p2,
                             (&raw mut aRes as *mut ::core::ffi::c_int)
                                 .offset(1 as isize)
                                 as *mut ::core::ffi::c_int,
@@ -4681,7 +4759,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                             aRes[0 as ::core::ffi::c_int as usize] = 1 as ::core::ffi::c_int;
                         }
                         i_4 = 0 as ::core::ffi::c_int;
-                        pMem_3 = aMem.offset((*pOp).p3 as isize) as *mut crate::src::src::vdbe::Mem;
+                        pMem_3 = aMem.offset(__pOp_ref.p3 as isize) as *mut crate::src::src::vdbe::Mem;
                         while i_4 < 3 as ::core::ffi::c_int {
                             crate::src::src::vdbemem::sqlite3VdbeMemSetInt64(pMem_3 as *mut crate::vdbeInt_h::sqlite3_value, aRes[i_4 as usize] as crate::src::ext::rtree::rtree::i64_0);
                             i_4 += 1;
@@ -4771,7 +4849,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                     }
     crate::opcodes_h::OP_Vacuum_1 =>  {
                         rc = crate::src::src::vacuum::sqlite3RunVacuum(
-                            &raw mut (*p).zErrMsg,
+                            &raw mut __p_ref.zErrMsg,
                             
                             db as *mut crate::sqliteInt_h::sqlite3,
                             (*pOp).p1,
@@ -4808,19 +4886,19 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                         if (*pOp).p1 == 0 {
                             crate::src::src::vdbeaux::sqlite3ExpirePreparedStatements(db as *mut crate::sqliteInt_h::sqlite3, (*pOp).p2);
                         } else {
-                            (*p).set_expired(((*pOp).p2 + 1 as ::core::ffi::c_int) as crate::sqliteInt_h::bft as crate::sqliteInt_h::bft);
+                            __p_ref.set_expired(((*pOp).p2 + 1 as ::core::ffi::c_int) as crate::sqliteInt_h::bft as crate::sqliteInt_h::bft);
                         }
                         current_block = 5783071609795492627;
                     }
     crate::opcodes_h::OP_CursorLock_1 =>  {
                         let mut pC_29: *mut crate::vdbeInt_h::VdbeCursor = ::core::ptr::null_mut::<crate::vdbeInt_h::VdbeCursor>();
-                        pC_29 = *(*p).apCsr.offset((*pOp).p1 as isize);
+                        pC_29 = *__p_ref.apCsr.offset((*pOp).p1 as isize);
                         crate::src::src::btree::sqlite3BtreeCursorPin((*pC_29).uc.pCursor);
                         current_block = 5783071609795492627;
                     }
     crate::opcodes_h::OP_CursorUnlock_1 =>  {
                         let mut pC_30: *mut crate::vdbeInt_h::VdbeCursor = ::core::ptr::null_mut::<crate::vdbeInt_h::VdbeCursor>();
-                        pC_30 = *(*p).apCsr.offset((*pOp).p1 as isize);
+                        pC_30 = *__p_ref.apCsr.offset((*pOp).p1 as isize);
                         crate::src::src::btree::sqlite3BtreeCursorUnpin((*pC_30).uc.pCursor);
                         current_block = 5783071609795492627;
                     }
@@ -4881,7 +4959,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                         );
                         zTab = crate::src::src::vdbeapi::sqlite3_value_text(&raw mut sMem_0 as *mut _ as *mut crate::vdbeInt_h::sqlite3_value) as *const ::core::ffi::c_char;
                         if !zTab.is_null() {
-                            rc = crate::src::src::vtab::sqlite3VtabCallCreate(db as *mut crate::sqliteInt_h::sqlite3, (*pOp).p1, zTab, &raw mut (*p).zErrMsg);
+                            rc = crate::src::src::vtab::sqlite3VtabCallCreate(db as *mut crate::sqliteInt_h::sqlite3, (*pOp).p1, zTab, &raw mut __p_ref.zErrMsg);
                         }
                         crate::src::src::vdbemem::sqlite3VdbeMemRelease(&raw mut sMem_0 as *mut _ as *mut crate::vdbeInt_h::sqlite3_value);
                         if rc != 0 {
@@ -4908,7 +4986,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                             ::core::ptr::null_mut::<crate::sqlite3_h::sqlite3_vtab>();
                         let mut pModule_0: *const crate::sqlite3_h::sqlite3_module =
                             ::core::ptr::null::<crate::sqlite3_h::sqlite3_module>();
-                        pCur_2 = *(*p).apCsr.offset((*pOp).p1 as isize);
+                        pCur_2 = *__p_ref.apCsr.offset((*pOp).p1 as isize);
                         if !(!pCur_2.is_null()
                             && (*pCur_2).eCurType as ::core::ffi::c_int == 2 as ::core::ffi::c_int
                             && (*(*pCur_2).uc.pVCur).pVtab == (*(*pOp).p4.pVtab).pVtab)
@@ -4963,17 +5041,18 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                         if (*pTab_2).u.vtab.p.is_null() {
                             current_block = 5783071609795492627;
                         } else {
-                            pVtab_1 = (*(*pTab_2).u.vtab.p).pVtab;
+                            let __pTab_2_ref = unsafe { &*pTab_2 };
+                            pVtab_1 = (*__pTab_2_ref.u.vtab.p).pVtab;
                             pModule_1 = (*pVtab_1).pModule;
-                            crate::src::src::vtab::sqlite3VtabLock((*pTab_2).u.vtab.p as *mut crate::sqliteInt_h::VTable);
+                            crate::src::src::vtab::sqlite3VtabLock(__pTab_2_ref.u.vtab.p as *mut crate::sqliteInt_h::VTable);
                             rc = (*pModule_1).xIntegrity.expect("non-null function pointer")(
                                 pVtab_1,
                                 (*(*db).aDb.offset((*pOp).p1 as isize)).zDbSName,
-                                (*pTab_2).zName,
+                                __pTab_2_ref.zName,
                                 (*pOp).p3,
                                 &raw mut zErr_1,
                             );
-                            crate::src::src::vtab::sqlite3VtabUnlock((*pTab_2).u.vtab.p as *mut crate::sqliteInt_h::VTable);
+                            crate::src::src::vtab::sqlite3VtabUnlock(__pTab_2_ref.u.vtab.p as *mut crate::sqliteInt_h::VTable);
                             if rc != 0 {
                                 crate::src::src::malloc::sqlite3_free(zErr_1 as *mut ::core::ffi::c_void);
                                 current_block = 9863799879598557851;
@@ -4997,7 +5076,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
     crate::opcodes_h::OP_VInitIn =>  {
                         let mut pC_31: *mut crate::vdbeInt_h::VdbeCursor = ::core::ptr::null_mut::<crate::vdbeInt_h::VdbeCursor>();
                         let mut pRhs: *mut crate::vdbeInt_h::ValueList = ::core::ptr::null_mut::<crate::vdbeInt_h::ValueList>();
-                        pC_31 = *(*p).apCsr.offset((*pOp).p1 as isize);
+                        pC_31 = *__p_ref.apCsr.offset((*pOp).p1 as isize);
                         pRhs =
                             crate::src::src::malloc::sqlite3_malloc64(::core::mem::size_of::<crate::vdbeInt_h::ValueList>() as crate::sqlite3_h::sqlite3_uint64)
                                 as *mut crate::vdbeInt_h::ValueList;
@@ -5037,15 +5116,16 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                         let mut res_11: ::core::ffi::c_int = 0;
                         let mut i_5: ::core::ffi::c_int = 0;
                         let mut apArg: *mut *mut crate::src::src::vdbe::Mem = ::core::ptr::null_mut::<*mut crate::src::src::vdbe::Mem>();
-                        pQuery = aMem.offset((*pOp).p3 as isize) as *mut crate::src::src::vdbe::Mem;
+                        let __pOp_ref = unsafe { &*pOp };
+                        pQuery = aMem.offset(__pOp_ref.p3 as isize) as *mut crate::src::src::vdbe::Mem;
                         pArgc = pQuery.offset(1 as isize) as *mut crate::src::src::vdbe::Mem;
-                        pCur_3 = *(*p).apCsr.offset((*pOp).p1 as isize);
+                        pCur_3 = *__p_ref.apCsr.offset(__pOp_ref.p1 as isize);
                         pVCur_0 = (*pCur_3).uc.pVCur;
                         pVtab_2 = (*pVCur_0).pVtab;
                         pModule_2 = (*pVtab_2).pModule;
                         nArg = (*pArgc).u.i as ::core::ffi::c_int;
                         iQuery = (*pQuery).u.i as ::core::ffi::c_int;
-                        apArg = (*p).apArg;
+                        apArg = __p_ref.apArg;
                         i_5 = 0 as ::core::ffi::c_int;
                         while i_5 < nArg {
                             let ref mut fresh15 = *apArg.offset(i_5 as isize);
@@ -5056,7 +5136,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                         rc = (*pModule_2).xFilter.expect("non-null function pointer")(
                             pVCur_0,
                             iQuery,
-                            (*pOp).p4.z,
+                            __pOp_ref.p4.z,
                             nArg,
                             apArg as *mut *mut crate::vdbeInt_h::sqlite3_value,
                         );
@@ -5094,7 +5174,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
     pHash:  ::core::ptr::null_mut::<crate::sqliteInt_h::FuncDef>(),
 },
 };
-                        let mut pCur_4: *mut crate::vdbeInt_h::VdbeCursor = *(*p).apCsr.offset((*pOp).p1 as isize);
+                        let mut pCur_4: *mut crate::vdbeInt_h::VdbeCursor = *__p_ref.apCsr.offset((*pOp).p1 as isize);
                         pDest_1 = aMem.offset((*pOp).p3 as isize) as *mut crate::src::src::vdbe::Mem;
                         if (*pCur_4).nullRow != 0 {
                             crate::src::src::vdbemem::sqlite3VdbeMemSetNull(pDest_1 as *mut crate::vdbeInt_h::sqlite3_value);
@@ -5147,14 +5227,15 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                             ::core::ptr::null::<crate::sqlite3_h::sqlite3_module>();
                         let mut res_12: ::core::ffi::c_int = 0;
                         let mut pCur_5: *mut crate::vdbeInt_h::VdbeCursor = ::core::ptr::null_mut::<crate::vdbeInt_h::VdbeCursor>();
-                        pCur_5 = *(*p).apCsr.offset((*pOp).p1 as isize);
+                        pCur_5 = *__p_ref.apCsr.offset((*pOp).p1 as isize);
                         if (*pCur_5).nullRow != 0 {
                             current_block = 5783071609795492627;
                         } else {
-                            pVtab_4 = (*(*pCur_5).uc.pVCur).pVtab;
+                            let __pCur_5_ref = unsafe { &*pCur_5 };
+                            pVtab_4 = (*__pCur_5_ref.uc.pVCur).pVtab;
                             pModule_4 = (*pVtab_4).pModule;
                             rc = (*pModule_4).xNext.expect("non-null function pointer")(
-                                (*pCur_5).uc.pVCur,
+                                __pCur_5_ref.uc.pVCur,
                             );
                             crate::src::src::vdbeaux::sqlite3VtabImportErrmsg(p as *mut crate::vdbeInt_h::Vdbe,  pVtab_4 as *mut crate::sqlite3_h::sqlite3_vtab);
                             if rc != 0 {
@@ -5162,7 +5243,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                                 break;
                             }
                             res_12 = (*pModule_4).xEof.expect("non-null function pointer")(
-                                (*pCur_5).uc.pVCur,
+                                __pCur_5_ref.uc.pVCur,
                             );
                             if res_12 == 0 {
                                 current_block = 16391045501586817625;
@@ -5195,7 +5276,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                             (*db).flags &= !(crate::sqliteInt_h::SQLITE_LegacyAlter as crate::src::ext::rtree::rtree::u64_0);
                         }
                         crate::src::src::vdbeaux::sqlite3VtabImportErrmsg(p as *mut crate::vdbeInt_h::Vdbe,  pVtab_5 as *mut crate::sqlite3_h::sqlite3_vtab);
-                        (*p).set_expired(0 as crate::sqliteInt_h::bft as crate::sqliteInt_h::bft);
+                        __p_ref.set_expired(0 as crate::sqliteInt_h::bft as crate::sqliteInt_h::bft);
                         if rc != 0 {
                             current_block = 9863799879598557851;
                             break;
@@ -5225,9 +5306,11 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                             pModule_5 = (*pVtab_6).pModule;
                             nArg_0 = (*pOp).p2;
                             if (*pModule_5).xUpdate.is_some() {
-                                let mut vtabOnConflict: crate::src::ext::rtree::rtree::u8_0 = (*db).vtabOnConflict;
-                                apArg_0 = (*p).apArg;
-                                pX_0 = aMem.offset((*pOp).p3 as isize) as *mut crate::src::src::vdbe::Mem;
+                                let __db_ref = unsafe { &mut *db };
+                                let mut vtabOnConflict: crate::src::ext::rtree::rtree::u8_0 = __db_ref.vtabOnConflict;
+                                apArg_0 = __p_ref.apArg;
+                                let __pOp_ref = unsafe { &*pOp };
+                                pX_0 = aMem.offset(__pOp_ref.p3 as isize) as *mut crate::src::src::vdbe::Mem;
                                 i_6 = 0 as ::core::ffi::c_int;
                                 while i_6 < nArg_0 {
                                     let ref mut fresh16 = *apArg_0.offset(i_6 as isize);
@@ -5235,33 +5318,33 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                                     pX_0 = pX_0.offset(1);
                                     i_6 += 1;
                                 }
-                                (*db).vtabOnConflict = (*pOp).p5 as crate::src::ext::rtree::rtree::u8_0;
+                                __db_ref.vtabOnConflict = __pOp_ref.p5 as crate::src::ext::rtree::rtree::u8_0;
                                 rc = (*pModule_5).xUpdate.expect("non-null function pointer")(
                                     pVtab_6,
                                     nArg_0,
                                     apArg_0 as *mut *mut crate::vdbeInt_h::sqlite3_value,
                                     &raw mut rowid_0,
                                 );
-                                (*db).vtabOnConflict = vtabOnConflict;
+                                __db_ref.vtabOnConflict = vtabOnConflict;
                                 crate::src::src::vdbeaux::sqlite3VtabImportErrmsg(p as *mut crate::vdbeInt_h::Vdbe,  pVtab_6 as *mut crate::sqlite3_h::sqlite3_vtab);
-                                if rc == crate::sqlite3_h::SQLITE_OK && (*pOp).p1 != 0 {
-                                    (*db).lastRowid = rowid_0 as crate::src::ext::rtree::rtree::i64_0;
+                                if rc == crate::sqlite3_h::SQLITE_OK && __pOp_ref.p1 != 0 {
+                                    __db_ref.lastRowid = rowid_0 as crate::src::ext::rtree::rtree::i64_0;
                                 }
                                 if rc & 0xff as ::core::ffi::c_int == crate::sqlite3_h::SQLITE_CONSTRAINT
-                                    && (*(*pOp).p4.pVtab).bConstraint as ::core::ffi::c_int != 0
+                                    && (*__pOp_ref.p4.pVtab).bConstraint as ::core::ffi::c_int != 0
                                 {
-                                    if (*pOp).p5 as ::core::ffi::c_int == crate::sqliteInt_h::OE_Ignore {
+                                    if __pOp_ref.p5 as ::core::ffi::c_int == crate::sqliteInt_h::OE_Ignore {
                                         rc = crate::sqlite3_h::SQLITE_OK;
                                     } else {
-                                        (*p).errorAction =
-                                            (if (*pOp).p5 as ::core::ffi::c_int == crate::sqliteInt_h::OE_Replace {
+                                        __p_ref.errorAction =
+                                            (if __pOp_ref.p5 as ::core::ffi::c_int == crate::sqliteInt_h::OE_Replace {
                                                 crate::sqliteInt_h::OE_Abort
                                             } else {
-                                                (*pOp).p5 as ::core::ffi::c_int
+                                                __pOp_ref.p5 as ::core::ffi::c_int
                                             }) as crate::src::ext::rtree::rtree::u8_0;
                                     }
                                 } else {
-                                    (*p).nChange += 1;
+                                    __p_ref.nChange += 1;
                                 }
                                 if rc != 0 {
                                     current_block = 9863799879598557851;
@@ -5322,9 +5405,10 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                             (*pOut).flags =
                                 ((*pOut).flags as ::core::ffi::c_int & !crate::vdbeInt_h::MEM_Subtype) as crate::src::fts5::u16_0;
                         } else {
-                            (*pOut).flags =
-                                ((*pOut).flags as ::core::ffi::c_int | crate::vdbeInt_h::MEM_Subtype) as crate::src::fts5::u16_0;
-                            (*pOut).eSubtype = ((*pIn1).u.i & 0xff as crate::src::ext::rtree::rtree::i64_0) as crate::src::ext::rtree::rtree::u8_0;
+                            let __pOut_ref = unsafe { &mut *pOut };
+                            __pOut_ref.flags =
+                                (__pOut_ref.flags as ::core::ffi::c_int | crate::vdbeInt_h::MEM_Subtype) as crate::src::fts5::u16_0;
+                            __pOut_ref.eSubtype = ((*pIn1).u.i & 0xff as crate::src::ext::rtree::rtree::i64_0) as crate::src::ext::rtree::rtree::u8_0;
                         }
                         current_block = 5783071609795492627;
                     }
@@ -5350,12 +5434,12 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                             & (1 as ::core::ffi::c_int) << (h_0 & 7 as crate::src::ext::rtree::rtree::u64_0)
                             == 0 as ::core::ffi::c_int
                         {
-                            (*p).aCounter[crate::sqlite3_h::SQLITE_STMTSTATUS_FILTER_HIT as usize] = (*p).aCounter
+                            __p_ref.aCounter[crate::sqlite3_h::SQLITE_STMTSTATUS_FILTER_HIT as usize] = __p_ref.aCounter
                                 [crate::sqlite3_h::SQLITE_STMTSTATUS_FILTER_HIT as usize]
                                 .wrapping_add(1);
                             current_block = 9512719473022792396;
                         } else {
-                            (*p).aCounter[crate::sqlite3_h::SQLITE_STMTSTATUS_FILTER_MISS as usize] = (*p).aCounter
+                            __p_ref.aCounter[crate::sqlite3_h::SQLITE_STMTSTATUS_FILTER_MISS as usize] = __p_ref.aCounter
                                 [crate::sqlite3_h::SQLITE_STMTSTATUS_FILTER_MISS as usize]
                                 .wrapping_add(1);
                             current_block = 5783071609795492627;
@@ -5368,13 +5452,13 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                         if (*db).mTrace as ::core::ffi::c_int
                             & (crate::sqlite3_h::SQLITE_TRACE_STMT | crate::sqliteInt_h::SQLITE_TRACE_LEGACY)
                             != 0 as ::core::ffi::c_int
-                            && (*p).minWriteFileFormat as ::core::ffi::c_int
+                            && __p_ref.minWriteFileFormat as ::core::ffi::c_int
                                 != 254 as ::core::ffi::c_int
                             && {
                                 zTrace = if !(*pOp).p4.z.is_null() {
                                     (*pOp).p4.z
                                 } else {
-                                    (*p).zSql
+                                    __p_ref.zSql
                                 };
                                 !zTrace.is_null()
                             }
@@ -5415,11 +5499,11 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                                 current_block = 5783071609795492627;
                             } else {
                                 i_8 = 1 as ::core::ffi::c_int;
-                                while i_8 < (*p).nOp {
-                                    if (*(*p).aOp.offset(i_8 as isize)).opcode as ::core::ffi::c_int
+                                while i_8 < __p_ref.nOp {
+                                    if (*__p_ref.aOp.offset(i_8 as isize)).opcode as ::core::ffi::c_int
                                         == crate::opcodes_h::OP_Once
                                     {
-                                        (*(*p).aOp.offset(i_8 as isize)).p1 =
+                                        (*__p_ref.aOp.offset(i_8 as isize)).p1 =
                                             0 as ::core::ffi::c_int;
                                     }
                                     i_8 += 1;
@@ -5434,8 +5518,8 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                             5783071609795492627 => {}
                             _ => {
                                 (*pOp).p1 += 1;
-                                (*p).aCounter[crate::sqlite3_h::SQLITE_STMTSTATUS_RUN as usize] =
-                                    (*p).aCounter[crate::sqlite3_h::SQLITE_STMTSTATUS_RUN as usize].wrapping_add(1);
+                                __p_ref.aCounter[crate::sqlite3_h::SQLITE_STMTSTATUS_RUN as usize] =
+                                    __p_ref.aCounter[crate::sqlite3_h::SQLITE_STMTSTATUS_RUN as usize].wrapping_add(1);
                                 current_block = 9512719473022792396;
                             }
                         }
@@ -5448,30 +5532,31 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                     10435735846551762309 => {
                         let mut pFrame: *mut crate::vdbeInt_h::VdbeFrame = ::core::ptr::null_mut::<crate::vdbeInt_h::VdbeFrame>();
                         let mut pcx: ::core::ffi::c_int = 0;
-                        if !(*p).pFrame.is_null() && (*pOp).p1 == crate::sqlite3_h::SQLITE_OK {
-                            pFrame = (*p).pFrame;
-                            (*p).pFrame = (*pFrame).pParent;
-                            (*p).nFrame -= 1;
-                            crate::src::src::vdbeaux::sqlite3VdbeSetChanges(db as *mut crate::sqliteInt_h::sqlite3, (*p).nChange);
+                        if !__p_ref.pFrame.is_null() && (*pOp).p1 == crate::sqlite3_h::SQLITE_OK {
+                            pFrame = __p_ref.pFrame;
+                            __p_ref.pFrame = (*pFrame).pParent;
+                            __p_ref.nFrame -= 1;
+                            crate::src::src::vdbeaux::sqlite3VdbeSetChanges(db as *mut crate::sqliteInt_h::sqlite3, __p_ref.nChange);
                             pcx = crate::src::src::vdbeaux::sqlite3VdbeFrameRestore(pFrame as *mut crate::vdbeInt_h::VdbeFrame);
                             if (*pOp).p2 == crate::sqliteInt_h::OE_Ignore {
-                                pcx = (*(*p).aOp.offset(pcx as isize)).p2 - 1 as ::core::ffi::c_int;
+                                pcx = (*__p_ref.aOp.offset(pcx as isize)).p2 - 1 as ::core::ffi::c_int;
                             }
-                            aOp = (*p).aOp;
-                            aMem = (*p).aMem;
+                            aOp = __p_ref.aOp;
+                            aMem = __p_ref.aMem;
                             pOp = aOp.offset(pcx as isize) as *mut crate::vdbeInt_h::Op;
                         } else {
-                            (*p).rc = (*pOp).p1;
-                            (*p).errorAction = (*pOp).p2 as crate::src::ext::rtree::rtree::u8_0;
-                            if (*p).rc != 0 {
-                                if (*pOp).p3 > 0 as ::core::ffi::c_int
-                                    && (*pOp).p4type as ::core::ffi::c_int == crate::src::src::vdbe::P4_NOTUSED
+                            __p_ref.rc = (*pOp).p1;
+                            __p_ref.errorAction = (*pOp).p2 as crate::src::ext::rtree::rtree::u8_0;
+                            if __p_ref.rc != 0 {
+                                let __pOp_ref = unsafe { &mut *pOp };
+                                if __pOp_ref.p3 > 0 as ::core::ffi::c_int
+                                    && __pOp_ref.p4type as ::core::ffi::c_int == crate::src::src::vdbe::P4_NOTUSED
                                 {
                                     let mut zErr: *const ::core::ffi::c_char =
                                         ::core::ptr::null::<::core::ffi::c_char>();
                                     zErr = crate::src::src::vdbemem::sqlite3ValueText(
                                         
-                                        aMem.offset((*pOp).p3 as isize) as *mut crate::vdbeInt_h::sqlite3_value as *mut crate::vdbeInt_h::sqlite3_value,
+                                        aMem.offset(__pOp_ref.p3 as isize) as *mut crate::vdbeInt_h::sqlite3_value as *mut crate::vdbeInt_h::sqlite3_value,
                                         crate::sqlite3_h::SQLITE_UTF8 as crate::src::ext::rtree::rtree::u8_0,
                                     )
                                         as *const ::core::ffi::c_char;
@@ -5481,7 +5566,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                                         b"%s\0" as *const u8 as *const ::core::ffi::c_char,
                                         zErr,
                                     );
-                                } else if (*pOp).p5 != 0 {
+                                } else if __pOp_ref.p5 != 0 {
                                     static mut azType: [*const ::core::ffi::c_char; 4] = [
                                         b"NOT NULL\0" as *const u8 as *const ::core::ffi::c_char,
                                         b"UNIQUE\0" as *const u8 as *const ::core::ffi::c_char,
@@ -5493,17 +5578,17 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                                         p as *mut crate::vdbeInt_h::Vdbe,
                                         b"%s constraint failed\0" as *const u8
                                             as *const ::core::ffi::c_char,
-                                        azType[((*pOp).p5 as ::core::ffi::c_int
+                                        azType[(__pOp_ref.p5 as ::core::ffi::c_int
                                             - 1 as ::core::ffi::c_int)
                                             as usize],
                                     );
-                                    if !(*pOp).p4.z.is_null() {
-                                        (*p).zErrMsg = crate::src::src::printf::sqlite3MPrintf(
+                                    if !__pOp_ref.p4.z.is_null() {
+                                        __p_ref.zErrMsg = crate::src::src::printf::sqlite3MPrintf(
                                             
                                             db as *mut crate::sqliteInt_h::sqlite3,
                                             b"%z: %s\0" as *const u8 as *const ::core::ffi::c_char,
-                                            (*p).zErrMsg,
-                                            (*pOp).p4.z,
+                                            __p_ref.zErrMsg,
+                                            __pOp_ref.p4.z,
                                         );
                                     }
                                 } else {
@@ -5511,16 +5596,16 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                                         
                                         p as *mut crate::vdbeInt_h::Vdbe,
                                         b"%s\0" as *const u8 as *const ::core::ffi::c_char,
-                                        (*pOp).p4.z,
+                                        __pOp_ref.p4.z,
                                     );
                                 }
-                                sqlite3VdbeLogAbort(p, (*pOp).p1, pOp, aOp);
+                                sqlite3VdbeLogAbort(p, __pOp_ref.p1, pOp, aOp);
                             }
                             rc = crate::src::src::vdbeaux::sqlite3VdbeHalt(p as *mut crate::vdbeInt_h::Vdbe);
                             if rc == crate::sqlite3_h::SQLITE_BUSY {
-                                (*p).rc = crate::sqlite3_h::SQLITE_BUSY;
+                                __p_ref.rc = crate::sqlite3_h::SQLITE_BUSY;
                             } else {
-                                rc = if (*p).rc != 0 {
+                                rc = if __p_ref.rc != 0 {
                                     crate::sqlite3_h::SQLITE_ERROR
                                 } else {
                                     crate::sqlite3_h::SQLITE_DONE
@@ -5538,12 +5623,13 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                         pCtx_1 = (*pOp).p4.pCtx;
                         pOut = aMem.offset((*pOp).p3 as isize) as *mut crate::src::src::vdbe::Mem;
                         if (*pCtx_1).pOut != pOut {
-                            (*pCtx_1).pVdbe = p;
-                            (*pCtx_1).pOut = pOut;
-                            (*pCtx_1).enc = encoding;
-                            i_7 = (*pCtx_1).argc as ::core::ffi::c_int - 1 as ::core::ffi::c_int;
+                            let __pCtx_1_ref = unsafe { &mut *pCtx_1 };
+                            __pCtx_1_ref.pVdbe = p;
+                            __pCtx_1_ref.pOut = pOut;
+                            __pCtx_1_ref.enc = encoding;
+                            i_7 = __pCtx_1_ref.argc as ::core::ffi::c_int - 1 as ::core::ffi::c_int;
                             while i_7 >= 0 as ::core::ffi::c_int {
-                                let ref mut fresh17 = *(&raw mut (*pCtx_1).argv
+                                let ref mut fresh17 = *(&raw mut __pCtx_1_ref.argv
                                     as *mut *mut crate::vdbeInt_h::sqlite3_value)
                                     .offset(i_7 as isize);
                                 *fresh17 = aMem.offset(((*pOp).p2 + i_7) as isize) as *mut crate::src::src::vdbe::Mem
@@ -5565,24 +5651,25 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                             &raw mut (*pCtx_1).argv as *mut *mut crate::vdbeInt_h::sqlite3_value,
                         );
                         if (*pCtx_1).isError != 0 {
-                            if (*pCtx_1).isError > 0 as ::core::ffi::c_int {
+                            let __pCtx_1_ref = unsafe { &mut *pCtx_1 };
+                            if __pCtx_1_ref.isError > 0 as ::core::ffi::c_int {
                                 crate::src::src::vdbeaux::sqlite3VdbeError(
                                     
                                     p as *mut crate::vdbeInt_h::Vdbe,
                                     b"%s\0" as *const u8 as *const ::core::ffi::c_char,
                                     crate::src::src::vdbeapi::sqlite3_value_text(pOut as *mut crate::vdbeInt_h::sqlite3_value as *mut crate::vdbeInt_h::sqlite3_value),
                                 );
-                                rc = (*pCtx_1).isError;
+                                rc = __pCtx_1_ref.isError;
                             }
                             crate::src::src::vdbeaux::sqlite3VdbeDeleteAuxData(
                                 
                                 db as *mut crate::sqliteInt_h::sqlite3,
                                 
-                                &raw mut (*p).pAuxData as *mut _ as *mut *mut crate::vdbeInt_h::AuxData,
-                                (*pCtx_1).iOp,
+                                &raw mut __p_ref.pAuxData as *mut _ as *mut *mut crate::vdbeInt_h::AuxData,
+                                __pCtx_1_ref.iOp,
                                 (*pOp).p1,
                             );
-                            (*pCtx_1).isError = 0 as ::core::ffi::c_int;
+                            __pCtx_1_ref.isError = 0 as ::core::ffi::c_int;
                             if rc != 0 {
                                 current_block = 9863799879598557851;
                                 break;
@@ -5596,8 +5683,9 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                         let mut pCtx_0: *mut crate::vdbeInt_h::sqlite3_context =
                             ::core::ptr::null_mut::<crate::vdbeInt_h::sqlite3_context>();
                         let mut pMem_1: *mut crate::src::src::vdbe::Mem = ::core::ptr::null_mut::<crate::src::src::vdbe::Mem>();
-                        pCtx_0 = (*pOp).p4.pCtx;
-                        pMem_1 = aMem.offset((*pOp).p3 as isize) as *mut crate::src::src::vdbe::Mem;
+                        let __pOp_ref = unsafe { &*pOp };
+                        pCtx_0 = __pOp_ref.p4.pCtx;
+                        pMem_1 = aMem.offset(__pOp_ref.p3 as isize) as *mut crate::src::src::vdbe::Mem;
                         if (*pCtx_0).pMem != pMem_1 {
                             (*pCtx_0).pMem = pMem_1;
                             i_3 = (*pCtx_0).argc as ::core::ffi::c_int - 1 as ::core::ffi::c_int;
@@ -5605,40 +5693,43 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                                 let ref mut fresh14 = *(&raw mut (*pCtx_0).argv
                                     as *mut *mut crate::vdbeInt_h::sqlite3_value)
                                     .offset(i_3 as isize);
-                                *fresh14 = aMem.offset(((*pOp).p2 + i_3) as isize) as *mut crate::src::src::vdbe::Mem
+                                *fresh14 = aMem.offset((__pOp_ref.p2 + i_3) as isize) as *mut crate::src::src::vdbe::Mem
                                     as *mut crate::vdbeInt_h::sqlite3_value;
                                 i_3 -= 1;
                             }
                         }
                         (*pMem_1).n += 1;
-                        if (*pOp).p1 != 0 {
-                            (*(*pCtx_0).pFunc)
+                        if __pOp_ref.p1 != 0 {
+                            let __pCtx_0_ref = unsafe { &mut *pCtx_0 };
+                            (*__pCtx_0_ref.pFunc)
                                 .xInverse
                                 .expect("non-null function pointer")(
                                 pCtx_0,
-                                (*pCtx_0).argc as ::core::ffi::c_int,
-                                &raw mut (*pCtx_0).argv as *mut *mut crate::vdbeInt_h::sqlite3_value,
+                                __pCtx_0_ref.argc as ::core::ffi::c_int,
+                                &raw mut __pCtx_0_ref.argv as *mut *mut crate::vdbeInt_h::sqlite3_value,
                             );
                         } else {
-                            (*(*pCtx_0).pFunc)
+                            let __pCtx_0_ref = unsafe { &mut *pCtx_0 };
+                            (*__pCtx_0_ref.pFunc)
                                 .xSFunc
                                 .expect("non-null function pointer")(
                                 pCtx_0,
-                                (*pCtx_0).argc as ::core::ffi::c_int,
-                                &raw mut (*pCtx_0).argv as *mut *mut crate::vdbeInt_h::sqlite3_value,
+                                __pCtx_0_ref.argc as ::core::ffi::c_int,
+                                &raw mut __pCtx_0_ref.argv as *mut *mut crate::vdbeInt_h::sqlite3_value,
                             );
                         }
                         if (*pCtx_0).isError != 0 {
-                            if (*pCtx_0).isError > 0 as ::core::ffi::c_int {
+                            let __pCtx_0_ref = unsafe { &mut *pCtx_0 };
+                            if __pCtx_0_ref.isError > 0 as ::core::ffi::c_int {
                                 crate::src::src::vdbeaux::sqlite3VdbeError(
                                     
                                     p as *mut crate::vdbeInt_h::Vdbe,
                                     b"%s\0" as *const u8 as *const ::core::ffi::c_char,
-                                    crate::src::src::vdbeapi::sqlite3_value_text((*pCtx_0).pOut as *mut crate::vdbeInt_h::sqlite3_value as *mut crate::vdbeInt_h::sqlite3_value),
+                                    crate::src::src::vdbeapi::sqlite3_value_text(__pCtx_0_ref.pOut as *mut crate::vdbeInt_h::sqlite3_value as *mut crate::vdbeInt_h::sqlite3_value),
                                 );
-                                rc = (*pCtx_0).isError;
+                                rc = __pCtx_0_ref.isError;
                             }
-                            if (*pCtx_0).skipFlag != 0 {
+                            if __pCtx_0_ref.skipFlag != 0 {
                                 i_3 = (*pOp.offset(-(1 as ::core::ffi::c_int) as isize)).p1;
                                 if i_3 != 0 {
                                     crate::src::src::vdbemem::sqlite3VdbeMemSetInt64(
@@ -5647,11 +5738,11 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                                         1 as crate::src::ext::rtree::rtree::i64_0,
                                     );
                                 }
-                                (*pCtx_0).skipFlag = 0 as crate::src::ext::rtree::rtree::u8_0;
+                                __pCtx_0_ref.skipFlag = 0 as crate::src::ext::rtree::rtree::u8_0;
                             }
-                            crate::src::src::vdbemem::sqlite3VdbeMemRelease((*pCtx_0).pOut as *mut crate::vdbeInt_h::sqlite3_value);
-                            (*(*pCtx_0).pOut).flags = crate::vdbeInt_h::MEM_Null as crate::src::fts5::u16_0;
-                            (*pCtx_0).isError = 0 as ::core::ffi::c_int;
+                            crate::src::src::vdbemem::sqlite3VdbeMemRelease(__pCtx_0_ref.pOut as *mut crate::vdbeInt_h::sqlite3_value);
+                            (*__pCtx_0_ref.pOut).flags = crate::vdbeInt_h::MEM_Null as crate::src::fts5::u16_0;
+                            __pCtx_0_ref.isError = 0 as ::core::ffi::c_int;
                             if rc != 0 {
                                 current_block = 9863799879598557851;
                                 break;
@@ -5665,7 +5756,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                         let mut pC_25: *mut crate::vdbeInt_h::VdbeCursor = ::core::ptr::null_mut::<crate::vdbeInt_h::VdbeCursor>();
                         let mut pTabCur: *mut crate::vdbeInt_h::VdbeCursor = ::core::ptr::null_mut::<crate::vdbeInt_h::VdbeCursor>();
                         let mut rowid: crate::src::ext::rtree::rtree::i64_0 = 0;
-                        pC_25 = *(*p).apCsr.offset((*pOp).p1 as isize);
+                        pC_25 = *__p_ref.apCsr.offset((*pOp).p1 as isize);
                         rc = crate::src::src::vdbeaux::sqlite3VdbeCursorRestore(pC_25 as *mut crate::vdbeInt_h::VdbeCursor);
                         if rc != crate::sqlite3_h::SQLITE_OK {
                             current_block = 9863799879598557851;
@@ -5679,7 +5770,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                                 break;
                             }
                             if (*pOp).opcode as ::core::ffi::c_int == crate::opcodes_h::OP_DeferredSeek {
-                                pTabCur = *(*p).apCsr.offset((*pOp).p3 as isize);
+                                pTabCur = *__p_ref.apCsr.offset((*pOp).p3 as isize);
                                 (*pTabCur).nullRow = 0 as crate::src::ext::rtree::rtree::u8_0;
                                 (*pTabCur).movetoTarget = rowid;
                                 (*pTabCur).deferredMoveto = 1 as crate::src::ext::rtree::rtree::u8_0;
@@ -5699,8 +5790,8 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                         (*pC_21).cacheStatus = crate::vdbeInt_h::CACHE_STALE as crate::src::ext::rtree::rtree::u32_0;
                         if rc == crate::sqlite3_h::SQLITE_OK {
                             (*pC_21).nullRow = 0 as crate::src::ext::rtree::rtree::u8_0;
-                            (*p).aCounter[(*pOp).p5 as usize] =
-                                (*p).aCounter[(*pOp).p5 as usize].wrapping_add(1);
+                            __p_ref.aCounter[(*pOp).p5 as usize] =
+                                __p_ref.aCounter[(*pOp).p5 as usize].wrapping_add(1);
                             sqlite3_search_count += 1;
                             current_block = 16391045501586817625;
                         } else {
@@ -5717,15 +5808,16 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                         let mut pC_19: *mut crate::vdbeInt_h::VdbeCursor = ::core::ptr::null_mut::<crate::vdbeInt_h::VdbeCursor>();
                         let mut pCrsr_5: *mut crate::btreeInt_h::BtCursor = ::core::ptr::null_mut::<crate::btreeInt_h::BtCursor>();
                         let mut res_7: ::core::ffi::c_int = 0;
-                        pC_19 = *(*p).apCsr.offset((*pOp).p1 as isize);
+                        pC_19 = *__p_ref.apCsr.offset((*pOp).p1 as isize);
                         res_7 = 1 as ::core::ffi::c_int;
                         if (*pC_19).eCurType as ::core::ffi::c_int == crate::vdbeInt_h::CURTYPE_SORTER {
                             rc = crate::src::src::vdbesort::sqlite3VdbeSorterRewind(pC_19 as *const crate::vdbeInt_h::VdbeCursor, &raw mut res_7);
                         } else {
-                            pCrsr_5 = (*pC_19).uc.pCursor;
+                            let __pC_19_ref = unsafe { &mut *pC_19 };
+                            pCrsr_5 = __pC_19_ref.uc.pCursor;
                             rc = crate::src::src::btree::sqlite3BtreeFirst(pCrsr_5, &raw mut res_7);
-                            (*pC_19).deferredMoveto = 0 as crate::src::ext::rtree::rtree::u8_0;
-                            (*pC_19).cacheStatus = crate::vdbeInt_h::CACHE_STALE as crate::src::ext::rtree::rtree::u32_0;
+                            __pC_19_ref.deferredMoveto = 0 as crate::src::ext::rtree::rtree::u8_0;
+                            __pC_19_ref.cacheStatus = crate::vdbeInt_h::CACHE_STALE as crate::src::ext::rtree::rtree::u32_0;
                         }
                         if rc != 0 {
                             current_block = 9863799879598557851;
@@ -5746,7 +5838,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                         let mut pC_17: *mut crate::vdbeInt_h::VdbeCursor = ::core::ptr::null_mut::<crate::vdbeInt_h::VdbeCursor>();
                         let mut pCrsr_3: *mut crate::btreeInt_h::BtCursor = ::core::ptr::null_mut::<crate::btreeInt_h::BtCursor>();
                         let mut res_5: ::core::ffi::c_int = 0;
-                        pC_17 = *(*p).apCsr.offset((*pOp).p1 as isize);
+                        pC_17 = *__p_ref.apCsr.offset((*pOp).p1 as isize);
                         pCrsr_3 = (*pC_17).uc.pCursor;
                         res_5 = 0 as ::core::ffi::c_int;
                         if (*pOp).opcode as ::core::ffi::c_int == crate::opcodes_h::OP_SeekEnd {
@@ -5763,9 +5855,10 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                             5783071609795492627 => {}
                             _ => {
                                 rc = crate::src::src::btree::sqlite3BtreeLast(pCrsr_3, &raw mut res_5);
-                                (*pC_17).nullRow = res_5 as crate::src::ext::rtree::rtree::u8_0;
-                                (*pC_17).deferredMoveto = 0 as crate::src::ext::rtree::rtree::u8_0;
-                                (*pC_17).cacheStatus = crate::vdbeInt_h::CACHE_STALE as crate::src::ext::rtree::rtree::u32_0;
+                                let __pC_17_ref = unsafe { &mut *pC_17 };
+                                __pC_17_ref.nullRow = res_5 as crate::src::ext::rtree::rtree::u8_0;
+                                __pC_17_ref.deferredMoveto = 0 as crate::src::ext::rtree::rtree::u8_0;
+                                __pC_17_ref.cacheStatus = crate::vdbeInt_h::CACHE_STALE as crate::src::ext::rtree::rtree::u32_0;
                                 if rc != 0 {
                                     current_block = 9863799879598557851;
                                     break;
@@ -5795,26 +5888,28 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                             | crate::sqlite3_h::SQLITE_OPEN_EXCLUSIVE
                             | crate::sqlite3_h::SQLITE_OPEN_DELETEONCLOSE
                             | crate::sqlite3_h::SQLITE_OPEN_TRANSIENT_DB;
-                        if (*pOp).p3 > 0 as ::core::ffi::c_int {
-                            (*aMem.offset((*pOp).p3 as isize)).n = 0 as ::core::ffi::c_int;
-                            let ref mut fresh8 = (*aMem.offset((*pOp).p3 as isize)).z;
+                        let __pOp_ref = unsafe { &mut *pOp };
+                        if __pOp_ref.p3 > 0 as ::core::ffi::c_int {
+                            (*aMem.offset(__pOp_ref.p3 as isize)).n = 0 as ::core::ffi::c_int;
+                            let ref mut fresh8 = (*aMem.offset(__pOp_ref.p3 as isize)).z;
                             *fresh8 = b"\0" as *const u8 as *const ::core::ffi::c_char
                                 as *mut ::core::ffi::c_char;
                         }
-                        pCx_0 = *(*p).apCsr.offset((*pOp).p1 as isize);
+                        pCx_0 = *__p_ref.apCsr.offset(__pOp_ref.p1 as isize);
                         if !pCx_0.is_null()
                             && (*pCx_0).noReuse() == 0
-                            && (*pOp).p2 <= (*pCx_0).nField as ::core::ffi::c_int
+                            && __pOp_ref.p2 <= (*pCx_0).nField as ::core::ffi::c_int
                         {
-                            (*pCx_0).seqCount = 0 as crate::src::ext::rtree::rtree::i64_0;
-                            (*pCx_0).cacheStatus = crate::vdbeInt_h::CACHE_STALE as crate::src::ext::rtree::rtree::u32_0;
+                            let __pCx_0_ref = unsafe { &mut *pCx_0 };
+                            __pCx_0_ref.seqCount = 0 as crate::src::ext::rtree::rtree::i64_0;
+                            __pCx_0_ref.cacheStatus = crate::vdbeInt_h::CACHE_STALE as crate::src::ext::rtree::rtree::u32_0;
                             rc = crate::src::src::btree::sqlite3BtreeClearTable(
-                                (*pCx_0).ub.pBtx,
-                                (*pCx_0).pgnoRoot as ::core::ffi::c_int,
+                                __pCx_0_ref.ub.pBtx,
+                                __pCx_0_ref.pgnoRoot as ::core::ffi::c_int,
                                 ::core::ptr::null_mut::<crate::src::ext::rtree::rtree::i64_0>(),
                             );
                         } else {
-                            pCx_0 = allocateCursor(p, (*pOp).p1, (*pOp).p2, crate::vdbeInt_h::CURTYPE_BTREE as crate::src::ext::rtree::rtree::u8_0);
+                            pCx_0 = allocateCursor(p, __pOp_ref.p1, __pOp_ref.p2, crate::vdbeInt_h::CURTYPE_BTREE as crate::src::ext::rtree::rtree::u8_0);
                             if pCx_0.is_null() {
                                 current_block = 2471432538116610086;
                                 break;
@@ -5827,7 +5922,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                                 
                                 db as *mut crate::sqliteInt_h::sqlite3,
                                 &raw mut (*pCx_0).ub.pBtx,
-                                crate::src::src::btree::BTREE_OMIT_JOURNAL | crate::src::src::btree::BTREE_SINGLE | (*pOp).p5 as ::core::ffi::c_int,
+                                crate::src::src::btree::BTREE_OMIT_JOURNAL | crate::src::src::btree::BTREE_SINGLE | __pOp_ref.p5 as ::core::ffi::c_int,
                                 vfsFlags,
                             );
                             if rc == crate::sqlite3_h::SQLITE_OK {
@@ -5837,47 +5932,49 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                                     ::core::ptr::null_mut::<::core::ffi::c_int>(),
                                 );
                                 if rc == crate::sqlite3_h::SQLITE_OK {
-                                    pKeyInfo_1 = (*pOp).p4.pKeyInfo;
+                                    pKeyInfo_1 = __pOp_ref.p4.pKeyInfo;
                                     (*pCx_0).pKeyInfo = pKeyInfo_1;
                                     if !(*pCx_0).pKeyInfo.is_null() {
+                                        let __pCx_0_ref = unsafe { &mut *pCx_0 };
                                         rc = crate::src::src::btree::sqlite3BtreeCreateTable(
-                                            (*pCx_0).ub.pBtx,
-                                            &raw mut (*pCx_0).pgnoRoot,
-                                            crate::src::src::btree::BTREE_BLOBKEY | (*pOp).p5 as ::core::ffi::c_int,
+                                            __pCx_0_ref.ub.pBtx,
+                                            &raw mut __pCx_0_ref.pgnoRoot,
+                                            crate::src::src::btree::BTREE_BLOBKEY | __pOp_ref.p5 as ::core::ffi::c_int,
                                         );
                                         if rc == crate::sqlite3_h::SQLITE_OK {
                                             rc = crate::src::src::btree::sqlite3BtreeCursor(
-                                                (*pCx_0).ub.pBtx,
-                                                (*pCx_0).pgnoRoot,
+                                                __pCx_0_ref.ub.pBtx,
+                                                __pCx_0_ref.pgnoRoot,
                                                 crate::src::src::btree::BTREE_WRCSR,
                                                 
                                                 pKeyInfo_1 as *mut crate::sqliteInt_h::KeyInfo as *mut crate::sqliteInt_h::KeyInfo,
-                                                (*pCx_0).uc.pCursor,
+                                                __pCx_0_ref.uc.pCursor,
                                             );
                                         }
-                                        (*pCx_0).isTable = 0 as crate::src::ext::rtree::rtree::u8_0;
+                                        __pCx_0_ref.isTable = 0 as crate::src::ext::rtree::rtree::u8_0;
                                     } else {
-                                        (*pCx_0).pgnoRoot = crate::sqliteInt_h::SCHEMA_ROOT as crate::src::src::pager::Pgno;
+                                        let __pCx_0_ref = unsafe { &mut *pCx_0 };
+                                        __pCx_0_ref.pgnoRoot = crate::sqliteInt_h::SCHEMA_ROOT as crate::src::src::pager::Pgno;
                                         rc = crate::src::src::btree::sqlite3BtreeCursor(
-                                            (*pCx_0).ub.pBtx,
+                                            __pCx_0_ref.ub.pBtx,
                                             crate::sqliteInt_h::SCHEMA_ROOT as crate::src::src::pager::Pgno,
                                             crate::src::src::btree::BTREE_WRCSR,
                                             
                                             ::core::ptr::null_mut::<crate::sqliteInt_h::KeyInfo>() as
     *mut crate::sqliteInt_h::KeyInfo,
-                                            (*pCx_0).uc.pCursor,
+                                            __pCx_0_ref.uc.pCursor,
                                         );
-                                        (*pCx_0).isTable = 1 as crate::src::ext::rtree::rtree::u8_0;
+                                        __pCx_0_ref.isTable = 1 as crate::src::ext::rtree::rtree::u8_0;
                                     }
                                 }
                                 (*pCx_0).set_isOrdered(
-                                    ((*pOp).p5 as ::core::ffi::c_int != crate::src::src::btree::BTREE_UNORDERED)
+                                    (__pOp_ref.p5 as ::core::ffi::c_int != crate::src::src::btree::BTREE_UNORDERED)
                                         as ::core::ffi::c_int
                                         as crate::vdbeInt_h::Bool as crate::vdbeInt_h::Bool,
                                 );
                                 if rc != 0 {
                                     crate::src::src::btree::sqlite3BtreeClose((*pCx_0).ub.pBtx);
-                                    let ref mut fresh9 = *(*p).apCsr.offset((*pOp).p1 as isize);
+                                    let ref mut fresh9 = *__p_ref.apCsr.offset(__pOp_ref.p1 as isize);
                                     *fresh9 = ::core::ptr::null_mut::<crate::vdbeInt_h::VdbeCursor>();
                                 }
                             }
@@ -5890,26 +5987,27 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                         current_block = 5783071609795492627;
                     }
                     6098721512207810182 => {
-                        if (*p).expired() as ::core::ffi::c_int == 1 as ::core::ffi::c_int {
+                        if __p_ref.expired() as ::core::ffi::c_int == 1 as ::core::ffi::c_int {
                             rc = crate::sqlite3_h::SQLITE_ABORT_ROLLBACK_1;
                             current_block = 9863799879598557851;
                             break;
                         } else {
                             nField_0 = 0 as ::core::ffi::c_int;
                             pKeyInfo_0 = ::core::ptr::null_mut::<crate::sqliteInt_h::KeyInfo>();
-                            p2_2 = (*pOp).p2 as crate::src::ext::rtree::rtree::u32_0;
-                            iDb_0 = (*pOp).p3;
+                            let __pOp_ref = unsafe { &*pOp };
+                            p2_2 = __pOp_ref.p2 as crate::src::ext::rtree::rtree::u32_0;
+                            iDb_0 = __pOp_ref.p3;
                             pDb_1 = (*db).aDb.offset(iDb_0 as isize) as *mut crate::sqliteInt_h::Db;
                             pX = (*pDb_1).pBt;
-                            if (*pOp).opcode as ::core::ffi::c_int == crate::opcodes_h::OP_OpenWrite {
+                            if __pOp_ref.opcode as ::core::ffi::c_int == crate::opcodes_h::OP_OpenWrite {
                                 wrFlag = crate::src::src::btree::BTREE_WRCSR
-                                    | (*pOp).p5 as ::core::ffi::c_int & crate::sqliteInt_h::OPFLAG_FORDELETE;
+                                    | __pOp_ref.p5 as ::core::ffi::c_int & crate::sqliteInt_h::OPFLAG_FORDELETE;
                                 if ((*(*pDb_1).pSchema).file_format as ::core::ffi::c_int)
-                                    < (*p).minWriteFileFormat as ::core::ffi::c_int
+                                    < __p_ref.minWriteFileFormat as ::core::ffi::c_int
                                 {
-                                    (*p).minWriteFileFormat = (*(*pDb_1).pSchema).file_format;
+                                    __p_ref.minWriteFileFormat = (*(*pDb_1).pSchema).file_format;
                                 }
-                                if (*pOp).p5 as ::core::ffi::c_int & crate::sqliteInt_h::OPFLAG_P2ISREG != 0 {
+                                if __pOp_ref.p5 as ::core::ffi::c_int & crate::sqliteInt_h::OPFLAG_P2ISREG != 0 {
                                     pIn2 = aMem.offset(p2_2 as isize) as *mut crate::src::src::vdbe::Mem;
                                     crate::src::src::vdbemem::sqlite3VdbeMemIntegerify(pIn2 as *mut crate::vdbeInt_h::sqlite3_value);
                                     p2_2 = (*pIn2).u.i as ::core::ffi::c_int as crate::src::ext::rtree::rtree::u32_0;
@@ -5917,13 +6015,13 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                             } else {
                                 wrFlag = 0 as ::core::ffi::c_int;
                             }
-                            if (*pOp).p4type as ::core::ffi::c_int == crate::src::src::vdbe::P4_KEYINFO {
-                                pKeyInfo_0 = (*pOp).p4.pKeyInfo;
+                            if __pOp_ref.p4type as ::core::ffi::c_int == crate::src::src::vdbe::P4_KEYINFO {
+                                pKeyInfo_0 = __pOp_ref.p4.pKeyInfo;
                                 nField_0 = (*pKeyInfo_0).nAllField as ::core::ffi::c_int;
-                            } else if (*pOp).p4type as ::core::ffi::c_int == crate::src::src::vdbe::P4_INT32 {
-                                nField_0 = (*pOp).p4.i;
+                            } else if __pOp_ref.p4type as ::core::ffi::c_int == crate::src::src::vdbe::P4_INT32 {
+                                nField_0 = __pOp_ref.p4.i;
                             }
-                            pCur = allocateCursor(p, (*pOp).p1, nField_0, crate::vdbeInt_h::CURTYPE_BTREE as crate::src::ext::rtree::rtree::u8_0);
+                            pCur = allocateCursor(p, __pOp_ref.p1, nField_0, crate::vdbeInt_h::CURTYPE_BTREE as crate::src::ext::rtree::rtree::u8_0);
                             if pCur.is_null() {
                                 current_block = 2471432538116610086;
                                 break;
@@ -5941,7 +6039,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                                 (*pCur).uc.pCursor,
                             );
                             (*pCur).pKeyInfo = pKeyInfo_0;
-                            (*pCur).isTable = ((*pOp).p4type as ::core::ffi::c_int != crate::src::src::vdbe::P4_KEYINFO)
+                            (*pCur).isTable = (__pOp_ref.p4type as ::core::ffi::c_int != crate::src::src::vdbe::P4_KEYINFO)
                                 as ::core::ffi::c_int
                                 as crate::src::ext::rtree::rtree::u8_0;
                         }
@@ -5950,17 +6048,18 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                     10856689599696957676 => {
                         let mut v1: ::core::ffi::c_int = 0;
                         let mut v2: ::core::ffi::c_int = 0;
+                        let __pOp_ref = unsafe { &*pOp };
                         v1 = crate::src::src::vdbemem::sqlite3VdbeBooleanValue(
                             
-                            aMem.offset((*pOp).p1 as isize) as *mut crate::src::src::vdbe::Mem as *mut crate::vdbeInt_h::sqlite3_value,
+                            aMem.offset(__pOp_ref.p1 as isize) as *mut crate::src::src::vdbe::Mem as *mut crate::vdbeInt_h::sqlite3_value,
                             2 as ::core::ffi::c_int,
                         );
                         v2 = crate::src::src::vdbemem::sqlite3VdbeBooleanValue(
                             
-                            aMem.offset((*pOp).p2 as isize) as *mut crate::src::src::vdbe::Mem as *mut crate::vdbeInt_h::sqlite3_value,
+                            aMem.offset(__pOp_ref.p2 as isize) as *mut crate::src::src::vdbe::Mem as *mut crate::vdbeInt_h::sqlite3_value,
                             2 as ::core::ffi::c_int,
                         );
-                        if (*pOp).opcode as ::core::ffi::c_int == crate::opcodes_h::OP_And {
+                        if __pOp_ref.opcode as ::core::ffi::c_int == crate::opcodes_h::OP_And {
                             static mut and_logic: [::core::ffi::c_uchar; 9] = [
                                 0 as ::core::ffi::c_int as ::core::ffi::c_uchar,
                                 0 as ::core::ffi::c_int as ::core::ffi::c_uchar,
@@ -5989,15 +6088,16 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                             v1 = or_logic[(v1 * 3 as ::core::ffi::c_int + v2) as usize]
                                 as ::core::ffi::c_int;
                         }
-                        pOut = aMem.offset((*pOp).p3 as isize) as *mut crate::src::src::vdbe::Mem;
+                        pOut = aMem.offset(__pOp_ref.p3 as isize) as *mut crate::src::src::vdbe::Mem;
                         if v1 == 2 as ::core::ffi::c_int {
                             (*pOut).flags = ((*pOut).flags as ::core::ffi::c_int
                                 & !(crate::vdbeInt_h::MEM_TypeMask | crate::vdbeInt_h::MEM_Zero)
                                 | 0x1 as ::core::ffi::c_int)
                                 as crate::src::fts5::u16_0;
                         } else {
-                            (*pOut).u.i = v1 as crate::src::ext::rtree::rtree::i64_0;
-                            (*pOut).flags = ((*pOut).flags as ::core::ffi::c_int
+                            let __pOut_ref = unsafe { &mut *pOut };
+                            __pOut_ref.u.i = v1 as crate::src::ext::rtree::rtree::i64_0;
+                            __pOut_ref.flags = (__pOut_ref.flags as ::core::ffi::c_int
                                 & !(crate::vdbeInt_h::MEM_TypeMask | crate::vdbeInt_h::MEM_Zero)
                                 | 0x4 as ::core::ffi::c_int)
                                 as crate::src::fts5::u16_0;
@@ -6007,13 +6107,14 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                     16937825661756021828 => {
                         pOut = out2Prerelease(p, pOp as *mut crate::src::src::vdbe::VdbeOp);
                         (*pOut).flags = (crate::vdbeInt_h::MEM_Str | crate::vdbeInt_h::MEM_Static | crate::vdbeInt_h::MEM_Term) as crate::src::fts5::u16_0;
-                        (*pOut).z = (*pOp).p4.z;
-                        (*pOut).n = (*pOp).p1;
+                        let __pOp_ref = unsafe { &*pOp };
+                        (*pOut).z = __pOp_ref.p4.z;
+                        (*pOut).n = __pOp_ref.p1;
                         (*pOut).enc = encoding;
                         updateMaxBlobsize(pOut);
-                        if (*pOp).p3 > 0 as ::core::ffi::c_int {
-                            pIn3 = aMem.offset((*pOp).p3 as isize) as *mut crate::src::src::vdbe::Mem;
-                            if (*pIn3).u.i == (*pOp).p5 as crate::src::ext::rtree::rtree::i64_0 {
+                        if __pOp_ref.p3 > 0 as ::core::ffi::c_int {
+                            pIn3 = aMem.offset(__pOp_ref.p3 as isize) as *mut crate::src::src::vdbe::Mem;
+                            if (*pIn3).u.i == __pOp_ref.p5 as crate::src::ext::rtree::rtree::i64_0 {
                                 (*pOut).flags = (crate::vdbeInt_h::MEM_Blob | crate::vdbeInt_h::MEM_Static | crate::vdbeInt_h::MEM_Term) as crate::src::fts5::u16_0;
                             }
                         }
@@ -6041,7 +6142,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                 }
                 match current_block {
                     8490332201604051012 => {
-                        pC_8 = *(*p).apCsr.offset((*pOp).p1 as isize);
+                        pC_8 = *__p_ref.apCsr.offset((*pOp).p1 as isize);
                         pCrsr_1 = (*pC_8).uc.pCursor;
                         res_2 = 0 as ::core::ffi::c_int;
                         rc = crate::src::src::btree::sqlite3BtreeTableMoveto(
@@ -6121,10 +6222,11 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                             break;
                         }
                         while nVmStep >= nProgressLimit && (*db).xProgress.is_some() {
+                            let __db_ref = unsafe { &mut *db };
                             nProgressLimit =
-                                nProgressLimit.wrapping_add((*db).nProgressOps as crate::src::ext::rtree::rtree::u64_0);
-                            if !((*db).xProgress.expect("non-null function pointer")(
-                                (*db).pProgressArg,
+                                nProgressLimit.wrapping_add(__db_ref.nProgressOps as crate::src::ext::rtree::rtree::u64_0);
+                            if !(__db_ref.xProgress.expect("non-null function pointer")(
+                                __db_ref.pProgressArg,
                             ) != 0)
                             {
                                 continue;
@@ -6153,15 +6255,16 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
     r2:  0,
     eqSeen:  0,
 };
-                        pC_27 = *(*p).apCsr.offset((*pOp).p1 as isize);
+                        let __pOp_ref = unsafe { &*pOp };
+                        pC_27 = *__p_ref.apCsr.offset(__pOp_ref.p1 as isize);
                         r_3.pKeyInfo = (*pC_27).pKeyInfo;
-                        r_3.nField = (*pOp).p4.i as crate::src::fts5::u16_0;
-                        if ((*pOp).opcode as ::core::ffi::c_int) < crate::opcodes_h::OP_IdxLT {
+                        r_3.nField = __pOp_ref.p4.i as crate::src::fts5::u16_0;
+                        if (__pOp_ref.opcode as ::core::ffi::c_int) < crate::opcodes_h::OP_IdxLT {
                             r_3.default_rc = -(1 as ::core::ffi::c_int) as crate::sqliteInt_h::i8_0;
                         } else {
                             r_3.default_rc = 0 as crate::sqliteInt_h::i8_0;
                         }
-                        r_3.aMem = aMem.offset((*pOp).p3 as isize) as *mut crate::src::src::vdbe::Mem;
+                        r_3.aMem = aMem.offset(__pOp_ref.p3 as isize) as *mut crate::src::src::vdbe::Mem;
                         let mut nCellKey: crate::src::ext::rtree::rtree::i64_0 = 0 as crate::src::ext::rtree::rtree::i64_0;
                         let mut pCur_1: *mut crate::btreeInt_h::BtCursor = ::core::ptr::null_mut::<crate::btreeInt_h::BtCursor>();
                         let mut m: crate::src::src::vdbe::Mem = crate::vdbeInt_h::sqlite3_value {
@@ -6203,7 +6306,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                                 0 as ::core::ffi::c_int,
                             );
                             crate::src::src::vdbemem::sqlite3VdbeMemReleaseMalloc(&raw mut m as *mut _ as *mut crate::vdbeInt_h::sqlite3_value);
-                            if (*pOp).opcode as ::core::ffi::c_int & 1 as ::core::ffi::c_int
+                            if __pOp_ref.opcode as ::core::ffi::c_int & 1 as ::core::ffi::c_int
                                 == crate::opcodes_h::OP_IdxLT & 1 as ::core::ffi::c_int
                             {
                                 res_10 = -res_10;
@@ -6237,20 +6340,22 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
     r2:  0,
     eqSeen:  0,
 };
-                        if (*pOp).opcode as ::core::ffi::c_int != crate::opcodes_h::OP_NoConflict {
+                        let __pOp_ref = unsafe { &*pOp };
+                        if __pOp_ref.opcode as ::core::ffi::c_int != crate::opcodes_h::OP_NoConflict {
                             sqlite3_found_count += 1;
                         }
-                        pC_7 = *(*p).apCsr.offset((*pOp).p1 as isize);
-                        r_1.aMem = aMem.offset((*pOp).p3 as isize) as *mut crate::src::src::vdbe::Mem;
-                        r_1.nField = (*pOp).p4.i as crate::src::fts5::u16_0;
+                        pC_7 = *__p_ref.apCsr.offset(__pOp_ref.p1 as isize);
+                        r_1.aMem = aMem.offset(__pOp_ref.p3 as isize) as *mut crate::src::src::vdbe::Mem;
+                        r_1.nField = __pOp_ref.p4.i as crate::src::fts5::u16_0;
                         if r_1.nField as ::core::ffi::c_int > 0 as ::core::ffi::c_int {
-                            r_1.pKeyInfo = (*pC_7).pKeyInfo;
+                            let __pC_7_ref = unsafe { &mut *pC_7 };
+                            r_1.pKeyInfo = __pC_7_ref.pKeyInfo;
                             r_1.default_rc = 0 as crate::sqliteInt_h::i8_0;
                             rc = crate::src::src::btree::sqlite3BtreeIndexMoveto(
-                                (*pC_7).uc.pCursor,
+                                __pC_7_ref.uc.pCursor,
                                 
                                 &raw mut r_1 as *mut _ as *mut crate::sqliteInt_h::UnpackedRecord,
-                                &raw mut (*pC_7).seekResult,
+                                &raw mut __pC_7_ref.seekResult,
                             );
                         } else {
                             rc = if (*r_1.aMem).flags as ::core::ffi::c_int & crate::vdbeInt_h::MEM_Zero != 0 {
@@ -6262,7 +6367,8 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                                 current_block = 2471432538116610086;
                                 break;
                             }
-                            pIdxKey =  crate::src::src::vdbeaux::sqlite3VdbeAllocUnpackedRecord((*pC_7).pKeyInfo as *mut crate::sqliteInt_h::KeyInfo) as
+                            let __pC_7_ref = unsafe { &mut *pC_7 };
+                            pIdxKey =  crate::src::src::vdbeaux::sqlite3VdbeAllocUnpackedRecord(__pC_7_ref.pKeyInfo as *mut crate::sqliteInt_h::KeyInfo) as
     *mut crate::sqliteInt_h::UnpackedRecord;
                             if pIdxKey.is_null() {
                                 current_block = 2471432538116610086;
@@ -6276,10 +6382,10 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                             );
                             (*pIdxKey).default_rc = 0 as crate::sqliteInt_h::i8_0;
                             rc = crate::src::src::btree::sqlite3BtreeIndexMoveto(
-                                (*pC_7).uc.pCursor,
+                                __pC_7_ref.uc.pCursor,
                                 
                                 pIdxKey as *mut crate::sqliteInt_h::UnpackedRecord,
-                                &raw mut (*pC_7).seekResult,
+                                &raw mut __pC_7_ref.seekResult,
                             );
                             crate::src::src::malloc::sqlite3DbFreeNN(db as *mut crate::sqliteInt_h::sqlite3, pIdxKey as *mut ::core::ffi::c_void);
                         }
@@ -6292,7 +6398,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                         (*pC_7).nullRow = (1 as ::core::ffi::c_int - alreadyExists) as crate::src::ext::rtree::rtree::u8_0;
                         (*pC_7).deferredMoveto = 0 as crate::src::ext::rtree::rtree::u8_0;
                         (*pC_7).cacheStatus = crate::vdbeInt_h::CACHE_STALE as crate::src::ext::rtree::rtree::u32_0;
-                        if (*pOp).opcode as ::core::ffi::c_int == crate::opcodes_h::OP_Found {
+                        if __pOp_ref.opcode as ::core::ffi::c_int == crate::opcodes_h::OP_Found {
                             if alreadyExists != 0 {
                                 current_block = 9512719473022792396;
                             } else {
@@ -6301,7 +6407,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                         } else if alreadyExists == 0 {
                             current_block = 9512719473022792396;
                         } else {
-                            if (*pOp).opcode as ::core::ffi::c_int == crate::opcodes_h::OP_NoConflict {
+                            if __pOp_ref.opcode as ::core::ffi::c_int == crate::opcodes_h::OP_NoConflict {
                                 ii_0 = 0 as ::core::ffi::c_int;
                                 loop {
                                     if !(ii_0 < r_1.nField as ::core::ffi::c_int) {
@@ -6323,8 +6429,8 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                             match current_block {
                                 9512719473022792396 => {}
                                 _ => {
-                                    if (*pOp).opcode as ::core::ffi::c_int == crate::opcodes_h::OP_IfNoHope {
-                                        (*pC_7).seekHit = (*pOp).p4.i as crate::src::fts5::u16_0;
+                                    if __pOp_ref.opcode as ::core::ffi::c_int == crate::opcodes_h::OP_IfNoHope {
+                                        (*pC_7).seekHit = __pOp_ref.p4.i as crate::src::fts5::u16_0;
                                     }
                                     current_block = 5783071609795492627;
                                 }
@@ -6352,7 +6458,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                         let mut nField_1: ::core::ffi::c_int = 0;
                         let mut iKey: crate::src::ext::rtree::rtree::i64_0 = 0;
                         let mut eqOnly: ::core::ffi::c_int = 0;
-                        pC_3 = *(*p).apCsr.offset((*pOp).p1 as isize);
+                        pC_3 = *__p_ref.apCsr.offset((*pOp).p1 as isize);
                         oc = (*pOp).opcode as ::core::ffi::c_int;
                         eqOnly = 0 as ::core::ffi::c_int;
                         (*pC_3).nullRow = 0 as crate::src::ext::rtree::rtree::u8_0;
@@ -6430,15 +6536,16 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                                 }
                             }
                         } else {
+                            let __pC_3_ref = unsafe { &*pC_3 };
                             if crate::src::src::btree::sqlite3BtreeCursorHasHint(
-                                (*pC_3).uc.pCursor,
+                                __pC_3_ref.uc.pCursor,
                                 crate::src::src::btree::BTREE_SEEK_EQ as ::core::ffi::c_uint,
                             ) != 0
                             {
                                 eqOnly = 1 as ::core::ffi::c_int;
                             }
                             nField_1 = (*pOp).p4.i;
-                            r.pKeyInfo = (*pC_3).pKeyInfo;
+                            r.pKeyInfo = __pC_3_ref.pKeyInfo;
                             r.nField = nField_1 as crate::src::fts5::u16_0;
                             r.default_rc = (if 1 as ::core::ffi::c_int & oc - crate::opcodes_h::OP_SeekLT != 0 {
                                 -(1 as ::core::ffi::c_int)
@@ -6448,7 +6555,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                             r.aMem = aMem.offset((*pOp).p3 as isize) as *mut crate::src::src::vdbe::Mem;
                             r.eqSeen = 0 as crate::src::ext::rtree::rtree::u8_0;
                             rc = crate::src::src::btree::sqlite3BtreeIndexMoveto(
-                                (*pC_3).uc.pCursor,
+                                __pC_3_ref.uc.pCursor,
                                 
                                 &raw mut r as *mut _ as *mut crate::sqliteInt_h::UnpackedRecord,
                                 &raw mut res_0,
@@ -6530,9 +6637,10 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                         let mut uA: crate::src::ext::rtree::rtree::u64_0 = 0;
                         let mut iB_0: crate::src::ext::rtree::rtree::i64_0 = 0;
                         let mut op: crate::src::ext::rtree::rtree::u8_0 = 0;
-                        pIn1 = aMem.offset((*pOp).p1 as isize) as *mut crate::src::src::vdbe::Mem;
-                        pIn2 = aMem.offset((*pOp).p2 as isize) as *mut crate::src::src::vdbe::Mem;
-                        pOut = aMem.offset((*pOp).p3 as isize) as *mut crate::src::src::vdbe::Mem;
+                        let __pOp_ref = unsafe { &*pOp };
+                        pIn1 = aMem.offset(__pOp_ref.p1 as isize) as *mut crate::src::src::vdbe::Mem;
+                        pIn2 = aMem.offset(__pOp_ref.p2 as isize) as *mut crate::src::src::vdbe::Mem;
+                        pOut = aMem.offset(__pOp_ref.p3 as isize) as *mut crate::src::src::vdbe::Mem;
                         if ((*pIn1).flags as ::core::ffi::c_int
                             | (*pIn2).flags as ::core::ffi::c_int)
                             & crate::vdbeInt_h::MEM_Null
@@ -6542,7 +6650,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                         } else {
                             iA_0 = crate::src::src::vdbemem::sqlite3VdbeIntValue(pIn2 as *const crate::vdbeInt_h::sqlite3_value);
                             iB_0 = crate::src::src::vdbemem::sqlite3VdbeIntValue(pIn1 as *const crate::vdbeInt_h::sqlite3_value);
-                            op = (*pOp).opcode;
+                            op = __pOp_ref.opcode;
                             if op as ::core::ffi::c_int == crate::opcodes_h::OP_BitAnd {
                                 iA_0 &= iB_0;
                             } else if op as ::core::ffi::c_int == crate::opcodes_h::OP_BitOr {
@@ -6591,8 +6699,9 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                                     );
                                 }
                             }
-                            (*pOut).u.i = iA_0;
-                            (*pOut).flags = ((*pOut).flags as ::core::ffi::c_int
+                            let __pOut_ref = unsafe { &mut *pOut };
+                            __pOut_ref.u.i = iA_0;
+                            __pOut_ref.flags = (__pOut_ref.flags as ::core::ffi::c_int
                                 & !(crate::vdbeInt_h::MEM_TypeMask | crate::vdbeInt_h::MEM_Zero)
                                 | 0x4 as ::core::ffi::c_int)
                                 as crate::src::fts5::u16_0;
@@ -6615,11 +6724,12 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                         let mut iB: crate::src::ext::rtree::rtree::i64_0 = 0;
                         let mut rA: ::core::ffi::c_double = 0.;
                         let mut rB: ::core::ffi::c_double = 0.;
-                        pIn1 = aMem.offset((*pOp).p1 as isize) as *mut crate::src::src::vdbe::Mem;
+                        let __pOp_ref = unsafe { &*pOp };
+                        pIn1 = aMem.offset(__pOp_ref.p1 as isize) as *mut crate::src::src::vdbe::Mem;
                         type1 = (*pIn1).flags;
-                        pIn2 = aMem.offset((*pOp).p2 as isize) as *mut crate::src::src::vdbe::Mem;
+                        pIn2 = aMem.offset(__pOp_ref.p2 as isize) as *mut crate::src::src::vdbe::Mem;
                         type2 = (*pIn2).flags;
-                        pOut = aMem.offset((*pOp).p3 as isize) as *mut crate::src::src::vdbe::Mem;
+                        pOut = aMem.offset(__pOp_ref.p3 as isize) as *mut crate::src::src::vdbe::Mem;
                         if type1 as ::core::ffi::c_int & type2 as ::core::ffi::c_int & crate::vdbeInt_h::MEM_Int
                             != 0 as ::core::ffi::c_int
                         {
@@ -6644,7 +6754,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                             4899479028894616879 => {
                                 iA = (*pIn1).u.i;
                                 iB = (*pIn2).u.i;
-                                match  (*pOp).opcode as ::core::ffi::c_int {
+                                match  __pOp_ref.opcode as ::core::ffi::c_int {
     crate::opcodes_h::OP_Add =>  {
                                         if crate::src::src::util::sqlite3AddInt64(&raw mut iB, iA) != 0 {
                                             current_block = 16857357506424929049;
@@ -6694,8 +6804,9 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                                     11350077356682528340 => {}
                                     16857357506424929049 => {}
                                     _ => {
-                                        (*pOut).u.i = iB;
-                                        (*pOut).flags = ((*pOut).flags as ::core::ffi::c_int
+                                        let __pOut_ref = unsafe { &mut *pOut };
+                                        __pOut_ref.u.i = iB;
+                                        __pOut_ref.flags = (__pOut_ref.flags as ::core::ffi::c_int
                                             & !(crate::vdbeInt_h::MEM_TypeMask | crate::vdbeInt_h::MEM_Zero)
                                             | 0x4 as ::core::ffi::c_int)
                                             as crate::src::fts5::u16_0;
@@ -6712,7 +6823,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                                     16857357506424929049 => {
                                         rA = crate::src::src::vdbemem::sqlite3VdbeRealValue(pIn1 as *mut crate::vdbeInt_h::sqlite3_value);
                                         rB = crate::src::src::vdbemem::sqlite3VdbeRealValue(pIn2 as *mut crate::vdbeInt_h::sqlite3_value);
-                                        match  (*pOp).opcode as ::core::ffi::c_int {
+                                        match  __pOp_ref.opcode as ::core::ffi::c_int {
     crate::opcodes_h::OP_Add =>  {
                                                 rB += rA;
                                                 current_block = 7157913506381630964;
@@ -6756,8 +6867,9 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                                                 if crate::src::src::util::sqlite3IsNaN(rB) != 0 {
                                                     current_block = 11350077356682528340;
                                                 } else {
-                                                    (*pOut).u.r = rB;
-                                                    (*pOut).flags = ((*pOut).flags
+                                                    let __pOut_ref = unsafe { &mut *pOut };
+                                                    __pOut_ref.u.r = rB;
+                                                    __pOut_ref.flags = (__pOut_ref.flags
                                                         as ::core::ffi::c_int
                                                         & !(crate::vdbeInt_h::MEM_TypeMask | crate::vdbeInt_h::MEM_Zero)
                                                         | 0x8 as ::core::ffi::c_int)
@@ -6993,11 +7105,12 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
     loop {
         match current_block {
             10408586827809538586 => {
-                if !(nVmStep >= nProgressLimit && (*db).xProgress.is_some()) {
+                let __db_ref = unsafe { &mut *db };
+                if !(nVmStep >= nProgressLimit && __db_ref.xProgress.is_some()) {
                     break;
                 }
-                nProgressLimit = nProgressLimit.wrapping_add((*db).nProgressOps as crate::src::ext::rtree::rtree::u64_0);
-                if !((*db).xProgress.expect("non-null function pointer")((*db).pProgressArg) != 0) {
+                nProgressLimit = nProgressLimit.wrapping_add(__db_ref.nProgressOps as crate::src::ext::rtree::rtree::u64_0);
+                if !(__db_ref.xProgress.expect("non-null function pointer")(__db_ref.pProgressArg) != 0) {
                     current_block = 10408586827809538586;
                     continue;
                 }
@@ -7011,7 +7124,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                 } else if rc == crate::sqlite3_h::SQLITE_IOERR_CORRUPTFS {
                     rc = crate::src::src::main::sqlite3CorruptError(9231 as ::core::ffi::c_int);
                 }
-                if (*p).zErrMsg.is_null() && rc != crate::sqlite3_h::SQLITE_IOERR_NOMEM {
+                if __p_ref.zErrMsg.is_null() && rc != crate::sqlite3_h::SQLITE_IOERR_NOMEM {
                     crate::src::src::vdbeaux::sqlite3VdbeError(
                         
                         p as *mut crate::vdbeInt_h::Vdbe,
@@ -7019,10 +7132,10 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
                         crate::src::src::main::sqlite3ErrStr(rc),
                     );
                 }
-                (*p).rc = rc;
+                __p_ref.rc = rc;
                 crate::src::src::util::sqlite3SystemError(db as *mut crate::sqliteInt_h::sqlite3, rc);
                 sqlite3VdbeLogAbort(p, rc, pOp, aOp);
-                if (*p).eVdbeState as ::core::ffi::c_int == crate::vdbeInt_h::VDBE_RUN_STATE {
+                if __p_ref.eVdbeState as ::core::ffi::c_int == crate::vdbeInt_h::VDBE_RUN_STATE {
                     crate::src::src::vdbeaux::sqlite3VdbeHalt(p as *mut crate::vdbeInt_h::Vdbe);
                 }
                 if rc == crate::sqlite3_h::SQLITE_IOERR_NOMEM {
@@ -7045,10 +7158,10 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::vdbeInt_h::Vdbe) -> 
             }
         }
     }
-    (*p).aCounter[crate::sqlite3_h::SQLITE_STMTSTATUS_VM_STEP as usize] = (*p).aCounter
+    __p_ref.aCounter[crate::sqlite3_h::SQLITE_STMTSTATUS_VM_STEP as usize] = __p_ref.aCounter
         [crate::sqlite3_h::SQLITE_STMTSTATUS_VM_STEP as usize]
         .wrapping_add(nVmStep as ::core::ffi::c_int as crate::src::ext::rtree::rtree::u32_0);
-    if (*p).lockMask != 0 as crate::sqliteInt_h::yDbMask {
+    if __p_ref.lockMask != 0 as crate::sqliteInt_h::yDbMask {
         crate::src::src::vdbeaux::sqlite3VdbeLeave(p as *mut crate::vdbeInt_h::Vdbe);
     }
     return rc;

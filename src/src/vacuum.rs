@@ -187,7 +187,8 @@ pub unsafe extern "C" fn sqlite3RunVacuum(
     let mut pgflags: crate::src::ext::rtree::rtree::u32_0 = crate::src::src::pager::PAGER_SYNCHRONOUS_OFF as crate::src::ext::rtree::rtree::u32_0;
     let mut iRandom: crate::src::ext::rtree::rtree::u64_0 = 0;
     let mut zDbVacuum: [::core::ffi::c_char; 42] = [0; 42];
-    if (*db).autoCommit == 0 {
+    let __db_ref = unsafe { &mut *db };
+    if __db_ref.autoCommit == 0 {
         crate::src::src::malloc::sqlite3SetString(
             pzErrMsg,
             
@@ -196,7 +197,7 @@ pub unsafe extern "C" fn sqlite3RunVacuum(
         );
         return crate::sqlite3_h::SQLITE_ERROR;
     }
-    if (*db).nVdbeActive > 1 as ::core::ffi::c_int {
+    if __db_ref.nVdbeActive > 1 as ::core::ffi::c_int {
         crate::src::src::malloc::sqlite3SetString(
             pzErrMsg,
             
@@ -206,7 +207,7 @@ pub unsafe extern "C" fn sqlite3RunVacuum(
         );
         return crate::sqlite3_h::SQLITE_ERROR;
     }
-    saved_openFlags = (*db).openFlags as crate::src::ext::rtree::rtree::u32_0;
+    saved_openFlags = __db_ref.openFlags as crate::src::ext::rtree::rtree::u32_0;
     if !pOut.is_null() {
         if crate::src::src::vdbeapi::sqlite3_value_type(pOut as *mut crate::vdbeInt_h::sqlite3_value) != crate::sqlite3_h::SQLITE_TEXT {
             crate::src::src::malloc::sqlite3SetString(
@@ -218,26 +219,26 @@ pub unsafe extern "C" fn sqlite3RunVacuum(
             return crate::sqlite3_h::SQLITE_ERROR;
         }
         zOut = crate::src::src::vdbeapi::sqlite3_value_text(pOut as *mut crate::vdbeInt_h::sqlite3_value) as *const ::core::ffi::c_char;
-        (*db).openFlags &= !crate::sqlite3_h::SQLITE_OPEN_READONLY as ::core::ffi::c_uint;
-        (*db).openFlags |= (crate::sqlite3_h::SQLITE_OPEN_CREATE | crate::sqlite3_h::SQLITE_OPEN_READWRITE) as ::core::ffi::c_uint;
+        __db_ref.openFlags &= !crate::sqlite3_h::SQLITE_OPEN_READONLY as ::core::ffi::c_uint;
+        __db_ref.openFlags |= (crate::sqlite3_h::SQLITE_OPEN_CREATE | crate::sqlite3_h::SQLITE_OPEN_READWRITE) as ::core::ffi::c_uint;
     } else {
         zOut = b"\0" as *const u8 as *const ::core::ffi::c_char;
     }
-    saved_flags = (*db).flags;
-    saved_mDbFlags = (*db).mDbFlags;
-    saved_nChange = (*db).nChange;
-    saved_nTotalChange = (*db).nTotalChange;
-    saved_mTrace = (*db).mTrace;
-    (*db).flags |= (crate::sqliteInt_h::SQLITE_WriteSchema | crate::sqliteInt_h::SQLITE_IgnoreChecks) as crate::src::ext::rtree::rtree::u64_0
+    saved_flags = __db_ref.flags;
+    saved_mDbFlags = __db_ref.mDbFlags;
+    saved_nChange = __db_ref.nChange;
+    saved_nTotalChange = __db_ref.nTotalChange;
+    saved_mTrace = __db_ref.mTrace;
+    __db_ref.flags |= (crate::sqliteInt_h::SQLITE_WriteSchema | crate::sqliteInt_h::SQLITE_IgnoreChecks) as crate::src::ext::rtree::rtree::u64_0
         | crate::sqliteInt_h::SQLITE_Comments
         | crate::sqliteInt_h::SQLITE_AttachCreate
         | crate::sqliteInt_h::SQLITE_AttachWrite;
-    (*db).mDbFlags |= (crate::sqliteInt_h::DBFLAG_PreferBuiltin | crate::sqliteInt_h::DBFLAG_Vacuum) as crate::src::ext::rtree::rtree::u32_0;
-    (*db).flags &= !((crate::sqliteInt_h::SQLITE_ForeignKeys | crate::sqliteInt_h::SQLITE_ReverseOrder | crate::sqliteInt_h::SQLITE_Defensive) as crate::src::ext::rtree::rtree::u64_0
+    __db_ref.mDbFlags |= (crate::sqliteInt_h::DBFLAG_PreferBuiltin | crate::sqliteInt_h::DBFLAG_Vacuum) as crate::src::ext::rtree::rtree::u32_0;
+    __db_ref.flags &= !((crate::sqliteInt_h::SQLITE_ForeignKeys | crate::sqliteInt_h::SQLITE_ReverseOrder | crate::sqliteInt_h::SQLITE_Defensive) as crate::src::ext::rtree::rtree::u64_0
         | crate::sqliteInt_h::SQLITE_CountRows);
-    (*db).mTrace = 0 as crate::src::ext::rtree::rtree::u8_0;
-    zDbMain = (*(*db).aDb.offset(iDb as isize)).zDbSName;
-    pMain = (*(*db).aDb.offset(iDb as isize)).pBt;
+    __db_ref.mTrace = 0 as crate::src::ext::rtree::rtree::u8_0;
+    zDbMain = (*__db_ref.aDb.offset(iDb as isize)).zDbSName;
+    pMain = (*__db_ref.aDb.offset(iDb as isize)).pBt;
     isMemDb = crate::src::src::pager::sqlite3PagerIsMemdb(crate::src::src::btree::sqlite3BtreePager(pMain) as *mut crate::src::src::pager::Pager);
     crate::src::src::random::sqlite3_randomness(
         ::core::mem::size_of::<crate::src::ext::rtree::rtree::u64_0>() as ::core::ffi::c_int,
@@ -249,7 +250,7 @@ pub unsafe extern "C" fn sqlite3RunVacuum(
         b"vacuum_%016llx\0" as *const u8 as *const ::core::ffi::c_char,
         iRandom,
     );
-    nDb = (*db).nDb;
+    nDb = __db_ref.nDb;
     rc = execSqlF(
         db,
         pzErrMsg,
@@ -257,9 +258,9 @@ pub unsafe extern "C" fn sqlite3RunVacuum(
         zOut,
         &raw mut zDbVacuum as *mut ::core::ffi::c_char,
     );
-    (*db).openFlags = saved_openFlags as ::core::ffi::c_uint;
+    __db_ref.openFlags = saved_openFlags as ::core::ffi::c_uint;
     if !(rc != crate::sqlite3_h::SQLITE_OK) {
-        pDb = (*db).aDb.offset(nDb as isize) as *mut crate::sqliteInt_h::Db;
+        pDb = __db_ref.aDb.offset(nDb as isize) as *mut crate::sqliteInt_h::Db;
         pTemp = (*pDb).pBt;
         if !pOut.is_null() {
             let mut id: *mut crate::sqlite3_h::sqlite3_file =
@@ -279,9 +280,9 @@ pub unsafe extern "C" fn sqlite3RunVacuum(
                 );
                 current_block = 3638292225213388937;
             } else {
-                (*db).mDbFlags |= crate::sqliteInt_h::DBFLAG_VacuumInto as crate::src::ext::rtree::rtree::u32_0;
-                pgflags = ((*(*db).aDb.offset(iDb as isize)).safety_level as crate::src::ext::rtree::rtree::u64_0
-                    | (*db).flags & crate::src::src::pager::PAGER_FLAGS_MASK as crate::src::ext::rtree::rtree::u64_0) as crate::src::ext::rtree::rtree::u32_0;
+                __db_ref.mDbFlags |= crate::sqliteInt_h::DBFLAG_VacuumInto as crate::src::ext::rtree::rtree::u32_0;
+                pgflags = ((*__db_ref.aDb.offset(iDb as isize)).safety_level as crate::src::ext::rtree::rtree::u64_0
+                    | __db_ref.flags & crate::src::src::pager::PAGER_FLAGS_MASK as crate::src::ext::rtree::rtree::u64_0) as crate::src::ext::rtree::rtree::u32_0;
                 current_block = 6450597802325118133;
             }
         } else {
@@ -293,7 +294,7 @@ pub unsafe extern "C" fn sqlite3RunVacuum(
                 nRes = crate::src::src::btree::sqlite3BtreeGetRequestedReserve(pMain);
                 crate::src::src::btree::sqlite3BtreeSetCacheSize(
                     pTemp,
-                    (*(*(*db).aDb.offset(iDb as isize)).pSchema).cache_size,
+                    (*(*__db_ref.aDb.offset(iDb as isize)).pSchema).cache_size,
                 );
                 crate::src::src::btree::sqlite3BtreeSetSpillSize(
                     pTemp,
@@ -323,7 +324,7 @@ pub unsafe extern "C" fn sqlite3RunVacuum(
                             == crate::src::src::pager::PAGER_JOURNALMODE_WAL
                             && pOut.is_null()
                         {
-                            (*db).nextPagesize = 0 as ::core::ffi::c_int;
+                            __db_ref.nextPagesize = 0 as ::core::ffi::c_int;
                         }
                         if crate::src::src::btree::sqlite3BtreeSetPageSize(
                             pTemp,
@@ -334,25 +335,25 @@ pub unsafe extern "C" fn sqlite3RunVacuum(
                             || isMemDb == 0
                                 && crate::src::src::btree::sqlite3BtreeSetPageSize(
                                     pTemp,
-                                    (*db).nextPagesize,
+                                    __db_ref.nextPagesize,
                                     nRes,
                                     0 as ::core::ffi::c_int,
                                 ) != 0
-                            || (*db).mallocFailed as ::core::ffi::c_int != 0
+                            || __db_ref.mallocFailed as ::core::ffi::c_int != 0
                         {
                             rc = crate::sqliteInt_h::SQLITE_NOMEM_BKPT;
                         } else {
                             crate::src::src::btree::sqlite3BtreeSetAutoVacuum(
                                 pTemp,
-                                if (*db).nextAutovac as ::core::ffi::c_int
+                                if __db_ref.nextAutovac as ::core::ffi::c_int
                                     >= 0 as ::core::ffi::c_int
                                 {
-                                    (*db).nextAutovac as ::core::ffi::c_int
+                                    __db_ref.nextAutovac as ::core::ffi::c_int
                                 } else {
                                     crate::src::src::btree::sqlite3BtreeGetAutoVacuum(pMain)
                                 },
                             );
-                            (*db).init.iDb = nDb as crate::src::ext::rtree::rtree::u8_0;
+                            __db_ref.init.iDb = nDb as crate::src::ext::rtree::rtree::u8_0;
                             rc = execSqlF(
                                 db,
                                 pzErrMsg,
@@ -370,7 +371,7 @@ pub unsafe extern "C" fn sqlite3RunVacuum(
                                     zDbMain,
                                 );
                                 if !(rc != crate::sqlite3_h::SQLITE_OK) {
-                                    (*db).init.iDb = 0 as crate::src::ext::rtree::rtree::u8_0;
+                                    __db_ref.init.iDb = 0 as crate::src::ext::rtree::rtree::u8_0;
                                     rc = execSqlF(
                                         db,
                                         pzErrMsg,
@@ -380,7 +381,7 @@ pub unsafe extern "C" fn sqlite3RunVacuum(
                                         zDbMain,
                                         &raw mut zDbVacuum as *mut ::core::ffi::c_char,
                                     );
-                                    (*db).mDbFlags &= !crate::sqliteInt_h::DBFLAG_Vacuum as crate::src::ext::rtree::rtree::u32_0;
+                                    __db_ref.mDbFlags &= !crate::sqliteInt_h::DBFLAG_Vacuum as crate::src::ext::rtree::rtree::u32_0;
                                     if !(rc != crate::sqlite3_h::SQLITE_OK) {
                                         rc = execSqlF(
                                             db,
@@ -486,23 +487,24 @@ pub unsafe extern "C" fn sqlite3RunVacuum(
             }
         }
     }
-    (*db).init.iDb = 0 as crate::src::ext::rtree::rtree::u8_0;
-    (*db).mDbFlags = saved_mDbFlags;
-    (*db).flags = saved_flags;
-    (*db).nChange = saved_nChange;
-    (*db).nTotalChange = saved_nTotalChange;
-    (*db).mTrace = saved_mTrace;
+    __db_ref.init.iDb = 0 as crate::src::ext::rtree::rtree::u8_0;
+    __db_ref.mDbFlags = saved_mDbFlags;
+    __db_ref.flags = saved_flags;
+    __db_ref.nChange = saved_nChange;
+    __db_ref.nTotalChange = saved_nTotalChange;
+    __db_ref.mTrace = saved_mTrace;
     crate::src::src::btree::sqlite3BtreeSetPageSize(
         pMain,
         -(1 as ::core::ffi::c_int),
         0 as ::core::ffi::c_int,
         1 as ::core::ffi::c_int,
     );
-    (*db).autoCommit = 1 as crate::src::ext::rtree::rtree::u8_0;
+    __db_ref.autoCommit = 1 as crate::src::ext::rtree::rtree::u8_0;
     if !pDb.is_null() {
-        crate::src::src::btree::sqlite3BtreeClose((*pDb).pBt);
-        (*pDb).pBt = ::core::ptr::null_mut::<crate::btreeInt_h::Btree>();
-        (*pDb).pSchema = ::core::ptr::null_mut::<crate::sqliteInt_h::Schema>();
+        let __pDb_ref = unsafe { &mut *pDb };
+        crate::src::src::btree::sqlite3BtreeClose(__pDb_ref.pBt);
+        __pDb_ref.pBt = ::core::ptr::null_mut::<crate::btreeInt_h::Btree>();
+        __pDb_ref.pSchema = ::core::ptr::null_mut::<crate::sqliteInt_h::Schema>();
     }
     crate::src::src::build::sqlite3ResetAllSchemasOfConnection(db as *mut crate::sqliteInt_h::sqlite3);
     return rc;

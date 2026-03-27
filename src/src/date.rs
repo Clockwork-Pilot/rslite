@@ -254,12 +254,13 @@ unsafe extern "C" fn parseHhMmSs(
     } else {
         s = 0 as ::core::ffi::c_int;
     }
-    (*p).validJD = 0 as ::core::ffi::c_char;
-    (*p).set_rawS(0 as ::core::ffi::c_uint as ::core::ffi::c_uint);
-    (*p).validHMS = 1 as ::core::ffi::c_char;
-    (*p).h = h;
-    (*p).m = m;
-    (*p).s = s as ::core::ffi::c_double + ms;
+    let __p_ref = unsafe { &mut *p };
+    __p_ref.validJD = 0 as ::core::ffi::c_char;
+    __p_ref.set_rawS(0 as ::core::ffi::c_uint as ::core::ffi::c_uint);
+    __p_ref.validHMS = 1 as ::core::ffi::c_char;
+    __p_ref.h = h;
+    __p_ref.m = m;
+    __p_ref.s = s as ::core::ffi::c_double + ms;
     if parseTimezone(zDate, p) != 0 {
         return 1 as ::core::ffi::c_int;
     }
@@ -283,13 +284,14 @@ unsafe extern "C" fn computeJD(mut p: *mut DateTime) {
     let mut B: ::core::ffi::c_int = 0;
     let mut X1: ::core::ffi::c_int = 0;
     let mut X2: ::core::ffi::c_int = 0;
-    if (*p).validJD != 0 {
+    let __p_ref = unsafe { &mut *p };
+    if __p_ref.validJD != 0 {
         return;
     }
-    if (*p).validYMD != 0 {
-        Y = (*p).Y;
-        M = (*p).M;
-        D = (*p).D;
+    if __p_ref.validYMD != 0 {
+        Y = __p_ref.Y;
+        M = __p_ref.M;
+        D = __p_ref.D;
     } else {
         Y = 2000 as ::core::ffi::c_int;
         M = 1 as ::core::ffi::c_int;
@@ -297,7 +299,7 @@ unsafe extern "C" fn computeJD(mut p: *mut DateTime) {
     }
     if Y < -(4713 as ::core::ffi::c_int)
         || Y > 9999 as ::core::ffi::c_int
-        || (*p).rawS() as ::core::ffi::c_int != 0
+        || __p_ref.rawS() as ::core::ffi::c_int != 0
     {
         datetimeError(p);
         return;
@@ -310,40 +312,41 @@ unsafe extern "C" fn computeJD(mut p: *mut DateTime) {
     B = 38 as ::core::ffi::c_int - A + A / 4 as ::core::ffi::c_int;
     X1 = 36525 as ::core::ffi::c_int * (Y + 4716 as ::core::ffi::c_int) / 100 as ::core::ffi::c_int;
     X2 = 306001 as ::core::ffi::c_int * (M + 1 as ::core::ffi::c_int) / 10000 as ::core::ffi::c_int;
-    (*p).iJD = (((X1 + X2 + D + B) as ::core::ffi::c_double - 1524.5f64)
+    __p_ref.iJD = (((X1 + X2 + D + B) as ::core::ffi::c_double - 1524.5f64)
         * 86400000 as ::core::ffi::c_int as ::core::ffi::c_double) as crate::sqlite3_h::sqlite3_int64;
-    (*p).validJD = 1 as ::core::ffi::c_char;
-    if (*p).validHMS != 0 {
-        (*p).iJD += ((*p).h * 3600000 as ::core::ffi::c_int + (*p).m * 60000 as ::core::ffi::c_int)
+    __p_ref.validJD = 1 as ::core::ffi::c_char;
+    if __p_ref.validHMS != 0 {
+        __p_ref.iJD += (__p_ref.h * 3600000 as ::core::ffi::c_int + __p_ref.m * 60000 as ::core::ffi::c_int)
             as crate::sqlite3_h::sqlite3_int64
-            + ((*p).s * 1000 as ::core::ffi::c_int as ::core::ffi::c_double + 0.5f64)
+            + (__p_ref.s * 1000 as ::core::ffi::c_int as ::core::ffi::c_double + 0.5f64)
                 as crate::sqlite3_h::sqlite3_int64;
-        if (*p).tz != 0 {
-            (*p).iJD -= ((*p).tz * 60000 as ::core::ffi::c_int) as crate::sqlite3_h::sqlite3_int64;
-            (*p).validYMD = 0 as ::core::ffi::c_char;
-            (*p).validHMS = 0 as ::core::ffi::c_char;
-            (*p).tz = 0 as ::core::ffi::c_int;
-            (*p).set_isUtc(1 as ::core::ffi::c_uint as ::core::ffi::c_uint);
-            (*p).set_isLocal(0 as ::core::ffi::c_uint as ::core::ffi::c_uint);
+        if __p_ref.tz != 0 {
+            __p_ref.iJD -= (__p_ref.tz * 60000 as ::core::ffi::c_int) as crate::sqlite3_h::sqlite3_int64;
+            __p_ref.validYMD = 0 as ::core::ffi::c_char;
+            __p_ref.validHMS = 0 as ::core::ffi::c_char;
+            __p_ref.tz = 0 as ::core::ffi::c_int;
+            __p_ref.set_isUtc(1 as ::core::ffi::c_uint as ::core::ffi::c_uint);
+            __p_ref.set_isLocal(0 as ::core::ffi::c_uint as ::core::ffi::c_uint);
         }
     }
 }
 
 unsafe extern "C" fn computeFloor(mut p: *mut DateTime) {
-    if (*p).D <= 28 as ::core::ffi::c_int {
-        (*p).nFloor = 0 as ::core::ffi::c_char;
-    } else if (1 as ::core::ffi::c_int) << (*p).M & 0x15aa as ::core::ffi::c_int != 0 {
-        (*p).nFloor = 0 as ::core::ffi::c_char;
-    } else if (*p).M != 2 as ::core::ffi::c_int {
-        (*p).nFloor =
-            ((*p).D == 31 as ::core::ffi::c_int) as ::core::ffi::c_int as ::core::ffi::c_char;
-    } else if (*p).Y % 4 as ::core::ffi::c_int != 0 as ::core::ffi::c_int
-        || (*p).Y % 100 as ::core::ffi::c_int == 0 as ::core::ffi::c_int
-            && (*p).Y % 400 as ::core::ffi::c_int != 0 as ::core::ffi::c_int
+    let __p_ref = unsafe { &mut *p };
+    if __p_ref.D <= 28 as ::core::ffi::c_int {
+        __p_ref.nFloor = 0 as ::core::ffi::c_char;
+    } else if (1 as ::core::ffi::c_int) << __p_ref.M & 0x15aa as ::core::ffi::c_int != 0 {
+        __p_ref.nFloor = 0 as ::core::ffi::c_char;
+    } else if __p_ref.M != 2 as ::core::ffi::c_int {
+        __p_ref.nFloor =
+            (__p_ref.D == 31 as ::core::ffi::c_int) as ::core::ffi::c_int as ::core::ffi::c_char;
+    } else if __p_ref.Y % 4 as ::core::ffi::c_int != 0 as ::core::ffi::c_int
+        || __p_ref.Y % 100 as ::core::ffi::c_int == 0 as ::core::ffi::c_int
+            && __p_ref.Y % 400 as ::core::ffi::c_int != 0 as ::core::ffi::c_int
     {
-        (*p).nFloor = ((*p).D - 28 as ::core::ffi::c_int) as ::core::ffi::c_char;
+        __p_ref.nFloor = (__p_ref.D - 28 as ::core::ffi::c_int) as ::core::ffi::c_char;
     } else {
-        (*p).nFloor = ((*p).D - 29 as ::core::ffi::c_int) as ::core::ffi::c_char;
+        __p_ref.nFloor = (__p_ref.D - 29 as ::core::ffi::c_int) as ::core::ffi::c_char;
     };
 }
 
@@ -380,20 +383,21 @@ unsafe extern "C" fn parseYyyyMmDd(
     {
         zDate = zDate.offset(1);
     }
+    let __p_ref = unsafe { &mut *p };
     if !(parseHhMmSs(zDate, p) == 0 as ::core::ffi::c_int) {
         if *zDate as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
-            (*p).validHMS = 0 as ::core::ffi::c_char;
+            __p_ref.validHMS = 0 as ::core::ffi::c_char;
         } else {
             return 1 as ::core::ffi::c_int;
         }
     }
-    (*p).validJD = 0 as ::core::ffi::c_char;
-    (*p).validYMD = 1 as ::core::ffi::c_char;
-    (*p).Y = if neg != 0 { -Y } else { Y };
-    (*p).M = M;
-    (*p).D = D;
+    __p_ref.validJD = 0 as ::core::ffi::c_char;
+    __p_ref.validYMD = 1 as ::core::ffi::c_char;
+    __p_ref.Y = if neg != 0 { -Y } else { Y };
+    __p_ref.M = M;
+    __p_ref.D = D;
     computeFloor(p);
-    if (*p).tz != 0 {
+    if __p_ref.tz != 0 {
         computeJD(p);
     }
     return 0 as ::core::ffi::c_int;
@@ -405,9 +409,10 @@ unsafe extern "C" fn setDateTimeToCurrent(
 ) -> ::core::ffi::c_int {
     (*p).iJD = crate::src::src::vdbeapi::sqlite3StmtCurrentTime(context);
     if (*p).iJD > 0 as crate::sqlite3_h::sqlite3_int64 {
-        (*p).validJD = 1 as ::core::ffi::c_char;
-        (*p).set_isUtc(1 as ::core::ffi::c_uint as ::core::ffi::c_uint);
-        (*p).set_isLocal(0 as ::core::ffi::c_uint as ::core::ffi::c_uint);
+        let __p_ref = unsafe { &mut *p };
+        __p_ref.validJD = 1 as ::core::ffi::c_char;
+        __p_ref.set_isUtc(1 as ::core::ffi::c_uint as ::core::ffi::c_uint);
+        __p_ref.set_isLocal(0 as ::core::ffi::c_uint as ::core::ffi::c_uint);
         clearYMD_HMS_TZ(p);
         return 0 as ::core::ffi::c_int;
     } else {
@@ -480,18 +485,19 @@ unsafe extern "C" fn computeYMD(mut p: *mut DateTime) {
     let mut D: ::core::ffi::c_int = 0;
     let mut E: ::core::ffi::c_int = 0;
     let mut X1: ::core::ffi::c_int = 0;
-    if (*p).validYMD != 0 {
+    let __p_ref = unsafe { &mut *p };
+    if __p_ref.validYMD != 0 {
         return;
     }
-    if (*p).validJD == 0 {
-        (*p).Y = 2000 as ::core::ffi::c_int;
-        (*p).M = 1 as ::core::ffi::c_int;
-        (*p).D = 1 as ::core::ffi::c_int;
-    } else if validJulianDay((*p).iJD) == 0 {
+    if __p_ref.validJD == 0 {
+        __p_ref.Y = 2000 as ::core::ffi::c_int;
+        __p_ref.M = 1 as ::core::ffi::c_int;
+        __p_ref.D = 1 as ::core::ffi::c_int;
+    } else if validJulianDay(__p_ref.iJD) == 0 {
         datetimeError(p);
         return;
     } else {
-        Z = (((*p).iJD + 43200000 as crate::sqlite3_h::sqlite3_int64) / 86400000 as crate::sqlite3_h::sqlite3_int64)
+        Z = ((__p_ref.iJD + 43200000 as crate::sqlite3_h::sqlite3_int64) / 86400000 as crate::sqlite3_h::sqlite3_int64)
             as ::core::ffi::c_int;
         alpha = ((Z as ::core::ffi::c_double + 32044.75f64) / 36524.25f64) as ::core::ffi::c_int
             - 52 as ::core::ffi::c_int;
@@ -504,36 +510,37 @@ unsafe extern "C" fn computeYMD(mut p: *mut DateTime) {
             / 100 as ::core::ffi::c_int;
         E = ((B - D) as ::core::ffi::c_double / 30.6001f64) as ::core::ffi::c_int;
         X1 = (30.6001f64 * E as ::core::ffi::c_double) as ::core::ffi::c_int;
-        (*p).D = B - D - X1;
-        (*p).M = if E < 14 as ::core::ffi::c_int {
+        __p_ref.D = B - D - X1;
+        __p_ref.M = if E < 14 as ::core::ffi::c_int {
             E - 1 as ::core::ffi::c_int
         } else {
             E - 13 as ::core::ffi::c_int
         };
-        (*p).Y = if (*p).M > 2 as ::core::ffi::c_int {
+        __p_ref.Y = if __p_ref.M > 2 as ::core::ffi::c_int {
             C - 4716 as ::core::ffi::c_int
         } else {
             C - 4715 as ::core::ffi::c_int
         };
     }
-    (*p).validYMD = 1 as ::core::ffi::c_char;
+    __p_ref.validYMD = 1 as ::core::ffi::c_char;
 }
 
 unsafe extern "C" fn computeHMS(mut p: *mut DateTime) {
     let mut day_ms: ::core::ffi::c_int = 0;
     let mut day_min: ::core::ffi::c_int = 0;
-    if (*p).validHMS != 0 {
+    let __p_ref = unsafe { &mut *p };
+    if __p_ref.validHMS != 0 {
         return;
     }
     computeJD(p);
     day_ms =
-        (((*p).iJD + 43200000 as crate::sqlite3_h::sqlite3_int64) % 86400000 as crate::sqlite3_h::sqlite3_int64) as ::core::ffi::c_int;
-    (*p).s = (day_ms % 60000 as ::core::ffi::c_int) as ::core::ffi::c_double / 1000.0f64;
+        ((__p_ref.iJD + 43200000 as crate::sqlite3_h::sqlite3_int64) % 86400000 as crate::sqlite3_h::sqlite3_int64) as ::core::ffi::c_int;
+    __p_ref.s = (day_ms % 60000 as ::core::ffi::c_int) as ::core::ffi::c_double / 1000.0f64;
     day_min = day_ms / 60000 as ::core::ffi::c_int;
-    (*p).m = day_min % 60 as ::core::ffi::c_int;
-    (*p).h = day_min / 60 as ::core::ffi::c_int;
-    (*p).set_rawS(0 as ::core::ffi::c_uint as ::core::ffi::c_uint);
-    (*p).validHMS = 1 as ::core::ffi::c_char;
+    __p_ref.m = day_min % 60 as ::core::ffi::c_int;
+    __p_ref.h = day_min / 60 as ::core::ffi::c_int;
+    __p_ref.set_rawS(0 as ::core::ffi::c_uint as ::core::ffi::c_uint);
+    __p_ref.validHMS = 1 as ::core::ffi::c_char;
 }
 
 unsafe extern "C" fn computeYMD_HMS(mut p: *mut DateTime) {
@@ -542,9 +549,10 @@ unsafe extern "C" fn computeYMD_HMS(mut p: *mut DateTime) {
 }
 
 unsafe extern "C" fn clearYMD_HMS_TZ(mut p: *mut DateTime) {
-    (*p).validYMD = 0 as ::core::ffi::c_char;
-    (*p).validHMS = 0 as ::core::ffi::c_char;
-    (*p).tz = 0 as ::core::ffi::c_int;
+    let __p_ref = unsafe { &mut *p };
+    __p_ref.validYMD = 0 as ::core::ffi::c_char;
+    __p_ref.validHMS = 0 as ::core::ffi::c_char;
+    __p_ref.tz = 0 as ::core::ffi::c_int;
 }
 
 unsafe extern "C" fn osLocaltime(mut t: *mut crate::stdlib::time_t, mut pTm: *mut ::libc::tm) -> ::core::ffi::c_int {
@@ -573,8 +581,9 @@ unsafe extern "C" fn toLocaltime(
     let mut sLocal: ::libc::tm = unsafe { ::core::mem::zeroed() };
     let mut iYearDiff: ::core::ffi::c_int = 0;
     computeJD(p);
-    if (*p).iJD < 2108667600 as crate::src::ext::rtree::rtree::i64_0 * 100000 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::i64_0
-        || (*p).iJD > 2130141456 as crate::src::ext::rtree::rtree::i64_0 * 100000 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::i64_0
+    let __p_ref = unsafe { &mut *p };
+    if __p_ref.iJD < 2108667600 as crate::src::ext::rtree::rtree::i64_0 * 100000 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::i64_0
+        || __p_ref.iJD > 2130141456 as crate::src::ext::rtree::rtree::i64_0 * 100000 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::i64_0
     {
         let mut x: DateTime = *p;
         computeYMD_HMS(&raw mut x);
@@ -586,7 +595,7 @@ unsafe extern "C" fn toLocaltime(
             - 21086676 as crate::src::ext::rtree::rtree::i64_0 * 10000 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::i64_0) as crate::stdlib::time_t;
     } else {
         iYearDiff = 0 as ::core::ffi::c_int;
-        t = ((*p).iJD as crate::src::ext::rtree::rtree::i64_0 / 1000 as crate::src::ext::rtree::rtree::i64_0
+        t = (__p_ref.iJD as crate::src::ext::rtree::rtree::i64_0 / 1000 as crate::src::ext::rtree::rtree::i64_0
             - 21086676 as crate::src::ext::rtree::rtree::i64_0 * 10000 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::i64_0) as crate::stdlib::time_t;
     }
     if osLocaltime(&raw mut t, &raw mut sLocal) != 0 {
@@ -597,19 +606,19 @@ unsafe extern "C" fn toLocaltime(
         );
         return crate::sqlite3_h::SQLITE_ERROR;
     }
-    (*p).Y = sLocal.tm_year + 1900 as ::core::ffi::c_int - iYearDiff;
-    (*p).M = sLocal.tm_mon + 1 as ::core::ffi::c_int;
-    (*p).D = sLocal.tm_mday;
-    (*p).h = sLocal.tm_hour;
-    (*p).m = sLocal.tm_min;
-    (*p).s = sLocal.tm_sec as ::core::ffi::c_double
-        + ((*p).iJD % 1000 as crate::sqlite3_h::sqlite3_int64) as ::core::ffi::c_double * 0.001f64;
-    (*p).validYMD = 1 as ::core::ffi::c_char;
-    (*p).validHMS = 1 as ::core::ffi::c_char;
-    (*p).validJD = 0 as ::core::ffi::c_char;
-    (*p).set_rawS(0 as ::core::ffi::c_uint as ::core::ffi::c_uint);
-    (*p).tz = 0 as ::core::ffi::c_int;
-    (*p).set_isError(0 as ::core::ffi::c_uint as ::core::ffi::c_uint);
+    __p_ref.Y = sLocal.tm_year + 1900 as ::core::ffi::c_int - iYearDiff;
+    __p_ref.M = sLocal.tm_mon + 1 as ::core::ffi::c_int;
+    __p_ref.D = sLocal.tm_mday;
+    __p_ref.h = sLocal.tm_hour;
+    __p_ref.m = sLocal.tm_min;
+    __p_ref.s = sLocal.tm_sec as ::core::ffi::c_double
+        + (__p_ref.iJD % 1000 as crate::sqlite3_h::sqlite3_int64) as ::core::ffi::c_double * 0.001f64;
+    __p_ref.validYMD = 1 as ::core::ffi::c_char;
+    __p_ref.validHMS = 1 as ::core::ffi::c_char;
+    __p_ref.validJD = 0 as ::core::ffi::c_char;
+    __p_ref.set_rawS(0 as ::core::ffi::c_uint as ::core::ffi::c_uint);
+    __p_ref.tz = 0 as ::core::ffi::c_int;
+    __p_ref.set_isError(0 as ::core::ffi::c_uint as ::core::ffi::c_uint);
     return crate::sqlite3_h::SQLITE_OK;
 }
 
@@ -655,20 +664,21 @@ static mut aXformType: [C2RustUnnamed; 6] = unsafe {
 };
 
 unsafe extern "C" fn autoAdjustDate(mut p: *mut DateTime) {
-    if (*p).rawS() == 0 || (*p).validJD as ::core::ffi::c_int != 0 {
-        (*p).set_rawS(0 as ::core::ffi::c_uint as ::core::ffi::c_uint);
-    } else if (*p).s
+    let __p_ref = unsafe { &mut *p };
+    if __p_ref.rawS() == 0 || __p_ref.validJD as ::core::ffi::c_int != 0 {
+        __p_ref.set_rawS(0 as ::core::ffi::c_uint as ::core::ffi::c_uint);
+    } else if __p_ref.s
         >= (-(21086676 as ::core::ffi::c_int) as crate::src::ext::rtree::rtree::i64_0 * 10000 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::i64_0)
             as ::core::ffi::c_double
-        && (*p).s
+        && __p_ref.s
             <= (25340230 as crate::src::ext::rtree::rtree::i64_0 * 10000 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::i64_0 + 799 as crate::src::ext::rtree::rtree::i64_0)
                 as ::core::ffi::c_double
     {
-        let mut r: ::core::ffi::c_double = (*p).s * 1000.0f64 + 210866760000000.0f64;
+        let mut r: ::core::ffi::c_double = __p_ref.s * 1000.0f64 + 210866760000000.0f64;
         clearYMD_HMS_TZ(p);
-        (*p).iJD = (r + 0.5f64) as crate::sqlite3_h::sqlite3_int64;
-        (*p).validJD = 1 as ::core::ffi::c_char;
-        (*p).set_rawS(0 as ::core::ffi::c_uint as ::core::ffi::c_uint);
+        __p_ref.iJD = (r + 0.5f64) as crate::sqlite3_h::sqlite3_int64;
+        __p_ref.validJD = 1 as ::core::ffi::c_char;
+        __p_ref.set_rawS(0 as ::core::ffi::c_uint as ::core::ffi::c_uint);
     }
 }
 
@@ -737,13 +747,14 @@ unsafe extern "C" fn parseModifier(
                 == 0 as ::core::ffi::c_int
                 && crate::src::src::vdbeaux::sqlite3NotPureFunc(pCtx) != 0
             {
-                rc = if (*p).isLocal() as ::core::ffi::c_int != 0 {
+                let __p_ref = unsafe { &mut *p };
+                rc = if __p_ref.isLocal() as ::core::ffi::c_int != 0 {
                     crate::sqlite3_h::SQLITE_OK
                 } else {
                     toLocaltime(p, pCtx)
                 };
-                (*p).set_isUtc(0 as ::core::ffi::c_uint as ::core::ffi::c_uint);
-                (*p).set_isLocal(1 as ::core::ffi::c_uint as ::core::ffi::c_uint);
+                __p_ref.set_isUtc(0 as ::core::ffi::c_uint as ::core::ffi::c_uint);
+                __p_ref.set_isLocal(1 as ::core::ffi::c_uint as ::core::ffi::c_uint);
             }
         }
         117 => {
@@ -757,9 +768,10 @@ unsafe extern "C" fn parseModifier(
                 r = (*p).s * 1000.0f64 + 210866760000000.0f64;
                 if r >= 0.0f64 && r < 464269060800000.0f64 {
                     clearYMD_HMS_TZ(p);
-                    (*p).iJD = (r + 0.5f64) as crate::sqlite3_h::sqlite3_int64;
-                    (*p).validJD = 1 as ::core::ffi::c_char;
-                    (*p).set_rawS(0 as ::core::ffi::c_uint as ::core::ffi::c_uint);
+                    let __p_ref = unsafe { &mut *p };
+                    __p_ref.iJD = (r + 0.5f64) as crate::sqlite3_h::sqlite3_int64;
+                    __p_ref.validJD = 1 as ::core::ffi::c_char;
+                    __p_ref.set_rawS(0 as ::core::ffi::c_uint as ::core::ffi::c_uint);
                     rc = 0 as ::core::ffi::c_int;
                 }
             } else if crate::src::src::util::sqlite3_stricmp(z, b"utc\0" as *const u8 as *const ::core::ffi::c_char)
@@ -772,7 +784,8 @@ unsafe extern "C" fn parseModifier(
                     let mut cnt: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
                     let mut iErr: crate::src::ext::rtree::rtree::i64_0 = 0;
                     computeJD(p);
-                    iOrigJD = (*p).iJD as crate::src::ext::rtree::rtree::i64_0;
+                    let __p_ref = unsafe { &mut *p };
+                    iOrigJD = __p_ref.iJD as crate::src::ext::rtree::rtree::i64_0;
                     iGuess = iOrigJD;
                     iErr = 0 as crate::src::ext::rtree::rtree::i64_0;
                     loop {
@@ -799,10 +812,10 @@ unsafe extern "C" fn parseModifier(
                         0 as ::core::ffi::c_int,
                         ::core::mem::size_of::<DateTime>() as crate::__stddef_size_t_h::size_t,
                     );
-                    (*p).iJD = iGuess as crate::sqlite3_h::sqlite3_int64;
-                    (*p).validJD = 1 as ::core::ffi::c_char;
-                    (*p).set_isUtc(1 as ::core::ffi::c_uint as ::core::ffi::c_uint);
-                    (*p).set_isLocal(0 as ::core::ffi::c_uint as ::core::ffi::c_uint);
+                    __p_ref.iJD = iGuess as crate::sqlite3_h::sqlite3_int64;
+                    __p_ref.validJD = 1 as ::core::ffi::c_char;
+                    __p_ref.set_isUtc(1 as ::core::ffi::c_uint as ::core::ffi::c_uint);
+                    __p_ref.set_isLocal(0 as ::core::ffi::c_uint as ::core::ffi::c_uint);
                 }
                 rc = crate::sqlite3_h::SQLITE_OK;
             }
@@ -830,20 +843,22 @@ unsafe extern "C" fn parseModifier(
             {
                 let mut Z: crate::sqlite3_h::sqlite3_int64 = 0;
                 computeYMD_HMS(p);
-                (*p).tz = 0 as ::core::ffi::c_int;
-                (*p).validJD = 0 as ::core::ffi::c_char;
+                let __p_ref = unsafe { &mut *p };
+                __p_ref.tz = 0 as ::core::ffi::c_int;
+                __p_ref.validJD = 0 as ::core::ffi::c_char;
                 computeJD(p);
-                Z = ((*p).iJD + 129600000 as crate::sqlite3_h::sqlite3_int64) / 86400000 as crate::sqlite3_h::sqlite3_int64
+                Z = (__p_ref.iJD + 129600000 as crate::sqlite3_h::sqlite3_int64) / 86400000 as crate::sqlite3_h::sqlite3_int64
                     % 7 as crate::sqlite3_h::sqlite3_int64;
                 if Z > n as crate::sqlite3_h::sqlite3_int64 {
                     Z -= 7 as crate::sqlite3_h::sqlite3_int64;
                 }
-                (*p).iJD += (n as crate::sqlite3_h::sqlite3_int64 - Z) * 86400000 as crate::sqlite3_h::sqlite3_int64;
+                __p_ref.iJD += (n as crate::sqlite3_h::sqlite3_int64 - Z) * 86400000 as crate::sqlite3_h::sqlite3_int64;
                 clearYMD_HMS_TZ(p);
                 rc = 0 as ::core::ffi::c_int;
             }
         }
         115 => {
+            let __p_ref = unsafe { &mut *p };
             if crate::src::src::util::sqlite3_strnicmp(
                 z,
                 b"start of \0" as *const u8 as *const ::core::ffi::c_char,
@@ -855,29 +870,29 @@ unsafe extern "C" fn parseModifier(
                     || crate::src::src::util::sqlite3_stricmp(z, b"subsecond\0" as *const u8 as *const ::core::ffi::c_char)
                         == 0 as ::core::ffi::c_int
                 {
-                    (*p).set_useSubsec(1 as ::core::ffi::c_uint as ::core::ffi::c_uint);
+                    __p_ref.set_useSubsec(1 as ::core::ffi::c_uint as ::core::ffi::c_uint);
                     rc = 0 as ::core::ffi::c_int;
                 }
-            } else if !((*p).validJD == 0 && (*p).validYMD == 0 && (*p).validHMS == 0) {
+            } else if !(__p_ref.validJD == 0 && __p_ref.validYMD == 0 && __p_ref.validHMS == 0) {
                 z = z.offset(9 as isize);
                 computeYMD(p);
-                (*p).validHMS = 1 as ::core::ffi::c_char;
-                (*p).m = 0 as ::core::ffi::c_int;
-                (*p).h = (*p).m;
-                (*p).s = 0.0f64;
-                (*p).set_rawS(0 as ::core::ffi::c_uint as ::core::ffi::c_uint);
-                (*p).tz = 0 as ::core::ffi::c_int;
-                (*p).validJD = 0 as ::core::ffi::c_char;
+                __p_ref.validHMS = 1 as ::core::ffi::c_char;
+                __p_ref.m = 0 as ::core::ffi::c_int;
+                __p_ref.h = __p_ref.m;
+                __p_ref.s = 0.0f64;
+                __p_ref.set_rawS(0 as ::core::ffi::c_uint as ::core::ffi::c_uint);
+                __p_ref.tz = 0 as ::core::ffi::c_int;
+                __p_ref.validJD = 0 as ::core::ffi::c_char;
                 if crate::src::src::util::sqlite3_stricmp(z, b"month\0" as *const u8 as *const ::core::ffi::c_char)
                     == 0 as ::core::ffi::c_int
                 {
-                    (*p).D = 1 as ::core::ffi::c_int;
+                    __p_ref.D = 1 as ::core::ffi::c_int;
                     rc = 0 as ::core::ffi::c_int;
                 } else if crate::src::src::util::sqlite3_stricmp(z, b"year\0" as *const u8 as *const ::core::ffi::c_char)
                     == 0 as ::core::ffi::c_int
                 {
-                    (*p).M = 1 as ::core::ffi::c_int;
-                    (*p).D = 1 as ::core::ffi::c_int;
+                    __p_ref.M = 1 as ::core::ffi::c_int;
+                    __p_ref.D = 1 as ::core::ffi::c_int;
                     rc = 0 as ::core::ffi::c_int;
                 } else if crate::src::src::util::sqlite3_stricmp(z, b"day\0" as *const u8 as *const ::core::ffi::c_char)
                     == 0 as ::core::ffi::c_int
@@ -978,29 +993,30 @@ unsafe extern "C" fn parseModifier(
                                     current_block_175 = 2413388577390654262;
                                 } else {
                                     computeYMD_HMS(p);
-                                    (*p).validJD = 0 as ::core::ffi::c_char;
+                                    let __p_ref = unsafe { &mut *p };
+                                    __p_ref.validJD = 0 as ::core::ffi::c_char;
                                     if z0 as ::core::ffi::c_int == '-' as i32 {
-                                        (*p).Y -= Y;
-                                        (*p).M -= M;
+                                        __p_ref.Y -= Y;
+                                        __p_ref.M -= M;
                                         D = -D;
                                     } else {
-                                        (*p).Y += Y;
-                                        (*p).M += M;
+                                        __p_ref.Y += Y;
+                                        __p_ref.M += M;
                                     }
-                                    x = if (*p).M > 0 as ::core::ffi::c_int {
-                                        ((*p).M - 1 as ::core::ffi::c_int)
+                                    x = if __p_ref.M > 0 as ::core::ffi::c_int {
+                                        (__p_ref.M - 1 as ::core::ffi::c_int)
                                             / 12 as ::core::ffi::c_int
                                     } else {
-                                        ((*p).M - 12 as ::core::ffi::c_int)
+                                        (__p_ref.M - 12 as ::core::ffi::c_int)
                                             / 12 as ::core::ffi::c_int
                                     };
-                                    (*p).Y += x;
-                                    (*p).M -= x * 12 as ::core::ffi::c_int;
+                                    __p_ref.Y += x;
+                                    __p_ref.M -= x * 12 as ::core::ffi::c_int;
                                     computeFloor(p);
                                     computeJD(p);
-                                    (*p).validHMS = 0 as ::core::ffi::c_char;
-                                    (*p).validYMD = 0 as ::core::ffi::c_char;
-                                    (*p).iJD += (D as crate::src::ext::rtree::rtree::i64_0 * 86400000 as crate::src::ext::rtree::rtree::i64_0) as crate::sqlite3_h::sqlite_int64;
+                                    __p_ref.validHMS = 0 as ::core::ffi::c_char;
+                                    __p_ref.validYMD = 0 as ::core::ffi::c_char;
+                                    __p_ref.iJD += (D as crate::src::ext::rtree::rtree::i64_0 * 86400000 as crate::src::ext::rtree::rtree::i64_0) as crate::sqlite3_h::sqlite_int64;
                                     if *z.offset(11 as isize)
                                         as ::core::ffi::c_int
                                         == 0 as ::core::ffi::c_int
@@ -1118,18 +1134,19 @@ unsafe extern "C" fn parseModifier(
                                         match i {
                                             4 => {
                                                 computeYMD_HMS(p);
-                                                (*p).M += r as ::core::ffi::c_int;
-                                                x = if (*p).M > 0 as ::core::ffi::c_int {
-                                                    ((*p).M - 1 as ::core::ffi::c_int)
+                                                let __p_ref = unsafe { &mut *p };
+                                                __p_ref.M += r as ::core::ffi::c_int;
+                                                x = if __p_ref.M > 0 as ::core::ffi::c_int {
+                                                    (__p_ref.M - 1 as ::core::ffi::c_int)
                                                         / 12 as ::core::ffi::c_int
                                                 } else {
-                                                    ((*p).M - 12 as ::core::ffi::c_int)
+                                                    (__p_ref.M - 12 as ::core::ffi::c_int)
                                                         / 12 as ::core::ffi::c_int
                                                 };
-                                                (*p).Y += x;
-                                                (*p).M -= x * 12 as ::core::ffi::c_int;
+                                                __p_ref.Y += x;
+                                                __p_ref.M -= x * 12 as ::core::ffi::c_int;
                                                 computeFloor(p);
-                                                (*p).validJD = 0 as ::core::ffi::c_char;
+                                                __p_ref.validJD = 0 as ::core::ffi::c_char;
                                                 r -= r as ::core::ffi::c_int
                                                     as ::core::ffi::c_double;
                                             }
@@ -1213,14 +1230,15 @@ unsafe extern "C" fn isDate(
         i += 1;
     }
     computeJD(p);
-    if (*p).isError() as ::core::ffi::c_int != 0 || validJulianDay((*p).iJD) == 0 {
+    let __p_ref = unsafe { &mut *p };
+    if __p_ref.isError() as ::core::ffi::c_int != 0 || validJulianDay(__p_ref.iJD) == 0 {
         return 1 as ::core::ffi::c_int;
     }
     if argc == 1 as ::core::ffi::c_int
-        && (*p).validYMD as ::core::ffi::c_int != 0
-        && (*p).D > 28 as ::core::ffi::c_int
+        && __p_ref.validYMD as ::core::ffi::c_int != 0
+        && __p_ref.D > 28 as ::core::ffi::c_int
     {
-        (*p).validYMD = 0 as ::core::ffi::c_char;
+        __p_ref.validYMD = 0 as ::core::ffi::c_char;
     }
     return 0 as ::core::ffi::c_int;
 }

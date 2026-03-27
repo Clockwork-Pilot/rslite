@@ -74,14 +74,15 @@ pub unsafe extern "C" fn sqlite3WhereOrderByLimitOptLabel(
     mut pWInfo: *mut crate::whereInt_h::WhereInfo,
 ) -> ::core::ffi::c_int {
     let mut pInner: *mut crate::whereInt_h::WhereLevel = ::core::ptr::null_mut::<crate::whereInt_h::WhereLevel>();
-    if (*pWInfo).bOrderedInnerLoop() == 0 {
-        return (*pWInfo).iContinue;
+    let __pWInfo_ref = unsafe { &mut *pWInfo };
+    if __pWInfo_ref.bOrderedInnerLoop() == 0 {
+        return __pWInfo_ref.iContinue;
     }
-    pInner = (&raw mut (*pWInfo).a as *mut crate::whereInt_h::WhereLevel)
-        .offset(((*pWInfo).nLevel as ::core::ffi::c_int - 1 as ::core::ffi::c_int) as isize)
+    pInner = (&raw mut __pWInfo_ref.a as *mut crate::whereInt_h::WhereLevel)
+        .offset((__pWInfo_ref.nLevel as ::core::ffi::c_int - 1 as ::core::ffi::c_int) as isize)
         as *mut crate::whereInt_h::WhereLevel;
     return if !(*pInner).pRJ.is_null() {
-        (*pWInfo).iContinue
+        __pWInfo_ref.iContinue
     } else {
         (*pInner).addrNxt
     };
@@ -94,22 +95,23 @@ pub unsafe extern "C" fn sqlite3WhereMinMaxOptEarlyOut(
 ) {
     let mut pInner: *mut crate::whereInt_h::WhereLevel = ::core::ptr::null_mut::<crate::whereInt_h::WhereLevel>();
     let mut i: ::core::ffi::c_int = 0;
-    if (*pWInfo).bOrderedInnerLoop() == 0 {
+    let __pWInfo_ref = unsafe { &mut *pWInfo };
+    if __pWInfo_ref.bOrderedInnerLoop() == 0 {
         return;
     }
-    if (*pWInfo).nOBSat as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
+    if __pWInfo_ref.nOBSat as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
         return;
     }
-    i = (*pWInfo).nLevel as ::core::ffi::c_int - 1 as ::core::ffi::c_int;
+    i = __pWInfo_ref.nLevel as ::core::ffi::c_int - 1 as ::core::ffi::c_int;
     while i >= 0 as ::core::ffi::c_int {
-        pInner = (&raw mut (*pWInfo).a as *mut crate::whereInt_h::WhereLevel).offset(i as isize) as *mut crate::whereInt_h::WhereLevel;
+        pInner = (&raw mut __pWInfo_ref.a as *mut crate::whereInt_h::WhereLevel).offset(i as isize) as *mut crate::whereInt_h::WhereLevel;
         if (*(*pInner).pWLoop).wsFlags & crate::whereInt_h::WHERE_COLUMN_IN as crate::src::ext::rtree::rtree::u32_0 != 0 as crate::src::ext::rtree::rtree::u32_0 {
             crate::src::src::vdbeaux::sqlite3VdbeGoto(v, (*pInner).addrNxt);
             return;
         }
         i -= 1;
     }
-    crate::src::src::vdbeaux::sqlite3VdbeGoto(v, (*pWInfo).iBreak);
+    crate::src::src::vdbeaux::sqlite3VdbeGoto(v, __pWInfo_ref.iBreak);
 }
 #[no_mangle]
 
@@ -145,11 +147,12 @@ pub unsafe extern "C" fn sqlite3WhereUsesDeferredSeek(
 }
 
 unsafe extern "C" fn whereOrMove(mut pDest: *mut crate::whereInt_h::WhereOrSet, mut pSrc: *mut crate::whereInt_h::WhereOrSet) {
-    (*pDest).n = (*pSrc).n;
+    let __pDest_ref = unsafe { &mut *pDest };
+    __pDest_ref.n = (*pSrc).n;
     ::libc::memcpy(
-        &raw mut (*pDest).a as *mut crate::whereInt_h::WhereOrCost as *mut ::core::ffi::c_void,
+        &raw mut __pDest_ref.a as *mut crate::whereInt_h::WhereOrCost as *mut ::core::ffi::c_void,
         &raw mut (*pSrc).a as *mut crate::whereInt_h::WhereOrCost as *const ::core::ffi::c_void,
-        ((*pDest).n as crate::__stddef_size_t_h::size_t).wrapping_mul(::core::mem::size_of::<crate::whereInt_h::WhereOrCost>() as crate::__stddef_size_t_h::size_t),
+        (__pDest_ref.n as crate::__stddef_size_t_h::size_t).wrapping_mul(::core::mem::size_of::<crate::whereInt_h::WhereOrCost>() as crate::__stddef_size_t_h::size_t),
     );
 }
 
@@ -186,9 +189,10 @@ unsafe extern "C" fn whereOrInsert(
     match current_block {
         2473556513754201174 => {
             if ((*pSet).n as ::core::ffi::c_int) < crate::whereInt_h::N_OR_COST {
-                let fresh13 = (*pSet).n;
-                (*pSet).n = (*pSet).n.wrapping_add(1);
-                p = (&raw mut (*pSet).a as *mut crate::whereInt_h::WhereOrCost).offset(fresh13 as isize)
+                let __pSet_ref = unsafe { &mut *pSet };
+                let fresh13 = __pSet_ref.n;
+                __pSet_ref.n = __pSet_ref.n.wrapping_add(1);
+                p = (&raw mut __pSet_ref.a as *mut crate::whereInt_h::WhereOrCost).offset(fresh13 as isize)
                     as *mut crate::whereInt_h::WhereOrCost;
                 (*p).nOut = nOut;
             } else {
@@ -273,9 +277,10 @@ pub unsafe extern "C" fn sqlite3WhereRealloc(
 }
 
 unsafe extern "C" fn createMask(mut pMaskSet: *mut crate::whereInt_h::WhereMaskSet, mut iCursor: ::core::ffi::c_int) {
-    let fresh26 = (*pMaskSet).n;
-    (*pMaskSet).n = (*pMaskSet).n + 1;
-    (*pMaskSet).ix[fresh26 as usize] = iCursor;
+    let __pMaskSet_ref = unsafe { &mut *pMaskSet };
+    let fresh26 = __pMaskSet_ref.n;
+    __pMaskSet_ref.n = __pMaskSet_ref.n + 1;
+    __pMaskSet_ref.ix[fresh26 as usize] = iCursor;
 }
 
 unsafe extern "C" fn whereRightSubexprIsColumn(mut p: *mut crate::sqliteInt_h::Expr) -> *mut crate::sqliteInt_h::Expr {
@@ -352,10 +357,11 @@ unsafe extern "C" fn whereScanNext(mut pScan: *mut crate::whereInt_h::WhereScan)
     let mut k: ::core::ffi::c_int = (*pScan).k;
     pWC = (*pScan).pWC;
     loop {
-        iColumn = (*pScan).aiColumn
-            [((*pScan).iEquiv as ::core::ffi::c_int - 1 as ::core::ffi::c_int) as usize];
-        iCur = (*pScan).aiCur
-            [((*pScan).iEquiv as ::core::ffi::c_int - 1 as ::core::ffi::c_int) as usize];
+        let __pScan_ref = unsafe { &mut *pScan };
+        iColumn = __pScan_ref.aiColumn
+            [(__pScan_ref.iEquiv as ::core::ffi::c_int - 1 as ::core::ffi::c_int) as usize];
+        iCur = __pScan_ref.aiCur
+            [(__pScan_ref.iEquiv as ::core::ffi::c_int - 1 as ::core::ffi::c_int) as usize];
         loop {
             let mut current_block_25: u64;
             pTerm = (*pWC).a.offset(k as isize);
@@ -363,15 +369,15 @@ unsafe extern "C" fn whereScanNext(mut pScan: *mut crate::whereInt_h::WhereScan)
                 if (*pTerm).leftCursor == iCur
                     && (*pTerm).u.x.leftColumn == iColumn as ::core::ffi::c_int
                     && (iColumn as ::core::ffi::c_int != crate::sqliteInt_h::XN_EXPR
-                        || crate::src::src::expr::sqlite3ExprCompareSkip((*(*pTerm).pExpr).pLeft as *mut crate::sqliteInt_h::Expr,  (*pScan).pIdxExpr as *mut crate::sqliteInt_h::Expr, iCur)
+                        || crate::src::src::expr::sqlite3ExprCompareSkip((*(*pTerm).pExpr).pLeft as *mut crate::sqliteInt_h::Expr,  __pScan_ref.pIdxExpr as *mut crate::sqliteInt_h::Expr, iCur)
                             == 0 as ::core::ffi::c_int)
-                    && ((*pScan).iEquiv as ::core::ffi::c_int <= 1 as ::core::ffi::c_int
+                    && (__pScan_ref.iEquiv as ::core::ffi::c_int <= 1 as ::core::ffi::c_int
                         || !((*(*pTerm).pExpr).flags & 0x1 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::u32_0
                             != 0 as crate::src::ext::rtree::rtree::u32_0))
                 {
                     if (*pTerm).eOperator as ::core::ffi::c_int & crate::whereInt_h::WO_EQUIV
                         != 0 as ::core::ffi::c_int
-                        && ((*pScan).nEquiv as ::core::ffi::c_int)
+                        && (__pScan_ref.nEquiv as ::core::ffi::c_int)
                             < (::core::mem::size_of::<[::core::ffi::c_int; 11]>() as usize)
                                 .wrapping_div(::core::mem::size_of::<::core::ffi::c_int>() as usize)
                                 as ::core::ffi::c_int
@@ -382,23 +388,23 @@ unsafe extern "C" fn whereScanNext(mut pScan: *mut crate::whereInt_h::WhereScan)
                     {
                         let mut j: ::core::ffi::c_int = 0;
                         j = 0 as ::core::ffi::c_int;
-                        while j < (*pScan).nEquiv as ::core::ffi::c_int {
-                            if (*pScan).aiCur[j as usize] == (*pX).iTable
-                                && (*pScan).aiColumn[j as usize] as ::core::ffi::c_int
+                        while j < __pScan_ref.nEquiv as ::core::ffi::c_int {
+                            if __pScan_ref.aiCur[j as usize] == (*pX).iTable
+                                && __pScan_ref.aiColumn[j as usize] as ::core::ffi::c_int
                                     == (*pX).iColumn as ::core::ffi::c_int
                             {
                                 break;
                             }
                             j += 1;
                         }
-                        if j == (*pScan).nEquiv as ::core::ffi::c_int {
-                            (*pScan).aiCur[j as usize] = (*pX).iTable;
-                            (*pScan).aiColumn[j as usize] = (*pX).iColumn as crate::src::fts5::i16_0;
-                            (*pScan).nEquiv = (*pScan).nEquiv.wrapping_add(1);
+                        if j == __pScan_ref.nEquiv as ::core::ffi::c_int {
+                            __pScan_ref.aiCur[j as usize] = (*pX).iTable;
+                            __pScan_ref.aiColumn[j as usize] = (*pX).iColumn as crate::src::fts5::i16_0;
+                            __pScan_ref.nEquiv = __pScan_ref.nEquiv.wrapping_add(1);
                         }
                     }
-                    if (*pTerm).eOperator as crate::src::ext::rtree::rtree::u32_0 & (*pScan).opMask != 0 as crate::src::ext::rtree::rtree::u32_0 {
-                        if !(*pScan).zCollName.is_null()
+                    if (*pTerm).eOperator as crate::src::ext::rtree::rtree::u32_0 & __pScan_ref.opMask != 0 as crate::src::ext::rtree::rtree::u32_0 {
+                        if !__pScan_ref.zCollName.is_null()
                             && (*pTerm).eOperator as ::core::ffi::c_int & crate::whereInt_h::WO_ISNULL
                                 == 0 as ::core::ffi::c_int
                         {
@@ -408,7 +414,7 @@ unsafe extern "C" fn whereScanNext(mut pScan: *mut crate::whereInt_h::WhereScan)
                             pX = (*pTerm).pExpr;
                             if (*pTerm).eOperator as ::core::ffi::c_int & crate::whereInt_h::WO_IN != 0 {
                                 zCollName =
-                                    indexInAffinityOk(pParse, pTerm, (*pScan).idxaff as crate::src::ext::rtree::rtree::u8_0);
+                                    indexInAffinityOk(pParse, pTerm, __pScan_ref.idxaff as crate::src::ext::rtree::rtree::u8_0);
                                 if zCollName.is_null() {
                                     current_block_25 = 14523784380283086299;
                                 } else {
@@ -416,7 +422,7 @@ unsafe extern "C" fn whereScanNext(mut pScan: *mut crate::whereInt_h::WhereScan)
                                 }
                             } else {
                                 let mut pColl: *mut crate::sqliteInt_h::CollSeq = ::core::ptr::null_mut::<crate::sqliteInt_h::CollSeq>();
-                                if crate::src::src::expr::sqlite3IndexAffinityOk(pX as *const crate::sqliteInt_h::Expr, (*pScan).idxaff) == 0 {
+                                if crate::src::src::expr::sqlite3IndexAffinityOk(pX as *const crate::sqliteInt_h::Expr, __pScan_ref.idxaff) == 0 {
                                     current_block_25 = 14523784380283086299;
                                 } else {
                                     pColl =  crate::src::src::expr::sqlite3ExprCompareCollSeq(pParse as *mut crate::sqliteInt_h::Parse,  pX as *const crate::sqliteInt_h::Expr) as
@@ -432,7 +438,7 @@ unsafe extern "C" fn whereScanNext(mut pScan: *mut crate::whereInt_h::WhereScan)
                             match current_block_25 {
                                 14523784380283086299 => {}
                                 _ => {
-                                    if crate::src::src::util::sqlite3StrICmp(zCollName, (*pScan).zCollName) != 0 {
+                                    if crate::src::src::util::sqlite3StrICmp(zCollName, __pScan_ref.zCollName) != 0 {
                                         current_block_25 = 14523784380283086299;
                                     } else {
                                         current_block_25 = 18377268871191777778;
@@ -453,13 +459,13 @@ unsafe extern "C" fn whereScanNext(mut pScan: *mut crate::whereInt_h::WhereScan)
                                     }
                                     && (*pX).op as ::core::ffi::c_int == crate::src::parse::TK_COLUMN
                                     && (*pX).iTable
-                                        == (*pScan).aiCur[0 as ::core::ffi::c_int as usize]
+                                        == __pScan_ref.aiCur[0 as ::core::ffi::c_int as usize]
                                     && (*pX).iColumn as ::core::ffi::c_int
-                                        == (*pScan).aiColumn[0 as ::core::ffi::c_int as usize]
+                                        == __pScan_ref.aiColumn[0 as ::core::ffi::c_int as usize]
                                             as ::core::ffi::c_int)
                                 {
-                                    (*pScan).pWC = pWC;
-                                    (*pScan).k = k + 1 as ::core::ffi::c_int;
+                                    __pScan_ref.pWC = pWC;
+                                    __pScan_ref.k = k + 1 as ::core::ffi::c_int;
                                     return pTerm;
                                 }
                             }
@@ -475,12 +481,12 @@ unsafe extern "C" fn whereScanNext(mut pScan: *mut crate::whereInt_h::WhereScan)
                 break;
             }
         }
-        if (*pScan).iEquiv as ::core::ffi::c_int >= (*pScan).nEquiv as ::core::ffi::c_int {
+        if __pScan_ref.iEquiv as ::core::ffi::c_int >= __pScan_ref.nEquiv as ::core::ffi::c_int {
             break;
         }
-        pWC = (*pScan).pOrigWC;
+        pWC = __pScan_ref.pOrigWC;
         k = 0 as ::core::ffi::c_int;
-        (*pScan).iEquiv = (*pScan).iEquiv.wrapping_add(1);
+        __pScan_ref.iEquiv = __pScan_ref.iEquiv.wrapping_add(1);
     }
     return ::core::ptr::null_mut::<crate::whereInt_h::WhereTerm>();
 }
@@ -499,35 +505,36 @@ unsafe extern "C" fn whereScanInit(
     mut opMask: crate::src::ext::rtree::rtree::u32_0,
     mut pIdx: *mut crate::sqliteInt_h::Index,
 ) -> *mut crate::whereInt_h::WhereTerm {
-    (*pScan).pOrigWC = pWC;
-    (*pScan).pWC = pWC;
-    (*pScan).pIdxExpr = ::core::ptr::null_mut::<crate::sqliteInt_h::Expr>();
-    (*pScan).idxaff = 0 as ::core::ffi::c_char;
-    (*pScan).zCollName = ::core::ptr::null::<::core::ffi::c_char>();
-    (*pScan).opMask = opMask;
-    (*pScan).k = 0 as ::core::ffi::c_int;
-    (*pScan).aiCur[0 as ::core::ffi::c_int as usize] = iCur;
-    (*pScan).nEquiv = 1 as ::core::ffi::c_uchar;
-    (*pScan).iEquiv = 1 as ::core::ffi::c_uchar;
+    let __pScan_ref = unsafe { &mut *pScan };
+    __pScan_ref.pOrigWC = pWC;
+    __pScan_ref.pWC = pWC;
+    __pScan_ref.pIdxExpr = ::core::ptr::null_mut::<crate::sqliteInt_h::Expr>();
+    __pScan_ref.idxaff = 0 as ::core::ffi::c_char;
+    __pScan_ref.zCollName = ::core::ptr::null::<::core::ffi::c_char>();
+    __pScan_ref.opMask = opMask;
+    __pScan_ref.k = 0 as ::core::ffi::c_int;
+    __pScan_ref.aiCur[0 as ::core::ffi::c_int as usize] = iCur;
+    __pScan_ref.nEquiv = 1 as ::core::ffi::c_uchar;
+    __pScan_ref.iEquiv = 1 as ::core::ffi::c_uchar;
     if !pIdx.is_null() {
         let mut j: ::core::ffi::c_int = iColumn;
         iColumn = *(*pIdx).aiColumn.offset(j as isize) as ::core::ffi::c_int;
         if iColumn == (*(*pIdx).pTable).iPKey as ::core::ffi::c_int {
             iColumn = crate::sqliteInt_h::XN_ROWID;
         } else if iColumn >= 0 as ::core::ffi::c_int {
-            (*pScan).idxaff = (*(*(*pIdx).pTable).aCol.offset(iColumn as isize)).affinity;
-            (*pScan).zCollName = *(*pIdx).azColl.offset(j as isize);
+            __pScan_ref.idxaff = (*(*(*pIdx).pTable).aCol.offset(iColumn as isize)).affinity;
+            __pScan_ref.zCollName = *(*pIdx).azColl.offset(j as isize);
         } else if iColumn == crate::sqliteInt_h::XN_EXPR {
-            (*pScan).pIdxExpr =
+            __pScan_ref.pIdxExpr =
                 (*(&raw mut (*(*pIdx).aColExpr).a as *mut crate::sqliteInt_h::ExprList_item).offset(j as isize)).pExpr;
-            (*pScan).zCollName = *(*pIdx).azColl.offset(j as isize);
-            (*pScan).aiColumn[0 as ::core::ffi::c_int as usize] = crate::sqliteInt_h::XN_EXPR as crate::src::fts5::i16_0;
+            __pScan_ref.zCollName = *(*pIdx).azColl.offset(j as isize);
+            __pScan_ref.aiColumn[0 as ::core::ffi::c_int as usize] = crate::sqliteInt_h::XN_EXPR as crate::src::fts5::i16_0;
             return whereScanInitIndexExpr(pScan);
         }
     } else if iColumn == crate::sqliteInt_h::XN_EXPR {
         return ::core::ptr::null_mut::<crate::whereInt_h::WhereTerm>();
     }
-    (*pScan).aiColumn[0 as ::core::ffi::c_int as usize] = iColumn as crate::src::fts5::i16_0;
+    __pScan_ref.aiColumn[0 as ::core::ffi::c_int as usize] = iColumn as crate::src::fts5::i16_0;
     return whereScanNext(pScan);
 }
 #[no_mangle]
@@ -587,12 +594,13 @@ unsafe extern "C" fn findIndexCol(
             (*(&raw mut (*pList).a as *mut crate::sqliteInt_h::ExprList_item).offset(i as isize)).pExpr as *mut crate::sqliteInt_h::Expr,
         ) as
     *mut crate::sqliteInt_h::Expr;
+        let __p_ref = unsafe { &*p };
         if !p.is_null()
-            && ((*p).op as ::core::ffi::c_int == crate::src::parse::TK_COLUMN
-                || (*p).op as ::core::ffi::c_int == crate::src::parse::TK_AGG_COLUMN)
-            && (*p).iColumn as ::core::ffi::c_int
+            && (__p_ref.op as ::core::ffi::c_int == crate::src::parse::TK_COLUMN
+                || __p_ref.op as ::core::ffi::c_int == crate::src::parse::TK_AGG_COLUMN)
+            && __p_ref.iColumn as ::core::ffi::c_int
                 == *(*pIdx).aiColumn.offset(iCol as isize) as ::core::ffi::c_int
-            && (*p).iTable == iBase
+            && __p_ref.iTable == iBase
         {
             let mut pColl: *mut crate::sqliteInt_h::CollSeq =  crate::src::src::expr::sqlite3ExprNNCollSeq(
                 
@@ -635,13 +643,14 @@ unsafe extern "C" fn isDistinctRedundant(
     let mut pIdx: *mut crate::sqliteInt_h::Index = ::core::ptr::null_mut::<crate::sqliteInt_h::Index>();
     let mut i: ::core::ffi::c_int = 0;
     let mut iBase: ::core::ffi::c_int = 0;
-    if (*pTabList).nSrc != 1 as ::core::ffi::c_int {
+    let __pTabList_ref = unsafe { &mut *pTabList };
+    if __pTabList_ref.nSrc != 1 as ::core::ffi::c_int {
         return 0 as ::core::ffi::c_int;
     }
-    iBase = (*(&raw mut (*pTabList).a as *mut crate::sqliteInt_h::SrcItem).offset(0 as isize))
+    iBase = (*(&raw mut __pTabList_ref.a as *mut crate::sqliteInt_h::SrcItem).offset(0 as isize))
         .iCursor;
     pTab =
-        (*(&raw mut (*pTabList).a as *mut crate::sqliteInt_h::SrcItem).offset(0 as isize)).pSTab;
+        (*(&raw mut __pTabList_ref.a as *mut crate::sqliteInt_h::SrcItem).offset(0 as isize)).pSTab;
     i = 0 as ::core::ffi::c_int;
     while i < (*pDistinct).nExpr {
         let mut p: *mut crate::sqliteInt_h::Expr =  crate::src::src::expr::sqlite3ExprSkipCollateAndLikely(
@@ -723,11 +732,12 @@ unsafe extern "C" fn translateColumnToCopy(
     while iStart < iEnd {
         if !((*pOp).p1 != iTabCur) {
             if (*pOp).opcode as ::core::ffi::c_int == crate::opcodes_h::OP_Column {
-                (*pOp).opcode = crate::opcodes_h::OP_Copy as crate::src::ext::rtree::rtree::u8_0;
-                (*pOp).p1 = (*pOp).p2 + iRegister;
-                (*pOp).p2 = (*pOp).p3;
-                (*pOp).p3 = 0 as ::core::ffi::c_int;
-                (*pOp).p5 = 2 as crate::src::fts5::u16_0;
+                let __pOp_ref = unsafe { &mut *pOp };
+                __pOp_ref.opcode = crate::opcodes_h::OP_Copy as crate::src::ext::rtree::rtree::u8_0;
+                __pOp_ref.p1 = __pOp_ref.p2 + iRegister;
+                __pOp_ref.p2 = __pOp_ref.p3;
+                __pOp_ref.p3 = 0 as ::core::ffi::c_int;
+                __pOp_ref.p5 = 2 as crate::src::fts5::u16_0;
             } else if (*pOp).opcode as ::core::ffi::c_int == crate::opcodes_h::OP_Rowid {
                 (*pOp).opcode = crate::opcodes_h::OP_Sequence as crate::src::ext::rtree::rtree::u8_0;
                 (*pOp).p1 = iAutoidxCur;
@@ -742,14 +752,15 @@ unsafe extern "C" fn constraintCompatibleWithOuterJoin(
     mut pTerm: *const crate::whereInt_h::WhereTerm,
     mut pSrc: *const crate::sqliteInt_h::SrcItem,
 ) -> ::core::ffi::c_int {
-    if !((*(*pTerm).pExpr).flags & (0x1 as ::core::ffi::c_int | 0x2 as ::core::ffi::c_int) as crate::src::ext::rtree::rtree::u32_0
+    let __pTerm_ref = unsafe { &*pTerm };
+    if !((*__pTerm_ref.pExpr).flags & (0x1 as ::core::ffi::c_int | 0x2 as ::core::ffi::c_int) as crate::src::ext::rtree::rtree::u32_0
         != 0 as crate::src::ext::rtree::rtree::u32_0)
-        || (*(*pTerm).pExpr).w.iJoin != (*pSrc).iCursor
+        || (*__pTerm_ref.pExpr).w.iJoin != (*pSrc).iCursor
     {
         return 0 as ::core::ffi::c_int;
     }
     if (*pSrc).fg.jointype as ::core::ffi::c_int & (crate::sqliteInt_h::JT_LEFT | crate::sqliteInt_h::JT_RIGHT) != 0 as ::core::ffi::c_int
-        && (*(*pTerm).pExpr).flags & 0x2 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::u32_0 != 0 as crate::src::ext::rtree::rtree::u32_0
+        && (*__pTerm_ref.pExpr).flags & 0x2 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::u32_0 != 0 as crate::src::ext::rtree::rtree::u32_0
     {
         return 0 as ::core::ffi::c_int;
     }
@@ -797,10 +808,11 @@ unsafe extern "C" fn termCanDriveIndex(
 ) -> ::core::ffi::c_int {
     let mut aff: ::core::ffi::c_char = 0;
     let mut leftCol: ::core::ffi::c_int = 0;
-    if (*pTerm).leftCursor != (*pSrc).iCursor {
+    let __pTerm_ref = unsafe { &*pTerm };
+    if __pTerm_ref.leftCursor != (*pSrc).iCursor {
         return 0 as ::core::ffi::c_int;
     }
-    if (*pTerm).eOperator as ::core::ffi::c_int & (crate::whereInt_h::WO_EQ | crate::whereInt_h::WO_IS) == 0 as ::core::ffi::c_int {
+    if __pTerm_ref.eOperator as ::core::ffi::c_int & (crate::whereInt_h::WO_EQ | crate::whereInt_h::WO_IS) == 0 as ::core::ffi::c_int {
         return 0 as ::core::ffi::c_int;
     }
     if (*pSrc).fg.jointype as ::core::ffi::c_int & (crate::sqliteInt_h::JT_LEFT | crate::sqliteInt_h::JT_LTORJ | crate::sqliteInt_h::JT_RIGHT)
@@ -809,15 +821,15 @@ unsafe extern "C" fn termCanDriveIndex(
     {
         return 0 as ::core::ffi::c_int;
     }
-    if (*pTerm).prereqRight & notReady != 0 as crate::sqliteInt_h::Bitmask {
+    if __pTerm_ref.prereqRight & notReady != 0 as crate::sqliteInt_h::Bitmask {
         return 0 as ::core::ffi::c_int;
     }
-    leftCol = (*pTerm).u.x.leftColumn;
+    leftCol = __pTerm_ref.u.x.leftColumn;
     if leftCol < 0 as ::core::ffi::c_int {
         return 0 as ::core::ffi::c_int;
     }
     aff = (*(*(*pSrc).pSTab).aCol.offset(leftCol as isize)).affinity;
-    if crate::src::src::expr::sqlite3IndexAffinityOk((*pTerm).pExpr as *const crate::sqliteInt_h::Expr, aff) == 0 {
+    if crate::src::src::expr::sqlite3IndexAffinityOk(__pTerm_ref.pExpr as *const crate::sqliteInt_h::Expr, aff) == 0 {
         return 0 as ::core::ffi::c_int;
     }
     return columnIsGoodIndexCandidate((*pSrc).pSTab, leftCol);
@@ -859,14 +871,15 @@ unsafe extern "C" fn constructAutomaticIndex(
     v = (*pParse).pVdbe;
     addrInit = crate::src::src::vdbeaux::sqlite3VdbeAddOp0(v, crate::opcodes_h::OP_Once);
     nKeyCol = 0 as ::core::ffi::c_int;
-    pTabList = (*(*pWC).pWInfo).pTabList;
+    let __pWC_ref = unsafe { &mut *pWC };
+    pTabList = (*__pWC_ref.pWInfo).pTabList;
     pSrc =
         (&raw mut (*pTabList).a as *mut crate::sqliteInt_h::SrcItem).offset((*pLevel).iFrom as isize) as *mut crate::sqliteInt_h::SrcItem;
     pTable = (*pSrc).pSTab;
-    pWCEnd = (*pWC).a.offset((*pWC).nTerm as isize) as *mut crate::whereInt_h::WhereTerm;
+    pWCEnd = __pWC_ref.a.offset(__pWC_ref.nTerm as isize) as *mut crate::whereInt_h::WhereTerm;
     pLoop = (*pLevel).pWLoop as *mut crate::whereInt_h::WhereLoop;
     idxCols = 0 as crate::sqliteInt_h::Bitmask;
-    pTerm = (*pWC).a;
+    pTerm = __pWC_ref.a;
     loop {
         if !(pTerm < pWCEnd) {
             current_block = 11385396242402735691;
@@ -930,11 +943,13 @@ unsafe extern "C" fn constructAutomaticIndex(
     }
     match current_block {
         11385396242402735691 => {
-            (*pLoop).nLTerm = nKeyCol as crate::src::fts5::u16_0;
-            (*pLoop).u.btree.nEq = (*pLoop).nLTerm;
-            (*pLoop).wsFlags =
+            let __pLoop_ref = unsafe { &mut *pLoop };
+            __pLoop_ref.nLTerm = nKeyCol as crate::src::fts5::u16_0;
+            __pLoop_ref.u.btree.nEq = __pLoop_ref.nLTerm;
+            __pLoop_ref.wsFlags =
                 (crate::whereInt_h::WHERE_COLUMN_EQ | crate::whereInt_h::WHERE_IDX_ONLY | crate::whereInt_h::WHERE_INDEXED | crate::whereInt_h::WHERE_AUTO_INDEX) as crate::src::ext::rtree::rtree::u32_0;
-            if (*pTable).eTabType as ::core::ffi::c_int == crate::sqliteInt_h::TABTYP_VIEW {
+            let __pTable_ref = unsafe { &mut *pTable };
+            if __pTable_ref.eTabType as ::core::ffi::c_int == crate::sqliteInt_h::TABTYP_VIEW {
                 extraCols = crate::sqliteInt_h::ALLBITS & !idxCols;
             } else {
                 extraCols = (*pSrc).colUsed
@@ -944,10 +959,10 @@ unsafe extern "C" fn constructAutomaticIndex(
                                 as ::core::ffi::c_int
                                 - 1 as ::core::ffi::c_int);
             }
-            if !((*pTable).tabFlags & crate::sqliteInt_h::TF_WithoutRowid as crate::src::ext::rtree::rtree::u32_0 == 0 as crate::src::ext::rtree::rtree::u32_0) {
+            if !(__pTable_ref.tabFlags & crate::sqliteInt_h::TF_WithoutRowid as crate::src::ext::rtree::rtree::u32_0 == 0 as crate::src::ext::rtree::rtree::u32_0) {
                 i = 0 as ::core::ffi::c_int;
-                while i < (*pTable).nCol as ::core::ffi::c_int {
-                    if !((*(*pTable).aCol.offset(i as isize)).colFlags as ::core::ffi::c_int
+                while i < __pTable_ref.nCol as ::core::ffi::c_int {
+                    if !((*__pTable_ref.aCol.offset(i as isize)).colFlags as ::core::ffi::c_int
                         & crate::sqliteInt_h::COLFLAG_PRIMKEY
                         == 0 as ::core::ffi::c_int)
                     {
@@ -968,13 +983,13 @@ unsafe extern "C" fn constructAutomaticIndex(
             mxBitCol = if ((::core::mem::size_of::<crate::sqliteInt_h::Bitmask>() as usize).wrapping_mul(8 as usize)
                 as ::core::ffi::c_int
                 - 1 as ::core::ffi::c_int)
-                < (*pTable).nCol as ::core::ffi::c_int
+                < __pTable_ref.nCol as ::core::ffi::c_int
             {
                 (::core::mem::size_of::<crate::sqliteInt_h::Bitmask>() as usize).wrapping_mul(8 as usize)
                     as ::core::ffi::c_int
                     - 1 as ::core::ffi::c_int
             } else {
-                (*pTable).nCol as ::core::ffi::c_int
+                __pTable_ref.nCol as ::core::ffi::c_int
             };
             i = 0 as ::core::ffi::c_int;
             while i < mxBitCol {
@@ -990,25 +1005,25 @@ unsafe extern "C" fn constructAutomaticIndex(
                         - 1 as ::core::ffi::c_int
                 != 0
             {
-                nKeyCol += (*pTable).nCol as ::core::ffi::c_int - crate::sqliteInt_h::BMS + 1 as ::core::ffi::c_int;
+                nKeyCol += __pTable_ref.nCol as ::core::ffi::c_int - crate::sqliteInt_h::BMS + 1 as ::core::ffi::c_int;
             }
             pIdx =  crate::src::src::build::sqlite3AllocateIndexObject(
                 
                 (*pParse).db as *mut crate::sqliteInt_h::sqlite3,
                 nKeyCol
-                    + ((*pTable).tabFlags & crate::sqliteInt_h::TF_WithoutRowid as crate::src::ext::rtree::rtree::u32_0 == 0 as crate::src::ext::rtree::rtree::u32_0)
+                    + (__pTable_ref.tabFlags & crate::sqliteInt_h::TF_WithoutRowid as crate::src::ext::rtree::rtree::u32_0 == 0 as crate::src::ext::rtree::rtree::u32_0)
                         as ::core::ffi::c_int,
                 0 as ::core::ffi::c_int,
                 &raw mut zNotUsed,
             ) as *mut crate::sqliteInt_h::Index;
             if !pIdx.is_null() {
-                (*pLoop).u.btree.pIndex = pIdx;
+                __pLoop_ref.u.btree.pIndex = pIdx;
                 (*pIdx).zName = b"auto-index\0" as *const u8 as *const ::core::ffi::c_char
                     as *mut ::core::ffi::c_char;
                 (*pIdx).pTable = pTable;
                 n = 0 as ::core::ffi::c_int;
                 idxCols = 0 as crate::sqliteInt_h::Bitmask;
-                pTerm = (*pWC).a;
+                pTerm = __pWC_ref.a;
                 while pTerm < pWCEnd {
                     if termCanDriveIndex(pTerm, pSrc, notReady) != 0 {
                         let mut iCol_0: ::core::ffi::c_int = 0;
@@ -1056,7 +1071,8 @@ unsafe extern "C" fn constructAutomaticIndex(
                     }
                     i += 1;
                 }
-                if (*pSrc).colUsed
+                let __pSrc_ref = unsafe { &mut *pSrc };
+                if __pSrc_ref.colUsed
                     & (1 as ::core::ffi::c_int as crate::sqliteInt_h::Bitmask)
                         << (::core::mem::size_of::<crate::sqliteInt_h::Bitmask>() as usize).wrapping_mul(8 as usize)
                             as ::core::ffi::c_int
@@ -1064,7 +1080,7 @@ unsafe extern "C" fn constructAutomaticIndex(
                     != 0
                 {
                     i = crate::sqliteInt_h::BMS - 1 as ::core::ffi::c_int;
-                    while i < (*pTable).nCol as ::core::ffi::c_int {
+                    while i < __pTable_ref.nCol as ::core::ffi::c_int {
                         *(*pIdx).aiColumn.offset(n as isize) = i as crate::src::fts5::i16_0;
                         let ref mut fresh7 = *(*pIdx).azColl.offset(n as isize);
                         *fresh7 = &raw const crate::src::src::global::sqlite3StrBINARY as *const ::core::ffi::c_char;
@@ -1072,33 +1088,35 @@ unsafe extern "C" fn constructAutomaticIndex(
                         i += 1;
                     }
                 }
-                if (*pTable).tabFlags & crate::sqliteInt_h::TF_WithoutRowid as crate::src::ext::rtree::rtree::u32_0 == 0 as crate::src::ext::rtree::rtree::u32_0 {
+                if __pTable_ref.tabFlags & crate::sqliteInt_h::TF_WithoutRowid as crate::src::ext::rtree::rtree::u32_0 == 0 as crate::src::ext::rtree::rtree::u32_0 {
                     *(*pIdx).aiColumn.offset(n as isize) = crate::sqliteInt_h::XN_ROWID as crate::src::fts5::i16_0;
                     let ref mut fresh8 = *(*pIdx).azColl.offset(n as isize);
                     *fresh8 = &raw const crate::src::src::global::sqlite3StrBINARY as *const ::core::ffi::c_char;
                 }
-                let fresh9 = (*pParse).nTab;
-                (*pParse).nTab = (*pParse).nTab + 1;
-                (*pLevel).iIdxCur = fresh9;
+                let __pParse_ref = unsafe { &mut *pParse };
+                let fresh9 = __pParse_ref.nTab;
+                __pParse_ref.nTab = __pParse_ref.nTab + 1;
+                let __pLevel_ref = unsafe { &mut *pLevel };
+                __pLevel_ref.iIdxCur = fresh9;
                 crate::src::src::vdbeaux::sqlite3VdbeAddOp2(
                     v,
                     crate::opcodes_h::OP_OpenAutoindex_1,
-                    (*pLevel).iIdxCur,
+                    __pLevel_ref.iIdxCur,
                     nKeyCol + 1 as ::core::ffi::c_int,
                 );
                 crate::src::src::vdbeaux::sqlite3VdbeSetP4KeyInfo(pParse as *mut crate::sqliteInt_h::Parse,  pIdx as *mut crate::sqliteInt_h::Index);
-                if (*(*pParse).db).dbOptFlags & 0x80000 as crate::src::ext::rtree::rtree::u32_0 == 0 as crate::src::ext::rtree::rtree::u32_0
+                if (*__pParse_ref.db).dbOptFlags & 0x80000 as crate::src::ext::rtree::rtree::u32_0 == 0 as crate::src::ext::rtree::rtree::u32_0
                     && useBloomFilter as ::core::ffi::c_int != 0
                 {
-                    crate::src::src::wherecode::sqlite3WhereExplainBloomFilter(pParse as *const crate::sqliteInt_h::Parse,  (*pWC).pWInfo as *const crate::whereInt_h::WhereInfo,  pLevel as *const crate::whereInt_h::WhereLevel);
-                    (*pParse).nMem += 1;
-                    (*pLevel).regFilter = (*pParse).nMem;
-                    crate::src::src::vdbeaux::sqlite3VdbeAddOp2(v, crate::opcodes_h::OP_Blob, 10000 as ::core::ffi::c_int, (*pLevel).regFilter);
+                    crate::src::src::wherecode::sqlite3WhereExplainBloomFilter(pParse as *const crate::sqliteInt_h::Parse,  __pWC_ref.pWInfo as *const crate::whereInt_h::WhereInfo,  pLevel as *const crate::whereInt_h::WhereLevel);
+                    __pParse_ref.nMem += 1;
+                    __pLevel_ref.regFilter = __pParse_ref.nMem;
+                    crate::src::src::vdbeaux::sqlite3VdbeAddOp2(v, crate::opcodes_h::OP_Blob, 10000 as ::core::ffi::c_int, __pLevel_ref.regFilter);
                 }
-                if (*pSrc).fg.viaCoroutine() != 0 {
+                if __pSrc_ref.fg.viaCoroutine() != 0 {
                     let mut regYield: ::core::ffi::c_int = 0;
                     let mut pSubq: *mut crate::sqliteInt_h::Subquery = ::core::ptr::null_mut::<crate::sqliteInt_h::Subquery>();
-                    pSubq = (*pSrc).u4.pSubq;
+                    pSubq = __pSrc_ref.u4.pSubq;
                     regYield = (*pSubq).regReturn;
                     addrCounter = crate::src::src::vdbeaux::sqlite3VdbeAddOp2(
                         v,
@@ -1116,12 +1134,12 @@ unsafe extern "C" fn constructAutomaticIndex(
                     addrTop = crate::src::src::vdbeaux::sqlite3VdbeAddOp1(v, crate::opcodes_h::OP_Yield, regYield);
                 } else {
                     addrTop =
-                        crate::src::src::vdbeaux::sqlite3VdbeAddOp2(v, crate::opcodes_h::OP_Rewind, (*pLevel).iTabCur, (*pLevel).addrHalt);
+                        crate::src::src::vdbeaux::sqlite3VdbeAddOp2(v, crate::opcodes_h::OP_Rewind, __pLevel_ref.iTabCur, __pLevel_ref.addrHalt);
                 }
                 if !pPartial.is_null() {
                     iContinue = crate::src::src::vdbeaux::sqlite3VdbeMakeLabel(pParse as *mut crate::sqliteInt_h::Parse);
                     crate::src::src::expr::sqlite3ExprIfFalse(pParse as *mut crate::sqliteInt_h::Parse,  pPartial as *mut crate::sqliteInt_h::Expr, iContinue, crate::sqliteInt_h::SQLITE_JUMPIFNULL);
-                    (*pLoop).wsFlags |= crate::whereInt_h::WHERE_PARTIALIDX as crate::src::ext::rtree::rtree::u32_0;
+                    __pLoop_ref.wsFlags |= crate::whereInt_h::WHERE_PARTIALIDX as crate::src::ext::rtree::rtree::u32_0;
                 }
                 regRecord = crate::src::src::expr::sqlite3GetTempReg(pParse as *mut crate::sqliteInt_h::Parse);
                 regBase = crate::src::src::delete::sqlite3GenerateIndexKey(
@@ -1129,7 +1147,7 @@ unsafe extern "C" fn constructAutomaticIndex(
                     pParse as *mut crate::sqliteInt_h::Parse,
                     
                     pIdx as *mut crate::sqliteInt_h::Index,
-                    (*pLevel).iTabCur,
+                    __pLevel_ref.iTabCur,
                     regRecord,
                     0 as ::core::ffi::c_int,
                     ::core::ptr::null_mut::<::core::ffi::c_int>(),
@@ -1138,29 +1156,29 @@ unsafe extern "C" fn constructAutomaticIndex(
     *mut crate::sqliteInt_h::Index,
                     0 as ::core::ffi::c_int,
                 );
-                if (*pLevel).regFilter != 0 {
+                if __pLevel_ref.regFilter != 0 {
                     crate::src::src::vdbeaux::sqlite3VdbeAddOp4Int(
                         v,
                         crate::opcodes_h::OP_FilterAdd,
-                        (*pLevel).regFilter,
+                        __pLevel_ref.regFilter,
                         0 as ::core::ffi::c_int,
                         regBase,
-                        (*pLoop).u.btree.nEq as ::core::ffi::c_int,
+                        __pLoop_ref.u.btree.nEq as ::core::ffi::c_int,
                     );
                 }
-                crate::src::src::vdbeaux::sqlite3VdbeAddOp2(v, crate::opcodes_h::OP_IdxInsert, (*pLevel).iIdxCur, regRecord);
+                crate::src::src::vdbeaux::sqlite3VdbeAddOp2(v, crate::opcodes_h::OP_IdxInsert, __pLevel_ref.iIdxCur, regRecord);
                 crate::src::src::vdbeaux::sqlite3VdbeChangeP5(v, crate::sqliteInt_h::OPFLAG_USESEEKRESULT as crate::src::fts5::u16_0);
                 if !pPartial.is_null() {
                     crate::src::src::vdbeaux::sqlite3VdbeResolveLabel(v, iContinue);
                 }
-                if (*pSrc).fg.viaCoroutine() != 0 {
+                if __pSrc_ref.fg.viaCoroutine() != 0 {
                     crate::src::src::vdbeaux::sqlite3VdbeChangeP2(v, addrCounter, regBase + n);
                     translateColumnToCopy(
                         pParse,
                         addrTop,
-                        (*pLevel).iTabCur,
-                        (*(*pSrc).u4.pSubq).regResult,
-                        (*pLevel).iIdxCur,
+                        __pLevel_ref.iTabCur,
+                        (*__pSrc_ref.u4.pSubq).regResult,
+                        __pLevel_ref.iIdxCur,
                     );
                     crate::src::src::vdbeaux::sqlite3VdbeGoto(v, addrTop);
                     (*pSrc)
@@ -1171,11 +1189,11 @@ unsafe extern "C" fn constructAutomaticIndex(
                     crate::src::src::vdbeaux::sqlite3VdbeAddOp2(
                         v,
                         crate::opcodes_h::OP_Next,
-                        (*pLevel).iTabCur,
+                        __pLevel_ref.iTabCur,
                         addrTop + 1 as ::core::ffi::c_int,
                     );
                     crate::src::src::vdbeaux::sqlite3VdbeChangeP5(v, crate::sqlite3_h::SQLITE_STMTSTATUS_AUTOINDEX as crate::src::fts5::u16_0);
-                    if (*pSrc).fg.jointype as ::core::ffi::c_int & crate::sqliteInt_h::JT_LEFT
+                    if __pSrc_ref.fg.jointype as ::core::ffi::c_int & crate::sqliteInt_h::JT_LEFT
                         != 0 as ::core::ffi::c_int
                     {
                         crate::src::src::vdbeaux::sqlite3VdbeJumpHere(v, addrTop);
@@ -1203,15 +1221,16 @@ unsafe extern "C" fn sqlite3ConstructBloomFilter(
     let mut pTerm: *const crate::whereInt_h::WhereTerm = ::core::ptr::null::<crate::whereInt_h::WhereTerm>();
     let mut pWCEnd: *const crate::whereInt_h::WhereTerm = ::core::ptr::null::<crate::whereInt_h::WhereTerm>();
     let mut pParse: *mut crate::sqliteInt_h::Parse = (*pWInfo).pParse;
-    let mut v: *mut crate::vdbeInt_h::Vdbe = (*pParse).pVdbe;
+    let __pParse_ref = unsafe { &mut *pParse };
+    let mut v: *mut crate::vdbeInt_h::Vdbe = __pParse_ref.pVdbe;
     let mut pLoop: *mut crate::whereInt_h::WhereLoop = (*pLevel).pWLoop as *mut crate::whereInt_h::WhereLoop;
     let mut iCur: ::core::ffi::c_int = 0;
     let mut saved_pIdxEpr: *mut crate::sqliteInt_h::IndexedExpr = ::core::ptr::null_mut::<crate::sqliteInt_h::IndexedExpr>();
     let mut saved_pIdxPartExpr: *mut crate::sqliteInt_h::IndexedExpr = ::core::ptr::null_mut::<crate::sqliteInt_h::IndexedExpr>();
-    saved_pIdxEpr = (*pParse).pIdxEpr;
-    saved_pIdxPartExpr = (*pParse).pIdxPartExpr;
-    (*pParse).pIdxEpr = ::core::ptr::null_mut::<crate::sqliteInt_h::IndexedExpr>();
-    (*pParse).pIdxPartExpr = ::core::ptr::null_mut::<crate::sqliteInt_h::IndexedExpr>();
+    saved_pIdxEpr = __pParse_ref.pIdxEpr;
+    saved_pIdxPartExpr = __pParse_ref.pIdxPartExpr;
+    __pParse_ref.pIdxEpr = ::core::ptr::null_mut::<crate::sqliteInt_h::IndexedExpr>();
+    __pParse_ref.pIdxPartExpr = ::core::ptr::null_mut::<crate::sqliteInt_h::IndexedExpr>();
     addrOnce = crate::src::src::vdbeaux::sqlite3VdbeAddOp0(v, crate::opcodes_h::OP_Once);
     loop {
         let mut pTabList: *const crate::sqliteInt_h::SrcList = ::core::ptr::null::<crate::sqliteInt_h::SrcList>();
@@ -1222,9 +1241,10 @@ unsafe extern "C" fn sqlite3ConstructBloomFilter(
         crate::src::src::wherecode::sqlite3WhereExplainBloomFilter(pParse as *const crate::sqliteInt_h::Parse,  pWInfo as *const crate::whereInt_h::WhereInfo,  pLevel as *const crate::whereInt_h::WhereLevel);
         addrCont = crate::src::src::vdbeaux::sqlite3VdbeMakeLabel(pParse as *mut crate::sqliteInt_h::Parse);
         iCur = (*pLevel).iTabCur;
-        (*pParse).nMem += 1;
-        (*pLevel).regFilter = (*pParse).nMem;
-        pTabList = (*pWInfo).pTabList;
+        __pParse_ref.nMem += 1;
+        (*pLevel).regFilter = __pParse_ref.nMem;
+        let __pWInfo_ref = unsafe { &mut *pWInfo };
+        pTabList = __pWInfo_ref.pTabList;
         iSrc = (*pLevel).iFrom as ::core::ffi::c_int;
         pItem =
             (&raw const (*pTabList).a as *const crate::sqliteInt_h::SrcItem).offset(iSrc as isize) as *const crate::sqliteInt_h::SrcItem;
@@ -1237,8 +1257,8 @@ unsafe extern "C" fn sqlite3ConstructBloomFilter(
         }
         crate::src::src::vdbeaux::sqlite3VdbeAddOp2(v, crate::opcodes_h::OP_Blob, sz as ::core::ffi::c_int, (*pLevel).regFilter);
         addrTop = crate::src::src::vdbeaux::sqlite3VdbeAddOp1(v, crate::opcodes_h::OP_Rewind, iCur);
-        pWCEnd = (*pWInfo).sWC.a.offset((*pWInfo).sWC.nTerm as isize) as *mut crate::whereInt_h::WhereTerm;
-        pTerm = (*pWInfo).sWC.a;
+        pWCEnd = __pWInfo_ref.sWC.a.offset(__pWInfo_ref.sWC.nTerm as isize) as *mut crate::whereInt_h::WhereTerm;
+        pTerm = __pWInfo_ref.sWC.a;
         while pTerm < pWCEnd {
             let mut pExpr: *mut crate::sqliteInt_h::Expr = (*pTerm).pExpr;
             if (*pTerm).wtFlags as ::core::ffi::c_int & crate::whereInt_h::TERM_VIRTUAL == 0 as ::core::ffi::c_int
@@ -1296,18 +1316,18 @@ unsafe extern "C" fn sqlite3ConstructBloomFilter(
         );
         crate::src::src::vdbeaux::sqlite3VdbeJumpHere(v, addrTop);
         (*pLoop).wsFlags &= !crate::whereInt_h::WHERE_BLOOMFILTER as crate::src::ext::rtree::rtree::u32_0;
-        if (*(*pParse).db).dbOptFlags & 0x100000 as crate::src::ext::rtree::rtree::u32_0 != 0 as crate::src::ext::rtree::rtree::u32_0 {
+        if (*__pParse_ref.db).dbOptFlags & 0x100000 as crate::src::ext::rtree::rtree::u32_0 != 0 as crate::src::ext::rtree::rtree::u32_0 {
             break;
         }
         loop {
             iLevel += 1;
-            if !(iLevel < (*pWInfo).nLevel as ::core::ffi::c_int) {
+            if !(iLevel < __pWInfo_ref.nLevel as ::core::ffi::c_int) {
                 break;
             }
             let mut pTabItem: *const crate::sqliteInt_h::SrcItem = ::core::ptr::null::<crate::sqliteInt_h::SrcItem>();
-            pLevel = (&raw mut (*pWInfo).a as *mut crate::whereInt_h::WhereLevel).offset(iLevel as isize)
+            pLevel = (&raw mut __pWInfo_ref.a as *mut crate::whereInt_h::WhereLevel).offset(iLevel as isize)
                 as *mut crate::whereInt_h::WhereLevel;
-            pTabItem = (&raw mut (*(*pWInfo).pTabList).a as *mut crate::sqliteInt_h::SrcItem)
+            pTabItem = (&raw mut (*__pWInfo_ref.pTabList).a as *mut crate::sqliteInt_h::SrcItem)
                 .offset((*pLevel).iFrom as isize) as *mut crate::sqliteInt_h::SrcItem;
             if (*pTabItem).fg.jointype as ::core::ffi::c_int & (crate::sqliteInt_h::JT_LEFT | crate::sqliteInt_h::JT_LTORJ) != 0 {
                 continue;
@@ -1325,13 +1345,13 @@ unsafe extern "C" fn sqlite3ConstructBloomFilter(
                 break;
             }
         }
-        if !(iLevel < (*pWInfo).nLevel as ::core::ffi::c_int) {
+        if !(iLevel < __pWInfo_ref.nLevel as ::core::ffi::c_int) {
             break;
         }
     }
     crate::src::src::vdbeaux::sqlite3VdbeJumpHere(v, addrOnce);
-    (*pParse).pIdxEpr = saved_pIdxEpr;
-    (*pParse).pIdxPartExpr = saved_pIdxPartExpr;
+    __pParse_ref.pIdxEpr = saved_pIdxEpr;
+    __pParse_ref.pIdxPartExpr = saved_pIdxPartExpr;
 }
 
 unsafe extern "C" fn termFromWhereClause(
@@ -1614,9 +1634,10 @@ unsafe extern "C" fn allocateIndexInfo(
 
 unsafe extern "C" fn freeIdxStr(mut pIdxInfo: *mut crate::sqlite3_h::sqlite3_index_info) {
     if (*pIdxInfo).needToFreeIdxStr != 0 {
-        crate::src::src::malloc::sqlite3_free((*pIdxInfo).idxStr as *mut ::core::ffi::c_void);
-        (*pIdxInfo).idxStr = ::core::ptr::null_mut::<::core::ffi::c_char>();
-        (*pIdxInfo).needToFreeIdxStr = 0 as ::core::ffi::c_int;
+        let __pIdxInfo_ref = unsafe { &mut *pIdxInfo };
+        crate::src::src::malloc::sqlite3_free(__pIdxInfo_ref.idxStr as *mut ::core::ffi::c_void);
+        __pIdxInfo_ref.idxStr = ::core::ptr::null_mut::<::core::ffi::c_char>();
+        __pIdxInfo_ref.needToFreeIdxStr = 0 as ::core::ffi::c_int;
     }
 }
 
@@ -1644,16 +1665,17 @@ unsafe extern "C" fn vtabBestIndex(
 ) -> ::core::ffi::c_int {
     let mut rc: ::core::ffi::c_int = 0;
     let mut pVtab: *mut crate::sqlite3_h::sqlite3_vtab = ::core::ptr::null_mut::<crate::sqlite3_h::sqlite3_vtab>();
-    pVtab = (*(crate::src::src::vtab::sqlite3GetVTable((*pParse).db as *mut crate::sqliteInt_h::sqlite3,  pTab as *mut crate::sqliteInt_h::Table) as
+    let __pParse_ref = unsafe { &mut *pParse };
+    pVtab = (*(crate::src::src::vtab::sqlite3GetVTable(__pParse_ref.db as *mut crate::sqliteInt_h::sqlite3,  pTab as *mut crate::sqliteInt_h::Table) as
     *mut crate::sqliteInt_h::VTable)).pVtab;
-    (*(*pParse).db).nSchemaLock = (*(*pParse).db).nSchemaLock.wrapping_add(1);
+    (*__pParse_ref.db).nSchemaLock = (*__pParse_ref.db).nSchemaLock.wrapping_add(1);
     rc = (*(*pVtab).pModule)
         .xBestIndex
         .expect("non-null function pointer")(pVtab, p);
-    (*(*pParse).db).nSchemaLock = (*(*pParse).db).nSchemaLock.wrapping_sub(1);
+    (*__pParse_ref.db).nSchemaLock = (*__pParse_ref.db).nSchemaLock.wrapping_sub(1);
     if rc != crate::sqlite3_h::SQLITE_OK && rc != crate::sqlite3_h::SQLITE_CONSTRAINT {
         if rc == crate::sqlite3_h::SQLITE_NOMEM {
-            crate::src::src::malloc::sqlite3OomFault((*pParse).db as *mut crate::sqliteInt_h::sqlite3);
+            crate::src::src::malloc::sqlite3OomFault(__pParse_ref.db as *mut crate::sqliteInt_h::sqlite3);
         } else if (*pVtab).zErrMsg.is_null() {
             crate::src::src::util::sqlite3ErrorMsg(
                 
@@ -1723,47 +1745,50 @@ unsafe extern "C" fn whereRangeScanEst(
 }
 
 unsafe extern "C" fn whereLoopInit(mut p: *mut crate::whereInt_h::WhereLoop) {
-    (*p).aLTerm = &raw mut (*p).aLTermSpace as *mut *mut crate::whereInt_h::WhereTerm;
-    (*p).nLTerm = 0 as crate::src::fts5::u16_0;
-    (*p).nLSlot = (::core::mem::size_of::<[*mut crate::whereInt_h::WhereTerm; 3]>() as usize)
+    let __p_ref = unsafe { &mut *p };
+    __p_ref.aLTerm = &raw mut __p_ref.aLTermSpace as *mut *mut crate::whereInt_h::WhereTerm;
+    __p_ref.nLTerm = 0 as crate::src::fts5::u16_0;
+    __p_ref.nLSlot = (::core::mem::size_of::<[*mut crate::whereInt_h::WhereTerm; 3]>() as usize)
         .wrapping_div(::core::mem::size_of::<*mut crate::whereInt_h::WhereTerm>() as usize)
         as ::core::ffi::c_int as crate::src::fts5::u16_0;
-    (*p).wsFlags = 0 as crate::src::ext::rtree::rtree::u32_0;
+    __p_ref.wsFlags = 0 as crate::src::ext::rtree::rtree::u32_0;
 }
 
 unsafe extern "C" fn whereLoopClearUnion(mut db: *mut crate::sqliteInt_h::sqlite3, mut p: *mut crate::whereInt_h::WhereLoop) {
     if (*p).wsFlags & (crate::whereInt_h::WHERE_VIRTUALTABLE | crate::whereInt_h::WHERE_AUTO_INDEX) as crate::src::ext::rtree::rtree::u32_0 != 0 {
-        if (*p).wsFlags & crate::whereInt_h::WHERE_VIRTUALTABLE as crate::src::ext::rtree::rtree::u32_0 != 0 as crate::src::ext::rtree::rtree::u32_0
-            && (*p).u.vtab.needFree() as ::core::ffi::c_int != 0
+        let __p_ref = unsafe { &mut *p };
+        if __p_ref.wsFlags & crate::whereInt_h::WHERE_VIRTUALTABLE as crate::src::ext::rtree::rtree::u32_0 != 0 as crate::src::ext::rtree::rtree::u32_0
+            && __p_ref.u.vtab.needFree() as ::core::ffi::c_int != 0
         {
-            crate::src::src::malloc::sqlite3_free((*p).u.vtab.idxStr as *mut ::core::ffi::c_void);
-            (*p).u.vtab.set_needFree(0 as crate::src::ext::rtree::rtree::u32_0 as crate::src::ext::rtree::rtree::u32_0);
-            (*p).u.vtab.idxStr = ::core::ptr::null_mut::<::core::ffi::c_char>();
-        } else if (*p).wsFlags & crate::whereInt_h::WHERE_AUTO_INDEX as crate::src::ext::rtree::rtree::u32_0 != 0 as crate::src::ext::rtree::rtree::u32_0
-            && !(*p).u.btree.pIndex.is_null()
+            crate::src::src::malloc::sqlite3_free(__p_ref.u.vtab.idxStr as *mut ::core::ffi::c_void);
+            __p_ref.u.vtab.set_needFree(0 as crate::src::ext::rtree::rtree::u32_0 as crate::src::ext::rtree::rtree::u32_0);
+            __p_ref.u.vtab.idxStr = ::core::ptr::null_mut::<::core::ffi::c_char>();
+        } else if __p_ref.wsFlags & crate::whereInt_h::WHERE_AUTO_INDEX as crate::src::ext::rtree::rtree::u32_0 != 0 as crate::src::ext::rtree::rtree::u32_0
+            && !__p_ref.u.btree.pIndex.is_null()
         {
             crate::src::src::malloc::sqlite3DbFree(
                 
                 db as *mut crate::sqliteInt_h::sqlite3,
-                (*(*p).u.btree.pIndex).zColAff as *mut ::core::ffi::c_void,
+                (*__p_ref.u.btree.pIndex).zColAff as *mut ::core::ffi::c_void,
             );
-            crate::src::src::malloc::sqlite3DbFreeNN(db as *mut crate::sqliteInt_h::sqlite3, (*p).u.btree.pIndex as *mut ::core::ffi::c_void);
-            (*p).u.btree.pIndex = ::core::ptr::null_mut::<crate::sqliteInt_h::Index>();
+            crate::src::src::malloc::sqlite3DbFreeNN(db as *mut crate::sqliteInt_h::sqlite3, __p_ref.u.btree.pIndex as *mut ::core::ffi::c_void);
+            __p_ref.u.btree.pIndex = ::core::ptr::null_mut::<crate::sqliteInt_h::Index>();
         }
     }
 }
 
 unsafe extern "C" fn whereLoopClear(mut db: *mut crate::sqliteInt_h::sqlite3, mut p: *mut crate::whereInt_h::WhereLoop) {
-    if (*p).aLTerm != &raw mut (*p).aLTermSpace as *mut *mut crate::whereInt_h::WhereTerm {
-        crate::src::src::malloc::sqlite3DbFreeNN(db as *mut crate::sqliteInt_h::sqlite3, (*p).aLTerm as *mut ::core::ffi::c_void);
-        (*p).aLTerm = &raw mut (*p).aLTermSpace as *mut *mut crate::whereInt_h::WhereTerm;
-        (*p).nLSlot = (::core::mem::size_of::<[*mut crate::whereInt_h::WhereTerm; 3]>() as usize)
+    let __p_ref = unsafe { &mut *p };
+    if __p_ref.aLTerm != &raw mut __p_ref.aLTermSpace as *mut *mut crate::whereInt_h::WhereTerm {
+        crate::src::src::malloc::sqlite3DbFreeNN(db as *mut crate::sqliteInt_h::sqlite3, __p_ref.aLTerm as *mut ::core::ffi::c_void);
+        __p_ref.aLTerm = &raw mut __p_ref.aLTermSpace as *mut *mut crate::whereInt_h::WhereTerm;
+        __p_ref.nLSlot = (::core::mem::size_of::<[*mut crate::whereInt_h::WhereTerm; 3]>() as usize)
             .wrapping_div(::core::mem::size_of::<*mut crate::whereInt_h::WhereTerm>() as usize)
             as ::core::ffi::c_int as crate::src::fts5::u16_0;
     }
     whereLoopClearUnion(db, p);
-    (*p).nLTerm = 0 as crate::src::fts5::u16_0;
-    (*p).wsFlags = 0 as crate::src::ext::rtree::rtree::u32_0;
+    __p_ref.nLTerm = 0 as crate::src::fts5::u16_0;
+    __p_ref.wsFlags = 0 as crate::src::ext::rtree::rtree::u32_0;
 }
 
 unsafe extern "C" fn whereLoopResize(
@@ -1772,7 +1797,8 @@ unsafe extern "C" fn whereLoopResize(
     mut n: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
     let mut paNew: *mut *mut crate::whereInt_h::WhereTerm = ::core::ptr::null_mut::<*mut crate::whereInt_h::WhereTerm>();
-    if (*p).nLSlot as ::core::ffi::c_int >= n {
+    let __p_ref = unsafe { &mut *p };
+    if __p_ref.nLSlot as ::core::ffi::c_int >= n {
         return crate::sqlite3_h::SQLITE_OK;
     }
     n = n + 7 as ::core::ffi::c_int & !(7 as ::core::ffi::c_int);
@@ -1786,14 +1812,14 @@ unsafe extern "C" fn whereLoopResize(
     }
     ::libc::memcpy(
         paNew as *mut ::core::ffi::c_void,
-        (*p).aLTerm as *const ::core::ffi::c_void,
-        (::core::mem::size_of::<*mut crate::whereInt_h::WhereTerm>() as crate::__stddef_size_t_h::size_t).wrapping_mul((*p).nLSlot as crate::__stddef_size_t_h::size_t),
+        __p_ref.aLTerm as *const ::core::ffi::c_void,
+        (::core::mem::size_of::<*mut crate::whereInt_h::WhereTerm>() as crate::__stddef_size_t_h::size_t).wrapping_mul(__p_ref.nLSlot as crate::__stddef_size_t_h::size_t),
     );
-    if (*p).aLTerm != &raw mut (*p).aLTermSpace as *mut *mut crate::whereInt_h::WhereTerm {
-        crate::src::src::malloc::sqlite3DbFreeNN(db as *mut crate::sqliteInt_h::sqlite3, (*p).aLTerm as *mut ::core::ffi::c_void);
+    if __p_ref.aLTerm != &raw mut __p_ref.aLTermSpace as *mut *mut crate::whereInt_h::WhereTerm {
+        crate::src::src::malloc::sqlite3DbFreeNN(db as *mut crate::sqliteInt_h::sqlite3, __p_ref.aLTerm as *mut ::core::ffi::c_void);
     }
-    (*p).aLTerm = paNew;
-    (*p).nLSlot = n as crate::src::fts5::u16_0;
+    __p_ref.aLTerm = paNew;
+    __p_ref.nLSlot = n as crate::src::fts5::u16_0;
     return crate::sqlite3_h::SQLITE_OK;
 }
 
@@ -1803,8 +1829,10 @@ unsafe extern "C" fn whereLoopXfer(
     mut pFrom: *mut crate::whereInt_h::WhereLoop,
 ) -> ::core::ffi::c_int {
     whereLoopClearUnion(db, pTo);
-    if (*pFrom).nLTerm as ::core::ffi::c_int > (*pTo).nLSlot as ::core::ffi::c_int
-        && whereLoopResize(db, pTo, (*pFrom).nLTerm as ::core::ffi::c_int) != 0
+    let __pTo_ref = unsafe { &mut *pTo };
+    let __pFrom_ref = unsafe { &mut *pFrom };
+    if __pFrom_ref.nLTerm as ::core::ffi::c_int > __pTo_ref.nLSlot as ::core::ffi::c_int
+        && whereLoopResize(db, pTo, __pFrom_ref.nLTerm as ::core::ffi::c_int) != 0
     {
         ::libc::memset(
             pTo as *mut ::core::ffi::c_void,
@@ -1819,14 +1847,14 @@ unsafe extern "C" fn whereLoopXfer(
         crate::whereInt_h::WHERE_LOOP_XFER_SZ as crate::__stddef_size_t_h::size_t,
     );
     ::libc::memcpy(
-        (*pTo).aLTerm as *mut ::core::ffi::c_void,
-        (*pFrom).aLTerm as *const ::core::ffi::c_void,
-        ((*pTo).nLTerm as crate::__stddef_size_t_h::size_t).wrapping_mul(::core::mem::size_of::<*mut crate::whereInt_h::WhereTerm>() as crate::__stddef_size_t_h::size_t),
+        __pTo_ref.aLTerm as *mut ::core::ffi::c_void,
+        __pFrom_ref.aLTerm as *const ::core::ffi::c_void,
+        (__pTo_ref.nLTerm as crate::__stddef_size_t_h::size_t).wrapping_mul(::core::mem::size_of::<*mut crate::whereInt_h::WhereTerm>() as crate::__stddef_size_t_h::size_t),
     );
-    if (*pFrom).wsFlags & crate::whereInt_h::WHERE_VIRTUALTABLE as crate::src::ext::rtree::rtree::u32_0 != 0 {
-        (*pFrom).u.vtab.set_needFree(0 as crate::src::ext::rtree::rtree::u32_0 as crate::src::ext::rtree::rtree::u32_0);
-    } else if (*pFrom).wsFlags & crate::whereInt_h::WHERE_AUTO_INDEX as crate::src::ext::rtree::rtree::u32_0 != 0 as crate::src::ext::rtree::rtree::u32_0 {
-        (*pFrom).u.btree.pIndex = ::core::ptr::null_mut::<crate::sqliteInt_h::Index>();
+    if __pFrom_ref.wsFlags & crate::whereInt_h::WHERE_VIRTUALTABLE as crate::src::ext::rtree::rtree::u32_0 != 0 {
+        __pFrom_ref.u.vtab.set_needFree(0 as crate::src::ext::rtree::rtree::u32_0 as crate::src::ext::rtree::rtree::u32_0);
+    } else if __pFrom_ref.wsFlags & crate::whereInt_h::WHERE_AUTO_INDEX as crate::src::ext::rtree::rtree::u32_0 != 0 as crate::src::ext::rtree::rtree::u32_0 {
+        __pFrom_ref.u.btree.pIndex = ::core::ptr::null_mut::<crate::sqliteInt_h::Index>();
     }
     return crate::sqlite3_h::SQLITE_OK;
 }
@@ -1837,16 +1865,17 @@ unsafe extern "C" fn whereLoopDelete(mut db: *mut crate::sqliteInt_h::sqlite3, m
 }
 
 unsafe extern "C" fn whereInfoFree(mut db: *mut crate::sqliteInt_h::sqlite3, mut pWInfo: *mut crate::whereInt_h::WhereInfo) {
-    crate::src::src::whereexpr::sqlite3WhereClauseClear(&raw mut (*pWInfo).sWC as *mut _ as *mut crate::whereInt_h::WhereClause);
-    while !(*pWInfo).pLoops.is_null() {
-        let mut p: *mut crate::whereInt_h::WhereLoop = (*pWInfo).pLoops;
-        (*pWInfo).pLoops = (*p).pNextLoop;
+    let __pWInfo_ref = unsafe { &mut *pWInfo };
+    crate::src::src::whereexpr::sqlite3WhereClauseClear(&raw mut __pWInfo_ref.sWC as *mut _ as *mut crate::whereInt_h::WhereClause);
+    while !__pWInfo_ref.pLoops.is_null() {
+        let mut p: *mut crate::whereInt_h::WhereLoop = __pWInfo_ref.pLoops;
+        __pWInfo_ref.pLoops = (*p).pNextLoop;
         whereLoopDelete(db, p);
     }
-    while !(*pWInfo).pMemToFree.is_null() {
-        let mut pNext: *mut crate::whereInt_h::WhereMemBlock = (*(*pWInfo).pMemToFree).pNext;
-        crate::src::src::malloc::sqlite3DbNNFreeNN(db as *mut crate::sqliteInt_h::sqlite3, (*pWInfo).pMemToFree as *mut ::core::ffi::c_void);
-        (*pWInfo).pMemToFree = pNext;
+    while !__pWInfo_ref.pMemToFree.is_null() {
+        let mut pNext: *mut crate::whereInt_h::WhereMemBlock = (*__pWInfo_ref.pMemToFree).pNext;
+        crate::src::src::malloc::sqlite3DbNNFreeNN(db as *mut crate::sqliteInt_h::sqlite3, __pWInfo_ref.pMemToFree as *mut ::core::ffi::c_void);
+        __pWInfo_ref.pMemToFree = pNext;
     }
     crate::src::src::malloc::sqlite3DbNNFreeNN(db as *mut crate::sqliteInt_h::sqlite3, pWInfo as *mut ::core::ffi::c_void);
 }
@@ -1909,36 +1938,38 @@ unsafe extern "C" fn whereLoopAdjustCost(mut p: *const crate::whereInt_h::WhereL
         if !((*p).iTab as ::core::ffi::c_int != (*pTemplate).iTab as ::core::ffi::c_int) {
             if !((*p).wsFlags & crate::whereInt_h::WHERE_INDEXED as crate::src::ext::rtree::rtree::u32_0 == 0 as crate::src::ext::rtree::rtree::u32_0) {
                 if whereLoopCheaperProperSubset(p, pTemplate) != 0 {
-                    (*pTemplate).rRun = (if ((*p).rRun as ::core::ffi::c_int)
-                        < (*pTemplate).rRun as ::core::ffi::c_int
+                    let __pTemplate_ref = unsafe { &mut *pTemplate };
+                    __pTemplate_ref.rRun = (if ((*p).rRun as ::core::ffi::c_int)
+                        < __pTemplate_ref.rRun as ::core::ffi::c_int
                     {
                         (*p).rRun as ::core::ffi::c_int
                     } else {
-                        (*pTemplate).rRun as ::core::ffi::c_int
+                        __pTemplate_ref.rRun as ::core::ffi::c_int
                     }) as crate::sqliteInt_h::LogEst;
-                    (*pTemplate).nOut = (if ((*p).nOut as ::core::ffi::c_int
+                    __pTemplate_ref.nOut = (if ((*p).nOut as ::core::ffi::c_int
                         - 1 as ::core::ffi::c_int)
-                        < (*pTemplate).nOut as ::core::ffi::c_int
+                        < __pTemplate_ref.nOut as ::core::ffi::c_int
                     {
                         (*p).nOut as ::core::ffi::c_int - 1 as ::core::ffi::c_int
                     } else {
-                        (*pTemplate).nOut as ::core::ffi::c_int
+                        __pTemplate_ref.nOut as ::core::ffi::c_int
                     }) as crate::sqliteInt_h::LogEst;
                 } else if whereLoopCheaperProperSubset(pTemplate, p) != 0 {
-                    (*pTemplate).rRun = (if (*p).rRun as ::core::ffi::c_int
-                        > (*pTemplate).rRun as ::core::ffi::c_int
+                    let __pTemplate_ref = unsafe { &mut *pTemplate };
+                    __pTemplate_ref.rRun = (if (*p).rRun as ::core::ffi::c_int
+                        > __pTemplate_ref.rRun as ::core::ffi::c_int
                     {
                         (*p).rRun as ::core::ffi::c_int
                     } else {
-                        (*pTemplate).rRun as ::core::ffi::c_int
+                        __pTemplate_ref.rRun as ::core::ffi::c_int
                     }) as crate::sqliteInt_h::LogEst;
-                    (*pTemplate).nOut = (if (*p).nOut as ::core::ffi::c_int
+                    __pTemplate_ref.nOut = (if (*p).nOut as ::core::ffi::c_int
                         + 1 as ::core::ffi::c_int
-                        > (*pTemplate).nOut as ::core::ffi::c_int
+                        > __pTemplate_ref.nOut as ::core::ffi::c_int
                     {
                         (*p).nOut as ::core::ffi::c_int + 1 as ::core::ffi::c_int
                     } else {
-                        (*pTemplate).nOut as ::core::ffi::c_int
+                        __pTemplate_ref.nOut as ::core::ffi::c_int
                     }) as crate::sqliteInt_h::LogEst;
                 }
             }
@@ -1957,24 +1988,25 @@ unsafe extern "C" fn whereLoopFindLesser(
         if !((*p).iTab as ::core::ffi::c_int != (*pTemplate).iTab as ::core::ffi::c_int
             || (*p).iSortIdx as ::core::ffi::c_int != (*pTemplate).iSortIdx as ::core::ffi::c_int)
         {
-            if (*p).wsFlags & crate::whereInt_h::WHERE_AUTO_INDEX as crate::src::ext::rtree::rtree::u32_0 != 0 as crate::src::ext::rtree::rtree::u32_0
+            let __p_ref = unsafe { &mut *p };
+            if __p_ref.wsFlags & crate::whereInt_h::WHERE_AUTO_INDEX as crate::src::ext::rtree::rtree::u32_0 != 0 as crate::src::ext::rtree::rtree::u32_0
                 && (*pTemplate).nSkip as ::core::ffi::c_int == 0 as ::core::ffi::c_int
                 && (*pTemplate).wsFlags & crate::whereInt_h::WHERE_INDEXED as crate::src::ext::rtree::rtree::u32_0 != 0 as crate::src::ext::rtree::rtree::u32_0
                 && (*pTemplate).wsFlags & crate::whereInt_h::WHERE_COLUMN_EQ as crate::src::ext::rtree::rtree::u32_0 != 0 as crate::src::ext::rtree::rtree::u32_0
-                && (*p).prereq & (*pTemplate).prereq == (*pTemplate).prereq
+                && __p_ref.prereq & (*pTemplate).prereq == (*pTemplate).prereq
             {
                 break;
             }
-            if (*p).prereq & (*pTemplate).prereq == (*p).prereq
-                && (*p).rSetup as ::core::ffi::c_int <= (*pTemplate).rSetup as ::core::ffi::c_int
-                && (*p).rRun as ::core::ffi::c_int <= (*pTemplate).rRun as ::core::ffi::c_int
-                && (*p).nOut as ::core::ffi::c_int <= (*pTemplate).nOut as ::core::ffi::c_int
+            if __p_ref.prereq & (*pTemplate).prereq == __p_ref.prereq
+                && __p_ref.rSetup as ::core::ffi::c_int <= (*pTemplate).rSetup as ::core::ffi::c_int
+                && __p_ref.rRun as ::core::ffi::c_int <= (*pTemplate).rRun as ::core::ffi::c_int
+                && __p_ref.nOut as ::core::ffi::c_int <= (*pTemplate).nOut as ::core::ffi::c_int
             {
                 return ::core::ptr::null_mut::<*mut crate::whereInt_h::WhereLoop>();
             }
-            if (*p).prereq & (*pTemplate).prereq == (*pTemplate).prereq
-                && (*p).rRun as ::core::ffi::c_int >= (*pTemplate).rRun as ::core::ffi::c_int
-                && (*p).nOut as ::core::ffi::c_int >= (*pTemplate).nOut as ::core::ffi::c_int
+            if __p_ref.prereq & (*pTemplate).prereq == (*pTemplate).prereq
+                && __p_ref.rRun as ::core::ffi::c_int >= (*pTemplate).rRun as ::core::ffi::c_int
+                && __p_ref.nOut as ::core::ffi::c_int >= (*pTemplate).nOut as ::core::ffi::c_int
             {
                 break;
             }
@@ -1991,29 +2023,32 @@ unsafe extern "C" fn whereLoopInsert(
 ) -> ::core::ffi::c_int {
     let mut ppPrev: *mut *mut crate::whereInt_h::WhereLoop = ::core::ptr::null_mut::<*mut crate::whereInt_h::WhereLoop>();
     let mut p: *mut crate::whereInt_h::WhereLoop = ::core::ptr::null_mut::<crate::whereInt_h::WhereLoop>();
-    let mut pWInfo: *mut crate::whereInt_h::WhereInfo = (*pBuilder).pWInfo;
-    let mut db: *mut crate::sqliteInt_h::sqlite3 = (*(*pWInfo).pParse).db;
+    let __pBuilder_ref = unsafe { &mut *pBuilder };
+    let mut pWInfo: *mut crate::whereInt_h::WhereInfo = __pBuilder_ref.pWInfo;
+    let __pWInfo_ref = unsafe { &mut *pWInfo };
+    let mut db: *mut crate::sqliteInt_h::sqlite3 = (*__pWInfo_ref.pParse).db;
     let mut rc: ::core::ffi::c_int = 0;
-    if (*pBuilder).iPlanLimit == 0 as ::core::ffi::c_uint {
-        if !(*pBuilder).pOrSet.is_null() {
-            (*(*pBuilder).pOrSet).n = 0 as crate::src::fts5::u16_0;
+    if __pBuilder_ref.iPlanLimit == 0 as ::core::ffi::c_uint {
+        if !__pBuilder_ref.pOrSet.is_null() {
+            (*__pBuilder_ref.pOrSet).n = 0 as crate::src::fts5::u16_0;
         }
         return crate::sqlite3_h::SQLITE_DONE;
     }
-    (*pBuilder).iPlanLimit = (*pBuilder).iPlanLimit.wrapping_sub(1);
-    whereLoopAdjustCost((*pWInfo).pLoops, pTemplate);
-    if !(*pBuilder).pOrSet.is_null() {
+    __pBuilder_ref.iPlanLimit = __pBuilder_ref.iPlanLimit.wrapping_sub(1);
+    whereLoopAdjustCost(__pWInfo_ref.pLoops, pTemplate);
+    if !__pBuilder_ref.pOrSet.is_null() {
         if (*pTemplate).nLTerm != 0 {
+            let __pTemplate_ref = unsafe { &*pTemplate };
             whereOrInsert(
-                (*pBuilder).pOrSet,
-                (*pTemplate).prereq,
-                (*pTemplate).rRun,
-                (*pTemplate).nOut,
+                __pBuilder_ref.pOrSet,
+                __pTemplate_ref.prereq,
+                __pTemplate_ref.rRun,
+                __pTemplate_ref.nOut,
             );
         }
         return crate::sqlite3_h::SQLITE_OK;
     }
-    ppPrev = whereLoopFindLesser(&raw mut (*pWInfo).pLoops, pTemplate);
+    ppPrev = whereLoopFindLesser(&raw mut __pWInfo_ref.pLoops, pTemplate);
     if ppPrev.is_null() {
         return crate::sqlite3_h::SQLITE_OK;
     } else {
@@ -2061,7 +2096,8 @@ unsafe extern "C" fn whereLoopOutputAdjust(
 ) {
     let mut pTerm: *mut crate::whereInt_h::WhereTerm = ::core::ptr::null_mut::<crate::whereInt_h::WhereTerm>();
     let mut pX: *mut crate::whereInt_h::WhereTerm = ::core::ptr::null_mut::<crate::whereInt_h::WhereTerm>();
-    let mut notAllowed: crate::sqliteInt_h::Bitmask = !((*pLoop).prereq | (*pLoop).maskSelf);
+    let __pLoop_ref = unsafe { &mut *pLoop };
+    let mut notAllowed: crate::sqliteInt_h::Bitmask = !(__pLoop_ref.prereq | __pLoop_ref.maskSelf);
     let mut i: ::core::ffi::c_int = 0;
     let mut j: ::core::ffi::c_int = 0;
     let mut iReduce: crate::sqliteInt_h::LogEst = 0 as crate::sqliteInt_h::LogEst;
@@ -2069,13 +2105,13 @@ unsafe extern "C" fn whereLoopOutputAdjust(
     pTerm = (*pWC).a;
     while i > 0 as ::core::ffi::c_int {
         if !((*pTerm).prereqAll & notAllowed != 0 as crate::sqliteInt_h::Bitmask) {
-            if !((*pTerm).prereqAll & (*pLoop).maskSelf == 0 as crate::sqliteInt_h::Bitmask) {
+            if !((*pTerm).prereqAll & __pLoop_ref.maskSelf == 0 as crate::sqliteInt_h::Bitmask) {
                 if !((*pTerm).wtFlags as ::core::ffi::c_int & crate::whereInt_h::TERM_VIRTUAL
                     != 0 as ::core::ffi::c_int)
                 {
-                    j = (*pLoop).nLTerm as ::core::ffi::c_int - 1 as ::core::ffi::c_int;
+                    j = __pLoop_ref.nLTerm as ::core::ffi::c_int - 1 as ::core::ffi::c_int;
                     while j >= 0 as ::core::ffi::c_int {
-                        pX = *(*pLoop).aLTerm.offset(j as isize);
+                        pX = *__pLoop_ref.aLTerm.offset(j as isize);
                         if !pX.is_null() {
                             if pX == pTerm {
                                 break;
@@ -2091,25 +2127,25 @@ unsafe extern "C" fn whereLoopOutputAdjust(
                     }
                     if j < 0 as ::core::ffi::c_int {
                         crate::src::src::util::sqlite3ProgressCheck((*(*pWC).pWInfo).pParse as *mut crate::sqliteInt_h::Parse);
-                        if (*pLoop).maskSelf == (*pTerm).prereqAll {
+                        if __pLoop_ref.maskSelf == (*pTerm).prereqAll {
                             if (*pTerm).eOperator as ::core::ffi::c_int & 0x3f as ::core::ffi::c_int
                                 != 0 as ::core::ffi::c_int
                                 || (*(&raw mut (*(*(*pWC).pWInfo).pTabList).a as *mut crate::sqliteInt_h::SrcItem)
-                                    .offset((*pLoop).iTab as isize))
+                                    .offset(__pLoop_ref.iTab as isize))
                                 .fg
                                 .jointype as ::core::ffi::c_int
                                     & (crate::sqliteInt_h::JT_LEFT | crate::sqliteInt_h::JT_LTORJ)
                                     == 0 as ::core::ffi::c_int
                             {
-                                (*pLoop).wsFlags |= crate::whereInt_h::WHERE_SELFCULL as crate::src::ext::rtree::rtree::u32_0;
+                                __pLoop_ref.wsFlags |= crate::whereInt_h::WHERE_SELFCULL as crate::src::ext::rtree::rtree::u32_0;
                             }
                         }
                         if (*pTerm).truthProb as ::core::ffi::c_int <= 0 as ::core::ffi::c_int {
-                            (*pLoop).nOut = ((*pLoop).nOut as ::core::ffi::c_int
+                            __pLoop_ref.nOut = (__pLoop_ref.nOut as ::core::ffi::c_int
                                 + (*pTerm).truthProb as ::core::ffi::c_int)
                                 as crate::sqliteInt_h::LogEst;
                         } else {
-                            (*pLoop).nOut -= 1;
+                            __pLoop_ref.nOut -= 1;
                             if (*pTerm).eOperator as ::core::ffi::c_int & (crate::whereInt_h::WO_EQ | crate::whereInt_h::WO_IS)
                                 != 0 as ::core::ffi::c_int
                                 && (*pTerm).wtFlags as ::core::ffi::c_int & crate::whereInt_h::TERM_HIGHTRUTH
@@ -2147,10 +2183,10 @@ unsafe extern "C" fn whereLoopOutputAdjust(
         i -= 1;
         pTerm = pTerm.offset(1);
     }
-    if (*pLoop).nOut as ::core::ffi::c_int
+    if __pLoop_ref.nOut as ::core::ffi::c_int
         > nRow as ::core::ffi::c_int - iReduce as ::core::ffi::c_int
     {
-        (*pLoop).nOut = (nRow as ::core::ffi::c_int - iReduce as ::core::ffi::c_int) as crate::sqliteInt_h::LogEst;
+        __pLoop_ref.nOut = (nRow as ::core::ffi::c_int - iReduce as ::core::ffi::c_int) as crate::sqliteInt_h::LogEst;
     }
 }
 
@@ -2187,17 +2223,18 @@ unsafe extern "C" fn whereRangeVectorLen(
             pRhs =
                 (*(&raw mut (*(*pRhs).x.pList).a as *mut crate::sqliteInt_h::ExprList_item).offset(i as isize)).pExpr;
         }
+        let __pIdx_ref = unsafe { &mut *pIdx };
         if (*pLhs).op as ::core::ffi::c_int != crate::src::parse::TK_COLUMN
             || (*pLhs).iTable != iCur
             || (*pLhs).iColumn as ::core::ffi::c_int
-                != *(*pIdx).aiColumn.offset((i + nEq) as isize) as ::core::ffi::c_int
-            || *(*pIdx).aSortOrder.offset((i + nEq) as isize) as ::core::ffi::c_int
-                != *(*pIdx).aSortOrder.offset(nEq as isize) as ::core::ffi::c_int
+                != *__pIdx_ref.aiColumn.offset((i + nEq) as isize) as ::core::ffi::c_int
+            || *__pIdx_ref.aSortOrder.offset((i + nEq) as isize) as ::core::ffi::c_int
+                != *__pIdx_ref.aSortOrder.offset(nEq as isize) as ::core::ffi::c_int
         {
             break;
         }
         aff = crate::src::src::expr::sqlite3CompareAffinity(pRhs as *const crate::sqliteInt_h::Expr, crate::src::src::expr::sqlite3ExprAffinity(pLhs as *const crate::sqliteInt_h::Expr));
-        idxaff = crate::src::src::expr::sqlite3TableColumnAffinity((*pIdx).pTable as *const crate::sqliteInt_h::Table, (*pLhs).iColumn as ::core::ffi::c_int);
+        idxaff = crate::src::src::expr::sqlite3TableColumnAffinity(__pIdx_ref.pTable as *const crate::sqliteInt_h::Table, (*pLhs).iColumn as ::core::ffi::c_int);
         if aff as ::core::ffi::c_int != idxaff as ::core::ffi::c_int {
             break;
         }
@@ -2206,7 +2243,7 @@ unsafe extern "C" fn whereRangeVectorLen(
         if pColl.is_null() {
             break;
         }
-        if crate::src::src::util::sqlite3StrICmp((*pColl).zName, *(*pIdx).azColl.offset((i + nEq) as isize)) != 0 {
+        if crate::src::src::util::sqlite3StrICmp((*pColl).zName, *__pIdx_ref.azColl.offset((i + nEq) as isize)) != 0 {
             break;
         }
         i += 1;
@@ -2220,7 +2257,8 @@ unsafe extern "C" fn whereLoopAddBtreeIndex(
     mut pProbe: *mut crate::sqliteInt_h::Index,
     mut nInMul: crate::sqliteInt_h::LogEst,
 ) -> ::core::ffi::c_int {
-    let mut pWInfo: *mut crate::whereInt_h::WhereInfo = (*pBuilder).pWInfo;
+    let __pBuilder_ref = unsafe { &mut *pBuilder };
+    let mut pWInfo: *mut crate::whereInt_h::WhereInfo = __pBuilder_ref.pWInfo;
     let mut pParse: *mut crate::sqliteInt_h::Parse = (*pWInfo).pParse;
     let mut db: *mut crate::sqliteInt_h::sqlite3 = (*pParse).db;
     let mut pNew: *mut crate::whereInt_h::WhereLoop = ::core::ptr::null_mut::<crate::whereInt_h::WhereLoop>();
@@ -2252,7 +2290,7 @@ unsafe extern "C" fn whereLoopAddBtreeIndex(
     let mut rLogSize: crate::sqliteInt_h::LogEst = 0;
     let mut pTop: *mut crate::whereInt_h::WhereTerm = ::core::ptr::null_mut::<crate::whereInt_h::WhereTerm>();
     let mut pBtm: *mut crate::whereInt_h::WhereTerm = ::core::ptr::null_mut::<crate::whereInt_h::WhereTerm>();
-    pNew = (*pBuilder).pNew;
+    pNew = __pBuilder_ref.pNew;
     if (*pParse).nErr != 0 {
         return (*pParse).rc;
     }
@@ -2261,7 +2299,8 @@ unsafe extern "C" fn whereLoopAddBtreeIndex(
     } else {
         opMask = crate::whereInt_h::WO_EQ | crate::whereInt_h::WO_IN | crate::whereInt_h::WO_GT | crate::whereInt_h::WO_GE | crate::whereInt_h::WO_LT | crate::whereInt_h::WO_LE | crate::whereInt_h::WO_ISNULL | crate::whereInt_h::WO_IS;
     }
-    if (*pProbe).bUnordered() != 0 {
+    let __pProbe_ref = unsafe { &mut *pProbe };
+    if __pProbe_ref.bUnordered() != 0 {
         opMask &= !(crate::whereInt_h::WO_GT | crate::whereInt_h::WO_GE | crate::whereInt_h::WO_LT | crate::whereInt_h::WO_LE);
     }
     saved_nEq = (*pNew).u.btree.nEq;
@@ -2274,7 +2313,7 @@ unsafe extern "C" fn whereLoopAddBtreeIndex(
     saved_nOut = (*pNew).nOut;
     pTerm = whereScanInit(
         &raw mut scan,
-        (*pBuilder).pWC,
+        __pBuilder_ref.pWC,
         (*pSrc).iCursor,
         saved_nEq as ::core::ffi::c_int,
         opMask as crate::src::ext::rtree::rtree::u32_0,
@@ -2304,38 +2343,39 @@ unsafe extern "C" fn whereLoopAddBtreeIndex(
                         != 0 as ::core::ffi::c_int
                         && constraintCompatibleWithOuterJoin(pTerm, pSrc) == 0)
                     {
-                        if (*pProbe).onError as ::core::ffi::c_int != crate::sqliteInt_h::OE_None
+                        if __pProbe_ref.onError as ::core::ffi::c_int != crate::sqliteInt_h::OE_None
                             && saved_nEq as ::core::ffi::c_int
-                                == (*pProbe).nKeyCol as ::core::ffi::c_int - 1 as ::core::ffi::c_int
+                                == __pProbe_ref.nKeyCol as ::core::ffi::c_int - 1 as ::core::ffi::c_int
                         {
-                            (*pBuilder).bldFlags1 = ((*pBuilder).bldFlags1 as ::core::ffi::c_int
+                            __pBuilder_ref.bldFlags1 = (__pBuilder_ref.bldFlags1 as ::core::ffi::c_int
                                 | crate::whereInt_h::SQLITE_BLDF1_UNIQUE)
                                 as ::core::ffi::c_uchar;
                         } else {
-                            (*pBuilder).bldFlags1 = ((*pBuilder).bldFlags1 as ::core::ffi::c_int
+                            __pBuilder_ref.bldFlags1 = (__pBuilder_ref.bldFlags1 as ::core::ffi::c_int
                                 | crate::whereInt_h::SQLITE_BLDF1_INDEXED)
                                 as ::core::ffi::c_uchar;
                         }
-                        (*pNew).wsFlags = saved_wsFlags;
-                        (*pNew).u.btree.nEq = saved_nEq;
-                        (*pNew).u.btree.nBtm = saved_nBtm;
-                        (*pNew).u.btree.nTop = saved_nTop;
-                        (*pNew).nLTerm = saved_nLTerm;
-                        if (*pNew).nLTerm as ::core::ffi::c_int
-                            >= (*pNew).nLSlot as ::core::ffi::c_int
+                        let __pNew_ref = unsafe { &mut *pNew };
+                        __pNew_ref.wsFlags = saved_wsFlags;
+                        __pNew_ref.u.btree.nEq = saved_nEq;
+                        __pNew_ref.u.btree.nBtm = saved_nBtm;
+                        __pNew_ref.u.btree.nTop = saved_nTop;
+                        __pNew_ref.nLTerm = saved_nLTerm;
+                        if __pNew_ref.nLTerm as ::core::ffi::c_int
+                            >= __pNew_ref.nLSlot as ::core::ffi::c_int
                             && whereLoopResize(
                                 db,
                                 pNew,
-                                (*pNew).nLTerm as ::core::ffi::c_int + 1 as ::core::ffi::c_int,
+                                __pNew_ref.nLTerm as ::core::ffi::c_int + 1 as ::core::ffi::c_int,
                             ) != 0
                         {
                             break;
                         }
-                        let fresh15 = (*pNew).nLTerm;
-                        (*pNew).nLTerm = (*pNew).nLTerm.wrapping_add(1);
-                        let ref mut fresh16 = *(*pNew).aLTerm.offset(fresh15 as isize);
+                        let fresh15 = __pNew_ref.nLTerm;
+                        __pNew_ref.nLTerm = __pNew_ref.nLTerm.wrapping_add(1);
+                        let ref mut fresh16 = *__pNew_ref.aLTerm.offset(fresh15 as isize);
                         *fresh16 = pTerm;
-                        (*pNew).prereq = (saved_prereq | (*pTerm).prereqRight) & !(*pNew).maskSelf;
+                        __pNew_ref.prereq = (saved_prereq | (*pTerm).prereqRight) & !__pNew_ref.maskSelf;
                         if eOp as ::core::ffi::c_int & crate::whereInt_h::WO_IN != 0 {
                             let mut pExpr: *mut crate::sqliteInt_h::Expr = (*pTerm).pExpr;
                             if (*pExpr).flags & crate::sqliteInt_h::EP_xIsSelect as crate::src::ext::rtree::rtree::u32_0 != 0 as crate::src::ext::rtree::rtree::u32_0 {
@@ -2344,13 +2384,13 @@ unsafe extern "C" fn whereLoopAddBtreeIndex(
                                 nIn = 46 as ::core::ffi::c_int;
                                 i = 0 as ::core::ffi::c_int;
                                 while i
-                                    < (*pNew).nLTerm as ::core::ffi::c_int - 1 as ::core::ffi::c_int
+                                    < __pNew_ref.nLTerm as ::core::ffi::c_int - 1 as ::core::ffi::c_int
                                 {
-                                    if !(*(*pNew).aLTerm.offset(i as isize)).is_null()
-                                        && (**(*pNew).aLTerm.offset(i as isize)).pExpr == pExpr
+                                    if !(*__pNew_ref.aLTerm.offset(i as isize)).is_null()
+                                        && (**__pNew_ref.aLTerm.offset(i as isize)).pExpr == pExpr
                                     {
                                         nIn = 0 as ::core::ffi::c_int;
-                                        if (**(*pNew).aLTerm.offset(i as isize)).u.x.iField
+                                        if (**__pNew_ref.aLTerm.offset(i as isize)).u.x.iField
                                             == (*pTerm).u.x.iField
                                         {
                                             bRedundant = 1 as ::core::ffi::c_int;
@@ -2359,7 +2399,7 @@ unsafe extern "C" fn whereLoopAddBtreeIndex(
                                     i += 1;
                                 }
                                 if bRedundant != 0 {
-                                    (*pNew).nLTerm = (*pNew).nLTerm.wrapping_sub(1);
+                                    __pNew_ref.nLTerm = __pNew_ref.nLTerm.wrapping_sub(1);
                                     current_block_151 = 1608152415753874203;
                                 } else {
                                     current_block_151 = 4888910987971495881;
@@ -2374,14 +2414,14 @@ unsafe extern "C" fn whereLoopAddBtreeIndex(
                             match current_block_151 {
                                 1608152415753874203 => {}
                                 _ => {
-                                    if (*pProbe).hasStat1() as ::core::ffi::c_int != 0
+                                    if __pProbe_ref.hasStat1() as ::core::ffi::c_int != 0
                                         && rLogSize as ::core::ffi::c_int
                                             >= 10 as ::core::ffi::c_int
                                     {
                                         let mut M: crate::sqliteInt_h::LogEst = 0;
                                         let mut logK: crate::sqliteInt_h::LogEst = 0;
                                         let mut x: crate::sqliteInt_h::LogEst = 0;
-                                        M = *(*pProbe).aiRowLogEst.offset(saved_nEq as isize);
+                                        M = *__pProbe_ref.aiRowLogEst.offset(saved_nEq as isize);
                                         logK = estLog(nIn as crate::sqliteInt_h::LogEst);
                                         x = (M as ::core::ffi::c_int
                                             + logK as ::core::ffi::c_int
@@ -2394,7 +2434,7 @@ unsafe extern "C" fn whereLoopAddBtreeIndex(
                                             < 2 as ::core::ffi::c_int
                                             && (*db).dbOptFlags & 0x20000 as crate::src::ext::rtree::rtree::u32_0 == 0 as crate::src::ext::rtree::rtree::u32_0
                                         {
-                                            (*pNew).wsFlags |= crate::whereInt_h::WHERE_IN_SEEKSCAN as crate::src::ext::rtree::rtree::u32_0;
+                                            __pNew_ref.wsFlags |= crate::whereInt_h::WHERE_IN_SEEKSCAN as crate::src::ext::rtree::rtree::u32_0;
                                             current_block_151 = 16029476503615101993;
                                         } else {
                                             current_block_151 = 1608152415753874203;
@@ -2405,7 +2445,7 @@ unsafe extern "C" fn whereLoopAddBtreeIndex(
                                     match current_block_151 {
                                         1608152415753874203 => {}
                                         _ => {
-                                            (*pNew).wsFlags |= crate::whereInt_h::WHERE_COLUMN_IN as crate::src::ext::rtree::rtree::u32_0;
+                                            __pNew_ref.wsFlags |= crate::whereInt_h::WHERE_COLUMN_IN as crate::src::ext::rtree::rtree::u32_0;
                                             current_block_151 = 8140372313878014523;
                                         }
                                     }
@@ -2414,33 +2454,33 @@ unsafe extern "C" fn whereLoopAddBtreeIndex(
                         } else {
                             if eOp as ::core::ffi::c_int & (crate::whereInt_h::WO_EQ | crate::whereInt_h::WO_IS) != 0 {
                                 let mut iCol: ::core::ffi::c_int =
-                                    *(*pProbe).aiColumn.offset(saved_nEq as isize)
+                                    *__pProbe_ref.aiColumn.offset(saved_nEq as isize)
                                         as ::core::ffi::c_int;
-                                (*pNew).wsFlags |= crate::whereInt_h::WHERE_COLUMN_EQ as crate::src::ext::rtree::rtree::u32_0;
+                                __pNew_ref.wsFlags |= crate::whereInt_h::WHERE_COLUMN_EQ as crate::src::ext::rtree::rtree::u32_0;
                                 if iCol == crate::sqliteInt_h::XN_ROWID
                                     || iCol >= 0 as ::core::ffi::c_int
                                         && nInMul as ::core::ffi::c_int == 0 as ::core::ffi::c_int
                                         && saved_nEq as ::core::ffi::c_int
-                                            == (*pProbe).nKeyCol as ::core::ffi::c_int
+                                            == __pProbe_ref.nKeyCol as ::core::ffi::c_int
                                                 - 1 as ::core::ffi::c_int
                                 {
                                     if iCol == crate::sqliteInt_h::XN_ROWID
-                                        || (*pProbe).uniqNotNull() as ::core::ffi::c_int != 0
-                                        || (*pProbe).nKeyCol as ::core::ffi::c_int
+                                        || __pProbe_ref.uniqNotNull() as ::core::ffi::c_int != 0
+                                        || __pProbe_ref.nKeyCol as ::core::ffi::c_int
                                             == 1 as ::core::ffi::c_int
-                                            && (*pProbe).onError as ::core::ffi::c_int != 0
+                                            && __pProbe_ref.onError as ::core::ffi::c_int != 0
                                             && eOp as ::core::ffi::c_int & crate::whereInt_h::WO_EQ != 0
                                     {
-                                        (*pNew).wsFlags |= crate::whereInt_h::WHERE_ONEROW as crate::src::ext::rtree::rtree::u32_0;
+                                        __pNew_ref.wsFlags |= crate::whereInt_h::WHERE_ONEROW as crate::src::ext::rtree::rtree::u32_0;
                                     } else {
-                                        (*pNew).wsFlags |= crate::whereInt_h::WHERE_UNQ_WANTED as crate::src::ext::rtree::rtree::u32_0;
+                                        __pNew_ref.wsFlags |= crate::whereInt_h::WHERE_UNQ_WANTED as crate::src::ext::rtree::rtree::u32_0;
                                     }
                                 }
                                 if scan.iEquiv as ::core::ffi::c_int > 1 as ::core::ffi::c_int {
-                                    (*pNew).wsFlags |= crate::whereInt_h::WHERE_TRANSCONS as crate::src::ext::rtree::rtree::u32_0;
+                                    __pNew_ref.wsFlags |= crate::whereInt_h::WHERE_TRANSCONS as crate::src::ext::rtree::rtree::u32_0;
                                 }
                             } else if eOp as ::core::ffi::c_int & crate::whereInt_h::WO_ISNULL != 0 {
-                                (*pNew).wsFlags |= crate::whereInt_h::WHERE_COLUMN_NULL as crate::src::ext::rtree::rtree::u32_0;
+                                __pNew_ref.wsFlags |= crate::whereInt_h::WHERE_COLUMN_NULL as crate::src::ext::rtree::rtree::u32_0;
                             } else {
                                 let mut nVecLen: ::core::ffi::c_int = whereRangeVectorLen(
                                     pParse,
@@ -2450,9 +2490,9 @@ unsafe extern "C" fn whereLoopAddBtreeIndex(
                                     pTerm,
                                 );
                                 if eOp as ::core::ffi::c_int & (crate::whereInt_h::WO_GT | crate::whereInt_h::WO_GE) != 0 {
-                                    (*pNew).wsFlags |=
+                                    __pNew_ref.wsFlags |=
                                         (crate::whereInt_h::WHERE_COLUMN_RANGE | crate::whereInt_h::WHERE_BTM_LIMIT) as crate::src::ext::rtree::rtree::u32_0;
-                                    (*pNew).u.btree.nBtm = nVecLen as crate::src::fts5::u16_0;
+                                    __pNew_ref.u.btree.nBtm = nVecLen as crate::src::fts5::u16_0;
                                     pBtm = pTerm;
                                     pTop = ::core::ptr::null_mut::<crate::whereInt_h::WhereTerm>();
                                     if (*pTerm).wtFlags as ::core::ffi::c_int & crate::whereInt_h::TERM_LIKEOPT != 0 {
@@ -2461,30 +2501,30 @@ unsafe extern "C" fn whereLoopAddBtreeIndex(
                                         if whereLoopResize(
                                             db,
                                             pNew,
-                                            (*pNew).nLTerm as ::core::ffi::c_int
+                                            __pNew_ref.nLTerm as ::core::ffi::c_int
                                                 + 1 as ::core::ffi::c_int,
                                         ) != 0
                                         {
                                             break;
                                         }
-                                        let fresh17 = (*pNew).nLTerm;
-                                        (*pNew).nLTerm = (*pNew).nLTerm.wrapping_add(1);
+                                        let fresh17 = __pNew_ref.nLTerm;
+                                        __pNew_ref.nLTerm = __pNew_ref.nLTerm.wrapping_add(1);
                                         let ref mut fresh18 =
-                                            *(*pNew).aLTerm.offset(fresh17 as isize);
+                                            *__pNew_ref.aLTerm.offset(fresh17 as isize);
                                         *fresh18 = pTop;
-                                        (*pNew).wsFlags |= crate::whereInt_h::WHERE_TOP_LIMIT as crate::src::ext::rtree::rtree::u32_0;
-                                        (*pNew).u.btree.nTop = 1 as crate::src::fts5::u16_0;
+                                        __pNew_ref.wsFlags |= crate::whereInt_h::WHERE_TOP_LIMIT as crate::src::ext::rtree::rtree::u32_0;
+                                        __pNew_ref.u.btree.nTop = 1 as crate::src::fts5::u16_0;
                                     }
                                 } else {
-                                    (*pNew).wsFlags |=
+                                    __pNew_ref.wsFlags |=
                                         (crate::whereInt_h::WHERE_COLUMN_RANGE | crate::whereInt_h::WHERE_TOP_LIMIT) as crate::src::ext::rtree::rtree::u32_0;
-                                    (*pNew).u.btree.nTop = nVecLen as crate::src::fts5::u16_0;
+                                    __pNew_ref.u.btree.nTop = nVecLen as crate::src::fts5::u16_0;
                                     pTop = pTerm;
-                                    pBtm = if (*pNew).wsFlags & crate::whereInt_h::WHERE_BTM_LIMIT as crate::src::ext::rtree::rtree::u32_0
+                                    pBtm = if __pNew_ref.wsFlags & crate::whereInt_h::WHERE_BTM_LIMIT as crate::src::ext::rtree::rtree::u32_0
                                         != 0 as crate::src::ext::rtree::rtree::u32_0
                                     {
-                                        *(*pNew).aLTerm.offset(
-                                            ((*pNew).nLTerm as ::core::ffi::c_int
+                                        *__pNew_ref.aLTerm.offset(
+                                            (__pNew_ref.nLTerm as ::core::ffi::c_int
                                                 - 2 as ::core::ffi::c_int)
                                                 as isize,
                                         )
@@ -2498,87 +2538,87 @@ unsafe extern "C" fn whereLoopAddBtreeIndex(
                         match current_block_151 {
                             1608152415753874203 => {}
                             _ => {
-                                if (*pNew).wsFlags & crate::whereInt_h::WHERE_COLUMN_RANGE as crate::src::ext::rtree::rtree::u32_0 != 0 {
+                                if __pNew_ref.wsFlags & crate::whereInt_h::WHERE_COLUMN_RANGE as crate::src::ext::rtree::rtree::u32_0 != 0 {
                                     whereRangeScanEst(pParse, pBuilder, pBtm, pTop, pNew);
                                 } else {
-                                    (*pNew).u.btree.nEq = (*pNew).u.btree.nEq.wrapping_add(1);
+                                    __pNew_ref.u.btree.nEq = __pNew_ref.u.btree.nEq.wrapping_add(1);
                                     let mut nEq: ::core::ffi::c_int =
-                                        (*pNew).u.btree.nEq as ::core::ffi::c_int;
+                                        __pNew_ref.u.btree.nEq as ::core::ffi::c_int;
                                     if (*pTerm).truthProb as ::core::ffi::c_int
                                         <= 0 as ::core::ffi::c_int
-                                        && *(*pProbe).aiColumn.offset(saved_nEq as isize)
+                                        && *__pProbe_ref.aiColumn.offset(saved_nEq as isize)
                                             as ::core::ffi::c_int
                                             >= 0 as ::core::ffi::c_int
                                     {
-                                        (*pNew).nOut = ((*pNew).nOut as ::core::ffi::c_int
+                                        __pNew_ref.nOut = (__pNew_ref.nOut as ::core::ffi::c_int
                                             + (*pTerm).truthProb as ::core::ffi::c_int)
                                             as crate::sqliteInt_h::LogEst;
-                                        (*pNew).nOut =
-                                            ((*pNew).nOut as ::core::ffi::c_int - nIn) as crate::sqliteInt_h::LogEst;
+                                        __pNew_ref.nOut =
+                                            (__pNew_ref.nOut as ::core::ffi::c_int - nIn) as crate::sqliteInt_h::LogEst;
                                     } else {
-                                        (*pNew).nOut = ((*pNew).nOut as ::core::ffi::c_int
-                                            + (*(*pProbe).aiRowLogEst.offset(nEq as isize)
+                                        __pNew_ref.nOut = (__pNew_ref.nOut as ::core::ffi::c_int
+                                            + (*__pProbe_ref.aiRowLogEst.offset(nEq as isize)
                                                 as ::core::ffi::c_int
-                                                - *(*pProbe).aiRowLogEst.offset(
+                                                - *__pProbe_ref.aiRowLogEst.offset(
                                                     (nEq - 1 as ::core::ffi::c_int) as isize,
                                                 )
                                                     as ::core::ffi::c_int))
                                             as crate::sqliteInt_h::LogEst;
                                         if eOp as ::core::ffi::c_int & crate::whereInt_h::WO_ISNULL != 0 {
-                                            (*pNew).nOut = ((*pNew).nOut as ::core::ffi::c_int
+                                            __pNew_ref.nOut = (__pNew_ref.nOut as ::core::ffi::c_int
                                                 + 10 as ::core::ffi::c_int)
                                                 as crate::sqliteInt_h::LogEst;
                                         }
                                     }
                                 }
-                                if (*pProbe).idxType() as ::core::ffi::c_int == crate::sqliteInt_h::SQLITE_IDXTYPE_IPK {
-                                    rCostIdx = ((*pNew).nOut as ::core::ffi::c_int
+                                if __pProbe_ref.idxType() as ::core::ffi::c_int == crate::sqliteInt_h::SQLITE_IDXTYPE_IPK {
+                                    rCostIdx = (__pNew_ref.nOut as ::core::ffi::c_int
                                         + 16 as ::core::ffi::c_int)
                                         as crate::sqliteInt_h::LogEst;
                                 } else {
-                                    rCostIdx = ((*pNew).nOut as ::core::ffi::c_int
+                                    rCostIdx = (__pNew_ref.nOut as ::core::ffi::c_int
                                         + 1 as ::core::ffi::c_int
                                         + 15 as ::core::ffi::c_int
-                                            * (*pProbe).szIdxRow as ::core::ffi::c_int
+                                            * __pProbe_ref.szIdxRow as ::core::ffi::c_int
                                             / (*(*pSrc).pSTab).szTabRow as ::core::ffi::c_int)
                                         as crate::sqliteInt_h::LogEst;
                                 }
                                 rCostIdx = crate::src::src::util::sqlite3LogEstAdd(rLogSize, rCostIdx);
-                                (*pNew).rRun = rCostIdx;
-                                if (*pNew).wsFlags
+                                __pNew_ref.rRun = rCostIdx;
+                                if __pNew_ref.wsFlags
                                     & (crate::whereInt_h::WHERE_IDX_ONLY | crate::whereInt_h::WHERE_IPK | crate::whereInt_h::WHERE_EXPRIDX) as crate::src::ext::rtree::rtree::u32_0
                                     == 0 as crate::src::ext::rtree::rtree::u32_0
                                 {
-                                    (*pNew).rRun = crate::src::src::util::sqlite3LogEstAdd(
-                                        (*pNew).rRun,
-                                        ((*pNew).nOut as ::core::ffi::c_int
+                                    __pNew_ref.rRun = crate::src::src::util::sqlite3LogEstAdd(
+                                        __pNew_ref.rRun,
+                                        (__pNew_ref.nOut as ::core::ffi::c_int
                                             + 16 as ::core::ffi::c_int)
                                             as crate::sqliteInt_h::LogEst,
                                     );
                                 }
-                                nOutUnadjusted = (*pNew).nOut;
-                                (*pNew).rRun = ((*pNew).rRun as ::core::ffi::c_int
+                                nOutUnadjusted = __pNew_ref.nOut;
+                                __pNew_ref.rRun = (__pNew_ref.rRun as ::core::ffi::c_int
                                     + (nInMul as ::core::ffi::c_int + nIn))
                                     as crate::sqliteInt_h::LogEst;
-                                (*pNew).nOut = ((*pNew).nOut as ::core::ffi::c_int
+                                __pNew_ref.nOut = (__pNew_ref.nOut as ::core::ffi::c_int
                                     + (nInMul as ::core::ffi::c_int + nIn))
                                     as crate::sqliteInt_h::LogEst;
-                                whereLoopOutputAdjust((*pBuilder).pWC, pNew, rSize);
+                                whereLoopOutputAdjust(__pBuilder_ref.pWC, pNew, rSize);
                                 rc = whereLoopInsert(pBuilder, pNew);
-                                if (*pNew).wsFlags & crate::whereInt_h::WHERE_COLUMN_RANGE as crate::src::ext::rtree::rtree::u32_0 != 0 {
-                                    (*pNew).nOut = saved_nOut;
+                                if __pNew_ref.wsFlags & crate::whereInt_h::WHERE_COLUMN_RANGE as crate::src::ext::rtree::rtree::u32_0 != 0 {
+                                    __pNew_ref.nOut = saved_nOut;
                                 } else {
-                                    (*pNew).nOut = nOutUnadjusted;
+                                    __pNew_ref.nOut = nOutUnadjusted;
                                 }
-                                if (*pNew).wsFlags & crate::whereInt_h::WHERE_TOP_LIMIT as crate::src::ext::rtree::rtree::u32_0 == 0 as crate::src::ext::rtree::rtree::u32_0
-                                    && ((*pNew).u.btree.nEq as ::core::ffi::c_int)
-                                        < (*pProbe).nColumn as ::core::ffi::c_int
-                                    && (((*pNew).u.btree.nEq as ::core::ffi::c_int)
-                                        < (*pProbe).nKeyCol as ::core::ffi::c_int
-                                        || (*pProbe).idxType() as ::core::ffi::c_int
+                                if __pNew_ref.wsFlags & crate::whereInt_h::WHERE_TOP_LIMIT as crate::src::ext::rtree::rtree::u32_0 == 0 as crate::src::ext::rtree::rtree::u32_0
+                                    && (__pNew_ref.u.btree.nEq as ::core::ffi::c_int)
+                                        < __pProbe_ref.nColumn as ::core::ffi::c_int
+                                    && ((__pNew_ref.u.btree.nEq as ::core::ffi::c_int)
+                                        < __pProbe_ref.nKeyCol as ::core::ffi::c_int
+                                        || __pProbe_ref.idxType() as ::core::ffi::c_int
                                             != crate::sqliteInt_h::SQLITE_IDXTYPE_PRIMARYKEY)
                                 {
-                                    if (*pNew).u.btree.nEq as ::core::ffi::c_int
+                                    if __pNew_ref.u.btree.nEq as ::core::ffi::c_int
                                         > 3 as ::core::ffi::c_int
                                     {
                                         crate::src::src::util::sqlite3ProgressCheck(pParse as *mut crate::sqliteInt_h::Parse);
@@ -2590,7 +2630,7 @@ unsafe extern "C" fn whereLoopAddBtreeIndex(
                                         (nInMul as ::core::ffi::c_int + nIn) as crate::sqliteInt_h::LogEst,
                                     );
                                 }
-                                (*pNew).nOut = saved_nOut;
+                                __pNew_ref.nOut = saved_nOut;
                             }
                         }
                     }
@@ -2609,10 +2649,10 @@ unsafe extern "C" fn whereLoopAddBtreeIndex(
     (*pNew).nLTerm = saved_nLTerm;
     if saved_nEq as ::core::ffi::c_int == saved_nSkip as ::core::ffi::c_int
         && (saved_nEq as ::core::ffi::c_int + 1 as ::core::ffi::c_int)
-            < (*pProbe).nKeyCol as ::core::ffi::c_int
+            < __pProbe_ref.nKeyCol as ::core::ffi::c_int
         && saved_nEq as ::core::ffi::c_int == (*pNew).nLTerm as ::core::ffi::c_int
-        && (*pProbe).noSkipScan() as ::core::ffi::c_int == 0 as ::core::ffi::c_int
-        && (*pProbe).hasStat1() as ::core::ffi::c_int != 0 as ::core::ffi::c_int
+        && __pProbe_ref.noSkipScan() as ::core::ffi::c_int == 0 as ::core::ffi::c_int
+        && __pProbe_ref.hasStat1() as ::core::ffi::c_int != 0 as ::core::ffi::c_int
         && (*db).dbOptFlags & 0x4000 as crate::src::ext::rtree::rtree::u32_0 == 0 as crate::src::ext::rtree::rtree::u32_0
         && *(*pProbe)
             .aiRowLogEst
@@ -2630,19 +2670,20 @@ unsafe extern "C" fn whereLoopAddBtreeIndex(
         }
     {
         let mut nIter: crate::sqliteInt_h::LogEst = 0;
-        (*pNew).u.btree.nEq = (*pNew).u.btree.nEq.wrapping_add(1);
-        (*pNew).nSkip = (*pNew).nSkip.wrapping_add(1);
-        let fresh19 = (*pNew).nLTerm;
-        (*pNew).nLTerm = (*pNew).nLTerm.wrapping_add(1);
-        let ref mut fresh20 = *(*pNew).aLTerm.offset(fresh19 as isize);
+        let __pNew_ref = unsafe { &mut *pNew };
+        __pNew_ref.u.btree.nEq = __pNew_ref.u.btree.nEq.wrapping_add(1);
+        __pNew_ref.nSkip = __pNew_ref.nSkip.wrapping_add(1);
+        let fresh19 = __pNew_ref.nLTerm;
+        __pNew_ref.nLTerm = __pNew_ref.nLTerm.wrapping_add(1);
+        let ref mut fresh20 = *__pNew_ref.aLTerm.offset(fresh19 as isize);
         *fresh20 = ::core::ptr::null_mut::<crate::whereInt_h::WhereTerm>();
-        (*pNew).wsFlags |= crate::whereInt_h::WHERE_SKIPSCAN as crate::src::ext::rtree::rtree::u32_0;
-        nIter = (*(*pProbe).aiRowLogEst.offset(saved_nEq as isize) as ::core::ffi::c_int
+        __pNew_ref.wsFlags |= crate::whereInt_h::WHERE_SKIPSCAN as crate::src::ext::rtree::rtree::u32_0;
+        nIter = (*__pProbe_ref.aiRowLogEst.offset(saved_nEq as isize) as ::core::ffi::c_int
             - *(*pProbe)
                 .aiRowLogEst
                 .offset((saved_nEq as ::core::ffi::c_int + 1 as ::core::ffi::c_int) as isize)
                 as ::core::ffi::c_int) as crate::sqliteInt_h::LogEst;
-        (*pNew).nOut = ((*pNew).nOut as ::core::ffi::c_int - nIter as ::core::ffi::c_int) as crate::sqliteInt_h::LogEst;
+        __pNew_ref.nOut = (__pNew_ref.nOut as ::core::ffi::c_int - nIter as ::core::ffi::c_int) as crate::sqliteInt_h::LogEst;
         nIter = (nIter as ::core::ffi::c_int + 5 as ::core::ffi::c_int) as crate::sqliteInt_h::LogEst;
         whereLoopAddBtreeIndex(
             pBuilder,
@@ -2650,10 +2691,10 @@ unsafe extern "C" fn whereLoopAddBtreeIndex(
             pProbe,
             (nIter as ::core::ffi::c_int + nInMul as ::core::ffi::c_int) as crate::sqliteInt_h::LogEst,
         );
-        (*pNew).nOut = saved_nOut;
-        (*pNew).u.btree.nEq = saved_nEq;
-        (*pNew).nSkip = saved_nSkip;
-        (*pNew).wsFlags = saved_wsFlags;
+        __pNew_ref.nOut = saved_nOut;
+        __pNew_ref.u.btree.nEq = saved_nEq;
+        __pNew_ref.nSkip = saved_nSkip;
+        __pNew_ref.wsFlags = saved_wsFlags;
     }
     return rc;
 }
@@ -2682,16 +2723,17 @@ unsafe extern "C" fn indexMightHelpWithOrderBy(
         ) as
     *mut crate::sqliteInt_h::Expr;
         if !pExpr.is_null() {
-            if ((*pExpr).op as ::core::ffi::c_int == crate::src::parse::TK_COLUMN
-                || (*pExpr).op as ::core::ffi::c_int == crate::src::parse::TK_AGG_COLUMN)
-                && (*pExpr).iTable == iCursor
+            let __pExpr_ref = unsafe { &*pExpr };
+            if (__pExpr_ref.op as ::core::ffi::c_int == crate::src::parse::TK_COLUMN
+                || __pExpr_ref.op as ::core::ffi::c_int == crate::src::parse::TK_AGG_COLUMN)
+                && __pExpr_ref.iTable == iCursor
             {
-                if ((*pExpr).iColumn as ::core::ffi::c_int) < 0 as ::core::ffi::c_int {
+                if (__pExpr_ref.iColumn as ::core::ffi::c_int) < 0 as ::core::ffi::c_int {
                     return 1 as ::core::ffi::c_int;
                 }
                 jj = 0 as ::core::ffi::c_int;
                 while jj < (*pIndex).nKeyCol as ::core::ffi::c_int {
-                    if (*pExpr).iColumn as ::core::ffi::c_int
+                    if __pExpr_ref.iColumn as ::core::ffi::c_int
                         == *(*pIndex).aiColumn.offset(jj as isize) as ::core::ffi::c_int
                     {
                         return 1 as ::core::ffi::c_int;
@@ -2741,7 +2783,8 @@ unsafe extern "C" fn whereUsablePartialIndex(
     if jointype as ::core::ffi::c_int & crate::sqliteInt_h::JT_LTORJ != 0 {
         return 0 as ::core::ffi::c_int;
     }
-    pParse = (*(*pWC).pWInfo).pParse;
+    let __pWC_ref = unsafe { &*pWC };
+    pParse = (*__pWC_ref.pWInfo).pParse;
     while (*pWhere).op as ::core::ffi::c_int == crate::src::parse::TK_AND {
         if whereUsablePartialIndex(iTab, jointype, pWC, (*pWhere).pLeft) == 0 {
             return 0 as ::core::ffi::c_int;
@@ -2749,8 +2792,8 @@ unsafe extern "C" fn whereUsablePartialIndex(
         pWhere = (*pWhere).pRight;
     }
     i = 0 as ::core::ffi::c_int;
-    pTerm = (*pWC).a;
-    while i < (*pWC).nTerm {
+    pTerm = __pWC_ref.a;
+    while i < __pWC_ref.nTerm {
         let mut pExpr: *mut crate::sqliteInt_h::Expr = ::core::ptr::null_mut::<crate::sqliteInt_h::Expr>();
         pExpr = (*pTerm).pExpr;
         if (!((*pExpr).flags & 0x1 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::u32_0 != 0 as crate::src::ext::rtree::rtree::u32_0)
@@ -2923,7 +2966,8 @@ unsafe extern "C" fn wherePartIdxExpr(
         let mut pLeft: *mut crate::sqliteInt_h::Expr = (*pPart).pLeft;
         let mut pRight: *mut crate::sqliteInt_h::Expr = (*pPart).pRight;
         let mut aff: crate::src::ext::rtree::rtree::u8_0 = 0;
-        if (*pLeft).op as ::core::ffi::c_int != crate::src::parse::TK_COLUMN {
+        let __pLeft_ref = unsafe { &*pLeft };
+        if __pLeft_ref.op as ::core::ffi::c_int != crate::src::parse::TK_COLUMN {
             return;
         }
         if crate::src::src::expr::sqlite3ExprIsConstant(::core::ptr::null_mut::<crate::sqliteInt_h::Parse>() as
@@ -2934,10 +2978,10 @@ unsafe extern "C" fn wherePartIdxExpr(
         *mut crate::sqliteInt_h::CollSeq as *const crate::sqliteInt_h::CollSeq) == 0 {
             return;
         }
-        if ((*pLeft).iColumn as ::core::ffi::c_int) < 0 as ::core::ffi::c_int {
+        if (__pLeft_ref.iColumn as ::core::ffi::c_int) < 0 as ::core::ffi::c_int {
             return;
         }
-        aff = (*(*(*pIdx).pTable).aCol.offset((*pLeft).iColumn as isize)).affinity as crate::src::ext::rtree::rtree::u8_0;
+        aff = (*(*(*pIdx).pTable).aCol.offset(__pLeft_ref.iColumn as isize)).affinity as crate::src::ext::rtree::rtree::u8_0;
         if aff as ::core::ffi::c_int >= crate::sqliteInt_h::SQLITE_AFF_TEXT {
             if !pItem.is_null() {
                 let mut db: *mut crate::sqliteInt_h::sqlite3 = (*pParse).db;
@@ -2949,16 +2993,17 @@ unsafe extern "C" fn wherePartIdxExpr(
                         ((*pItem).fg.jointype as ::core::ffi::c_int & (crate::sqliteInt_h::JT_LEFT | crate::sqliteInt_h::JT_LTORJ)
                             != 0 as ::core::ffi::c_int)
                             as ::core::ffi::c_int;
-                    (*p).pExpr =  crate::src::src::expr::sqlite3ExprDup(db as *mut crate::sqliteInt_h::sqlite3,  pRight as *const crate::sqliteInt_h::Expr, 0 as ::core::ffi::c_int) as
+                    let __p_ref = unsafe { &mut *p };
+                    __p_ref.pExpr =  crate::src::src::expr::sqlite3ExprDup(db as *mut crate::sqliteInt_h::sqlite3,  pRight as *const crate::sqliteInt_h::Expr, 0 as ::core::ffi::c_int) as
     *mut crate::sqliteInt_h::Expr;
-                    (*p).iDataCur = (*pItem).iCursor;
-                    (*p).iIdxCur = iIdxCur;
-                    (*p).iIdxCol = (*pLeft).iColumn as ::core::ffi::c_int;
-                    (*p).bMaybeNullRow = bNullRow as crate::src::ext::rtree::rtree::u8_0;
-                    (*p).pIENext = (*pParse).pIdxPartExpr;
-                    (*p).aff = aff;
+                    __p_ref.iDataCur = (*pItem).iCursor;
+                    __p_ref.iIdxCur = iIdxCur;
+                    __p_ref.iIdxCol = __pLeft_ref.iColumn as ::core::ffi::c_int;
+                    __p_ref.bMaybeNullRow = bNullRow as crate::src::ext::rtree::rtree::u8_0;
+                    __p_ref.pIENext = (*pParse).pIdxPartExpr;
+                    __p_ref.aff = aff;
                     (*pParse).pIdxPartExpr = p;
-                    if (*p).pIENext.is_null() {
+                    if __p_ref.pIENext.is_null() {
                         let mut pArg: *mut ::core::ffi::c_void =
                             &raw mut (*pParse).pIdxPartExpr as *mut ::core::ffi::c_void;
                         crate::src::src::prepare::sqlite3ParserAddCleanup(
@@ -2979,9 +3024,9 @@ unsafe extern "C" fn wherePartIdxExpr(
                         );
                     }
                 }
-            } else if ((*pLeft).iColumn as ::core::ffi::c_int) < crate::sqliteInt_h::BMS - 1 as ::core::ffi::c_int {
+            } else if (__pLeft_ref.iColumn as ::core::ffi::c_int) < crate::sqliteInt_h::BMS - 1 as ::core::ffi::c_int {
                 *pMask &= !((1 as ::core::ffi::c_int as crate::sqliteInt_h::Bitmask)
-                    << (*pLeft).iColumn as ::core::ffi::c_int);
+                    << __pLeft_ref.iColumn as ::core::ffi::c_int);
             }
         }
     }
@@ -3005,13 +3050,14 @@ unsafe extern "C" fn whereLoopAddBtree(
     let mut rSize: crate::sqliteInt_h::LogEst = 0;
     let mut pWC: *mut crate::whereInt_h::WhereClause = ::core::ptr::null_mut::<crate::whereInt_h::WhereClause>();
     let mut pTab: *mut crate::sqliteInt_h::Table = ::core::ptr::null_mut::<crate::sqliteInt_h::Table>();
-    pNew = (*pBuilder).pNew;
-    pWInfo = (*pBuilder).pWInfo;
+    let __pBuilder_ref = unsafe { &mut *pBuilder };
+    pNew = __pBuilder_ref.pNew;
+    pWInfo = __pBuilder_ref.pWInfo;
     pTabList = (*pWInfo).pTabList;
     pSrc = (&raw mut (*pTabList).a as *mut crate::sqliteInt_h::SrcItem)
         .offset((*pNew).iTab as ::core::ffi::c_int as isize);
     pTab = (*pSrc).pSTab;
-    pWC = (*pBuilder).pWC;
+    pWC = __pBuilder_ref.pWC;
     if (*pSrc).fg.isIndexedBy() != 0 {
         pProbe = (*pSrc).u2.pIBIndex;
     } else if !((*pTab).tabFlags & crate::sqliteInt_h::TF_WithoutRowid as crate::src::ext::rtree::rtree::u32_0 == 0 as crate::src::ext::rtree::rtree::u32_0) {
@@ -3035,7 +3081,7 @@ unsafe extern "C" fn whereLoopAddBtree(
         pProbe = &raw mut sPk;
     }
     rSize = (*pTab).nRowLogEst;
-    if (*pBuilder).pOrSet.is_null()
+    if __pBuilder_ref.pOrSet.is_null()
         && (*pWInfo).wctrlFlags as ::core::ffi::c_int & (crate::sqliteInt_h::WHERE_RIGHT_JOIN | crate::sqliteInt_h::WHERE_OR_SUBCLAUSE)
             == 0 as ::core::ffi::c_int
         && (*(*(*pWInfo).pParse).db).flags & crate::sqliteInt_h::SQLITE_AutoIndex as crate::src::ext::rtree::rtree::u64_0 != 0 as crate::src::ext::rtree::rtree::u64_0
@@ -3047,9 +3093,10 @@ unsafe extern "C" fn whereLoopAddBtree(
     {
         let mut rLogSize: crate::sqliteInt_h::LogEst = 0;
         let mut pTerm: *mut crate::whereInt_h::WhereTerm = ::core::ptr::null_mut::<crate::whereInt_h::WhereTerm>();
-        let mut pWCEnd: *mut crate::whereInt_h::WhereTerm = (*pWC).a.offset((*pWC).nTerm as isize);
+        let __pWC_ref = unsafe { &mut *pWC };
+        let mut pWCEnd: *mut crate::whereInt_h::WhereTerm = __pWC_ref.a.offset(__pWC_ref.nTerm as isize);
         rLogSize = estLog(rSize);
-        pTerm = (*pWC).a;
+        pTerm = __pWC_ref.a;
         while rc == crate::sqlite3_h::SQLITE_OK && pTerm < pWCEnd {
             if !((*pTerm).prereqRight & (*pNew).maskSelf != 0) {
                 if termCanDriveIndex(pTerm, pSrc, 0 as crate::sqliteInt_h::Bitmask) != 0 {
@@ -3086,10 +3133,11 @@ unsafe extern "C" fn whereLoopAddBtree(
         }
     }
     while rc == crate::sqlite3_h::SQLITE_OK && !pProbe.is_null() {
+        let __pSrc_ref = unsafe { &mut *pSrc };
         if !(!(*pProbe).pPartIdxWhere.is_null()
             && whereUsablePartialIndex(
-                (*pSrc).iCursor,
-                (*pSrc).fg.jointype,
+                __pSrc_ref.iCursor,
+                __pSrc_ref.fg.jointype,
                 pWC,
                 (*pProbe).pPartIdxWhere,
             ) == 0)
@@ -3110,7 +3158,7 @@ unsafe extern "C" fn whereLoopAddBtree(
                 (*pNew).nOut = rSize;
                 (*pNew).u.btree.pIndex = pProbe;
                 (*pNew).u.btree.pOrderBy = ::core::ptr::null_mut::<crate::sqliteInt_h::ExprList>();
-                b = indexMightHelpWithOrderBy(pBuilder, pProbe, (*pSrc).iCursor);
+                b = indexMightHelpWithOrderBy(pBuilder, pProbe, __pSrc_ref.iCursor);
                 if (*pProbe).idxType() as ::core::ffi::c_int == crate::sqliteInt_h::SQLITE_IDXTYPE_IPK {
                     (*pNew).wsFlags = crate::whereInt_h::WHERE_IPK as crate::src::ext::rtree::rtree::u32_0;
                     (*pNew).iSortIdx = (if b != 0 {
@@ -3121,11 +3169,11 @@ unsafe extern "C" fn whereLoopAddBtree(
                     (*pNew).rRun =
                         (rSize as ::core::ffi::c_int + 16 as ::core::ffi::c_int) as crate::sqliteInt_h::LogEst;
                     whereLoopOutputAdjust(pWC, pNew, rSize);
-                    if (*pSrc).fg.isSubquery() != 0 {
-                        if (*pSrc).fg.viaCoroutine() != 0 {
+                    if __pSrc_ref.fg.isSubquery() != 0 {
+                        if __pSrc_ref.fg.viaCoroutine() != 0 {
                             (*pNew).wsFlags |= crate::whereInt_h::WHERE_COROUTINE as crate::src::ext::rtree::rtree::u32_0;
                         }
-                        (*pNew).u.btree.pOrderBy = (*(*(*pSrc).u4.pSubq).pSelect).pOrderBy;
+                        (*pNew).u.btree.pOrderBy = (*(*__pSrc_ref.u4.pSubq).pSelect).pOrderBy;
                     }
                     rc = whereLoopInsert(pBuilder, pNew);
                     (*pNew).nOut = rSize;
@@ -3138,7 +3186,7 @@ unsafe extern "C" fn whereLoopAddBtree(
                         m = 0 as crate::sqliteInt_h::Bitmask;
                         (*pNew).wsFlags = (crate::whereInt_h::WHERE_IDX_ONLY | crate::whereInt_h::WHERE_INDEXED) as crate::src::ext::rtree::rtree::u32_0;
                     } else {
-                        m = (*pSrc).colUsed & (*pProbe).colNotIdxed;
+                        m = __pSrc_ref.colUsed & (*pProbe).colNotIdxed;
                         if !(*pProbe).pPartIdxWhere.is_null() {
                             wherePartIdxExpr(
                                 (*pWInfo).pParse,
@@ -3156,7 +3204,7 @@ unsafe extern "C" fn whereLoopAddBtree(
                                 && m != 0 as crate::sqliteInt_h::Bitmask
                         {
                             let mut isCov: crate::src::ext::rtree::rtree::u32_0 =
-                                whereIsCoveringIndex(pWInfo, pProbe, (*pSrc).iCursor);
+                                whereIsCoveringIndex(pWInfo, pProbe, __pSrc_ref.iCursor);
                             if !(isCov == 0 as crate::src::ext::rtree::rtree::u32_0) {
                                 m = 0 as crate::sqliteInt_h::Bitmask;
                                 (*pNew).wsFlags |= isCov;
@@ -3173,7 +3221,7 @@ unsafe extern "C" fn whereLoopAddBtree(
                     if b != 0
                         || !((*pTab).tabFlags & crate::sqliteInt_h::TF_WithoutRowid as crate::src::ext::rtree::rtree::u32_0 == 0 as crate::src::ext::rtree::rtree::u32_0)
                         || !(*pProbe).pPartIdxWhere.is_null()
-                        || (*pSrc).fg.isIndexedBy() as ::core::ffi::c_int != 0
+                        || __pSrc_ref.fg.isIndexedBy() as ::core::ffi::c_int != 0
                         || m == 0 as crate::sqliteInt_h::Bitmask
                             && (*pProbe).bUnordered() as ::core::ffi::c_int
                                 == 0 as ::core::ffi::c_int
@@ -3198,7 +3246,7 @@ unsafe extern "C" fn whereLoopAddBtree(
                             let mut nLookup: crate::sqliteInt_h::LogEst =
                                 (rSize as ::core::ffi::c_int + 16 as ::core::ffi::c_int) as crate::sqliteInt_h::LogEst;
                             let mut ii: ::core::ffi::c_int = 0;
-                            let mut iCur: ::core::ffi::c_int = (*pSrc).iCursor;
+                            let mut iCur: ::core::ffi::c_int = __pSrc_ref.iCursor;
                             let mut pWC2: *mut crate::whereInt_h::WhereClause = &raw mut (*pWInfo).sWC;
                             ii = 0 as ::core::ffi::c_int;
                             while ii < (*pWC2).nTerm {
@@ -3228,7 +3276,7 @@ unsafe extern "C" fn whereLoopAddBtree(
                             (*pNew).rRun = crate::src::src::util::sqlite3LogEstAdd((*pNew).rRun, nLookup);
                         }
                         whereLoopOutputAdjust(pWC, pNew, rSize);
-                        if !((*pSrc).fg.jointype as ::core::ffi::c_int & crate::sqliteInt_h::JT_RIGHT
+                        if !(__pSrc_ref.fg.jointype as ::core::ffi::c_int & crate::sqliteInt_h::JT_RIGHT
                             != 0 as ::core::ffi::c_int
                             && !(*pProbe).aColExpr.is_null())
                         {
@@ -3240,14 +3288,14 @@ unsafe extern "C" fn whereLoopAddBtree(
                         }
                     }
                 }
-                (*pBuilder).bldFlags1 = 0 as ::core::ffi::c_uchar;
+                __pBuilder_ref.bldFlags1 = 0 as ::core::ffi::c_uchar;
                 rc = whereLoopAddBtreeIndex(pBuilder, pSrc, pProbe, 0 as crate::sqliteInt_h::LogEst);
-                if (*pBuilder).bldFlags1 as ::core::ffi::c_int == crate::whereInt_h::SQLITE_BLDF1_INDEXED {
+                if __pBuilder_ref.bldFlags1 as ::core::ffi::c_int == crate::whereInt_h::SQLITE_BLDF1_INDEXED {
                     (*pTab).tabFlags |= crate::sqliteInt_h::TF_MaybeReanalyze as crate::src::ext::rtree::rtree::u32_0;
                 }
             }
         }
-        pProbe = if (*pSrc).fg.isIndexedBy() as ::core::ffi::c_int != 0 {
+        pProbe = if __pSrc_ref.fg.isIndexedBy() as ::core::ffi::c_int != 0 {
             ::core::ptr::null_mut::<crate::sqliteInt_h::Index>()
         } else {
             (*pProbe).pNext
@@ -3288,31 +3336,35 @@ unsafe extern "C" fn whereLoopAddVirtualOne(
     mut pbIn: *mut ::core::ffi::c_int,
     mut pbRetryLimit: *mut ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
-    let mut pWC: *mut crate::whereInt_h::WhereClause = (*pBuilder).pWC;
+    let __pBuilder_ref = unsafe { &mut *pBuilder };
+    let mut pWC: *mut crate::whereInt_h::WhereClause = __pBuilder_ref.pWC;
     let mut pHidden: *mut HiddenIndexInfo = pIdxInfo.offset(1 as isize)
         as *mut crate::sqlite3_h::sqlite3_index_info
         as *mut HiddenIndexInfo;
     let mut pIdxCons: *mut crate::sqlite3_h::sqlite3_index_constraint =
         ::core::ptr::null_mut::<crate::sqlite3_h::sqlite3_index_constraint>();
+    let __pIdxInfo_ref = unsafe { &mut *pIdxInfo };
     let mut pUsage: *mut crate::sqlite3_h::sqlite3_index_constraint_usage =
-        (*pIdxInfo).aConstraintUsage as *mut crate::sqlite3_h::sqlite3_index_constraint_usage;
+        __pIdxInfo_ref.aConstraintUsage as *mut crate::sqlite3_h::sqlite3_index_constraint_usage;
     let mut i: ::core::ffi::c_int = 0;
     let mut mxTerm: ::core::ffi::c_int = 0;
     let mut rc: ::core::ffi::c_int = crate::sqlite3_h::SQLITE_OK;
-    let mut pNew: *mut crate::whereInt_h::WhereLoop = (*pBuilder).pNew;
-    let mut pParse: *mut crate::sqliteInt_h::Parse = (*(*pBuilder).pWInfo).pParse;
-    let mut pSrc: *mut crate::sqliteInt_h::SrcItem = (&raw mut (*(*(*pBuilder).pWInfo).pTabList).a as *mut crate::sqliteInt_h::SrcItem)
-        .offset((*pNew).iTab as isize) as *mut crate::sqliteInt_h::SrcItem;
-    let mut nConstraint: ::core::ffi::c_int = (*pIdxInfo).nConstraint;
+    let mut pNew: *mut crate::whereInt_h::WhereLoop = __pBuilder_ref.pNew;
+    let mut pParse: *mut crate::sqliteInt_h::Parse = (*__pBuilder_ref.pWInfo).pParse;
+    let __pNew_ref = unsafe { &mut *pNew };
+    let mut pSrc: *mut crate::sqliteInt_h::SrcItem = (&raw mut (*(*__pBuilder_ref.pWInfo).pTabList).a as *mut crate::sqliteInt_h::SrcItem)
+        .offset(__pNew_ref.iTab as isize) as *mut crate::sqliteInt_h::SrcItem;
+    let mut nConstraint: ::core::ffi::c_int = __pIdxInfo_ref.nConstraint;
     *pbIn = 0 as ::core::ffi::c_int;
-    (*pNew).prereq = mPrereq;
-    pIdxCons = *(&raw mut (*pIdxInfo).aConstraint as *mut *mut crate::sqlite3_h::sqlite3_index_constraint);
+    __pNew_ref.prereq = mPrereq;
+    pIdxCons = *(&raw mut __pIdxInfo_ref.aConstraint as *mut *mut crate::sqlite3_h::sqlite3_index_constraint);
     i = 0 as ::core::ffi::c_int;
     while i < nConstraint {
         let mut pTerm: *mut crate::whereInt_h::WhereTerm = termFromWhereClause(pWC, (*pIdxCons).iTermOffset);
         (*pIdxCons).usable = 0 as ::core::ffi::c_uchar;
-        if (*pTerm).prereqRight & mUsable == (*pTerm).prereqRight
-            && (*pTerm).eOperator as ::core::ffi::c_int & mExclude as ::core::ffi::c_int
+        let __pTerm_ref = unsafe { &*pTerm };
+        if __pTerm_ref.prereqRight & mUsable == __pTerm_ref.prereqRight
+            && __pTerm_ref.eOperator as ::core::ffi::c_int & mExclude as ::core::ffi::c_int
                 == 0 as ::core::ffi::c_int
             && (!pbRetryLimit.is_null() || isLimitTerm(pTerm) == 0)
         {
@@ -3327,12 +3379,12 @@ unsafe extern "C" fn whereLoopAddVirtualOne(
         (::core::mem::size_of::<crate::sqlite3_h::sqlite3_index_constraint_usage>() as crate::__stddef_size_t_h::size_t)
             .wrapping_mul(nConstraint as crate::__stddef_size_t_h::size_t),
     );
-    (*pIdxInfo).idxStr = ::core::ptr::null_mut::<::core::ffi::c_char>();
-    (*pIdxInfo).idxNum = 0 as ::core::ffi::c_int;
-    (*pIdxInfo).orderByConsumed = 0 as ::core::ffi::c_int;
-    (*pIdxInfo).estimatedCost = crate::sqliteInt_h::SQLITE_BIG_DBL / 2 as ::core::ffi::c_int as ::core::ffi::c_double;
-    (*pIdxInfo).estimatedRows = 25 as crate::sqlite3_h::sqlite3_int64;
-    (*pIdxInfo).idxFlags = 0 as ::core::ffi::c_int;
+    __pIdxInfo_ref.idxStr = ::core::ptr::null_mut::<::core::ffi::c_char>();
+    __pIdxInfo_ref.idxNum = 0 as ::core::ffi::c_int;
+    __pIdxInfo_ref.orderByConsumed = 0 as ::core::ffi::c_int;
+    __pIdxInfo_ref.estimatedCost = crate::sqliteInt_h::SQLITE_BIG_DBL / 2 as ::core::ffi::c_int as ::core::ffi::c_double;
+    __pIdxInfo_ref.estimatedRows = 25 as crate::sqlite3_h::sqlite3_int64;
+    __pIdxInfo_ref.idxFlags = 0 as ::core::ffi::c_int;
     (*pHidden).mHandleIn = 0 as crate::src::ext::rtree::rtree::u32_0;
     rc = vtabBestIndex(pParse, (*pSrc).pSTab, pIdxInfo);
     if rc != 0 {
@@ -3344,16 +3396,16 @@ unsafe extern "C" fn whereLoopAddVirtualOne(
     }
     mxTerm = -(1 as ::core::ffi::c_int);
     ::libc::memset(
-        (*pNew).aLTerm as *mut ::core::ffi::c_void,
+        __pNew_ref.aLTerm as *mut ::core::ffi::c_void,
         0 as ::core::ffi::c_int,
         (::core::mem::size_of::<*mut crate::whereInt_h::WhereTerm>() as crate::__stddef_size_t_h::size_t).wrapping_mul(nConstraint as crate::__stddef_size_t_h::size_t),
     );
     ::libc::memset(
-        &raw mut (*pNew).u.vtab as *mut ::core::ffi::c_void,
+        &raw mut __pNew_ref.u.vtab as *mut ::core::ffi::c_void,
         0 as ::core::ffi::c_int,
         ::core::mem::size_of::<crate::whereInt_h::__anon_struct_13>() as crate::__stddef_size_t_h::size_t,
     );
-    pIdxCons = *(&raw mut (*pIdxInfo).aConstraint as *mut *mut crate::sqlite3_h::sqlite3_index_constraint);
+    pIdxCons = *(&raw mut __pIdxInfo_ref.aConstraint as *mut *mut crate::sqlite3_h::sqlite3_index_constraint);
     i = 0 as ::core::ffi::c_int;
     while i < nConstraint {
         let mut iTerm: ::core::ffi::c_int = 0;
@@ -3367,7 +3419,7 @@ unsafe extern "C" fn whereLoopAddVirtualOne(
                     pTerm_0 = termFromWhereClause(pWC, j);
                     pTerm_0.is_null()
                 }
-                || !(*(*pNew).aLTerm.offset(iTerm as isize)).is_null()
+                || !(*__pNew_ref.aLTerm.offset(iTerm as isize)).is_null()
                 || (*pIdxCons).usable as ::core::ffi::c_int == 0 as ::core::ffi::c_int
             {
                 crate::src::src::util::sqlite3ErrorMsg(
@@ -3379,8 +3431,8 @@ unsafe extern "C" fn whereLoopAddVirtualOne(
                 freeIdxStr(pIdxInfo);
                 return crate::sqlite3_h::SQLITE_ERROR;
             }
-            (*pNew).prereq |= (*pTerm_0).prereqRight;
-            let ref mut fresh22 = *(*pNew).aLTerm.offset(iTerm as isize);
+            __pNew_ref.prereq |= (*pTerm_0).prereqRight;
+            let ref mut fresh22 = *__pNew_ref.aLTerm.offset(iTerm as isize);
             *fresh22 = pTerm_0;
             if iTerm > mxTerm {
                 mxTerm = iTerm;
@@ -3390,12 +3442,12 @@ unsafe extern "C" fn whereLoopAddVirtualOne(
                     && (1 as ::core::ffi::c_int) << i & mNoOmit as ::core::ffi::c_int
                         == 0 as ::core::ffi::c_int
                 {
-                    (*pNew).u.vtab.omitMask = ((*pNew).u.vtab.omitMask as ::core::ffi::c_int
+                    __pNew_ref.u.vtab.omitMask = (__pNew_ref.u.vtab.omitMask as ::core::ffi::c_int
                         | (1 as ::core::ffi::c_int) << iTerm)
                         as crate::src::fts5::u16_0;
                 }
                 if (*pTerm_0).eMatchOp as ::core::ffi::c_int == crate::sqlite3_h::SQLITE_INDEX_CONSTRAINT_OFFSET {
-                    (*pNew).u.vtab.set_bOmitOffset(1 as crate::src::ext::rtree::rtree::u32_0 as crate::src::ext::rtree::rtree::u32_0);
+                    __pNew_ref.u.vtab.set_bOmitOffset(1 as crate::src::ext::rtree::rtree::u32_0 as crate::src::ext::rtree::rtree::u32_0);
                 }
             }
             if (if i <= 31 as ::core::ffi::c_int {
@@ -3405,13 +3457,13 @@ unsafe extern "C" fn whereLoopAddVirtualOne(
             }) & (*pHidden).mHandleIn
                 != 0
             {
-                (*pNew).u.vtab.mHandleIn = ((*pNew).u.vtab.mHandleIn as ::core::ffi::c_uint
+                __pNew_ref.u.vtab.mHandleIn = (__pNew_ref.u.vtab.mHandleIn as ::core::ffi::c_uint
                     | (1 as ::core::ffi::c_int as ::core::ffi::c_uint) << iTerm)
                     as crate::src::ext::rtree::rtree::u32_0;
             } else if (*pTerm_0).eOperator as ::core::ffi::c_int & crate::whereInt_h::WO_IN != 0 as ::core::ffi::c_int
             {
-                (*pIdxInfo).orderByConsumed = 0 as ::core::ffi::c_int;
-                (*pIdxInfo).idxFlags &= !crate::sqlite3_h::SQLITE_INDEX_SCAN_UNIQUE;
+                __pIdxInfo_ref.orderByConsumed = 0 as ::core::ffi::c_int;
+                __pIdxInfo_ref.idxFlags &= !crate::sqlite3_h::SQLITE_INDEX_SCAN_UNIQUE;
                 *pbIn = 1 as ::core::ffi::c_int;
             }
             if isLimitTerm(pTerm_0) != 0 && (*pbIn != 0 || allConstraintsUsed(pUsage, i) == 0) {
@@ -3423,10 +3475,10 @@ unsafe extern "C" fn whereLoopAddVirtualOne(
         i += 1;
         pIdxCons = pIdxCons.offset(1);
     }
-    (*pNew).nLTerm = (mxTerm + 1 as ::core::ffi::c_int) as crate::src::fts5::u16_0;
+    __pNew_ref.nLTerm = (mxTerm + 1 as ::core::ffi::c_int) as crate::src::fts5::u16_0;
     i = 0 as ::core::ffi::c_int;
     while i <= mxTerm {
-        if (*(*pNew).aLTerm.offset(i as isize)).is_null() {
+        if (*__pNew_ref.aLTerm.offset(i as isize)).is_null() {
             crate::src::src::util::sqlite3ErrorMsg(
                 
                 pParse as *mut crate::sqliteInt_h::Parse,
@@ -3438,34 +3490,34 @@ unsafe extern "C" fn whereLoopAddVirtualOne(
         }
         i += 1;
     }
-    (*pNew).u.vtab.idxNum = (*pIdxInfo).idxNum;
+    __pNew_ref.u.vtab.idxNum = __pIdxInfo_ref.idxNum;
     (*pNew)
         .u
         .vtab
-        .set_needFree((*pIdxInfo).needToFreeIdxStr as crate::src::ext::rtree::rtree::u32_0 as crate::src::ext::rtree::rtree::u32_0);
-    (*pIdxInfo).needToFreeIdxStr = 0 as ::core::ffi::c_int;
-    (*pNew).u.vtab.idxStr = (*pIdxInfo).idxStr;
-    (*pNew).u.vtab.isOrdered = (if (*pIdxInfo).orderByConsumed != 0 {
-        (*pIdxInfo).nOrderBy
+        .set_needFree(__pIdxInfo_ref.needToFreeIdxStr as crate::src::ext::rtree::rtree::u32_0 as crate::src::ext::rtree::rtree::u32_0);
+    __pIdxInfo_ref.needToFreeIdxStr = 0 as ::core::ffi::c_int;
+    __pNew_ref.u.vtab.idxStr = __pIdxInfo_ref.idxStr;
+    __pNew_ref.u.vtab.isOrdered = (if __pIdxInfo_ref.orderByConsumed != 0 {
+        __pIdxInfo_ref.nOrderBy
     } else {
         0 as ::core::ffi::c_int
     }) as crate::sqliteInt_h::i8_0;
-    (*pNew).u.vtab.set_bIdxNumHex(
-        ((*pIdxInfo).idxFlags & crate::sqlite3_h::SQLITE_INDEX_SCAN_HEX != 0 as ::core::ffi::c_int)
+    __pNew_ref.u.vtab.set_bIdxNumHex(
+        (__pIdxInfo_ref.idxFlags & crate::sqlite3_h::SQLITE_INDEX_SCAN_HEX != 0 as ::core::ffi::c_int)
             as ::core::ffi::c_int as crate::src::ext::rtree::rtree::u32_0 as crate::src::ext::rtree::rtree::u32_0,
     );
-    (*pNew).rSetup = 0 as crate::sqliteInt_h::LogEst;
-    (*pNew).rRun = crate::src::src::util::sqlite3LogEstFromDouble((*pIdxInfo).estimatedCost);
-    (*pNew).nOut = crate::src::src::util::sqlite3LogEst((*pIdxInfo).estimatedRows as crate::src::ext::rtree::rtree::u64_0);
-    if (*pIdxInfo).idxFlags & crate::sqlite3_h::SQLITE_INDEX_SCAN_UNIQUE != 0 {
-        (*pNew).wsFlags |= crate::whereInt_h::WHERE_ONEROW as crate::src::ext::rtree::rtree::u32_0;
+    __pNew_ref.rSetup = 0 as crate::sqliteInt_h::LogEst;
+    __pNew_ref.rRun = crate::src::src::util::sqlite3LogEstFromDouble(__pIdxInfo_ref.estimatedCost);
+    __pNew_ref.nOut = crate::src::src::util::sqlite3LogEst(__pIdxInfo_ref.estimatedRows as crate::src::ext::rtree::rtree::u64_0);
+    if __pIdxInfo_ref.idxFlags & crate::sqlite3_h::SQLITE_INDEX_SCAN_UNIQUE != 0 {
+        __pNew_ref.wsFlags |= crate::whereInt_h::WHERE_ONEROW as crate::src::ext::rtree::rtree::u32_0;
     } else {
-        (*pNew).wsFlags &= !crate::whereInt_h::WHERE_ONEROW as crate::src::ext::rtree::rtree::u32_0;
+        __pNew_ref.wsFlags &= !crate::whereInt_h::WHERE_ONEROW as crate::src::ext::rtree::rtree::u32_0;
     }
     rc = whereLoopInsert(pBuilder, pNew);
-    if (*pNew).u.vtab.needFree() != 0 {
-        crate::src::src::malloc::sqlite3_free((*pNew).u.vtab.idxStr as *mut ::core::ffi::c_void);
-        (*pNew).u.vtab.set_needFree(0 as crate::src::ext::rtree::rtree::u32_0 as crate::src::ext::rtree::rtree::u32_0);
+    if __pNew_ref.u.vtab.needFree() != 0 {
+        crate::src::src::malloc::sqlite3_free(__pNew_ref.u.vtab.idxStr as *mut ::core::ffi::c_void);
+        __pNew_ref.u.vtab.set_needFree(0 as crate::src::ext::rtree::rtree::u32_0 as crate::src::ext::rtree::rtree::u32_0);
     }
     return rc;
 }
@@ -3536,18 +3588,19 @@ pub unsafe extern "C" fn sqlite3_vtab_rhs_value(
         rc = crate::src::src::main::sqlite3MisuseError(4499 as ::core::ffi::c_int);
     } else {
         if (*(&raw mut (*pH).aRhs as *mut *mut crate::vdbeInt_h::sqlite3_value).offset(iCons as isize)).is_null() {
+            let __pH_ref = unsafe { &mut *pH };
             let mut pTerm: *mut crate::whereInt_h::WhereTerm = termFromWhereClause(
-                (*pH).pWC,
+                __pH_ref.pWC,
                 (*(*pIdxInfo).aConstraint.offset(iCons as isize)).iTermOffset,
             );
             rc = crate::src::src::vdbemem::sqlite3ValueFromExpr(
                 
-                (*(*pH).pParse).db as *mut crate::sqliteInt_h::sqlite3,
+                (*__pH_ref.pParse).db as *mut crate::sqliteInt_h::sqlite3,
                 
                 (*(*pTerm).pExpr).pRight as *const crate::sqliteInt_h::Expr,
-                (*(*(*pH).pParse).db).enc,
+                (*(*__pH_ref.pParse).db).enc,
                 crate::sqliteInt_h::SQLITE_AFF_BLOB as crate::src::ext::rtree::rtree::u8_0,
-                (&raw mut (*pH).aRhs as *mut *mut crate::vdbeInt_h::sqlite3_value).offset(iCons as isize)
+                (&raw mut __pH_ref.aRhs as *mut *mut crate::vdbeInt_h::sqlite3_value).offset(iCons as isize)
                     as *mut *mut crate::vdbeInt_h::sqlite3_value,
             );
         }
@@ -3605,10 +3658,11 @@ unsafe extern "C" fn whereLoopAddVirtual(
     let mut mBest: crate::sqliteInt_h::Bitmask = 0;
     let mut mNoOmit: crate::src::fts5::u16_0 = 0;
     let mut bRetry: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
-    pWInfo = (*pBuilder).pWInfo;
+    let __pBuilder_ref = unsafe { &*pBuilder };
+    pWInfo = __pBuilder_ref.pWInfo;
     pParse = (*pWInfo).pParse;
-    pWC = (*pBuilder).pWC;
-    pNew = (*pBuilder).pNew;
+    pWC = __pBuilder_ref.pWC;
+    pNew = __pBuilder_ref.pNew;
     pSrc = (&raw mut (*(*pWInfo).pTabList).a as *mut crate::sqliteInt_h::SrcItem).offset((*pNew).iTab as isize)
         as *mut crate::sqliteInt_h::SrcItem;
     p = allocateIndexInfo(pWInfo, pWC, mUnusable, pSrc, &raw mut mNoOmit);
@@ -3745,7 +3799,8 @@ unsafe extern "C" fn whereLoopAddOr(
     mut mPrereq: crate::sqliteInt_h::Bitmask,
     mut mUnusable: crate::sqliteInt_h::Bitmask,
 ) -> ::core::ffi::c_int {
-    let mut pWInfo: *mut crate::whereInt_h::WhereInfo = (*pBuilder).pWInfo;
+    let __pBuilder_ref = unsafe { &*pBuilder };
+    let mut pWInfo: *mut crate::whereInt_h::WhereInfo = __pBuilder_ref.pWInfo;
     let mut pWC: *mut crate::whereInt_h::WhereClause = ::core::ptr::null_mut::<crate::whereInt_h::WhereClause>();
     let mut pNew: *mut crate::whereInt_h::WhereLoop = ::core::ptr::null_mut::<crate::whereInt_h::WhereLoop>();
     let mut pTerm: *mut crate::whereInt_h::WhereTerm = ::core::ptr::null_mut::<crate::whereInt_h::WhereTerm>();
@@ -3793,9 +3848,9 @@ unsafe extern "C" fn whereLoopAddOr(
     a:  [crate::whereInt_h::WhereOrCost { prereq:  0, rRun:  0, nOut:  0 }; 3],
 };
     let mut pItem: *mut crate::sqliteInt_h::SrcItem = ::core::ptr::null_mut::<crate::sqliteInt_h::SrcItem>();
-    pWC = (*pBuilder).pWC;
+    pWC = __pBuilder_ref.pWC;
     pWCEnd = (*pWC).a.offset((*pWC).nTerm as isize);
-    pNew = (*pBuilder).pNew;
+    pNew = __pBuilder_ref.pNew;
     pItem = (&raw mut (*(*pWInfo).pTabList).a as *mut crate::sqliteInt_h::SrcItem)
         .offset((*pNew).iTab as ::core::ffi::c_int as isize);
     iCur = (*pItem).iCursor;
@@ -3808,8 +3863,9 @@ unsafe extern "C" fn whereLoopAddOr(
             && (*(*pTerm).u.pOrInfo).indexable & (*pNew).maskSelf != 0 as crate::sqliteInt_h::Bitmask
         {
             let pOrWC: *mut crate::whereInt_h::WhereClause = &raw mut (*(*pTerm).u.pOrInfo).wc;
+            let __pOrWC_ref = unsafe { &mut *pOrWC };
             let pOrWCEnd: *mut crate::whereInt_h::WhereTerm =
-                (*pOrWC).a.offset((*pOrWC).nTerm as isize) as *mut crate::whereInt_h::WhereTerm;
+                __pOrWC_ref.a.offset(__pOrWC_ref.nTerm as isize) as *mut crate::whereInt_h::WhereTerm;
             let mut pOrTerm: *mut crate::whereInt_h::WhereTerm = ::core::ptr::null_mut::<crate::whereInt_h::WhereTerm>();
             let mut once: ::core::ffi::c_int = 1 as ::core::ffi::c_int;
             let mut i: ::core::ffi::c_int = 0;
@@ -3817,7 +3873,7 @@ unsafe extern "C" fn whereLoopAddOr(
             sSubBuild = *pBuilder;
             sSubBuild.pOrSet = &raw mut sCur;
             let mut current_block_48: u64;
-            pOrTerm = (*pOrWC).a;
+            pOrTerm = __pOrWC_ref.a;
             while pOrTerm < pOrWCEnd {
                 if (*pOrTerm).eOperator as ::core::ffi::c_int & crate::whereInt_h::WO_AND != 0 as ::core::ffi::c_int {
                     sSubBuild.pWC = &raw mut (*(*pOrTerm).u.pAndInfo).wc;
@@ -3884,23 +3940,24 @@ unsafe extern "C" fn whereLoopAddOr(
                 }
                 pOrTerm = pOrTerm.offset(1);
             }
-            (*pNew).nLTerm = 1 as crate::src::fts5::u16_0;
-            let ref mut fresh12 = *(*pNew).aLTerm.offset(0 as isize);
+            let __pNew_ref = unsafe { &mut *pNew };
+            __pNew_ref.nLTerm = 1 as crate::src::fts5::u16_0;
+            let ref mut fresh12 = *__pNew_ref.aLTerm.offset(0 as isize);
             *fresh12 = pTerm;
-            (*pNew).wsFlags = crate::whereInt_h::WHERE_MULTI_OR as crate::src::ext::rtree::rtree::u32_0;
-            (*pNew).rSetup = 0 as crate::sqliteInt_h::LogEst;
-            (*pNew).iSortIdx = 0 as crate::src::ext::rtree::rtree::u8_0;
+            __pNew_ref.wsFlags = crate::whereInt_h::WHERE_MULTI_OR as crate::src::ext::rtree::rtree::u32_0;
+            __pNew_ref.rSetup = 0 as crate::sqliteInt_h::LogEst;
+            __pNew_ref.iSortIdx = 0 as crate::src::ext::rtree::rtree::u8_0;
             ::libc::memset(
-                &raw mut (*pNew).u as *mut ::core::ffi::c_void,
+                &raw mut __pNew_ref.u as *mut ::core::ffi::c_void,
                 0 as ::core::ffi::c_int,
                 ::core::mem::size_of::<crate::whereInt_h::__anon_union_20>() as crate::__stddef_size_t_h::size_t,
             );
             i = 0 as ::core::ffi::c_int;
             while rc == crate::sqlite3_h::SQLITE_OK && i < sSum.n as ::core::ffi::c_int {
-                (*pNew).rRun = (sSum.a[i as usize].rRun as ::core::ffi::c_int
+                __pNew_ref.rRun = (sSum.a[i as usize].rRun as ::core::ffi::c_int
                     + 1 as ::core::ffi::c_int) as crate::sqliteInt_h::LogEst;
-                (*pNew).nOut = sSum.a[i as usize].nOut;
-                (*pNew).prereq = sSum.a[i as usize].prereq;
+                __pNew_ref.nOut = sSum.a[i as usize].nOut;
+                __pNew_ref.prereq = sSum.a[i as usize].prereq;
                 rc = whereLoopInsert(pBuilder, pNew);
                 i += 1;
             }
@@ -3911,30 +3968,33 @@ unsafe extern "C" fn whereLoopAddOr(
 }
 
 unsafe extern "C" fn whereLoopAddAll(mut pBuilder: *mut crate::whereInt_h::WhereLoopBuilder) -> ::core::ffi::c_int {
-    let mut pWInfo: *mut crate::whereInt_h::WhereInfo = (*pBuilder).pWInfo;
+    let __pBuilder_ref = unsafe { &mut *pBuilder };
+    let mut pWInfo: *mut crate::whereInt_h::WhereInfo = __pBuilder_ref.pWInfo;
     let mut mPrereq: crate::sqliteInt_h::Bitmask = 0 as crate::sqliteInt_h::Bitmask;
     let mut mPrior: crate::sqliteInt_h::Bitmask = 0 as crate::sqliteInt_h::Bitmask;
     let mut iTab: ::core::ffi::c_int = 0;
-    let mut pTabList: *mut crate::sqliteInt_h::SrcList = (*pWInfo).pTabList;
+    let __pWInfo_ref = unsafe { &mut *pWInfo };
+    let mut pTabList: *mut crate::sqliteInt_h::SrcList = __pWInfo_ref.pTabList;
     let mut pItem: *mut crate::sqliteInt_h::SrcItem = ::core::ptr::null_mut::<crate::sqliteInt_h::SrcItem>();
     let mut pEnd: *mut crate::sqliteInt_h::SrcItem =
-        (&raw mut (*pTabList).a as *mut crate::sqliteInt_h::SrcItem).offset((*pWInfo).nLevel as isize) as *mut crate::sqliteInt_h::SrcItem;
-    let mut db: *mut crate::sqliteInt_h::sqlite3 = (*(*pWInfo).pParse).db;
+        (&raw mut (*pTabList).a as *mut crate::sqliteInt_h::SrcItem).offset(__pWInfo_ref.nLevel as isize) as *mut crate::sqliteInt_h::SrcItem;
+    let mut db: *mut crate::sqliteInt_h::sqlite3 = (*__pWInfo_ref.pParse).db;
     let mut rc: ::core::ffi::c_int = crate::sqlite3_h::SQLITE_OK;
     let mut bFirstPastRJ: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
     let mut hasRightJoin: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
     let mut pNew: *mut crate::whereInt_h::WhereLoop = ::core::ptr::null_mut::<crate::whereInt_h::WhereLoop>();
-    pNew = (*pBuilder).pNew;
-    (*pBuilder).iPlanLimit = crate::whereInt_h::SQLITE_QUERY_PLANNER_LIMIT as ::core::ffi::c_uint;
+    pNew = __pBuilder_ref.pNew;
+    __pBuilder_ref.iPlanLimit = crate::whereInt_h::SQLITE_QUERY_PLANNER_LIMIT as ::core::ffi::c_uint;
     iTab = 0 as ::core::ffi::c_int;
     pItem = &raw mut (*pTabList).a as *mut crate::sqliteInt_h::SrcItem;
     while pItem < pEnd {
         let mut mUnusable: crate::sqliteInt_h::Bitmask = 0 as crate::sqliteInt_h::Bitmask;
-        (*pNew).iTab = iTab as crate::src::ext::rtree::rtree::u8_0;
-        (*pBuilder).iPlanLimit = (*pBuilder)
+        let __pNew_ref = unsafe { &mut *pNew };
+        __pNew_ref.iTab = iTab as crate::src::ext::rtree::rtree::u8_0;
+        __pBuilder_ref.iPlanLimit = (*pBuilder)
             .iPlanLimit
             .wrapping_add(crate::whereInt_h::SQLITE_QUERY_PLANNER_LIMIT_INCR as ::core::ffi::c_uint);
-        (*pNew).maskSelf = sqlite3WhereGetMask(&raw mut (*pWInfo).sMaskSet, (*pItem).iCursor);
+        __pNew_ref.maskSelf = sqlite3WhereGetMask(&raw mut __pWInfo_ref.sMaskSet, (*pItem).iCursor);
         if bFirstPastRJ != 0
             || (*pItem).fg.jointype as ::core::ffi::c_int & (crate::sqliteInt_h::JT_OUTER | crate::sqliteInt_h::JT_CROSS | crate::sqliteInt_h::JT_LTORJ)
                 != 0 as ::core::ffi::c_int
@@ -3955,7 +4015,7 @@ unsafe extern "C" fn whereLoopAddAll(mut pBuilder: *mut crate::whereInt_h::Where
                 if mUnusable != 0
                     || (*p).fg.jointype as ::core::ffi::c_int & (crate::sqliteInt_h::JT_OUTER | crate::sqliteInt_h::JT_CROSS) != 0
                 {
-                    mUnusable |= sqlite3WhereGetMask(&raw mut (*pWInfo).sMaskSet, (*p).iCursor);
+                    mUnusable |= sqlite3WhereGetMask(&raw mut __pWInfo_ref.sMaskSet, (*p).iCursor);
                 }
                 p = p.offset(1);
             }
@@ -3963,10 +4023,10 @@ unsafe extern "C" fn whereLoopAddAll(mut pBuilder: *mut crate::whereInt_h::Where
         } else {
             rc = whereLoopAddBtree(pBuilder, mPrereq);
         }
-        if rc == crate::sqlite3_h::SQLITE_OK && (*(*pBuilder).pWC).hasOr as ::core::ffi::c_int != 0 {
+        if rc == crate::sqlite3_h::SQLITE_OK && (*__pBuilder_ref.pWC).hasOr as ::core::ffi::c_int != 0 {
             rc = whereLoopAddOr(pBuilder, mPrereq, mUnusable);
         }
-        mPrior |= (*pNew).maskSelf;
+        mPrior |= __pNew_ref.maskSelf;
         if rc != 0 || (*db).mallocFailed as ::core::ffi::c_int != 0 {
             if !(rc == crate::sqlite3_h::SQLITE_DONE) {
                 break;
@@ -4189,12 +4249,13 @@ unsafe extern "C" fn wherePathSatisfiesOrderBy(
                                         if !pTerm.is_null() {
                                             if (*pTerm).eOperator as ::core::ffi::c_int == crate::whereInt_h::WO_IN {
                                                 j = 0 as ::core::ffi::c_int;
-                                                while j < (*pLoop).nLTerm as ::core::ffi::c_int
-                                                    && pTerm != *(*pLoop).aLTerm.offset(j as isize)
+                                                let __pLoop_ref = unsafe { &mut *pLoop };
+                                                while j < __pLoop_ref.nLTerm as ::core::ffi::c_int
+                                                    && pTerm != *__pLoop_ref.aLTerm.offset(j as isize)
                                                 {
                                                     j += 1;
                                                 }
-                                                if j >= (*pLoop).nLTerm as ::core::ffi::c_int {
+                                                if j >= __pLoop_ref.nLTerm as ::core::ffi::c_int {
                                                     current_block_36 = 18153031941552419006;
                                                 } else {
                                                     current_block_36 = 14775119014532381840;
@@ -4291,9 +4352,10 @@ unsafe extern "C" fn wherePathSatisfiesOrderBy(
                             {
                                 return 0 as crate::sqliteInt_h::i8_0;
                             } else {
-                                nKeyCol = (*pIndex).nKeyCol;
-                                nColumn = (*pIndex).nColumn;
-                                isOrderDistinct = ((*pIndex).onError as ::core::ffi::c_int
+                                let __pIndex_ref = unsafe { &*pIndex };
+                                nKeyCol = __pIndex_ref.nKeyCol;
+                                nColumn = __pIndex_ref.nColumn;
+                                isOrderDistinct = (__pIndex_ref.onError as ::core::ffi::c_int
                                     != crate::sqliteInt_h::OE_None
                                     && (*pLoop).wsFlags & crate::whereInt_h::WHERE_SKIPSCAN as crate::src::ext::rtree::rtree::u32_0 == 0 as crate::src::ext::rtree::rtree::u32_0)
                                     as ::core::ffi::c_int
@@ -4341,14 +4403,15 @@ unsafe extern "C" fn wherePathSatisfiesOrderBy(
                             match current_block_131 {
                                 8102658916883067714 => {
                                     if !pIndex.is_null() {
-                                        iColumn = *(*pIndex).aiColumn.offset(j as isize)
+                                        let __pIndex_ref = unsafe { &mut *pIndex };
+                                        iColumn = *__pIndex_ref.aiColumn.offset(j as isize)
                                             as ::core::ffi::c_int;
-                                        revIdx = (*(*pIndex).aSortOrder.offset(j as isize)
+                                        revIdx = (*__pIndex_ref.aSortOrder.offset(j as isize)
                                             as ::core::ffi::c_int
                                             & crate::sqliteInt_h::KEYINFO_ORDER_DESC)
                                             as crate::src::ext::rtree::rtree::u8_0;
                                         if iColumn
-                                            == (*(*pIndex).pTable).iPKey as ::core::ffi::c_int
+                                            == (*__pIndex_ref.pTable).iPKey as ::core::ffi::c_int
                                         {
                                             iColumn = crate::sqliteInt_h::XN_ROWID;
                                         }
@@ -4393,15 +4456,16 @@ unsafe extern "C" fn wherePathSatisfiesOrderBy(
                                                     bOnce = 0 as crate::src::ext::rtree::rtree::u8_0;
                                                 }
                                                 if iColumn >= crate::sqliteInt_h::XN_ROWID {
-                                                    if (*pOBExpr).op as ::core::ffi::c_int
+                                                    let __pOBExpr_ref = unsafe { &*pOBExpr };
+                                                    if __pOBExpr_ref.op as ::core::ffi::c_int
                                                         != crate::src::parse::TK_COLUMN
-                                                        && (*pOBExpr).op as ::core::ffi::c_int
+                                                        && __pOBExpr_ref.op as ::core::ffi::c_int
                                                             != crate::src::parse::TK_AGG_COLUMN
                                                     {
                                                         current_block_101 = 2220405792722996547;
-                                                    } else if (*pOBExpr).iTable != iCur {
+                                                    } else if __pOBExpr_ref.iTable != iCur {
                                                         current_block_101 = 2220405792722996547;
-                                                    } else if (*pOBExpr).iColumn
+                                                    } else if __pOBExpr_ref.iColumn
                                                         as ::core::ffi::c_int
                                                         != iColumn
                                                     {
@@ -4614,8 +4678,9 @@ unsafe extern "C" fn whereSortingCost(
 ) -> crate::sqliteInt_h::LogEst {
     let mut rSortCost: crate::sqliteInt_h::LogEst = 0;
     let mut nCol: crate::sqliteInt_h::LogEst = 0;
+    let __pWInfo_ref = unsafe { &*pWInfo };
     nCol = crate::src::src::util::sqlite3LogEst(
-        (((*(*(*pWInfo).pSelect).pEList).nExpr + 59 as ::core::ffi::c_int)
+        (((*(*__pWInfo_ref.pSelect).pEList).nExpr + 59 as ::core::ffi::c_int)
             / 30 as ::core::ffi::c_int) as crate::src::ext::rtree::rtree::u64_0,
     );
     rSortCost = (nRow as ::core::ffi::c_int + nCol as ::core::ffi::c_int) as crate::sqliteInt_h::LogEst;
@@ -4625,15 +4690,15 @@ unsafe extern "C" fn whereSortingCost(
                 as ::core::ffi::c_int
                 - 66 as ::core::ffi::c_int)) as crate::sqliteInt_h::LogEst;
     }
-    if (*pWInfo).wctrlFlags as ::core::ffi::c_int & crate::sqliteInt_h::WHERE_USE_LIMIT != 0 as ::core::ffi::c_int {
+    if __pWInfo_ref.wctrlFlags as ::core::ffi::c_int & crate::sqliteInt_h::WHERE_USE_LIMIT != 0 as ::core::ffi::c_int {
         rSortCost = (rSortCost as ::core::ffi::c_int + 10 as ::core::ffi::c_int) as crate::sqliteInt_h::LogEst;
         if nSorted != 0 as ::core::ffi::c_int {
             rSortCost = (rSortCost as ::core::ffi::c_int + 6 as ::core::ffi::c_int) as crate::sqliteInt_h::LogEst;
         }
-        if ((*pWInfo).iLimit as ::core::ffi::c_int) < nRow as ::core::ffi::c_int {
-            nRow = (*pWInfo).iLimit;
+        if (__pWInfo_ref.iLimit as ::core::ffi::c_int) < nRow as ::core::ffi::c_int {
+            nRow = __pWInfo_ref.iLimit;
         }
-    } else if (*pWInfo).wctrlFlags as ::core::ffi::c_int & crate::sqliteInt_h::WHERE_WANT_DISTINCT != 0 {
+    } else if __pWInfo_ref.wctrlFlags as ::core::ffi::c_int & crate::sqliteInt_h::WHERE_WANT_DISTINCT != 0 {
         if nRow as ::core::ffi::c_int > 10 as ::core::ffi::c_int {
             nRow = (nRow as ::core::ffi::c_int - 10 as ::core::ffi::c_int) as crate::sqliteInt_h::LogEst;
         }
@@ -4643,20 +4708,21 @@ unsafe extern "C" fn whereSortingCost(
 }
 
 unsafe extern "C" fn computeMxChoice(mut pWInfo: *mut crate::whereInt_h::WhereInfo) -> ::core::ffi::c_int {
-    let mut nLoop: ::core::ffi::c_int = (*pWInfo).nLevel as ::core::ffi::c_int;
+    let __pWInfo_ref = unsafe { &mut *pWInfo };
+    let mut nLoop: ::core::ffi::c_int = __pWInfo_ref.nLevel as ::core::ffi::c_int;
     let mut pWLoop: *mut crate::whereInt_h::WhereLoop = ::core::ptr::null_mut::<crate::whereInt_h::WhereLoop>();
     if nLoop >= 5 as ::core::ffi::c_int
-        && (*pWInfo).bStarDone() == 0
-        && (*(*(*pWInfo).pParse).db).dbOptFlags & 0x20000000 as crate::src::ext::rtree::rtree::u32_0 == 0 as crate::src::ext::rtree::rtree::u32_0
+        && __pWInfo_ref.bStarDone() == 0
+        && (*(*__pWInfo_ref.pParse).db).dbOptFlags & 0x20000000 as crate::src::ext::rtree::rtree::u32_0 == 0 as crate::src::ext::rtree::rtree::u32_0
     {
         let mut aFromTabs: *mut crate::sqliteInt_h::SrcItem = ::core::ptr::null_mut::<crate::sqliteInt_h::SrcItem>();
         let mut iFromIdx: ::core::ffi::c_int = 0;
         let mut m: crate::sqliteInt_h::Bitmask = 0;
         let mut mSelfJoin: crate::sqliteInt_h::Bitmask = 0 as crate::sqliteInt_h::Bitmask;
         let mut pStart: *mut crate::whereInt_h::WhereLoop = ::core::ptr::null_mut::<crate::whereInt_h::WhereLoop>();
-        (*pWInfo).set_bStarDone(1 as ::core::ffi::c_uint as ::core::ffi::c_uint);
-        aFromTabs = &raw mut (*(*pWInfo).pTabList).a as *mut crate::sqliteInt_h::SrcItem;
-        pStart = (*pWInfo).pLoops;
+        __pWInfo_ref.set_bStarDone(1 as ::core::ffi::c_uint as ::core::ffi::c_uint);
+        aFromTabs = &raw mut (*__pWInfo_ref.pTabList).a as *mut crate::sqliteInt_h::SrcItem;
+        pStart = __pWInfo_ref.pLoops;
         iFromIdx = 0 as ::core::ffi::c_int;
         m = 1 as crate::sqliteInt_h::Bitmask;
         while iFromIdx < nLoop {
@@ -4697,7 +4763,7 @@ unsafe extern "C" fn computeMxChoice(mut pWInfo: *mut crate::whereInt_h::WhereIn
                 pWLoop = (*pWLoop).pNextLoop;
             }
             if !(nDep <= 3 as ::core::ffi::c_int) {
-                (*pWInfo).set_bStarUsed(1 as ::core::ffi::c_uint as ::core::ffi::c_uint);
+                __pWInfo_ref.set_bStarUsed(1 as ::core::ffi::c_uint as ::core::ffi::c_uint);
                 mxRun = crate::sqliteInt_h::LOGEST_MIN as crate::sqliteInt_h::LogEst;
                 pWLoop = pStart;
                 while !pWLoop.is_null() {
@@ -4731,7 +4797,7 @@ unsafe extern "C" fn computeMxChoice(mut pWInfo: *mut crate::whereInt_h::WhereIn
             m <<= 1 as ::core::ffi::c_int;
         }
     }
-    return if (*pWInfo).bStarUsed() as ::core::ffi::c_int != 0 {
+    return if __pWInfo_ref.bStarUsed() as ::core::ffi::c_int != 0 {
         18 as ::core::ffi::c_int
     } else {
         12 as ::core::ffi::c_int
@@ -4782,8 +4848,9 @@ unsafe extern "C" fn wherePathSolver(
     let mut aSortCost: *mut crate::sqliteInt_h::LogEst = ::core::ptr::null_mut::<crate::sqliteInt_h::LogEst>();
     let mut pSpace: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
     let mut nSpace: ::core::ffi::c_int = 0;
-    pParse = (*pWInfo).pParse;
-    nLoop = (*pWInfo).nLevel as ::core::ffi::c_int;
+    let __pWInfo_ref = unsafe { &mut *pWInfo };
+    pParse = __pWInfo_ref.pParse;
+    nLoop = __pWInfo_ref.nLevel as ::core::ffi::c_int;
     if nLoop <= 1 as ::core::ffi::c_int {
         mxChoice = 1 as ::core::ffi::c_int;
     } else if nLoop == 2 as ::core::ffi::c_int {
@@ -4793,10 +4860,10 @@ unsafe extern "C" fn wherePathSolver(
     } else {
         mxChoice = computeMxChoice(pWInfo);
     }
-    if (*pWInfo).pOrderBy.is_null() || nRowEst as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
+    if __pWInfo_ref.pOrderBy.is_null() || nRowEst as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
         nOrderBy = 0 as ::core::ffi::c_int;
     } else {
-        nOrderBy = (*(*pWInfo).pOrderBy).nExpr;
+        nOrderBy = (*__pWInfo_ref.pOrderBy).nExpr;
     }
     nSpace = (::core::mem::size_of::<crate::whereInt_h::WherePath>() as usize)
         .wrapping_add(
@@ -4858,7 +4925,7 @@ unsafe extern "C" fn wherePathSolver(
         pFrom = aFrom;
         while ii < nFrom {
             let mut current_block_107: u64;
-            pWLoop = (*pWInfo).pLoops;
+            pWLoop = __pWInfo_ref.pLoops;
             while !pWLoop.is_null() {
                 let mut nOut: crate::sqliteInt_h::LogEst = 0;
                 let mut rCost: crate::sqliteInt_h::LogEst = 0;
@@ -4871,31 +4938,33 @@ unsafe extern "C" fn wherePathSolver(
                         if !((*pWLoop).wsFlags & crate::whereInt_h::WHERE_AUTO_INDEX as crate::src::ext::rtree::rtree::u32_0 != 0 as crate::src::ext::rtree::rtree::u32_0
                             && ((*pFrom).nRow as ::core::ffi::c_int) < 3 as ::core::ffi::c_int)
                         {
-                            rUnsort = ((*pWLoop).rRun as ::core::ffi::c_int
-                                + (*pFrom).nRow as ::core::ffi::c_int)
+                            let __pFrom_ref = unsafe { &*pFrom };
+                            let __pWLoop_ref = unsafe { &*pWLoop };
+                            rUnsort = (__pWLoop_ref.rRun as ::core::ffi::c_int
+                                + __pFrom_ref.nRow as ::core::ffi::c_int)
                                 as crate::sqliteInt_h::LogEst;
-                            if (*pWLoop).rSetup != 0 {
-                                rUnsort = crate::src::src::util::sqlite3LogEstAdd((*pWLoop).rSetup, rUnsort);
+                            if __pWLoop_ref.rSetup != 0 {
+                                rUnsort = crate::src::src::util::sqlite3LogEstAdd(__pWLoop_ref.rSetup, rUnsort);
                             }
-                            rUnsort = crate::src::src::util::sqlite3LogEstAdd(rUnsort, (*pFrom).rUnsort);
-                            nOut = ((*pFrom).nRow as ::core::ffi::c_int
-                                + (*pWLoop).nOut as ::core::ffi::c_int)
+                            rUnsort = crate::src::src::util::sqlite3LogEstAdd(rUnsort, __pFrom_ref.rUnsort);
+                            nOut = (__pFrom_ref.nRow as ::core::ffi::c_int
+                                + __pWLoop_ref.nOut as ::core::ffi::c_int)
                                 as crate::sqliteInt_h::LogEst;
-                            maskNew = (*pFrom).maskLoop | (*pWLoop).maskSelf;
-                            isOrdered = (*pFrom).isOrdered;
+                            maskNew = __pFrom_ref.maskLoop | __pWLoop_ref.maskSelf;
+                            isOrdered = __pFrom_ref.isOrdered;
                             if (isOrdered as ::core::ffi::c_int) < 0 as ::core::ffi::c_int {
                                 revMask = 0 as crate::sqliteInt_h::Bitmask;
                                 isOrdered = wherePathSatisfiesOrderBy(
                                     pWInfo,
-                                    (*pWInfo).pOrderBy,
+                                    __pWInfo_ref.pOrderBy,
                                     pFrom,
-                                    (*pWInfo).wctrlFlags,
+                                    __pWInfo_ref.wctrlFlags,
                                     iLoop as crate::src::fts5::u16_0,
                                     pWLoop,
                                     &raw mut revMask,
                                 );
                             } else {
-                                revMask = (*pFrom).revLoop;
+                                revMask = __pFrom_ref.revLoop;
                             }
                             if isOrdered as ::core::ffi::c_int >= 0 as ::core::ffi::c_int
                                 && (isOrdered as ::core::ffi::c_int) < nOrderBy
@@ -4983,7 +5052,7 @@ unsafe extern "C" fn wherePathSolver(
                             match current_block_107 {
                                 2122094917359643297 => {}
                                 _ => {
-                                    (*pTo).maskLoop = (*pFrom).maskLoop | (*pWLoop).maskSelf;
+                                    (*pTo).maskLoop = __pFrom_ref.maskLoop | __pWLoop_ref.maskSelf;
                                     (*pTo).revLoop = revMask;
                                     (*pTo).nRow = nOut;
                                     (*pTo).rCost = rCost;
@@ -4991,7 +5060,7 @@ unsafe extern "C" fn wherePathSolver(
                                     (*pTo).isOrdered = isOrdered;
                                     ::libc::memcpy(
                                         (*pTo).aLoop as *mut ::core::ffi::c_void,
-                                        (*pFrom).aLoop as *const ::core::ffi::c_void,
+                                        __pFrom_ref.aLoop as *const ::core::ffi::c_void,
                                         (::core::mem::size_of::<*mut crate::whereInt_h::WhereLoop>() as crate::__stddef_size_t_h::size_t)
                                             .wrapping_mul(iLoop as crate::__stddef_size_t_h::size_t),
                                     );
@@ -5051,24 +5120,25 @@ unsafe extern "C" fn wherePathSolver(
     iLoop = 0 as ::core::ffi::c_int;
     while iLoop < nLoop {
         let mut pLevel: *mut crate::whereInt_h::WhereLevel =
-            (&raw mut (*pWInfo).a as *mut crate::whereInt_h::WhereLevel).offset(iLoop as isize);
+            (&raw mut __pWInfo_ref.a as *mut crate::whereInt_h::WhereLevel).offset(iLoop as isize);
         pWLoop = *(*pFrom).aLoop.offset(iLoop as isize);
-        (*pLevel).pWLoop = pWLoop as *mut crate::whereInt_h::WhereLoop;
-        (*pLevel).iFrom = (*pWLoop).iTab;
-        (*pLevel).iTabCur = (*(&raw mut (*(*pWInfo).pTabList).a as *mut crate::sqliteInt_h::SrcItem)
-            .offset((*pLevel).iFrom as isize))
+        let __pLevel_ref = unsafe { &mut *pLevel };
+        __pLevel_ref.pWLoop = pWLoop as *mut crate::whereInt_h::WhereLoop;
+        __pLevel_ref.iFrom = (*pWLoop).iTab;
+        __pLevel_ref.iTabCur = (*(&raw mut (*__pWInfo_ref.pTabList).a as *mut crate::sqliteInt_h::SrcItem)
+            .offset(__pLevel_ref.iFrom as isize))
         .iCursor;
         iLoop += 1;
     }
-    if (*pWInfo).wctrlFlags as ::core::ffi::c_int & crate::sqliteInt_h::WHERE_WANT_DISTINCT != 0 as ::core::ffi::c_int
-        && (*pWInfo).wctrlFlags as ::core::ffi::c_int & crate::sqliteInt_h::WHERE_DISTINCTBY == 0 as ::core::ffi::c_int
-        && (*pWInfo).eDistinct as ::core::ffi::c_int == crate::sqliteInt_h::WHERE_DISTINCT_NOOP
+    if __pWInfo_ref.wctrlFlags as ::core::ffi::c_int & crate::sqliteInt_h::WHERE_WANT_DISTINCT != 0 as ::core::ffi::c_int
+        && __pWInfo_ref.wctrlFlags as ::core::ffi::c_int & crate::sqliteInt_h::WHERE_DISTINCTBY == 0 as ::core::ffi::c_int
+        && __pWInfo_ref.eDistinct as ::core::ffi::c_int == crate::sqliteInt_h::WHERE_DISTINCT_NOOP
         && nRowEst as ::core::ffi::c_int != 0
     {
         let mut notUsed: crate::sqliteInt_h::Bitmask = 0;
         let mut rc: ::core::ffi::c_int = wherePathSatisfiesOrderBy(
             pWInfo,
-            (*pWInfo).pResultSet,
+            __pWInfo_ref.pResultSet,
             pFrom,
             crate::sqliteInt_h::WHERE_DISTINCTBY as crate::src::fts5::u16_0,
             (nLoop - 1 as ::core::ffi::c_int) as crate::src::fts5::u16_0,
@@ -5077,21 +5147,21 @@ unsafe extern "C" fn wherePathSolver(
                 .offset((nLoop - 1 as ::core::ffi::c_int) as isize),
             &raw mut notUsed,
         ) as ::core::ffi::c_int;
-        if rc == (*(*pWInfo).pResultSet).nExpr {
-            (*pWInfo).eDistinct = crate::sqliteInt_h::WHERE_DISTINCT_ORDERED as crate::src::ext::rtree::rtree::u8_0;
+        if rc == (*__pWInfo_ref.pResultSet).nExpr {
+            __pWInfo_ref.eDistinct = crate::sqliteInt_h::WHERE_DISTINCT_ORDERED as crate::src::ext::rtree::rtree::u8_0;
         }
     }
-    (*pWInfo).set_bOrderedInnerLoop(0 as ::core::ffi::c_uint as ::core::ffi::c_uint);
-    if !(*pWInfo).pOrderBy.is_null() {
-        (*pWInfo).nOBSat = (*pFrom).isOrdered;
-        if (*pWInfo).wctrlFlags as ::core::ffi::c_int & crate::sqliteInt_h::WHERE_DISTINCTBY != 0 {
-            if (*pFrom).isOrdered as ::core::ffi::c_int == (*(*pWInfo).pOrderBy).nExpr {
-                (*pWInfo).eDistinct = crate::sqliteInt_h::WHERE_DISTINCT_ORDERED as crate::src::ext::rtree::rtree::u8_0;
+    __pWInfo_ref.set_bOrderedInnerLoop(0 as ::core::ffi::c_uint as ::core::ffi::c_uint);
+    if !__pWInfo_ref.pOrderBy.is_null() {
+        __pWInfo_ref.nOBSat = (*pFrom).isOrdered;
+        if __pWInfo_ref.wctrlFlags as ::core::ffi::c_int & crate::sqliteInt_h::WHERE_DISTINCTBY != 0 {
+            if (*pFrom).isOrdered as ::core::ffi::c_int == (*__pWInfo_ref.pOrderBy).nExpr {
+                __pWInfo_ref.eDistinct = crate::sqliteInt_h::WHERE_DISTINCT_ORDERED as crate::src::ext::rtree::rtree::u8_0;
             }
         } else {
-            (*pWInfo).revMask = (*pFrom).revLoop;
-            if (*pWInfo).nOBSat as ::core::ffi::c_int <= 0 as ::core::ffi::c_int {
-                (*pWInfo).nOBSat = 0 as crate::sqliteInt_h::i8_0;
+            __pWInfo_ref.revMask = (*pFrom).revLoop;
+            if __pWInfo_ref.nOBSat as ::core::ffi::c_int <= 0 as ::core::ffi::c_int {
+                __pWInfo_ref.nOBSat = 0 as crate::sqliteInt_h::i8_0;
                 if nLoop > 0 as ::core::ffi::c_int {
                     let mut wsFlags: crate::src::ext::rtree::rtree::u32_0 = (**(*pFrom)
                         .aLoop
@@ -5104,7 +5174,7 @@ unsafe extern "C" fn wherePathSolver(
                         let mut m: crate::sqliteInt_h::Bitmask = 0 as crate::sqliteInt_h::Bitmask;
                         let mut rc_0: ::core::ffi::c_int = wherePathSatisfiesOrderBy(
                             pWInfo,
-                            (*pWInfo).pOrderBy,
+                            __pWInfo_ref.pOrderBy,
                             pFrom,
                             crate::sqliteInt_h::WHERE_ORDERBY_LIMIT as crate::src::fts5::u16_0,
                             (nLoop - 1 as ::core::ffi::c_int) as crate::src::fts5::u16_0,
@@ -5114,31 +5184,31 @@ unsafe extern "C" fn wherePathSolver(
                             &raw mut m,
                         )
                             as ::core::ffi::c_int;
-                        if rc_0 == (*(*pWInfo).pOrderBy).nExpr {
-                            (*pWInfo).set_bOrderedInnerLoop(
+                        if rc_0 == (*__pWInfo_ref.pOrderBy).nExpr {
+                            __pWInfo_ref.set_bOrderedInnerLoop(
                                 1 as ::core::ffi::c_uint as ::core::ffi::c_uint,
                             );
-                            (*pWInfo).revMask = m;
+                            __pWInfo_ref.revMask = m;
                         }
                     }
                 }
             } else if nLoop != 0
-                && (*pWInfo).nOBSat as ::core::ffi::c_int == 1 as ::core::ffi::c_int
-                && (*pWInfo).wctrlFlags as ::core::ffi::c_int
+                && __pWInfo_ref.nOBSat as ::core::ffi::c_int == 1 as ::core::ffi::c_int
+                && __pWInfo_ref.wctrlFlags as ::core::ffi::c_int
                     & (crate::sqliteInt_h::WHERE_ORDERBY_MIN | crate::sqliteInt_h::WHERE_ORDERBY_MAX)
                     != 0 as ::core::ffi::c_int
             {
-                (*pWInfo).set_bOrderedInnerLoop(1 as ::core::ffi::c_uint as ::core::ffi::c_uint);
+                __pWInfo_ref.set_bOrderedInnerLoop(1 as ::core::ffi::c_uint as ::core::ffi::c_uint);
             }
         }
-        if (*pWInfo).wctrlFlags as ::core::ffi::c_int & crate::sqliteInt_h::WHERE_SORTBYGROUP != 0
-            && (*pWInfo).nOBSat as ::core::ffi::c_int == (*(*pWInfo).pOrderBy).nExpr
+        if __pWInfo_ref.wctrlFlags as ::core::ffi::c_int & crate::sqliteInt_h::WHERE_SORTBYGROUP != 0
+            && __pWInfo_ref.nOBSat as ::core::ffi::c_int == (*__pWInfo_ref.pOrderBy).nExpr
             && nLoop > 0 as ::core::ffi::c_int
         {
             let mut revMask_0: crate::sqliteInt_h::Bitmask = 0 as crate::sqliteInt_h::Bitmask;
             let mut nOrder: ::core::ffi::c_int = wherePathSatisfiesOrderBy(
                 pWInfo,
-                (*pWInfo).pOrderBy,
+                __pWInfo_ref.pOrderBy,
                 pFrom,
                 0 as crate::src::fts5::u16_0,
                 (nLoop - 1 as ::core::ffi::c_int) as crate::src::fts5::u16_0,
@@ -5147,13 +5217,13 @@ unsafe extern "C" fn wherePathSolver(
                     .offset((nLoop - 1 as ::core::ffi::c_int) as isize),
                 &raw mut revMask_0,
             ) as ::core::ffi::c_int;
-            if nOrder == (*(*pWInfo).pOrderBy).nExpr {
-                (*pWInfo).set_sorted(1 as ::core::ffi::c_uint as ::core::ffi::c_uint);
-                (*pWInfo).revMask = revMask_0;
+            if nOrder == (*__pWInfo_ref.pOrderBy).nExpr {
+                __pWInfo_ref.set_sorted(1 as ::core::ffi::c_uint as ::core::ffi::c_uint);
+                __pWInfo_ref.revMask = revMask_0;
             }
         }
     }
-    (*pWInfo).nRowOut = (*pFrom).nRow;
+    __pWInfo_ref.nRowOut = (*pFrom).nRow;
     crate::src::src::malloc::sqlite3DbFreeNN((*pParse).db as *mut crate::sqliteInt_h::sqlite3, pSpace as *mut ::core::ffi::c_void);
     return crate::sqlite3_h::SQLITE_OK;
 }
@@ -5168,15 +5238,16 @@ unsafe extern "C" fn whereInterstageHeuristic(mut pWInfo: *mut crate::whereInt_h
         if p.is_null() {
             break;
         }
-        if (*p).wsFlags & crate::whereInt_h::WHERE_VIRTUALTABLE as crate::src::ext::rtree::rtree::u32_0 != 0 as crate::src::ext::rtree::rtree::u32_0 {
+        let __p_ref = unsafe { &*p };
+        if __p_ref.wsFlags & crate::whereInt_h::WHERE_VIRTUALTABLE as crate::src::ext::rtree::rtree::u32_0 != 0 as crate::src::ext::rtree::rtree::u32_0 {
             break;
         }
-        if !((*p).wsFlags & (crate::whereInt_h::WHERE_COLUMN_EQ | crate::whereInt_h::WHERE_COLUMN_NULL | crate::whereInt_h::WHERE_COLUMN_IN) as crate::src::ext::rtree::rtree::u32_0
+        if !(__p_ref.wsFlags & (crate::whereInt_h::WHERE_COLUMN_EQ | crate::whereInt_h::WHERE_COLUMN_NULL | crate::whereInt_h::WHERE_COLUMN_IN) as crate::src::ext::rtree::rtree::u32_0
             != 0 as crate::src::ext::rtree::rtree::u32_0)
         {
             break;
         }
-        let mut iTab: crate::src::ext::rtree::rtree::u8_0 = (*p).iTab;
+        let mut iTab: crate::src::ext::rtree::rtree::u8_0 = __p_ref.iTab;
         let mut pLoop: *mut crate::whereInt_h::WhereLoop = ::core::ptr::null_mut::<crate::whereInt_h::WhereLoop>();
         pLoop = (*pWInfo).pLoops;
         while !pLoop.is_null() {
@@ -5247,12 +5318,13 @@ unsafe extern "C" fn whereShortCut(mut pBuilder: *mut crate::whereInt_h::WhereLo
         pTerm = whereScanNext(&raw mut scan);
     }
     if !pTerm.is_null() {
-        (*pLoop).wsFlags = (crate::whereInt_h::WHERE_COLUMN_EQ | crate::whereInt_h::WHERE_IPK | crate::whereInt_h::WHERE_ONEROW) as crate::src::ext::rtree::rtree::u32_0;
-        let ref mut fresh23 = *(*pLoop).aLTerm.offset(0 as isize);
+        let __pLoop_ref = unsafe { &mut *pLoop };
+        __pLoop_ref.wsFlags = (crate::whereInt_h::WHERE_COLUMN_EQ | crate::whereInt_h::WHERE_IPK | crate::whereInt_h::WHERE_ONEROW) as crate::src::ext::rtree::rtree::u32_0;
+        let ref mut fresh23 = *__pLoop_ref.aLTerm.offset(0 as isize);
         *fresh23 = pTerm;
-        (*pLoop).nLTerm = 1 as crate::src::fts5::u16_0;
-        (*pLoop).u.btree.nEq = 1 as crate::src::fts5::u16_0;
-        (*pLoop).rRun = 33 as crate::sqliteInt_h::LogEst;
+        __pLoop_ref.nLTerm = 1 as crate::src::fts5::u16_0;
+        __pLoop_ref.u.btree.nEq = 1 as crate::src::fts5::u16_0;
+        __pLoop_ref.rRun = 33 as crate::sqliteInt_h::LogEst;
     } else {
         pIdx = (*pTab).pIndex;
         while !pIdx.is_null() {
@@ -5264,13 +5336,14 @@ unsafe extern "C" fn whereShortCut(mut pBuilder: *mut crate::whereInt_h::WhereLo
                         .wrapping_div(::core::mem::size_of::<*mut crate::whereInt_h::WhereTerm>() as usize)
                         as ::core::ffi::c_int)
             {
-                opMask = if (*pIdx).uniqNotNull() as ::core::ffi::c_int != 0 {
+                let __pIdx_ref = unsafe { &mut *pIdx };
+                opMask = if __pIdx_ref.uniqNotNull() as ::core::ffi::c_int != 0 {
                     crate::whereInt_h::WO_EQ | crate::whereInt_h::WO_IS
                 } else {
                     crate::whereInt_h::WO_EQ
                 };
                 j = 0 as ::core::ffi::c_int;
-                while j < (*pIdx).nKeyCol as ::core::ffi::c_int {
+                while j < __pIdx_ref.nKeyCol as ::core::ffi::c_int {
                     pTerm = whereScanInit(&raw mut scan, pWC, iCur, j, opMask as crate::src::ext::rtree::rtree::u32_0, pIdx);
                     while !pTerm.is_null() && (*pTerm).prereqRight != 0 {
                         pTerm = whereScanNext(&raw mut scan);
@@ -5282,10 +5355,10 @@ unsafe extern "C" fn whereShortCut(mut pBuilder: *mut crate::whereInt_h::WhereLo
                     *fresh24 = pTerm;
                     j += 1;
                 }
-                if !(j != (*pIdx).nKeyCol as ::core::ffi::c_int) {
+                if !(j != __pIdx_ref.nKeyCol as ::core::ffi::c_int) {
                     (*pLoop).wsFlags = (crate::whereInt_h::WHERE_COLUMN_EQ | crate::whereInt_h::WHERE_ONEROW | crate::whereInt_h::WHERE_INDEXED) as crate::src::ext::rtree::rtree::u32_0;
-                    if (*pIdx).isCovering() as ::core::ffi::c_int != 0
-                        || (*pItem).colUsed & (*pIdx).colNotIdxed == 0 as crate::sqliteInt_h::Bitmask
+                    if __pIdx_ref.isCovering() as ::core::ffi::c_int != 0
+                        || (*pItem).colUsed & __pIdx_ref.colNotIdxed == 0 as crate::sqliteInt_h::Bitmask
                     {
                         (*pLoop).wsFlags |= crate::whereInt_h::WHERE_IDX_ONLY as crate::src::ext::rtree::rtree::u32_0;
                     }
@@ -5301,19 +5374,20 @@ unsafe extern "C" fn whereShortCut(mut pBuilder: *mut crate::whereInt_h::WhereLo
     }
     if (*pLoop).wsFlags != 0 {
         (*pLoop).nOut = 1 as ::core::ffi::c_int as crate::sqliteInt_h::LogEst;
-        let ref mut fresh25 = (*(&raw mut (*pWInfo).a as *mut crate::whereInt_h::WhereLevel)
+        let __pWInfo_ref = unsafe { &mut *pWInfo };
+        let ref mut fresh25 = (*(&raw mut __pWInfo_ref.a as *mut crate::whereInt_h::WhereLevel)
             .offset(0 as isize))
         .pWLoop;
         *fresh25 = pLoop as *mut crate::whereInt_h::WhereLoop;
         (*pLoop).maskSelf = 1 as crate::sqliteInt_h::Bitmask;
-        (*(&raw mut (*pWInfo).a as *mut crate::whereInt_h::WhereLevel).offset(0 as isize))
+        (*(&raw mut __pWInfo_ref.a as *mut crate::whereInt_h::WhereLevel).offset(0 as isize))
             .iTabCur = iCur;
-        (*pWInfo).nRowOut = 1 as crate::sqliteInt_h::LogEst;
-        if !(*pWInfo).pOrderBy.is_null() {
-            (*pWInfo).nOBSat = (*(*pWInfo).pOrderBy).nExpr as crate::sqliteInt_h::i8_0;
+        __pWInfo_ref.nRowOut = 1 as crate::sqliteInt_h::LogEst;
+        if !__pWInfo_ref.pOrderBy.is_null() {
+            __pWInfo_ref.nOBSat = (*__pWInfo_ref.pOrderBy).nExpr as crate::sqliteInt_h::i8_0;
         }
-        if (*pWInfo).wctrlFlags as ::core::ffi::c_int & crate::sqliteInt_h::WHERE_WANT_DISTINCT != 0 {
-            (*pWInfo).eDistinct = crate::sqliteInt_h::WHERE_DISTINCT_UNIQUE as crate::src::ext::rtree::rtree::u8_0;
+        if __pWInfo_ref.wctrlFlags as ::core::ffi::c_int & crate::sqliteInt_h::WHERE_WANT_DISTINCT != 0 {
+            __pWInfo_ref.eDistinct = crate::sqliteInt_h::WHERE_DISTINCT_UNIQUE as crate::src::ext::rtree::rtree::u8_0;
         }
         if scan.iEquiv as ::core::ffi::c_int > 1 as ::core::ffi::c_int {
             (*pLoop).wsFlags |= crate::whereInt_h::WHERE_TRANSCONS as crate::src::ext::rtree::rtree::u32_0;
@@ -5363,35 +5437,36 @@ unsafe extern "C" fn whereOmitNoopJoin(
     let mut i: ::core::ffi::c_int = 0;
     let mut tabUsed: crate::sqliteInt_h::Bitmask = 0;
     let mut hasRightJoin: ::core::ffi::c_int = 0;
-    tabUsed = crate::src::src::whereexpr::sqlite3WhereExprListUsage(&raw mut (*pWInfo).sMaskSet as *mut _ as *mut crate::whereInt_h::WhereMaskSet,  (*pWInfo).pResultSet as *mut crate::sqliteInt_h::ExprList);
-    if !(*pWInfo).pOrderBy.is_null() {
-        tabUsed |= crate::src::src::whereexpr::sqlite3WhereExprListUsage(&raw mut (*pWInfo).sMaskSet as *mut _ as *mut crate::whereInt_h::WhereMaskSet,  (*pWInfo).pOrderBy as *mut crate::sqliteInt_h::ExprList);
+    let __pWInfo_ref = unsafe { &mut *pWInfo };
+    tabUsed = crate::src::src::whereexpr::sqlite3WhereExprListUsage(&raw mut __pWInfo_ref.sMaskSet as *mut _ as *mut crate::whereInt_h::WhereMaskSet,  __pWInfo_ref.pResultSet as *mut crate::sqliteInt_h::ExprList);
+    if !__pWInfo_ref.pOrderBy.is_null() {
+        tabUsed |= crate::src::src::whereexpr::sqlite3WhereExprListUsage(&raw mut __pWInfo_ref.sMaskSet as *mut _ as *mut crate::whereInt_h::WhereMaskSet,  __pWInfo_ref.pOrderBy as *mut crate::sqliteInt_h::ExprList);
     }
-    hasRightJoin = ((*(&raw mut (*(*pWInfo).pTabList).a as *mut crate::sqliteInt_h::SrcItem)
+    hasRightJoin = ((*(&raw mut (*__pWInfo_ref.pTabList).a as *mut crate::sqliteInt_h::SrcItem)
         .offset(0 as isize))
     .fg
     .jointype as ::core::ffi::c_int
         & crate::sqliteInt_h::JT_LTORJ
         != 0 as ::core::ffi::c_int) as ::core::ffi::c_int;
-    i = (*pWInfo).nLevel as ::core::ffi::c_int - 1 as ::core::ffi::c_int;
+    i = __pWInfo_ref.nLevel as ::core::ffi::c_int - 1 as ::core::ffi::c_int;
     while i >= 1 as ::core::ffi::c_int {
         let mut pTerm: *mut crate::whereInt_h::WhereTerm = ::core::ptr::null_mut::<crate::whereInt_h::WhereTerm>();
         let mut pEnd: *mut crate::whereInt_h::WhereTerm = ::core::ptr::null_mut::<crate::whereInt_h::WhereTerm>();
         let mut pItem: *mut crate::sqliteInt_h::SrcItem = ::core::ptr::null_mut::<crate::sqliteInt_h::SrcItem>();
         let mut pLoop: *mut crate::whereInt_h::WhereLoop = ::core::ptr::null_mut::<crate::whereInt_h::WhereLoop>();
         let mut m1: crate::sqliteInt_h::Bitmask = 0;
-        pLoop = (*(&raw mut (*pWInfo).a as *mut crate::whereInt_h::WhereLevel).offset(i as isize)).pWLoop
+        pLoop = (*(&raw mut __pWInfo_ref.a as *mut crate::whereInt_h::WhereLevel).offset(i as isize)).pWLoop
             as *mut crate::whereInt_h::WhereLoop;
-        pItem = (&raw mut (*(*pWInfo).pTabList).a as *mut crate::sqliteInt_h::SrcItem).offset((*pLoop).iTab as isize)
+        pItem = (&raw mut (*__pWInfo_ref.pTabList).a as *mut crate::sqliteInt_h::SrcItem).offset((*pLoop).iTab as isize)
             as *mut crate::sqliteInt_h::SrcItem;
         if !((*pItem).fg.jointype as ::core::ffi::c_int & (crate::sqliteInt_h::JT_LEFT | crate::sqliteInt_h::JT_RIGHT) != crate::sqliteInt_h::JT_LEFT) {
-            if !((*pWInfo).wctrlFlags as ::core::ffi::c_int & crate::sqliteInt_h::WHERE_WANT_DISTINCT
+            if !(__pWInfo_ref.wctrlFlags as ::core::ffi::c_int & crate::sqliteInt_h::WHERE_WANT_DISTINCT
                 == 0 as ::core::ffi::c_int
                 && (*pLoop).wsFlags & crate::whereInt_h::WHERE_ONEROW as crate::src::ext::rtree::rtree::u32_0 == 0 as crate::src::ext::rtree::rtree::u32_0)
             {
                 if !(tabUsed & (*pLoop).maskSelf != 0 as crate::sqliteInt_h::Bitmask) {
-                    pEnd = (*pWInfo).sWC.a.offset((*pWInfo).sWC.nTerm as isize);
-                    pTerm = (*pWInfo).sWC.a;
+                    pEnd = __pWInfo_ref.sWC.a.offset(__pWInfo_ref.sWC.nTerm as isize);
+                    pTerm = __pWInfo_ref.sWC.a;
                     while pTerm < pEnd {
                         if (*pTerm).prereqAll & (*pLoop).maskSelf != 0 as crate::sqliteInt_h::Bitmask {
                             if !((*(*pTerm).pExpr).flags & 0x1 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::u32_0
@@ -5412,10 +5487,10 @@ unsafe extern "C" fn whereOmitNoopJoin(
                     }
                     if !(pTerm < pEnd) {
                         m1 = ((1 as ::core::ffi::c_int as crate::sqliteInt_h::Bitmask) << i).wrapping_sub(1 as crate::sqliteInt_h::Bitmask);
-                        (*pWInfo).revMask = m1 & (*pWInfo).revMask
-                            | (*pWInfo).revMask >> 1 as ::core::ffi::c_int & !m1;
+                        __pWInfo_ref.revMask = m1 & __pWInfo_ref.revMask
+                            | __pWInfo_ref.revMask >> 1 as ::core::ffi::c_int & !m1;
                         notReady &= !(*pLoop).maskSelf;
-                        pTerm = (*pWInfo).sWC.a;
+                        pTerm = __pWInfo_ref.sWC.a;
                         while pTerm < pEnd {
                             if (*pTerm).prereqAll & (*pLoop).maskSelf != 0 as crate::sqliteInt_h::Bitmask {
                                 (*pTerm).wtFlags =
@@ -5423,25 +5498,25 @@ unsafe extern "C" fn whereOmitNoopJoin(
                             }
                             pTerm = pTerm.offset(1);
                         }
-                        if i != (*pWInfo).nLevel as ::core::ffi::c_int - 1 as ::core::ffi::c_int {
+                        if i != __pWInfo_ref.nLevel as ::core::ffi::c_int - 1 as ::core::ffi::c_int {
                             let mut nByte: ::core::ffi::c_int =
-                                (((*pWInfo).nLevel as ::core::ffi::c_int
+                                ((__pWInfo_ref.nLevel as ::core::ffi::c_int
                                     - 1 as ::core::ffi::c_int
                                     - i) as usize)
                                     .wrapping_mul(::core::mem::size_of::<crate::whereInt_h::WhereLevel>() as usize)
                                     as ::core::ffi::c_int;
                             ::libc::memmove(
-                                (&raw mut (*pWInfo).a as *mut crate::whereInt_h::WhereLevel).offset(i as isize)
+                                (&raw mut __pWInfo_ref.a as *mut crate::whereInt_h::WhereLevel).offset(i as isize)
                                     as *mut crate::whereInt_h::WhereLevel
                                     as *mut ::core::ffi::c_void,
-                                (&raw mut (*pWInfo).a as *mut crate::whereInt_h::WhereLevel)
+                                (&raw mut __pWInfo_ref.a as *mut crate::whereInt_h::WhereLevel)
                                     .offset((i + 1 as ::core::ffi::c_int) as isize)
                                     as *mut crate::whereInt_h::WhereLevel
                                     as *const ::core::ffi::c_void,
                                 nByte as crate::__stddef_size_t_h::size_t,
                             );
                         }
-                        (*pWInfo).nLevel = (*pWInfo).nLevel.wrapping_sub(1);
+                        __pWInfo_ref.nLevel = __pWInfo_ref.nLevel.wrapping_sub(1);
                     }
                 }
             }
@@ -5462,25 +5537,26 @@ unsafe extern "C" fn whereCheckIfBloomFilterIsUseful(mut pWInfo: *const crate::w
         .pWLoop as *mut crate::whereInt_h::WhereLoop;
         let reqFlags: ::core::ffi::c_uint =
             (crate::whereInt_h::WHERE_SELFCULL | crate::whereInt_h::WHERE_COLUMN_EQ) as ::core::ffi::c_uint;
+        let __pLoop_ref = unsafe { &mut *pLoop };
         let mut pItem: *mut crate::sqliteInt_h::SrcItem = (&raw mut (*(*pWInfo).pTabList).a as *mut crate::sqliteInt_h::SrcItem)
-            .offset((*pLoop).iTab as isize) as *mut crate::sqliteInt_h::SrcItem;
+            .offset(__pLoop_ref.iTab as isize) as *mut crate::sqliteInt_h::SrcItem;
         let mut pTab: *mut crate::sqliteInt_h::Table = (*pItem).pSTab;
         if (*pTab).tabFlags & crate::sqliteInt_h::TF_HasStat1 as crate::src::ext::rtree::rtree::u32_0 == 0 as crate::src::ext::rtree::rtree::u32_0 {
             break;
         }
         (*pTab).tabFlags |= crate::sqliteInt_h::TF_MaybeReanalyze as crate::src::ext::rtree::rtree::u32_0;
         if i >= 1 as ::core::ffi::c_int
-            && (*pLoop).wsFlags & reqFlags as crate::src::ext::rtree::rtree::u32_0 == reqFlags as crate::src::ext::rtree::rtree::u32_0
-            && (*pLoop).wsFlags
+            && __pLoop_ref.wsFlags & reqFlags as crate::src::ext::rtree::rtree::u32_0 == reqFlags as crate::src::ext::rtree::rtree::u32_0
+            && __pLoop_ref.wsFlags
                 & (0x100 as ::core::ffi::c_int | 0x200 as ::core::ffi::c_int) as crate::src::ext::rtree::rtree::u32_0
                 != 0 as crate::src::ext::rtree::rtree::u32_0
         {
             if nSearch as ::core::ffi::c_int > (*pTab).nRowLogEst as ::core::ffi::c_int {
-                (*pLoop).wsFlags |= crate::whereInt_h::WHERE_BLOOMFILTER as crate::src::ext::rtree::rtree::u32_0;
-                (*pLoop).wsFlags &= !crate::whereInt_h::WHERE_IDX_ONLY as crate::src::ext::rtree::rtree::u32_0;
+                __pLoop_ref.wsFlags |= crate::whereInt_h::WHERE_BLOOMFILTER as crate::src::ext::rtree::rtree::u32_0;
+                __pLoop_ref.wsFlags &= !crate::whereInt_h::WHERE_IDX_ONLY as crate::src::ext::rtree::rtree::u32_0;
             }
         }
-        nSearch = (nSearch as ::core::ffi::c_int + (*pLoop).nOut as ::core::ffi::c_int) as crate::sqliteInt_h::LogEst;
+        nSearch = (nSearch as ::core::ffi::c_int + __pLoop_ref.nOut as ::core::ffi::c_int) as crate::sqliteInt_h::LogEst;
         i += 1;
     }
 }
@@ -5518,16 +5594,17 @@ unsafe extern "C" fn whereAddIndexedExpr(
             1917311967535052937 => {
                 if !(crate::src::src::expr::sqlite3ExprIsConstant(::core::ptr::null_mut::<crate::sqliteInt_h::Parse>() as
     *mut crate::sqliteInt_h::Parse,  pExpr as *mut crate::sqliteInt_h::Expr) != 0) {
+                    let __pParse_ref = unsafe { &mut *pParse };
                     p = crate::src::src::malloc::sqlite3DbMallocRaw(
                         
-                        (*pParse).db as *mut crate::sqliteInt_h::sqlite3,
+                        __pParse_ref.db as *mut crate::sqliteInt_h::sqlite3,
                         ::core::mem::size_of::<crate::sqliteInt_h::IndexedExpr>() as crate::src::ext::rtree::rtree::u64_0,
                     ) as *mut crate::sqliteInt_h::IndexedExpr;
                     if p.is_null() {
                         break;
                     }
-                    (*p).pIENext = (*pParse).pIdxEpr;
-                    (*p).pExpr =  crate::src::src::expr::sqlite3ExprDup((*pParse).db as *mut crate::sqliteInt_h::sqlite3,  pExpr as *const crate::sqliteInt_h::Expr, 0 as ::core::ffi::c_int) as
+                    (*p).pIENext = __pParse_ref.pIdxEpr;
+                    (*p).pExpr =  crate::src::src::expr::sqlite3ExprDup(__pParse_ref.db as *mut crate::sqliteInt_h::sqlite3,  pExpr as *const crate::sqliteInt_h::Expr, 0 as ::core::ffi::c_int) as
     *mut crate::sqliteInt_h::Expr;
                     (*p).iDataCur = (*pTabItem).iCursor;
                     (*p).iIdxCur = iIdxCur;
@@ -5536,13 +5613,13 @@ unsafe extern "C" fn whereAddIndexedExpr(
                         & (crate::sqliteInt_h::JT_LEFT | crate::sqliteInt_h::JT_LTORJ | crate::sqliteInt_h::JT_RIGHT)
                         != 0 as ::core::ffi::c_int)
                         as ::core::ffi::c_int as crate::src::ext::rtree::rtree::u8_0;
-                    if !crate::src::src::insert::sqlite3IndexAffinityStr((*pParse).db as *mut crate::sqliteInt_h::sqlite3,  pIdx as *mut crate::sqliteInt_h::Index).is_null() {
+                    if !crate::src::src::insert::sqlite3IndexAffinityStr(__pParse_ref.db as *mut crate::sqliteInt_h::sqlite3,  pIdx as *mut crate::sqliteInt_h::Index).is_null() {
                         (*p).aff = *(*pIdx).zColAff.offset(i as isize) as crate::src::ext::rtree::rtree::u8_0;
                     }
-                    (*pParse).pIdxEpr = p;
+                    __pParse_ref.pIdxEpr = p;
                     if (*p).pIENext.is_null() {
                         let mut pArg: *mut ::core::ffi::c_void =
-                            &raw mut (*pParse).pIdxEpr as *mut ::core::ffi::c_void;
+                            &raw mut __pParse_ref.pIdxEpr as *mut ::core::ffi::c_void;
                         crate::src::src::prepare::sqlite3ParserAddCleanup(
                             
                             pParse as *mut crate::sqliteInt_h::Parse,
@@ -5575,10 +5652,11 @@ unsafe extern "C" fn whereReverseScanOrder(mut pWInfo: *mut crate::whereInt_h::W
     while ii < (*(*pWInfo).pTabList).nSrc {
         let mut pItem: *mut crate::sqliteInt_h::SrcItem =
             (&raw mut (*(*pWInfo).pTabList).a as *mut crate::sqliteInt_h::SrcItem).offset(ii as isize) as *mut crate::sqliteInt_h::SrcItem;
-        if (*pItem).fg.isCte() == 0
-            || (*(*pItem).u2.pCteUse).eM10d as ::core::ffi::c_int != crate::sqliteInt_h::M10d_Yes
-            || (*pItem).fg.isSubquery() as ::core::ffi::c_int == 0 as ::core::ffi::c_int
-            || (*(*(*pItem).u4.pSubq).pSelect).pOrderBy.is_null()
+        let __pItem_ref = unsafe { &mut *pItem };
+        if __pItem_ref.fg.isCte() == 0
+            || (*__pItem_ref.u2.pCteUse).eM10d as ::core::ffi::c_int != crate::sqliteInt_h::M10d_Yes
+            || __pItem_ref.fg.isSubquery() as ::core::ffi::c_int == 0 as ::core::ffi::c_int
+            || (*(*__pItem_ref.u4.pSubq).pSelect).pOrderBy.is_null()
         {
             (*pWInfo).revMask |= (1 as ::core::ffi::c_int as crate::sqliteInt_h::Bitmask) << ii;
         }
@@ -5646,54 +5724,55 @@ pub unsafe extern "C" fn sqlite3WhereBegin(
         crate::src::src::malloc::sqlite3DbFree(db as *mut crate::sqliteInt_h::sqlite3, pWInfo as *mut ::core::ffi::c_void);
         pWInfo = ::core::ptr::null_mut::<crate::whereInt_h::WhereInfo>();
     } else {
-        (*pWInfo).pParse = pParse;
-        (*pWInfo).pTabList = pTabList;
-        (*pWInfo).pOrderBy = pOrderBy;
-        (*pWInfo).pResultSet = pResultSet;
-        (*pWInfo).aiCurOnePass[1 as ::core::ffi::c_int as usize] = -(1 as ::core::ffi::c_int);
-        (*pWInfo).aiCurOnePass[0 as ::core::ffi::c_int as usize] =
-            (*pWInfo).aiCurOnePass[1 as ::core::ffi::c_int as usize];
-        (*pWInfo).nLevel = nTabList as crate::src::ext::rtree::rtree::u8_0;
-        (*pWInfo).iContinue = crate::src::src::vdbeaux::sqlite3VdbeMakeLabel(pParse as *mut crate::sqliteInt_h::Parse);
-        (*pWInfo).iBreak = (*pWInfo).iContinue;
-        (*pWInfo).wctrlFlags = wctrlFlags;
-        (*pWInfo).iLimit = iAuxArg as crate::sqliteInt_h::LogEst;
-        (*pWInfo).savedNQueryLoop = (*pParse).nQueryLoop as ::core::ffi::c_int;
-        (*pWInfo).pSelect = pSelect;
+        let __pWInfo_ref = unsafe { &mut *pWInfo };
+        __pWInfo_ref.pParse = pParse;
+        __pWInfo_ref.pTabList = pTabList;
+        __pWInfo_ref.pOrderBy = pOrderBy;
+        __pWInfo_ref.pResultSet = pResultSet;
+        __pWInfo_ref.aiCurOnePass[1 as ::core::ffi::c_int as usize] = -(1 as ::core::ffi::c_int);
+        __pWInfo_ref.aiCurOnePass[0 as ::core::ffi::c_int as usize] =
+            __pWInfo_ref.aiCurOnePass[1 as ::core::ffi::c_int as usize];
+        __pWInfo_ref.nLevel = nTabList as crate::src::ext::rtree::rtree::u8_0;
+        __pWInfo_ref.iContinue = crate::src::src::vdbeaux::sqlite3VdbeMakeLabel(pParse as *mut crate::sqliteInt_h::Parse);
+        __pWInfo_ref.iBreak = __pWInfo_ref.iContinue;
+        __pWInfo_ref.wctrlFlags = wctrlFlags;
+        __pWInfo_ref.iLimit = iAuxArg as crate::sqliteInt_h::LogEst;
+        __pWInfo_ref.savedNQueryLoop = (*pParse).nQueryLoop as ::core::ffi::c_int;
+        __pWInfo_ref.pSelect = pSelect;
         ::libc::memset(
-            &raw mut (*pWInfo).nOBSat as *mut ::core::ffi::c_void,
+            &raw mut __pWInfo_ref.nOBSat as *mut ::core::ffi::c_void,
             0 as ::core::ffi::c_int,
             (104 as crate::__stddef_size_t_h::size_t).wrapping_sub(65 as crate::__stddef_size_t_h::size_t),
         );
         ::libc::memset(
-            (&raw mut (*pWInfo).a as *mut crate::whereInt_h::WhereLevel).offset(0 as isize)
+            (&raw mut __pWInfo_ref.a as *mut crate::whereInt_h::WhereLevel).offset(0 as isize)
                 as *mut crate::whereInt_h::WhereLevel as *mut ::core::ffi::c_void,
             0 as ::core::ffi::c_int,
             (::core::mem::size_of::<crate::whereInt_h::WhereLoop>() as crate::__stddef_size_t_h::size_t).wrapping_add(
                 (nTabList as crate::__stddef_size_t_h::size_t).wrapping_mul(::core::mem::size_of::<crate::whereInt_h::WhereLevel>() as crate::__stddef_size_t_h::size_t),
             ),
         );
-        pMaskSet = &raw mut (*pWInfo).sMaskSet;
+        pMaskSet = &raw mut __pWInfo_ref.sMaskSet;
         (*pMaskSet).n = 0 as ::core::ffi::c_int;
         (*pMaskSet).ix[0 as ::core::ffi::c_int as usize] = -(99 as ::core::ffi::c_int);
         sWLB.pWInfo = pWInfo;
-        sWLB.pWC = &raw mut (*pWInfo).sWC;
+        sWLB.pWC = &raw mut __pWInfo_ref.sWC;
         sWLB.pNew =
             (pWInfo as *mut ::core::ffi::c_char).offset(nByteWInfo as isize) as *mut crate::whereInt_h::WhereLoop;
         whereLoopInit(sWLB.pNew);
-        crate::src::src::whereexpr::sqlite3WhereClauseInit(&raw mut (*pWInfo).sWC as *mut _ as *mut crate::whereInt_h::WhereClause,  pWInfo as *mut crate::whereInt_h::WhereInfo);
-        crate::src::src::whereexpr::sqlite3WhereSplit(&raw mut (*pWInfo).sWC as *mut _ as *mut crate::whereInt_h::WhereClause,  pWhere as *mut crate::sqliteInt_h::Expr, crate::src::parse::TK_AND as crate::src::ext::rtree::rtree::u8_0);
+        crate::src::src::whereexpr::sqlite3WhereClauseInit(&raw mut __pWInfo_ref.sWC as *mut _ as *mut crate::whereInt_h::WhereClause,  pWInfo as *mut crate::whereInt_h::WhereInfo);
+        crate::src::src::whereexpr::sqlite3WhereSplit(&raw mut __pWInfo_ref.sWC as *mut _ as *mut crate::whereInt_h::WhereClause,  pWhere as *mut crate::sqliteInt_h::Expr, crate::src::parse::TK_AND as crate::src::ext::rtree::rtree::u8_0);
         if nTabList == 0 as ::core::ffi::c_int {
             if !pOrderBy.is_null() {
-                (*pWInfo).nOBSat = (*pOrderBy).nExpr as crate::sqliteInt_h::i8_0;
+                __pWInfo_ref.nOBSat = (*pOrderBy).nExpr as crate::sqliteInt_h::i8_0;
             }
             if wctrlFlags as ::core::ffi::c_int & crate::sqliteInt_h::WHERE_WANT_DISTINCT != 0 as ::core::ffi::c_int
                 && (*db).dbOptFlags & 0x10 as crate::src::ext::rtree::rtree::u32_0 == 0 as crate::src::ext::rtree::rtree::u32_0
             {
-                (*pWInfo).eDistinct = crate::sqliteInt_h::WHERE_DISTINCT_UNIQUE as crate::src::ext::rtree::rtree::u8_0;
+                __pWInfo_ref.eDistinct = crate::sqliteInt_h::WHERE_DISTINCT_UNIQUE as crate::src::ext::rtree::rtree::u8_0;
             }
-            if !(*pWInfo).pSelect.is_null()
-                && (*(*pWInfo).pSelect).selFlags & crate::sqliteInt_h::SF_MultiValue as crate::src::ext::rtree::rtree::u32_0 == 0 as crate::src::ext::rtree::rtree::u32_0
+            if !__pWInfo_ref.pSelect.is_null()
+                && (*__pWInfo_ref.pSelect).selFlags & crate::sqliteInt_h::SF_MultiValue as crate::src::ext::rtree::rtree::u32_0 == 0 as crate::src::ext::rtree::rtree::u32_0
             {
                 crate::src::src::vdbeaux::sqlite3VdbeExplain(
                     
@@ -5705,27 +5784,28 @@ pub unsafe extern "C" fn sqlite3WhereBegin(
         } else {
             ii = 0 as ::core::ffi::c_int;
             loop {
+                let __pTabList_ref = unsafe { &mut *pTabList };
                 createMask(
                     pMaskSet,
-                    (*(&raw mut (*pTabList).a as *mut crate::sqliteInt_h::SrcItem).offset(ii as isize)).iCursor,
+                    (*(&raw mut __pTabList_ref.a as *mut crate::sqliteInt_h::SrcItem).offset(ii as isize)).iCursor,
                 );
                 crate::src::src::whereexpr::sqlite3WhereTabFuncArgs(
                     
                     pParse as *mut crate::sqliteInt_h::Parse,
                     
-                    (&raw mut (*pTabList).a as *mut crate::sqliteInt_h::SrcItem).offset(ii as isize) as *mut crate::sqliteInt_h::SrcItem as *mut crate::sqliteInt_h::SrcItem,
+                    (&raw mut __pTabList_ref.a as *mut crate::sqliteInt_h::SrcItem).offset(ii as isize) as *mut crate::sqliteInt_h::SrcItem as *mut crate::sqliteInt_h::SrcItem,
                     
-                    &raw mut (*pWInfo).sWC as *mut _ as *mut crate::whereInt_h::WhereClause,
+                    &raw mut __pWInfo_ref.sWC as *mut _ as *mut crate::whereInt_h::WhereClause,
                 );
                 ii += 1;
-                if !(ii < (*pTabList).nSrc) {
+                if !(ii < __pTabList_ref.nSrc) {
                     break;
                 }
             }
         }
-        crate::src::src::whereexpr::sqlite3WhereExprAnalyze(pTabList as *mut crate::sqliteInt_h::SrcList,  &raw mut (*pWInfo).sWC as *mut _ as *mut crate::whereInt_h::WhereClause);
+        crate::src::src::whereexpr::sqlite3WhereExprAnalyze(pTabList as *mut crate::sqliteInt_h::SrcList,  &raw mut __pWInfo_ref.sWC as *mut _ as *mut crate::whereInt_h::WhereClause);
         if !pSelect.is_null() && !(*pSelect).pLimit.is_null() {
-            crate::src::src::whereexpr::sqlite3WhereAddLimit(&raw mut (*pWInfo).sWC as *mut _ as *mut crate::whereInt_h::WhereClause,  pSelect as *mut crate::sqliteInt_h::Select);
+            crate::src::src::whereexpr::sqlite3WhereAddLimit(&raw mut __pWInfo_ref.sWC as *mut _ as *mut crate::whereInt_h::WhereClause,  pSelect as *mut crate::sqliteInt_h::Select);
         }
         if !((*pParse).nErr != 0) {
             ii = 0 as ::core::ffi::c_int;
@@ -5744,7 +5824,7 @@ pub unsafe extern "C" fn sqlite3WhereBegin(
                                 & crate::sqliteInt_h::JT_LTORJ
                                 != 0 as ::core::ffi::c_int)
                     {
-                        crate::src::src::expr::sqlite3ExprIfFalse(pParse as *mut crate::sqliteInt_h::Parse,  pX as *mut crate::sqliteInt_h::Expr, (*pWInfo).iBreak, crate::sqliteInt_h::SQLITE_JUMPIFNULL);
+                        crate::src::src::expr::sqlite3ExprIfFalse(pParse as *mut crate::sqliteInt_h::Parse,  pX as *mut crate::sqliteInt_h::Expr, __pWInfo_ref.iBreak, crate::sqliteInt_h::SQLITE_JUMPIFNULL);
                         (*pT).wtFlags = ((*pT).wtFlags as ::core::ffi::c_int | crate::whereInt_h::TERM_CODED) as crate::src::fts5::u16_0;
                     }
                 }
@@ -5753,16 +5833,16 @@ pub unsafe extern "C" fn sqlite3WhereBegin(
             if wctrlFlags as ::core::ffi::c_int & crate::sqliteInt_h::WHERE_WANT_DISTINCT != 0 {
                 if (*db).dbOptFlags & 0x10 as crate::src::ext::rtree::rtree::u32_0 != 0 as crate::src::ext::rtree::rtree::u32_0 {
                     wctrlFlags = (wctrlFlags as ::core::ffi::c_int & !crate::sqliteInt_h::WHERE_WANT_DISTINCT) as crate::src::fts5::u16_0;
-                    (*pWInfo).wctrlFlags = ((*pWInfo).wctrlFlags as ::core::ffi::c_int
+                    __pWInfo_ref.wctrlFlags = (__pWInfo_ref.wctrlFlags as ::core::ffi::c_int
                         & !crate::sqliteInt_h::WHERE_WANT_DISTINCT) as crate::src::fts5::u16_0;
-                } else if isDistinctRedundant(pParse, pTabList, &raw mut (*pWInfo).sWC, pResultSet)
+                } else if isDistinctRedundant(pParse, pTabList, &raw mut __pWInfo_ref.sWC, pResultSet)
                     != 0
                 {
-                    (*pWInfo).eDistinct = crate::sqliteInt_h::WHERE_DISTINCT_UNIQUE as crate::src::ext::rtree::rtree::u8_0;
+                    __pWInfo_ref.eDistinct = crate::sqliteInt_h::WHERE_DISTINCT_UNIQUE as crate::src::ext::rtree::rtree::u8_0;
                 } else if pOrderBy.is_null() {
-                    (*pWInfo).wctrlFlags =
-                        ((*pWInfo).wctrlFlags as ::core::ffi::c_int | crate::sqliteInt_h::WHERE_DISTINCTBY) as crate::src::fts5::u16_0;
-                    (*pWInfo).pOrderBy = pResultSet;
+                    __pWInfo_ref.wctrlFlags =
+                        (__pWInfo_ref.wctrlFlags as ::core::ffi::c_int | crate::sqliteInt_h::WHERE_DISTINCTBY) as crate::src::fts5::u16_0;
+                    __pWInfo_ref.pOrderBy = pResultSet;
                 }
             }
             if nTabList != 1 as ::core::ffi::c_int
@@ -5776,16 +5856,16 @@ pub unsafe extern "C" fn sqlite3WhereBegin(
                     if (*db).mallocFailed != 0 {
                         current_block = 8938545224499708060;
                     } else {
-                        if !(*pWInfo).pOrderBy.is_null() {
+                        if !__pWInfo_ref.pOrderBy.is_null() {
                             whereInterstageHeuristic(pWInfo);
                             wherePathSolver(
                                 pWInfo,
-                                (if ((*pWInfo).nRowOut as ::core::ffi::c_int)
+                                (if (__pWInfo_ref.nRowOut as ::core::ffi::c_int)
                                     < 0 as ::core::ffi::c_int
                                 {
                                     1 as ::core::ffi::c_int
                                 } else {
-                                    (*pWInfo).nRowOut as ::core::ffi::c_int
+                                    __pWInfo_ref.nRowOut as ::core::ffi::c_int
                                         + 1 as ::core::ffi::c_int
                                 }) as crate::sqliteInt_h::LogEst,
                             );
@@ -5800,10 +5880,10 @@ pub unsafe extern "C" fn sqlite3WhereBegin(
                         match current_block {
                             8938545224499708060 => {}
                             _ => {
-                                if (*pWInfo).wctrlFlags as ::core::ffi::c_int & crate::sqliteInt_h::WHERE_WANT_DISTINCT
+                                if __pWInfo_ref.wctrlFlags as ::core::ffi::c_int & crate::sqliteInt_h::WHERE_WANT_DISTINCT
                                     != 0 as ::core::ffi::c_int
                                 {
-                                    (*pWInfo).nRowOut = ((*pWInfo).nRowOut as ::core::ffi::c_int
+                                    __pWInfo_ref.nRowOut = (__pWInfo_ref.nRowOut as ::core::ffi::c_int
                                         - 30 as ::core::ffi::c_int)
                                         as crate::sqliteInt_h::LogEst;
                                 }
@@ -5818,37 +5898,38 @@ pub unsafe extern "C" fn sqlite3WhereBegin(
             match current_block {
                 8938545224499708060 => {}
                 _ => {
-                    if (*pWInfo).pOrderBy.is_null()
+                    if __pWInfo_ref.pOrderBy.is_null()
                         && (*db).flags & crate::sqliteInt_h::SQLITE_ReverseOrder as crate::src::ext::rtree::rtree::u64_0 != 0 as crate::src::ext::rtree::rtree::u64_0
                     {
                         whereReverseScanOrder(pWInfo);
                     }
                     if !((*pParse).nErr != 0) {
                         notReady = !(0 as ::core::ffi::c_int as crate::sqliteInt_h::Bitmask);
-                        if (*pWInfo).nLevel as ::core::ffi::c_int >= 2 as ::core::ffi::c_int
+                        let __db_ref = unsafe { &*db };
+                        if __pWInfo_ref.nLevel as ::core::ffi::c_int >= 2 as ::core::ffi::c_int
                             && !pResultSet.is_null()
                             && 0 as ::core::ffi::c_int
                                 == wctrlFlags as ::core::ffi::c_int
                                     & (crate::sqliteInt_h::WHERE_AGG_DISTINCT | crate::sqliteInt_h::WHERE_KEEP_ALL_JOINS)
-                            && (*db).dbOptFlags & 0x100 as crate::src::ext::rtree::rtree::u32_0 == 0 as crate::src::ext::rtree::rtree::u32_0
+                            && __db_ref.dbOptFlags & 0x100 as crate::src::ext::rtree::rtree::u32_0 == 0 as crate::src::ext::rtree::rtree::u32_0
                         {
                             notReady = whereOmitNoopJoin(pWInfo, notReady);
-                            nTabList = (*pWInfo).nLevel as ::core::ffi::c_int;
+                            nTabList = __pWInfo_ref.nLevel as ::core::ffi::c_int;
                         }
-                        if (*pWInfo).nLevel as ::core::ffi::c_int >= 2 as ::core::ffi::c_int
-                            && (*db).dbOptFlags & 0x80000 as crate::src::ext::rtree::rtree::u32_0 == 0 as crate::src::ext::rtree::rtree::u32_0
+                        if __pWInfo_ref.nLevel as ::core::ffi::c_int >= 2 as ::core::ffi::c_int
+                            && __db_ref.dbOptFlags & 0x80000 as crate::src::ext::rtree::rtree::u32_0 == 0 as crate::src::ext::rtree::rtree::u32_0
                         {
                             whereCheckIfBloomFilterIsUseful(pWInfo);
                         }
-                        (*(*pWInfo).pParse).nQueryLoop = ((*(*pWInfo).pParse).nQueryLoop
+                        (*__pWInfo_ref.pParse).nQueryLoop = ((*__pWInfo_ref.pParse).nQueryLoop
                             as ::core::ffi::c_int
-                            + (*pWInfo).nRowOut as ::core::ffi::c_int)
+                            + __pWInfo_ref.nRowOut as ::core::ffi::c_int)
                             as crate::sqliteInt_h::LogEst;
                         if wctrlFlags as ::core::ffi::c_int & crate::sqliteInt_h::WHERE_ONEPASS_DESIRED
                             != 0 as ::core::ffi::c_int
                         {
                             let mut wsFlags: ::core::ffi::c_int =
-                                (*(*(&raw mut (*pWInfo).a as *mut crate::whereInt_h::WhereLevel)
+                                (*(*(&raw mut __pWInfo_ref.a as *mut crate::whereInt_h::WhereLevel)
                                     .offset(0 as isize))
                                 .pWLoop)
                                     .wsFlags as ::core::ffi::c_int;
@@ -5867,9 +5948,9 @@ pub unsafe extern "C" fn sqlite3WhereBegin(
                                     && (0 as ::core::ffi::c_int == wsFlags & crate::whereInt_h::WHERE_MULTI_OR
                                         || wctrlFlags as ::core::ffi::c_int & crate::sqliteInt_h::WHERE_DUPLICATES_OK
                                             != 0)
-                                    && (*db).dbOptFlags & 0x8000000 as crate::src::ext::rtree::rtree::u32_0 == 0 as crate::src::ext::rtree::rtree::u32_0
+                                    && __db_ref.dbOptFlags & 0x8000000 as crate::src::ext::rtree::rtree::u32_0 == 0 as crate::src::ext::rtree::rtree::u32_0
                             {
-                                (*pWInfo).eOnePass = (if bOnerow != 0 {
+                                __pWInfo_ref.eOnePass = (if bOnerow != 0 {
                                     crate::sqliteInt_h::ONEPASS_SINGLE
                                 } else {
                                     crate::sqliteInt_h::ONEPASS_MULTI
@@ -5887,7 +5968,7 @@ pub unsafe extern "C" fn sqlite3WhereBegin(
                                     {
                                         bFordelete = crate::sqliteInt_h::OPFLAG_FORDELETE as crate::src::ext::rtree::rtree::u8_0;
                                     }
-                                    (*(*(&raw mut (*pWInfo).a as *mut crate::whereInt_h::WhereLevel)
+                                    (*(*(&raw mut __pWInfo_ref.a as *mut crate::whereInt_h::WhereLevel)
                                         .offset(0 as isize))
                                     .pWLoop)
                                         .wsFlags = (wsFlags & !crate::whereInt_h::WHERE_IDX_ONLY) as crate::src::ext::rtree::rtree::u32_0;
@@ -5895,7 +5976,7 @@ pub unsafe extern "C" fn sqlite3WhereBegin(
                             }
                         }
                         ii = 0 as ::core::ffi::c_int;
-                        pLevel = &raw mut (*pWInfo).a as *mut crate::whereInt_h::WhereLevel;
+                        pLevel = &raw mut __pWInfo_ref.a as *mut crate::whereInt_h::WhereLevel;
                         while ii < nTabList {
                             let mut pTab: *mut crate::sqliteInt_h::Table = ::core::ptr::null_mut::<crate::sqliteInt_h::Table>();
                             let mut iDb: ::core::ffi::c_int = 0;
@@ -5916,16 +5997,16 @@ pub unsafe extern "C" fn sqlite3WhereBegin(
                                     != 0 as ::core::ffi::c_int
                             {
                                 (*pLevel).addrHalt = (*pLevel).addrBrk;
-                            } else if !(*(&raw mut (*pWInfo).a as *mut crate::whereInt_h::WhereLevel)
+                            } else if !(*(&raw mut __pWInfo_ref.a as *mut crate::whereInt_h::WhereLevel)
                                 .offset((ii - 1 as ::core::ffi::c_int) as isize))
                             .pRJ
                             .is_null()
                             {
-                                (*pLevel).addrHalt = (*(&raw mut (*pWInfo).a as *mut crate::whereInt_h::WhereLevel)
+                                (*pLevel).addrHalt = (*(&raw mut __pWInfo_ref.a as *mut crate::whereInt_h::WhereLevel)
                                     .offset((ii - 1 as ::core::ffi::c_int) as isize))
                                 .addrBrk;
                             } else {
-                                (*pLevel).addrHalt = (*(&raw mut (*pWInfo).a as *mut crate::whereInt_h::WhereLevel)
+                                (*pLevel).addrHalt = (*(&raw mut __pWInfo_ref.a as *mut crate::whereInt_h::WhereLevel)
                                     .offset((ii - 1 as ::core::ffi::c_int) as isize))
                                 .addrHalt;
                             }
@@ -5956,9 +6037,9 @@ pub unsafe extern "C" fn sqlite3WhereBegin(
                                             != 0 as ::core::ffi::c_int
                                     {
                                         let mut op: ::core::ffi::c_int = crate::opcodes_h::OP_OpenRead;
-                                        if (*pWInfo).eOnePass as ::core::ffi::c_int != crate::sqliteInt_h::ONEPASS_OFF {
+                                        if __pWInfo_ref.eOnePass as ::core::ffi::c_int != crate::sqliteInt_h::ONEPASS_OFF {
                                             op = crate::opcodes_h::OP_OpenWrite;
-                                            (*pWInfo).aiCurOnePass
+                                            __pWInfo_ref.aiCurOnePass
                                                 [0 as ::core::ffi::c_int as usize] =
                                                 (*pTabItem).iCursor;
                                         }
@@ -5971,7 +6052,7 @@ pub unsafe extern "C" fn sqlite3WhereBegin(
                                             pTab as *mut crate::sqliteInt_h::Table,
                                             op,
                                         );
-                                        if (*pWInfo).eOnePass as ::core::ffi::c_int == crate::sqliteInt_h::ONEPASS_OFF
+                                        if __pWInfo_ref.eOnePass as ::core::ffi::c_int == crate::sqliteInt_h::ONEPASS_OFF
                                             && ((*pTab).nCol as ::core::ffi::c_int) < crate::sqliteInt_h::BMS
                                             && (*pTab).tabFlags
                                                 & (crate::sqliteInt_h::TF_HasGenerated | crate::sqliteInt_h::TF_WithoutRowid) as crate::src::ext::rtree::rtree::u32_0
@@ -6003,7 +6084,7 @@ pub unsafe extern "C" fn sqlite3WhereBegin(
                                                 & (crate::sqliteInt_h::JT_LTORJ | crate::sqliteInt_h::JT_LEFT)
                                                 == 0 as ::core::ffi::c_int
                                             && (*pLevel).addrHalt
-                                                == (*(&raw mut (*pWInfo).a as *mut crate::whereInt_h::WhereLevel)
+                                                == (*(&raw mut __pWInfo_ref.a as *mut crate::whereInt_h::WhereLevel)
                                                     .offset(0 as isize))
                                                 .addrHalt
                                         {
@@ -6011,7 +6092,7 @@ pub unsafe extern "C" fn sqlite3WhereBegin(
                                                 v,
                                                 crate::opcodes_h::OP_IfEmpty,
                                                 (*pTabItem).iCursor,
-                                                (*pWInfo).iBreak,
+                                                __pWInfo_ref.iBreak,
                                             );
                                         }
                                     } else {
@@ -6038,7 +6119,7 @@ pub unsafe extern "C" fn sqlite3WhereBegin(
                                 {
                                     iIndexCur = (*pLevel).iTabCur;
                                     op_0 = 0 as ::core::ffi::c_int;
-                                } else if (*pWInfo).eOnePass as ::core::ffi::c_int != crate::sqliteInt_h::ONEPASS_OFF {
+                                } else if __pWInfo_ref.eOnePass as ::core::ffi::c_int != crate::sqliteInt_h::ONEPASS_OFF {
                                     let mut pJ: *mut crate::sqliteInt_h::Index = (*(*pTabItem).pSTab).pIndex;
                                     iIndexCur = iAuxArg;
                                     while !pJ.is_null() && pJ != pIx {
@@ -6046,7 +6127,7 @@ pub unsafe extern "C" fn sqlite3WhereBegin(
                                         pJ = (*pJ).pNext;
                                     }
                                     op_0 = crate::opcodes_h::OP_OpenWrite;
-                                    (*pWInfo).aiCurOnePass[1 as ::core::ffi::c_int as usize] =
+                                    __pWInfo_ref.aiCurOnePass[1 as ::core::ffi::c_int as usize] =
                                         iIndexCur;
                                 } else if iAuxArg != 0
                                     && wctrlFlags as ::core::ffi::c_int & crate::sqliteInt_h::WHERE_OR_SUBCLAUSE
@@ -6055,11 +6136,12 @@ pub unsafe extern "C" fn sqlite3WhereBegin(
                                     iIndexCur = iAuxArg;
                                     op_0 = crate::opcodes_h::OP_ReopenIdx_1;
                                 } else {
-                                    let fresh0 = (*pParse).nTab;
-                                    (*pParse).nTab = (*pParse).nTab + 1;
+                                    let __pParse_ref = unsafe { &mut *pParse };
+                                    let fresh0 = __pParse_ref.nTab;
+                                    __pParse_ref.nTab = __pParse_ref.nTab + 1;
                                     iIndexCur = fresh0;
                                     if (*pIx).bHasExpr() as ::core::ffi::c_int != 0
-                                        && (*db).dbOptFlags & 0x1000000 as crate::src::ext::rtree::rtree::u32_0 == 0 as crate::src::ext::rtree::rtree::u32_0
+                                        && __db_ref.dbOptFlags & 0x1000000 as crate::src::ext::rtree::rtree::u32_0 == 0 as crate::src::ext::rtree::rtree::u32_0
                                     {
                                         whereAddIndexedExpr(pParse, pIx, iIndexCur, pTabItem);
                                     }
@@ -6087,18 +6169,19 @@ pub unsafe extern "C" fn sqlite3WhereBegin(
                                         iDb,
                                     );
                                     crate::src::src::vdbeaux::sqlite3VdbeSetP4KeyInfo(pParse as *mut crate::sqliteInt_h::Parse,  pIx as *mut crate::sqliteInt_h::Index);
-                                    if (*pLoop).wsFlags & crate::whereInt_h::WHERE_CONSTRAINT as crate::src::ext::rtree::rtree::u32_0 != 0 as crate::src::ext::rtree::rtree::u32_0
-                                        && (*pLoop).wsFlags
+                                    let __pLoop_ref = unsafe { &*pLoop };
+                                    if __pLoop_ref.wsFlags & crate::whereInt_h::WHERE_CONSTRAINT as crate::src::ext::rtree::rtree::u32_0 != 0 as crate::src::ext::rtree::rtree::u32_0
+                                        && __pLoop_ref.wsFlags
                                             & (crate::whereInt_h::WHERE_COLUMN_RANGE | crate::whereInt_h::WHERE_SKIPSCAN) as crate::src::ext::rtree::rtree::u32_0
                                             == 0 as crate::src::ext::rtree::rtree::u32_0
-                                        && (*pLoop).wsFlags & crate::whereInt_h::WHERE_BIGNULL_SORT as crate::src::ext::rtree::rtree::u32_0
+                                        && __pLoop_ref.wsFlags & crate::whereInt_h::WHERE_BIGNULL_SORT as crate::src::ext::rtree::rtree::u32_0
                                             == 0 as crate::src::ext::rtree::rtree::u32_0
-                                        && (*pLoop).wsFlags & crate::whereInt_h::WHERE_IN_SEEKSCAN as crate::src::ext::rtree::rtree::u32_0
+                                        && __pLoop_ref.wsFlags & crate::whereInt_h::WHERE_IN_SEEKSCAN as crate::src::ext::rtree::rtree::u32_0
                                             == 0 as crate::src::ext::rtree::rtree::u32_0
-                                        && (*pWInfo).wctrlFlags as ::core::ffi::c_int
+                                        && __pWInfo_ref.wctrlFlags as ::core::ffi::c_int
                                             & crate::sqliteInt_h::WHERE_ORDERBY_MIN
                                             == 0 as ::core::ffi::c_int
-                                        && (*pWInfo).eDistinct as ::core::ffi::c_int
+                                        && __pWInfo_ref.eDistinct as ::core::ffi::c_int
                                             != crate::sqliteInt_h::WHERE_DISTINCT_ORDERED
                                     {
                                         crate::src::src::vdbeaux::sqlite3VdbeChangeP5(v, crate::sqliteInt_h::OPFLAG_SEEKEQ as crate::src::fts5::u16_0);
@@ -6120,24 +6203,26 @@ pub unsafe extern "C" fn sqlite3WhereBegin(
                                 }
                             {
                                 let mut pRJ: *mut crate::whereInt_h::WhereRightJoin = (*pLevel).pRJ;
-                                let fresh1 = (*pParse).nTab;
-                                (*pParse).nTab = (*pParse).nTab + 1;
-                                (*pRJ).iMatch = fresh1;
-                                (*pParse).nMem += 1;
-                                (*pRJ).regBloom = (*pParse).nMem;
+                                let __pParse_ref = unsafe { &mut *pParse };
+                                let fresh1 = __pParse_ref.nTab;
+                                __pParse_ref.nTab = __pParse_ref.nTab + 1;
+                                let __pRJ_ref = unsafe { &mut *pRJ };
+                                __pRJ_ref.iMatch = fresh1;
+                                __pParse_ref.nMem += 1;
+                                __pRJ_ref.regBloom = __pParse_ref.nMem;
                                 crate::src::src::vdbeaux::sqlite3VdbeAddOp2(
                                     v,
                                     crate::opcodes_h::OP_Blob,
                                     65536 as ::core::ffi::c_int,
-                                    (*pRJ).regBloom,
+                                    __pRJ_ref.regBloom,
                                 );
-                                (*pParse).nMem += 1;
-                                (*pRJ).regReturn = (*pParse).nMem;
+                                __pParse_ref.nMem += 1;
+                                __pRJ_ref.regReturn = __pParse_ref.nMem;
                                 crate::src::src::vdbeaux::sqlite3VdbeAddOp2(
                                     v,
                                     crate::opcodes_h::OP_Null,
                                     0 as ::core::ffi::c_int,
-                                    (*pRJ).regReturn,
+                                    __pRJ_ref.regReturn,
                                 );
                                 if (*pTab).tabFlags & crate::sqliteInt_h::TF_WithoutRowid as crate::src::ext::rtree::rtree::u32_0 == 0 as crate::src::ext::rtree::rtree::u32_0 {
                                     let mut pInfo: *mut crate::sqliteInt_h::KeyInfo =
@@ -6145,12 +6230,12 @@ pub unsafe extern "C" fn sqlite3WhereBegin(
                                     crate::src::src::vdbeaux::sqlite3VdbeAddOp2(
                                         v,
                                         crate::opcodes_h::OP_OpenEphemeral,
-                                        (*pRJ).iMatch,
+                                        __pRJ_ref.iMatch,
                                         1 as ::core::ffi::c_int,
                                     );
                                     pInfo =  crate::src::src::select::sqlite3KeyInfoAlloc(
                                         
-                                        (*pParse).db as *mut crate::sqliteInt_h::sqlite3,
+                                        __pParse_ref.db as *mut crate::sqliteInt_h::sqlite3,
                                         1 as ::core::ffi::c_int,
                                         0 as ::core::ffi::c_int,
                                     ) as *mut crate::sqliteInt_h::KeyInfo;
@@ -6173,20 +6258,20 @@ pub unsafe extern "C" fn sqlite3WhereBegin(
                                     crate::src::src::vdbeaux::sqlite3VdbeAddOp2(
                                         v,
                                         crate::opcodes_h::OP_OpenEphemeral,
-                                        (*pRJ).iMatch,
+                                        __pRJ_ref.iMatch,
                                         (*pPk).nKeyCol as ::core::ffi::c_int,
                                     );
                                     crate::src::src::vdbeaux::sqlite3VdbeSetP4KeyInfo(pParse as *mut crate::sqliteInt_h::Parse,  pPk as *mut crate::sqliteInt_h::Index);
                                 }
                                 (*pLoop).wsFlags &= !crate::whereInt_h::WHERE_IDX_ONLY as crate::src::ext::rtree::rtree::u32_0;
-                                (*pWInfo).nOBSat = 0 as crate::sqliteInt_h::i8_0;
-                                (*pWInfo).eDistinct = crate::sqliteInt_h::WHERE_DISTINCT_UNORDERED as crate::src::ext::rtree::rtree::u8_0;
+                                __pWInfo_ref.nOBSat = 0 as crate::sqliteInt_h::i8_0;
+                                __pWInfo_ref.eDistinct = crate::sqliteInt_h::WHERE_DISTINCT_UNORDERED as crate::src::ext::rtree::rtree::u8_0;
                             }
                             ii += 1;
                             pLevel = pLevel.offset(1);
                         }
-                        (*pWInfo).iTop = crate::src::src::vdbeaux::sqlite3VdbeCurrentAddr(v);
-                        if !((*db).mallocFailed != 0) {
+                        __pWInfo_ref.iTop = crate::src::src::vdbeaux::sqlite3VdbeCurrentAddr(v);
+                        if !(__db_ref.mallocFailed != 0) {
                             ii = 0 as ::core::ffi::c_int;
                             loop {
                                 if !(ii < nTabList) {
@@ -6200,7 +6285,7 @@ pub unsafe extern "C" fn sqlite3WhereBegin(
                                     current_block = 8938545224499708060;
                                     break;
                                 }
-                                pLevel = (&raw mut (*pWInfo).a as *mut crate::whereInt_h::WhereLevel)
+                                pLevel = (&raw mut __pWInfo_ref.a as *mut crate::whereInt_h::WhereLevel)
                                     .offset(ii as isize)
                                     as *mut crate::whereInt_h::WhereLevel;
                                 wsFlags_0 = (*(*pLevel).pWLoop).wsFlags as ::core::ffi::c_int;
@@ -6235,14 +6320,14 @@ pub unsafe extern "C" fn sqlite3WhereBegin(
                                     if wsFlags_0 & crate::whereInt_h::WHERE_AUTO_INDEX != 0 as ::core::ffi::c_int {
                                         constructAutomaticIndex(
                                             pParse,
-                                            &raw mut (*pWInfo).sWC,
+                                            &raw mut __pWInfo_ref.sWC,
                                             notReady,
                                             pLevel,
                                         );
                                     } else {
                                         sqlite3ConstructBloomFilter(pWInfo, ii, pLevel, notReady);
                                     }
-                                    if (*db).mallocFailed != 0 {
+                                    if __db_ref.mallocFailed != 0 {
                                         current_block = 8938545224499708060;
                                         break;
                                     }
@@ -6256,7 +6341,7 @@ pub unsafe extern "C" fn sqlite3WhereBegin(
                                     
                                     pParse as *mut crate::sqliteInt_h::Parse, v,  pWInfo as *mut crate::whereInt_h::WhereInfo, ii,  pLevel as *mut crate::whereInt_h::WhereLevel, notReady,
                                 );
-                                (*pWInfo).iContinue = (*pLevel).addrCont;
+                                __pWInfo_ref.iContinue = (*pLevel).addrCont;
                                 wsFlags_0 & crate::whereInt_h::WHERE_MULTI_OR == 0 as ::core::ffi::c_int
                                     && wctrlFlags as ::core::ffi::c_int & crate::sqliteInt_h::WHERE_OR_SUBCLAUSE
                                         == 0 as ::core::ffi::c_int;
@@ -6265,7 +6350,7 @@ pub unsafe extern "C" fn sqlite3WhereBegin(
                             match current_block {
                                 8938545224499708060 => {}
                                 _ => {
-                                    (*pWInfo).iEndWhere = crate::src::src::vdbeaux::sqlite3VdbeCurrentAddr(v);
+                                    __pWInfo_ref.iEndWhere = crate::src::src::vdbeaux::sqlite3VdbeCurrentAddr(v);
                                     return pWInfo;
                                 }
                             }
@@ -6284,30 +6369,34 @@ pub unsafe extern "C" fn sqlite3WhereBegin(
 #[no_mangle]
 
 pub unsafe extern "C" fn sqlite3WhereEnd(mut pWInfo: *mut crate::whereInt_h::WhereInfo) {
-    let mut pParse: *mut crate::sqliteInt_h::Parse = (*pWInfo).pParse;
-    let mut v: *mut crate::vdbeInt_h::Vdbe = (*pParse).pVdbe;
+    let __pWInfo_ref = unsafe { &mut *pWInfo };
+    let mut pParse: *mut crate::sqliteInt_h::Parse = __pWInfo_ref.pParse;
+    let __pParse_ref = unsafe { &mut *pParse };
+    let mut v: *mut crate::vdbeInt_h::Vdbe = __pParse_ref.pVdbe;
     let mut i: ::core::ffi::c_int = 0;
     let mut pLevel: *mut crate::whereInt_h::WhereLevel = ::core::ptr::null_mut::<crate::whereInt_h::WhereLevel>();
     let mut pLoop: *mut crate::whereInt_h::WhereLoop = ::core::ptr::null_mut::<crate::whereInt_h::WhereLoop>();
-    let mut pTabList: *mut crate::sqliteInt_h::SrcList = (*pWInfo).pTabList;
-    let mut db: *mut crate::sqliteInt_h::sqlite3 = (*pParse).db;
+    let mut pTabList: *mut crate::sqliteInt_h::SrcList = __pWInfo_ref.pTabList;
+    let mut db: *mut crate::sqliteInt_h::sqlite3 = __pParse_ref.db;
     let mut iEnd: ::core::ffi::c_int = crate::src::src::vdbeaux::sqlite3VdbeCurrentAddr(v);
     let mut nRJ: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
     let mut addrSeek: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
-    i = (*pWInfo).nLevel as ::core::ffi::c_int - 1 as ::core::ffi::c_int;
+    i = __pWInfo_ref.nLevel as ::core::ffi::c_int - 1 as ::core::ffi::c_int;
     while i >= 0 as ::core::ffi::c_int {
         let mut addr: ::core::ffi::c_int = 0;
-        pLevel = (&raw mut (*pWInfo).a as *mut crate::whereInt_h::WhereLevel).offset(i as isize) as *mut crate::whereInt_h::WhereLevel;
+        pLevel = (&raw mut __pWInfo_ref.a as *mut crate::whereInt_h::WhereLevel).offset(i as isize) as *mut crate::whereInt_h::WhereLevel;
         if !(*pLevel).pRJ.is_null() {
-            let mut pRJ: *mut crate::whereInt_h::WhereRightJoin = (*pLevel).pRJ;
-            crate::src::src::vdbeaux::sqlite3VdbeResolveLabel(v, (*pLevel).addrCont);
-            (*pLevel).addrCont = crate::src::src::vdbeaux::sqlite3VdbeMakeLabel(pParse as *mut crate::sqliteInt_h::Parse);
-            (*pRJ).endSubrtn = crate::src::src::vdbeaux::sqlite3VdbeCurrentAddr(v);
+            let __pLevel_ref = unsafe { &mut *pLevel };
+            let mut pRJ: *mut crate::whereInt_h::WhereRightJoin = __pLevel_ref.pRJ;
+            crate::src::src::vdbeaux::sqlite3VdbeResolveLabel(v, __pLevel_ref.addrCont);
+            __pLevel_ref.addrCont = crate::src::src::vdbeaux::sqlite3VdbeMakeLabel(pParse as *mut crate::sqliteInt_h::Parse);
+            let __pRJ_ref = unsafe { &mut *pRJ };
+            __pRJ_ref.endSubrtn = crate::src::src::vdbeaux::sqlite3VdbeCurrentAddr(v);
             crate::src::src::vdbeaux::sqlite3VdbeAddOp3(
                 v,
                 crate::opcodes_h::OP_Return,
-                (*pRJ).regReturn,
-                (*pRJ).addrSubrtn,
+                __pRJ_ref.regReturn,
+                __pRJ_ref.addrSubrtn,
                 1 as ::core::ffi::c_int,
             );
             nRJ += 1;
@@ -6316,8 +6405,8 @@ pub unsafe extern "C" fn sqlite3WhereEnd(mut pWInfo: *mut crate::whereInt_h::Whe
         if (*pLevel).op as ::core::ffi::c_int != crate::opcodes_h::OP_Noop {
             let mut pIdx: *mut crate::sqliteInt_h::Index = ::core::ptr::null_mut::<crate::sqliteInt_h::Index>();
             let mut n: ::core::ffi::c_int = 0;
-            if (*pWInfo).eDistinct as ::core::ffi::c_int == crate::sqliteInt_h::WHERE_DISTINCT_ORDERED
-                && i == (*pWInfo).nLevel as ::core::ffi::c_int - 1 as ::core::ffi::c_int
+            if __pWInfo_ref.eDistinct as ::core::ffi::c_int == crate::sqliteInt_h::WHERE_DISTINCT_ORDERED
+                && i == __pWInfo_ref.nLevel as ::core::ffi::c_int - 1 as ::core::ffi::c_int
                 && (*pLoop).wsFlags & crate::whereInt_h::WHERE_INDEXED as crate::src::ext::rtree::rtree::u32_0 != 0 as crate::src::ext::rtree::rtree::u32_0
                 && {
                     pIdx = (*pLoop).u.btree.pIndex;
@@ -6330,30 +6419,31 @@ pub unsafe extern "C" fn sqlite3WhereEnd(mut pWInfo: *mut crate::whereInt_h::Whe
                 && *(*pIdx).aiRowLogEst.offset(n as isize) as ::core::ffi::c_int
                     >= 36 as ::core::ffi::c_int
             {
-                let mut r1: ::core::ffi::c_int = (*pParse).nMem + 1 as ::core::ffi::c_int;
+                let mut r1: ::core::ffi::c_int = __pParse_ref.nMem + 1 as ::core::ffi::c_int;
                 let mut j: ::core::ffi::c_int = 0;
                 let mut op: ::core::ffi::c_int = 0;
                 j = 0 as ::core::ffi::c_int;
+                let __pLevel_ref = unsafe { &*pLevel };
                 while j < n {
-                    crate::src::src::vdbeaux::sqlite3VdbeAddOp3(v, crate::opcodes_h::OP_Column, (*pLevel).iIdxCur, j, r1 + j);
+                    crate::src::src::vdbeaux::sqlite3VdbeAddOp3(v, crate::opcodes_h::OP_Column, __pLevel_ref.iIdxCur, j, r1 + j);
                     j += 1;
                 }
-                (*pParse).nMem += n + 1 as ::core::ffi::c_int;
-                op = if (*pLevel).op as ::core::ffi::c_int == crate::opcodes_h::OP_Prev_1 {
+                __pParse_ref.nMem += n + 1 as ::core::ffi::c_int;
+                op = if __pLevel_ref.op as ::core::ffi::c_int == crate::opcodes_h::OP_Prev_1 {
                     crate::opcodes_h::OP_SeekLT
                 } else {
                     crate::opcodes_h::OP_SeekGT
                 };
                 addrSeek =
-                    crate::src::src::vdbeaux::sqlite3VdbeAddOp4Int(v, op, (*pLevel).iIdxCur, 0 as ::core::ffi::c_int, r1, n);
-                crate::src::src::vdbeaux::sqlite3VdbeAddOp2(v, crate::opcodes_h::OP_Goto, 1 as ::core::ffi::c_int, (*pLevel).p2);
+                    crate::src::src::vdbeaux::sqlite3VdbeAddOp4Int(v, op, __pLevel_ref.iIdxCur, 0 as ::core::ffi::c_int, r1, n);
+                crate::src::src::vdbeaux::sqlite3VdbeAddOp2(v, crate::opcodes_h::OP_Goto, 1 as ::core::ffi::c_int, __pLevel_ref.p2);
             }
         }
         if (*(&raw mut (*pTabList).a as *mut crate::sqliteInt_h::SrcItem).offset((*pLevel).iFrom as isize))
             .fg
             .fromExists() as ::core::ffi::c_int
             != 0
-            && i == (*pWInfo).nLevel as ::core::ffi::c_int - 1 as ::core::ffi::c_int
+            && i == __pWInfo_ref.nLevel as ::core::ffi::c_int - 1 as ::core::ffi::c_int
         {
             let mut nOuter: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
             while nOuter < i {
@@ -6377,21 +6467,22 @@ pub unsafe extern "C" fn sqlite3WhereEnd(mut pWInfo: *mut crate::whereInt_h::Whe
         }
         crate::src::src::vdbeaux::sqlite3VdbeResolveLabel(v, (*pLevel).addrCont);
         if (*pLevel).op as ::core::ffi::c_int != crate::opcodes_h::OP_Noop {
+            let __pLevel_ref = unsafe { &*pLevel };
             crate::src::src::vdbeaux::sqlite3VdbeAddOp3(
                 v,
-                (*pLevel).op as ::core::ffi::c_int,
-                (*pLevel).p1,
-                (*pLevel).p2,
-                (*pLevel).p3 as ::core::ffi::c_int,
+                __pLevel_ref.op as ::core::ffi::c_int,
+                __pLevel_ref.p1,
+                __pLevel_ref.p2,
+                __pLevel_ref.p3 as ::core::ffi::c_int,
             );
-            crate::src::src::vdbeaux::sqlite3VdbeChangeP5(v, (*pLevel).p5 as crate::src::fts5::u16_0);
-            if (*pLevel).regBignull != 0 {
-                crate::src::src::vdbeaux::sqlite3VdbeResolveLabel(v, (*pLevel).addrBignull);
+            crate::src::src::vdbeaux::sqlite3VdbeChangeP5(v, __pLevel_ref.p5 as crate::src::fts5::u16_0);
+            if __pLevel_ref.regBignull != 0 {
+                crate::src::src::vdbeaux::sqlite3VdbeResolveLabel(v, __pLevel_ref.addrBignull);
                 crate::src::src::vdbeaux::sqlite3VdbeAddOp2(
                     v,
                     crate::opcodes_h::OP_DecrJumpZero,
-                    (*pLevel).regBignull,
-                    (*pLevel).p2 - 1 as ::core::ffi::c_int,
+                    __pLevel_ref.regBignull,
+                    __pLevel_ref.p2 - 1 as ::core::ffi::c_int,
                 );
             }
             if addrSeek != 0 {
@@ -6404,8 +6495,9 @@ pub unsafe extern "C" fn sqlite3WhereEnd(mut pWInfo: *mut crate::whereInt_h::Whe
         {
             let mut pIn: *mut crate::whereInt_h::InLoop = ::core::ptr::null_mut::<crate::whereInt_h::InLoop>();
             let mut j_0: ::core::ffi::c_int = 0;
-            crate::src::src::vdbeaux::sqlite3VdbeResolveLabel(v, (*pLevel).addrNxt);
-            j_0 = (*pLevel).u.in_0.nIn;
+            let __pLevel_ref = unsafe { &mut *pLevel };
+            crate::src::src::vdbeaux::sqlite3VdbeResolveLabel(v, __pLevel_ref.addrNxt);
+            j_0 = __pLevel_ref.u.in_0.nIn;
             pIn = (*pLevel)
                 .u
                 .in_0
@@ -6420,7 +6512,7 @@ pub unsafe extern "C" fn sqlite3WhereEnd(mut pWInfo: *mut crate::whereInt_h::Whe
                             ((*pLoop).wsFlags & crate::whereInt_h::WHERE_VIRTUALTABLE as crate::src::ext::rtree::rtree::u32_0 == 0 as crate::src::ext::rtree::rtree::u32_0
                                 && (*pLoop).wsFlags & crate::whereInt_h::WHERE_IN_EARLYOUT as crate::src::ext::rtree::rtree::u32_0 != 0 as crate::src::ext::rtree::rtree::u32_0)
                                 as ::core::ffi::c_int;
-                        if (*pLevel).iLeftJoin != 0 {
+                        if __pLevel_ref.iLeftJoin != 0 {
                             crate::src::src::vdbeaux::sqlite3VdbeAddOp2(
                                 v,
                                 crate::opcodes_h::OP_IfNotOpen_1,
@@ -6432,7 +6524,7 @@ pub unsafe extern "C" fn sqlite3WhereEnd(mut pWInfo: *mut crate::whereInt_h::Whe
                             crate::src::src::vdbeaux::sqlite3VdbeAddOp4Int(
                                 v,
                                 crate::opcodes_h::OP_IfNoHope,
-                                (*pLevel).iIdxCur,
+                                __pLevel_ref.iIdxCur,
                                 crate::src::src::vdbeaux::sqlite3VdbeCurrentAddr(v) + 2 as ::core::ffi::c_int,
                                 (*pIn).iBase,
                                 (*pIn).nPrefix,
@@ -6463,9 +6555,10 @@ pub unsafe extern "C" fn sqlite3WhereEnd(mut pWInfo: *mut crate::whereInt_h::Whe
             );
         }
         if (*pLevel).addrSkip != 0 {
-            crate::src::src::vdbeaux::sqlite3VdbeGoto(v, (*pLevel).addrSkip);
-            crate::src::src::vdbeaux::sqlite3VdbeJumpHere(v, (*pLevel).addrSkip);
-            crate::src::src::vdbeaux::sqlite3VdbeJumpHere(v, (*pLevel).addrSkip - 2 as ::core::ffi::c_int);
+            let __pLevel_ref = unsafe { &*pLevel };
+            crate::src::src::vdbeaux::sqlite3VdbeGoto(v, __pLevel_ref.addrSkip);
+            crate::src::src::vdbeaux::sqlite3VdbeJumpHere(v, __pLevel_ref.addrSkip);
+            crate::src::src::vdbeaux::sqlite3VdbeJumpHere(v, __pLevel_ref.addrSkip - 2 as ::core::ffi::c_int);
         }
         if (*pLevel).addrLikeRep != 0 {
             crate::src::src::vdbeaux::sqlite3VdbeAddOp2(
@@ -6477,10 +6570,11 @@ pub unsafe extern "C" fn sqlite3WhereEnd(mut pWInfo: *mut crate::whereInt_h::Whe
         }
         if (*pLevel).iLeftJoin != 0 {
             let mut ws: ::core::ffi::c_int = (*pLoop).wsFlags as ::core::ffi::c_int;
-            addr = crate::src::src::vdbeaux::sqlite3VdbeAddOp1(v, crate::opcodes_h::OP_IfPos, (*pLevel).iLeftJoin);
+            let __pLevel_ref = unsafe { &mut *pLevel };
+            addr = crate::src::src::vdbeaux::sqlite3VdbeAddOp1(v, crate::opcodes_h::OP_IfPos, __pLevel_ref.iLeftJoin);
             if ws & crate::whereInt_h::WHERE_IDX_ONLY == 0 as ::core::ffi::c_int {
                 let mut pSrc: *mut crate::sqliteInt_h::SrcItem = (&raw mut (*pTabList).a as *mut crate::sqliteInt_h::SrcItem)
-                    .offset((*pLevel).iFrom as isize)
+                    .offset(__pLevel_ref.iFrom as isize)
                     as *mut crate::sqliteInt_h::SrcItem;
                 if (*pSrc).fg.viaCoroutine() != 0 {
                     let mut m: ::core::ffi::c_int = 0;
@@ -6495,37 +6589,37 @@ pub unsafe extern "C" fn sqlite3WhereEnd(mut pWInfo: *mut crate::whereInt_h::Whe
                         n_0 + m - 1 as ::core::ffi::c_int,
                     );
                 }
-                crate::src::src::vdbeaux::sqlite3VdbeAddOp1(v, crate::opcodes_h::OP_NullRow, (*pLevel).iTabCur);
+                crate::src::src::vdbeaux::sqlite3VdbeAddOp1(v, crate::opcodes_h::OP_NullRow, __pLevel_ref.iTabCur);
             }
             if ws & crate::whereInt_h::WHERE_INDEXED != 0
-                || ws & crate::whereInt_h::WHERE_MULTI_OR != 0 && !(*pLevel).u.pCoveringIdx.is_null()
+                || ws & crate::whereInt_h::WHERE_MULTI_OR != 0 && !__pLevel_ref.u.pCoveringIdx.is_null()
             {
                 if ws & crate::whereInt_h::WHERE_MULTI_OR != 0 {
-                    let mut pIx: *mut crate::sqliteInt_h::Index = (*pLevel).u.pCoveringIdx;
+                    let mut pIx: *mut crate::sqliteInt_h::Index = __pLevel_ref.u.pCoveringIdx;
                     let mut iDb: ::core::ffi::c_int = crate::src::src::prepare::sqlite3SchemaToIndex(db as *mut crate::sqliteInt_h::sqlite3,  (*pIx).pSchema as *mut crate::sqliteInt_h::Schema);
                     crate::src::src::vdbeaux::sqlite3VdbeAddOp3(
                         v,
                         crate::opcodes_h::OP_ReopenIdx_1,
-                        (*pLevel).iIdxCur,
+                        __pLevel_ref.iIdxCur,
                         (*pIx).tnum as ::core::ffi::c_int,
                         iDb,
                     );
                     crate::src::src::vdbeaux::sqlite3VdbeSetP4KeyInfo(pParse as *mut crate::sqliteInt_h::Parse,  pIx as *mut crate::sqliteInt_h::Index);
                 }
-                crate::src::src::vdbeaux::sqlite3VdbeAddOp1(v, crate::opcodes_h::OP_NullRow, (*pLevel).iIdxCur);
+                crate::src::src::vdbeaux::sqlite3VdbeAddOp1(v, crate::opcodes_h::OP_NullRow, __pLevel_ref.iIdxCur);
             }
-            if (*pLevel).op as ::core::ffi::c_int == crate::opcodes_h::OP_Return {
-                crate::src::src::vdbeaux::sqlite3VdbeAddOp2(v, crate::opcodes_h::OP_Gosub, (*pLevel).p1, (*pLevel).addrFirst);
+            if __pLevel_ref.op as ::core::ffi::c_int == crate::opcodes_h::OP_Return {
+                crate::src::src::vdbeaux::sqlite3VdbeAddOp2(v, crate::opcodes_h::OP_Gosub, __pLevel_ref.p1, __pLevel_ref.addrFirst);
             } else {
-                crate::src::src::vdbeaux::sqlite3VdbeGoto(v, (*pLevel).addrFirst);
+                crate::src::src::vdbeaux::sqlite3VdbeGoto(v, __pLevel_ref.addrFirst);
             }
             crate::src::src::vdbeaux::sqlite3VdbeJumpHere(v, addr);
         }
         i -= 1;
     }
     i = 0 as ::core::ffi::c_int;
-    pLevel = &raw mut (*pWInfo).a as *mut crate::whereInt_h::WhereLevel;
-    while i < (*pWInfo).nLevel as ::core::ffi::c_int {
+    pLevel = &raw mut __pWInfo_ref.a as *mut crate::whereInt_h::WhereLevel;
+    while i < __pWInfo_ref.nLevel as ::core::ffi::c_int {
         let mut k: ::core::ffi::c_int = 0;
         let mut last: ::core::ffi::c_int = 0;
         let mut pOp: *mut crate::src::src::vdbe::VdbeOp = ::core::ptr::null_mut::<crate::src::src::vdbe::VdbeOp>();
@@ -6553,15 +6647,15 @@ pub unsafe extern "C" fn sqlite3WhereEnd(mut pWInfo: *mut crate::whereInt_h::Whe
                 pIdx_0 = (*pLevel).u.pCoveringIdx;
             }
             if !pIdx_0.is_null() && (*db).mallocFailed == 0 {
-                if (*pWInfo).eOnePass as ::core::ffi::c_int == crate::sqliteInt_h::ONEPASS_OFF
+                if __pWInfo_ref.eOnePass as ::core::ffi::c_int == crate::sqliteInt_h::ONEPASS_OFF
                     || !((*(*pIdx_0).pTable).tabFlags & crate::sqliteInt_h::TF_WithoutRowid as crate::src::ext::rtree::rtree::u32_0 == 0 as crate::src::ext::rtree::rtree::u32_0)
                 {
                     last = iEnd;
                 } else {
-                    last = (*pWInfo).iEndWhere;
+                    last = __pWInfo_ref.iEndWhere;
                 }
                 if (*pIdx_0).bHasExpr() != 0 {
-                    let mut p: *mut crate::sqliteInt_h::IndexedExpr = (*pParse).pIdxEpr;
+                    let mut p: *mut crate::sqliteInt_h::IndexedExpr = __pParse_ref.pIdxEpr;
                     while !p.is_null() {
                         if (*p).iIdxCur == (*pLevel).iIdxCur {
                             (*p).iDataCur = -(1 as ::core::ffi::c_int);
@@ -6576,8 +6670,9 @@ pub unsafe extern "C" fn sqlite3WhereEnd(mut pWInfo: *mut crate::whereInt_h::Whe
                 pLastOp = pOp.offset((last - k) as isize);
                 loop {
                     if !((*pOp).p1 != (*pLevel).iTabCur) {
-                        if (*pOp).opcode as ::core::ffi::c_int == crate::opcodes_h::OP_Column {
-                            let mut x: ::core::ffi::c_int = (*pOp).p2;
+                        let __pOp_ref = unsafe { &mut *pOp };
+                        if __pOp_ref.opcode as ::core::ffi::c_int == crate::opcodes_h::OP_Column {
+                            let mut x: ::core::ffi::c_int = __pOp_ref.p2;
                             if !((*pTab).tabFlags & crate::sqliteInt_h::TF_WithoutRowid as crate::src::ext::rtree::rtree::u32_0 == 0 as crate::src::ext::rtree::rtree::u32_0) {
                                 let mut pPk: *mut crate::sqliteInt_h::Index =  crate::src::src::build::sqlite3PrimaryKeyIndex(pTab as *mut crate::sqliteInt_h::Table) as *mut crate::sqliteInt_h::Index;
                                 x = *(*pPk).aiColumn.offset(x as isize) as ::core::ffi::c_int;
@@ -6587,8 +6682,8 @@ pub unsafe extern "C" fn sqlite3WhereEnd(mut pWInfo: *mut crate::whereInt_h::Whe
                             }
                             x = crate::src::src::build::sqlite3TableColumnToIndex(pIdx_0 as *mut crate::sqliteInt_h::Index, x);
                             if x >= 0 as ::core::ffi::c_int {
-                                (*pOp).p2 = x;
-                                (*pOp).p1 = (*pLevel).iIdxCur;
+                                __pOp_ref.p2 = x;
+                                __pOp_ref.p1 = (*pLevel).iIdxCur;
                             } else if (*pLoop).wsFlags & (crate::whereInt_h::WHERE_IDX_ONLY | crate::whereInt_h::WHERE_EXPRIDX) as crate::src::ext::rtree::rtree::u32_0
                                 != 0
                             {
@@ -6599,7 +6694,7 @@ pub unsafe extern "C" fn sqlite3WhereEnd(mut pWInfo: *mut crate::whereInt_h::Whe
                                         b"internal query planner error\0" as *const u8
                                             as *const ::core::ffi::c_char,
                                     );
-                                    (*pParse).rc = crate::sqlite3_h::SQLITE_INTERNAL_1;
+                                    __pParse_ref.rc = crate::sqlite3_h::SQLITE_INTERNAL_1;
                                 } else {
                                     (*pLoop).wsFlags &= !crate::whereInt_h::WHERE_EXPRIDX as crate::src::ext::rtree::rtree::u32_0;
                                     crate::src::src::wherecode::sqlite3WhereAddExplainText(
@@ -6610,15 +6705,15 @@ pub unsafe extern "C" fn sqlite3WhereEnd(mut pWInfo: *mut crate::whereInt_h::Whe
                                         pTabList as *mut crate::sqliteInt_h::SrcList,
                                         
                                         pLevel as *mut crate::whereInt_h::WhereLevel,
-                                        (*pWInfo).wctrlFlags,
+                                        __pWInfo_ref.wctrlFlags,
                                     );
                                 }
                             }
-                        } else if (*pOp).opcode as ::core::ffi::c_int == crate::opcodes_h::OP_Rowid {
-                            (*pOp).p1 = (*pLevel).iIdxCur;
-                            (*pOp).opcode = crate::opcodes_h::OP_IdxRowid as crate::src::ext::rtree::rtree::u8_0;
-                        } else if (*pOp).opcode as ::core::ffi::c_int == crate::opcodes_h::OP_IfNullRow {
-                            (*pOp).p1 = (*pLevel).iIdxCur;
+                        } else if __pOp_ref.opcode as ::core::ffi::c_int == crate::opcodes_h::OP_Rowid {
+                            __pOp_ref.p1 = (*pLevel).iIdxCur;
+                            __pOp_ref.opcode = crate::opcodes_h::OP_IdxRowid as crate::src::ext::rtree::rtree::u8_0;
+                        } else if __pOp_ref.opcode as ::core::ffi::c_int == crate::opcodes_h::OP_IfNullRow {
+                            __pOp_ref.p1 = (*pLevel).iIdxCur;
                         }
                     }
                     pOp = pOp.offset(1);
@@ -6631,8 +6726,8 @@ pub unsafe extern "C" fn sqlite3WhereEnd(mut pWInfo: *mut crate::whereInt_h::Whe
         i += 1;
         pLevel = pLevel.offset(1);
     }
-    crate::src::src::vdbeaux::sqlite3VdbeResolveLabel(v, (*pWInfo).iBreak);
-    (*pParse).nQueryLoop = (*pWInfo).savedNQueryLoop as crate::sqliteInt_h::LogEst;
+    crate::src::src::vdbeaux::sqlite3VdbeResolveLabel(v, __pWInfo_ref.iBreak);
+    __pParse_ref.nQueryLoop = __pWInfo_ref.savedNQueryLoop as crate::sqliteInt_h::LogEst;
     whereInfoFree(db, pWInfo);
-    (*pParse).withinRJSubrtn = ((*pParse).withinRJSubrtn as ::core::ffi::c_int - nRJ) as crate::src::ext::rtree::rtree::u8_0;
+    __pParse_ref.withinRJSubrtn = (__pParse_ref.withinRJSubrtn as ::core::ffi::c_int - nRJ) as crate::src::ext::rtree::rtree::u8_0;
 }

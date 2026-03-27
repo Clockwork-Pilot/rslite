@@ -129,9 +129,10 @@ unsafe extern "C" fn stmtClose(mut cur: *mut crate::sqlite3_h::sqlite3_vtab_curs
 
 unsafe extern "C" fn stmtNext(mut cur: *mut crate::sqlite3_h::sqlite3_vtab_cursor) -> ::core::ffi::c_int {
     let mut pCur: *mut stmt_cursor = cur as *mut stmt_cursor;
-    let mut pNext: *mut StmtRow = (*(*pCur).pRow).pNext;
-    crate::src::src::malloc::sqlite3_free((*pCur).pRow as *mut ::core::ffi::c_void);
-    (*pCur).pRow = pNext;
+    let __pCur_ref = unsafe { &mut *pCur };
+    let mut pNext: *mut StmtRow = (*__pCur_ref.pRow).pNext;
+    crate::src::src::malloc::sqlite3_free(__pCur_ref.pRow as *mut ::core::ffi::c_void);
+    __pCur_ref.pRow = pNext;
     return crate::sqlite3_h::SQLITE_OK;
 }
 
@@ -205,37 +206,38 @@ unsafe extern "C" fn stmtFilter(
             0 as ::core::ffi::c_int,
             ::core::mem::size_of::<StmtRow>() as crate::__stddef_size_t_h::size_t,
         );
+        let __pNew_ref = unsafe { &mut *pNew };
         if !zSql.is_null() {
-            (*pNew).zSql = pNew.offset(1 as isize) as *mut StmtRow
+            __pNew_ref.zSql = pNew.offset(1 as isize) as *mut StmtRow
                 as *mut ::core::ffi::c_char;
             ::libc::memcpy(
-                (*pNew).zSql as *mut ::core::ffi::c_void,
+                __pNew_ref.zSql as *mut ::core::ffi::c_void,
                 zSql as *const ::core::ffi::c_void,
                 nSql as crate::__stddef_size_t_h::size_t,
             );
         }
-        (*pNew).aCol[STMT_COLUMN_NCOL as usize] = crate::src::src::vdbeapi::sqlite3_column_count(p);
-        (*pNew).aCol[STMT_COLUMN_RO as usize] = crate::src::src::vdbeapi::sqlite3_stmt_readonly(p);
-        (*pNew).aCol[STMT_COLUMN_BUSY as usize] = crate::src::src::vdbeapi::sqlite3_stmt_busy(p);
-        (*pNew).aCol[STMT_COLUMN_NSCAN as usize] =
+        __pNew_ref.aCol[STMT_COLUMN_NCOL as usize] = crate::src::src::vdbeapi::sqlite3_column_count(p);
+        __pNew_ref.aCol[STMT_COLUMN_RO as usize] = crate::src::src::vdbeapi::sqlite3_stmt_readonly(p);
+        __pNew_ref.aCol[STMT_COLUMN_BUSY as usize] = crate::src::src::vdbeapi::sqlite3_stmt_busy(p);
+        __pNew_ref.aCol[STMT_COLUMN_NSCAN as usize] =
             crate::src::src::vdbeapi::sqlite3_stmt_status(p, crate::sqlite3_h::SQLITE_STMTSTATUS_FULLSCAN_STEP, 0 as ::core::ffi::c_int);
-        (*pNew).aCol[STMT_COLUMN_NSORT as usize] =
+        __pNew_ref.aCol[STMT_COLUMN_NSORT as usize] =
             crate::src::src::vdbeapi::sqlite3_stmt_status(p, crate::sqlite3_h::SQLITE_STMTSTATUS_SORT, 0 as ::core::ffi::c_int);
-        (*pNew).aCol[STMT_COLUMN_NAIDX as usize] =
+        __pNew_ref.aCol[STMT_COLUMN_NAIDX as usize] =
             crate::src::src::vdbeapi::sqlite3_stmt_status(p, crate::sqlite3_h::SQLITE_STMTSTATUS_AUTOINDEX, 0 as ::core::ffi::c_int);
-        (*pNew).aCol[STMT_COLUMN_NSTEP as usize] =
+        __pNew_ref.aCol[STMT_COLUMN_NSTEP as usize] =
             crate::src::src::vdbeapi::sqlite3_stmt_status(p, crate::sqlite3_h::SQLITE_STMTSTATUS_VM_STEP, 0 as ::core::ffi::c_int);
-        (*pNew).aCol[STMT_COLUMN_REPREP as usize] =
+        __pNew_ref.aCol[STMT_COLUMN_REPREP as usize] =
             crate::src::src::vdbeapi::sqlite3_stmt_status(p, crate::sqlite3_h::SQLITE_STMTSTATUS_REPREPARE, 0 as ::core::ffi::c_int);
-        (*pNew).aCol[STMT_COLUMN_RUN as usize] =
+        __pNew_ref.aCol[STMT_COLUMN_RUN as usize] =
             crate::src::src::vdbeapi::sqlite3_stmt_status(p, crate::sqlite3_h::SQLITE_STMTSTATUS_RUN, 0 as ::core::ffi::c_int);
-        (*pNew).aCol[STMT_COLUMN_MEM as usize] =
+        __pNew_ref.aCol[STMT_COLUMN_MEM as usize] =
             crate::src::src::vdbeapi::sqlite3_stmt_status(p, crate::sqlite3_h::SQLITE_STMTSTATUS_MEMUSED, 0 as ::core::ffi::c_int);
         let fresh0 = iRowid;
         iRowid = iRowid + 1;
-        (*pNew).iRowid = fresh0;
+        __pNew_ref.iRowid = fresh0;
         *ppRow = pNew;
-        ppRow = &raw mut (*pNew).pNext;
+        ppRow = &raw mut __pNew_ref.pNext;
         p = crate::src::src::vdbeapi::sqlite3_next_stmt((*pCur).db, p);
     }
     return crate::sqlite3_h::SQLITE_OK;

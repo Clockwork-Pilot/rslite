@@ -20,16 +20,17 @@ pub unsafe extern "C" fn sqlite3MutexInit() -> ::core::ffi::c_int {
             pFrom =  crate::src::src::mutex_noop::sqlite3NoopMutex() as
     *const crate::sqlite3_h::sqlite3_mutex_methods;
         }
-        (*pTo).xMutexInit = (*pFrom).xMutexInit;
-        (*pTo).xMutexEnd = (*pFrom).xMutexEnd;
-        (*pTo).xMutexFree = (*pFrom).xMutexFree;
-        (*pTo).xMutexEnter = (*pFrom).xMutexEnter;
-        (*pTo).xMutexTry = (*pFrom).xMutexTry;
-        (*pTo).xMutexLeave = (*pFrom).xMutexLeave;
-        (*pTo).xMutexHeld = (*pFrom).xMutexHeld;
-        (*pTo).xMutexNotheld = (*pFrom).xMutexNotheld;
+        let __pTo_ref = unsafe { &mut *pTo };
+        __pTo_ref.xMutexInit = (*pFrom).xMutexInit;
+        __pTo_ref.xMutexEnd = (*pFrom).xMutexEnd;
+        __pTo_ref.xMutexFree = (*pFrom).xMutexFree;
+        __pTo_ref.xMutexEnter = (*pFrom).xMutexEnter;
+        __pTo_ref.xMutexTry = (*pFrom).xMutexTry;
+        __pTo_ref.xMutexLeave = (*pFrom).xMutexLeave;
+        __pTo_ref.xMutexHeld = (*pFrom).xMutexHeld;
+        __pTo_ref.xMutexNotheld = (*pFrom).xMutexNotheld;
         crate::src::src::mutex_unix::sqlite3MemoryBarrier();
-        (*pTo).xMutexAlloc = (*pFrom).xMutexAlloc;
+        __pTo_ref.xMutexAlloc = (*pFrom).xMutexAlloc;
     }
     rc = crate::src::src::global::sqlite3Config
         .mutex

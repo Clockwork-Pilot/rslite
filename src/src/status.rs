@@ -162,12 +162,13 @@ pub unsafe extern "C" fn sqlite3LookasideUsed(
     mut db: *mut crate::sqliteInt_h::sqlite3,
     mut pHighwater: *mut ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
-    let mut nInit: crate::src::ext::rtree::rtree::u32_0 = countLookasideSlots((*db).lookaside.pInit);
-    let mut nFree: crate::src::ext::rtree::rtree::u32_0 = countLookasideSlots((*db).lookaside.pFree);
-    nInit = nInit.wrapping_add(countLookasideSlots((*db).lookaside.pSmallInit));
-    nFree = nFree.wrapping_add(countLookasideSlots((*db).lookaside.pSmallFree));
+    let __db_ref = unsafe { &mut *db };
+    let mut nInit: crate::src::ext::rtree::rtree::u32_0 = countLookasideSlots(__db_ref.lookaside.pInit);
+    let mut nFree: crate::src::ext::rtree::rtree::u32_0 = countLookasideSlots(__db_ref.lookaside.pFree);
+    nInit = nInit.wrapping_add(countLookasideSlots(__db_ref.lookaside.pSmallInit));
+    nFree = nFree.wrapping_add(countLookasideSlots(__db_ref.lookaside.pSmallFree));
     if !pHighwater.is_null() {
-        *pHighwater = (*db).lookaside.nSlot.wrapping_sub(nInit) as ::core::ffi::c_int;
+        *pHighwater = __db_ref.lookaside.nSlot.wrapping_sub(nInit) as ::core::ffi::c_int;
     }
     return (*db)
         .lookaside
@@ -197,18 +198,20 @@ pub unsafe extern "C" fn sqlite3_db_status64(
                     while !(*p).pNext.is_null() {
                         p = (*p).pNext;
                     }
-                    (*p).pNext = (*db).lookaside.pInit;
-                    (*db).lookaside.pInit = (*db).lookaside.pFree;
-                    (*db).lookaside.pFree = ::core::ptr::null_mut::<crate::sqliteInt_h::LookasideSlot>();
+                    let __db_ref = unsafe { &mut *db };
+                    (*p).pNext = __db_ref.lookaside.pInit;
+                    __db_ref.lookaside.pInit = __db_ref.lookaside.pFree;
+                    __db_ref.lookaside.pFree = ::core::ptr::null_mut::<crate::sqliteInt_h::LookasideSlot>();
                 }
                 p = (*db).lookaside.pSmallFree;
                 if !p.is_null() {
                     while !(*p).pNext.is_null() {
                         p = (*p).pNext;
                     }
-                    (*p).pNext = (*db).lookaside.pSmallInit;
-                    (*db).lookaside.pSmallInit = (*db).lookaside.pSmallFree;
-                    (*db).lookaside.pSmallFree = ::core::ptr::null_mut::<crate::sqliteInt_h::LookasideSlot>();
+                    let __db_ref = unsafe { &mut *db };
+                    (*p).pNext = __db_ref.lookaside.pSmallInit;
+                    __db_ref.lookaside.pSmallInit = __db_ref.lookaside.pSmallFree;
+                    __db_ref.lookaside.pSmallFree = ::core::ptr::null_mut::<crate::sqliteInt_h::LookasideSlot>();
                 }
             }
             current_block_105 = 6406431739208918833;
@@ -251,13 +254,15 @@ pub unsafe extern "C" fn sqlite3_db_status64(
             let mut i_0: ::core::ffi::c_int = 0;
             let mut nByte_0: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
             crate::src::src::btmutex::sqlite3BtreeEnterAll(db as *mut crate::sqliteInt_h::sqlite3);
-            (*db).pnBytesFreed = &raw mut nByte_0;
-            (*db).lookaside.pEnd = (*db).lookaside.pStart;
+            let __db_ref = unsafe { &mut *db };
+            __db_ref.pnBytesFreed = &raw mut nByte_0;
+            __db_ref.lookaside.pEnd = __db_ref.lookaside.pStart;
             i_0 = 0 as ::core::ffi::c_int;
-            while i_0 < (*db).nDb {
-                let mut pSchema: *mut crate::sqliteInt_h::Schema = (*(*db).aDb.offset(i_0 as isize)).pSchema;
+            while i_0 < __db_ref.nDb {
+                let mut pSchema: *mut crate::sqliteInt_h::Schema = (*__db_ref.aDb.offset(i_0 as isize)).pSchema;
                 if !pSchema.is_null() {
                     let mut p_0: *mut crate::src::src::hash::HashElem = ::core::ptr::null_mut::<crate::src::src::hash::HashElem>();
+                    let __pSchema_ref = unsafe { &mut *pSchema };
                     nByte_0 = (nByte_0 as ::core::ffi::c_uint).wrapping_add(
                         (crate::src::src::global::sqlite3Config.m.xRoundup.expect("non-null function pointer")(
                             ::core::mem::size_of::<crate::src::src::hash::HashElem>() as ::core::ffi::c_int,
@@ -266,29 +271,29 @@ pub unsafe extern "C" fn sqlite3_db_status64(
                                 (*pSchema)
                                     .tblHash
                                     .count
-                                    .wrapping_add((*pSchema).trigHash.count)
-                                    .wrapping_add((*pSchema).idxHash.count)
-                                    .wrapping_add((*pSchema).fkeyHash.count),
+                                    .wrapping_add(__pSchema_ref.trigHash.count)
+                                    .wrapping_add(__pSchema_ref.idxHash.count)
+                                    .wrapping_add(__pSchema_ref.fkeyHash.count),
                             ),
                     ) as ::core::ffi::c_int as ::core::ffi::c_int;
                     nByte_0 = (nByte_0 as crate::sqlite3_h::sqlite3_uint64).wrapping_add(crate::src::src::malloc::sqlite3_msize(
-                        (*pSchema).tblHash.ht as *mut ::core::ffi::c_void,
+                        __pSchema_ref.tblHash.ht as *mut ::core::ffi::c_void,
                     )) as ::core::ffi::c_int as ::core::ffi::c_int;
                     nByte_0 = (nByte_0 as crate::sqlite3_h::sqlite3_uint64).wrapping_add(crate::src::src::malloc::sqlite3_msize(
-                        (*pSchema).trigHash.ht as *mut ::core::ffi::c_void,
+                        __pSchema_ref.trigHash.ht as *mut ::core::ffi::c_void,
                     )) as ::core::ffi::c_int as ::core::ffi::c_int;
                     nByte_0 = (nByte_0 as crate::sqlite3_h::sqlite3_uint64).wrapping_add(crate::src::src::malloc::sqlite3_msize(
-                        (*pSchema).idxHash.ht as *mut ::core::ffi::c_void,
+                        __pSchema_ref.idxHash.ht as *mut ::core::ffi::c_void,
                     )) as ::core::ffi::c_int as ::core::ffi::c_int;
                     nByte_0 = (nByte_0 as crate::sqlite3_h::sqlite3_uint64).wrapping_add(crate::src::src::malloc::sqlite3_msize(
-                        (*pSchema).fkeyHash.ht as *mut ::core::ffi::c_void,
+                        __pSchema_ref.fkeyHash.ht as *mut ::core::ffi::c_void,
                     )) as ::core::ffi::c_int as ::core::ffi::c_int;
-                    p_0 = (*pSchema).trigHash.first;
+                    p_0 = __pSchema_ref.trigHash.first;
                     while !p_0.is_null() {
                         crate::src::src::trigger::sqlite3DeleteTrigger(db as *mut crate::sqliteInt_h::sqlite3,  (*p_0).data as *mut crate::sqliteInt_h::Trigger as *mut crate::sqliteInt_h::Trigger);
                         p_0 = (*p_0).next;
                     }
-                    p_0 = (*pSchema).tblHash.first;
+                    p_0 = __pSchema_ref.tblHash.first;
                     while !p_0.is_null() {
                         crate::src::src::build::sqlite3DeleteTable(db as *mut crate::sqliteInt_h::sqlite3,  (*p_0).data as *mut crate::sqliteInt_h::Table as *mut crate::sqliteInt_h::Table);
                         p_0 = (*p_0).next;
@@ -296,8 +301,8 @@ pub unsafe extern "C" fn sqlite3_db_status64(
                 }
                 i_0 += 1;
             }
-            (*db).pnBytesFreed = ::core::ptr::null_mut::<::core::ffi::c_int>();
-            (*db).lookaside.pEnd = (*db).lookaside.pTrueEnd;
+            __db_ref.pnBytesFreed = ::core::ptr::null_mut::<::core::ffi::c_int>();
+            __db_ref.lookaside.pEnd = __db_ref.lookaside.pTrueEnd;
             crate::src::src::btmutex::sqlite3BtreeLeaveAll(db as *mut crate::sqliteInt_h::sqlite3);
             *pHighwtr = 0 as crate::sqlite3_h::sqlite3_int64;
             *pCurrent = nByte_0 as crate::sqlite3_h::sqlite3_int64;
@@ -306,15 +311,16 @@ pub unsafe extern "C" fn sqlite3_db_status64(
     crate::sqlite3_h::SQLITE_DBSTATUS_STMT_USED =>  {
             let mut pVdbe: *mut crate::vdbeInt_h::Vdbe = ::core::ptr::null_mut::<crate::vdbeInt_h::Vdbe>();
             let mut nByte_1: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
-            (*db).pnBytesFreed = &raw mut nByte_1;
-            (*db).lookaside.pEnd = (*db).lookaside.pStart;
-            pVdbe = (*db).pVdbe;
+            let __db_ref = unsafe { &mut *db };
+            __db_ref.pnBytesFreed = &raw mut nByte_1;
+            __db_ref.lookaside.pEnd = __db_ref.lookaside.pStart;
+            pVdbe = __db_ref.pVdbe;
             while !pVdbe.is_null() {
                 crate::src::src::vdbeaux::sqlite3VdbeDelete(pVdbe as *mut crate::vdbeInt_h::Vdbe as *mut crate::vdbeInt_h::Vdbe);
                 pVdbe = (*pVdbe).pVNext as *mut crate::vdbeInt_h::Vdbe;
             }
-            (*db).lookaside.pEnd = (*db).lookaside.pTrueEnd;
-            (*db).pnBytesFreed = ::core::ptr::null_mut::<::core::ffi::c_int>();
+            __db_ref.lookaside.pEnd = __db_ref.lookaside.pTrueEnd;
+            __db_ref.pnBytesFreed = ::core::ptr::null_mut::<::core::ffi::c_int>();
             *pHighwtr = 0 as crate::sqlite3_h::sqlite3_int64;
             *pCurrent = nByte_1 as crate::sqlite3_h::sqlite3_int64;
             current_block_105 = 6406431739208918833;

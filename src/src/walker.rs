@@ -146,25 +146,26 @@ pub unsafe extern "C" fn sqlite3WalkSelectExpr(
     mut pWalker: *mut crate::sqliteInt_h::Walker,
     mut p: *mut crate::sqliteInt_h::Select,
 ) -> ::core::ffi::c_int {
-    if sqlite3WalkExprList(pWalker, (*p).pEList) != 0 {
+    let __p_ref = unsafe { &mut *p };
+    if sqlite3WalkExprList(pWalker, __p_ref.pEList) != 0 {
         return crate::sqliteInt_h::WRC_Abort;
     }
-    if sqlite3WalkExpr(pWalker, (*p).pWhere) != 0 {
+    if sqlite3WalkExpr(pWalker, __p_ref.pWhere) != 0 {
         return crate::sqliteInt_h::WRC_Abort;
     }
-    if sqlite3WalkExprList(pWalker, (*p).pGroupBy) != 0 {
+    if sqlite3WalkExprList(pWalker, __p_ref.pGroupBy) != 0 {
         return crate::sqliteInt_h::WRC_Abort;
     }
-    if sqlite3WalkExpr(pWalker, (*p).pHaving) != 0 {
+    if sqlite3WalkExpr(pWalker, __p_ref.pHaving) != 0 {
         return crate::sqliteInt_h::WRC_Abort;
     }
-    if sqlite3WalkExprList(pWalker, (*p).pOrderBy) != 0 {
+    if sqlite3WalkExprList(pWalker, __p_ref.pOrderBy) != 0 {
         return crate::sqliteInt_h::WRC_Abort;
     }
-    if sqlite3WalkExpr(pWalker, (*p).pLimit) != 0 {
+    if sqlite3WalkExpr(pWalker, __p_ref.pLimit) != 0 {
         return crate::sqliteInt_h::WRC_Abort;
     }
-    if !(*p).pWinDefn.is_null() {
+    if !__p_ref.pWinDefn.is_null() {
         let mut pParse: *mut crate::sqliteInt_h::Parse = ::core::ptr::null_mut::<crate::sqliteInt_h::Parse>();
         if (*pWalker).xSelectCallback2
             == Some(
@@ -181,7 +182,7 @@ pub unsafe extern "C" fn sqlite3WalkSelectExpr(
                 )
         {
             let mut rc: ::core::ffi::c_int =
-                walkWindowList(pWalker, (*p).pWinDefn, 0 as ::core::ffi::c_int);
+                walkWindowList(pWalker, __p_ref.pWinDefn, 0 as ::core::ffi::c_int);
             return rc;
         }
     }

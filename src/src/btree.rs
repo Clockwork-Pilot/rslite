@@ -144,19 +144,20 @@ unsafe extern "C" fn querySharedCacheTableLock(
     if (*p).sharable == 0 {
         return crate::sqlite3_h::SQLITE_OK;
     }
-    if (*pBt).pWriter != p
-        && (*pBt).btsFlags as ::core::ffi::c_int & crate::btreeInt_h::BTS_EXCLUSIVE != 0 as ::core::ffi::c_int
+    let __pBt_ref = unsafe { &mut *pBt };
+    if __pBt_ref.pWriter != p
+        && __pBt_ref.btsFlags as ::core::ffi::c_int & crate::btreeInt_h::BTS_EXCLUSIVE != 0 as ::core::ffi::c_int
     {
         return crate::sqlite3_h::SQLITE_LOCKED_SHAREDCACHE;
     }
-    pIter = (*pBt).pLock;
+    pIter = __pBt_ref.pLock;
     while !pIter.is_null() {
         if (*pIter).pBtree != p
             && (*pIter).iTable == iTab
             && (*pIter).eLock as ::core::ffi::c_int != eLock as ::core::ffi::c_int
         {
             if eLock as ::core::ffi::c_int == crate::btreeInt_h::WRITE_LOCK {
-                (*pBt).btsFlags = ((*pBt).btsFlags as ::core::ffi::c_int | crate::btreeInt_h::BTS_PENDING) as crate::src::fts5::u16_0;
+                __pBt_ref.btsFlags = (__pBt_ref.btsFlags as ::core::ffi::c_int | crate::btreeInt_h::BTS_PENDING) as crate::src::fts5::u16_0;
             }
             return crate::sqlite3_h::SQLITE_LOCKED_SHAREDCACHE;
         }
@@ -200,7 +201,8 @@ unsafe extern "C" fn setSharedCacheTableLock(
 
 unsafe extern "C" fn clearAllSharedCacheTableLocks(mut p: *mut crate::btreeInt_h::Btree) {
     let mut pBt: *mut crate::btreeInt_h::BtShared = (*p).pBt;
-    let mut ppIter: *mut *mut crate::btreeInt_h::BtLock = &raw mut (*pBt).pLock;
+    let __pBt_ref = unsafe { &mut *pBt };
+    let mut ppIter: *mut *mut crate::btreeInt_h::BtLock = &raw mut __pBt_ref.pLock;
     while !(*ppIter).is_null() {
         let mut pLock: *mut crate::btreeInt_h::BtLock = *ppIter;
         if (*pLock).pBtree == p {
@@ -212,12 +214,12 @@ unsafe extern "C" fn clearAllSharedCacheTableLocks(mut p: *mut crate::btreeInt_h
             ppIter = &raw mut (*pLock).pNext;
         }
     }
-    if (*pBt).pWriter == p {
-        (*pBt).pWriter = ::core::ptr::null_mut::<crate::btreeInt_h::Btree>();
-        (*pBt).btsFlags =
-            ((*pBt).btsFlags as ::core::ffi::c_int & !(crate::btreeInt_h::BTS_EXCLUSIVE | crate::btreeInt_h::BTS_PENDING)) as crate::src::fts5::u16_0;
-    } else if (*pBt).nTransaction == 2 as ::core::ffi::c_int {
-        (*pBt).btsFlags = ((*pBt).btsFlags as ::core::ffi::c_int & !crate::btreeInt_h::BTS_PENDING) as crate::src::fts5::u16_0;
+    if __pBt_ref.pWriter == p {
+        __pBt_ref.pWriter = ::core::ptr::null_mut::<crate::btreeInt_h::Btree>();
+        __pBt_ref.btsFlags =
+            (__pBt_ref.btsFlags as ::core::ffi::c_int & !(crate::btreeInt_h::BTS_EXCLUSIVE | crate::btreeInt_h::BTS_PENDING)) as crate::src::fts5::u16_0;
+    } else if __pBt_ref.nTransaction == 2 as ::core::ffi::c_int {
+        __pBt_ref.btsFlags = (__pBt_ref.btsFlags as ::core::ffi::c_int & !crate::btreeInt_h::BTS_PENDING) as crate::src::fts5::u16_0;
     }
 }
 
@@ -225,10 +227,11 @@ unsafe extern "C" fn downgradeAllSharedCacheTableLocks(mut p: *mut crate::btreeI
     let mut pBt: *mut crate::btreeInt_h::BtShared = (*p).pBt;
     if (*pBt).pWriter == p {
         let mut pLock: *mut crate::btreeInt_h::BtLock = ::core::ptr::null_mut::<crate::btreeInt_h::BtLock>();
-        (*pBt).pWriter = ::core::ptr::null_mut::<crate::btreeInt_h::Btree>();
-        (*pBt).btsFlags =
-            ((*pBt).btsFlags as ::core::ffi::c_int & !(crate::btreeInt_h::BTS_EXCLUSIVE | crate::btreeInt_h::BTS_PENDING)) as crate::src::fts5::u16_0;
-        pLock = (*pBt).pLock;
+        let __pBt_ref = unsafe { &mut *pBt };
+        __pBt_ref.pWriter = ::core::ptr::null_mut::<crate::btreeInt_h::Btree>();
+        __pBt_ref.btsFlags =
+            (__pBt_ref.btsFlags as ::core::ffi::c_int & !(crate::btreeInt_h::BTS_EXCLUSIVE | crate::btreeInt_h::BTS_PENDING)) as crate::src::fts5::u16_0;
+        pLock = __pBt_ref.pLock;
         while !pLock.is_null() {
             (*pLock).eLock = crate::btreeInt_h::READ_LOCK as crate::src::ext::rtree::rtree::u8_0;
             pLock = (*pLock).pNext;
@@ -271,8 +274,9 @@ unsafe extern "C" fn btreeSetHasContent(
 ) -> ::core::ffi::c_int {
     let mut rc: ::core::ffi::c_int = crate::sqlite3_h::SQLITE_OK;
     if (*pBt).pHasContent.is_null() {
-        (*pBt).pHasContent = crate::src::src::bitvec::sqlite3BitvecCreate((*pBt).nPage);
-        if (*pBt).pHasContent.is_null() {
+        let __pBt_ref = unsafe { &mut *pBt };
+        __pBt_ref.pHasContent = crate::src::src::bitvec::sqlite3BitvecCreate(__pBt_ref.nPage);
+        if __pBt_ref.pHasContent.is_null() {
             rc = crate::sqliteInt_h::SQLITE_NOMEM_BKPT;
         }
     }
@@ -301,12 +305,13 @@ unsafe extern "C" fn btreeReleaseAllCursorPages(mut pCur: *mut crate::btreeInt_h
     let mut i: ::core::ffi::c_int = 0;
     if (*pCur).iPage as ::core::ffi::c_int >= 0 as ::core::ffi::c_int {
         i = 0 as ::core::ffi::c_int;
-        while i < (*pCur).iPage as ::core::ffi::c_int {
-            releasePageNotNull((*pCur).apPage[i as usize]);
+        let __pCur_ref = unsafe { &mut *pCur };
+        while i < __pCur_ref.iPage as ::core::ffi::c_int {
+            releasePageNotNull(__pCur_ref.apPage[i as usize]);
             i += 1;
         }
-        releasePageNotNull((*pCur).pPage);
-        (*pCur).iPage = -(1 as ::core::ffi::c_int) as crate::sqliteInt_h::i8_0;
+        releasePageNotNull(__pCur_ref.pPage);
+        __pCur_ref.iPage = -(1 as ::core::ffi::c_int) as crate::sqliteInt_h::i8_0;
     }
 }
 
@@ -344,20 +349,21 @@ unsafe extern "C" fn saveCursorKey(mut pCur: *mut crate::btreeInt_h::BtCursor) -
 
 unsafe extern "C" fn saveCursorPosition(mut pCur: *mut crate::btreeInt_h::BtCursor) -> ::core::ffi::c_int {
     let mut rc: ::core::ffi::c_int = 0;
-    if (*pCur).curFlags as ::core::ffi::c_int & crate::btreeInt_h::BTCF_Pinned != 0 {
+    let __pCur_ref = unsafe { &mut *pCur };
+    if __pCur_ref.curFlags as ::core::ffi::c_int & crate::btreeInt_h::BTCF_Pinned != 0 {
         return crate::sqlite3_h::SQLITE_CONSTRAINT_PINNED;
     }
-    if (*pCur).eState as ::core::ffi::c_int == crate::btreeInt_h::CURSOR_SKIPNEXT {
-        (*pCur).eState = crate::btreeInt_h::CURSOR_VALID as crate::src::ext::rtree::rtree::u8_0;
+    if __pCur_ref.eState as ::core::ffi::c_int == crate::btreeInt_h::CURSOR_SKIPNEXT {
+        __pCur_ref.eState = crate::btreeInt_h::CURSOR_VALID as crate::src::ext::rtree::rtree::u8_0;
     } else {
-        (*pCur).skipNext = 0 as ::core::ffi::c_int;
+        __pCur_ref.skipNext = 0 as ::core::ffi::c_int;
     }
     rc = saveCursorKey(pCur);
     if rc == crate::sqlite3_h::SQLITE_OK {
         btreeReleaseAllCursorPages(pCur);
-        (*pCur).eState = crate::btreeInt_h::CURSOR_REQUIRESEEK as crate::src::ext::rtree::rtree::u8_0;
+        __pCur_ref.eState = crate::btreeInt_h::CURSOR_REQUIRESEEK as crate::src::ext::rtree::rtree::u8_0;
     }
-    (*pCur).curFlags = ((*pCur).curFlags as ::core::ffi::c_int
+    __pCur_ref.curFlags = (__pCur_ref.curFlags as ::core::ffi::c_int
         & !(crate::btreeInt_h::BTCF_ValidNKey | crate::btreeInt_h::BTCF_ValidOvfl | crate::btreeInt_h::BTCF_AtLast)) as crate::src::ext::rtree::rtree::u8_0;
     return rc;
 }
@@ -413,9 +419,10 @@ unsafe extern "C" fn saveCursorsOnList(
 #[no_mangle]
 
 pub unsafe extern "C" fn sqlite3BtreeClearCursor(mut pCur: *mut crate::btreeInt_h::BtCursor) {
-    crate::src::src::malloc::sqlite3_free((*pCur).pKey);
-    (*pCur).pKey = ::core::ptr::null_mut::<::core::ffi::c_void>();
-    (*pCur).eState = crate::btreeInt_h::CURSOR_INVALID as crate::src::ext::rtree::rtree::u8_0;
+    let __pCur_ref = unsafe { &mut *pCur };
+    crate::src::src::malloc::sqlite3_free(__pCur_ref.pKey);
+    __pCur_ref.pKey = ::core::ptr::null_mut::<::core::ffi::c_void>();
+    __pCur_ref.eState = crate::btreeInt_h::CURSOR_INVALID as crate::src::ext::rtree::rtree::u8_0;
 }
 
 unsafe extern "C" fn btreeMoveto(
@@ -469,13 +476,14 @@ unsafe extern "C" fn btreeRestoreCursorPosition(mut pCur: *mut crate::btreeInt_h
         );
     }
     if rc == crate::sqlite3_h::SQLITE_OK {
-        crate::src::src::malloc::sqlite3_free((*pCur).pKey);
-        (*pCur).pKey = ::core::ptr::null_mut::<::core::ffi::c_void>();
+        let __pCur_ref = unsafe { &mut *pCur };
+        crate::src::src::malloc::sqlite3_free(__pCur_ref.pKey);
+        __pCur_ref.pKey = ::core::ptr::null_mut::<::core::ffi::c_void>();
         if skipNext != 0 {
-            (*pCur).skipNext = skipNext;
+            __pCur_ref.skipNext = skipNext;
         }
-        if (*pCur).skipNext != 0 && (*pCur).eState as ::core::ffi::c_int == crate::btreeInt_h::CURSOR_VALID {
-            (*pCur).eState = crate::btreeInt_h::CURSOR_SKIPNEXT as crate::src::ext::rtree::rtree::u8_0;
+        if __pCur_ref.skipNext != 0 && __pCur_ref.eState as ::core::ffi::c_int == crate::btreeInt_h::CURSOR_VALID {
+            __pCur_ref.eState = crate::btreeInt_h::CURSOR_SKIPNEXT as crate::src::ext::rtree::rtree::u8_0;
         }
     }
     return rc;
@@ -666,20 +674,22 @@ unsafe extern "C" fn btreeParseCellAdjustSizeForOverflow(
     let mut minLocal: ::core::ffi::c_int = 0;
     let mut maxLocal: ::core::ffi::c_int = 0;
     let mut surplus: ::core::ffi::c_int = 0;
-    minLocal = (*pPage).minLocal as ::core::ffi::c_int;
-    maxLocal = (*pPage).maxLocal as ::core::ffi::c_int;
+    let __pPage_ref = unsafe { &mut *pPage };
+    minLocal = __pPage_ref.minLocal as ::core::ffi::c_int;
+    maxLocal = __pPage_ref.maxLocal as ::core::ffi::c_int;
+    let __pInfo_ref = unsafe { &mut *pInfo };
     surplus = (minLocal as crate::src::ext::rtree::rtree::u32_0).wrapping_add(
         (*pInfo)
             .nPayload
             .wrapping_sub(minLocal as crate::src::ext::rtree::rtree::u32_0)
-            .wrapping_rem((*(*pPage).pBt).usableSize.wrapping_sub(4 as crate::src::ext::rtree::rtree::u32_0)),
+            .wrapping_rem((*__pPage_ref.pBt).usableSize.wrapping_sub(4 as crate::src::ext::rtree::rtree::u32_0)),
     ) as ::core::ffi::c_int;
     if surplus <= maxLocal {
-        (*pInfo).nLocal = surplus as crate::src::fts5::u16_0;
+        __pInfo_ref.nLocal = surplus as crate::src::fts5::u16_0;
     } else {
-        (*pInfo).nLocal = minLocal as crate::src::fts5::u16_0;
+        __pInfo_ref.nLocal = minLocal as crate::src::fts5::u16_0;
     }
-    (*pInfo).nSize = (((*pInfo).pPayload.offset((*pInfo).nLocal as isize) as *mut crate::src::ext::rtree::rtree::u8_0)
+    __pInfo_ref.nSize = ((__pInfo_ref.pPayload.offset(__pInfo_ref.nLocal as isize) as *mut crate::src::ext::rtree::rtree::u8_0)
         .offset_from(pCell) as ::core::ffi::c_long as crate::src::fts5::u16_0
         as ::core::ffi::c_int
         + 4 as ::core::ffi::c_int) as crate::src::fts5::u16_0;
@@ -714,14 +724,15 @@ unsafe extern "C" fn btreeParseCellPtrNoPayload(
     mut pCell: *mut crate::src::ext::rtree::rtree::u8_0,
     mut pInfo: *mut crate::btreeInt_h::CellInfo,
 ) {
-    (*pInfo).nSize = (4 as ::core::ffi::c_int
+    let __pInfo_ref = unsafe { &mut *pInfo };
+    __pInfo_ref.nSize = (4 as ::core::ffi::c_int
         + crate::src::src::util::sqlite3GetVarint(
             pCell.offset(4 as isize) as *mut crate::src::ext::rtree::rtree::u8_0,
-            &raw mut (*pInfo).nKey as *mut crate::src::ext::rtree::rtree::u64_0,
+            &raw mut __pInfo_ref.nKey as *mut crate::src::ext::rtree::rtree::u64_0,
         ) as ::core::ffi::c_int) as crate::src::fts5::u16_0;
-    (*pInfo).nPayload = 0 as crate::src::ext::rtree::rtree::u32_0;
-    (*pInfo).nLocal = 0 as crate::src::fts5::u16_0;
-    (*pInfo).pPayload = ::core::ptr::null_mut::<crate::src::ext::rtree::rtree::u8_0>();
+    __pInfo_ref.nPayload = 0 as crate::src::ext::rtree::rtree::u32_0;
+    __pInfo_ref.nLocal = 0 as crate::src::fts5::u16_0;
+    __pInfo_ref.pPayload = ::core::ptr::null_mut::<crate::src::ext::rtree::rtree::u8_0>();
 }
 
 unsafe extern "C" fn btreeParseCellPtr(
@@ -796,17 +807,18 @@ unsafe extern "C" fn btreeParseCellPtr(
         }
     }
     pIter = pIter.offset(1);
-    (*pInfo).nKey = *(&raw mut iKey as *mut crate::src::ext::rtree::rtree::i64_0);
-    (*pInfo).nPayload = nPayload;
-    (*pInfo).pPayload = pIter;
+    let __pInfo_ref = unsafe { &mut *pInfo };
+    __pInfo_ref.nKey = *(&raw mut iKey as *mut crate::src::ext::rtree::rtree::i64_0);
+    __pInfo_ref.nPayload = nPayload;
+    __pInfo_ref.pPayload = pIter;
     if nPayload <= (*pPage).maxLocal as crate::src::ext::rtree::rtree::u32_0 {
-        (*pInfo).nSize = (nPayload as crate::src::fts5::u16_0 as ::core::ffi::c_int
+        __pInfo_ref.nSize = (nPayload as crate::src::fts5::u16_0 as ::core::ffi::c_int
             + pIter.offset_from(pCell) as ::core::ffi::c_long as crate::src::fts5::u16_0 as ::core::ffi::c_int)
             as crate::src::fts5::u16_0;
-        if ((*pInfo).nSize as ::core::ffi::c_int) < 4 as ::core::ffi::c_int {
-            (*pInfo).nSize = 4 as crate::src::fts5::u16_0;
+        if (__pInfo_ref.nSize as ::core::ffi::c_int) < 4 as ::core::ffi::c_int {
+            __pInfo_ref.nSize = 4 as crate::src::fts5::u16_0;
         }
-        (*pInfo).nLocal = nPayload as crate::src::fts5::u16_0;
+        __pInfo_ref.nLocal = nPayload as crate::src::fts5::u16_0;
     } else {
         btreeParseCellAdjustSizeForOverflow(pPage, pCell, pInfo);
     };
@@ -834,17 +846,18 @@ unsafe extern "C" fn btreeParseCellPtrIndex(
         }
     }
     pIter = pIter.offset(1);
-    (*pInfo).nKey = nPayload as crate::src::ext::rtree::rtree::i64_0;
-    (*pInfo).nPayload = nPayload;
-    (*pInfo).pPayload = pIter;
+    let __pInfo_ref = unsafe { &mut *pInfo };
+    __pInfo_ref.nKey = nPayload as crate::src::ext::rtree::rtree::i64_0;
+    __pInfo_ref.nPayload = nPayload;
+    __pInfo_ref.pPayload = pIter;
     if nPayload <= (*pPage).maxLocal as crate::src::ext::rtree::rtree::u32_0 {
-        (*pInfo).nSize = (nPayload as crate::src::fts5::u16_0 as ::core::ffi::c_int
+        __pInfo_ref.nSize = (nPayload as crate::src::fts5::u16_0 as ::core::ffi::c_int
             + pIter.offset_from(pCell) as ::core::ffi::c_long as crate::src::fts5::u16_0 as ::core::ffi::c_int)
             as crate::src::fts5::u16_0;
-        if ((*pInfo).nSize as ::core::ffi::c_int) < 4 as ::core::ffi::c_int {
-            (*pInfo).nSize = 4 as crate::src::fts5::u16_0;
+        if (__pInfo_ref.nSize as ::core::ffi::c_int) < 4 as ::core::ffi::c_int {
+            __pInfo_ref.nSize = 4 as crate::src::fts5::u16_0;
         }
-        (*pInfo).nLocal = nPayload as crate::src::fts5::u16_0;
+        __pInfo_ref.nLocal = nPayload as crate::src::fts5::u16_0;
     } else {
         btreeParseCellAdjustSizeForOverflow(pPage, pCell, pInfo);
     };
@@ -855,10 +868,11 @@ unsafe extern "C" fn btreeParseCell(
     mut iCell: ::core::ffi::c_int,
     mut pInfo: *mut crate::btreeInt_h::CellInfo,
 ) {
-    (*pPage).xParseCell.expect("non-null function pointer")(
+    let __pPage_ref = unsafe { &mut *pPage };
+    __pPage_ref.xParseCell.expect("non-null function pointer")(
         pPage,
-        (*pPage).aData.offset(
-            ((*pPage).maskPage as ::core::ffi::c_int
+        __pPage_ref.aData.offset(
+            (__pPage_ref.maskPage as ::core::ffi::c_int
                 & ((*((*pPage)
                     .aCellIdx
                     .offset((2 as ::core::ffi::c_int * iCell) as isize)
@@ -898,13 +912,14 @@ unsafe extern "C" fn cellSizePtr(mut pPage: *mut crate::btreeInt_h::MemPage, mut
     if nSize <= (*pPage).maxLocal as crate::src::ext::rtree::rtree::u32_0 {
         nSize = nSize.wrapping_add(pIter.offset_from(pCell) as ::core::ffi::c_long as crate::src::ext::rtree::rtree::u32_0);
     } else {
-        let mut minLocal: ::core::ffi::c_int = (*pPage).minLocal as ::core::ffi::c_int;
+        let __pPage_ref = unsafe { &mut *pPage };
+        let mut minLocal: ::core::ffi::c_int = __pPage_ref.minLocal as ::core::ffi::c_int;
         nSize = (minLocal as crate::src::ext::rtree::rtree::u32_0).wrapping_add(
             nSize
                 .wrapping_sub(minLocal as crate::src::ext::rtree::rtree::u32_0)
-                .wrapping_rem((*(*pPage).pBt).usableSize.wrapping_sub(4 as crate::src::ext::rtree::rtree::u32_0)),
+                .wrapping_rem((*__pPage_ref.pBt).usableSize.wrapping_sub(4 as crate::src::ext::rtree::rtree::u32_0)),
         );
-        if nSize > (*pPage).maxLocal as crate::src::ext::rtree::rtree::u32_0 {
+        if nSize > __pPage_ref.maxLocal as crate::src::ext::rtree::rtree::u32_0 {
             nSize = minLocal as crate::src::ext::rtree::rtree::u32_0;
         }
         nSize = nSize.wrapping_add(
@@ -940,13 +955,14 @@ unsafe extern "C" fn cellSizePtrIdxLeaf(mut pPage: *mut crate::btreeInt_h::MemPa
             nSize = 4 as crate::src::ext::rtree::rtree::u32_0;
         }
     } else {
-        let mut minLocal: ::core::ffi::c_int = (*pPage).minLocal as ::core::ffi::c_int;
+        let __pPage_ref = unsafe { &mut *pPage };
+        let mut minLocal: ::core::ffi::c_int = __pPage_ref.minLocal as ::core::ffi::c_int;
         nSize = (minLocal as crate::src::ext::rtree::rtree::u32_0).wrapping_add(
             nSize
                 .wrapping_sub(minLocal as crate::src::ext::rtree::rtree::u32_0)
-                .wrapping_rem((*(*pPage).pBt).usableSize.wrapping_sub(4 as crate::src::ext::rtree::rtree::u32_0)),
+                .wrapping_rem((*__pPage_ref.pBt).usableSize.wrapping_sub(4 as crate::src::ext::rtree::rtree::u32_0)),
         );
-        if nSize > (*pPage).maxLocal as crate::src::ext::rtree::rtree::u32_0 {
+        if nSize > __pPage_ref.maxLocal as crate::src::ext::rtree::rtree::u32_0 {
             nSize = minLocal as crate::src::ext::rtree::rtree::u32_0;
         }
         nSize = nSize.wrapping_add(
@@ -1037,13 +1053,14 @@ unsafe extern "C" fn cellSizePtrTableLeaf(mut pPage: *mut crate::btreeInt_h::Mem
             nSize = 4 as crate::src::ext::rtree::rtree::u32_0;
         }
     } else {
-        let mut minLocal: ::core::ffi::c_int = (*pPage).minLocal as ::core::ffi::c_int;
+        let __pPage_ref = unsafe { &mut *pPage };
+        let mut minLocal: ::core::ffi::c_int = __pPage_ref.minLocal as ::core::ffi::c_int;
         nSize = (minLocal as crate::src::ext::rtree::rtree::u32_0).wrapping_add(
             nSize
                 .wrapping_sub(minLocal as crate::src::ext::rtree::rtree::u32_0)
-                .wrapping_rem((*(*pPage).pBt).usableSize.wrapping_sub(4 as crate::src::ext::rtree::rtree::u32_0)),
+                .wrapping_rem((*__pPage_ref.pBt).usableSize.wrapping_sub(4 as crate::src::ext::rtree::rtree::u32_0)),
         );
-        if nSize > (*pPage).maxLocal as crate::src::ext::rtree::rtree::u32_0 {
+        if nSize > __pPage_ref.maxLocal as crate::src::ext::rtree::rtree::u32_0 {
             nSize = minLocal as crate::src::ext::rtree::rtree::u32_0;
         }
         nSize = nSize.wrapping_add(
@@ -1114,12 +1131,13 @@ unsafe extern "C" fn defragmentPage(
     let mut iCellFirst: ::core::ffi::c_int = 0;
     let mut iCellLast: ::core::ffi::c_int = 0;
     let mut iCellStart: ::core::ffi::c_int = 0;
-    data = (*pPage).aData as *mut ::core::ffi::c_uchar;
-    hdr = (*pPage).hdrOffset as ::core::ffi::c_int;
-    cellOffset = (*pPage).cellOffset as ::core::ffi::c_int;
-    nCell = (*pPage).nCell as ::core::ffi::c_int;
+    let __pPage_ref = unsafe { &mut *pPage };
+    data = __pPage_ref.aData as *mut ::core::ffi::c_uchar;
+    hdr = __pPage_ref.hdrOffset as ::core::ffi::c_int;
+    cellOffset = __pPage_ref.cellOffset as ::core::ffi::c_int;
+    nCell = __pPage_ref.nCell as ::core::ffi::c_int;
     iCellFirst = cellOffset + 2 as ::core::ffi::c_int * nCell;
-    usableSize = (*(*pPage).pBt).usableSize as ::core::ffi::c_int;
+    usableSize = (*__pPage_ref.pBt).usableSize as ::core::ffi::c_int;
     if *data.offset((hdr + 7 as ::core::ffi::c_int) as isize) as ::core::ffi::c_int <= nMaxFrag {
         let mut iFree: ::core::ffi::c_int = (*(data.offset((hdr + 1 as ::core::ffi::c_int) as isize)
             as *mut ::core::ffi::c_uchar)
@@ -1252,7 +1270,7 @@ unsafe extern "C" fn defragmentPage(
                     .offset(1 as isize)
                     as ::core::ffi::c_int;
             if nCell > 0 as ::core::ffi::c_int {
-                temp = crate::src::src::pager::sqlite3PagerTempSpace((*(*pPage).pBt).pPager) as *mut ::core::ffi::c_uchar;
+                temp = crate::src::src::pager::sqlite3PagerTempSpace((*__pPage_ref.pBt).pPager) as *mut ::core::ffi::c_uchar;
                 ::libc::memcpy(
                     temp as *mut ::core::ffi::c_void,
                     data as *const ::core::ffi::c_void,
@@ -1270,7 +1288,7 @@ unsafe extern "C" fn defragmentPage(
                     if pc > iCellLast {
                         return crate::src::src::main::sqlite3CorruptError(1702 as ::core::ffi::c_int);
                     }
-                    size = (*pPage).xCellSize.expect("non-null function pointer")(
+                    size = __pPage_ref.xCellSize.expect("non-null function pointer")(
                         pPage,
                         src.offset(pc as isize) as *mut crate::src::ext::rtree::rtree::u8_0,
                     ) as ::core::ffi::c_int;
@@ -1297,7 +1315,7 @@ unsafe extern "C" fn defragmentPage(
     }
     if *data.offset((hdr + 7 as ::core::ffi::c_int) as isize) as ::core::ffi::c_int + cbrk
         - iCellFirst
-        != (*pPage).nFree
+        != __pPage_ref.nFree
     {
         return crate::src::src::main::sqlite3CorruptError(1722 as ::core::ffi::c_int);
     }
@@ -1321,8 +1339,9 @@ unsafe extern "C" fn pageFindSlot(
     mut nByte: ::core::ffi::c_int,
     mut pRc: *mut ::core::ffi::c_int,
 ) -> *mut crate::src::ext::rtree::rtree::u8_0 {
-    let hdr: ::core::ffi::c_int = (*pPg).hdrOffset as ::core::ffi::c_int;
-    let aData: *mut crate::src::ext::rtree::rtree::u8_0 = (*pPg).aData;
+    let __pPg_ref = unsafe { &mut *pPg };
+    let hdr: ::core::ffi::c_int = __pPg_ref.hdrOffset as ::core::ffi::c_int;
+    let aData: *mut crate::src::ext::rtree::rtree::u8_0 = __pPg_ref.aData;
     let mut iAddr: ::core::ffi::c_int = hdr + 1 as ::core::ffi::c_int;
     let mut pTmp: *mut crate::src::ext::rtree::rtree::u8_0 = aData.offset(iAddr as isize) as *mut crate::src::ext::rtree::rtree::u8_0;
     let mut pc: ::core::ffi::c_int = (*pTmp.offset(0 as isize)
@@ -1331,7 +1350,7 @@ unsafe extern "C" fn pageFindSlot(
         | *pTmp.offset(1 as isize) as ::core::ffi::c_int;
     let mut x: ::core::ffi::c_int = 0;
     let mut maxPC: ::core::ffi::c_int =
-        (*(*pPg).pBt).usableSize.wrapping_sub(nByte as crate::src::ext::rtree::rtree::u32_0) as ::core::ffi::c_int;
+        (*__pPg_ref.pBt).usableSize.wrapping_sub(nByte as crate::src::ext::rtree::rtree::u32_0) as ::core::ffi::c_int;
     let mut size: ::core::ffi::c_int = 0;
     while pc <= maxPC {
         pTmp = aData.offset((pc + 2 as ::core::ffi::c_int) as isize) as *mut crate::src::ext::rtree::rtree::u8_0;
@@ -1391,25 +1410,26 @@ unsafe extern "C" fn allocateSpace(
     mut nByte: ::core::ffi::c_int,
     mut pIdx: *mut ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
-    let hdr: ::core::ffi::c_int = (*pPage).hdrOffset as ::core::ffi::c_int;
-    let data: *mut crate::src::ext::rtree::rtree::u8_0 = (*pPage).aData;
+    let __pPage_ref = unsafe { &*pPage };
+    let hdr: ::core::ffi::c_int = __pPage_ref.hdrOffset as ::core::ffi::c_int;
+    let data: *mut crate::src::ext::rtree::rtree::u8_0 = __pPage_ref.aData;
     let mut top: ::core::ffi::c_int = 0;
     let mut rc: ::core::ffi::c_int = crate::sqlite3_h::SQLITE_OK;
     let mut pTmp: *mut crate::src::ext::rtree::rtree::u8_0 = ::core::ptr::null_mut::<crate::src::ext::rtree::rtree::u8_0>();
     let mut gap: ::core::ffi::c_int = 0;
-    gap = (*pPage).cellOffset as ::core::ffi::c_int
-        + 2 as ::core::ffi::c_int * (*pPage).nCell as ::core::ffi::c_int;
+    gap = __pPage_ref.cellOffset as ::core::ffi::c_int
+        + 2 as ::core::ffi::c_int * __pPage_ref.nCell as ::core::ffi::c_int;
     pTmp = data.offset((hdr + 5 as ::core::ffi::c_int) as isize) as *mut crate::src::ext::rtree::rtree::u8_0;
     top = (*pTmp.offset(0 as isize) as ::core::ffi::c_int)
         << 8 as ::core::ffi::c_int
         | *pTmp.offset(1 as isize) as ::core::ffi::c_int;
     if gap > top {
-        if top == 0 as ::core::ffi::c_int && (*(*pPage).pBt).usableSize == 65536 as crate::src::ext::rtree::rtree::u32_0 {
+        if top == 0 as ::core::ffi::c_int && (*__pPage_ref.pBt).usableSize == 65536 as crate::src::ext::rtree::rtree::u32_0 {
             top = 65536 as ::core::ffi::c_int;
         } else {
             return crate::src::src::main::sqlite3CorruptError(1849 as ::core::ffi::c_int);
         }
-    } else if top > (*(*pPage).pBt).usableSize as ::core::ffi::c_int {
+    } else if top > (*__pPage_ref.pBt).usableSize as ::core::ffi::c_int {
         return crate::src::src::main::sqlite3CorruptError(1852 as ::core::ffi::c_int);
     }
     if (*data.offset((hdr + 2 as ::core::ffi::c_int) as isize) as ::core::ffi::c_int != 0
@@ -1433,10 +1453,10 @@ unsafe extern "C" fn allocateSpace(
     if gap + 2 as ::core::ffi::c_int + nByte > top {
         rc = defragmentPage(
             pPage,
-            if (4 as ::core::ffi::c_int) < (*pPage).nFree - (2 as ::core::ffi::c_int + nByte) {
+            if (4 as ::core::ffi::c_int) < __pPage_ref.nFree - (2 as ::core::ffi::c_int + nByte) {
                 4 as ::core::ffi::c_int
             } else {
-                (*pPage).nFree - (2 as ::core::ffi::c_int + nByte)
+                __pPage_ref.nFree - (2 as ::core::ffi::c_int + nByte)
             },
         );
         if rc != 0 {
@@ -1472,9 +1492,10 @@ unsafe extern "C" fn freeSpace(
     let mut iOrigSize: ::core::ffi::c_int = iSize;
     let mut x: ::core::ffi::c_int = 0;
     let mut iEnd: ::core::ffi::c_int = iStart + iSize;
-    let mut data: *mut ::core::ffi::c_uchar = (*pPage).aData as *mut ::core::ffi::c_uchar;
+    let __pPage_ref = unsafe { &mut *pPage };
+    let mut data: *mut ::core::ffi::c_uchar = __pPage_ref.aData as *mut ::core::ffi::c_uchar;
     let mut pTmp: *mut crate::src::ext::rtree::rtree::u8_0 = ::core::ptr::null_mut::<crate::src::ext::rtree::rtree::u8_0>();
-    hdr = (*pPage).hdrOffset;
+    hdr = __pPage_ref.hdrOffset;
     iPtr = hdr as ::core::ffi::c_int + 1 as ::core::ffi::c_int;
     if *data.offset((iPtr + 1 as ::core::ffi::c_int) as isize) as ::core::ffi::c_int
         == 0 as ::core::ffi::c_int
@@ -1502,7 +1523,7 @@ unsafe extern "C" fn freeSpace(
                 iPtr = iFreeBlk;
             }
         }
-        if iFreeBlk > (*(*pPage).pBt).usableSize as ::core::ffi::c_int - 4 as ::core::ffi::c_int {
+        if iFreeBlk > (*__pPage_ref.pBt).usableSize as ::core::ffi::c_int - 4 as ::core::ffi::c_int {
             return crate::src::src::main::sqlite3CorruptError(1953 as ::core::ffi::c_int);
         }
         if iFreeBlk != 0 && iEnd + 3 as ::core::ffi::c_int >= iFreeBlk {
@@ -1520,7 +1541,7 @@ unsafe extern "C" fn freeSpace(
                         as *mut ::core::ffi::c_uchar)
                         .offset(1 as isize)
                         as ::core::ffi::c_int);
-            if iEnd > (*(*pPage).pBt).usableSize as ::core::ffi::c_int {
+            if iEnd > (*__pPage_ref.pBt).usableSize as ::core::ffi::c_int {
                 return crate::src::src::main::sqlite3CorruptError(1968 as ::core::ffi::c_int);
             }
             iSize = iEnd - iStart;
@@ -1568,7 +1589,7 @@ unsafe extern "C" fn freeSpace(
     x = (*pTmp.offset(0 as isize) as ::core::ffi::c_int)
         << 8 as ::core::ffi::c_int
         | *pTmp.offset(1 as isize) as ::core::ffi::c_int;
-    if (*(*pPage).pBt).btsFlags as ::core::ffi::c_int & crate::btreeInt_h::BTS_FAST_SECURE != 0 {
+    if (*__pPage_ref.pBt).btsFlags as ::core::ffi::c_int & crate::btreeInt_h::BTS_FAST_SECURE != 0 {
         ::libc::memset(
             data.offset(iStart as isize) as *mut ::core::ffi::c_uchar as *mut ::core::ffi::c_void,
             0 as ::core::ffi::c_int,
@@ -1615,7 +1636,7 @@ unsafe extern "C" fn freeSpace(
             .offset(1 as isize) =
             iSize as crate::src::fts5::u16_0 as crate::src::ext::rtree::rtree::u8_0 as ::core::ffi::c_uchar;
     }
-    (*pPage).nFree += iOrigSize;
+    __pPage_ref.nFree += iOrigSize;
     return crate::sqlite3_h::SQLITE_OK;
 }
 
@@ -1630,39 +1651,42 @@ unsafe extern "C" fn decodeFlags(
         (*pPage).childPtrSize = 0 as crate::src::ext::rtree::rtree::u8_0;
         (*pPage).leaf = 1 as crate::src::ext::rtree::rtree::u8_0;
         if flagByte == crate::btreeInt_h::PTF_LEAFDATA | crate::btreeInt_h::PTF_INTKEY | crate::btreeInt_h::PTF_LEAF {
-            (*pPage).intKeyLeaf = 1 as crate::src::ext::rtree::rtree::u8_0;
-            (*pPage).xCellSize = Some(
+            let __pPage_ref = unsafe { &mut *pPage };
+            __pPage_ref.intKeyLeaf = 1 as crate::src::ext::rtree::rtree::u8_0;
+            __pPage_ref.xCellSize = Some(
                 cellSizePtrTableLeaf as unsafe extern "C" fn(*mut crate::btreeInt_h::MemPage, *mut crate::src::ext::rtree::rtree::u8_0) -> crate::src::fts5::u16_0,
             )
                 as Option<unsafe extern "C" fn(*mut crate::btreeInt_h::MemPage, *mut crate::src::ext::rtree::rtree::u8_0) -> crate::src::fts5::u16_0>;
-            (*pPage).xParseCell = Some(
+            __pPage_ref.xParseCell = Some(
                 btreeParseCellPtr
                     as unsafe extern "C" fn(*mut crate::btreeInt_h::MemPage, *mut crate::src::ext::rtree::rtree::u8_0, *mut crate::btreeInt_h::CellInfo) -> (),
             )
                 as Option<unsafe extern "C" fn(*mut crate::btreeInt_h::MemPage, *mut crate::src::ext::rtree::rtree::u8_0, *mut crate::btreeInt_h::CellInfo) -> ()>;
-            (*pPage).intKey = 1 as crate::src::ext::rtree::rtree::u8_0;
-            (*pPage).maxLocal = (*pBt).maxLeaf;
-            (*pPage).minLocal = (*pBt).minLeaf;
+            __pPage_ref.intKey = 1 as crate::src::ext::rtree::rtree::u8_0;
+            __pPage_ref.maxLocal = (*pBt).maxLeaf;
+            __pPage_ref.minLocal = (*pBt).minLeaf;
         } else if flagByte == crate::btreeInt_h::PTF_ZERODATA | crate::btreeInt_h::PTF_LEAF {
-            (*pPage).intKey = 0 as crate::src::ext::rtree::rtree::u8_0;
-            (*pPage).intKeyLeaf = 0 as crate::src::ext::rtree::rtree::u8_0;
-            (*pPage).xCellSize =
+            let __pPage_ref = unsafe { &mut *pPage };
+            __pPage_ref.intKey = 0 as crate::src::ext::rtree::rtree::u8_0;
+            __pPage_ref.intKeyLeaf = 0 as crate::src::ext::rtree::rtree::u8_0;
+            __pPage_ref.xCellSize =
                 Some(cellSizePtrIdxLeaf as unsafe extern "C" fn(*mut crate::btreeInt_h::MemPage, *mut crate::src::ext::rtree::rtree::u8_0) -> crate::src::fts5::u16_0)
                     as Option<unsafe extern "C" fn(*mut crate::btreeInt_h::MemPage, *mut crate::src::ext::rtree::rtree::u8_0) -> crate::src::fts5::u16_0>;
-            (*pPage).xParseCell = Some(
+            __pPage_ref.xParseCell = Some(
                 btreeParseCellPtrIndex
                     as unsafe extern "C" fn(*mut crate::btreeInt_h::MemPage, *mut crate::src::ext::rtree::rtree::u8_0, *mut crate::btreeInt_h::CellInfo) -> (),
             )
                 as Option<unsafe extern "C" fn(*mut crate::btreeInt_h::MemPage, *mut crate::src::ext::rtree::rtree::u8_0, *mut crate::btreeInt_h::CellInfo) -> ()>;
-            (*pPage).maxLocal = (*pBt).maxLocal;
-            (*pPage).minLocal = (*pBt).minLocal;
+            __pPage_ref.maxLocal = (*pBt).maxLocal;
+            __pPage_ref.minLocal = (*pBt).minLocal;
         } else {
-            (*pPage).intKey = 0 as crate::src::ext::rtree::rtree::u8_0;
-            (*pPage).intKeyLeaf = 0 as crate::src::ext::rtree::rtree::u8_0;
-            (*pPage).xCellSize =
+            let __pPage_ref = unsafe { &mut *pPage };
+            __pPage_ref.intKey = 0 as crate::src::ext::rtree::rtree::u8_0;
+            __pPage_ref.intKeyLeaf = 0 as crate::src::ext::rtree::rtree::u8_0;
+            __pPage_ref.xCellSize =
                 Some(cellSizePtrIdxLeaf as unsafe extern "C" fn(*mut crate::btreeInt_h::MemPage, *mut crate::src::ext::rtree::rtree::u8_0) -> crate::src::fts5::u16_0)
                     as Option<unsafe extern "C" fn(*mut crate::btreeInt_h::MemPage, *mut crate::src::ext::rtree::rtree::u8_0) -> crate::src::fts5::u16_0>;
-            (*pPage).xParseCell = Some(
+            __pPage_ref.xParseCell = Some(
                 btreeParseCellPtrIndex
                     as unsafe extern "C" fn(*mut crate::btreeInt_h::MemPage, *mut crate::src::ext::rtree::rtree::u8_0, *mut crate::btreeInt_h::CellInfo) -> (),
             )
@@ -1673,39 +1697,42 @@ unsafe extern "C" fn decodeFlags(
         (*pPage).childPtrSize = 4 as crate::src::ext::rtree::rtree::u8_0;
         (*pPage).leaf = 0 as crate::src::ext::rtree::rtree::u8_0;
         if flagByte == 0x2 as ::core::ffi::c_int {
-            (*pPage).intKey = 0 as crate::src::ext::rtree::rtree::u8_0;
-            (*pPage).intKeyLeaf = 0 as crate::src::ext::rtree::rtree::u8_0;
-            (*pPage).xCellSize =
+            let __pPage_ref = unsafe { &mut *pPage };
+            __pPage_ref.intKey = 0 as crate::src::ext::rtree::rtree::u8_0;
+            __pPage_ref.intKeyLeaf = 0 as crate::src::ext::rtree::rtree::u8_0;
+            __pPage_ref.xCellSize =
                 Some(cellSizePtr as unsafe extern "C" fn(*mut crate::btreeInt_h::MemPage, *mut crate::src::ext::rtree::rtree::u8_0) -> crate::src::fts5::u16_0)
                     as Option<unsafe extern "C" fn(*mut crate::btreeInt_h::MemPage, *mut crate::src::ext::rtree::rtree::u8_0) -> crate::src::fts5::u16_0>;
-            (*pPage).xParseCell = Some(
+            __pPage_ref.xParseCell = Some(
                 btreeParseCellPtrIndex
                     as unsafe extern "C" fn(*mut crate::btreeInt_h::MemPage, *mut crate::src::ext::rtree::rtree::u8_0, *mut crate::btreeInt_h::CellInfo) -> (),
             )
                 as Option<unsafe extern "C" fn(*mut crate::btreeInt_h::MemPage, *mut crate::src::ext::rtree::rtree::u8_0, *mut crate::btreeInt_h::CellInfo) -> ()>;
-            (*pPage).maxLocal = (*pBt).maxLocal;
-            (*pPage).minLocal = (*pBt).minLocal;
+            __pPage_ref.maxLocal = (*pBt).maxLocal;
+            __pPage_ref.minLocal = (*pBt).minLocal;
         } else if flagByte == crate::btreeInt_h::PTF_LEAFDATA | crate::btreeInt_h::PTF_INTKEY {
-            (*pPage).intKeyLeaf = 0 as crate::src::ext::rtree::rtree::u8_0;
-            (*pPage).xCellSize = Some(
+            let __pPage_ref = unsafe { &mut *pPage };
+            __pPage_ref.intKeyLeaf = 0 as crate::src::ext::rtree::rtree::u8_0;
+            __pPage_ref.xCellSize = Some(
                 cellSizePtrNoPayload as unsafe extern "C" fn(*mut crate::btreeInt_h::MemPage, *mut crate::src::ext::rtree::rtree::u8_0) -> crate::src::fts5::u16_0,
             )
                 as Option<unsafe extern "C" fn(*mut crate::btreeInt_h::MemPage, *mut crate::src::ext::rtree::rtree::u8_0) -> crate::src::fts5::u16_0>;
-            (*pPage).xParseCell = Some(
+            __pPage_ref.xParseCell = Some(
                 btreeParseCellPtrNoPayload
                     as unsafe extern "C" fn(*mut crate::btreeInt_h::MemPage, *mut crate::src::ext::rtree::rtree::u8_0, *mut crate::btreeInt_h::CellInfo) -> (),
             )
                 as Option<unsafe extern "C" fn(*mut crate::btreeInt_h::MemPage, *mut crate::src::ext::rtree::rtree::u8_0, *mut crate::btreeInt_h::CellInfo) -> ()>;
-            (*pPage).intKey = 1 as crate::src::ext::rtree::rtree::u8_0;
-            (*pPage).maxLocal = (*pBt).maxLeaf;
-            (*pPage).minLocal = (*pBt).minLeaf;
+            __pPage_ref.intKey = 1 as crate::src::ext::rtree::rtree::u8_0;
+            __pPage_ref.maxLocal = (*pBt).maxLeaf;
+            __pPage_ref.minLocal = (*pBt).minLeaf;
         } else {
-            (*pPage).intKey = 0 as crate::src::ext::rtree::rtree::u8_0;
-            (*pPage).intKeyLeaf = 0 as crate::src::ext::rtree::rtree::u8_0;
-            (*pPage).xCellSize =
+            let __pPage_ref = unsafe { &mut *pPage };
+            __pPage_ref.intKey = 0 as crate::src::ext::rtree::rtree::u8_0;
+            __pPage_ref.intKeyLeaf = 0 as crate::src::ext::rtree::rtree::u8_0;
+            __pPage_ref.xCellSize =
                 Some(cellSizePtr as unsafe extern "C" fn(*mut crate::btreeInt_h::MemPage, *mut crate::src::ext::rtree::rtree::u8_0) -> crate::src::fts5::u16_0)
                     as Option<unsafe extern "C" fn(*mut crate::btreeInt_h::MemPage, *mut crate::src::ext::rtree::rtree::u8_0) -> crate::src::fts5::u16_0>;
-            (*pPage).xParseCell = Some(
+            __pPage_ref.xParseCell = Some(
                 btreeParseCellPtrIndex
                     as unsafe extern "C" fn(*mut crate::btreeInt_h::MemPage, *mut crate::src::ext::rtree::rtree::u8_0, *mut crate::btreeInt_h::CellInfo) -> (),
             )
@@ -1725,9 +1752,10 @@ unsafe extern "C" fn btreeComputeFreeSpace(mut pPage: *mut crate::btreeInt_h::Me
     let mut top: ::core::ffi::c_int = 0;
     let mut iCellFirst: ::core::ffi::c_int = 0;
     let mut iCellLast: ::core::ffi::c_int = 0;
-    usableSize = (*(*pPage).pBt).usableSize as ::core::ffi::c_int;
-    hdr = (*pPage).hdrOffset;
-    data = (*pPage).aData;
+    let __pPage_ref = unsafe { &mut *pPage };
+    usableSize = (*__pPage_ref.pBt).usableSize as ::core::ffi::c_int;
+    hdr = __pPage_ref.hdrOffset;
+    data = __pPage_ref.aData;
     top = (((*(data.offset((hdr as ::core::ffi::c_int + 5 as ::core::ffi::c_int) as isize)
         as *mut crate::src::ext::rtree::rtree::u8_0)
         .offset(0 as isize) as ::core::ffi::c_int)
@@ -1740,8 +1768,8 @@ unsafe extern "C" fn btreeComputeFreeSpace(mut pPage: *mut crate::btreeInt_h::Me
         + 1 as ::core::ffi::c_int;
     iCellFirst = hdr as ::core::ffi::c_int
         + 8 as ::core::ffi::c_int
-        + (*pPage).childPtrSize as ::core::ffi::c_int
-        + 2 as ::core::ffi::c_int * (*pPage).nCell as ::core::ffi::c_int;
+        + __pPage_ref.childPtrSize as ::core::ffi::c_int
+        + 2 as ::core::ffi::c_int * __pPage_ref.nCell as ::core::ffi::c_int;
     iCellLast = usableSize - 4 as ::core::ffi::c_int;
     pc = (*(data.offset((hdr as ::core::ffi::c_int + 1 as ::core::ffi::c_int) as isize)
         as *mut crate::src::ext::rtree::rtree::u8_0)
@@ -1792,7 +1820,7 @@ unsafe extern "C" fn btreeComputeFreeSpace(mut pPage: *mut crate::btreeInt_h::Me
     if nFree > usableSize || nFree < iCellFirst {
         return crate::src::src::main::sqlite3CorruptError(2163 as ::core::ffi::c_int);
     }
-    (*pPage).nFree = (nFree - iCellFirst) as crate::src::fts5::u16_0 as ::core::ffi::c_int;
+    __pPage_ref.nFree = (nFree - iCellFirst) as crate::src::fts5::u16_0 as ::core::ffi::c_int;
     return crate::sqlite3_h::SQLITE_OK;
 }
 #[inline(never)]
@@ -1806,17 +1834,18 @@ unsafe extern "C" fn btreeCellSizeCheck(mut pPage: *mut crate::btreeInt_h::MemPa
     let mut data: *mut crate::src::ext::rtree::rtree::u8_0 = ::core::ptr::null_mut::<crate::src::ext::rtree::rtree::u8_0>();
     let mut usableSize: ::core::ffi::c_int = 0;
     let mut cellOffset: ::core::ffi::c_int = 0;
-    iCellFirst = (*pPage).cellOffset as ::core::ffi::c_int
-        + 2 as ::core::ffi::c_int * (*pPage).nCell as ::core::ffi::c_int;
-    usableSize = (*(*pPage).pBt).usableSize as ::core::ffi::c_int;
+    let __pPage_ref = unsafe { &mut *pPage };
+    iCellFirst = __pPage_ref.cellOffset as ::core::ffi::c_int
+        + 2 as ::core::ffi::c_int * __pPage_ref.nCell as ::core::ffi::c_int;
+    usableSize = (*__pPage_ref.pBt).usableSize as ::core::ffi::c_int;
     iCellLast = usableSize - 4 as ::core::ffi::c_int;
-    data = (*pPage).aData;
-    cellOffset = (*pPage).cellOffset as ::core::ffi::c_int;
-    if (*pPage).leaf == 0 {
+    data = __pPage_ref.aData;
+    cellOffset = __pPage_ref.cellOffset as ::core::ffi::c_int;
+    if __pPage_ref.leaf == 0 {
         iCellLast -= 1;
     }
     i = 0 as ::core::ffi::c_int;
-    while i < (*pPage).nCell as ::core::ffi::c_int {
+    while i < __pPage_ref.nCell as ::core::ffi::c_int {
         pc = (*(data.offset((cellOffset + i * 2 as ::core::ffi::c_int) as isize) as *mut crate::src::ext::rtree::rtree::u8_0)
             .offset(0 as isize) as ::core::ffi::c_int)
             << 8 as ::core::ffi::c_int
@@ -1825,7 +1854,7 @@ unsafe extern "C" fn btreeCellSizeCheck(mut pPage: *mut crate::btreeInt_h::MemPa
         if pc < iCellFirst || pc > iCellLast {
             return crate::src::src::main::sqlite3CorruptError(2194 as ::core::ffi::c_int);
         }
-        sz = (*pPage).xCellSize.expect("non-null function pointer")(
+        sz = __pPage_ref.xCellSize.expect("non-null function pointer")(
             pPage,
             data.offset(pc as isize) as *mut crate::src::ext::rtree::rtree::u8_0,
         ) as ::core::ffi::c_int;
@@ -1840,10 +1869,11 @@ unsafe extern "C" fn btreeCellSizeCheck(mut pPage: *mut crate::btreeInt_h::MemPa
 unsafe extern "C" fn btreeInitPage(mut pPage: *mut crate::btreeInt_h::MemPage) -> ::core::ffi::c_int {
     let mut data: *mut crate::src::ext::rtree::rtree::u8_0 = ::core::ptr::null_mut::<crate::src::ext::rtree::rtree::u8_0>();
     let mut pBt: *mut crate::btreeInt_h::BtShared = ::core::ptr::null_mut::<crate::btreeInt_h::BtShared>();
-    pBt = (*pPage).pBt;
+    let __pPage_ref = unsafe { &mut *pPage };
+    pBt = __pPage_ref.pBt;
     data = (*pPage)
         .aData
-        .offset((*pPage).hdrOffset as ::core::ffi::c_int as isize);
+        .offset(__pPage_ref.hdrOffset as ::core::ffi::c_int as isize);
     if decodeFlags(
         pPage,
         *data.offset(0 as isize) as ::core::ffi::c_int,
@@ -1851,25 +1881,25 @@ unsafe extern "C" fn btreeInitPage(mut pPage: *mut crate::btreeInt_h::MemPage) -
     {
         return crate::src::src::main::sqlite3CorruptError(2231 as ::core::ffi::c_int);
     }
-    (*pPage).maskPage = (*pBt).pageSize.wrapping_sub(1 as crate::src::ext::rtree::rtree::u32_0) as crate::src::fts5::u16_0;
-    (*pPage).nOverflow = 0 as crate::src::ext::rtree::rtree::u8_0;
-    (*pPage).cellOffset = ((*pPage).hdrOffset as ::core::ffi::c_int
+    __pPage_ref.maskPage = (*pBt).pageSize.wrapping_sub(1 as crate::src::ext::rtree::rtree::u32_0) as crate::src::fts5::u16_0;
+    __pPage_ref.nOverflow = 0 as crate::src::ext::rtree::rtree::u8_0;
+    __pPage_ref.cellOffset = (__pPage_ref.hdrOffset as ::core::ffi::c_int
         + 8 as ::core::ffi::c_int
-        + (*pPage).childPtrSize as ::core::ffi::c_int) as crate::src::fts5::u16_0;
-    (*pPage).aCellIdx = data
-        .offset((*pPage).childPtrSize as ::core::ffi::c_int as isize)
+        + __pPage_ref.childPtrSize as ::core::ffi::c_int) as crate::src::fts5::u16_0;
+    __pPage_ref.aCellIdx = data
+        .offset(__pPage_ref.childPtrSize as ::core::ffi::c_int as isize)
         .offset(8 as isize);
-    (*pPage).aDataEnd = (*pPage).aData.offset((*pBt).pageSize as isize);
-    (*pPage).aDataOfst = (*pPage)
+    __pPage_ref.aDataEnd = __pPage_ref.aData.offset((*pBt).pageSize as isize);
+    __pPage_ref.aDataOfst = (*pPage)
         .aData
-        .offset((*pPage).childPtrSize as ::core::ffi::c_int as isize);
-    (*pPage).nCell = ((*(data.offset(3 as isize) as *mut crate::src::ext::rtree::rtree::u8_0)
+        .offset(__pPage_ref.childPtrSize as ::core::ffi::c_int as isize);
+    __pPage_ref.nCell = ((*(data.offset(3 as isize) as *mut crate::src::ext::rtree::rtree::u8_0)
         .offset(0 as isize) as ::core::ffi::c_int)
         << 8 as ::core::ffi::c_int
         | *(data.offset(3 as isize) as *mut crate::src::ext::rtree::rtree::u8_0)
             .offset(1 as isize) as ::core::ffi::c_int)
         as crate::src::fts5::u16_0;
-    if (*pPage).nCell as crate::src::ext::rtree::rtree::u32_0
+    if __pPage_ref.nCell as crate::src::ext::rtree::rtree::u32_0
         > (*pBt)
             .pageSize
             .wrapping_sub(8 as crate::src::ext::rtree::rtree::u32_0)
@@ -1877,8 +1907,8 @@ unsafe extern "C" fn btreeInitPage(mut pPage: *mut crate::btreeInt_h::MemPage) -
     {
         return crate::src::src::main::sqlite3CorruptError(2245 as ::core::ffi::c_int);
     }
-    (*pPage).nFree = -(1 as ::core::ffi::c_int);
-    (*pPage).isInit = 1 as crate::src::ext::rtree::rtree::u8_0;
+    __pPage_ref.nFree = -(1 as ::core::ffi::c_int);
+    __pPage_ref.isInit = 1 as crate::src::ext::rtree::rtree::u8_0;
     if (*(*pBt).db).flags & crate::sqliteInt_h::SQLITE_CellSizeCk as crate::src::ext::rtree::rtree::u64_0 != 0 {
         return btreeCellSizeCheck(pPage);
     }
@@ -1886,15 +1916,17 @@ unsafe extern "C" fn btreeInitPage(mut pPage: *mut crate::btreeInt_h::MemPage) -
 }
 
 unsafe extern "C" fn zeroPage(mut pPage: *mut crate::btreeInt_h::MemPage, mut flags: ::core::ffi::c_int) {
-    let mut data: *mut ::core::ffi::c_uchar = (*pPage).aData as *mut ::core::ffi::c_uchar;
-    let mut pBt: *mut crate::btreeInt_h::BtShared = (*pPage).pBt;
-    let mut hdr: ::core::ffi::c_int = (*pPage).hdrOffset as ::core::ffi::c_int;
+    let __pPage_ref = unsafe { &mut *pPage };
+    let mut data: *mut ::core::ffi::c_uchar = __pPage_ref.aData as *mut ::core::ffi::c_uchar;
+    let mut pBt: *mut crate::btreeInt_h::BtShared = __pPage_ref.pBt;
+    let mut hdr: ::core::ffi::c_int = __pPage_ref.hdrOffset as ::core::ffi::c_int;
     let mut first: ::core::ffi::c_int = 0;
-    if (*pBt).btsFlags as ::core::ffi::c_int & crate::btreeInt_h::BTS_FAST_SECURE != 0 {
+    let __pBt_ref = unsafe { &mut *pBt };
+    if __pBt_ref.btsFlags as ::core::ffi::c_int & crate::btreeInt_h::BTS_FAST_SECURE != 0 {
         ::libc::memset(
             data.offset(hdr as isize) as *mut ::core::ffi::c_uchar as *mut ::core::ffi::c_void,
             0 as ::core::ffi::c_int,
-            (*pBt).usableSize.wrapping_sub(hdr as crate::src::ext::rtree::rtree::u32_0) as crate::__stddef_size_t_h::size_t,
+            __pBt_ref.usableSize.wrapping_sub(hdr as crate::src::ext::rtree::rtree::u32_0) as crate::__stddef_size_t_h::size_t,
         );
     }
     *data.offset(hdr as isize) = flags as ::core::ffi::c_char as ::core::ffi::c_uchar;
@@ -1913,22 +1945,22 @@ unsafe extern "C" fn zeroPage(mut pPage: *mut crate::btreeInt_h::MemPage, mut fl
     *data.offset((hdr + 7 as ::core::ffi::c_int) as isize) = 0 as ::core::ffi::c_uchar;
     *(data.offset((hdr + 5 as ::core::ffi::c_int) as isize) as *mut ::core::ffi::c_uchar)
         .offset(0 as isize) =
-        ((*pBt).usableSize >> 8 as ::core::ffi::c_int) as crate::src::ext::rtree::rtree::u8_0 as ::core::ffi::c_uchar;
+        (__pBt_ref.usableSize >> 8 as ::core::ffi::c_int) as crate::src::ext::rtree::rtree::u8_0 as ::core::ffi::c_uchar;
     *(data.offset((hdr + 5 as ::core::ffi::c_int) as isize) as *mut ::core::ffi::c_uchar)
         .offset(1 as isize) =
-        (*pBt).usableSize as crate::src::ext::rtree::rtree::u8_0 as ::core::ffi::c_uchar;
-    (*pPage).nFree = (*pBt).usableSize.wrapping_sub(first as crate::src::ext::rtree::rtree::u32_0) as crate::src::fts5::u16_0 as ::core::ffi::c_int;
+        __pBt_ref.usableSize as crate::src::ext::rtree::rtree::u8_0 as ::core::ffi::c_uchar;
+    __pPage_ref.nFree = __pBt_ref.usableSize.wrapping_sub(first as crate::src::ext::rtree::rtree::u32_0) as crate::src::fts5::u16_0 as ::core::ffi::c_int;
     decodeFlags(pPage, flags);
-    (*pPage).cellOffset = first as crate::src::fts5::u16_0;
-    (*pPage).aDataEnd =
-        data.offset((*pBt).pageSize as isize) as *mut ::core::ffi::c_uchar as *mut crate::src::ext::rtree::rtree::u8_0;
-    (*pPage).aCellIdx = data.offset(first as isize) as *mut ::core::ffi::c_uchar as *mut crate::src::ext::rtree::rtree::u8_0;
-    (*pPage).aDataOfst =
-        data.offset((*pPage).childPtrSize as isize) as *mut ::core::ffi::c_uchar as *mut crate::src::ext::rtree::rtree::u8_0;
-    (*pPage).nOverflow = 0 as crate::src::ext::rtree::rtree::u8_0;
-    (*pPage).maskPage = (*pBt).pageSize.wrapping_sub(1 as crate::src::ext::rtree::rtree::u32_0) as crate::src::fts5::u16_0;
-    (*pPage).nCell = 0 as crate::src::fts5::u16_0;
-    (*pPage).isInit = 1 as crate::src::ext::rtree::rtree::u8_0;
+    __pPage_ref.cellOffset = first as crate::src::fts5::u16_0;
+    __pPage_ref.aDataEnd =
+        data.offset(__pBt_ref.pageSize as isize) as *mut ::core::ffi::c_uchar as *mut crate::src::ext::rtree::rtree::u8_0;
+    __pPage_ref.aCellIdx = data.offset(first as isize) as *mut ::core::ffi::c_uchar as *mut crate::src::ext::rtree::rtree::u8_0;
+    __pPage_ref.aDataOfst =
+        data.offset(__pPage_ref.childPtrSize as isize) as *mut ::core::ffi::c_uchar as *mut crate::src::ext::rtree::rtree::u8_0;
+    __pPage_ref.nOverflow = 0 as crate::src::ext::rtree::rtree::u8_0;
+    __pPage_ref.maskPage = __pBt_ref.pageSize.wrapping_sub(1 as crate::src::ext::rtree::rtree::u32_0) as crate::src::fts5::u16_0;
+    __pPage_ref.nCell = 0 as crate::src::fts5::u16_0;
+    __pPage_ref.isInit = 1 as crate::src::ext::rtree::rtree::u8_0;
 }
 
 unsafe extern "C" fn btreePageFromDbPage(
@@ -1938,11 +1970,12 @@ unsafe extern "C" fn btreePageFromDbPage(
 ) -> *mut crate::btreeInt_h::MemPage {
     let mut pPage: *mut crate::btreeInt_h::MemPage = crate::src::src::pager::sqlite3PagerGetExtra(pDbPage as *mut crate::src::src::pcache::PgHdr) as *mut crate::btreeInt_h::MemPage;
     if pgno != (*pPage).pgno {
-        (*pPage).aData = crate::src::src::pager::sqlite3PagerGetData(pDbPage as *mut crate::src::src::pcache::PgHdr) as *mut crate::src::ext::rtree::rtree::u8_0;
-        (*pPage).pDbPage = pDbPage;
-        (*pPage).pBt = pBt;
-        (*pPage).pgno = pgno;
-        (*pPage).hdrOffset = (if pgno == 1 as crate::src::src::pager::Pgno {
+        let __pPage_ref = unsafe { &mut *pPage };
+        __pPage_ref.aData = crate::src::src::pager::sqlite3PagerGetData(pDbPage as *mut crate::src::src::pcache::PgHdr) as *mut crate::src::ext::rtree::rtree::u8_0;
+        __pPage_ref.pDbPage = pDbPage;
+        __pPage_ref.pBt = pBt;
+        __pPage_ref.pgno = pgno;
+        __pPage_ref.hdrOffset = (if pgno == 1 as crate::src::src::pager::Pgno {
             100 as ::core::ffi::c_int
         } else {
             0 as ::core::ffi::c_int
@@ -2228,10 +2261,11 @@ pub unsafe extern "C" fn sqlite3BtreeOpen(
             if rc != crate::sqlite3_h::SQLITE_OK {
                 current_block = 16994982316810399751;
             } else {
-                (*pBt).openFlags = flags as crate::src::ext::rtree::rtree::u8_0;
-                (*pBt).db = db;
+                let __pBt_ref = unsafe { &mut *pBt };
+                __pBt_ref.openFlags = flags as crate::src::ext::rtree::rtree::u8_0;
+                __pBt_ref.db = db;
                 crate::src::src::pager::sqlite3PagerSetBusyHandler(
-                    (*pBt).pPager,
+                    __pBt_ref.pPager,
                     Some(
                         btreeInvokeBusyHandler
                             as unsafe extern "C" fn(*mut ::core::ffi::c_void) -> ::core::ffi::c_int,
@@ -2239,29 +2273,29 @@ pub unsafe extern "C" fn sqlite3BtreeOpen(
                     pBt as *mut ::core::ffi::c_void,
                 );
                 (*p).pBt = pBt;
-                (*pBt).pCursor = ::core::ptr::null_mut::<crate::btreeInt_h::BtCursor>();
-                (*pBt).pPage1 = ::core::ptr::null_mut::<crate::btreeInt_h::MemPage>();
-                if crate::src::src::pager::sqlite3PagerIsreadonly((*pBt).pPager) != 0 {
-                    (*pBt).btsFlags =
-                        ((*pBt).btsFlags as ::core::ffi::c_int | crate::btreeInt_h::BTS_READ_ONLY) as crate::src::fts5::u16_0;
+                __pBt_ref.pCursor = ::core::ptr::null_mut::<crate::btreeInt_h::BtCursor>();
+                __pBt_ref.pPage1 = ::core::ptr::null_mut::<crate::btreeInt_h::MemPage>();
+                if crate::src::src::pager::sqlite3PagerIsreadonly(__pBt_ref.pPager) != 0 {
+                    __pBt_ref.btsFlags =
+                        (__pBt_ref.btsFlags as ::core::ffi::c_int | crate::btreeInt_h::BTS_READ_ONLY) as crate::src::fts5::u16_0;
                 }
-                (*pBt).pageSize = ((zDbHeader[16 as ::core::ffi::c_int as usize]
+                __pBt_ref.pageSize = ((zDbHeader[16 as ::core::ffi::c_int as usize]
                     as ::core::ffi::c_int)
                     << 8 as ::core::ffi::c_int
                     | (zDbHeader[17 as ::core::ffi::c_int as usize] as ::core::ffi::c_int)
                         << 16 as ::core::ffi::c_int) as crate::src::ext::rtree::rtree::u32_0;
-                if (*pBt).pageSize < 512 as crate::src::ext::rtree::rtree::u32_0
-                    || (*pBt).pageSize > crate::sqliteLimit_h::SQLITE_MAX_PAGE_SIZE as crate::src::ext::rtree::rtree::u32_0
-                    || (*pBt).pageSize.wrapping_sub(1 as crate::src::ext::rtree::rtree::u32_0) & (*pBt).pageSize != 0 as crate::src::ext::rtree::rtree::u32_0
+                if __pBt_ref.pageSize < 512 as crate::src::ext::rtree::rtree::u32_0
+                    || __pBt_ref.pageSize > crate::sqliteLimit_h::SQLITE_MAX_PAGE_SIZE as crate::src::ext::rtree::rtree::u32_0
+                    || __pBt_ref.pageSize.wrapping_sub(1 as crate::src::ext::rtree::rtree::u32_0) & __pBt_ref.pageSize != 0 as crate::src::ext::rtree::rtree::u32_0
                 {
-                    (*pBt).pageSize = 0 as crate::src::ext::rtree::rtree::u32_0;
+                    __pBt_ref.pageSize = 0 as crate::src::ext::rtree::rtree::u32_0;
                     if !zFilename.is_null() && isMemdb == 0 {
-                        (*pBt).autoVacuum = (if crate::src::src::btree::SQLITE_DEFAULT_AUTOVACUUM != 0 {
+                        __pBt_ref.autoVacuum = (if crate::src::src::btree::SQLITE_DEFAULT_AUTOVACUUM != 0 {
                             1 as ::core::ffi::c_int
                         } else {
                             0 as ::core::ffi::c_int
                         }) as crate::src::ext::rtree::rtree::u8_0;
-                        (*pBt).incrVacuum = (if crate::src::src::btree::SQLITE_DEFAULT_AUTOVACUUM == 2 as ::core::ffi::c_int
+                        __pBt_ref.incrVacuum = (if crate::src::src::btree::SQLITE_DEFAULT_AUTOVACUUM == 2 as ::core::ffi::c_int
                         {
                             1 as ::core::ffi::c_int
                         } else {
@@ -2271,9 +2305,9 @@ pub unsafe extern "C" fn sqlite3BtreeOpen(
                     nReserve = 0 as crate::src::ext::rtree::rtree::u8_0;
                 } else {
                     nReserve = zDbHeader[20 as ::core::ffi::c_int as usize] as crate::src::ext::rtree::rtree::u8_0;
-                    (*pBt).btsFlags =
-                        ((*pBt).btsFlags as ::core::ffi::c_int | crate::btreeInt_h::BTS_PAGESIZE_FIXED) as crate::src::fts5::u16_0;
-                    (*pBt).autoVacuum = (if crate::src::src::util::sqlite3Get4byte(
+                    __pBt_ref.btsFlags =
+                        (__pBt_ref.btsFlags as ::core::ffi::c_int | crate::btreeInt_h::BTS_PAGESIZE_FIXED) as crate::src::fts5::u16_0;
+                    __pBt_ref.autoVacuum = (if crate::src::src::util::sqlite3Get4byte(
                         (&raw mut zDbHeader as *mut ::core::ffi::c_uchar).offset(
                             (36 as ::core::ffi::c_int
                                 + 4 as ::core::ffi::c_int * 4 as ::core::ffi::c_int)
@@ -2285,7 +2319,7 @@ pub unsafe extern "C" fn sqlite3BtreeOpen(
                     } else {
                         0 as ::core::ffi::c_int
                     }) as crate::src::ext::rtree::rtree::u8_0;
-                    (*pBt).incrVacuum = (if crate::src::src::util::sqlite3Get4byte(
+                    __pBt_ref.incrVacuum = (if crate::src::src::util::sqlite3Get4byte(
                         (&raw mut zDbHeader as *mut ::core::ffi::c_uchar).offset(
                             (36 as ::core::ffi::c_int
                                 + 7 as ::core::ffi::c_int * 4 as ::core::ffi::c_int)
@@ -2299,15 +2333,15 @@ pub unsafe extern "C" fn sqlite3BtreeOpen(
                     }) as crate::src::ext::rtree::rtree::u8_0;
                 }
                 rc = crate::src::src::pager::sqlite3PagerSetPagesize(
-                    (*pBt).pPager,
-                    &raw mut (*pBt).pageSize,
+                    __pBt_ref.pPager,
+                    &raw mut __pBt_ref.pageSize,
                     nReserve as ::core::ffi::c_int,
                 );
                 if rc != 0 {
                     current_block = 16994982316810399751;
                 } else {
-                    (*pBt).usableSize = (*pBt).pageSize.wrapping_sub(nReserve as crate::src::ext::rtree::rtree::u32_0);
-                    (*pBt).nRef = 1 as ::core::ffi::c_int;
+                    __pBt_ref.usableSize = __pBt_ref.pageSize.wrapping_sub(nReserve as crate::src::ext::rtree::rtree::u32_0);
+                    __pBt_ref.nRef = 1 as ::core::ffi::c_int;
                     if (*p).sharable != 0 {
                         let mut mutexShared_0: *mut crate::src::src::mutex_unix::sqlite3_mutex =
                             ::core::ptr::null_mut::<crate::src::src::mutex_unix::sqlite3_mutex>();
@@ -2315,8 +2349,8 @@ pub unsafe extern "C" fn sqlite3BtreeOpen(
                         if crate::internal::SQLITE_THREADSAFE != 0
                             && crate::src::src::global::sqlite3Config.bCoreMutex as ::core::ffi::c_int != 0
                         {
-                            (*pBt).mutex = crate::src::src::mutex::sqlite3MutexAlloc(crate::sqlite3_h::SQLITE_MUTEX_FAST);
-                            if (*pBt).mutex.is_null() {
+                            __pBt_ref.mutex = crate::src::src::mutex::sqlite3MutexAlloc(crate::sqlite3_h::SQLITE_MUTEX_FAST);
+                            if __pBt_ref.mutex.is_null() {
                                 rc = crate::sqliteInt_h::SQLITE_NOMEM_BKPT;
                                 current_block = 16994982316810399751;
                             } else {
@@ -2329,7 +2363,7 @@ pub unsafe extern "C" fn sqlite3BtreeOpen(
                             16994982316810399751 => {}
                             _ => {
                                 crate::src::src::mutex::sqlite3_mutex_enter(mutexShared_0);
-                                (*pBt).pNext = sqlite3SharedCacheList;
+                                __pBt_ref.pNext = sqlite3SharedCacheList;
                                 sqlite3SharedCacheList = pBt;
                                 crate::src::src::mutex::sqlite3_mutex_leave(mutexShared_0);
                                 current_block = 7301440000599063274;
@@ -2361,15 +2395,16 @@ pub unsafe extern "C" fn sqlite3BtreeOpen(
                             (*p).pPrev = ::core::ptr::null_mut::<crate::btreeInt_h::Btree>();
                             (*pSib).pPrev = p;
                         } else {
+                            let __p_ref = unsafe { &mut *p };
                             while !(*pSib).pNext.is_null()
-                                && ((*(*pSib).pNext).pBt as crate::sqliteInt_h::uptr) < (*p).pBt as crate::sqliteInt_h::uptr
+                                && ((*(*pSib).pNext).pBt as crate::sqliteInt_h::uptr) < __p_ref.pBt as crate::sqliteInt_h::uptr
                             {
                                 pSib = (*pSib).pNext;
                             }
-                            (*p).pNext = (*pSib).pNext;
-                            (*p).pPrev = pSib;
-                            if !(*p).pNext.is_null() {
-                                (*(*p).pNext).pPrev = p;
+                            __p_ref.pNext = (*pSib).pNext;
+                            __p_ref.pPrev = pSib;
+                            if !__p_ref.pNext.is_null() {
+                                (*__p_ref.pNext).pPrev = p;
                             }
                             (*pSib).pNext = p;
                         }
@@ -2441,10 +2476,11 @@ unsafe extern "C" fn removeFromSharingList(mut pBt: *mut crate::btreeInt_h::BtSh
 #[inline(never)]
 
 unsafe extern "C" fn allocateTempSpace(mut pBt: *mut crate::btreeInt_h::BtShared) -> ::core::ffi::c_int {
-    (*pBt).pTmpSpace = crate::src::src::pcache1::sqlite3PageMalloc((*pBt).pageSize as ::core::ffi::c_int) as *mut crate::src::ext::rtree::rtree::u8_0;
-    if (*pBt).pTmpSpace.is_null() {
-        let mut pCur: *mut crate::btreeInt_h::BtCursor = (*pBt).pCursor;
-        (*pBt).pCursor = (*pCur).pNext;
+    let __pBt_ref = unsafe { &mut *pBt };
+    __pBt_ref.pTmpSpace = crate::src::src::pcache1::sqlite3PageMalloc(__pBt_ref.pageSize as ::core::ffi::c_int) as *mut crate::src::ext::rtree::rtree::u8_0;
+    if __pBt_ref.pTmpSpace.is_null() {
+        let mut pCur: *mut crate::btreeInt_h::BtCursor = __pBt_ref.pCursor;
+        __pBt_ref.pCursor = (*pCur).pNext;
         ::libc::memset(
             pCur as *mut ::core::ffi::c_void,
             0 as ::core::ffi::c_int,
@@ -2453,43 +2489,46 @@ unsafe extern "C" fn allocateTempSpace(mut pBt: *mut crate::btreeInt_h::BtShared
         return crate::sqliteInt_h::SQLITE_NOMEM_BKPT;
     }
     ::libc::memset(
-        (*pBt).pTmpSpace as *mut ::core::ffi::c_void,
+        __pBt_ref.pTmpSpace as *mut ::core::ffi::c_void,
         0 as ::core::ffi::c_int,
         8 as crate::__stddef_size_t_h::size_t,
     );
-    (*pBt).pTmpSpace = (*pBt).pTmpSpace.offset(4 as isize);
+    __pBt_ref.pTmpSpace = __pBt_ref.pTmpSpace.offset(4 as isize);
     return crate::sqlite3_h::SQLITE_OK;
 }
 
 unsafe extern "C" fn freeTempSpace(mut pBt: *mut crate::btreeInt_h::BtShared) {
     if !(*pBt).pTmpSpace.is_null() {
-        (*pBt).pTmpSpace = (*pBt).pTmpSpace.offset(-(4 as ::core::ffi::c_int as isize));
-        crate::src::src::pcache1::sqlite3PageFree((*pBt).pTmpSpace as *mut ::core::ffi::c_void);
-        (*pBt).pTmpSpace = ::core::ptr::null_mut::<crate::src::ext::rtree::rtree::u8_0>();
+        let __pBt_ref = unsafe { &mut *pBt };
+        __pBt_ref.pTmpSpace = __pBt_ref.pTmpSpace.offset(-(4 as ::core::ffi::c_int as isize));
+        crate::src::src::pcache1::sqlite3PageFree(__pBt_ref.pTmpSpace as *mut ::core::ffi::c_void);
+        __pBt_ref.pTmpSpace = ::core::ptr::null_mut::<crate::src::ext::rtree::rtree::u8_0>();
     }
 }
 #[no_mangle]
 
 pub unsafe extern "C" fn sqlite3BtreeClose(mut p: *mut crate::btreeInt_h::Btree) -> ::core::ffi::c_int {
-    let mut pBt: *mut crate::btreeInt_h::BtShared = (*p).pBt;
+    let __p_ref = unsafe { &mut *p };
+    let mut pBt: *mut crate::btreeInt_h::BtShared = __p_ref.pBt;
     crate::src::src::btmutex::sqlite3BtreeEnter(p as *mut crate::btreeInt_h::Btree);
     sqlite3BtreeRollback(p, crate::sqlite3_h::SQLITE_OK, 0 as ::core::ffi::c_int);
     crate::src::src::btmutex::sqlite3BtreeLeave(p as *mut crate::btreeInt_h::Btree);
-    if (*p).sharable == 0 || removeFromSharingList(pBt) != 0 {
-        crate::src::src::pager::sqlite3PagerClose((*pBt).pPager,  (*p).db as *mut crate::sqliteInt_h::sqlite3);
-        if (*pBt).xFreeSchema.is_some() && !(*pBt).pSchema.is_null() {
-            (*pBt).xFreeSchema.expect("non-null function pointer")((*pBt).pSchema);
+    if __p_ref.sharable == 0 || removeFromSharingList(pBt) != 0 {
+        let __pBt_ref = unsafe { &mut *pBt };
+        crate::src::src::pager::sqlite3PagerClose(__pBt_ref.pPager,  __p_ref.db as *mut crate::sqliteInt_h::sqlite3);
+        if __pBt_ref.xFreeSchema.is_some() && !__pBt_ref.pSchema.is_null() {
+            __pBt_ref.xFreeSchema.expect("non-null function pointer")(__pBt_ref.pSchema);
         }
         crate::src::src::malloc::sqlite3DbFree(::core::ptr::null_mut::<crate::sqliteInt_h::sqlite3>() as
-    *mut crate::sqliteInt_h::sqlite3, (*pBt).pSchema);
+    *mut crate::sqliteInt_h::sqlite3, __pBt_ref.pSchema);
         freeTempSpace(pBt);
         crate::src::src::malloc::sqlite3_free(pBt as *mut ::core::ffi::c_void);
     }
-    if !(*p).pPrev.is_null() {
-        (*(*p).pPrev).pNext = (*p).pNext;
+    if !__p_ref.pPrev.is_null() {
+        (*__p_ref.pPrev).pNext = __p_ref.pNext;
     }
-    if !(*p).pNext.is_null() {
-        (*(*p).pNext).pPrev = (*p).pPrev;
+    if !__p_ref.pNext.is_null() {
+        (*__p_ref.pNext).pPrev = __p_ref.pPrev;
     }
     crate::src::src::malloc::sqlite3_free(p as *mut ::core::ffi::c_void);
     return crate::sqlite3_h::SQLITE_OK;
@@ -2555,10 +2594,11 @@ pub unsafe extern "C" fn sqlite3BtreeSetPageSize(
     let mut x: ::core::ffi::c_int = 0;
     let mut pBt: *mut crate::btreeInt_h::BtShared = (*p).pBt;
     crate::src::src::btmutex::sqlite3BtreeEnter(p as *mut crate::btreeInt_h::Btree);
-    (*pBt).nReserveWanted = nReserve as crate::src::ext::rtree::rtree::u8_0;
-    x = (*pBt).pageSize.wrapping_sub((*pBt).usableSize) as ::core::ffi::c_int;
+    let __pBt_ref = unsafe { &mut *pBt };
+    __pBt_ref.nReserveWanted = nReserve as crate::src::ext::rtree::rtree::u8_0;
+    x = __pBt_ref.pageSize.wrapping_sub(__pBt_ref.usableSize) as ::core::ffi::c_int;
     if x == nReserve
-        && (pageSize == 0 as ::core::ffi::c_int || pageSize as crate::src::ext::rtree::rtree::u32_0 == (*pBt).pageSize)
+        && (pageSize == 0 as ::core::ffi::c_int || pageSize as crate::src::ext::rtree::rtree::u32_0 == __pBt_ref.pageSize)
     {
         crate::src::src::btmutex::sqlite3BtreeLeave(p as *mut crate::btreeInt_h::Btree);
         return crate::sqlite3_h::SQLITE_OK;
@@ -2566,7 +2606,7 @@ pub unsafe extern "C" fn sqlite3BtreeSetPageSize(
     if nReserve < x {
         nReserve = x;
     }
-    if (*pBt).btsFlags as ::core::ffi::c_int & crate::btreeInt_h::BTS_PAGESIZE_FIXED != 0 {
+    if __pBt_ref.btsFlags as ::core::ffi::c_int & crate::btreeInt_h::BTS_PAGESIZE_FIXED != 0 {
         crate::src::src::btmutex::sqlite3BtreeLeave(p as *mut crate::btreeInt_h::Btree);
         return crate::sqlite3_h::SQLITE_READONLY;
     }
@@ -2577,13 +2617,13 @@ pub unsafe extern "C" fn sqlite3BtreeSetPageSize(
         if nReserve > 32 as ::core::ffi::c_int && pageSize == 512 as ::core::ffi::c_int {
             pageSize = 1024 as ::core::ffi::c_int;
         }
-        (*pBt).pageSize = pageSize as crate::src::ext::rtree::rtree::u32_0;
+        __pBt_ref.pageSize = pageSize as crate::src::ext::rtree::rtree::u32_0;
         freeTempSpace(pBt);
     }
-    rc = crate::src::src::pager::sqlite3PagerSetPagesize((*pBt).pPager, &raw mut (*pBt).pageSize, nReserve);
-    (*pBt).usableSize = (*pBt).pageSize.wrapping_sub(nReserve as crate::src::fts5::u16_0 as crate::src::ext::rtree::rtree::u32_0);
+    rc = crate::src::src::pager::sqlite3PagerSetPagesize(__pBt_ref.pPager, &raw mut __pBt_ref.pageSize, nReserve);
+    __pBt_ref.usableSize = __pBt_ref.pageSize.wrapping_sub(nReserve as crate::src::fts5::u16_0 as crate::src::ext::rtree::rtree::u32_0);
     if iFix != 0 {
-        (*pBt).btsFlags = ((*pBt).btsFlags as ::core::ffi::c_int | crate::btreeInt_h::BTS_PAGESIZE_FIXED) as crate::src::fts5::u16_0;
+        __pBt_ref.btsFlags = (__pBt_ref.btsFlags as ::core::ffi::c_int | crate::btreeInt_h::BTS_PAGESIZE_FIXED) as crate::src::fts5::u16_0;
     }
     crate::src::src::btmutex::sqlite3BtreeLeave(p as *mut crate::btreeInt_h::Btree);
     return rc;
@@ -2632,9 +2672,10 @@ pub unsafe extern "C" fn sqlite3BtreeSecureDelete(
     }
     crate::src::src::btmutex::sqlite3BtreeEnter(p as *mut crate::btreeInt_h::Btree);
     if newFlag >= 0 as ::core::ffi::c_int {
-        (*(*p).pBt).btsFlags =
-            ((*(*p).pBt).btsFlags as ::core::ffi::c_int & !crate::btreeInt_h::BTS_FAST_SECURE) as crate::src::fts5::u16_0;
-        (*(*p).pBt).btsFlags = ((*(*p).pBt).btsFlags as ::core::ffi::c_int
+        let __p_ref = unsafe { &mut *p };
+        (*__p_ref.pBt).btsFlags =
+            ((*__p_ref.pBt).btsFlags as ::core::ffi::c_int & !crate::btreeInt_h::BTS_FAST_SECURE) as crate::src::fts5::u16_0;
+        (*__p_ref.pBt).btsFlags = ((*__p_ref.pBt).btsFlags as ::core::ffi::c_int
             | (crate::btreeInt_h::BTS_SECURE_DELETE * newFlag) as crate::src::fts5::u16_0 as ::core::ffi::c_int)
             as crate::src::fts5::u16_0;
     }
@@ -2697,7 +2738,8 @@ unsafe extern "C" fn lockBtree(mut pBt: *mut crate::btreeInt_h::BtShared) -> ::c
     let mut pPage1: *mut crate::btreeInt_h::MemPage = ::core::ptr::null_mut::<crate::btreeInt_h::MemPage>();
     let mut nPage: crate::src::ext::rtree::rtree::u32_0 = 0;
     let mut nPageFile: crate::src::ext::rtree::rtree::u32_0 = 0 as crate::src::ext::rtree::rtree::u32_0;
-    rc = crate::src::src::pager::sqlite3PagerSharedLock((*pBt).pPager);
+    let __pBt_ref = unsafe { &mut *pBt };
+    rc = crate::src::src::pager::sqlite3PagerSharedLock(__pBt_ref.pPager);
     if rc != crate::sqlite3_h::SQLITE_OK {
         return rc;
     }
@@ -2705,24 +2747,25 @@ unsafe extern "C" fn lockBtree(mut pBt: *mut crate::btreeInt_h::BtShared) -> ::c
     if rc != crate::sqlite3_h::SQLITE_OK {
         return rc;
     }
-    nPage = crate::src::src::util::sqlite3Get4byte((*pPage1).aData.offset(28 as isize));
-    crate::src::src::pager::sqlite3PagerPagecount((*pBt).pPager, &raw mut nPageFile as *mut ::core::ffi::c_int);
+    let __pPage1_ref = unsafe { &mut *pPage1 };
+    nPage = crate::src::src::util::sqlite3Get4byte(__pPage1_ref.aData.offset(28 as isize));
+    crate::src::src::pager::sqlite3PagerPagecount(__pBt_ref.pPager, &raw mut nPageFile as *mut ::core::ffi::c_int);
     if nPage == 0 as crate::src::ext::rtree::rtree::u32_0
         || ::libc::memcmp(
-            (*pPage1).aData.offset(24 as isize) as *const ::core::ffi::c_void,
-            (*pPage1).aData.offset(92 as isize) as *const ::core::ffi::c_void,
+            __pPage1_ref.aData.offset(24 as isize) as *const ::core::ffi::c_void,
+            __pPage1_ref.aData.offset(92 as isize) as *const ::core::ffi::c_void,
             4 as crate::__stddef_size_t_h::size_t,
         ) != 0 as ::core::ffi::c_int
     {
         nPage = nPageFile;
     }
-    if (*(*pBt).db).flags & crate::sqliteInt_h::SQLITE_ResetDatabase as crate::src::ext::rtree::rtree::u64_0 != 0 as crate::src::ext::rtree::rtree::u64_0 {
+    if (*__pBt_ref.db).flags & crate::sqliteInt_h::SQLITE_ResetDatabase as crate::src::ext::rtree::rtree::u64_0 != 0 as crate::src::ext::rtree::rtree::u64_0 {
         nPage = 0 as crate::src::ext::rtree::rtree::u32_0;
     }
     if nPage > 0 as crate::src::ext::rtree::rtree::u32_0 {
         let mut pageSize: crate::src::ext::rtree::rtree::u32_0 = 0;
         let mut usableSize: crate::src::ext::rtree::rtree::u32_0 = 0;
-        let mut page1: *mut crate::src::ext::rtree::rtree::u8_0 = (*pPage1).aData;
+        let mut page1: *mut crate::src::ext::rtree::rtree::u8_0 = __pPage1_ref.aData;
         rc = crate::sqlite3_h::SQLITE_NOTADB;
         if ::libc::memcmp(
             page1 as *const ::core::ffi::c_void,
@@ -2735,7 +2778,7 @@ unsafe extern "C" fn lockBtree(mut pBt: *mut crate::btreeInt_h::BtShared) -> ::c
             if *page1.offset(18 as isize) as ::core::ffi::c_int
                 > 2 as ::core::ffi::c_int
             {
-                (*pBt).btsFlags = ((*pBt).btsFlags as ::core::ffi::c_int | crate::btreeInt_h::BTS_READ_ONLY) as crate::src::fts5::u16_0;
+                __pBt_ref.btsFlags = (__pBt_ref.btsFlags as ::core::ffi::c_int | crate::btreeInt_h::BTS_READ_ONLY) as crate::src::fts5::u16_0;
             }
             if *page1.offset(19 as isize) as ::core::ffi::c_int
                 > 2 as ::core::ffi::c_int
@@ -2744,10 +2787,10 @@ unsafe extern "C" fn lockBtree(mut pBt: *mut crate::btreeInt_h::BtShared) -> ::c
             } else {
                 if *page1.offset(19 as isize) as ::core::ffi::c_int
                     == 2 as ::core::ffi::c_int
-                    && (*pBt).btsFlags as ::core::ffi::c_int & crate::btreeInt_h::BTS_NO_WAL == 0 as ::core::ffi::c_int
+                    && __pBt_ref.btsFlags as ::core::ffi::c_int & crate::btreeInt_h::BTS_NO_WAL == 0 as ::core::ffi::c_int
                 {
                     let mut isOpen: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
-                    rc = crate::src::src::pager::sqlite3PagerOpenWal((*pBt).pPager, &raw mut isOpen);
+                    rc = crate::src::src::pager::sqlite3PagerOpenWal(__pBt_ref.pPager, &raw mut isOpen);
                     if rc != crate::sqlite3_h::SQLITE_OK {
                         current_block = 5106468414449065519;
                     } else {
@@ -2790,23 +2833,23 @@ unsafe extern "C" fn lockBtree(mut pBt: *mut crate::btreeInt_h::BtShared) -> ::c
                                 usableSize = pageSize.wrapping_sub(
                                     *page1.offset(20 as isize) as crate::src::ext::rtree::rtree::u32_0,
                                 );
-                                if pageSize != (*pBt).pageSize {
+                                if pageSize != __pBt_ref.pageSize {
                                     releasePageOne(pPage1);
-                                    (*pBt).usableSize = usableSize;
-                                    (*pBt).pageSize = pageSize;
-                                    (*pBt).btsFlags = ((*pBt).btsFlags as ::core::ffi::c_int
+                                    __pBt_ref.usableSize = usableSize;
+                                    __pBt_ref.pageSize = pageSize;
+                                    __pBt_ref.btsFlags = (__pBt_ref.btsFlags as ::core::ffi::c_int
                                         | crate::btreeInt_h::BTS_PAGESIZE_FIXED)
                                         as crate::src::fts5::u16_0;
                                     freeTempSpace(pBt);
                                     rc = crate::src::src::pager::sqlite3PagerSetPagesize(
-                                        (*pBt).pPager,
-                                        &raw mut (*pBt).pageSize,
+                                        __pBt_ref.pPager,
+                                        &raw mut __pBt_ref.pageSize,
                                         pageSize.wrapping_sub(usableSize) as ::core::ffi::c_int,
                                     );
                                     return rc;
                                 }
                                 if nPage > nPageFile {
-                                    if crate::src::src::build::sqlite3WritableSchema((*pBt).db as *mut crate::sqliteInt_h::sqlite3) == 0 as ::core::ffi::c_int {
+                                    if crate::src::src::build::sqlite3WritableSchema(__pBt_ref.db as *mut crate::sqliteInt_h::sqlite3) == 0 as ::core::ffi::c_int {
                                         rc = crate::src::src::main::sqlite3CorruptError(3403 as ::core::ffi::c_int);
                                         current_block = 5106468414449065519;
                                     } else {
@@ -2822,13 +2865,13 @@ unsafe extern "C" fn lockBtree(mut pBt: *mut crate::btreeInt_h::BtShared) -> ::c
                                         if usableSize < 480 as crate::src::ext::rtree::rtree::u32_0 {
                                             current_block = 5106468414449065519;
                                         } else {
-                                            (*pBt).btsFlags = ((*pBt).btsFlags
+                                            __pBt_ref.btsFlags = (__pBt_ref.btsFlags
                                                 as ::core::ffi::c_int
                                                 | crate::btreeInt_h::BTS_PAGESIZE_FIXED)
                                                 as crate::src::fts5::u16_0;
-                                            (*pBt).pageSize = pageSize;
-                                            (*pBt).usableSize = usableSize;
-                                            (*pBt).autoVacuum = (if crate::src::src::util::sqlite3Get4byte(page1.offset(
+                                            __pBt_ref.pageSize = pageSize;
+                                            __pBt_ref.usableSize = usableSize;
+                                            __pBt_ref.autoVacuum = (if crate::src::src::util::sqlite3Get4byte(page1.offset(
                                                 (36 as ::core::ffi::c_int
                                                     + 4 as ::core::ffi::c_int
                                                         * 4 as ::core::ffi::c_int)
@@ -2842,7 +2885,7 @@ unsafe extern "C" fn lockBtree(mut pBt: *mut crate::btreeInt_h::BtShared) -> ::c
                                                 0 as ::core::ffi::c_int
                                             })
                                                 as crate::src::ext::rtree::rtree::u8_0;
-                                            (*pBt).incrVacuum = (if crate::src::src::util::sqlite3Get4byte(page1.offset(
+                                            __pBt_ref.incrVacuum = (if crate::src::src::util::sqlite3Get4byte(page1.offset(
                                                 (36 as ::core::ffi::c_int
                                                     + 7 as ::core::ffi::c_int
                                                         * 4 as ::core::ffi::c_int)
@@ -2870,37 +2913,37 @@ unsafe extern "C" fn lockBtree(mut pBt: *mut crate::btreeInt_h::BtShared) -> ::c
             11793792312832361944 => {}
             _ => {
                 releasePageOne(pPage1);
-                (*pBt).pPage1 = ::core::ptr::null_mut::<crate::btreeInt_h::MemPage>();
+                __pBt_ref.pPage1 = ::core::ptr::null_mut::<crate::btreeInt_h::MemPage>();
                 return rc;
             }
         }
     }
-    (*pBt).maxLocal = (*pBt)
+    __pBt_ref.maxLocal = (*pBt)
         .usableSize
         .wrapping_sub(12 as crate::src::ext::rtree::rtree::u32_0)
         .wrapping_mul(64 as crate::src::ext::rtree::rtree::u32_0)
         .wrapping_div(255 as crate::src::ext::rtree::rtree::u32_0)
         .wrapping_sub(23 as crate::src::ext::rtree::rtree::u32_0) as crate::src::fts5::u16_0;
-    (*pBt).minLocal = (*pBt)
+    __pBt_ref.minLocal = (*pBt)
         .usableSize
         .wrapping_sub(12 as crate::src::ext::rtree::rtree::u32_0)
         .wrapping_mul(32 as crate::src::ext::rtree::rtree::u32_0)
         .wrapping_div(255 as crate::src::ext::rtree::rtree::u32_0)
         .wrapping_sub(23 as crate::src::ext::rtree::rtree::u32_0) as crate::src::fts5::u16_0;
-    (*pBt).maxLeaf = (*pBt).usableSize.wrapping_sub(35 as crate::src::ext::rtree::rtree::u32_0) as crate::src::fts5::u16_0;
-    (*pBt).minLeaf = (*pBt)
+    __pBt_ref.maxLeaf = __pBt_ref.usableSize.wrapping_sub(35 as crate::src::ext::rtree::rtree::u32_0) as crate::src::fts5::u16_0;
+    __pBt_ref.minLeaf = (*pBt)
         .usableSize
         .wrapping_sub(12 as crate::src::ext::rtree::rtree::u32_0)
         .wrapping_mul(32 as crate::src::ext::rtree::rtree::u32_0)
         .wrapping_div(255 as crate::src::ext::rtree::rtree::u32_0)
         .wrapping_sub(23 as crate::src::ext::rtree::rtree::u32_0) as crate::src::fts5::u16_0;
-    if (*pBt).maxLocal as ::core::ffi::c_int > 127 as ::core::ffi::c_int {
-        (*pBt).max1bytePayload = 127 as crate::src::ext::rtree::rtree::u8_0;
+    if __pBt_ref.maxLocal as ::core::ffi::c_int > 127 as ::core::ffi::c_int {
+        __pBt_ref.max1bytePayload = 127 as crate::src::ext::rtree::rtree::u8_0;
     } else {
-        (*pBt).max1bytePayload = (*pBt).maxLocal as crate::src::ext::rtree::rtree::u8_0;
+        __pBt_ref.max1bytePayload = __pBt_ref.maxLocal as crate::src::ext::rtree::rtree::u8_0;
     }
-    (*pBt).pPage1 = pPage1;
-    (*pBt).nPage = nPage;
+    __pBt_ref.pPage1 = pPage1;
+    __pBt_ref.nPage = nPage;
     return crate::sqlite3_h::SQLITE_OK;
 }
 
@@ -2916,10 +2959,11 @@ unsafe extern "C" fn newDatabase(mut pBt: *mut crate::btreeInt_h::BtShared) -> :
     let mut pP1: *mut crate::btreeInt_h::MemPage = ::core::ptr::null_mut::<crate::btreeInt_h::MemPage>();
     let mut data: *mut ::core::ffi::c_uchar = ::core::ptr::null_mut::<::core::ffi::c_uchar>();
     let mut rc: ::core::ffi::c_int = 0;
-    if (*pBt).nPage > 0 as crate::src::ext::rtree::rtree::u32_0 {
+    let __pBt_ref = unsafe { &mut *pBt };
+    if __pBt_ref.nPage > 0 as crate::src::ext::rtree::rtree::u32_0 {
         return crate::sqlite3_h::SQLITE_OK;
     }
-    pP1 = (*pBt).pPage1;
+    pP1 = __pBt_ref.pPage1;
     data = (*pP1).aData as *mut ::core::ffi::c_uchar;
     rc = crate::src::src::pager::sqlite3PagerWrite((*pP1).pDbPage as *mut crate::src::src::pcache::PgHdr);
     if rc != 0 {
@@ -2930,16 +2974,16 @@ unsafe extern "C" fn newDatabase(mut pBt: *mut crate::btreeInt_h::BtShared) -> :
         &raw const zMagicHeader as *const ::core::ffi::c_char as *const ::core::ffi::c_void,
         ::core::mem::size_of::<[::core::ffi::c_char; 16]>() as crate::__stddef_size_t_h::size_t,
     );
-    *data.offset(16 as isize) = ((*pBt).pageSize >> 8 as ::core::ffi::c_int
+    *data.offset(16 as isize) = (__pBt_ref.pageSize >> 8 as ::core::ffi::c_int
         & 0xff as crate::src::ext::rtree::rtree::u32_0) as crate::src::ext::rtree::rtree::u8_0
         as ::core::ffi::c_uchar;
-    *data.offset(17 as isize) = ((*pBt).pageSize >> 16 as ::core::ffi::c_int
+    *data.offset(17 as isize) = (__pBt_ref.pageSize >> 16 as ::core::ffi::c_int
         & 0xff as crate::src::ext::rtree::rtree::u32_0) as crate::src::ext::rtree::rtree::u8_0
         as ::core::ffi::c_uchar;
     *data.offset(18 as isize) = 1 as ::core::ffi::c_uchar;
     *data.offset(19 as isize) = 1 as ::core::ffi::c_uchar;
     *data.offset(20 as isize) =
-        (*pBt).pageSize.wrapping_sub((*pBt).usableSize) as crate::src::ext::rtree::rtree::u8_0 as ::core::ffi::c_uchar;
+        __pBt_ref.pageSize.wrapping_sub(__pBt_ref.usableSize) as crate::src::ext::rtree::rtree::u8_0 as ::core::ffi::c_uchar;
     *data.offset(21 as isize) = 64 as ::core::ffi::c_uchar;
     *data.offset(22 as isize) = 32 as ::core::ffi::c_uchar;
     *data.offset(23 as isize) = 32 as ::core::ffi::c_uchar;
@@ -2950,20 +2994,20 @@ unsafe extern "C" fn newDatabase(mut pBt: *mut crate::btreeInt_h::BtShared) -> :
         (100 as ::core::ffi::c_int - 24 as ::core::ffi::c_int) as crate::__stddef_size_t_h::size_t,
     );
     zeroPage(pP1, crate::btreeInt_h::PTF_INTKEY | crate::btreeInt_h::PTF_LEAF | crate::btreeInt_h::PTF_LEAFDATA);
-    (*pBt).btsFlags = ((*pBt).btsFlags as ::core::ffi::c_int | crate::btreeInt_h::BTS_PAGESIZE_FIXED) as crate::src::fts5::u16_0;
+    __pBt_ref.btsFlags = (__pBt_ref.btsFlags as ::core::ffi::c_int | crate::btreeInt_h::BTS_PAGESIZE_FIXED) as crate::src::fts5::u16_0;
     crate::src::src::util::sqlite3Put4byte(
         data.offset(
             (36 as ::core::ffi::c_int + 4 as ::core::ffi::c_int * 4 as ::core::ffi::c_int) as isize,
         ) as *mut crate::src::ext::rtree::rtree::u8_0,
-        (*pBt).autoVacuum as crate::src::ext::rtree::rtree::u32_0,
+        __pBt_ref.autoVacuum as crate::src::ext::rtree::rtree::u32_0,
     );
     crate::src::src::util::sqlite3Put4byte(
         data.offset(
             (36 as ::core::ffi::c_int + 7 as ::core::ffi::c_int * 4 as ::core::ffi::c_int) as isize,
         ) as *mut crate::src::ext::rtree::rtree::u8_0,
-        (*pBt).incrVacuum as crate::src::ext::rtree::rtree::u32_0,
+        __pBt_ref.incrVacuum as crate::src::ext::rtree::rtree::u32_0,
     );
-    (*pBt).nPage = 1 as crate::src::ext::rtree::rtree::u32_0;
+    __pBt_ref.nPage = 1 as crate::src::ext::rtree::rtree::u32_0;
     *data.offset(31 as isize) = 1 as ::core::ffi::c_uchar;
     return crate::sqlite3_h::SQLITE_OK;
 }
@@ -2984,14 +3028,15 @@ unsafe extern "C" fn btreeBeginTrans(
     mut wrflag: ::core::ffi::c_int,
     mut pSchemaVersion: *mut ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
-    let mut pBt: *mut crate::btreeInt_h::BtShared = (*p).pBt;
+    let __p_ref = unsafe { &mut *p };
+    let mut pBt: *mut crate::btreeInt_h::BtShared = __p_ref.pBt;
     let mut pPager: *mut crate::src::src::pager::Pager = (*pBt).pPager;
     let mut rc: ::core::ffi::c_int = crate::sqlite3_h::SQLITE_OK;
     crate::src::src::btmutex::sqlite3BtreeEnter(p as *mut crate::btreeInt_h::Btree);
-    if !((*p).inTrans as ::core::ffi::c_int == crate::btreeInt_h::TRANS_WRITE
-        || (*p).inTrans as ::core::ffi::c_int == crate::btreeInt_h::TRANS_READ && wrflag == 0)
+    if !(__p_ref.inTrans as ::core::ffi::c_int == crate::btreeInt_h::TRANS_WRITE
+        || __p_ref.inTrans as ::core::ffi::c_int == crate::btreeInt_h::TRANS_READ && wrflag == 0)
     {
-        if (*(*p).db).flags & crate::sqliteInt_h::SQLITE_ResetDatabase as crate::src::ext::rtree::rtree::u64_0 != 0
+        if (*__p_ref.db).flags & crate::sqliteInt_h::SQLITE_ResetDatabase as crate::src::ext::rtree::rtree::u64_0 != 0
             && crate::src::src::pager::sqlite3PagerIsreadonly(pPager) as ::core::ffi::c_int == 0 as ::core::ffi::c_int
         {
             (*pBt).btsFlags = ((*pBt).btsFlags as ::core::ffi::c_int & !crate::btreeInt_h::BTS_READ_ONLY) as crate::src::fts5::u16_0;
@@ -3023,19 +3068,20 @@ unsafe extern "C" fn btreeBeginTrans(
             } else {
                 rc = querySharedCacheTableLock(p, crate::sqliteInt_h::SCHEMA_ROOT as crate::src::src::pager::Pgno, crate::btreeInt_h::READ_LOCK as crate::src::ext::rtree::rtree::u8_0);
                 if !(crate::sqlite3_h::SQLITE_OK != rc) {
-                    (*pBt).btsFlags =
-                        ((*pBt).btsFlags as ::core::ffi::c_int & !crate::btreeInt_h::BTS_INITIALLY_EMPTY) as crate::src::fts5::u16_0;
-                    if (*pBt).nPage == 0 as crate::src::ext::rtree::rtree::u32_0 {
-                        (*pBt).btsFlags =
-                            ((*pBt).btsFlags as ::core::ffi::c_int | crate::btreeInt_h::BTS_INITIALLY_EMPTY) as crate::src::fts5::u16_0;
+                    let __pBt_ref = unsafe { &mut *pBt };
+                    __pBt_ref.btsFlags =
+                        (__pBt_ref.btsFlags as ::core::ffi::c_int & !crate::btreeInt_h::BTS_INITIALLY_EMPTY) as crate::src::fts5::u16_0;
+                    if __pBt_ref.nPage == 0 as crate::src::ext::rtree::rtree::u32_0 {
+                        __pBt_ref.btsFlags =
+                            (__pBt_ref.btsFlags as ::core::ffi::c_int | crate::btreeInt_h::BTS_INITIALLY_EMPTY) as crate::src::fts5::u16_0;
                     }
                     loop {
-                        while (*pBt).pPage1.is_null() && {
+                        while __pBt_ref.pPage1.is_null() && {
                             rc = lockBtree(pBt);
                             crate::sqlite3_h::SQLITE_OK == rc
                         } {}
                         if rc == crate::sqlite3_h::SQLITE_OK && wrflag != 0 {
-                            if (*pBt).btsFlags as ::core::ffi::c_int & crate::btreeInt_h::BTS_READ_ONLY
+                            if __pBt_ref.btsFlags as ::core::ffi::c_int & crate::btreeInt_h::BTS_READ_ONLY
                                 != 0 as ::core::ffi::c_int
                             {
                                 rc = crate::sqlite3_h::SQLITE_READONLY;
@@ -3043,12 +3089,12 @@ unsafe extern "C" fn btreeBeginTrans(
                                 rc = crate::src::src::pager::sqlite3PagerBegin(
                                     pPager,
                                     (wrflag > 1 as ::core::ffi::c_int) as ::core::ffi::c_int,
-                                    crate::src::src::main::sqlite3TempInMemory((*p).db as *const crate::sqliteInt_h::sqlite3),
+                                    crate::src::src::main::sqlite3TempInMemory(__p_ref.db as *const crate::sqliteInt_h::sqlite3),
                                 );
                                 if rc == crate::sqlite3_h::SQLITE_OK {
                                     rc = newDatabase(pBt);
                                 } else if rc == crate::sqlite3_h::SQLITE_BUSY_SNAPSHOT
-                                    && (*pBt).inTransaction as ::core::ffi::c_int == crate::btreeInt_h::TRANS_NONE
+                                    && __pBt_ref.inTransaction as ::core::ffi::c_int == crate::btreeInt_h::TRANS_NONE
                                 {
                                     rc = crate::sqlite3_h::SQLITE_BUSY;
                                 }
@@ -3058,38 +3104,38 @@ unsafe extern "C" fn btreeBeginTrans(
                             unlockBtreeIfUnused(pBt);
                         }
                         if !(rc & 0xff as ::core::ffi::c_int == crate::sqlite3_h::SQLITE_BUSY
-                            && (*pBt).inTransaction as ::core::ffi::c_int == crate::btreeInt_h::TRANS_NONE
+                            && __pBt_ref.inTransaction as ::core::ffi::c_int == crate::btreeInt_h::TRANS_NONE
                             && btreeInvokeBusyHandler(pBt as *mut ::core::ffi::c_void) != 0)
                         {
                             break;
                         }
                     }
                     if rc == crate::sqlite3_h::SQLITE_OK {
-                        if (*p).inTrans as ::core::ffi::c_int == crate::btreeInt_h::TRANS_NONE {
-                            (*pBt).nTransaction += 1;
-                            if (*p).sharable != 0 {
-                                (*p).lock.eLock = crate::btreeInt_h::READ_LOCK as crate::src::ext::rtree::rtree::u8_0;
-                                (*p).lock.pNext = (*pBt).pLock;
-                                (*pBt).pLock = &raw mut (*p).lock;
+                        if __p_ref.inTrans as ::core::ffi::c_int == crate::btreeInt_h::TRANS_NONE {
+                            __pBt_ref.nTransaction += 1;
+                            if __p_ref.sharable != 0 {
+                                __p_ref.lock.eLock = crate::btreeInt_h::READ_LOCK as crate::src::ext::rtree::rtree::u8_0;
+                                __p_ref.lock.pNext = __pBt_ref.pLock;
+                                __pBt_ref.pLock = &raw mut __p_ref.lock;
                             }
                         }
-                        (*p).inTrans = (if wrflag != 0 { crate::btreeInt_h::TRANS_WRITE } else { crate::btreeInt_h::TRANS_READ }) as crate::src::ext::rtree::rtree::u8_0;
-                        if (*p).inTrans as ::core::ffi::c_int
-                            > (*pBt).inTransaction as ::core::ffi::c_int
+                        __p_ref.inTrans = (if wrflag != 0 { crate::btreeInt_h::TRANS_WRITE } else { crate::btreeInt_h::TRANS_READ }) as crate::src::ext::rtree::rtree::u8_0;
+                        if __p_ref.inTrans as ::core::ffi::c_int
+                            > __pBt_ref.inTransaction as ::core::ffi::c_int
                         {
-                            (*pBt).inTransaction = (*p).inTrans;
+                            __pBt_ref.inTransaction = __p_ref.inTrans;
                         }
                         if wrflag != 0 {
-                            let mut pPage1: *mut crate::btreeInt_h::MemPage = (*pBt).pPage1;
-                            (*pBt).pWriter = p;
-                            (*pBt).btsFlags =
-                                ((*pBt).btsFlags as ::core::ffi::c_int & !crate::btreeInt_h::BTS_EXCLUSIVE) as crate::src::fts5::u16_0;
+                            let mut pPage1: *mut crate::btreeInt_h::MemPage = __pBt_ref.pPage1;
+                            __pBt_ref.pWriter = p;
+                            __pBt_ref.btsFlags =
+                                (__pBt_ref.btsFlags as ::core::ffi::c_int & !crate::btreeInt_h::BTS_EXCLUSIVE) as crate::src::fts5::u16_0;
                             if wrflag > 1 as ::core::ffi::c_int {
-                                (*pBt).btsFlags = ((*pBt).btsFlags as ::core::ffi::c_int
+                                __pBt_ref.btsFlags = (__pBt_ref.btsFlags as ::core::ffi::c_int
                                     | crate::btreeInt_h::BTS_EXCLUSIVE)
                                     as crate::src::fts5::u16_0;
                             }
-                            if (*pBt).nPage
+                            if __pBt_ref.nPage
                                 != crate::src::src::util::sqlite3Get4byte(
                                     (*pPage1).aData.offset(28 as isize)
                                         as *mut crate::src::ext::rtree::rtree::u8_0,
@@ -3100,7 +3146,7 @@ unsafe extern "C" fn btreeBeginTrans(
                                     crate::src::src::util::sqlite3Put4byte(
                                         (*pPage1).aData.offset(28 as isize)
                                             as *mut crate::src::ext::rtree::rtree::u8_0,
-                                        (*pBt).nPage,
+                                        __pBt_ref.nPage,
                                     );
                                 }
                             }
@@ -3119,7 +3165,7 @@ unsafe extern "C" fn btreeBeginTrans(
             ) as ::core::ffi::c_int;
         }
         if wrflag != 0 {
-            rc = crate::src::src::pager::sqlite3PagerOpenSavepoint(pPager, (*(*p).db).nSavepoint);
+            rc = crate::src::src::pager::sqlite3PagerOpenSavepoint(pPager, (*__p_ref.db).nSavepoint);
         }
     }
     crate::src::src::btmutex::sqlite3BtreeLeave(p as *mut crate::btreeInt_h::Btree);
@@ -3133,13 +3179,14 @@ pub unsafe extern "C" fn sqlite3BtreeBeginTrans(
     mut pSchemaVersion: *mut ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
     let mut pBt: *mut crate::btreeInt_h::BtShared = ::core::ptr::null_mut::<crate::btreeInt_h::BtShared>();
-    if (*p).sharable as ::core::ffi::c_int != 0
-        || (*p).inTrans as ::core::ffi::c_int == crate::btreeInt_h::TRANS_NONE
-        || (*p).inTrans as ::core::ffi::c_int == crate::btreeInt_h::TRANS_READ && wrflag != 0 as ::core::ffi::c_int
+    let __p_ref = unsafe { &*p };
+    if __p_ref.sharable as ::core::ffi::c_int != 0
+        || __p_ref.inTrans as ::core::ffi::c_int == crate::btreeInt_h::TRANS_NONE
+        || __p_ref.inTrans as ::core::ffi::c_int == crate::btreeInt_h::TRANS_READ && wrflag != 0 as ::core::ffi::c_int
     {
         return btreeBeginTrans(p, wrflag, pSchemaVersion);
     }
-    pBt = (*p).pBt;
+    pBt = __p_ref.pBt;
     if !pSchemaVersion.is_null() {
         *pSchemaVersion = crate::src::src::util::sqlite3Get4byte(
             (*(*pBt).pPage1)
@@ -3148,7 +3195,7 @@ pub unsafe extern "C" fn sqlite3BtreeBeginTrans(
         ) as ::core::ffi::c_int;
     }
     if wrflag != 0 {
-        return crate::src::src::pager::sqlite3PagerOpenSavepoint((*pBt).pPager, (*(*p).db).nSavepoint);
+        return crate::src::src::pager::sqlite3PagerOpenSavepoint((*pBt).pPager, (*__p_ref.db).nSavepoint);
     } else {
         return crate::sqlite3_h::SQLITE_OK;
     };
@@ -3158,9 +3205,10 @@ unsafe extern "C" fn setChildPtrmaps(mut pPage: *mut crate::btreeInt_h::MemPage)
     let mut i: ::core::ffi::c_int = 0;
     let mut nCell: ::core::ffi::c_int = 0;
     let mut rc: ::core::ffi::c_int = 0;
-    let mut pBt: *mut crate::btreeInt_h::BtShared = (*pPage).pBt;
-    let mut pgno: crate::src::src::pager::Pgno = (*pPage).pgno;
-    rc = if (*pPage).isInit as ::core::ffi::c_int != 0 {
+    let __pPage_ref = unsafe { &mut *pPage };
+    let mut pBt: *mut crate::btreeInt_h::BtShared = __pPage_ref.pBt;
+    let mut pgno: crate::src::src::pager::Pgno = __pPage_ref.pgno;
+    rc = if __pPage_ref.isInit as ::core::ffi::c_int != 0 {
         crate::sqlite3_h::SQLITE_OK
     } else {
         btreeInitPage(pPage)
@@ -3168,11 +3216,11 @@ unsafe extern "C" fn setChildPtrmaps(mut pPage: *mut crate::btreeInt_h::MemPage)
     if rc != crate::sqlite3_h::SQLITE_OK {
         return rc;
     }
-    nCell = (*pPage).nCell as ::core::ffi::c_int;
+    nCell = __pPage_ref.nCell as ::core::ffi::c_int;
     i = 0 as ::core::ffi::c_int;
     while i < nCell {
-        let mut pCell: *mut crate::src::ext::rtree::rtree::u8_0 = (*pPage).aData.offset(
-            ((*pPage).maskPage as ::core::ffi::c_int
+        let mut pCell: *mut crate::src::ext::rtree::rtree::u8_0 = __pPage_ref.aData.offset(
+            (__pPage_ref.maskPage as ::core::ffi::c_int
                 & ((*((*pPage)
                     .aCellIdx
                     .offset((2 as ::core::ffi::c_int * i) as isize)
@@ -3188,16 +3236,16 @@ unsafe extern "C" fn setChildPtrmaps(mut pPage: *mut crate::btreeInt_h::MemPage)
                         as ::core::ffi::c_int)) as isize,
         );
         ptrmapPutOvflPtr(pPage, pPage, pCell, &raw mut rc);
-        if (*pPage).leaf == 0 {
+        if __pPage_ref.leaf == 0 {
             let mut childPgno: crate::src::src::pager::Pgno = crate::src::src::util::sqlite3Get4byte(pCell) as crate::src::src::pager::Pgno;
             ptrmapPut(pBt, childPgno, crate::btreeInt_h::PTRMAP_BTREE as crate::src::ext::rtree::rtree::u8_0, pgno, &raw mut rc);
         }
         i += 1;
     }
-    if (*pPage).leaf == 0 {
+    if __pPage_ref.leaf == 0 {
         let mut childPgno_0: crate::src::src::pager::Pgno =
-            crate::src::src::util::sqlite3Get4byte((*pPage).aData.offset(
-                ((*pPage).hdrOffset as ::core::ffi::c_int + 8 as ::core::ffi::c_int) as isize,
+            crate::src::src::util::sqlite3Get4byte(__pPage_ref.aData.offset(
+                (__pPage_ref.hdrOffset as ::core::ffi::c_int + 8 as ::core::ffi::c_int) as isize,
             ) as *mut crate::src::ext::rtree::rtree::u8_0) as crate::src::src::pager::Pgno;
         ptrmapPut(pBt, childPgno_0, crate::btreeInt_h::PTRMAP_BTREE as crate::src::ext::rtree::rtree::u8_0, pgno, &raw mut rc);
     }
@@ -3230,8 +3278,9 @@ unsafe extern "C" fn modifyPagePointer(
         nCell = (*pPage).nCell as ::core::ffi::c_int;
         i = 0 as ::core::ffi::c_int;
         while i < nCell {
-            let mut pCell: *mut crate::src::ext::rtree::rtree::u8_0 = (*pPage).aData.offset(
-                ((*pPage).maskPage as ::core::ffi::c_int
+            let __pPage_ref = unsafe { &mut *pPage };
+            let mut pCell: *mut crate::src::ext::rtree::rtree::u8_0 = __pPage_ref.aData.offset(
+                (__pPage_ref.maskPage as ::core::ffi::c_int
                     & ((*((*pPage)
                         .aCellIdx
                         .offset((2 as ::core::ffi::c_int * i) as isize)
@@ -3254,14 +3303,14 @@ unsafe extern "C" fn modifyPagePointer(
     nLocal:  0,
     nSize:  0,
 };
-                (*pPage).xParseCell.expect("non-null function pointer")(
+                __pPage_ref.xParseCell.expect("non-null function pointer")(
                     pPage,
                     pCell,
                     &raw mut info,
                 );
                 if (info.nLocal as crate::src::ext::rtree::rtree::u32_0) < info.nPayload {
                     if pCell.offset(info.nSize as ::core::ffi::c_int as isize)
-                        > (*pPage).aData.offset((*(*pPage).pBt).usableSize as isize)
+                        > __pPage_ref.aData.offset((*__pPage_ref.pBt).usableSize as isize)
                     {
                         return crate::src::src::main::sqlite3CorruptError(3877 as ::core::ffi::c_int);
                     }
@@ -3283,7 +3332,7 @@ unsafe extern "C" fn modifyPagePointer(
                 }
             } else {
                 if pCell.offset(4 as isize)
-                    > (*pPage).aData.offset((*(*pPage).pBt).usableSize as isize)
+                    > __pPage_ref.aData.offset((*__pPage_ref.pBt).usableSize as isize)
                 {
                     return crate::src::src::main::sqlite3CorruptError(3886 as ::core::ffi::c_int);
                 }
@@ -3295,17 +3344,18 @@ unsafe extern "C" fn modifyPagePointer(
             i += 1;
         }
         if i == nCell {
+            let __pPage_ref = unsafe { &mut *pPage };
             if eType as ::core::ffi::c_int != crate::btreeInt_h::PTRMAP_BTREE
-                || crate::src::src::util::sqlite3Get4byte((*pPage).aData.offset(
-                    ((*pPage).hdrOffset as ::core::ffi::c_int + 8 as ::core::ffi::c_int) as isize,
+                || crate::src::src::util::sqlite3Get4byte(__pPage_ref.aData.offset(
+                    (__pPage_ref.hdrOffset as ::core::ffi::c_int + 8 as ::core::ffi::c_int) as isize,
                 ) as *mut crate::src::ext::rtree::rtree::u8_0)
                     != iFrom
             {
                 return crate::src::src::main::sqlite3CorruptError(3898 as ::core::ffi::c_int);
             }
             crate::src::src::util::sqlite3Put4byte(
-                (*pPage).aData.offset(
-                    ((*pPage).hdrOffset as ::core::ffi::c_int + 8 as ::core::ffi::c_int) as isize,
+                __pPage_ref.aData.offset(
+                    (__pPage_ref.hdrOffset as ::core::ffi::c_int + 8 as ::core::ffi::c_int) as isize,
                 ) as *mut crate::src::ext::rtree::rtree::u8_0,
                 iTo as crate::src::ext::rtree::rtree::u32_0,
             );
@@ -3323,17 +3373,18 @@ unsafe extern "C" fn relocatePage(
     mut isCommit: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
     let mut pPtrPage: *mut crate::btreeInt_h::MemPage = ::core::ptr::null_mut::<crate::btreeInt_h::MemPage>();
-    let mut iDbPage: crate::src::src::pager::Pgno = (*pDbPage).pgno;
+    let __pDbPage_ref = unsafe { &mut *pDbPage };
+    let mut iDbPage: crate::src::src::pager::Pgno = __pDbPage_ref.pgno;
     let mut pPager: *mut crate::src::src::pager::Pager = (*pBt).pPager;
     let mut rc: ::core::ffi::c_int = 0;
     if iDbPage < 3 as crate::src::src::pager::Pgno {
         return crate::src::src::main::sqlite3CorruptError(3933 as ::core::ffi::c_int);
     }
-    rc = crate::src::src::pager::sqlite3PagerMovepage(pPager,  (*pDbPage).pDbPage as *mut crate::src::src::pcache::PgHdr, iFreePage, isCommit);
+    rc = crate::src::src::pager::sqlite3PagerMovepage(pPager,  __pDbPage_ref.pDbPage as *mut crate::src::src::pcache::PgHdr, iFreePage, isCommit);
     if rc != crate::sqlite3_h::SQLITE_OK {
         return rc;
     }
-    (*pDbPage).pgno = iFreePage;
+    __pDbPage_ref.pgno = iFreePage;
     if eType as ::core::ffi::c_int == crate::btreeInt_h::PTRMAP_BTREE || eType as ::core::ffi::c_int == crate::btreeInt_h::PTRMAP_ROOTPAGE
     {
         rc = setChildPtrmaps(pDbPage);
@@ -3341,7 +3392,7 @@ unsafe extern "C" fn relocatePage(
             return rc;
         }
     } else {
-        let mut nextOvfl: crate::src::src::pager::Pgno = crate::src::src::util::sqlite3Get4byte((*pDbPage).aData) as crate::src::src::pager::Pgno;
+        let mut nextOvfl: crate::src::src::pager::Pgno = crate::src::src::util::sqlite3Get4byte(__pDbPage_ref.aData) as crate::src::src::pager::Pgno;
         if nextOvfl != 0 as crate::src::src::pager::Pgno {
             ptrmapPut(
                 pBt,
@@ -3480,7 +3531,8 @@ unsafe extern "C" fn finalDbSize(mut pBt: *mut crate::btreeInt_h::BtShared, mut 
     let mut nEntry: ::core::ffi::c_int = 0;
     let mut nPtrmap: crate::src::src::pager::Pgno = 0;
     let mut nFin: crate::src::src::pager::Pgno = 0;
-    nEntry = (*pBt).usableSize.wrapping_div(5 as crate::src::ext::rtree::rtree::u32_0) as ::core::ffi::c_int;
+    let __pBt_ref = unsafe { &mut *pBt };
+    nEntry = __pBt_ref.usableSize.wrapping_div(5 as crate::src::ext::rtree::rtree::u32_0) as ::core::ffi::c_int;
     nPtrmap = nFree
         .wrapping_sub(nOrig)
         .wrapping_add(ptrmapPageno(pBt, nOrig))
@@ -3489,11 +3541,11 @@ unsafe extern "C" fn finalDbSize(mut pBt: *mut crate::btreeInt_h::BtShared, mut 
     nFin = nOrig.wrapping_sub(nFree).wrapping_sub(nPtrmap);
     if nOrig
         > (crate::src::src::global::sqlite3PendingByte as crate::src::ext::rtree::rtree::u32_0)
-            .wrapping_div((*pBt).pageSize)
+            .wrapping_div(__pBt_ref.pageSize)
             .wrapping_add(1 as crate::src::ext::rtree::rtree::u32_0)
         && nFin
             < (crate::src::src::global::sqlite3PendingByte as crate::src::ext::rtree::rtree::u32_0)
-                .wrapping_div((*pBt).pageSize)
+                .wrapping_div(__pBt_ref.pageSize)
                 .wrapping_add(1 as crate::src::ext::rtree::rtree::u32_0)
     {
         nFin = nFin.wrapping_sub(1);
@@ -3501,7 +3553,7 @@ unsafe extern "C" fn finalDbSize(mut pBt: *mut crate::btreeInt_h::BtShared, mut 
     while ptrmapPageno(pBt, nFin) == nFin
         || nFin
             == (crate::src::src::global::sqlite3PendingByte as crate::src::ext::rtree::rtree::u32_0)
-                .wrapping_div((*pBt).pageSize)
+                .wrapping_div(__pBt_ref.pageSize)
                 .wrapping_add(1 as crate::src::ext::rtree::rtree::u32_0)
     {
         nFin = nFin.wrapping_sub(1);
@@ -3533,12 +3585,13 @@ pub unsafe extern "C" fn sqlite3BtreeIncrVacuum(mut p: *mut crate::btreeInt_h::B
                 rc = incrVacuumStep(pBt, nFin, nOrig, 0 as ::core::ffi::c_int);
             }
             if rc == crate::sqlite3_h::SQLITE_OK {
-                rc = crate::src::src::pager::sqlite3PagerWrite((*(*pBt).pPage1).pDbPage as *mut crate::src::src::pcache::PgHdr);
+                let __pBt_ref = unsafe { &mut *pBt };
+                rc = crate::src::src::pager::sqlite3PagerWrite((*__pBt_ref.pPage1).pDbPage as *mut crate::src::src::pcache::PgHdr);
                 crate::src::src::util::sqlite3Put4byte(
-                    (*(*pBt).pPage1)
+                    (*__pBt_ref.pPage1)
                         .aData
                         .offset(28 as isize) as *mut crate::src::ext::rtree::rtree::u8_0,
-                    (*pBt).nPage,
+                    __pBt_ref.nPage,
                 );
             }
         } else {
@@ -3581,15 +3634,16 @@ unsafe extern "C" fn autoVacuumCommit(mut p: *mut crate::btreeInt_h::Btree) -> :
         if (*db).xAutovacPages.is_some() {
             let mut iDb: ::core::ffi::c_int = 0;
             iDb = 0 as ::core::ffi::c_int;
-            while iDb < (*db).nDb {
-                if (*(*db).aDb.offset(iDb as isize)).pBt == p {
+            let __db_ref = unsafe { &mut *db };
+            while iDb < __db_ref.nDb {
+                if (*__db_ref.aDb.offset(iDb as isize)).pBt == p {
                     break;
                 }
                 iDb += 1;
             }
-            nVac = (*db).xAutovacPages.expect("non-null function pointer")(
-                (*db).pAutovacPagesArg,
-                (*(*db).aDb.offset(iDb as isize)).zDbSName,
+            nVac = __db_ref.xAutovacPages.expect("non-null function pointer")(
+                __db_ref.pAutovacPagesArg,
+                (*__db_ref.aDb.offset(iDb as isize)).zDbSName,
                 nOrig as crate::src::ext::rtree::rtree::u32_0,
                 nFree as crate::src::ext::rtree::rtree::u32_0,
                 (*pBt).pageSize,
@@ -3616,29 +3670,30 @@ unsafe extern "C" fn autoVacuumCommit(mut p: *mut crate::btreeInt_h::Btree) -> :
             iFree = iFree.wrapping_sub(1);
         }
         if (rc == crate::sqlite3_h::SQLITE_DONE || rc == crate::sqlite3_h::SQLITE_OK) && nFree > 0 as crate::src::src::pager::Pgno {
-            rc = crate::src::src::pager::sqlite3PagerWrite((*(*pBt).pPage1).pDbPage as *mut crate::src::src::pcache::PgHdr);
+            let __pBt_ref = unsafe { &mut *pBt };
+            rc = crate::src::src::pager::sqlite3PagerWrite((*__pBt_ref.pPage1).pDbPage as *mut crate::src::src::pcache::PgHdr);
             if nVac == nFree {
                 crate::src::src::util::sqlite3Put4byte(
-                    (*(*pBt).pPage1)
+                    (*__pBt_ref.pPage1)
                         .aData
                         .offset(32 as isize) as *mut crate::src::ext::rtree::rtree::u8_0,
                     0 as crate::src::ext::rtree::rtree::u32_0,
                 );
                 crate::src::src::util::sqlite3Put4byte(
-                    (*(*pBt).pPage1)
+                    (*__pBt_ref.pPage1)
                         .aData
                         .offset(36 as isize) as *mut crate::src::ext::rtree::rtree::u8_0,
                     0 as crate::src::ext::rtree::rtree::u32_0,
                 );
             }
             crate::src::src::util::sqlite3Put4byte(
-                (*(*pBt).pPage1)
+                (*__pBt_ref.pPage1)
                     .aData
                     .offset(28 as isize) as *mut crate::src::ext::rtree::rtree::u8_0,
                 nFin as crate::src::ext::rtree::rtree::u32_0,
             );
-            (*pBt).bDoTruncate = 1 as crate::src::ext::rtree::rtree::u8_0;
-            (*pBt).nPage = nFin as crate::src::ext::rtree::rtree::u32_0;
+            __pBt_ref.bDoTruncate = 1 as crate::src::ext::rtree::rtree::u8_0;
+            __pBt_ref.nPage = nFin as crate::src::ext::rtree::rtree::u32_0;
         }
         if rc != crate::sqlite3_h::SQLITE_OK {
             crate::src::src::pager::sqlite3PagerRollback(pPager);
@@ -3656,39 +3711,41 @@ pub unsafe extern "C" fn sqlite3BtreeCommitPhaseOne(
     if (*p).inTrans as ::core::ffi::c_int == crate::btreeInt_h::TRANS_WRITE {
         let mut pBt: *mut crate::btreeInt_h::BtShared = (*p).pBt;
         crate::src::src::btmutex::sqlite3BtreeEnter(p as *mut crate::btreeInt_h::Btree);
-        if (*pBt).autoVacuum != 0 {
+        let __pBt_ref = unsafe { &*pBt };
+        if __pBt_ref.autoVacuum != 0 {
             rc = autoVacuumCommit(p);
             if rc != crate::sqlite3_h::SQLITE_OK {
                 crate::src::src::btmutex::sqlite3BtreeLeave(p as *mut crate::btreeInt_h::Btree);
                 return rc;
             }
         }
-        if (*pBt).bDoTruncate != 0 {
-            crate::src::src::pager::sqlite3PagerTruncateImage((*pBt).pPager, (*pBt).nPage as crate::src::src::pager::Pgno);
+        if __pBt_ref.bDoTruncate != 0 {
+            crate::src::src::pager::sqlite3PagerTruncateImage(__pBt_ref.pPager, __pBt_ref.nPage as crate::src::src::pager::Pgno);
         }
-        rc = crate::src::src::pager::sqlite3PagerCommitPhaseOne((*pBt).pPager, zSuperJrnl, 0 as ::core::ffi::c_int);
+        rc = crate::src::src::pager::sqlite3PagerCommitPhaseOne(__pBt_ref.pPager, zSuperJrnl, 0 as ::core::ffi::c_int);
         crate::src::src::btmutex::sqlite3BtreeLeave(p as *mut crate::btreeInt_h::Btree);
     }
     return rc;
 }
 
 unsafe extern "C" fn btreeEndTransaction(mut p: *mut crate::btreeInt_h::Btree) {
-    let mut pBt: *mut crate::btreeInt_h::BtShared = (*p).pBt;
-    let mut db: *mut crate::sqliteInt_h::sqlite3 = (*p).db;
+    let __p_ref = unsafe { &mut *p };
+    let mut pBt: *mut crate::btreeInt_h::BtShared = __p_ref.pBt;
+    let mut db: *mut crate::sqliteInt_h::sqlite3 = __p_ref.db;
     (*pBt).bDoTruncate = 0 as crate::src::ext::rtree::rtree::u8_0;
-    if (*p).inTrans as ::core::ffi::c_int > crate::btreeInt_h::TRANS_NONE && (*db).nVdbeRead > 1 as ::core::ffi::c_int
+    if __p_ref.inTrans as ::core::ffi::c_int > crate::btreeInt_h::TRANS_NONE && (*db).nVdbeRead > 1 as ::core::ffi::c_int
     {
         downgradeAllSharedCacheTableLocks(p);
-        (*p).inTrans = crate::btreeInt_h::TRANS_READ as crate::src::ext::rtree::rtree::u8_0;
+        __p_ref.inTrans = crate::btreeInt_h::TRANS_READ as crate::src::ext::rtree::rtree::u8_0;
     } else {
-        if (*p).inTrans as ::core::ffi::c_int != crate::btreeInt_h::TRANS_NONE {
+        if __p_ref.inTrans as ::core::ffi::c_int != crate::btreeInt_h::TRANS_NONE {
             clearAllSharedCacheTableLocks(p);
             (*pBt).nTransaction -= 1;
             if 0 as ::core::ffi::c_int == (*pBt).nTransaction {
                 (*pBt).inTransaction = crate::btreeInt_h::TRANS_NONE as crate::src::ext::rtree::rtree::u8_0;
             }
         }
-        (*p).inTrans = crate::btreeInt_h::TRANS_NONE as crate::src::ext::rtree::rtree::u8_0;
+        __p_ref.inTrans = crate::btreeInt_h::TRANS_NONE as crate::src::ext::rtree::rtree::u8_0;
         unlockBtreeIfUnused(pBt);
     };
 }
@@ -3704,13 +3761,14 @@ pub unsafe extern "C" fn sqlite3BtreeCommitPhaseTwo(
     crate::src::src::btmutex::sqlite3BtreeEnter(p as *mut crate::btreeInt_h::Btree);
     if (*p).inTrans as ::core::ffi::c_int == crate::btreeInt_h::TRANS_WRITE {
         let mut rc: ::core::ffi::c_int = 0;
-        let mut pBt: *mut crate::btreeInt_h::BtShared = (*p).pBt;
+        let __p_ref = unsafe { &mut *p };
+        let mut pBt: *mut crate::btreeInt_h::BtShared = __p_ref.pBt;
         rc = crate::src::src::pager::sqlite3PagerCommitPhaseTwo((*pBt).pPager);
         if rc != crate::sqlite3_h::SQLITE_OK && bCleanup == 0 as ::core::ffi::c_int {
             crate::src::src::btmutex::sqlite3BtreeLeave(p as *mut crate::btreeInt_h::Btree);
             return rc;
         }
-        (*p).iBDataVersion = (*p).iBDataVersion.wrapping_sub(1);
+        __p_ref.iBDataVersion = __p_ref.iBDataVersion.wrapping_sub(1);
         (*pBt).inTransaction = crate::btreeInt_h::TRANS_READ as crate::src::ext::rtree::rtree::u8_0;
         btreeClearHasContent(pBt);
     }
@@ -3881,31 +3939,33 @@ unsafe extern "C" fn btreeCursor(
             iTable = 0 as crate::src::src::pager::Pgno;
         }
     }
-    (*pCur).pgnoRoot = iTable;
-    (*pCur).iPage = -(1 as ::core::ffi::c_int) as crate::sqliteInt_h::i8_0;
-    (*pCur).pKeyInfo = pKeyInfo;
-    (*pCur).pBtree = p;
-    (*pCur).pBt = pBt;
-    (*pCur).curFlags = 0 as crate::src::ext::rtree::rtree::u8_0;
-    pX = (*pBt).pCursor;
+    let __pCur_ref = unsafe { &mut *pCur };
+    __pCur_ref.pgnoRoot = iTable;
+    __pCur_ref.iPage = -(1 as ::core::ffi::c_int) as crate::sqliteInt_h::i8_0;
+    __pCur_ref.pKeyInfo = pKeyInfo;
+    __pCur_ref.pBtree = p;
+    __pCur_ref.pBt = pBt;
+    __pCur_ref.curFlags = 0 as crate::src::ext::rtree::rtree::u8_0;
+    let __pBt_ref = unsafe { &mut *pBt };
+    pX = __pBt_ref.pCursor;
     while !pX.is_null() {
         if (*pX).pgnoRoot == iTable {
             (*pX).curFlags = ((*pX).curFlags as ::core::ffi::c_int | crate::btreeInt_h::BTCF_Multiple) as crate::src::ext::rtree::rtree::u8_0;
-            (*pCur).curFlags = crate::btreeInt_h::BTCF_Multiple as crate::src::ext::rtree::rtree::u8_0;
+            __pCur_ref.curFlags = crate::btreeInt_h::BTCF_Multiple as crate::src::ext::rtree::rtree::u8_0;
         }
         pX = (*pX).pNext;
     }
-    (*pCur).eState = crate::btreeInt_h::CURSOR_INVALID as crate::src::ext::rtree::rtree::u8_0;
-    (*pCur).pNext = (*pBt).pCursor;
-    (*pBt).pCursor = pCur;
+    __pCur_ref.eState = crate::btreeInt_h::CURSOR_INVALID as crate::src::ext::rtree::rtree::u8_0;
+    __pCur_ref.pNext = __pBt_ref.pCursor;
+    __pBt_ref.pCursor = pCur;
     if wrFlag != 0 {
-        (*pCur).curFlags = ((*pCur).curFlags as ::core::ffi::c_int | crate::btreeInt_h::BTCF_WriteFlag) as crate::src::ext::rtree::rtree::u8_0;
-        (*pCur).curPagerFlags = 0 as crate::src::ext::rtree::rtree::u8_0;
-        if (*pBt).pTmpSpace.is_null() {
+        __pCur_ref.curFlags = (__pCur_ref.curFlags as ::core::ffi::c_int | crate::btreeInt_h::BTCF_WriteFlag) as crate::src::ext::rtree::rtree::u8_0;
+        __pCur_ref.curPagerFlags = 0 as crate::src::ext::rtree::rtree::u8_0;
+        if __pBt_ref.pTmpSpace.is_null() {
             return allocateTempSpace(pBt);
         }
     } else {
-        (*pCur).curPagerFlags = crate::src::src::pager::PAGER_GET_READONLY as crate::src::ext::rtree::rtree::u8_0;
+        __pCur_ref.curPagerFlags = crate::src::src::pager::PAGER_GET_READONLY as crate::src::ext::rtree::rtree::u8_0;
     }
     return crate::sqlite3_h::SQLITE_OK;
 }
@@ -3958,15 +4018,17 @@ pub unsafe extern "C" fn sqlite3BtreeCursorZero(mut p: *mut crate::btreeInt_h::B
 pub unsafe extern "C" fn sqlite3BtreeCloseCursor(mut pCur: *mut crate::btreeInt_h::BtCursor) -> ::core::ffi::c_int {
     let mut pBtree: *mut crate::btreeInt_h::Btree = (*pCur).pBtree;
     if !pBtree.is_null() {
-        let mut pBt: *mut crate::btreeInt_h::BtShared = (*pCur).pBt;
+        let __pCur_ref = unsafe { &mut *pCur };
+        let mut pBt: *mut crate::btreeInt_h::BtShared = __pCur_ref.pBt;
         crate::src::src::btmutex::sqlite3BtreeEnter(pBtree as *mut crate::btreeInt_h::Btree);
-        if (*pBt).pCursor == pCur {
-            (*pBt).pCursor = (*pCur).pNext;
+        let __pBt_ref = unsafe { &mut *pBt };
+        if __pBt_ref.pCursor == pCur {
+            __pBt_ref.pCursor = __pCur_ref.pNext;
         } else {
-            let mut pPrev: *mut crate::btreeInt_h::BtCursor = (*pBt).pCursor;
+            let mut pPrev: *mut crate::btreeInt_h::BtCursor = __pBt_ref.pCursor;
             loop {
                 if (*pPrev).pNext == pCur {
-                    (*pPrev).pNext = (*pCur).pNext;
+                    (*pPrev).pNext = __pCur_ref.pNext;
                     break;
                 } else {
                     pPrev = (*pPrev).pNext;
@@ -3978,14 +4040,14 @@ pub unsafe extern "C" fn sqlite3BtreeCloseCursor(mut pCur: *mut crate::btreeInt_
         }
         btreeReleaseAllCursorPages(pCur);
         unlockBtreeIfUnused(pBt);
-        crate::src::src::malloc::sqlite3_free((*pCur).aOverflow as *mut ::core::ffi::c_void);
-        crate::src::src::malloc::sqlite3_free((*pCur).pKey);
-        if (*pBt).openFlags as ::core::ffi::c_int & crate::src::src::btree::BTREE_SINGLE != 0 && (*pBt).pCursor.is_null() {
+        crate::src::src::malloc::sqlite3_free(__pCur_ref.aOverflow as *mut ::core::ffi::c_void);
+        crate::src::src::malloc::sqlite3_free(__pCur_ref.pKey);
+        if __pBt_ref.openFlags as ::core::ffi::c_int & crate::src::src::btree::BTREE_SINGLE != 0 && __pBt_ref.pCursor.is_null() {
             sqlite3BtreeClose(pBtree);
         } else {
             crate::src::src::btmutex::sqlite3BtreeLeave(pBtree as *mut crate::btreeInt_h::Btree);
         }
-        (*pCur).pBtree = ::core::ptr::null_mut::<crate::btreeInt_h::Btree>();
+        __pCur_ref.pBtree = ::core::ptr::null_mut::<crate::btreeInt_h::Btree>();
     }
     return crate::sqlite3_h::SQLITE_OK;
 }
@@ -3993,11 +4055,12 @@ pub unsafe extern "C" fn sqlite3BtreeCloseCursor(mut pCur: *mut crate::btreeInt_
 
 unsafe extern "C" fn getCellInfo(mut pCur: *mut crate::btreeInt_h::BtCursor) {
     if (*pCur).info.nSize as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
-        (*pCur).curFlags = ((*pCur).curFlags as ::core::ffi::c_int | crate::btreeInt_h::BTCF_ValidNKey) as crate::src::ext::rtree::rtree::u8_0;
+        let __pCur_ref = unsafe { &mut *pCur };
+        __pCur_ref.curFlags = (__pCur_ref.curFlags as ::core::ffi::c_int | crate::btreeInt_h::BTCF_ValidNKey) as crate::src::ext::rtree::rtree::u8_0;
         btreeParseCell(
-            (*pCur).pPage,
-            (*pCur).ix as ::core::ffi::c_int,
-            &raw mut (*pCur).info,
+            __pCur_ref.pPage,
+            __pCur_ref.ix as ::core::ffi::c_int,
+            &raw mut __pCur_ref.info,
         );
     }
 }
@@ -4028,8 +4091,9 @@ pub unsafe extern "C" fn sqlite3BtreeCursorUnpin(mut pCur: *mut crate::btreeInt_
 
 pub unsafe extern "C" fn sqlite3BtreeOffset(mut pCur: *mut crate::btreeInt_h::BtCursor) -> crate::src::ext::rtree::rtree::i64_0 {
     getCellInfo(pCur);
-    return (*(*pCur).pBt).pageSize as crate::src::ext::rtree::rtree::i64_0 * ((*(*pCur).pPage).pgno as crate::src::ext::rtree::rtree::i64_0 - 1 as crate::src::ext::rtree::rtree::i64_0)
-        + (*pCur).info.pPayload.offset_from((*(*pCur).pPage).aData) as ::core::ffi::c_long
+    let __pCur_ref = unsafe { &mut *pCur };
+    return (*__pCur_ref.pBt).pageSize as crate::src::ext::rtree::rtree::i64_0 * ((*__pCur_ref.pPage).pgno as crate::src::ext::rtree::rtree::i64_0 - 1 as crate::src::ext::rtree::rtree::i64_0)
+        + __pCur_ref.info.pPayload.offset_from((*__pCur_ref.pPage).aData) as ::core::ffi::c_long
             as crate::src::ext::rtree::rtree::i64_0;
 }
 #[no_mangle]
@@ -4126,23 +4190,24 @@ unsafe extern "C" fn accessPayload(
     let mut aPayload: *mut ::core::ffi::c_uchar = ::core::ptr::null_mut::<::core::ffi::c_uchar>();
     let mut rc: ::core::ffi::c_int = crate::sqlite3_h::SQLITE_OK;
     let mut iIdx: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
-    let mut pPage: *mut crate::btreeInt_h::MemPage = (*pCur).pPage;
-    let mut pBt: *mut crate::btreeInt_h::BtShared = (*pCur).pBt;
+    let __pCur_ref = unsafe { &mut *pCur };
+    let mut pPage: *mut crate::btreeInt_h::MemPage = __pCur_ref.pPage;
+    let mut pBt: *mut crate::btreeInt_h::BtShared = __pCur_ref.pBt;
     let pBufStart: *mut ::core::ffi::c_uchar = pBuf;
-    if (*pCur).ix as ::core::ffi::c_int >= (*pPage).nCell as ::core::ffi::c_int {
+    if __pCur_ref.ix as ::core::ffi::c_int >= (*pPage).nCell as ::core::ffi::c_int {
         return crate::src::src::main::sqlite3CorruptError(5117 as ::core::ffi::c_int);
     }
     getCellInfo(pCur);
-    aPayload = (*pCur).info.pPayload as *mut ::core::ffi::c_uchar;
+    aPayload = __pCur_ref.info.pPayload as *mut ::core::ffi::c_uchar;
     if aPayload.offset_from((*pPage).aData) as ::core::ffi::c_long as crate::sqliteInt_h::uptr
-        > (*pBt).usableSize.wrapping_sub((*pCur).info.nLocal as crate::src::ext::rtree::rtree::u32_0) as crate::sqliteInt_h::uptr
+        > (*pBt).usableSize.wrapping_sub(__pCur_ref.info.nLocal as crate::src::ext::rtree::rtree::u32_0) as crate::sqliteInt_h::uptr
     {
         return crate::src::src::main::sqlite3CorruptError(5132 as ::core::ffi::c_int);
     }
-    if offset < (*pCur).info.nLocal as crate::src::ext::rtree::rtree::u32_0 {
+    if offset < __pCur_ref.info.nLocal as crate::src::ext::rtree::rtree::u32_0 {
         let mut a: ::core::ffi::c_int = amt as ::core::ffi::c_int;
-        if (a as crate::src::ext::rtree::rtree::u32_0).wrapping_add(offset) > (*pCur).info.nLocal as crate::src::ext::rtree::rtree::u32_0 {
-            a = ((*pCur).info.nLocal as crate::src::ext::rtree::rtree::u32_0).wrapping_sub(offset) as ::core::ffi::c_int;
+        if (a as crate::src::ext::rtree::rtree::u32_0).wrapping_add(offset) > __pCur_ref.info.nLocal as crate::src::ext::rtree::rtree::u32_0 {
+            a = (__pCur_ref.info.nLocal as crate::src::ext::rtree::rtree::u32_0).wrapping_sub(offset) as ::core::ffi::c_int;
         }
         rc = copyPayload(
             aPayload.offset(offset as isize) as *mut ::core::ffi::c_uchar
@@ -4156,33 +4221,33 @@ unsafe extern "C" fn accessPayload(
         pBuf = pBuf.offset(a as isize);
         amt = amt.wrapping_sub(a as crate::src::ext::rtree::rtree::u32_0);
     } else {
-        offset = offset.wrapping_sub((*pCur).info.nLocal as crate::src::ext::rtree::rtree::u32_0);
+        offset = offset.wrapping_sub(__pCur_ref.info.nLocal as crate::src::ext::rtree::rtree::u32_0);
     }
     if rc == crate::sqlite3_h::SQLITE_OK && amt > 0 as crate::src::ext::rtree::rtree::u32_0 {
         let ovflSize: crate::src::ext::rtree::rtree::u32_0 = (*pBt).usableSize.wrapping_sub(4 as crate::src::ext::rtree::rtree::u32_0);
         let mut nextPage: crate::src::src::pager::Pgno = 0;
         nextPage = crate::src::src::util::sqlite3Get4byte(
-            aPayload.offset((*pCur).info.nLocal as isize) as *mut ::core::ffi::c_uchar
+            aPayload.offset(__pCur_ref.info.nLocal as isize) as *mut ::core::ffi::c_uchar
         ) as crate::src::src::pager::Pgno;
-        if (*pCur).curFlags as ::core::ffi::c_int & crate::btreeInt_h::BTCF_ValidOvfl == 0 as ::core::ffi::c_int {
+        if __pCur_ref.curFlags as ::core::ffi::c_int & crate::btreeInt_h::BTCF_ValidOvfl == 0 as ::core::ffi::c_int {
             let mut nOvfl: ::core::ffi::c_int = (*pCur)
                 .info
                 .nPayload
-                .wrapping_sub((*pCur).info.nLocal as crate::src::ext::rtree::rtree::u32_0)
+                .wrapping_sub(__pCur_ref.info.nLocal as crate::src::ext::rtree::rtree::u32_0)
                 .wrapping_add(ovflSize)
                 .wrapping_sub(1 as crate::src::ext::rtree::rtree::u32_0)
                 .wrapping_div(ovflSize)
                 as ::core::ffi::c_int;
-            if (*pCur).aOverflow.is_null()
+            if __pCur_ref.aOverflow.is_null()
                 || nOvfl * ::core::mem::size_of::<crate::src::src::pager::Pgno>() as ::core::ffi::c_int
-                    > crate::src::src::malloc::sqlite3MallocSize((*pCur).aOverflow as *const ::core::ffi::c_void)
+                    > crate::src::src::malloc::sqlite3MallocSize(__pCur_ref.aOverflow as *const ::core::ffi::c_void)
             {
                 let mut aNew: *mut crate::src::src::pager::Pgno = ::core::ptr::null_mut::<crate::src::src::pager::Pgno>();
                 if crate::src::src::util::sqlite3FaultSim(413 as ::core::ffi::c_int) != 0 {
                     aNew = ::core::ptr::null_mut::<crate::src::src::pager::Pgno>();
                 } else {
                     aNew = crate::src::src::malloc::sqlite3Realloc(
-                        (*pCur).aOverflow as *mut ::core::ffi::c_void,
+                        __pCur_ref.aOverflow as *mut ::core::ffi::c_void,
                         ((nOvfl * 2 as ::core::ffi::c_int) as usize)
                             .wrapping_mul(::core::mem::size_of::<crate::src::src::pager::Pgno>() as usize)
                             as crate::src::ext::rtree::rtree::u64_0,
@@ -4191,29 +4256,29 @@ unsafe extern "C" fn accessPayload(
                 if aNew.is_null() {
                     return crate::sqliteInt_h::SQLITE_NOMEM_BKPT;
                 } else {
-                    (*pCur).aOverflow = aNew;
+                    __pCur_ref.aOverflow = aNew;
                 }
             }
             ::libc::memset(
-                (*pCur).aOverflow as *mut ::core::ffi::c_void,
+                __pCur_ref.aOverflow as *mut ::core::ffi::c_void,
                 0 as ::core::ffi::c_int,
                 (nOvfl as crate::__stddef_size_t_h::size_t).wrapping_mul(::core::mem::size_of::<crate::src::src::pager::Pgno>() as crate::__stddef_size_t_h::size_t),
             );
-            (*pCur).curFlags = ((*pCur).curFlags as ::core::ffi::c_int | crate::btreeInt_h::BTCF_ValidOvfl) as crate::src::ext::rtree::rtree::u8_0;
+            __pCur_ref.curFlags = (__pCur_ref.curFlags as ::core::ffi::c_int | crate::btreeInt_h::BTCF_ValidOvfl) as crate::src::ext::rtree::rtree::u8_0;
         } else if *(*pCur)
             .aOverflow
             .offset(offset.wrapping_div(ovflSize) as isize)
             != 0
         {
             iIdx = offset.wrapping_div(ovflSize) as ::core::ffi::c_int;
-            nextPage = *(*pCur).aOverflow.offset(iIdx as isize);
+            nextPage = *__pCur_ref.aOverflow.offset(iIdx as isize);
             offset = offset.wrapping_rem(ovflSize);
         }
         while nextPage != 0 {
             if nextPage > (*pBt).nPage {
                 return crate::src::src::main::sqlite3CorruptError(5203 as ::core::ffi::c_int);
             }
-            *(*pCur).aOverflow.offset(iIdx as isize) = nextPage;
+            *__pCur_ref.aOverflow.offset(iIdx as isize) = nextPage;
             if offset >= ovflSize {
                 if *(*pCur)
                     .aOverflow
@@ -4379,23 +4444,24 @@ unsafe extern "C" fn fetchPayload(
     mut pAmt: *mut crate::src::ext::rtree::rtree::u32_0,
 ) -> *const ::core::ffi::c_void {
     let mut amt: ::core::ffi::c_int = 0;
-    amt = (*pCur).info.nLocal as ::core::ffi::c_int;
+    let __pCur_ref = unsafe { &mut *pCur };
+    amt = __pCur_ref.info.nLocal as ::core::ffi::c_int;
     if amt
-        > (*(*pCur).pPage).aDataEnd.offset_from((*pCur).info.pPayload) as ::core::ffi::c_long
+        > (*__pCur_ref.pPage).aDataEnd.offset_from(__pCur_ref.info.pPayload) as ::core::ffi::c_long
             as ::core::ffi::c_int
     {
         amt = if 0 as ::core::ffi::c_int
-            > (*(*pCur).pPage).aDataEnd.offset_from((*pCur).info.pPayload) as ::core::ffi::c_long
+            > (*__pCur_ref.pPage).aDataEnd.offset_from(__pCur_ref.info.pPayload) as ::core::ffi::c_long
                 as ::core::ffi::c_int
         {
             0 as ::core::ffi::c_int
         } else {
-            (*(*pCur).pPage).aDataEnd.offset_from((*pCur).info.pPayload) as ::core::ffi::c_long
+            (*__pCur_ref.pPage).aDataEnd.offset_from(__pCur_ref.info.pPayload) as ::core::ffi::c_long
                 as ::core::ffi::c_int
         };
     }
     *pAmt = amt as crate::src::ext::rtree::rtree::u32_0;
-    return (*pCur).info.pPayload as *mut ::core::ffi::c_void;
+    return __pCur_ref.info.pPayload as *mut ::core::ffi::c_void;
 }
 #[no_mangle]
 
@@ -4411,47 +4477,49 @@ unsafe extern "C" fn moveToChild(
     mut newPgno: crate::src::ext::rtree::rtree::u32_0,
 ) -> ::core::ffi::c_int {
     let mut rc: ::core::ffi::c_int = 0;
-    if (*pCur).iPage as ::core::ffi::c_int >= crate::btreeInt_h::BTCURSOR_MAX_DEPTH - 1 as ::core::ffi::c_int {
+    let __pCur_ref = unsafe { &mut *pCur };
+    if __pCur_ref.iPage as ::core::ffi::c_int >= crate::btreeInt_h::BTCURSOR_MAX_DEPTH - 1 as ::core::ffi::c_int {
         return crate::src::src::main::sqlite3CorruptError(5425 as ::core::ffi::c_int);
     }
-    (*pCur).info.nSize = 0 as crate::src::fts5::u16_0;
-    (*pCur).curFlags =
-        ((*pCur).curFlags as ::core::ffi::c_int & !(crate::btreeInt_h::BTCF_ValidNKey | crate::btreeInt_h::BTCF_ValidOvfl)) as crate::src::ext::rtree::rtree::u8_0;
-    (*pCur).aiIdx[(*pCur).iPage as usize] = (*pCur).ix;
-    (*pCur).apPage[(*pCur).iPage as usize] = (*pCur).pPage;
-    (*pCur).ix = 0 as crate::src::fts5::u16_0;
-    (*pCur).iPage += 1;
+    __pCur_ref.info.nSize = 0 as crate::src::fts5::u16_0;
+    __pCur_ref.curFlags =
+        (__pCur_ref.curFlags as ::core::ffi::c_int & !(crate::btreeInt_h::BTCF_ValidNKey | crate::btreeInt_h::BTCF_ValidOvfl)) as crate::src::ext::rtree::rtree::u8_0;
+    __pCur_ref.aiIdx[__pCur_ref.iPage as usize] = __pCur_ref.ix;
+    __pCur_ref.apPage[__pCur_ref.iPage as usize] = __pCur_ref.pPage;
+    __pCur_ref.ix = 0 as crate::src::fts5::u16_0;
+    __pCur_ref.iPage += 1;
     rc = getAndInitPage(
-        (*pCur).pBt,
+        __pCur_ref.pBt,
         newPgno as crate::src::src::pager::Pgno,
-        &raw mut (*pCur).pPage,
-        (*pCur).curPagerFlags as ::core::ffi::c_int,
+        &raw mut __pCur_ref.pPage,
+        __pCur_ref.curPagerFlags as ::core::ffi::c_int,
     );
     if rc == crate::sqlite3_h::SQLITE_OK
-        && (((*(*pCur).pPage).nCell as ::core::ffi::c_int) < 1 as ::core::ffi::c_int
-            || (*(*pCur).pPage).intKey as ::core::ffi::c_int
-                != (*pCur).curIntKey as ::core::ffi::c_int)
+        && (((*__pCur_ref.pPage).nCell as ::core::ffi::c_int) < 1 as ::core::ffi::c_int
+            || (*__pCur_ref.pPage).intKey as ::core::ffi::c_int
+                != __pCur_ref.curIntKey as ::core::ffi::c_int)
     {
-        releasePage((*pCur).pPage);
+        releasePage(__pCur_ref.pPage);
         rc = crate::src::src::main::sqlite3CorruptError(5439 as ::core::ffi::c_int);
     }
     if rc != 0 {
-        (*pCur).iPage -= 1;
-        (*pCur).pPage = (*pCur).apPage[(*pCur).iPage as usize];
+        __pCur_ref.iPage -= 1;
+        __pCur_ref.pPage = __pCur_ref.apPage[__pCur_ref.iPage as usize];
     }
     return rc;
 }
 
 unsafe extern "C" fn moveToParent(mut pCur: *mut crate::btreeInt_h::BtCursor) {
     let mut pLeaf: *mut crate::btreeInt_h::MemPage = ::core::ptr::null_mut::<crate::btreeInt_h::MemPage>();
-    (*pCur).info.nSize = 0 as crate::src::fts5::u16_0;
-    (*pCur).curFlags =
-        ((*pCur).curFlags as ::core::ffi::c_int & !(crate::btreeInt_h::BTCF_ValidNKey | crate::btreeInt_h::BTCF_ValidOvfl)) as crate::src::ext::rtree::rtree::u8_0;
-    (*pCur).ix =
-        (*pCur).aiIdx[((*pCur).iPage as ::core::ffi::c_int - 1 as ::core::ffi::c_int) as usize];
-    pLeaf = (*pCur).pPage;
-    (*pCur).iPage -= 1;
-    (*pCur).pPage = (*pCur).apPage[(*pCur).iPage as usize];
+    let __pCur_ref = unsafe { &mut *pCur };
+    __pCur_ref.info.nSize = 0 as crate::src::fts5::u16_0;
+    __pCur_ref.curFlags =
+        (__pCur_ref.curFlags as ::core::ffi::c_int & !(crate::btreeInt_h::BTCF_ValidNKey | crate::btreeInt_h::BTCF_ValidOvfl)) as crate::src::ext::rtree::rtree::u8_0;
+    __pCur_ref.ix =
+        __pCur_ref.aiIdx[(__pCur_ref.iPage as ::core::ffi::c_int - 1 as ::core::ffi::c_int) as usize];
+    pLeaf = __pCur_ref.pPage;
+    __pCur_ref.iPage -= 1;
+    __pCur_ref.pPage = __pCur_ref.apPage[__pCur_ref.iPage as usize];
     releasePageNotNull(pLeaf);
 }
 
@@ -4459,53 +4527,54 @@ unsafe extern "C" fn moveToRoot(mut pCur: *mut crate::btreeInt_h::BtCursor) -> :
     let mut current_block: u64;
     let mut pRoot: *mut crate::btreeInt_h::MemPage = ::core::ptr::null_mut::<crate::btreeInt_h::MemPage>();
     let mut rc: ::core::ffi::c_int = crate::sqlite3_h::SQLITE_OK;
-    if (*pCur).iPage as ::core::ffi::c_int >= 0 as ::core::ffi::c_int {
-        if (*pCur).iPage != 0 {
-            releasePageNotNull((*pCur).pPage);
+    let __pCur_ref = unsafe { &mut *pCur };
+    if __pCur_ref.iPage as ::core::ffi::c_int >= 0 as ::core::ffi::c_int {
+        if __pCur_ref.iPage != 0 {
+            releasePageNotNull(__pCur_ref.pPage);
             loop {
-                (*pCur).iPage -= 1;
-                if !((*pCur).iPage != 0) {
+                __pCur_ref.iPage -= 1;
+                if !(__pCur_ref.iPage != 0) {
                     break;
                 }
-                releasePageNotNull((*pCur).apPage[(*pCur).iPage as usize]);
+                releasePageNotNull(__pCur_ref.apPage[__pCur_ref.iPage as usize]);
             }
-            (*pCur).pPage = (*pCur).apPage[0 as ::core::ffi::c_int as usize];
-            pRoot = (*pCur).pPage;
+            __pCur_ref.pPage = __pCur_ref.apPage[0 as ::core::ffi::c_int as usize];
+            pRoot = __pCur_ref.pPage;
             current_block = 10084261848283180480;
         } else {
             current_block = 17478428563724192186;
         }
     } else {
-        if (*pCur).pgnoRoot == 0 as crate::src::src::pager::Pgno {
-            (*pCur).eState = crate::btreeInt_h::CURSOR_INVALID as crate::src::ext::rtree::rtree::u8_0;
+        if __pCur_ref.pgnoRoot == 0 as crate::src::src::pager::Pgno {
+            __pCur_ref.eState = crate::btreeInt_h::CURSOR_INVALID as crate::src::ext::rtree::rtree::u8_0;
             return crate::sqlite3_h::SQLITE_EMPTY;
         } else {
-            if (*pCur).eState as ::core::ffi::c_int >= crate::btreeInt_h::CURSOR_REQUIRESEEK {
-                if (*pCur).eState as ::core::ffi::c_int == crate::btreeInt_h::CURSOR_FAULT {
-                    return (*pCur).skipNext;
+            if __pCur_ref.eState as ::core::ffi::c_int >= crate::btreeInt_h::CURSOR_REQUIRESEEK {
+                if __pCur_ref.eState as ::core::ffi::c_int == crate::btreeInt_h::CURSOR_FAULT {
+                    return __pCur_ref.skipNext;
                 }
                 sqlite3BtreeClearCursor(pCur);
             }
             rc = getAndInitPage(
-                (*pCur).pBt,
-                (*pCur).pgnoRoot,
-                &raw mut (*pCur).pPage,
-                (*pCur).curPagerFlags as ::core::ffi::c_int,
+                __pCur_ref.pBt,
+                __pCur_ref.pgnoRoot,
+                &raw mut __pCur_ref.pPage,
+                __pCur_ref.curPagerFlags as ::core::ffi::c_int,
             );
             if rc != crate::sqlite3_h::SQLITE_OK {
-                (*pCur).eState = crate::btreeInt_h::CURSOR_INVALID as crate::src::ext::rtree::rtree::u8_0;
+                __pCur_ref.eState = crate::btreeInt_h::CURSOR_INVALID as crate::src::ext::rtree::rtree::u8_0;
                 return rc;
             }
-            (*pCur).iPage = 0 as crate::sqliteInt_h::i8_0;
-            (*pCur).curIntKey = (*(*pCur).pPage).intKey;
+            __pCur_ref.iPage = 0 as crate::sqliteInt_h::i8_0;
+            __pCur_ref.curIntKey = (*__pCur_ref.pPage).intKey;
         }
         current_block = 17478428563724192186;
     }
     match current_block {
         17478428563724192186 => {
-            pRoot = (*pCur).pPage;
+            pRoot = __pCur_ref.pPage;
             if (*pRoot).isInit as ::core::ffi::c_int == 0 as ::core::ffi::c_int
-                || ((*pCur).pKeyInfo == ::core::ptr::null_mut::<crate::sqliteInt_h::KeyInfo>()) as ::core::ffi::c_int
+                || (__pCur_ref.pKeyInfo == ::core::ptr::null_mut::<crate::sqliteInt_h::KeyInfo>()) as ::core::ffi::c_int
                     != (*pRoot).intKey as ::core::ffi::c_int
             {
                 return crate::src::src::main::sqlite3CorruptError(5574 as ::core::ffi::c_int);
@@ -4513,25 +4582,26 @@ unsafe extern "C" fn moveToRoot(mut pCur: *mut crate::btreeInt_h::BtCursor) -> :
         }
         _ => {}
     }
-    (*pCur).ix = 0 as crate::src::fts5::u16_0;
-    (*pCur).info.nSize = 0 as crate::src::fts5::u16_0;
-    (*pCur).curFlags = ((*pCur).curFlags as ::core::ffi::c_int
+    __pCur_ref.ix = 0 as crate::src::fts5::u16_0;
+    __pCur_ref.info.nSize = 0 as crate::src::fts5::u16_0;
+    __pCur_ref.curFlags = (__pCur_ref.curFlags as ::core::ffi::c_int
         & !(crate::btreeInt_h::BTCF_AtLast | crate::btreeInt_h::BTCF_ValidNKey | crate::btreeInt_h::BTCF_ValidOvfl)) as crate::src::ext::rtree::rtree::u8_0;
     if (*pRoot).nCell as ::core::ffi::c_int > 0 as ::core::ffi::c_int {
-        (*pCur).eState = crate::btreeInt_h::CURSOR_VALID as crate::src::ext::rtree::rtree::u8_0;
+        __pCur_ref.eState = crate::btreeInt_h::CURSOR_VALID as crate::src::ext::rtree::rtree::u8_0;
     } else if (*pRoot).leaf == 0 {
         let mut subpage: crate::src::src::pager::Pgno = 0;
-        if (*pRoot).pgno != 1 as crate::src::src::pager::Pgno {
+        let __pRoot_ref = unsafe { &mut *pRoot };
+        if __pRoot_ref.pgno != 1 as crate::src::src::pager::Pgno {
             return crate::src::src::main::sqlite3CorruptError(5586 as ::core::ffi::c_int);
         }
         subpage =
-            crate::src::src::util::sqlite3Get4byte((*pRoot).aData.offset(
-                ((*pRoot).hdrOffset as ::core::ffi::c_int + 8 as ::core::ffi::c_int) as isize,
+            crate::src::src::util::sqlite3Get4byte(__pRoot_ref.aData.offset(
+                (__pRoot_ref.hdrOffset as ::core::ffi::c_int + 8 as ::core::ffi::c_int) as isize,
             ) as *mut crate::src::ext::rtree::rtree::u8_0) as crate::src::src::pager::Pgno;
-        (*pCur).eState = crate::btreeInt_h::CURSOR_VALID as crate::src::ext::rtree::rtree::u8_0;
+        __pCur_ref.eState = crate::btreeInt_h::CURSOR_VALID as crate::src::ext::rtree::rtree::u8_0;
         rc = moveToChild(pCur, subpage as crate::src::ext::rtree::rtree::u32_0);
     } else {
-        (*pCur).eState = crate::btreeInt_h::CURSOR_INVALID as crate::src::ext::rtree::rtree::u8_0;
+        __pCur_ref.eState = crate::btreeInt_h::CURSOR_INVALID as crate::src::ext::rtree::rtree::u8_0;
         rc = crate::sqlite3_h::SQLITE_EMPTY;
     }
     return rc;
@@ -4545,16 +4615,17 @@ unsafe extern "C" fn moveToLeftmost(mut pCur: *mut crate::btreeInt_h::BtCursor) 
         pPage = (*pCur).pPage;
         (*pPage).leaf == 0
     } {
+        let __pPage_ref = unsafe { &mut *pPage };
         pgno = crate::src::src::util::sqlite3Get4byte(
-            (*pPage).aData.offset(
-                ((*pPage).maskPage as ::core::ffi::c_int
-                    & ((*((*pPage).aCellIdx.offset(
+            __pPage_ref.aData.offset(
+                (__pPage_ref.maskPage as ::core::ffi::c_int
+                    & ((*(__pPage_ref.aCellIdx.offset(
                         (2 as ::core::ffi::c_int * (*pCur).ix as ::core::ffi::c_int) as isize,
                     ) as *mut crate::src::ext::rtree::rtree::u8_0)
                         .offset(0 as isize)
                         as ::core::ffi::c_int)
                         << 8 as ::core::ffi::c_int
-                        | *((*pPage).aCellIdx.offset(
+                        | *(__pPage_ref.aCellIdx.offset(
                             (2 as ::core::ffi::c_int * (*pCur).ix as ::core::ffi::c_int) as isize,
                         ) as *mut crate::src::ext::rtree::rtree::u8_0)
                             .offset(1 as isize)
@@ -4670,24 +4741,25 @@ pub unsafe extern "C" fn sqlite3BtreeTableMoveto(
 ) -> ::core::ffi::c_int {
     let mut current_block: u64;
     let mut rc: ::core::ffi::c_int = 0;
-    if (*pCur).eState as ::core::ffi::c_int == crate::btreeInt_h::CURSOR_VALID
-        && (*pCur).curFlags as ::core::ffi::c_int & crate::btreeInt_h::BTCF_ValidNKey != 0 as ::core::ffi::c_int
+    let __pCur_ref = unsafe { &mut *pCur };
+    if __pCur_ref.eState as ::core::ffi::c_int == crate::btreeInt_h::CURSOR_VALID
+        && __pCur_ref.curFlags as ::core::ffi::c_int & crate::btreeInt_h::BTCF_ValidNKey != 0 as ::core::ffi::c_int
     {
-        if (*pCur).info.nKey == intKey {
+        if __pCur_ref.info.nKey == intKey {
             *pRes = 0 as ::core::ffi::c_int;
             return crate::sqlite3_h::SQLITE_OK;
         }
-        if (*pCur).info.nKey < intKey {
-            if (*pCur).curFlags as ::core::ffi::c_int & crate::btreeInt_h::BTCF_AtLast != 0 as ::core::ffi::c_int {
+        if __pCur_ref.info.nKey < intKey {
+            if __pCur_ref.curFlags as ::core::ffi::c_int & crate::btreeInt_h::BTCF_AtLast != 0 as ::core::ffi::c_int {
                 *pRes = -(1 as ::core::ffi::c_int);
                 return crate::sqlite3_h::SQLITE_OK;
             }
-            if (*pCur).info.nKey + 1 as crate::src::ext::rtree::rtree::i64_0 == intKey {
+            if __pCur_ref.info.nKey + 1 as crate::src::ext::rtree::rtree::i64_0 == intKey {
                 *pRes = 0 as ::core::ffi::c_int;
                 rc = sqlite3BtreeNext(pCur, 0 as ::core::ffi::c_int);
                 if rc == crate::sqlite3_h::SQLITE_OK {
                     getCellInfo(pCur);
-                    if (*pCur).info.nKey == intKey {
+                    if __pCur_ref.info.nKey == intKey {
                         return crate::sqlite3_h::SQLITE_OK;
                     }
                 } else if rc != crate::sqlite3_h::SQLITE_DONE {
@@ -4710,15 +4782,16 @@ pub unsafe extern "C" fn sqlite3BtreeTableMoveto(
         let mut idx: ::core::ffi::c_int = 0;
         let mut c: ::core::ffi::c_int = 0;
         let mut chldPg: crate::src::src::pager::Pgno = 0;
-        let mut pPage: *mut crate::btreeInt_h::MemPage = (*pCur).pPage;
+        let mut pPage: *mut crate::btreeInt_h::MemPage = __pCur_ref.pPage;
         let mut pCell: *mut crate::src::ext::rtree::rtree::u8_0 = ::core::ptr::null_mut::<crate::src::ext::rtree::rtree::u8_0>();
         lwr = 0 as ::core::ffi::c_int;
         upr = (*pPage).nCell as ::core::ffi::c_int - 1 as ::core::ffi::c_int;
         idx = upr >> 1 as ::core::ffi::c_int - biasRight;
         loop {
             let mut nCellKey: crate::src::ext::rtree::rtree::i64_0 = 0;
-            pCell = (*pPage).aDataOfst.offset(
-                ((*pPage).maskPage as ::core::ffi::c_int
+            let __pPage_ref = unsafe { &mut *pPage };
+            pCell = __pPage_ref.aDataOfst.offset(
+                (__pPage_ref.maskPage as ::core::ffi::c_int
                     & ((*((*pPage)
                         .aCellIdx
                         .offset((2 as ::core::ffi::c_int * idx) as isize)
@@ -4733,14 +4806,14 @@ pub unsafe extern "C" fn sqlite3BtreeTableMoveto(
                             .offset(1 as isize)
                             as ::core::ffi::c_int)) as isize,
             );
-            if (*pPage).intKeyLeaf != 0 {
+            if __pPage_ref.intKeyLeaf != 0 {
                 loop {
                     let fresh11 = pCell;
                     pCell = pCell.offset(1);
                     if !(0x80 as ::core::ffi::c_int <= *fresh11 as ::core::ffi::c_int) {
                         break;
                     }
-                    if pCell >= (*pPage).aDataEnd {
+                    if pCell >= __pPage_ref.aDataEnd {
                         return crate::src::src::main::sqlite3CorruptError(5859 as ::core::ffi::c_int);
                     }
                 }
@@ -4761,16 +4834,16 @@ pub unsafe extern "C" fn sqlite3BtreeTableMoveto(
                     break;
                 }
             } else {
-                (*pCur).ix = idx as crate::src::fts5::u16_0;
-                if (*pPage).leaf == 0 {
+                __pCur_ref.ix = idx as crate::src::fts5::u16_0;
+                if __pPage_ref.leaf == 0 {
                     lwr = idx;
                     current_block = 15432772999000535839;
                     break;
                 } else {
-                    (*pCur).curFlags =
-                        ((*pCur).curFlags as ::core::ffi::c_int | crate::btreeInt_h::BTCF_ValidNKey) as crate::src::ext::rtree::rtree::u8_0;
-                    (*pCur).info.nKey = nCellKey;
-                    (*pCur).info.nSize = 0 as crate::src::fts5::u16_0;
+                    __pCur_ref.curFlags =
+                        (__pCur_ref.curFlags as ::core::ffi::c_int | crate::btreeInt_h::BTCF_ValidNKey) as crate::src::ext::rtree::rtree::u8_0;
+                    __pCur_ref.info.nKey = nCellKey;
+                    __pCur_ref.info.nSize = 0 as crate::src::fts5::u16_0;
                     *pRes = 0 as ::core::ffi::c_int;
                     return crate::sqlite3_h::SQLITE_OK;
                 }
@@ -4780,7 +4853,7 @@ pub unsafe extern "C" fn sqlite3BtreeTableMoveto(
         match current_block {
             981995395831942902 => {
                 if (*pPage).leaf != 0 {
-                    (*pCur).ix = idx as crate::src::fts5::u16_0;
+                    __pCur_ref.ix = idx as crate::src::fts5::u16_0;
                     *pRes = c;
                     rc = crate::sqlite3_h::SQLITE_OK;
                     break;
@@ -4793,9 +4866,10 @@ pub unsafe extern "C" fn sqlite3BtreeTableMoveto(
                 ((*pPage).hdrOffset as ::core::ffi::c_int + 8 as ::core::ffi::c_int) as isize,
             ) as *mut crate::src::ext::rtree::rtree::u8_0) as crate::src::src::pager::Pgno;
         } else {
+            let __pPage_ref = unsafe { &mut *pPage };
             chldPg = crate::src::src::util::sqlite3Get4byte(
-                (*pPage).aData.offset(
-                    ((*pPage).maskPage as ::core::ffi::c_int
+                __pPage_ref.aData.offset(
+                    (__pPage_ref.maskPage as ::core::ffi::c_int
                         & ((*((*pPage)
                             .aCellIdx
                             .offset((2 as ::core::ffi::c_int * lwr) as isize)
@@ -4812,13 +4886,13 @@ pub unsafe extern "C" fn sqlite3BtreeTableMoveto(
                 ),
             ) as crate::src::src::pager::Pgno;
         }
-        (*pCur).ix = lwr as crate::src::fts5::u16_0;
+        __pCur_ref.ix = lwr as crate::src::fts5::u16_0;
         rc = moveToChild(pCur, chldPg as crate::src::ext::rtree::rtree::u32_0);
         if rc != 0 {
             break;
         }
     }
-    (*pCur).info.nSize = 0 as crate::src::fts5::u16_0;
+    __pCur_ref.info.nSize = 0 as crate::src::fts5::u16_0;
     return rc;
 }
 
@@ -4830,8 +4904,9 @@ unsafe extern "C" fn indexCellCompare(
 ) -> ::core::ffi::c_int {
     let mut c: ::core::ffi::c_int = 0;
     let mut nCell: ::core::ffi::c_int = 0;
-    let mut pCell: *mut crate::src::ext::rtree::rtree::u8_0 = (*pPage).aDataOfst.offset(
-        ((*pPage).maskPage as ::core::ffi::c_int
+    let __pPage_ref = unsafe { &mut *pPage };
+    let mut pCell: *mut crate::src::ext::rtree::rtree::u8_0 = __pPage_ref.aDataOfst.offset(
+        (__pPage_ref.maskPage as ::core::ffi::c_int
             & ((*((*pPage)
                 .aCellIdx
                 .offset((2 as ::core::ffi::c_int * idx) as isize) as *mut crate::src::ext::rtree::rtree::u8_0)
@@ -4845,7 +4920,7 @@ unsafe extern "C" fn indexCellCompare(
                     as ::core::ffi::c_int)) as isize,
     );
     nCell = *pCell.offset(0 as isize) as ::core::ffi::c_int;
-    if nCell <= (*pPage).max1bytePayload as ::core::ffi::c_int {
+    if nCell <= __pPage_ref.max1bytePayload as ::core::ffi::c_int {
         c = xRecordCompare.expect("non-null function pointer")(
             nCell,
             pCell.offset(1 as isize) as *mut crate::src::ext::rtree::rtree::u8_0 as *mut ::core::ffi::c_void,
@@ -4857,7 +4932,7 @@ unsafe extern "C" fn indexCellCompare(
         && {
             nCell = ((nCell & 0x7f as ::core::ffi::c_int) << 7 as ::core::ffi::c_int)
                 + *pCell.offset(1 as isize) as ::core::ffi::c_int;
-            nCell <= (*pPage).maxLocal as ::core::ffi::c_int
+            nCell <= __pPage_ref.maxLocal as ::core::ffi::c_int
         }
     {
         c = xRecordCompare.expect("non-null function pointer")(
@@ -4899,17 +4974,18 @@ pub unsafe extern "C" fn sqlite3BtreeIndexMoveto(
         _: *const ::libc::c_void, _: *mut crate::sqliteInt_h::UnpackedRecord)
         -> i32>;
     (*pIdxKey).errCode = 0 as crate::src::ext::rtree::rtree::u8_0;
-    if (*pCur).eState as ::core::ffi::c_int == crate::btreeInt_h::CURSOR_VALID
-        && (*(*pCur).pPage).leaf as ::core::ffi::c_int != 0
+    let __pCur_ref = unsafe { &mut *pCur };
+    if __pCur_ref.eState as ::core::ffi::c_int == crate::btreeInt_h::CURSOR_VALID
+        && (*__pCur_ref.pPage).leaf as ::core::ffi::c_int != 0
         && cursorOnLastPage(pCur) != 0
     {
         let mut c: ::core::ffi::c_int = 0;
-        if (*pCur).ix as ::core::ffi::c_int
-            == (*(*pCur).pPage).nCell as ::core::ffi::c_int - 1 as ::core::ffi::c_int
+        if __pCur_ref.ix as ::core::ffi::c_int
+            == (*__pCur_ref.pPage).nCell as ::core::ffi::c_int - 1 as ::core::ffi::c_int
             && {
                 c = indexCellCompare(
-                    (*pCur).pPage,
-                    (*pCur).ix as ::core::ffi::c_int,
+                    __pCur_ref.pPage,
+                    __pCur_ref.ix as ::core::ffi::c_int,
                     pIdxKey,
                     xRecordCompare,
                 );
@@ -4920,18 +4996,18 @@ pub unsafe extern "C" fn sqlite3BtreeIndexMoveto(
             *pRes = c;
             return crate::sqlite3_h::SQLITE_OK;
         }
-        if (*pCur).iPage as ::core::ffi::c_int > 0 as ::core::ffi::c_int
+        if __pCur_ref.iPage as ::core::ffi::c_int > 0 as ::core::ffi::c_int
             && indexCellCompare(
-                (*pCur).pPage,
+                __pCur_ref.pPage,
                 0 as ::core::ffi::c_int,
                 pIdxKey,
                 xRecordCompare,
             ) <= 0 as ::core::ffi::c_int
             && (*pIdxKey).errCode as ::core::ffi::c_int == crate::sqlite3_h::SQLITE_OK
         {
-            (*pCur).curFlags =
-                ((*pCur).curFlags as ::core::ffi::c_int & !(crate::btreeInt_h::BTCF_ValidOvfl | crate::btreeInt_h::BTCF_AtLast)) as crate::src::ext::rtree::rtree::u8_0;
-            if (*(*pCur).pPage).isInit == 0 {
+            __pCur_ref.curFlags =
+                (__pCur_ref.curFlags as ::core::ffi::c_int & !(crate::btreeInt_h::BTCF_ValidOvfl | crate::btreeInt_h::BTCF_AtLast)) as crate::src::ext::rtree::rtree::u8_0;
+            if (*__pCur_ref.pPage).isInit == 0 {
                 return crate::src::src::main::sqlite3CorruptError(6054 as ::core::ffi::c_int);
             }
             current_block = 2719512138335094285;
@@ -4961,15 +5037,16 @@ pub unsafe extern "C" fn sqlite3BtreeIndexMoveto(
         let mut idx: ::core::ffi::c_int = 0;
         let mut c_0: ::core::ffi::c_int = 0;
         let mut chldPg: crate::src::src::pager::Pgno = 0;
-        let mut pPage: *mut crate::btreeInt_h::MemPage = (*pCur).pPage;
+        let mut pPage: *mut crate::btreeInt_h::MemPage = __pCur_ref.pPage;
         let mut pCell: *mut crate::src::ext::rtree::rtree::u8_0 = ::core::ptr::null_mut::<crate::src::ext::rtree::rtree::u8_0>();
         lwr = 0 as ::core::ffi::c_int;
         upr = (*pPage).nCell as ::core::ffi::c_int - 1 as ::core::ffi::c_int;
         idx = upr >> 1 as ::core::ffi::c_int;
         loop {
             let mut nCell: ::core::ffi::c_int = 0;
-            pCell = (*pPage).aDataOfst.offset(
-                ((*pPage).maskPage as ::core::ffi::c_int
+            let __pPage_ref = unsafe { &mut *pPage };
+            pCell = __pPage_ref.aDataOfst.offset(
+                (__pPage_ref.maskPage as ::core::ffi::c_int
                     & ((*((*pPage)
                         .aCellIdx
                         .offset((2 as ::core::ffi::c_int * idx) as isize)
@@ -4985,7 +5062,7 @@ pub unsafe extern "C" fn sqlite3BtreeIndexMoveto(
                             as ::core::ffi::c_int)) as isize,
             );
             nCell = *pCell.offset(0 as isize) as ::core::ffi::c_int;
-            if nCell <= (*pPage).max1bytePayload as ::core::ffi::c_int {
+            if nCell <= __pPage_ref.max1bytePayload as ::core::ffi::c_int {
                 c_0 = xRecordCompare.expect("non-null function pointer")(
                     nCell,
                     pCell.offset(1 as isize) as *mut crate::src::ext::rtree::rtree::u8_0
@@ -4998,7 +5075,7 @@ pub unsafe extern "C" fn sqlite3BtreeIndexMoveto(
                 && {
                     nCell = ((nCell & 0x7f as ::core::ffi::c_int) << 7 as ::core::ffi::c_int)
                         + *pCell.offset(1 as isize) as ::core::ffi::c_int;
-                    nCell <= (*pPage).maxLocal as ::core::ffi::c_int
+                    nCell <= __pPage_ref.maxLocal as ::core::ffi::c_int
                 }
             {
                 c_0 = xRecordCompare.expect("non-null function pointer")(
@@ -5011,17 +5088,17 @@ pub unsafe extern "C" fn sqlite3BtreeIndexMoveto(
                 let mut pCellKey: *mut ::core::ffi::c_void =
                     ::core::ptr::null_mut::<::core::ffi::c_void>();
                 let pCellBody: *mut crate::src::ext::rtree::rtree::u8_0 =
-                    pCell.offset(-((*pPage).childPtrSize as ::core::ffi::c_int as isize));
+                    pCell.offset(-(__pPage_ref.childPtrSize as ::core::ffi::c_int as isize));
                 let nOverrun: ::core::ffi::c_int = 18 as ::core::ffi::c_int;
-                (*pPage).xParseCell.expect("non-null function pointer")(
+                __pPage_ref.xParseCell.expect("non-null function pointer")(
                     pPage,
                     pCellBody,
-                    &raw mut (*pCur).info,
+                    &raw mut __pCur_ref.info,
                 );
-                nCell = (*pCur).info.nKey as ::core::ffi::c_int;
+                nCell = __pCur_ref.info.nKey as ::core::ffi::c_int;
                 if nCell < 2 as ::core::ffi::c_int
-                    || (nCell as crate::src::ext::rtree::rtree::u32_0).wrapping_div((*(*pCur).pBt).usableSize)
-                        > (*(*pCur).pBt).nPage
+                    || (nCell as crate::src::ext::rtree::rtree::u32_0).wrapping_div((*__pCur_ref.pBt).usableSize)
+                        > (*__pCur_ref.pBt).nPage
                 {
                     rc = crate::src::src::main::sqlite3CorruptError(6141 as ::core::ffi::c_int);
                     break 's_125;
@@ -5031,7 +5108,7 @@ pub unsafe extern "C" fn sqlite3BtreeIndexMoveto(
                         rc = crate::sqliteInt_h::SQLITE_NOMEM_BKPT;
                         break 's_125;
                     } else {
-                        (*pCur).ix = idx as crate::src::fts5::u16_0;
+                        __pCur_ref.ix = idx as crate::src::fts5::u16_0;
                         rc = accessPayload(
                             pCur,
                             0 as crate::src::ext::rtree::rtree::u32_0,
@@ -5045,8 +5122,8 @@ pub unsafe extern "C" fn sqlite3BtreeIndexMoveto(
                             0 as ::core::ffi::c_int,
                             nOverrun as crate::__stddef_size_t_h::size_t,
                         );
-                        (*pCur).curFlags =
-                            ((*pCur).curFlags as ::core::ffi::c_int & !crate::btreeInt_h::BTCF_ValidOvfl) as crate::src::ext::rtree::rtree::u8_0;
+                        __pCur_ref.curFlags =
+                            (__pCur_ref.curFlags as ::core::ffi::c_int & !crate::btreeInt_h::BTCF_ValidOvfl) as crate::src::ext::rtree::rtree::u8_0;
                         if rc != 0 {
                             crate::src::src::malloc::sqlite3_free(pCellKey);
                             break 's_125;
@@ -5064,7 +5141,7 @@ pub unsafe extern "C" fn sqlite3BtreeIndexMoveto(
             } else {
                 *pRes = 0 as ::core::ffi::c_int;
                 rc = crate::sqlite3_h::SQLITE_OK;
-                (*pCur).ix = idx as crate::src::fts5::u16_0;
+                __pCur_ref.ix = idx as crate::src::fts5::u16_0;
                 if (*pIdxKey).errCode != 0 {
                     rc = crate::src::src::main::sqlite3CorruptError(6173 as ::core::ffi::c_int);
                 }
@@ -5076,7 +5153,7 @@ pub unsafe extern "C" fn sqlite3BtreeIndexMoveto(
             idx = lwr + upr >> 1 as ::core::ffi::c_int;
         }
         if (*pPage).leaf != 0 {
-            (*pCur).ix = idx as crate::src::fts5::u16_0;
+            __pCur_ref.ix = idx as crate::src::fts5::u16_0;
             *pRes = c_0;
             rc = crate::sqlite3_h::SQLITE_OK;
             break;
@@ -5086,9 +5163,10 @@ pub unsafe extern "C" fn sqlite3BtreeIndexMoveto(
                     ((*pPage).hdrOffset as ::core::ffi::c_int + 8 as ::core::ffi::c_int) as isize,
                 ) as *mut crate::src::ext::rtree::rtree::u8_0) as crate::src::src::pager::Pgno;
             } else {
+                let __pPage_ref = unsafe { &mut *pPage };
                 chldPg = crate::src::src::util::sqlite3Get4byte(
-                    (*pPage).aData.offset(
-                        ((*pPage).maskPage as ::core::ffi::c_int
+                    __pPage_ref.aData.offset(
+                        (__pPage_ref.maskPage as ::core::ffi::c_int
                             & ((*((*pPage)
                                 .aCellIdx
                                 .offset((2 as ::core::ffi::c_int * lwr) as isize)
@@ -5105,39 +5183,39 @@ pub unsafe extern "C" fn sqlite3BtreeIndexMoveto(
                     ),
                 ) as crate::src::src::pager::Pgno;
             }
-            (*pCur).info.nSize = 0 as crate::src::fts5::u16_0;
-            (*pCur).curFlags = ((*pCur).curFlags as ::core::ffi::c_int
+            __pCur_ref.info.nSize = 0 as crate::src::fts5::u16_0;
+            __pCur_ref.curFlags = (__pCur_ref.curFlags as ::core::ffi::c_int
                 & !(crate::btreeInt_h::BTCF_ValidNKey | crate::btreeInt_h::BTCF_ValidOvfl)) as crate::src::ext::rtree::rtree::u8_0;
-            if (*pCur).iPage as ::core::ffi::c_int >= crate::btreeInt_h::BTCURSOR_MAX_DEPTH - 1 as ::core::ffi::c_int {
+            if __pCur_ref.iPage as ::core::ffi::c_int >= crate::btreeInt_h::BTCURSOR_MAX_DEPTH - 1 as ::core::ffi::c_int {
                 return crate::src::src::main::sqlite3CorruptError(6204 as ::core::ffi::c_int);
             }
-            (*pCur).aiIdx[(*pCur).iPage as usize] = lwr as crate::src::fts5::u16_0;
-            (*pCur).apPage[(*pCur).iPage as usize] = (*pCur).pPage;
-            (*pCur).ix = 0 as crate::src::fts5::u16_0;
-            (*pCur).iPage += 1;
+            __pCur_ref.aiIdx[__pCur_ref.iPage as usize] = lwr as crate::src::fts5::u16_0;
+            __pCur_ref.apPage[__pCur_ref.iPage as usize] = __pCur_ref.pPage;
+            __pCur_ref.ix = 0 as crate::src::fts5::u16_0;
+            __pCur_ref.iPage += 1;
             rc = getAndInitPage(
-                (*pCur).pBt,
+                __pCur_ref.pBt,
                 chldPg,
-                &raw mut (*pCur).pPage,
-                (*pCur).curPagerFlags as ::core::ffi::c_int,
+                &raw mut __pCur_ref.pPage,
+                __pCur_ref.curPagerFlags as ::core::ffi::c_int,
             );
             if rc == crate::sqlite3_h::SQLITE_OK
-                && (((*(*pCur).pPage).nCell as ::core::ffi::c_int) < 1 as ::core::ffi::c_int
-                    || (*(*pCur).pPage).intKey as ::core::ffi::c_int
-                        != (*pCur).curIntKey as ::core::ffi::c_int)
+                && (((*__pCur_ref.pPage).nCell as ::core::ffi::c_int) < 1 as ::core::ffi::c_int
+                    || (*__pCur_ref.pPage).intKey as ::core::ffi::c_int
+                        != __pCur_ref.curIntKey as ::core::ffi::c_int)
             {
-                releasePage((*pCur).pPage);
+                releasePage(__pCur_ref.pPage);
                 rc = crate::src::src::main::sqlite3CorruptError(6215 as ::core::ffi::c_int);
             }
             if !(rc != 0) {
                 continue;
             }
-            (*pCur).iPage -= 1;
-            (*pCur).pPage = (*pCur).apPage[(*pCur).iPage as usize];
+            __pCur_ref.iPage -= 1;
+            __pCur_ref.pPage = __pCur_ref.apPage[__pCur_ref.iPage as usize];
             break;
         }
     }
-    (*pCur).info.nSize = 0 as crate::src::fts5::u16_0;
+    __pCur_ref.info.nSize = 0 as crate::src::fts5::u16_0;
     return rc;
 }
 #[no_mangle]
@@ -5150,16 +5228,17 @@ pub unsafe extern "C" fn sqlite3BtreeEof(mut pCur: *mut crate::btreeInt_h::BtCur
 pub unsafe extern "C" fn sqlite3BtreeRowCountEst(mut pCur: *mut crate::btreeInt_h::BtCursor) -> crate::src::ext::rtree::rtree::i64_0 {
     let mut n: crate::src::ext::rtree::rtree::i64_0 = 0;
     let mut i: crate::src::ext::rtree::rtree::u8_0 = 0;
-    if (*pCur).eState as ::core::ffi::c_int != crate::btreeInt_h::CURSOR_VALID {
+    let __pCur_ref = unsafe { &*pCur };
+    if __pCur_ref.eState as ::core::ffi::c_int != crate::btreeInt_h::CURSOR_VALID {
         return 0 as crate::src::ext::rtree::rtree::i64_0;
     }
-    if (*(*pCur).pPage).leaf as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
+    if (*__pCur_ref.pPage).leaf as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
         return -(1 as ::core::ffi::c_int) as crate::src::ext::rtree::rtree::i64_0;
     }
-    n = (*(*pCur).pPage).nCell as crate::src::ext::rtree::rtree::i64_0;
+    n = (*__pCur_ref.pPage).nCell as crate::src::ext::rtree::rtree::i64_0;
     i = 0 as crate::src::ext::rtree::rtree::u8_0;
-    while (i as ::core::ffi::c_int) < (*pCur).iPage as ::core::ffi::c_int {
-        n *= ((*(*pCur).apPage[i as usize]).nCell as ::core::ffi::c_int + 1 as ::core::ffi::c_int)
+    while (i as ::core::ffi::c_int) < __pCur_ref.iPage as ::core::ffi::c_int {
+        n *= ((*__pCur_ref.apPage[i as usize]).nCell as ::core::ffi::c_int + 1 as ::core::ffi::c_int)
             as crate::src::ext::rtree::rtree::i64_0;
         i = i.wrapping_add(1);
     }
@@ -5171,8 +5250,9 @@ unsafe extern "C" fn btreeNext(mut pCur: *mut crate::btreeInt_h::BtCursor) -> ::
     let mut rc: ::core::ffi::c_int = 0;
     let mut idx: ::core::ffi::c_int = 0;
     let mut pPage: *mut crate::btreeInt_h::MemPage = ::core::ptr::null_mut::<crate::btreeInt_h::MemPage>();
-    if (*pCur).eState as ::core::ffi::c_int != crate::btreeInt_h::CURSOR_VALID {
-        rc = if (*pCur).eState as ::core::ffi::c_int >= crate::btreeInt_h::CURSOR_REQUIRESEEK {
+    let __pCur_ref = unsafe { &mut *pCur };
+    if __pCur_ref.eState as ::core::ffi::c_int != crate::btreeInt_h::CURSOR_VALID {
+        rc = if __pCur_ref.eState as ::core::ffi::c_int >= crate::btreeInt_h::CURSOR_REQUIRESEEK {
             btreeRestoreCursorPosition(pCur)
         } else {
             crate::sqlite3_h::SQLITE_OK
@@ -5180,19 +5260,19 @@ unsafe extern "C" fn btreeNext(mut pCur: *mut crate::btreeInt_h::BtCursor) -> ::
         if rc != crate::sqlite3_h::SQLITE_OK {
             return rc;
         }
-        if crate::btreeInt_h::CURSOR_INVALID == (*pCur).eState as ::core::ffi::c_int {
+        if crate::btreeInt_h::CURSOR_INVALID == __pCur_ref.eState as ::core::ffi::c_int {
             return crate::sqlite3_h::SQLITE_DONE;
         }
-        if (*pCur).eState as ::core::ffi::c_int == crate::btreeInt_h::CURSOR_SKIPNEXT {
-            (*pCur).eState = crate::btreeInt_h::CURSOR_VALID as crate::src::ext::rtree::rtree::u8_0;
-            if (*pCur).skipNext > 0 as ::core::ffi::c_int {
+        if __pCur_ref.eState as ::core::ffi::c_int == crate::btreeInt_h::CURSOR_SKIPNEXT {
+            __pCur_ref.eState = crate::btreeInt_h::CURSOR_VALID as crate::src::ext::rtree::rtree::u8_0;
+            if __pCur_ref.skipNext > 0 as ::core::ffi::c_int {
                 return crate::sqlite3_h::SQLITE_OK;
             }
         }
     }
-    pPage = (*pCur).pPage;
-    (*pCur).ix = (*pCur).ix.wrapping_add(1);
-    idx = (*pCur).ix as ::core::ffi::c_int;
+    pPage = __pCur_ref.pPage;
+    __pCur_ref.ix = __pCur_ref.ix.wrapping_add(1);
+    idx = __pCur_ref.ix as ::core::ffi::c_int;
     if crate::src::src::util::sqlite3FaultSim(412 as ::core::ffi::c_int) != 0 {
         (*pPage).isInit = 0 as crate::src::ext::rtree::rtree::u8_0;
     }
@@ -5213,13 +5293,13 @@ unsafe extern "C" fn btreeNext(mut pCur: *mut crate::btreeInt_h::BtCursor) -> ::
             return moveToLeftmost(pCur);
         }
         loop {
-            if (*pCur).iPage as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
-                (*pCur).eState = crate::btreeInt_h::CURSOR_INVALID as crate::src::ext::rtree::rtree::u8_0;
+            if __pCur_ref.iPage as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
+                __pCur_ref.eState = crate::btreeInt_h::CURSOR_INVALID as crate::src::ext::rtree::rtree::u8_0;
                 return crate::sqlite3_h::SQLITE_DONE;
             }
             moveToParent(pCur);
-            pPage = (*pCur).pPage;
-            if !((*pCur).ix as ::core::ffi::c_int >= (*pPage).nCell as ::core::ffi::c_int) {
+            pPage = __pCur_ref.pPage;
+            if !(__pCur_ref.ix as ::core::ffi::c_int >= (*pPage).nCell as ::core::ffi::c_int) {
                 break;
             }
         }
@@ -5242,16 +5322,17 @@ pub unsafe extern "C" fn sqlite3BtreeNext(
     mut _flags: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
     let mut pPage: *mut crate::btreeInt_h::MemPage = ::core::ptr::null_mut::<crate::btreeInt_h::MemPage>();
-    (*pCur).info.nSize = 0 as crate::src::fts5::u16_0;
-    (*pCur).curFlags =
-        ((*pCur).curFlags as ::core::ffi::c_int & !(crate::btreeInt_h::BTCF_ValidNKey | crate::btreeInt_h::BTCF_ValidOvfl)) as crate::src::ext::rtree::rtree::u8_0;
-    if (*pCur).eState as ::core::ffi::c_int != crate::btreeInt_h::CURSOR_VALID {
+    let __pCur_ref = unsafe { &mut *pCur };
+    __pCur_ref.info.nSize = 0 as crate::src::fts5::u16_0;
+    __pCur_ref.curFlags =
+        (__pCur_ref.curFlags as ::core::ffi::c_int & !(crate::btreeInt_h::BTCF_ValidNKey | crate::btreeInt_h::BTCF_ValidOvfl)) as crate::src::ext::rtree::rtree::u8_0;
+    if __pCur_ref.eState as ::core::ffi::c_int != crate::btreeInt_h::CURSOR_VALID {
         return btreeNext(pCur);
     }
-    pPage = (*pCur).pPage;
-    (*pCur).ix = (*pCur).ix.wrapping_add(1);
-    if (*pCur).ix as ::core::ffi::c_int >= (*pPage).nCell as ::core::ffi::c_int {
-        (*pCur).ix = (*pCur).ix.wrapping_sub(1);
+    pPage = __pCur_ref.pPage;
+    __pCur_ref.ix = __pCur_ref.ix.wrapping_add(1);
+    if __pCur_ref.ix as ::core::ffi::c_int >= (*pPage).nCell as ::core::ffi::c_int {
+        __pCur_ref.ix = __pCur_ref.ix.wrapping_sub(1);
         return btreeNext(pCur);
     }
     if (*pPage).leaf != 0 {
@@ -5266,7 +5347,8 @@ unsafe extern "C" fn btreePrevious(mut pCur: *mut crate::btreeInt_h::BtCursor) -
     let mut rc: ::core::ffi::c_int = 0;
     let mut pPage: *mut crate::btreeInt_h::MemPage = ::core::ptr::null_mut::<crate::btreeInt_h::MemPage>();
     if (*pCur).eState as ::core::ffi::c_int != crate::btreeInt_h::CURSOR_VALID {
-        rc = if (*pCur).eState as ::core::ffi::c_int >= crate::btreeInt_h::CURSOR_REQUIRESEEK {
+        let __pCur_ref = unsafe { &mut *pCur };
+        rc = if __pCur_ref.eState as ::core::ffi::c_int >= crate::btreeInt_h::CURSOR_REQUIRESEEK {
             btreeRestoreCursorPosition(pCur)
         } else {
             crate::sqlite3_h::SQLITE_OK
@@ -5274,12 +5356,12 @@ unsafe extern "C" fn btreePrevious(mut pCur: *mut crate::btreeInt_h::BtCursor) -
         if rc != crate::sqlite3_h::SQLITE_OK {
             return rc;
         }
-        if crate::btreeInt_h::CURSOR_INVALID == (*pCur).eState as ::core::ffi::c_int {
+        if crate::btreeInt_h::CURSOR_INVALID == __pCur_ref.eState as ::core::ffi::c_int {
             return crate::sqlite3_h::SQLITE_DONE;
         }
-        if crate::btreeInt_h::CURSOR_SKIPNEXT == (*pCur).eState as ::core::ffi::c_int {
-            (*pCur).eState = crate::btreeInt_h::CURSOR_VALID as crate::src::ext::rtree::rtree::u8_0;
-            if (*pCur).skipNext < 0 as ::core::ffi::c_int {
+        if crate::btreeInt_h::CURSOR_SKIPNEXT == __pCur_ref.eState as ::core::ffi::c_int {
+            __pCur_ref.eState = crate::btreeInt_h::CURSOR_VALID as crate::src::ext::rtree::rtree::u8_0;
+            if __pCur_ref.skipNext < 0 as ::core::ffi::c_int {
                 return crate::sqlite3_h::SQLITE_OK;
             }
         }
@@ -5293,11 +5375,12 @@ unsafe extern "C" fn btreePrevious(mut pCur: *mut crate::btreeInt_h::BtCursor) -
     }
     if (*pPage).leaf == 0 {
         let mut idx: ::core::ffi::c_int = (*pCur).ix as ::core::ffi::c_int;
+        let __pPage_ref = unsafe { &mut *pPage };
         rc = moveToChild(
             pCur,
             crate::src::src::util::sqlite3Get4byte(
-                (*pPage).aData.offset(
-                    ((*pPage).maskPage as ::core::ffi::c_int
+                __pPage_ref.aData.offset(
+                    (__pPage_ref.maskPage as ::core::ffi::c_int
                         & ((*((*pPage)
                             .aCellIdx
                             .offset((2 as ::core::ffi::c_int * idx) as isize)
@@ -5319,15 +5402,16 @@ unsafe extern "C" fn btreePrevious(mut pCur: *mut crate::btreeInt_h::BtCursor) -
         }
         rc = moveToRightmost(pCur);
     } else {
-        while (*pCur).ix as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
-            if (*pCur).iPage as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
-                (*pCur).eState = crate::btreeInt_h::CURSOR_INVALID as crate::src::ext::rtree::rtree::u8_0;
+        let __pCur_ref = unsafe { &mut *pCur };
+        while __pCur_ref.ix as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
+            if __pCur_ref.iPage as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
+                __pCur_ref.eState = crate::btreeInt_h::CURSOR_INVALID as crate::src::ext::rtree::rtree::u8_0;
                 return crate::sqlite3_h::SQLITE_DONE;
             }
             moveToParent(pCur);
         }
-        (*pCur).ix = (*pCur).ix.wrapping_sub(1);
-        pPage = (*pCur).pPage;
+        __pCur_ref.ix = __pCur_ref.ix.wrapping_sub(1);
+        pPage = __pCur_ref.pPage;
         if (*pPage).intKey as ::core::ffi::c_int != 0 && (*pPage).leaf == 0 {
             rc = sqlite3BtreePrevious(pCur, 0 as ::core::ffi::c_int);
         } else {
@@ -5342,16 +5426,17 @@ pub unsafe extern "C" fn sqlite3BtreePrevious(
     mut pCur: *mut crate::btreeInt_h::BtCursor,
     mut _flags: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
-    (*pCur).curFlags = ((*pCur).curFlags as ::core::ffi::c_int
+    let __pCur_ref = unsafe { &mut *pCur };
+    __pCur_ref.curFlags = (__pCur_ref.curFlags as ::core::ffi::c_int
         & !(crate::btreeInt_h::BTCF_AtLast | crate::btreeInt_h::BTCF_ValidOvfl | crate::btreeInt_h::BTCF_ValidNKey)) as crate::src::ext::rtree::rtree::u8_0;
-    (*pCur).info.nSize = 0 as crate::src::fts5::u16_0;
-    if (*pCur).eState as ::core::ffi::c_int != crate::btreeInt_h::CURSOR_VALID
-        || (*pCur).ix as ::core::ffi::c_int == 0 as ::core::ffi::c_int
-        || (*(*pCur).pPage).leaf as ::core::ffi::c_int == 0 as ::core::ffi::c_int
+    __pCur_ref.info.nSize = 0 as crate::src::fts5::u16_0;
+    if __pCur_ref.eState as ::core::ffi::c_int != crate::btreeInt_h::CURSOR_VALID
+        || __pCur_ref.ix as ::core::ffi::c_int == 0 as ::core::ffi::c_int
+        || (*__pCur_ref.pPage).leaf as ::core::ffi::c_int == 0 as ::core::ffi::c_int
     {
         return btreePrevious(pCur);
     }
-    (*pCur).ix = (*pCur).ix.wrapping_sub(1);
+    __pCur_ref.ix = __pCur_ref.ix.wrapping_sub(1);
     return crate::sqlite3_h::SQLITE_OK;
 }
 
@@ -5511,8 +5596,9 @@ unsafe extern "C" fn allocateBtreePage(
                                 releasePage(pNewTrunk);
                                 break;
                             } else {
+                                let __pNewTrunk_ref = unsafe { &mut *pNewTrunk };
                                 ::libc::memcpy(
-                                    (*pNewTrunk).aData.offset(0 as isize)
+                                    __pNewTrunk_ref.aData.offset(0 as isize)
                                         as *mut crate::src::ext::rtree::rtree::u8_0
                                         as *mut ::core::ffi::c_void,
                                     (*pTrunk).aData.offset(0 as isize)
@@ -5521,12 +5607,12 @@ unsafe extern "C" fn allocateBtreePage(
                                     4 as crate::__stddef_size_t_h::size_t,
                                 );
                                 crate::src::src::util::sqlite3Put4byte(
-                                    (*pNewTrunk).aData.offset(4 as isize)
+                                    __pNewTrunk_ref.aData.offset(4 as isize)
                                         as *mut crate::src::ext::rtree::rtree::u8_0,
                                     k.wrapping_sub(1 as crate::src::ext::rtree::rtree::u32_0),
                                 );
                                 ::libc::memcpy(
-                                    (*pNewTrunk).aData.offset(8 as isize)
+                                    __pNewTrunk_ref.aData.offset(8 as isize)
                                         as *mut crate::src::ext::rtree::rtree::u8_0
                                         as *mut ::core::ffi::c_void,
                                     (*pTrunk).aData.offset(12 as isize)
@@ -5671,29 +5757,30 @@ unsafe extern "C" fn allocateBtreePage(
             }
         }
     } else {
+        let __pBt_ref = unsafe { &mut *pBt };
         let mut bNoContent: ::core::ffi::c_int =
-            if 0 as ::core::ffi::c_int == (*pBt).bDoTruncate as ::core::ffi::c_int {
+            if 0 as ::core::ffi::c_int == __pBt_ref.bDoTruncate as ::core::ffi::c_int {
                 crate::src::src::pager::PAGER_GET_NOCONTENT
             } else {
                 0 as ::core::ffi::c_int
             };
-        rc = crate::src::src::pager::sqlite3PagerWrite((*(*pBt).pPage1).pDbPage as *mut crate::src::src::pcache::PgHdr);
+        rc = crate::src::src::pager::sqlite3PagerWrite((*__pBt_ref.pPage1).pDbPage as *mut crate::src::src::pcache::PgHdr);
         if rc != 0 {
             return rc;
         }
-        (*pBt).nPage = (*pBt).nPage.wrapping_add(1);
-        if (*pBt).nPage
+        __pBt_ref.nPage = __pBt_ref.nPage.wrapping_add(1);
+        if __pBt_ref.nPage
             == (crate::src::src::global::sqlite3PendingByte as crate::src::ext::rtree::rtree::u32_0)
-                .wrapping_div((*pBt).pageSize)
+                .wrapping_div(__pBt_ref.pageSize)
                 .wrapping_add(1 as crate::src::ext::rtree::rtree::u32_0)
         {
-            (*pBt).nPage = (*pBt).nPage.wrapping_add(1);
+            __pBt_ref.nPage = __pBt_ref.nPage.wrapping_add(1);
         }
-        if (*pBt).autoVacuum as ::core::ffi::c_int != 0
-            && ptrmapPageno(pBt, (*pBt).nPage as crate::src::src::pager::Pgno) == (*pBt).nPage
+        if __pBt_ref.autoVacuum as ::core::ffi::c_int != 0
+            && ptrmapPageno(pBt, __pBt_ref.nPage as crate::src::src::pager::Pgno) == __pBt_ref.nPage
         {
             let mut pPg: *mut crate::btreeInt_h::MemPage = ::core::ptr::null_mut::<crate::btreeInt_h::MemPage>();
-            rc = btreeGetUnusedPage(pBt, (*pBt).nPage as crate::src::src::pager::Pgno, &raw mut pPg, bNoContent);
+            rc = btreeGetUnusedPage(pBt, __pBt_ref.nPage as crate::src::src::pager::Pgno, &raw mut pPg, bNoContent);
             if rc == crate::sqlite3_h::SQLITE_OK {
                 rc = crate::src::src::pager::sqlite3PagerWrite((*pPg).pDbPage as *mut crate::src::src::pcache::PgHdr);
                 releasePage(pPg);
@@ -5701,22 +5788,22 @@ unsafe extern "C" fn allocateBtreePage(
             if rc != 0 {
                 return rc;
             }
-            (*pBt).nPage = (*pBt).nPage.wrapping_add(1);
-            if (*pBt).nPage
+            __pBt_ref.nPage = __pBt_ref.nPage.wrapping_add(1);
+            if __pBt_ref.nPage
                 == (crate::src::src::global::sqlite3PendingByte as crate::src::ext::rtree::rtree::u32_0)
-                    .wrapping_div((*pBt).pageSize)
+                    .wrapping_div(__pBt_ref.pageSize)
                     .wrapping_add(1 as crate::src::ext::rtree::rtree::u32_0)
             {
-                (*pBt).nPage = (*pBt).nPage.wrapping_add(1);
+                __pBt_ref.nPage = __pBt_ref.nPage.wrapping_add(1);
             }
         }
         crate::src::src::util::sqlite3Put4byte(
-            (*(*pBt).pPage1)
+            (*__pBt_ref.pPage1)
                 .aData
                 .offset(28 as isize),
-            (*pBt).nPage,
+            __pBt_ref.nPage,
         );
-        *pPgno = (*pBt).nPage as crate::src::src::pager::Pgno;
+        *pPgno = __pBt_ref.nPage as crate::src::src::pager::Pgno;
         rc = btreeGetUnusedPage(pBt, *pPgno, ppPage, bNoContent);
         if rc != 0 {
             return rc;
@@ -5932,19 +6019,20 @@ unsafe extern "C" fn clearCellOverflow(
     let mut rc: ::core::ffi::c_int = 0;
     let mut nOvfl: ::core::ffi::c_int = 0;
     let mut ovflPageSize: crate::src::ext::rtree::rtree::u32_0 = 0;
-    if pCell.offset((*pInfo).nSize as ::core::ffi::c_int as isize) > (*pPage).aDataEnd {
+    let __pInfo_ref = unsafe { &mut *pInfo };
+    if pCell.offset(__pInfo_ref.nSize as ::core::ffi::c_int as isize) > (*pPage).aDataEnd {
         return crate::src::src::main::sqlite3CorruptError(6957 as ::core::ffi::c_int);
     }
     ovflPgno = crate::src::src::util::sqlite3Get4byte(
         pCell
-            .offset((*pInfo).nSize as ::core::ffi::c_int as isize)
+            .offset(__pInfo_ref.nSize as ::core::ffi::c_int as isize)
             .offset(-(4 as ::core::ffi::c_int as isize)),
     ) as crate::src::src::pager::Pgno;
     pBt = (*pPage).pBt;
     ovflPageSize = (*pBt).usableSize.wrapping_sub(4 as crate::src::ext::rtree::rtree::u32_0);
     nOvfl = (*pInfo)
         .nPayload
-        .wrapping_sub((*pInfo).nLocal as crate::src::ext::rtree::rtree::u32_0)
+        .wrapping_sub(__pInfo_ref.nLocal as crate::src::ext::rtree::rtree::u32_0)
         .wrapping_add(ovflPageSize)
         .wrapping_sub(1 as crate::src::ext::rtree::rtree::u32_0)
         .wrapping_div(ovflPageSize) as ::core::ffi::c_int;
@@ -6004,11 +6092,13 @@ unsafe extern "C" fn fillInCell(
     let mut pBt: *mut crate::btreeInt_h::BtShared = ::core::ptr::null_mut::<crate::btreeInt_h::BtShared>();
     let mut pgnoOvfl: crate::src::src::pager::Pgno = 0;
     let mut nHeader: ::core::ffi::c_int = 0;
-    nHeader = (*pPage).childPtrSize as ::core::ffi::c_int;
-    if (*pPage).intKey != 0 {
-        nPayload = (*pX).nData + (*pX).nZero;
-        pSrc = (*pX).pData as *const crate::src::ext::rtree::rtree::u8_0;
-        nSrc = (*pX).nData;
+    let __pPage_ref = unsafe { &mut *pPage };
+    nHeader = __pPage_ref.childPtrSize as ::core::ffi::c_int;
+    if __pPage_ref.intKey != 0 {
+        let __pX_ref = unsafe { &*pX };
+        nPayload = __pX_ref.nData + __pX_ref.nZero;
+        pSrc = __pX_ref.pData as *const crate::src::ext::rtree::rtree::u8_0;
+        nSrc = __pX_ref.nData;
         nHeader += (if (nPayload as crate::src::ext::rtree::rtree::u32_0) < 0x80 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::u32_0 {
             *pCell.offset(nHeader as isize) = nPayload as ::core::ffi::c_uchar;
             1 as ::core::ffi::c_int
@@ -6020,7 +6110,7 @@ unsafe extern "C" fn fillInCell(
         }) as crate::src::ext::rtree::rtree::u8_0 as ::core::ffi::c_int;
         nHeader += crate::src::src::util::sqlite3PutVarint(
             pCell.offset(nHeader as isize) as *mut ::core::ffi::c_uchar,
-            *(&raw const (*pX).nKey as *mut crate::src::ext::rtree::rtree::u64_0),
+            *(&raw const __pX_ref.nKey as *mut crate::src::ext::rtree::rtree::u64_0),
         );
     } else {
         nPayload = (*pX).nKey as ::core::ffi::c_int;
@@ -6037,7 +6127,7 @@ unsafe extern "C" fn fillInCell(
         }) as crate::src::ext::rtree::rtree::u8_0 as ::core::ffi::c_int;
     }
     pPayload = pCell.offset(nHeader as isize) as *mut ::core::ffi::c_uchar;
-    if nPayload <= (*pPage).maxLocal as ::core::ffi::c_int {
+    if nPayload <= __pPage_ref.maxLocal as ::core::ffi::c_int {
         n = nHeader + nPayload;
         if n < 4 as ::core::ffi::c_int {
             n = 4 as ::core::ffi::c_int;
@@ -6056,12 +6146,12 @@ unsafe extern "C" fn fillInCell(
         );
         return crate::sqlite3_h::SQLITE_OK;
     }
-    mn = (*pPage).minLocal as ::core::ffi::c_int;
+    mn = __pPage_ref.minLocal as ::core::ffi::c_int;
     n = (mn as crate::src::ext::rtree::rtree::u32_0).wrapping_add(
         ((nPayload - mn) as crate::src::ext::rtree::rtree::u32_0)
-            .wrapping_rem((*(*pPage).pBt).usableSize.wrapping_sub(4 as crate::src::ext::rtree::rtree::u32_0)),
+            .wrapping_rem((*__pPage_ref.pBt).usableSize.wrapping_sub(4 as crate::src::ext::rtree::rtree::u32_0)),
     ) as ::core::ffi::c_int;
-    if n > (*pPage).maxLocal as ::core::ffi::c_int {
+    if n > __pPage_ref.maxLocal as ::core::ffi::c_int {
         n = mn;
     }
     spaceLeft = n;
@@ -6069,7 +6159,7 @@ unsafe extern "C" fn fillInCell(
     pPrior = pCell.offset((nHeader + n) as isize) as *mut ::core::ffi::c_uchar;
     pToRelease = ::core::ptr::null_mut::<crate::btreeInt_h::MemPage>();
     pgnoOvfl = 0 as crate::src::src::pager::Pgno;
-    pBt = (*pPage).pBt;
+    pBt = __pPage_ref.pBt;
     loop {
         n = nPayload;
         if n > spaceLeft {
@@ -6106,13 +6196,14 @@ unsafe extern "C" fn fillInCell(
         if spaceLeft == 0 as ::core::ffi::c_int {
             let mut pOvfl: *mut crate::btreeInt_h::MemPage = ::core::ptr::null_mut::<crate::btreeInt_h::MemPage>();
             let mut pgnoPtrmap: crate::src::src::pager::Pgno = pgnoOvfl;
-            if (*pBt).autoVacuum != 0 {
+            let __pBt_ref = unsafe { &mut *pBt };
+            if __pBt_ref.autoVacuum != 0 {
                 loop {
                     pgnoOvfl = pgnoOvfl.wrapping_add(1);
                     if !(ptrmapPageno(pBt, pgnoOvfl) == pgnoOvfl
                         || pgnoOvfl
                             == (crate::src::src::global::sqlite3PendingByte as crate::src::ext::rtree::rtree::u32_0)
-                                .wrapping_div((*pBt).pageSize)
+                                .wrapping_div(__pBt_ref.pageSize)
                                 .wrapping_add(1 as crate::src::ext::rtree::rtree::u32_0))
                     {
                         break;
@@ -6120,7 +6211,7 @@ unsafe extern "C" fn fillInCell(
                 }
             }
             rc = allocateBtreePage(pBt, &raw mut pOvfl, &raw mut pgnoOvfl, pgnoOvfl, 0 as crate::src::ext::rtree::rtree::u8_0);
-            if (*pBt).autoVacuum as ::core::ffi::c_int != 0 && rc == crate::sqlite3_h::SQLITE_OK {
+            if __pBt_ref.autoVacuum as ::core::ffi::c_int != 0 && rc == crate::sqlite3_h::SQLITE_OK {
                 let mut eType: crate::src::ext::rtree::rtree::u8_0 = (if pgnoPtrmap != 0 {
                     crate::btreeInt_h::PTRMAP_OVERFLOW2
                 } else {
@@ -6142,7 +6233,7 @@ unsafe extern "C" fn fillInCell(
             crate::src::src::util::sqlite3Put4byte(pPrior as *mut crate::src::ext::rtree::rtree::u8_0, 0 as crate::src::ext::rtree::rtree::u32_0);
             pPayload = (*pOvfl).aData.offset(4 as isize) as *mut crate::src::ext::rtree::rtree::u8_0
                 as *mut ::core::ffi::c_uchar;
-            spaceLeft = (*pBt).usableSize.wrapping_sub(4 as crate::src::ext::rtree::rtree::u32_0) as ::core::ffi::c_int;
+            spaceLeft = __pBt_ref.usableSize.wrapping_sub(4 as crate::src::ext::rtree::rtree::u32_0) as ::core::ffi::c_int;
         }
     }
     releasePage(pToRelease);
@@ -6163,15 +6254,16 @@ unsafe extern "C" fn dropCell(
     if *pRC != 0 {
         return;
     }
-    data = (*pPage).aData;
+    let __pPage_ref = unsafe { &mut *pPage };
+    data = __pPage_ref.aData;
     ptr = (*pPage)
         .aCellIdx
         .offset((2 as ::core::ffi::c_int * idx) as isize) as *mut crate::src::ext::rtree::rtree::u8_0;
     pc = ((*ptr.offset(0 as isize) as ::core::ffi::c_int)
         << 8 as ::core::ffi::c_int
         | *ptr.offset(1 as isize) as ::core::ffi::c_int) as crate::src::ext::rtree::rtree::u32_0;
-    hdr = (*pPage).hdrOffset as ::core::ffi::c_int;
-    if pc.wrapping_add(sz as crate::src::ext::rtree::rtree::u32_0) > (*(*pPage).pBt).usableSize {
+    hdr = __pPage_ref.hdrOffset as ::core::ffi::c_int;
+    if pc.wrapping_add(sz as crate::src::ext::rtree::rtree::u32_0) > (*__pPage_ref.pBt).usableSize {
         *pRC = crate::src::src::main::sqlite3CorruptError(7250 as ::core::ffi::c_int);
         return;
     }
@@ -6180,8 +6272,8 @@ unsafe extern "C" fn dropCell(
         *pRC = rc;
         return;
     }
-    (*pPage).nCell = (*pPage).nCell.wrapping_sub(1);
-    if (*pPage).nCell as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
+    __pPage_ref.nCell = __pPage_ref.nCell.wrapping_sub(1);
+    if __pPage_ref.nCell as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
         ::libc::memset(
             data.offset((hdr + 1 as ::core::ffi::c_int) as isize) as *mut crate::src::ext::rtree::rtree::u8_0
                 as *mut ::core::ffi::c_void,
@@ -6191,26 +6283,26 @@ unsafe extern "C" fn dropCell(
         *data.offset((hdr + 7 as ::core::ffi::c_int) as isize) = 0 as crate::src::ext::rtree::rtree::u8_0;
         *(data.offset((hdr + 5 as ::core::ffi::c_int) as isize) as *mut crate::src::ext::rtree::rtree::u8_0)
             .offset(0 as isize) =
-            ((*(*pPage).pBt).usableSize >> 8 as ::core::ffi::c_int) as crate::src::ext::rtree::rtree::u8_0;
+            ((*__pPage_ref.pBt).usableSize >> 8 as ::core::ffi::c_int) as crate::src::ext::rtree::rtree::u8_0;
         *(data.offset((hdr + 5 as ::core::ffi::c_int) as isize) as *mut crate::src::ext::rtree::rtree::u8_0)
-            .offset(1 as isize) = (*(*pPage).pBt).usableSize as crate::src::ext::rtree::rtree::u8_0;
-        (*pPage).nFree = (*(*pPage).pBt)
+            .offset(1 as isize) = (*__pPage_ref.pBt).usableSize as crate::src::ext::rtree::rtree::u8_0;
+        __pPage_ref.nFree = (*__pPage_ref.pBt)
             .usableSize
-            .wrapping_sub((*pPage).hdrOffset as crate::src::ext::rtree::rtree::u32_0)
-            .wrapping_sub((*pPage).childPtrSize as crate::src::ext::rtree::rtree::u32_0)
+            .wrapping_sub(__pPage_ref.hdrOffset as crate::src::ext::rtree::rtree::u32_0)
+            .wrapping_sub(__pPage_ref.childPtrSize as crate::src::ext::rtree::rtree::u32_0)
             .wrapping_sub(8 as crate::src::ext::rtree::rtree::u32_0) as ::core::ffi::c_int;
     } else {
         ::libc::memmove(
             ptr as *mut ::core::ffi::c_void,
             ptr.offset(2 as isize) as *const ::core::ffi::c_void,
-            (2 as ::core::ffi::c_int * ((*pPage).nCell as ::core::ffi::c_int - idx)) as crate::__stddef_size_t_h::size_t,
+            (2 as ::core::ffi::c_int * (__pPage_ref.nCell as ::core::ffi::c_int - idx)) as crate::__stddef_size_t_h::size_t,
         );
         *(data.offset((hdr + 3 as ::core::ffi::c_int) as isize) as *mut crate::src::ext::rtree::rtree::u8_0)
             .offset(0 as isize) =
-            ((*pPage).nCell as ::core::ffi::c_int >> 8 as ::core::ffi::c_int) as crate::src::ext::rtree::rtree::u8_0;
+            (__pPage_ref.nCell as ::core::ffi::c_int >> 8 as ::core::ffi::c_int) as crate::src::ext::rtree::rtree::u8_0;
         *(data.offset((hdr + 3 as ::core::ffi::c_int) as isize) as *mut crate::src::ext::rtree::rtree::u8_0)
-            .offset(1 as isize) = (*pPage).nCell as crate::src::ext::rtree::rtree::u8_0;
-        (*pPage).nFree += 2 as ::core::ffi::c_int;
+            .offset(1 as isize) = __pPage_ref.nCell as crate::src::ext::rtree::rtree::u8_0;
+        __pPage_ref.nFree += 2 as ::core::ffi::c_int;
     };
 }
 
@@ -6238,22 +6330,24 @@ unsafe extern "C" fn insertCell(
             pCell = pTemp;
         }
         crate::src::src::util::sqlite3Put4byte(pCell, iChild as crate::src::ext::rtree::rtree::u32_0);
-        let fresh22 = (*pPage).nOverflow;
-        (*pPage).nOverflow = (*pPage).nOverflow.wrapping_add(1);
+        let __pPage_ref = unsafe { &mut *pPage };
+        let fresh22 = __pPage_ref.nOverflow;
+        __pPage_ref.nOverflow = __pPage_ref.nOverflow.wrapping_add(1);
         j = fresh22 as ::core::ffi::c_int;
-        (*pPage).apOvfl[j as usize] = pCell;
-        (*pPage).aiOvfl[j as usize] = i as crate::src::fts5::u16_0;
+        __pPage_ref.apOvfl[j as usize] = pCell;
+        __pPage_ref.aiOvfl[j as usize] = i as crate::src::fts5::u16_0;
     } else {
-        let mut rc: ::core::ffi::c_int = crate::src::src::pager::sqlite3PagerWrite((*pPage).pDbPage as *mut crate::src::src::pcache::PgHdr);
+        let __pPage_ref = unsafe { &mut *pPage };
+        let mut rc: ::core::ffi::c_int = crate::src::src::pager::sqlite3PagerWrite(__pPage_ref.pDbPage as *mut crate::src::src::pcache::PgHdr);
         if rc != 0 as ::core::ffi::c_int {
             return rc;
         }
-        data = (*pPage).aData;
+        data = __pPage_ref.aData;
         rc = allocateSpace(pPage, sz, &raw mut idx);
         if rc != 0 {
             return rc;
         }
-        (*pPage).nFree -= (2 as ::core::ffi::c_int + sz) as crate::src::fts5::u16_0 as ::core::ffi::c_int;
+        __pPage_ref.nFree -= (2 as ::core::ffi::c_int + sz) as crate::src::fts5::u16_0 as ::core::ffi::c_int;
         ::libc::memcpy(
             data.offset((idx + 4 as ::core::ffi::c_int) as isize) as *mut crate::src::ext::rtree::rtree::u8_0
                 as *mut ::core::ffi::c_void,
@@ -6267,21 +6361,21 @@ unsafe extern "C" fn insertCell(
         ::libc::memmove(
             pIns.offset(2 as isize) as *mut ::core::ffi::c_void,
             pIns as *const ::core::ffi::c_void,
-            (2 as ::core::ffi::c_int * ((*pPage).nCell as ::core::ffi::c_int - i)) as crate::__stddef_size_t_h::size_t,
+            (2 as ::core::ffi::c_int * (__pPage_ref.nCell as ::core::ffi::c_int - i)) as crate::__stddef_size_t_h::size_t,
         );
         *pIns.offset(0 as isize) = (idx >> 8 as ::core::ffi::c_int) as crate::src::ext::rtree::rtree::u8_0;
         *pIns.offset(1 as isize) = idx as crate::src::ext::rtree::rtree::u8_0;
-        (*pPage).nCell = (*pPage).nCell.wrapping_add(1);
+        __pPage_ref.nCell = __pPage_ref.nCell.wrapping_add(1);
         let ref mut fresh23 = *data
-            .offset(((*pPage).hdrOffset as ::core::ffi::c_int + 4 as ::core::ffi::c_int) as isize);
+            .offset((__pPage_ref.hdrOffset as ::core::ffi::c_int + 4 as ::core::ffi::c_int) as isize);
         *fresh23 = (*fresh23).wrapping_add(1);
         if *fresh23 as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
             let ref mut fresh24 = *data.offset(
-                ((*pPage).hdrOffset as ::core::ffi::c_int + 3 as ::core::ffi::c_int) as isize,
+                (__pPage_ref.hdrOffset as ::core::ffi::c_int + 3 as ::core::ffi::c_int) as isize,
             );
             *fresh24 = (*fresh24).wrapping_add(1);
         }
-        if (*(*pPage).pBt).autoVacuum != 0 {
+        if (*__pPage_ref.pBt).autoVacuum != 0 {
             let mut rc2: ::core::ffi::c_int = crate::sqlite3_h::SQLITE_OK;
             ptrmapPutOvflPtr(pPage, pPage, pCell, &raw mut rc2);
             if rc2 != 0 {
@@ -6303,22 +6397,24 @@ unsafe extern "C" fn insertCellFast(
     let mut data: *mut crate::src::ext::rtree::rtree::u8_0 = ::core::ptr::null_mut::<crate::src::ext::rtree::rtree::u8_0>();
     let mut pIns: *mut crate::src::ext::rtree::rtree::u8_0 = ::core::ptr::null_mut::<crate::src::ext::rtree::rtree::u8_0>();
     if sz + 2 as ::core::ffi::c_int > (*pPage).nFree {
-        let fresh28 = (*pPage).nOverflow;
-        (*pPage).nOverflow = (*pPage).nOverflow.wrapping_add(1);
+        let __pPage_ref = unsafe { &mut *pPage };
+        let fresh28 = __pPage_ref.nOverflow;
+        __pPage_ref.nOverflow = __pPage_ref.nOverflow.wrapping_add(1);
         j = fresh28 as ::core::ffi::c_int;
-        (*pPage).apOvfl[j as usize] = pCell;
-        (*pPage).aiOvfl[j as usize] = i as crate::src::fts5::u16_0;
+        __pPage_ref.apOvfl[j as usize] = pCell;
+        __pPage_ref.aiOvfl[j as usize] = i as crate::src::fts5::u16_0;
     } else {
-        let mut rc: ::core::ffi::c_int = crate::src::src::pager::sqlite3PagerWrite((*pPage).pDbPage as *mut crate::src::src::pcache::PgHdr);
+        let __pPage_ref = unsafe { &mut *pPage };
+        let mut rc: ::core::ffi::c_int = crate::src::src::pager::sqlite3PagerWrite(__pPage_ref.pDbPage as *mut crate::src::src::pcache::PgHdr);
         if rc != crate::sqlite3_h::SQLITE_OK {
             return rc;
         }
-        data = (*pPage).aData;
+        data = __pPage_ref.aData;
         rc = allocateSpace(pPage, sz, &raw mut idx);
         if rc != 0 {
             return rc;
         }
-        (*pPage).nFree -= (2 as ::core::ffi::c_int + sz) as crate::src::fts5::u16_0 as ::core::ffi::c_int;
+        __pPage_ref.nFree -= (2 as ::core::ffi::c_int + sz) as crate::src::fts5::u16_0 as ::core::ffi::c_int;
         ::libc::memcpy(
             data.offset(idx as isize) as *mut crate::src::ext::rtree::rtree::u8_0 as *mut ::core::ffi::c_void,
             pCell as *const ::core::ffi::c_void,
@@ -6330,21 +6426,21 @@ unsafe extern "C" fn insertCellFast(
         ::libc::memmove(
             pIns.offset(2 as isize) as *mut ::core::ffi::c_void,
             pIns as *const ::core::ffi::c_void,
-            (2 as ::core::ffi::c_int * ((*pPage).nCell as ::core::ffi::c_int - i)) as crate::__stddef_size_t_h::size_t,
+            (2 as ::core::ffi::c_int * (__pPage_ref.nCell as ::core::ffi::c_int - i)) as crate::__stddef_size_t_h::size_t,
         );
         *pIns.offset(0 as isize) = (idx >> 8 as ::core::ffi::c_int) as crate::src::ext::rtree::rtree::u8_0;
         *pIns.offset(1 as isize) = idx as crate::src::ext::rtree::rtree::u8_0;
-        (*pPage).nCell = (*pPage).nCell.wrapping_add(1);
+        __pPage_ref.nCell = __pPage_ref.nCell.wrapping_add(1);
         let ref mut fresh29 = *data
-            .offset(((*pPage).hdrOffset as ::core::ffi::c_int + 4 as ::core::ffi::c_int) as isize);
+            .offset((__pPage_ref.hdrOffset as ::core::ffi::c_int + 4 as ::core::ffi::c_int) as isize);
         *fresh29 = (*fresh29).wrapping_add(1);
         if *fresh29 as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
             let ref mut fresh30 = *data.offset(
-                ((*pPage).hdrOffset as ::core::ffi::c_int + 3 as ::core::ffi::c_int) as isize,
+                (__pPage_ref.hdrOffset as ::core::ffi::c_int + 3 as ::core::ffi::c_int) as isize,
             );
             *fresh30 = (*fresh30).wrapping_add(1);
         }
-        if (*(*pPage).pBt).autoVacuum != 0 {
+        if (*__pPage_ref.pBt).autoVacuum != 0 {
             let mut rc2: ::core::ffi::c_int = crate::sqlite3_h::SQLITE_OK;
             ptrmapPutOvflPtr(pPage, pPage, pCell, &raw mut rc2);
             if rc2 != 0 {
@@ -6378,11 +6474,12 @@ unsafe extern "C" fn populateCellCache(
 #[inline(never)]
 
 unsafe extern "C" fn computeCellSize(mut p: *mut CellArray, mut N: ::core::ffi::c_int) -> crate::src::fts5::u16_0 {
-    *(*p).szCell.offset(N as isize) = (*(*p).pRef).xCellSize.expect("non-null function pointer")(
-        (*p).pRef,
-        *(*p).apCell.offset(N as isize),
+    let __p_ref = unsafe { &mut *p };
+    *__p_ref.szCell.offset(N as isize) = (*__p_ref.pRef).xCellSize.expect("non-null function pointer")(
+        __p_ref.pRef,
+        *__p_ref.apCell.offset(N as isize),
     );
-    return *(*p).szCell.offset(N as isize);
+    return *__p_ref.szCell.offset(N as isize);
 }
 
 unsafe extern "C" fn cachedCellSize(mut p: *mut CellArray, mut N: ::core::ffi::c_int) -> crate::src::fts5::u16_0 {
@@ -6398,15 +6495,16 @@ unsafe extern "C" fn rebuildPage(
     mut nCell: ::core::ffi::c_int,
     mut pPg: *mut crate::btreeInt_h::MemPage,
 ) -> ::core::ffi::c_int {
-    let hdr: ::core::ffi::c_int = (*pPg).hdrOffset as ::core::ffi::c_int;
-    let aData: *mut crate::src::ext::rtree::rtree::u8_0 = (*pPg).aData;
-    let usableSize: ::core::ffi::c_int = (*(*pPg).pBt).usableSize as ::core::ffi::c_int;
+    let __pPg_ref = unsafe { &mut *pPg };
+    let hdr: ::core::ffi::c_int = __pPg_ref.hdrOffset as ::core::ffi::c_int;
+    let aData: *mut crate::src::ext::rtree::rtree::u8_0 = __pPg_ref.aData;
+    let usableSize: ::core::ffi::c_int = (*__pPg_ref.pBt).usableSize as ::core::ffi::c_int;
     let pEnd: *mut crate::src::ext::rtree::rtree::u8_0 = aData.offset(usableSize as isize) as *mut crate::src::ext::rtree::rtree::u8_0;
     let mut i: ::core::ffi::c_int = iFirst;
     let mut j: crate::src::ext::rtree::rtree::u32_0 = 0;
     let mut iEnd: ::core::ffi::c_int = i + nCell;
-    let mut pCellptr: *mut crate::src::ext::rtree::rtree::u8_0 = (*pPg).aCellIdx;
-    let mut pTmp: *mut crate::src::ext::rtree::rtree::u8_0 = crate::src::src::pager::sqlite3PagerTempSpace((*(*pPg).pBt).pPager) as *mut crate::src::ext::rtree::rtree::u8_0;
+    let mut pCellptr: *mut crate::src::ext::rtree::rtree::u8_0 = __pPg_ref.aCellIdx;
+    let mut pTmp: *mut crate::src::ext::rtree::rtree::u8_0 = crate::src::src::pager::sqlite3PagerTempSpace((*__pPg_ref.pBt).pPager) as *mut crate::src::ext::rtree::rtree::u8_0;
     let mut pData: *mut crate::src::ext::rtree::rtree::u8_0 = ::core::ptr::null_mut::<crate::src::ext::rtree::rtree::u8_0>();
     let mut k: ::core::ffi::c_int = 0;
     let mut pSrcEnd: *mut crate::src::ext::rtree::rtree::u8_0 = ::core::ptr::null_mut::<crate::src::ext::rtree::rtree::u8_0>();
@@ -6430,8 +6528,9 @@ unsafe extern "C" fn rebuildPage(
     pSrcEnd = (*pCArray).apEnd[k as usize];
     pData = pEnd;
     loop {
-        let mut pCell: *mut crate::src::ext::rtree::rtree::u8_0 = *(*pCArray).apCell.offset(i as isize);
-        let mut sz: crate::src::fts5::u16_0 = *(*pCArray).szCell.offset(i as isize);
+        let __pCArray_ref = unsafe { &mut *pCArray };
+        let mut pCell: *mut crate::src::ext::rtree::rtree::u8_0 = *__pCArray_ref.apCell.offset(i as isize);
+        let mut sz: crate::src::fts5::u16_0 = *__pCArray_ref.szCell.offset(i as isize);
         if pCell as crate::sqliteInt_h::uptr >= aData.offset(j as isize) as crate::sqliteInt_h::uptr && (pCell as crate::sqliteInt_h::uptr) < pEnd as crate::sqliteInt_h::uptr {
             if pCell.offset(sz as ::core::ffi::c_int as isize) as crate::sqliteInt_h::uptr > pEnd as crate::sqliteInt_h::uptr {
                 return crate::src::src::main::sqlite3CorruptError(7640 as ::core::ffi::c_int);
@@ -6461,13 +6560,13 @@ unsafe extern "C" fn rebuildPage(
         if i >= iEnd {
             break;
         }
-        if (*pCArray).ixNx[k as usize] <= i {
+        if __pCArray_ref.ixNx[k as usize] <= i {
             k += 1;
-            pSrcEnd = (*pCArray).apEnd[k as usize];
+            pSrcEnd = __pCArray_ref.apEnd[k as usize];
         }
     }
-    (*pPg).nCell = nCell as crate::src::fts5::u16_0;
-    (*pPg).nOverflow = 0 as crate::src::ext::rtree::rtree::u8_0;
+    __pPg_ref.nCell = nCell as crate::src::fts5::u16_0;
+    __pPg_ref.nOverflow = 0 as crate::src::ext::rtree::rtree::u8_0;
     *(aData.offset((hdr + 1 as ::core::ffi::c_int) as isize) as *mut crate::src::ext::rtree::rtree::u8_0)
         .offset(0 as isize) =
         (0 as ::core::ffi::c_int >> 8 as ::core::ffi::c_int) as crate::src::ext::rtree::rtree::u8_0;
@@ -6475,9 +6574,9 @@ unsafe extern "C" fn rebuildPage(
         .offset(1 as isize) = 0 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::u8_0;
     *(aData.offset((hdr + 3 as ::core::ffi::c_int) as isize) as *mut crate::src::ext::rtree::rtree::u8_0)
         .offset(0 as isize) =
-        ((*pPg).nCell as ::core::ffi::c_int >> 8 as ::core::ffi::c_int) as crate::src::ext::rtree::rtree::u8_0;
+        (__pPg_ref.nCell as ::core::ffi::c_int >> 8 as ::core::ffi::c_int) as crate::src::ext::rtree::rtree::u8_0;
     *(aData.offset((hdr + 3 as ::core::ffi::c_int) as isize) as *mut crate::src::ext::rtree::rtree::u8_0)
-        .offset(1 as isize) = (*pPg).nCell as crate::src::ext::rtree::rtree::u8_0;
+        .offset(1 as isize) = __pPg_ref.nCell as crate::src::ext::rtree::rtree::u8_0;
     *(aData.offset((hdr + 5 as ::core::ffi::c_int) as isize) as *mut crate::src::ext::rtree::rtree::u8_0)
         .offset(0 as isize) =
         (pData.offset_from(aData) as ::core::ffi::c_long >> 8 as ::core::ffi::c_int) as crate::src::ext::rtree::rtree::u8_0;
@@ -6515,7 +6614,8 @@ unsafe extern "C" fn pageInsertArray(
         let mut sz: ::core::ffi::c_int = 0;
         let mut rc: ::core::ffi::c_int = 0;
         let mut pSlot: *mut crate::src::ext::rtree::rtree::u8_0 = ::core::ptr::null_mut::<crate::src::ext::rtree::rtree::u8_0>();
-        sz = *(*pCArray).szCell.offset(i as isize) as ::core::ffi::c_int;
+        let __pCArray_ref = unsafe { &mut *pCArray };
+        sz = *__pCArray_ref.szCell.offset(i as isize) as ::core::ffi::c_int;
         if *aData.offset(1 as isize) as ::core::ffi::c_int
             == 0 as ::core::ffi::c_int
             && *aData.offset(2 as isize) as ::core::ffi::c_int
@@ -6531,15 +6631,15 @@ unsafe extern "C" fn pageInsertArray(
             pData = pData.offset(-(sz as isize));
             pSlot = pData;
         }
-        if (*(*pCArray).apCell.offset(i as isize)).offset(sz as isize) as crate::sqliteInt_h::uptr > pEnd as crate::sqliteInt_h::uptr
-            && (*(*pCArray).apCell.offset(i as isize) as crate::sqliteInt_h::uptr) < pEnd as crate::sqliteInt_h::uptr
+        if (*__pCArray_ref.apCell.offset(i as isize)).offset(sz as isize) as crate::sqliteInt_h::uptr > pEnd as crate::sqliteInt_h::uptr
+            && (*__pCArray_ref.apCell.offset(i as isize) as crate::sqliteInt_h::uptr) < pEnd as crate::sqliteInt_h::uptr
         {
             crate::src::src::main::sqlite3CorruptError(7738 as ::core::ffi::c_int);
             return 1 as ::core::ffi::c_int;
         }
         ::libc::memmove(
             pSlot as *mut ::core::ffi::c_void,
-            *(*pCArray).apCell.offset(i as isize) as *const ::core::ffi::c_void,
+            *__pCArray_ref.apCell.offset(i as isize) as *const ::core::ffi::c_void,
             sz as crate::__stddef_size_t_h::size_t,
         );
         *pCellptr.offset(0 as isize) =
@@ -6551,9 +6651,9 @@ unsafe extern "C" fn pageInsertArray(
         if i >= iEnd {
             break;
         }
-        if (*pCArray).ixNx[k as usize] <= i {
+        if __pCArray_ref.ixNx[k as usize] <= i {
             k += 1;
-            pEnd = (*pCArray).apEnd[k as usize];
+            pEnd = __pCArray_ref.apEnd[k as usize];
         }
     }
     *ppData = pData;
@@ -6566,12 +6666,13 @@ unsafe extern "C" fn pageFreeArray(
     mut nCell: ::core::ffi::c_int,
     mut pCArray: *mut CellArray,
 ) -> ::core::ffi::c_int {
-    let aData: *mut crate::src::ext::rtree::rtree::u8_0 = (*pPg).aData;
-    let pEnd: *mut crate::src::ext::rtree::rtree::u8_0 = aData.offset((*(*pPg).pBt).usableSize as isize) as *mut crate::src::ext::rtree::rtree::u8_0;
+    let __pPg_ref = unsafe { &*pPg };
+    let aData: *mut crate::src::ext::rtree::rtree::u8_0 = __pPg_ref.aData;
+    let pEnd: *mut crate::src::ext::rtree::rtree::u8_0 = aData.offset((*__pPg_ref.pBt).usableSize as isize) as *mut crate::src::ext::rtree::rtree::u8_0;
     let pStart: *mut crate::src::ext::rtree::rtree::u8_0 = aData.offset(
-        ((*pPg).hdrOffset as ::core::ffi::c_int
+        (__pPg_ref.hdrOffset as ::core::ffi::c_int
             + 8 as ::core::ffi::c_int
-            + (*pPg).childPtrSize as ::core::ffi::c_int) as isize,
+            + __pPg_ref.childPtrSize as ::core::ffi::c_int) as isize,
     ) as *mut crate::src::ext::rtree::rtree::u8_0;
     let mut nRet: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
     let mut i: ::core::ffi::c_int = 0;
@@ -6650,18 +6751,19 @@ unsafe extern "C" fn editPage(
     mut pCArray: *mut CellArray,
 ) -> ::core::ffi::c_int {
     let mut current_block: u64;
-    let aData: *mut crate::src::ext::rtree::rtree::u8_0 = (*pPg).aData;
-    let hdr: ::core::ffi::c_int = (*pPg).hdrOffset as ::core::ffi::c_int;
+    let __pPg_ref = unsafe { &mut *pPg };
+    let aData: *mut crate::src::ext::rtree::rtree::u8_0 = __pPg_ref.aData;
+    let hdr: ::core::ffi::c_int = __pPg_ref.hdrOffset as ::core::ffi::c_int;
     let mut pBegin: *mut crate::src::ext::rtree::rtree::u8_0 = (*pPg)
         .aCellIdx
         .offset((nNew * 2 as ::core::ffi::c_int) as isize)
         as *mut crate::src::ext::rtree::rtree::u8_0;
-    let mut nCell: ::core::ffi::c_int = (*pPg).nCell as ::core::ffi::c_int;
+    let mut nCell: ::core::ffi::c_int = __pPg_ref.nCell as ::core::ffi::c_int;
     let mut pData: *mut crate::src::ext::rtree::rtree::u8_0 = ::core::ptr::null_mut::<crate::src::ext::rtree::rtree::u8_0>();
     let mut pCellptr: *mut crate::src::ext::rtree::rtree::u8_0 = ::core::ptr::null_mut::<crate::src::ext::rtree::rtree::u8_0>();
     let mut i: ::core::ffi::c_int = 0;
     let mut iOldEnd: ::core::ffi::c_int =
-        iOld + (*pPg).nCell as ::core::ffi::c_int + (*pPg).nOverflow as ::core::ffi::c_int;
+        iOld + __pPg_ref.nCell as ::core::ffi::c_int + __pPg_ref.nOverflow as ::core::ffi::c_int;
     let mut iNewEnd: ::core::ffi::c_int = iNew + nNew;
     if iOld < iNew {
         let mut nShift: ::core::ffi::c_int = pageFreeArray(pPg, iOld, iNew - iOld, pCArray);
@@ -6669,7 +6771,7 @@ unsafe extern "C" fn editPage(
             return crate::src::src::main::sqlite3CorruptError(7860 as ::core::ffi::c_int);
         }
         ::libc::memmove(
-            (*pPg).aCellIdx as *mut ::core::ffi::c_void,
+            __pPg_ref.aCellIdx as *mut ::core::ffi::c_void,
             (*pPg)
                 .aCellIdx
                 .offset((nShift * 2 as ::core::ffi::c_int) as isize) as *mut crate::src::ext::rtree::rtree::u8_0
@@ -6690,14 +6792,14 @@ unsafe extern "C" fn editPage(
                 .offset(1 as isize) as ::core::ffi::c_int) as isize,
     ) as *mut crate::src::ext::rtree::rtree::u8_0;
     if !(pData < pBegin) {
-        if !(pData > (*pPg).aDataEnd) {
+        if !(pData > __pPg_ref.aDataEnd) {
             if iNew < iOld {
                 let mut nAdd: ::core::ffi::c_int = if nNew < iOld - iNew {
                     nNew
                 } else {
                     iOld - iNew
                 };
-                pCellptr = (*pPg).aCellIdx;
+                pCellptr = __pPg_ref.aCellIdx;
                 ::libc::memmove(
                     pCellptr.offset((nAdd * 2 as ::core::ffi::c_int) as isize) as *mut crate::src::ext::rtree::rtree::u8_0
                         as *mut ::core::ffi::c_void,
@@ -6719,12 +6821,12 @@ unsafe extern "C" fn editPage(
                 _ => {
                     i = 0 as ::core::ffi::c_int;
                     loop {
-                        if !(i < (*pPg).nOverflow as ::core::ffi::c_int) {
+                        if !(i < __pPg_ref.nOverflow as ::core::ffi::c_int) {
                             current_block = 11459959175219260272;
                             break;
                         }
                         let mut iCell: ::core::ffi::c_int =
-                            iOld + (*pPg).aiOvfl[i as usize] as ::core::ffi::c_int - iNew;
+                            iOld + __pPg_ref.aiOvfl[i as usize] as ::core::ffi::c_int - iNew;
                         if iCell >= 0 as ::core::ffi::c_int && iCell < nNew {
                             pCellptr = (*pPg)
                                 .aCellIdx
@@ -6773,17 +6875,17 @@ unsafe extern "C" fn editPage(
                                 pCArray,
                             ) != 0)
                             {
-                                (*pPg).nCell = nNew as crate::src::fts5::u16_0;
-                                (*pPg).nOverflow = 0 as crate::src::ext::rtree::rtree::u8_0;
+                                __pPg_ref.nCell = nNew as crate::src::fts5::u16_0;
+                                __pPg_ref.nOverflow = 0 as crate::src::ext::rtree::rtree::u8_0;
                                 *(aData.offset((hdr + 3 as ::core::ffi::c_int) as isize)
                                     as *mut crate::src::ext::rtree::rtree::u8_0)
                                     .offset(0 as isize) =
-                                    ((*pPg).nCell as ::core::ffi::c_int >> 8 as ::core::ffi::c_int)
+                                    (__pPg_ref.nCell as ::core::ffi::c_int >> 8 as ::core::ffi::c_int)
                                         as crate::src::ext::rtree::rtree::u8_0;
                                 *(aData.offset((hdr + 3 as ::core::ffi::c_int) as isize)
                                     as *mut crate::src::ext::rtree::rtree::u8_0)
                                     .offset(1 as isize) =
-                                    (*pPg).nCell as crate::src::ext::rtree::rtree::u8_0;
+                                    __pPg_ref.nCell as crate::src::ext::rtree::rtree::u8_0;
                                 *(aData.offset((hdr + 5 as ::core::ffi::c_int) as isize)
                                     as *mut crate::src::ext::rtree::rtree::u8_0)
                                     .offset(0 as isize) =
@@ -6824,9 +6926,10 @@ unsafe extern "C" fn balance_quick(
     rc = allocateBtreePage(pBt, &raw mut pNew, &raw mut pgnoNew, 0 as crate::src::src::pager::Pgno, 0 as crate::src::ext::rtree::rtree::u8_0);
     if rc == crate::sqlite3_h::SQLITE_OK {
         let mut pOut: *mut crate::src::ext::rtree::rtree::u8_0 = pSpace.offset(4 as isize) as *mut crate::src::ext::rtree::rtree::u8_0;
-        let mut pCell: *mut crate::src::ext::rtree::rtree::u8_0 = (*pPage).apOvfl[0 as ::core::ffi::c_int as usize];
+        let __pPage_ref = unsafe { &mut *pPage };
+        let mut pCell: *mut crate::src::ext::rtree::rtree::u8_0 = __pPage_ref.apOvfl[0 as ::core::ffi::c_int as usize];
         let mut szCell: crate::src::fts5::u16_0 =
-            (*pPage).xCellSize.expect("non-null function pointer")(pPage, pCell);
+            __pPage_ref.xCellSize.expect("non-null function pointer")(pPage, pCell);
         let mut pStop: *mut crate::src::ext::rtree::rtree::u8_0 = ::core::ptr::null_mut::<crate::src::ext::rtree::rtree::u8_0>();
         let mut b: CellArray = CellArray {
             nCell: 0,
@@ -6841,7 +6944,7 @@ unsafe extern "C" fn balance_quick(
         b.pRef = pPage;
         b.apCell = &raw mut pCell;
         b.szCell = &raw mut szCell;
-        b.apEnd[0 as ::core::ffi::c_int as usize] = (*pPage).aDataEnd;
+        b.apEnd[0 as ::core::ffi::c_int as usize] = __pPage_ref.aDataEnd;
         b.ixNx[0 as ::core::ffi::c_int as usize] = 2 as ::core::ffi::c_int;
         b.ixNx[(NB * 2 as ::core::ffi::c_int - 1 as ::core::ffi::c_int) as usize] =
             0x7fffffff as ::core::ffi::c_int;
@@ -6872,19 +6975,19 @@ unsafe extern "C" fn balance_quick(
                 ptrmapPutOvflPtr(pNew, pNew, pCell, &raw mut rc);
             }
         }
-        pCell = (*pPage).aData.offset(
-            ((*pPage).maskPage as ::core::ffi::c_int
-                & ((*((*pPage).aCellIdx.offset(
+        pCell = __pPage_ref.aData.offset(
+            (__pPage_ref.maskPage as ::core::ffi::c_int
+                & ((*(__pPage_ref.aCellIdx.offset(
                     (2 as ::core::ffi::c_int
-                        * ((*pPage).nCell as ::core::ffi::c_int - 1 as ::core::ffi::c_int))
+                        * (__pPage_ref.nCell as ::core::ffi::c_int - 1 as ::core::ffi::c_int))
                         as isize,
                 ) as *mut crate::src::ext::rtree::rtree::u8_0)
                     .offset(0 as isize)
                     as ::core::ffi::c_int)
                     << 8 as ::core::ffi::c_int
-                    | *((*pPage).aCellIdx.offset(
+                    | *(__pPage_ref.aCellIdx.offset(
                         (2 as ::core::ffi::c_int
-                            * ((*pPage).nCell as ::core::ffi::c_int - 1 as ::core::ffi::c_int))
+                            * (__pPage_ref.nCell as ::core::ffi::c_int - 1 as ::core::ffi::c_int))
                             as isize,
                     ) as *mut crate::src::ext::rtree::rtree::u8_0)
                         .offset(1 as isize)
@@ -6918,7 +7021,7 @@ unsafe extern "C" fn balance_quick(
                 pSpace,
                 pOut.offset_from(pSpace) as ::core::ffi::c_long as ::core::ffi::c_int,
                 ::core::ptr::null_mut::<crate::src::ext::rtree::rtree::u8_0>(),
-                (*pPage).pgno,
+                __pPage_ref.pgno,
             );
         }
         crate::src::src::util::sqlite3Put4byte(
@@ -6938,11 +7041,13 @@ unsafe extern "C" fn copyNodeContent(
     mut pRC: *mut ::core::ffi::c_int,
 ) {
     if *pRC == crate::sqlite3_h::SQLITE_OK {
-        let pBt: *mut crate::btreeInt_h::BtShared = (*pFrom).pBt;
-        let aFrom: *mut crate::src::ext::rtree::rtree::u8_0 = (*pFrom).aData;
-        let aTo: *mut crate::src::ext::rtree::rtree::u8_0 = (*pTo).aData;
-        let iFromHdr: ::core::ffi::c_int = (*pFrom).hdrOffset as ::core::ffi::c_int;
-        let iToHdr: ::core::ffi::c_int = if (*pTo).pgno == 1 as crate::src::src::pager::Pgno {
+        let __pFrom_ref = unsafe { &*pFrom };
+        let pBt: *mut crate::btreeInt_h::BtShared = __pFrom_ref.pBt;
+        let aFrom: *mut crate::src::ext::rtree::rtree::u8_0 = __pFrom_ref.aData;
+        let __pTo_ref = unsafe { &mut *pTo };
+        let aTo: *mut crate::src::ext::rtree::rtree::u8_0 = __pTo_ref.aData;
+        let iFromHdr: ::core::ffi::c_int = __pFrom_ref.hdrOffset as ::core::ffi::c_int;
+        let iToHdr: ::core::ffi::c_int = if __pTo_ref.pgno == 1 as crate::src::src::pager::Pgno {
             100 as ::core::ffi::c_int
         } else {
             0 as ::core::ffi::c_int
@@ -6962,11 +7067,11 @@ unsafe extern "C" fn copyNodeContent(
         ::libc::memcpy(
             aTo.offset(iToHdr as isize) as *mut crate::src::ext::rtree::rtree::u8_0 as *mut ::core::ffi::c_void,
             aFrom.offset(iFromHdr as isize) as *mut crate::src::ext::rtree::rtree::u8_0 as *const ::core::ffi::c_void,
-            ((*pFrom).cellOffset as ::core::ffi::c_int
-                + 2 as ::core::ffi::c_int * (*pFrom).nCell as ::core::ffi::c_int)
+            (__pFrom_ref.cellOffset as ::core::ffi::c_int
+                + 2 as ::core::ffi::c_int * __pFrom_ref.nCell as ::core::ffi::c_int)
                 as crate::__stddef_size_t_h::size_t,
         );
-        (*pTo).isInit = 0 as crate::src::ext::rtree::rtree::u8_0;
+        __pTo_ref.isInit = 0 as crate::src::ext::rtree::rtree::u8_0;
         rc = btreeInitPage(pTo);
         if rc == crate::sqlite3_h::SQLITE_OK {
             rc = btreeComputeFreeSpace(pTo);
@@ -7019,11 +7124,12 @@ unsafe extern "C" fn balance_nonroot(
     let mut b: CellArray = unsafe { ::core::mem::zeroed() };
     b.ixNx[(NB * 2 as ::core::ffi::c_int - 1 as ::core::ffi::c_int) as usize] =
         0x7fffffff as ::core::ffi::c_int;
-    pBt = (*pParent).pBt;
+    let __pParent_ref = unsafe { &mut *pParent };
+    pBt = __pParent_ref.pBt;
     if aOvflSpace.is_null() {
         return crate::sqliteInt_h::SQLITE_NOMEM_BKPT;
     }
-    i = (*pParent).nOverflow as ::core::ffi::c_int + (*pParent).nCell as ::core::ffi::c_int;
+    i = __pParent_ref.nOverflow as ::core::ffi::c_int + __pParent_ref.nCell as ::core::ffi::c_int;
     if i < 2 as ::core::ffi::c_int {
         nxDiv = 0 as ::core::ffi::c_int;
     } else {
@@ -7037,27 +7143,27 @@ unsafe extern "C" fn balance_nonroot(
         i = 2 as ::core::ffi::c_int - bBulk;
     }
     nOld = i + 1 as ::core::ffi::c_int;
-    if i + nxDiv - (*pParent).nOverflow as ::core::ffi::c_int
-        == (*pParent).nCell as ::core::ffi::c_int
+    if i + nxDiv - __pParent_ref.nOverflow as ::core::ffi::c_int
+        == __pParent_ref.nCell as ::core::ffi::c_int
     {
         pRight = (*pParent)
             .aData
-            .offset(((*pParent).hdrOffset as ::core::ffi::c_int + 8 as ::core::ffi::c_int) as isize)
+            .offset((__pParent_ref.hdrOffset as ::core::ffi::c_int + 8 as ::core::ffi::c_int) as isize)
             as *mut crate::src::ext::rtree::rtree::u8_0;
     } else {
-        pRight = (*pParent).aData.offset(
-            ((*pParent).maskPage as ::core::ffi::c_int
-                & ((*((*pParent).aCellIdx.offset(
+        pRight = __pParent_ref.aData.offset(
+            (__pParent_ref.maskPage as ::core::ffi::c_int
+                & ((*(__pParent_ref.aCellIdx.offset(
                     (2 as ::core::ffi::c_int
-                        * (i + nxDiv - (*pParent).nOverflow as ::core::ffi::c_int))
+                        * (i + nxDiv - __pParent_ref.nOverflow as ::core::ffi::c_int))
                         as isize,
                 ) as *mut crate::src::ext::rtree::rtree::u8_0)
                     .offset(0 as isize)
                     as ::core::ffi::c_int)
                     << 8 as ::core::ffi::c_int
-                    | *((*pParent).aCellIdx.offset(
+                    | *(__pParent_ref.aCellIdx.offset(
                         (2 as ::core::ffi::c_int
-                            * (i + nxDiv - (*pParent).nOverflow as ::core::ffi::c_int))
+                            * (i + nxDiv - __pParent_ref.nOverflow as ::core::ffi::c_int))
                             as isize,
                     ) as *mut crate::src::ext::rtree::rtree::u8_0)
                         .offset(1 as isize)
@@ -7101,45 +7207,45 @@ unsafe extern "C" fn balance_nonroot(
                 current_block = 13303144130133872306;
                 break;
             }
-            if (*pParent).nOverflow as ::core::ffi::c_int != 0
+            if __pParent_ref.nOverflow as ::core::ffi::c_int != 0
                 && i + nxDiv
-                    == (*pParent).aiOvfl[0 as ::core::ffi::c_int as usize] as ::core::ffi::c_int
+                    == __pParent_ref.aiOvfl[0 as ::core::ffi::c_int as usize] as ::core::ffi::c_int
             {
-                apDiv[i as usize] = (*pParent).apOvfl[0 as ::core::ffi::c_int as usize];
+                apDiv[i as usize] = __pParent_ref.apOvfl[0 as ::core::ffi::c_int as usize];
                 pgno = crate::src::src::util::sqlite3Get4byte(apDiv[i as usize]) as crate::src::src::pager::Pgno;
-                szNew[i as usize] = (*pParent).xCellSize.expect("non-null function pointer")(
+                szNew[i as usize] = __pParent_ref.xCellSize.expect("non-null function pointer")(
                     pParent,
                     apDiv[i as usize],
                 ) as ::core::ffi::c_int;
-                (*pParent).nOverflow = 0 as crate::src::ext::rtree::rtree::u8_0;
+                __pParent_ref.nOverflow = 0 as crate::src::ext::rtree::rtree::u8_0;
             } else {
-                apDiv[i as usize] = (*pParent).aData.offset(
-                    ((*pParent).maskPage as ::core::ffi::c_int
-                        & ((*((*pParent).aCellIdx.offset(
+                apDiv[i as usize] = __pParent_ref.aData.offset(
+                    (__pParent_ref.maskPage as ::core::ffi::c_int
+                        & ((*(__pParent_ref.aCellIdx.offset(
                             (2 as ::core::ffi::c_int
-                                * (i + nxDiv - (*pParent).nOverflow as ::core::ffi::c_int))
+                                * (i + nxDiv - __pParent_ref.nOverflow as ::core::ffi::c_int))
                                 as isize,
                         ) as *mut crate::src::ext::rtree::rtree::u8_0)
                             .offset(0 as isize)
                             as ::core::ffi::c_int)
                             << 8 as ::core::ffi::c_int
-                            | *((*pParent).aCellIdx.offset(
+                            | *(__pParent_ref.aCellIdx.offset(
                                 (2 as ::core::ffi::c_int
-                                    * (i + nxDiv - (*pParent).nOverflow as ::core::ffi::c_int))
+                                    * (i + nxDiv - __pParent_ref.nOverflow as ::core::ffi::c_int))
                                     as isize,
                             ) as *mut crate::src::ext::rtree::rtree::u8_0)
                                 .offset(1 as isize)
                                 as ::core::ffi::c_int)) as isize,
                 );
                 pgno = crate::src::src::util::sqlite3Get4byte(apDiv[i as usize]) as crate::src::src::pager::Pgno;
-                szNew[i as usize] = (*pParent).xCellSize.expect("non-null function pointer")(
+                szNew[i as usize] = __pParent_ref.xCellSize.expect("non-null function pointer")(
                     pParent,
                     apDiv[i as usize],
                 ) as ::core::ffi::c_int;
                 if (*pBt).btsFlags as ::core::ffi::c_int & crate::btreeInt_h::BTS_FAST_SECURE != 0 {
                     let mut iOff: ::core::ffi::c_int = 0;
                     iOff = apDiv[i as usize] as crate::stdlib::intptr_t as ::core::ffi::c_int
-                        - (*pParent).aData as crate::stdlib::intptr_t as ::core::ffi::c_int;
+                        - __pParent_ref.aData as crate::stdlib::intptr_t as ::core::ffi::c_int;
                     if iOff + szNew[i as usize] <= (*pBt).usableSize as ::core::ffi::c_int {
                         ::libc::memcpy(
                             aOvflSpace.offset(iOff as isize) as *mut crate::src::ext::rtree::rtree::u8_0
@@ -7149,14 +7255,14 @@ unsafe extern "C" fn balance_nonroot(
                         );
                         apDiv[i as usize] = aOvflSpace.offset(
                             (*(&raw mut apDiv as *mut *mut crate::src::ext::rtree::rtree::u8_0).offset(i as isize))
-                                .offset_from((*pParent).aData)
+                                .offset_from(__pParent_ref.aData)
                                 as ::core::ffi::c_long as isize,
                         ) as *mut crate::src::ext::rtree::rtree::u8_0;
                     }
                 }
                 dropCell(
                     pParent,
-                    i + nxDiv - (*pParent).nOverflow as ::core::ffi::c_int,
+                    i + nxDiv - __pParent_ref.nOverflow as ::core::ffi::c_int,
                     szNew[i as usize],
                     &raw mut rc,
                 );
@@ -7191,13 +7297,14 @@ unsafe extern "C" fn balance_nonroot(
                         break;
                     }
                     let mut pOld: *mut crate::btreeInt_h::MemPage = apOld[i as usize];
-                    let mut limit: ::core::ffi::c_int = (*pOld).nCell as ::core::ffi::c_int;
-                    let mut aData: *mut crate::src::ext::rtree::rtree::u8_0 = (*pOld).aData;
-                    let mut maskPage: crate::src::fts5::u16_0 = (*pOld).maskPage;
+                    let __pOld_ref = unsafe { &mut *pOld };
+                    let mut limit: ::core::ffi::c_int = __pOld_ref.nCell as ::core::ffi::c_int;
+                    let mut aData: *mut crate::src::ext::rtree::rtree::u8_0 = __pOld_ref.aData;
+                    let mut maskPage: crate::src::fts5::u16_0 = __pOld_ref.maskPage;
                     let mut piCell: *mut crate::src::ext::rtree::rtree::u8_0 =
-                        aData.offset((*pOld).cellOffset as ::core::ffi::c_int as isize);
+                        aData.offset(__pOld_ref.cellOffset as ::core::ffi::c_int as isize);
                     let mut piEnd: *mut crate::src::ext::rtree::rtree::u8_0 = ::core::ptr::null_mut::<crate::src::ext::rtree::rtree::u8_0>();
-                    if *(*pOld).aData.offset(0 as isize) as ::core::ffi::c_int
+                    if *__pOld_ref.aData.offset(0 as isize) as ::core::ffi::c_int
                         != *(*apOld[0 as ::core::ffi::c_int as usize])
                             .aData
                             .offset(0 as isize)
@@ -7212,19 +7319,19 @@ unsafe extern "C" fn balance_nonroot(
                                 as *mut ::core::ffi::c_void,
                             0 as ::core::ffi::c_int,
                             (::core::mem::size_of::<crate::src::fts5::u16_0>() as crate::__stddef_size_t_h::size_t).wrapping_mul(
-                                (limit + (*pOld).nOverflow as ::core::ffi::c_int) as crate::__stddef_size_t_h::size_t,
+                                (limit + __pOld_ref.nOverflow as ::core::ffi::c_int) as crate::__stddef_size_t_h::size_t,
                             ),
                         );
-                        if (*pOld).nOverflow as ::core::ffi::c_int > 0 as ::core::ffi::c_int {
+                        if __pOld_ref.nOverflow as ::core::ffi::c_int > 0 as ::core::ffi::c_int {
                             if limit
-                                < (*pOld).aiOvfl[0 as ::core::ffi::c_int as usize]
+                                < __pOld_ref.aiOvfl[0 as ::core::ffi::c_int as usize]
                                     as ::core::ffi::c_int
                             {
                                 rc = crate::src::src::main::sqlite3CorruptError(8426 as ::core::ffi::c_int);
                                 current_block = 4198108429590484834;
                                 break;
                             } else {
-                                limit = (*pOld).aiOvfl[0 as ::core::ffi::c_int as usize]
+                                limit = __pOld_ref.aiOvfl[0 as ::core::ffi::c_int as usize]
                                     as ::core::ffi::c_int;
                                 j = 0 as ::core::ffi::c_int;
                                 while j < limit {
@@ -7243,18 +7350,18 @@ unsafe extern "C" fn balance_nonroot(
                                     j += 1;
                                 }
                                 k = 0 as ::core::ffi::c_int;
-                                while k < (*pOld).nOverflow as ::core::ffi::c_int {
+                                while k < __pOld_ref.nOverflow as ::core::ffi::c_int {
                                     let ref mut fresh15 = *b.apCell.offset(b.nCell as isize);
-                                    *fresh15 = (*pOld).apOvfl[k as usize];
+                                    *fresh15 = __pOld_ref.apOvfl[k as usize];
                                     b.nCell += 1;
                                     k += 1;
                                 }
                             }
                         }
                         piEnd = aData
-                            .offset((*pOld).cellOffset as ::core::ffi::c_int as isize)
+                            .offset(__pOld_ref.cellOffset as ::core::ffi::c_int as isize)
                             .offset(
-                                (2 as ::core::ffi::c_int * (*pOld).nCell as ::core::ffi::c_int)
+                                (2 as ::core::ffi::c_int * __pOld_ref.nCell as ::core::ffi::c_int)
                                     as isize,
                             );
                         while piCell < piEnd {
@@ -7289,10 +7396,10 @@ unsafe extern "C" fn balance_nonroot(
                                 as ::core::ffi::c_int
                                 - leafCorrection as ::core::ffi::c_int)
                                 as crate::src::fts5::u16_0;
-                            if (*pOld).leaf == 0 {
+                            if __pOld_ref.leaf == 0 {
                                 ::libc::memcpy(
                                     *b.apCell.offset(b.nCell as isize) as *mut ::core::ffi::c_void,
-                                    (*pOld).aData.offset(8 as isize)
+                                    __pOld_ref.aData.offset(8 as isize)
                                         as *mut crate::src::ext::rtree::rtree::u8_0
                                         as *const ::core::ffi::c_void,
                                     4 as crate::__stddef_size_t_h::size_t,
@@ -7325,7 +7432,8 @@ unsafe extern "C" fn balance_nonroot(
                         i = k;
                         while i < nOld {
                             let mut p: *mut crate::btreeInt_h::MemPage = apOld[i as usize];
-                            b.apEnd[k as usize] = (*p).aDataEnd;
+                            let __p_ref = unsafe { &mut *p };
+                            b.apEnd[k as usize] = __p_ref.aDataEnd;
                             b.ixNx[k as usize] = cntOld[i as usize];
                             if k != 0
                                 && b.ixNx[k as usize]
@@ -7335,16 +7443,16 @@ unsafe extern "C" fn balance_nonroot(
                             }
                             if leafData == 0 {
                                 k += 1;
-                                b.apEnd[k as usize] = (*pParent).aDataEnd;
+                                b.apEnd[k as usize] = __pParent_ref.aDataEnd;
                                 b.ixNx[k as usize] = cntOld[i as usize] + 1 as ::core::ffi::c_int;
                             }
-                            szNew[i as usize] = usableSpace - (*p).nFree;
+                            szNew[i as usize] = usableSpace - __p_ref.nFree;
                             j = 0 as ::core::ffi::c_int;
-                            while j < (*p).nOverflow as ::core::ffi::c_int {
+                            while j < __p_ref.nOverflow as ::core::ffi::c_int {
                                 szNew[i as usize] += 2 as ::core::ffi::c_int
-                                    + (*p).xCellSize.expect("non-null function pointer")(
+                                    + __p_ref.xCellSize.expect("non-null function pointer")(
                                         p,
-                                        (*p).apOvfl[j as usize],
+                                        __p_ref.apOvfl[j as usize],
                                     ) as ::core::ffi::c_int;
                                 j += 1;
                             }
@@ -7544,7 +7652,7 @@ unsafe extern "C" fn balance_nonroot(
                                                         pBt,
                                                         (*pNew).pgno,
                                                         crate::btreeInt_h::PTRMAP_BTREE as crate::src::ext::rtree::rtree::u8_0,
-                                                        (*pParent).pgno,
+                                                        __pParent_ref.pgno,
                                                         &raw mut rc,
                                                     );
                                                     if rc != crate::sqlite3_h::SQLITE_OK {
@@ -7927,9 +8035,9 @@ unsafe extern "C" fn balance_nonroot(
                                                                     4198108429590484834 => {}
                                                                     _ => {
                                                                         if isRoot != 0
-                                                                            && (*pParent).nCell as ::core::ffi::c_int
+                                                                            && __pParent_ref.nCell as ::core::ffi::c_int
                                                                                 == 0 as ::core::ffi::c_int
-                                                                            && (*pParent).hdrOffset as ::core::ffi::c_int
+                                                                            && __pParent_ref.hdrOffset as ::core::ffi::c_int
                                                                                 <= (*apNew[0 as ::core::ffi::c_int as usize]).nFree
                                                                         {
                                                                             rc = defragmentPage(
@@ -8017,14 +8125,15 @@ unsafe extern "C" fn balance_deeper(
     let mut rc: ::core::ffi::c_int = 0;
     let mut pChild: *mut crate::btreeInt_h::MemPage = ::core::ptr::null_mut::<crate::btreeInt_h::MemPage>();
     let mut pgnoChild: crate::src::src::pager::Pgno = 0 as crate::src::src::pager::Pgno;
-    let mut pBt: *mut crate::btreeInt_h::BtShared = (*pRoot).pBt;
-    rc = crate::src::src::pager::sqlite3PagerWrite((*pRoot).pDbPage as *mut crate::src::src::pcache::PgHdr);
+    let __pRoot_ref = unsafe { &mut *pRoot };
+    let mut pBt: *mut crate::btreeInt_h::BtShared = __pRoot_ref.pBt;
+    rc = crate::src::src::pager::sqlite3PagerWrite(__pRoot_ref.pDbPage as *mut crate::src::src::pcache::PgHdr);
     if rc == crate::sqlite3_h::SQLITE_OK {
         rc = allocateBtreePage(
             pBt,
             &raw mut pChild,
             &raw mut pgnoChild,
-            (*pRoot).pgno,
+            __pRoot_ref.pgno,
             0 as crate::src::ext::rtree::rtree::u8_0,
         );
         copyNodeContent(pRoot, pChild, &raw mut rc);
@@ -8033,7 +8142,7 @@ unsafe extern "C" fn balance_deeper(
                 pBt,
                 pgnoChild,
                 crate::btreeInt_h::PTRMAP_BTREE as crate::src::ext::rtree::rtree::u8_0,
-                (*pRoot).pgno,
+                __pRoot_ref.pgno,
                 &raw mut rc,
             );
         }
@@ -8043,25 +8152,26 @@ unsafe extern "C" fn balance_deeper(
         releasePage(pChild);
         return rc;
     }
+    let __pChild_ref = unsafe { &mut *pChild };
     ::libc::memcpy(
-        &raw mut (*pChild).aiOvfl as *mut crate::src::fts5::u16_0 as *mut ::core::ffi::c_void,
-        &raw mut (*pRoot).aiOvfl as *mut crate::src::fts5::u16_0 as *const ::core::ffi::c_void,
-        ((*pRoot).nOverflow as crate::__stddef_size_t_h::size_t).wrapping_mul(::core::mem::size_of::<crate::src::fts5::u16_0>() as crate::__stddef_size_t_h::size_t),
+        &raw mut __pChild_ref.aiOvfl as *mut crate::src::fts5::u16_0 as *mut ::core::ffi::c_void,
+        &raw mut __pRoot_ref.aiOvfl as *mut crate::src::fts5::u16_0 as *const ::core::ffi::c_void,
+        (__pRoot_ref.nOverflow as crate::__stddef_size_t_h::size_t).wrapping_mul(::core::mem::size_of::<crate::src::fts5::u16_0>() as crate::__stddef_size_t_h::size_t),
     );
     ::libc::memcpy(
-        &raw mut (*pChild).apOvfl as *mut *mut crate::src::ext::rtree::rtree::u8_0 as *mut ::core::ffi::c_void,
-        &raw mut (*pRoot).apOvfl as *mut *mut crate::src::ext::rtree::rtree::u8_0 as *const ::core::ffi::c_void,
-        ((*pRoot).nOverflow as crate::__stddef_size_t_h::size_t).wrapping_mul(::core::mem::size_of::<*mut crate::src::ext::rtree::rtree::u8_0>() as crate::__stddef_size_t_h::size_t),
+        &raw mut __pChild_ref.apOvfl as *mut *mut crate::src::ext::rtree::rtree::u8_0 as *mut ::core::ffi::c_void,
+        &raw mut __pRoot_ref.apOvfl as *mut *mut crate::src::ext::rtree::rtree::u8_0 as *const ::core::ffi::c_void,
+        (__pRoot_ref.nOverflow as crate::__stddef_size_t_h::size_t).wrapping_mul(::core::mem::size_of::<*mut crate::src::ext::rtree::rtree::u8_0>() as crate::__stddef_size_t_h::size_t),
     );
-    (*pChild).nOverflow = (*pRoot).nOverflow;
+    __pChild_ref.nOverflow = __pRoot_ref.nOverflow;
     zeroPage(
         pRoot,
-        *(*pChild).aData.offset(0 as isize) as ::core::ffi::c_int & !crate::btreeInt_h::PTF_LEAF,
+        *__pChild_ref.aData.offset(0 as isize) as ::core::ffi::c_int & !crate::btreeInt_h::PTF_LEAF,
     );
     crate::src::src::util::sqlite3Put4byte(
         (*pRoot)
             .aData
-            .offset(((*pRoot).hdrOffset as ::core::ffi::c_int + 8 as ::core::ffi::c_int) as isize)
+            .offset((__pRoot_ref.hdrOffset as ::core::ffi::c_int + 8 as ::core::ffi::c_int) as isize)
             as *mut crate::src::ext::rtree::rtree::u8_0,
         pgnoChild as crate::src::ext::rtree::rtree::u32_0,
     );
@@ -8090,19 +8200,21 @@ unsafe extern "C" fn balance(mut pCur: *mut crate::btreeInt_h::BtCursor) -> ::co
     let mut pFree: *mut crate::src::ext::rtree::rtree::u8_0 = ::core::ptr::null_mut::<crate::src::ext::rtree::rtree::u8_0>();
     loop {
         let mut iPage: ::core::ffi::c_int = 0;
-        let mut pPage: *mut crate::btreeInt_h::MemPage = (*pCur).pPage;
-        if (*pPage).nFree < 0 as ::core::ffi::c_int && btreeComputeFreeSpace(pPage) != 0 {
+        let __pCur_ref = unsafe { &mut *pCur };
+        let mut pPage: *mut crate::btreeInt_h::MemPage = __pCur_ref.pPage;
+        let __pPage_ref = unsafe { &mut *pPage };
+        if __pPage_ref.nFree < 0 as ::core::ffi::c_int && btreeComputeFreeSpace(pPage) != 0 {
             break;
         }
-        if (*pPage).nOverflow as ::core::ffi::c_int == 0 as ::core::ffi::c_int
-            && (*pPage).nFree * 3 as ::core::ffi::c_int
-                <= (*(*pCur).pBt).usableSize as ::core::ffi::c_int * 2 as ::core::ffi::c_int
+        if __pPage_ref.nOverflow as ::core::ffi::c_int == 0 as ::core::ffi::c_int
+            && __pPage_ref.nFree * 3 as ::core::ffi::c_int
+                <= (*__pCur_ref.pBt).usableSize as ::core::ffi::c_int * 2 as ::core::ffi::c_int
         {
             break;
         }
-        iPage = (*pCur).iPage as ::core::ffi::c_int;
+        iPage = __pCur_ref.iPage as ::core::ffi::c_int;
         if iPage == 0 as ::core::ffi::c_int {
-            if !((*pPage).nOverflow as ::core::ffi::c_int != 0 && {
+            if !(__pPage_ref.nOverflow as ::core::ffi::c_int != 0 && {
                 rc = anotherValidCursor(pCur);
                 rc == crate::sqlite3_h::SQLITE_OK
             }) {
@@ -8110,45 +8222,45 @@ unsafe extern "C" fn balance(mut pCur: *mut crate::btreeInt_h::BtCursor) -> ::co
             }
             rc = balance_deeper(
                 pPage,
-                (&raw mut (*pCur).apPage as *mut *mut crate::btreeInt_h::MemPage)
+                (&raw mut __pCur_ref.apPage as *mut *mut crate::btreeInt_h::MemPage)
                     .offset(1 as isize) as *mut *mut crate::btreeInt_h::MemPage,
             );
             if rc == crate::sqlite3_h::SQLITE_OK {
-                (*pCur).iPage = 1 as crate::sqliteInt_h::i8_0;
-                (*pCur).ix = 0 as crate::src::fts5::u16_0;
-                (*pCur).aiIdx[0 as ::core::ffi::c_int as usize] = 0 as crate::src::fts5::u16_0;
-                (*pCur).apPage[0 as ::core::ffi::c_int as usize] = pPage;
-                (*pCur).pPage = (*pCur).apPage[1 as ::core::ffi::c_int as usize];
+                __pCur_ref.iPage = 1 as crate::sqliteInt_h::i8_0;
+                __pCur_ref.ix = 0 as crate::src::fts5::u16_0;
+                __pCur_ref.aiIdx[0 as ::core::ffi::c_int as usize] = 0 as crate::src::fts5::u16_0;
+                __pCur_ref.apPage[0 as ::core::ffi::c_int as usize] = pPage;
+                __pCur_ref.pPage = __pCur_ref.apPage[1 as ::core::ffi::c_int as usize];
             }
-        } else if crate::src::src::pager::sqlite3PagerPageRefcount((*pPage).pDbPage as *mut crate::src::src::pcache::PgHdr) > 1 as ::core::ffi::c_int {
+        } else if crate::src::src::pager::sqlite3PagerPageRefcount(__pPage_ref.pDbPage as *mut crate::src::src::pcache::PgHdr) > 1 as ::core::ffi::c_int {
             rc = crate::src::src::main::sqlite3CorruptError(9135 as ::core::ffi::c_int);
         } else {
-            let pParent: *mut crate::btreeInt_h::MemPage = (*pCur).apPage[(iPage - 1 as ::core::ffi::c_int) as usize];
+            let pParent: *mut crate::btreeInt_h::MemPage = __pCur_ref.apPage[(iPage - 1 as ::core::ffi::c_int) as usize];
             let iIdx: ::core::ffi::c_int =
-                (*pCur).aiIdx[(iPage - 1 as ::core::ffi::c_int) as usize] as ::core::ffi::c_int;
+                __pCur_ref.aiIdx[(iPage - 1 as ::core::ffi::c_int) as usize] as ::core::ffi::c_int;
             rc = crate::src::src::pager::sqlite3PagerWrite((*pParent).pDbPage as *mut crate::src::src::pcache::PgHdr);
             if rc == crate::sqlite3_h::SQLITE_OK && (*pParent).nFree < 0 as ::core::ffi::c_int {
                 rc = btreeComputeFreeSpace(pParent);
             }
             if rc == crate::sqlite3_h::SQLITE_OK {
-                if (*pPage).intKeyLeaf as ::core::ffi::c_int != 0
-                    && (*pPage).nOverflow as ::core::ffi::c_int == 1 as ::core::ffi::c_int
-                    && (*pPage).aiOvfl[0 as ::core::ffi::c_int as usize] as ::core::ffi::c_int
-                        == (*pPage).nCell as ::core::ffi::c_int
+                if __pPage_ref.intKeyLeaf as ::core::ffi::c_int != 0
+                    && __pPage_ref.nOverflow as ::core::ffi::c_int == 1 as ::core::ffi::c_int
+                    && __pPage_ref.aiOvfl[0 as ::core::ffi::c_int as usize] as ::core::ffi::c_int
+                        == __pPage_ref.nCell as ::core::ffi::c_int
                     && (*pParent).pgno != 1 as crate::src::src::pager::Pgno
                     && (*pParent).nCell as ::core::ffi::c_int == iIdx
                 {
                     rc = balance_quick(pParent, pPage, &raw mut aBalanceQuickSpace as *mut crate::src::ext::rtree::rtree::u8_0);
                 } else {
                     let mut pSpace: *mut crate::src::ext::rtree::rtree::u8_0 =
-                        crate::src::src::pcache1::sqlite3PageMalloc((*(*pCur).pBt).pageSize as ::core::ffi::c_int)
+                        crate::src::src::pcache1::sqlite3PageMalloc((*__pCur_ref.pBt).pageSize as ::core::ffi::c_int)
                             as *mut crate::src::ext::rtree::rtree::u8_0;
                     rc = balance_nonroot(
                         pParent,
                         iIdx,
                         pSpace,
                         (iPage == 1 as ::core::ffi::c_int) as ::core::ffi::c_int,
-                        (*pCur).hints as ::core::ffi::c_int & crate::src::src::btree::BTREE_BULKLOAD,
+                        __pCur_ref.hints as ::core::ffi::c_int & crate::src::src::btree::BTREE_BULKLOAD,
                     );
                     if !pFree.is_null() {
                         crate::src::src::pcache1::sqlite3PageFree(pFree as *mut ::core::ffi::c_void);
@@ -8156,10 +8268,10 @@ unsafe extern "C" fn balance(mut pCur: *mut crate::btreeInt_h::BtCursor) -> ::co
                     pFree = pSpace;
                 }
             }
-            (*pPage).nOverflow = 0 as crate::src::ext::rtree::rtree::u8_0;
+            __pPage_ref.nOverflow = 0 as crate::src::ext::rtree::rtree::u8_0;
             releasePage(pPage);
-            (*pCur).iPage -= 1;
-            (*pCur).pPage = (*pCur).apPage[(*pCur).iPage as usize];
+            __pCur_ref.iPage -= 1;
+            __pCur_ref.pPage = __pCur_ref.apPage[__pCur_ref.iPage as usize];
         }
         if !(rc == crate::sqlite3_h::SQLITE_OK) {
             break;
@@ -8239,22 +8351,23 @@ unsafe extern "C" fn btreeOverwriteOverflowCell(
     let mut iOffset: ::core::ffi::c_int = 0;
     let mut nTotal: ::core::ffi::c_int = (*pX).nData + (*pX).nZero;
     let mut rc: ::core::ffi::c_int = 0;
-    let mut pPage: *mut crate::btreeInt_h::MemPage = (*pCur).pPage;
+    let __pCur_ref = unsafe { &mut *pCur };
+    let mut pPage: *mut crate::btreeInt_h::MemPage = __pCur_ref.pPage;
     let mut pBt: *mut crate::btreeInt_h::BtShared = ::core::ptr::null_mut::<crate::btreeInt_h::BtShared>();
     let mut ovflPgno: crate::src::src::pager::Pgno = 0;
     let mut ovflPageSize: crate::src::ext::rtree::rtree::u32_0 = 0;
     rc = btreeOverwriteContent(
         pPage,
-        (*pCur).info.pPayload,
+        __pCur_ref.info.pPayload,
         pX,
         0 as ::core::ffi::c_int,
-        (*pCur).info.nLocal as ::core::ffi::c_int,
+        __pCur_ref.info.nLocal as ::core::ffi::c_int,
     );
     if rc != 0 {
         return rc;
     }
-    iOffset = (*pCur).info.nLocal as ::core::ffi::c_int;
-    ovflPgno = crate::src::src::util::sqlite3Get4byte((*pCur).info.pPayload.offset(iOffset as isize)) as crate::src::src::pager::Pgno;
+    iOffset = __pCur_ref.info.nLocal as ::core::ffi::c_int;
+    ovflPgno = crate::src::src::util::sqlite3Get4byte(__pCur_ref.info.pPayload.offset(iOffset as isize)) as crate::src::src::pager::Pgno;
     pBt = (*pPage).pBt;
     ovflPageSize = (*pBt).usableSize.wrapping_sub(4 as crate::src::ext::rtree::rtree::u32_0);
     loop {
@@ -8262,25 +8375,26 @@ unsafe extern "C" fn btreeOverwriteOverflowCell(
         if rc != 0 {
             return rc;
         }
-        if crate::src::src::pager::sqlite3PagerPageRefcount((*pPage).pDbPage as *mut crate::src::src::pcache::PgHdr) != 1 as ::core::ffi::c_int
-            || (*pPage).isInit as ::core::ffi::c_int != 0
+        let __pPage_ref = unsafe { &mut *pPage };
+        if crate::src::src::pager::sqlite3PagerPageRefcount(__pPage_ref.pDbPage as *mut crate::src::src::pcache::PgHdr) != 1 as ::core::ffi::c_int
+            || __pPage_ref.isInit as ::core::ffi::c_int != 0
         {
             rc = crate::src::src::main::sqlite3CorruptError(9299 as ::core::ffi::c_int);
         } else {
             if (iOffset as crate::src::ext::rtree::rtree::u32_0).wrapping_add(ovflPageSize) < nTotal as crate::src::ext::rtree::rtree::u32_0 {
-                ovflPgno = crate::src::src::util::sqlite3Get4byte((*pPage).aData) as crate::src::src::pager::Pgno;
+                ovflPgno = crate::src::src::util::sqlite3Get4byte(__pPage_ref.aData) as crate::src::src::pager::Pgno;
             } else {
                 ovflPageSize = (nTotal - iOffset) as crate::src::ext::rtree::rtree::u32_0;
             }
             rc = btreeOverwriteContent(
                 pPage,
-                (*pPage).aData.offset(4 as isize),
+                __pPage_ref.aData.offset(4 as isize),
                 pX,
                 iOffset,
                 ovflPageSize as ::core::ffi::c_int,
             );
         }
-        crate::src::src::pager::sqlite3PagerUnref((*pPage).pDbPage as *mut crate::src::src::pcache::PgHdr);
+        crate::src::src::pager::sqlite3PagerUnref(__pPage_ref.pDbPage as *mut crate::src::src::pcache::PgHdr);
         if rc != 0 {
             return rc;
         }
@@ -8298,26 +8412,28 @@ unsafe extern "C" fn btreeOverwriteCell(
     mut pX: *const crate::src::src::btree::BtreePayload,
 ) -> ::core::ffi::c_int {
     let mut nTotal: ::core::ffi::c_int = (*pX).nData + (*pX).nZero;
-    let mut pPage: *mut crate::btreeInt_h::MemPage = (*pCur).pPage;
+    let __pCur_ref = unsafe { &mut *pCur };
+    let mut pPage: *mut crate::btreeInt_h::MemPage = __pCur_ref.pPage;
+    let __pPage_ref = unsafe { &mut *pPage };
     if (*pCur)
         .info
         .pPayload
-        .offset((*pCur).info.nLocal as ::core::ffi::c_int as isize)
-        > (*pPage).aDataEnd
-        || (*pCur).info.pPayload
+        .offset(__pCur_ref.info.nLocal as ::core::ffi::c_int as isize)
+        > __pPage_ref.aDataEnd
+        || __pCur_ref.info.pPayload
             < (*pPage)
                 .aData
-                .offset((*pPage).cellOffset as ::core::ffi::c_int as isize)
+                .offset(__pPage_ref.cellOffset as ::core::ffi::c_int as isize)
     {
         return crate::src::src::main::sqlite3CorruptError(9327 as ::core::ffi::c_int);
     }
-    if (*pCur).info.nLocal as ::core::ffi::c_int == nTotal {
+    if __pCur_ref.info.nLocal as ::core::ffi::c_int == nTotal {
         return btreeOverwriteContent(
             pPage,
-            (*pCur).info.pPayload,
+            __pCur_ref.info.pPayload,
             pX,
             0 as ::core::ffi::c_int,
-            (*pCur).info.nLocal as ::core::ffi::c_int,
+            __pCur_ref.info.nLocal as ::core::ffi::c_int,
         );
     } else {
         return btreeOverwriteOverflowCell(pCur, pX);
@@ -8337,38 +8453,39 @@ pub unsafe extern "C" fn sqlite3BtreeInsert(
     let mut szNew: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
     let mut idx: ::core::ffi::c_int = 0;
     let mut pPage: *mut crate::btreeInt_h::MemPage = ::core::ptr::null_mut::<crate::btreeInt_h::MemPage>();
-    let mut p: *mut crate::btreeInt_h::Btree = (*pCur).pBtree;
+    let __pCur_ref = unsafe { &mut *pCur };
+    let mut p: *mut crate::btreeInt_h::Btree = __pCur_ref.pBtree;
     let mut oldCell: *mut ::core::ffi::c_uchar = ::core::ptr::null_mut::<::core::ffi::c_uchar>();
     let mut newCell: *mut ::core::ffi::c_uchar = ::core::ptr::null_mut::<::core::ffi::c_uchar>();
-    if (*pCur).curFlags as ::core::ffi::c_int & crate::btreeInt_h::BTCF_Multiple != 0 {
-        rc = saveAllCursors((*p).pBt, (*pCur).pgnoRoot, pCur);
+    if __pCur_ref.curFlags as ::core::ffi::c_int & crate::btreeInt_h::BTCF_Multiple != 0 {
+        rc = saveAllCursors((*p).pBt, __pCur_ref.pgnoRoot, pCur);
         if rc != 0 {
             return rc;
         }
-        if loc != 0 && ((*pCur).iPage as ::core::ffi::c_int) < 0 as ::core::ffi::c_int {
+        if loc != 0 && (__pCur_ref.iPage as ::core::ffi::c_int) < 0 as ::core::ffi::c_int {
             return crate::src::src::main::sqlite3CorruptError(9408 as ::core::ffi::c_int);
         }
     }
-    if (*pCur).eState as ::core::ffi::c_int >= crate::btreeInt_h::CURSOR_REQUIRESEEK {
+    if __pCur_ref.eState as ::core::ffi::c_int >= crate::btreeInt_h::CURSOR_REQUIRESEEK {
         rc = moveToRoot(pCur);
         if rc != 0 && rc != crate::sqlite3_h::SQLITE_EMPTY {
             return rc;
         }
     }
-    if (*pCur).pKeyInfo.is_null() {
+    if __pCur_ref.pKeyInfo.is_null() {
         if (*p).hasIncrblobCur != 0 {
             invalidateIncrblobCursors(
                 p,
-                (*pCur).pgnoRoot,
+                __pCur_ref.pgnoRoot,
                 (*pX).nKey as crate::src::ext::rtree::rtree::i64_0,
                 0 as ::core::ffi::c_int,
             );
         }
-        if (*pCur).curFlags as ::core::ffi::c_int & crate::btreeInt_h::BTCF_ValidNKey != 0 as ::core::ffi::c_int
-            && (*pX).nKey == (*pCur).info.nKey
+        if __pCur_ref.curFlags as ::core::ffi::c_int & crate::btreeInt_h::BTCF_ValidNKey != 0 as ::core::ffi::c_int
+            && (*pX).nKey == __pCur_ref.info.nKey
         {
-            if (*pCur).info.nSize as ::core::ffi::c_int != 0 as ::core::ffi::c_int
-                && (*pCur).info.nPayload
+            if __pCur_ref.info.nSize as ::core::ffi::c_int != 0 as ::core::ffi::c_int
+                && __pCur_ref.info.nPayload
                     == ((*pX).nData as crate::src::ext::rtree::rtree::u32_0).wrapping_add((*pX).nZero as crate::src::ext::rtree::rtree::u32_0)
             {
                 return btreeOverwriteCell(pCur, pX);
@@ -8401,7 +8518,7 @@ pub unsafe extern "C" fn sqlite3BtreeInsert(
     r2:  0,
     eqSeen:  0,
 };
-                r.pKeyInfo = (*pCur).pKeyInfo as *mut crate::sqliteInt_h::KeyInfo;
+                r.pKeyInfo = __pCur_ref.pKeyInfo as *mut crate::sqliteInt_h::KeyInfo;
                 r.aMem = (*pX).aMem as *mut crate::src::src::vdbe::Mem;
                 r.nField = (*pX).nMem;
                 r.default_rc = 0 as crate::sqliteInt_h::i8_0;
@@ -8422,7 +8539,7 @@ pub unsafe extern "C" fn sqlite3BtreeInsert(
         }
         if loc == 0 as ::core::ffi::c_int {
             getCellInfo(pCur);
-            if (*pCur).info.nKey == (*pX).nKey {
+            if __pCur_ref.info.nKey == (*pX).nKey {
                 let mut x2: crate::src::src::btree::BtreePayload = crate::src::src::btree::BtreePayload {
     pKey:  ::core::ptr::null::<::core::ffi::c_void>(),
     nKey:  0,
@@ -8439,9 +8556,9 @@ pub unsafe extern "C" fn sqlite3BtreeInsert(
             }
         }
     }
-    pPage = (*pCur).pPage;
+    pPage = __pCur_ref.pPage;
     if (*pPage).nFree < 0 as ::core::ffi::c_int {
-        if (*pCur).eState as ::core::ffi::c_int > 1 as ::core::ffi::c_int {
+        if __pCur_ref.eState as ::core::ffi::c_int > 1 as ::core::ffi::c_int {
             rc = crate::src::src::main::sqlite3CorruptError(9531 as ::core::ffi::c_int);
         } else {
             rc = btreeComputeFreeSpace(pPage);
@@ -8505,8 +8622,8 @@ pub unsafe extern "C" fn sqlite3BtreeInsert(
     }
     match current_block {
         479107131381816815 => {
-            idx = (*pCur).ix as ::core::ffi::c_int;
-            (*pCur).info.nSize = 0 as crate::src::fts5::u16_0;
+            idx = __pCur_ref.ix as ::core::ffi::c_int;
+            __pCur_ref.info.nSize = 0 as crate::src::fts5::u16_0;
             if loc == 0 as ::core::ffi::c_int {
                 let mut info_0: crate::btreeInt_h::CellInfo = crate::btreeInt_h::CellInfo {
     nKey:  0,
@@ -8522,8 +8639,9 @@ pub unsafe extern "C" fn sqlite3BtreeInsert(
                 if rc != 0 {
                     current_block = 17030598806234454338;
                 } else {
-                    oldCell = (*pPage).aData.offset(
-                        ((*pPage).maskPage as ::core::ffi::c_int
+                    let __pPage_ref = unsafe { &mut *pPage };
+                    oldCell = __pPage_ref.aData.offset(
+                        (__pPage_ref.maskPage as ::core::ffi::c_int
                             & ((*((*pPage)
                                 .aCellIdx
                                 .offset((2 as ::core::ffi::c_int * idx) as isize)
@@ -8538,14 +8656,14 @@ pub unsafe extern "C" fn sqlite3BtreeInsert(
                                     .offset(1 as isize)
                                     as ::core::ffi::c_int)) as isize,
                     ) as *mut ::core::ffi::c_uchar;
-                    if (*pPage).leaf == 0 {
+                    if __pPage_ref.leaf == 0 {
                         ::libc::memcpy(
                             newCell as *mut ::core::ffi::c_void,
                             oldCell as *const ::core::ffi::c_void,
                             4 as crate::__stddef_size_t_h::size_t,
                         );
                     }
-                    (*pPage).xParseCell.expect("non-null function pointer")(
+                    __pPage_ref.xParseCell.expect("non-null function pointer")(
                         pPage,
                         oldCell as *mut crate::src::ext::rtree::rtree::u8_0,
                         &raw mut info_0,
@@ -8555,22 +8673,22 @@ pub unsafe extern "C" fn sqlite3BtreeInsert(
                     } else {
                         rc = crate::sqlite3_h::SQLITE_OK;
                     }
-                    (*pCur).curFlags =
-                        ((*pCur).curFlags as ::core::ffi::c_int & !crate::btreeInt_h::BTCF_ValidOvfl) as crate::src::ext::rtree::rtree::u8_0;
+                    __pCur_ref.curFlags =
+                        (__pCur_ref.curFlags as ::core::ffi::c_int & !crate::btreeInt_h::BTCF_ValidOvfl) as crate::src::ext::rtree::rtree::u8_0;
                     if info_0.nSize as ::core::ffi::c_int == szNew
                         && info_0.nLocal as crate::src::ext::rtree::rtree::u32_0 == info_0.nPayload
                         && ((*(*p).pBt).autoVacuum == 0
-                            || szNew < (*pPage).minLocal as ::core::ffi::c_int)
+                            || szNew < __pPage_ref.minLocal as ::core::ffi::c_int)
                     {
                         if oldCell
                             < (*pPage)
                                 .aData
-                                .offset((*pPage).hdrOffset as ::core::ffi::c_int as isize)
+                                .offset(__pPage_ref.hdrOffset as ::core::ffi::c_int as isize)
                                 .offset(10 as isize)
                         {
                             return crate::src::src::main::sqlite3CorruptError(9600 as ::core::ffi::c_int);
                         }
-                        if oldCell.offset(szNew as isize) > (*pPage).aDataEnd {
+                        if oldCell.offset(szNew as isize) > __pPage_ref.aDataEnd {
                             return crate::src::src::main::sqlite3CorruptError(9603 as ::core::ffi::c_int);
                         }
                         ::libc::memcpy(
@@ -8591,9 +8709,9 @@ pub unsafe extern "C" fn sqlite3BtreeInsert(
                 if loc < 0 as ::core::ffi::c_int
                     && (*pPage).nCell as ::core::ffi::c_int > 0 as ::core::ffi::c_int
                 {
-                    (*pCur).ix = (*pCur).ix.wrapping_add(1);
-                    idx = (*pCur).ix as ::core::ffi::c_int;
-                    (*pCur).curFlags = ((*pCur).curFlags as ::core::ffi::c_int
+                    __pCur_ref.ix = __pCur_ref.ix.wrapping_add(1);
+                    idx = __pCur_ref.ix as ::core::ffi::c_int;
+                    __pCur_ref.curFlags = (__pCur_ref.curFlags as ::core::ffi::c_int
                         & !(crate::btreeInt_h::BTCF_ValidNKey | crate::btreeInt_h::BTCF_ValidOvfl))
                         as crate::src::ext::rtree::rtree::u8_0;
                 }
@@ -8604,24 +8722,24 @@ pub unsafe extern "C" fn sqlite3BtreeInsert(
                 _ => {
                     rc = insertCellFast(pPage, idx, newCell as *mut crate::src::ext::rtree::rtree::u8_0, szNew);
                     if (*pPage).nOverflow != 0 {
-                        (*pCur).curFlags = ((*pCur).curFlags as ::core::ffi::c_int
+                        __pCur_ref.curFlags = (__pCur_ref.curFlags as ::core::ffi::c_int
                             & !(crate::btreeInt_h::BTCF_ValidNKey | crate::btreeInt_h::BTCF_ValidOvfl))
                             as crate::src::ext::rtree::rtree::u8_0;
                         rc = balance(pCur);
-                        (*(*pCur).pPage).nOverflow = 0 as crate::src::ext::rtree::rtree::u8_0;
-                        (*pCur).eState = crate::btreeInt_h::CURSOR_INVALID as crate::src::ext::rtree::rtree::u8_0;
+                        (*__pCur_ref.pPage).nOverflow = 0 as crate::src::ext::rtree::rtree::u8_0;
+                        __pCur_ref.eState = crate::btreeInt_h::CURSOR_INVALID as crate::src::ext::rtree::rtree::u8_0;
                         if flags & crate::src::src::btree::BTREE_SAVEPOSITION != 0 && rc == crate::sqlite3_h::SQLITE_OK {
                             btreeReleaseAllCursorPages(pCur);
-                            if !(*pCur).pKeyInfo.is_null() {
-                                (*pCur).pKey = crate::src::src::malloc::sqlite3Malloc((*pX).nKey as crate::src::ext::rtree::rtree::u64_0);
-                                if (*pCur).pKey.is_null() {
+                            if !__pCur_ref.pKeyInfo.is_null() {
+                                __pCur_ref.pKey = crate::src::src::malloc::sqlite3Malloc((*pX).nKey as crate::src::ext::rtree::rtree::u64_0);
+                                if __pCur_ref.pKey.is_null() {
                                     rc = crate::sqlite3_h::SQLITE_NOMEM;
                                 } else {
-                                    ::libc::memcpy((*pCur).pKey, (*pX).pKey, (*pX).nKey as crate::__stddef_size_t_h::size_t);
+                                    ::libc::memcpy(__pCur_ref.pKey, (*pX).pKey, (*pX).nKey as crate::__stddef_size_t_h::size_t);
                                 }
                             }
-                            (*pCur).eState = crate::btreeInt_h::CURSOR_REQUIRESEEK as crate::src::ext::rtree::rtree::u8_0;
-                            (*pCur).nKey = (*pX).nKey as crate::src::ext::rtree::rtree::i64_0;
+                            __pCur_ref.eState = crate::btreeInt_h::CURSOR_REQUIRESEEK as crate::src::ext::rtree::rtree::u8_0;
+                            __pCur_ref.nKey = (*pX).nKey as crate::src::ext::rtree::rtree::i64_0;
                         }
                     }
                 }
@@ -8638,33 +8756,35 @@ pub unsafe extern "C" fn sqlite3BtreeTransferRow(
     mut pSrc: *mut crate::btreeInt_h::BtCursor,
     mut iKey: crate::src::ext::rtree::rtree::i64_0,
 ) -> ::core::ffi::c_int {
-    let mut pBt: *mut crate::btreeInt_h::BtShared = (*pDest).pBt;
+    let __pDest_ref = unsafe { &mut *pDest };
+    let mut pBt: *mut crate::btreeInt_h::BtShared = __pDest_ref.pBt;
     let mut aOut: *mut crate::src::ext::rtree::rtree::u8_0 = (*pBt).pTmpSpace;
     let mut aIn: *const crate::src::ext::rtree::rtree::u8_0 = ::core::ptr::null::<crate::src::ext::rtree::rtree::u8_0>();
     let mut nIn: crate::src::ext::rtree::rtree::u32_0 = 0;
     let mut nRem: crate::src::ext::rtree::rtree::u32_0 = 0;
     getCellInfo(pSrc);
-    if (*pSrc).info.nPayload < 0x80 as crate::src::ext::rtree::rtree::u32_0 {
+    let __pSrc_ref = unsafe { &mut *pSrc };
+    if __pSrc_ref.info.nPayload < 0x80 as crate::src::ext::rtree::rtree::u32_0 {
         let fresh34 = aOut;
         aOut = aOut.offset(1);
-        *fresh34 = (*pSrc).info.nPayload as crate::src::ext::rtree::rtree::u8_0;
+        *fresh34 = __pSrc_ref.info.nPayload as crate::src::ext::rtree::rtree::u8_0;
     } else {
         aOut = aOut.offset(crate::src::src::util::sqlite3PutVarint(
             aOut as *mut ::core::ffi::c_uchar,
-            (*pSrc).info.nPayload as crate::src::ext::rtree::rtree::u64_0,
+            __pSrc_ref.info.nPayload as crate::src::ext::rtree::rtree::u64_0,
         ) as isize);
     }
-    if (*pDest).pKeyInfo.is_null() {
+    if __pDest_ref.pKeyInfo.is_null() {
         aOut = aOut
             .offset(crate::src::src::util::sqlite3PutVarint(aOut as *mut ::core::ffi::c_uchar, iKey as crate::src::ext::rtree::rtree::u64_0) as isize);
     }
-    nIn = (*pSrc).info.nLocal as crate::src::ext::rtree::rtree::u32_0;
-    aIn = (*pSrc).info.pPayload;
-    if aIn.offset(nIn as isize) > (*(*pSrc).pPage).aDataEnd as *const crate::src::ext::rtree::rtree::u8_0 {
+    nIn = __pSrc_ref.info.nLocal as crate::src::ext::rtree::rtree::u32_0;
+    aIn = __pSrc_ref.info.pPayload;
+    if aIn.offset(nIn as isize) > (*__pSrc_ref.pPage).aDataEnd as *const crate::src::ext::rtree::rtree::u8_0 {
         return crate::src::src::main::sqlite3CorruptError(9705 as ::core::ffi::c_int);
     }
-    nRem = (*pSrc).info.nPayload;
-    if nIn == nRem && nIn < (*(*pDest).pPage).maxLocal as crate::src::ext::rtree::rtree::u32_0 {
+    nRem = __pSrc_ref.info.nPayload;
+    if nIn == nRem && nIn < (*__pDest_ref.pPage).maxLocal as crate::src::ext::rtree::rtree::u32_0 {
         ::libc::memcpy(
             aOut as *mut ::core::ffi::c_void,
             aIn as *const ::core::ffi::c_void,
@@ -8676,16 +8796,16 @@ pub unsafe extern "C" fn sqlite3BtreeTransferRow(
         return crate::sqlite3_h::SQLITE_OK;
     } else {
         let mut rc: ::core::ffi::c_int = crate::sqlite3_h::SQLITE_OK;
-        let mut pSrcPager: *mut crate::src::src::pager::Pager = (*(*pSrc).pBt).pPager;
+        let mut pSrcPager: *mut crate::src::src::pager::Pager = (*__pSrc_ref.pBt).pPager;
         let mut pPgnoOut: *mut crate::src::ext::rtree::rtree::u8_0 = ::core::ptr::null_mut::<crate::src::ext::rtree::rtree::u8_0>();
         let mut ovflIn: crate::src::src::pager::Pgno = 0 as crate::src::src::pager::Pgno;
         let mut pPageIn: *mut crate::src::src::pager::DbPage = ::core::ptr::null_mut::<crate::src::src::pager::DbPage>();
         let mut pPageOut: *mut crate::btreeInt_h::MemPage = ::core::ptr::null_mut::<crate::btreeInt_h::MemPage>();
         let mut nOut: crate::src::ext::rtree::rtree::u32_0 = 0;
-        nOut = btreePayloadToLocal((*pDest).pPage, (*pSrc).info.nPayload as crate::src::ext::rtree::rtree::i64_0) as crate::src::ext::rtree::rtree::u32_0;
+        nOut = btreePayloadToLocal(__pDest_ref.pPage, __pSrc_ref.info.nPayload as crate::src::ext::rtree::rtree::i64_0) as crate::src::ext::rtree::rtree::u32_0;
         (*pBt).nPreformatSize = nOut as ::core::ffi::c_int
             + aOut.offset_from((*pBt).pTmpSpace) as ::core::ffi::c_long as ::core::ffi::c_int;
-        if nOut < (*pSrc).info.nPayload {
+        if nOut < __pSrc_ref.info.nPayload {
             pPgnoOut = aOut.offset(nOut as isize) as *mut crate::src::ext::rtree::rtree::u8_0;
             (*pBt).nPreformatSize += 4 as ::core::ffi::c_int;
         }
@@ -8693,12 +8813,12 @@ pub unsafe extern "C" fn sqlite3BtreeTransferRow(
             if aIn
                 .offset(nIn as isize)
                 .offset(4 as isize)
-                > (*(*pSrc).pPage).aDataEnd as *const crate::src::ext::rtree::rtree::u8_0
+                > (*__pSrc_ref.pPage).aDataEnd as *const crate::src::ext::rtree::rtree::u8_0
             {
                 return crate::src::src::main::sqlite3CorruptError(9730 as ::core::ffi::c_int);
             }
             ovflIn =
-                crate::src::src::util::sqlite3Get4byte((*pSrc).info.pPayload.offset(nIn as isize) as *mut crate::src::ext::rtree::rtree::u8_0) as crate::src::src::pager::Pgno;
+                crate::src::src::util::sqlite3Get4byte(__pSrc_ref.info.pPayload.offset(nIn as isize) as *mut crate::src::ext::rtree::rtree::u8_0) as crate::src::src::pager::Pgno;
         }
         loop {
             nRem = nRem.wrapping_sub(nOut);
@@ -8724,7 +8844,7 @@ pub unsafe extern "C" fn sqlite3BtreeTransferRow(
                         aIn = crate::src::src::pager::sqlite3PagerGetData(pPageIn as *mut crate::src::src::pcache::PgHdr) as *const crate::src::ext::rtree::rtree::u8_0;
                         ovflIn = crate::src::src::util::sqlite3Get4byte(aIn) as crate::src::src::pager::Pgno;
                         aIn = aIn.offset(4 as isize);
-                        nIn = (*(*pSrc).pBt).usableSize.wrapping_sub(4 as crate::src::ext::rtree::rtree::u32_0);
+                        nIn = (*__pSrc_ref.pBt).usableSize.wrapping_sub(4 as crate::src::ext::rtree::rtree::u32_0);
                     }
                 }
                 if !(rc == crate::sqlite3_h::SQLITE_OK && nOut > 0 as crate::src::ext::rtree::rtree::u32_0) {
@@ -8773,7 +8893,8 @@ pub unsafe extern "C" fn sqlite3BtreeDelete(
     mut pCur: *mut crate::btreeInt_h::BtCursor,
     mut flags: crate::src::ext::rtree::rtree::u8_0,
 ) -> ::core::ffi::c_int {
-    let mut p: *mut crate::btreeInt_h::Btree = (*pCur).pBtree;
+    let __pCur_ref = unsafe { &mut *pCur };
+    let mut p: *mut crate::btreeInt_h::Btree = __pCur_ref.pBtree;
     let mut pBt: *mut crate::btreeInt_h::BtShared = (*p).pBt;
     let mut rc: ::core::ffi::c_int = 0;
     let mut pPage: *mut crate::btreeInt_h::MemPage = ::core::ptr::null_mut::<crate::btreeInt_h::MemPage>();
@@ -8788,19 +8909,19 @@ pub unsafe extern "C" fn sqlite3BtreeDelete(
     nSize:  0,
 };
     let mut bPreserve: crate::src::ext::rtree::rtree::u8_0 = 0;
-    if (*pCur).eState as ::core::ffi::c_int != crate::btreeInt_h::CURSOR_VALID {
-        if (*pCur).eState as ::core::ffi::c_int >= crate::btreeInt_h::CURSOR_REQUIRESEEK {
+    if __pCur_ref.eState as ::core::ffi::c_int != crate::btreeInt_h::CURSOR_VALID {
+        if __pCur_ref.eState as ::core::ffi::c_int >= crate::btreeInt_h::CURSOR_REQUIRESEEK {
             rc = btreeRestoreCursorPosition(pCur);
-            if rc != 0 || (*pCur).eState as ::core::ffi::c_int != crate::btreeInt_h::CURSOR_VALID {
+            if rc != 0 || __pCur_ref.eState as ::core::ffi::c_int != crate::btreeInt_h::CURSOR_VALID {
                 return rc;
             }
         } else {
             return crate::src::src::main::sqlite3CorruptError(9826 as ::core::ffi::c_int);
         }
     }
-    iCellDepth = (*pCur).iPage as ::core::ffi::c_int;
-    iCellIdx = (*pCur).ix as ::core::ffi::c_int;
-    pPage = (*pCur).pPage;
+    iCellDepth = __pCur_ref.iPage as ::core::ffi::c_int;
+    iCellIdx = __pCur_ref.ix as ::core::ffi::c_int;
+    pPage = __pCur_ref.pPage;
     if (*pPage).nCell as ::core::ffi::c_int <= iCellIdx {
         return crate::src::src::main::sqlite3CorruptError(9835 as ::core::ffi::c_int);
     }
@@ -8828,16 +8949,17 @@ pub unsafe extern "C" fn sqlite3BtreeDelete(
     bPreserve = (flags as ::core::ffi::c_int & crate::src::src::btree::BTREE_SAVEPOSITION != 0 as ::core::ffi::c_int)
         as ::core::ffi::c_int as crate::src::ext::rtree::rtree::u8_0;
     if bPreserve != 0 {
-        if (*pPage).leaf == 0
-            || (*pPage).nFree
-                + (*pPage).xCellSize.expect("non-null function pointer")(pPage, pCell as *mut crate::src::ext::rtree::rtree::u8_0)
+        let __pPage_ref = unsafe { &mut *pPage };
+        if __pPage_ref.leaf == 0
+            || __pPage_ref.nFree
+                + __pPage_ref.xCellSize.expect("non-null function pointer")(pPage, pCell as *mut crate::src::ext::rtree::rtree::u8_0)
                     as ::core::ffi::c_int
                 + 2 as ::core::ffi::c_int
                 > (*pBt)
                     .usableSize
                     .wrapping_mul(2 as crate::src::ext::rtree::rtree::u32_0)
                     .wrapping_div(3 as crate::src::ext::rtree::rtree::u32_0) as ::core::ffi::c_int
-            || (*pPage).nCell as ::core::ffi::c_int == 1 as ::core::ffi::c_int
+            || __pPage_ref.nCell as ::core::ffi::c_int == 1 as ::core::ffi::c_int
         {
             rc = saveCursorKey(pCur);
             if rc != 0 {
@@ -8853,17 +8975,17 @@ pub unsafe extern "C" fn sqlite3BtreeDelete(
             return rc;
         }
     }
-    if (*pCur).curFlags as ::core::ffi::c_int & crate::btreeInt_h::BTCF_Multiple != 0 {
-        rc = saveAllCursors(pBt, (*pCur).pgnoRoot, pCur);
+    if __pCur_ref.curFlags as ::core::ffi::c_int & crate::btreeInt_h::BTCF_Multiple != 0 {
+        rc = saveAllCursors(pBt, __pCur_ref.pgnoRoot, pCur);
         if rc != 0 {
             return rc;
         }
     }
-    if (*pCur).pKeyInfo.is_null() && (*p).hasIncrblobCur as ::core::ffi::c_int != 0 {
+    if __pCur_ref.pKeyInfo.is_null() && (*p).hasIncrblobCur as ::core::ffi::c_int != 0 {
         invalidateIncrblobCursors(
             p,
-            (*pCur).pgnoRoot,
-            (*pCur).info.nKey,
+            __pCur_ref.pgnoRoot,
+            __pCur_ref.info.nKey,
             0 as ::core::ffi::c_int,
         );
     }
@@ -8891,46 +9013,47 @@ pub unsafe extern "C" fn sqlite3BtreeDelete(
         return rc;
     }
     if (*pPage).leaf == 0 {
-        let mut pLeaf: *mut crate::btreeInt_h::MemPage = (*pCur).pPage;
+        let mut pLeaf: *mut crate::btreeInt_h::MemPage = __pCur_ref.pPage;
         let mut nCell: ::core::ffi::c_int = 0;
         let mut n: crate::src::src::pager::Pgno = 0;
         let mut pTmp: *mut ::core::ffi::c_uchar = ::core::ptr::null_mut::<::core::ffi::c_uchar>();
-        if (*pLeaf).nFree < 0 as ::core::ffi::c_int {
+        let __pLeaf_ref = unsafe { &mut *pLeaf };
+        if __pLeaf_ref.nFree < 0 as ::core::ffi::c_int {
             rc = btreeComputeFreeSpace(pLeaf);
             if rc != 0 {
                 return rc;
             }
         }
-        if iCellDepth < (*pCur).iPage as ::core::ffi::c_int - 1 as ::core::ffi::c_int {
-            n = (*(*pCur).apPage[(iCellDepth + 1 as ::core::ffi::c_int) as usize]).pgno;
+        if iCellDepth < __pCur_ref.iPage as ::core::ffi::c_int - 1 as ::core::ffi::c_int {
+            n = (*__pCur_ref.apPage[(iCellDepth + 1 as ::core::ffi::c_int) as usize]).pgno;
         } else {
-            n = (*(*pCur).pPage).pgno;
+            n = (*__pCur_ref.pPage).pgno;
         }
-        pCell = (*pLeaf).aData.offset(
-            ((*pLeaf).maskPage as ::core::ffi::c_int
-                & ((*((*pLeaf).aCellIdx.offset(
+        pCell = __pLeaf_ref.aData.offset(
+            (__pLeaf_ref.maskPage as ::core::ffi::c_int
+                & ((*(__pLeaf_ref.aCellIdx.offset(
                     (2 as ::core::ffi::c_int
-                        * ((*pLeaf).nCell as ::core::ffi::c_int - 1 as ::core::ffi::c_int))
+                        * (__pLeaf_ref.nCell as ::core::ffi::c_int - 1 as ::core::ffi::c_int))
                         as isize,
                 ) as *mut crate::src::ext::rtree::rtree::u8_0)
                     .offset(0 as isize)
                     as ::core::ffi::c_int)
                     << 8 as ::core::ffi::c_int
-                    | *((*pLeaf).aCellIdx.offset(
+                    | *(__pLeaf_ref.aCellIdx.offset(
                         (2 as ::core::ffi::c_int
-                            * ((*pLeaf).nCell as ::core::ffi::c_int - 1 as ::core::ffi::c_int))
+                            * (__pLeaf_ref.nCell as ::core::ffi::c_int - 1 as ::core::ffi::c_int))
                             as isize,
                     ) as *mut crate::src::ext::rtree::rtree::u8_0)
                         .offset(1 as isize)
                         as ::core::ffi::c_int)) as isize,
         ) as *mut ::core::ffi::c_uchar;
-        if pCell < (*pLeaf).aData.offset(4 as isize) as *mut crate::src::ext::rtree::rtree::u8_0 {
+        if pCell < __pLeaf_ref.aData.offset(4 as isize) as *mut crate::src::ext::rtree::rtree::u8_0 {
             return crate::src::src::main::sqlite3CorruptError(9933 as ::core::ffi::c_int);
         }
-        nCell = (*pLeaf).xCellSize.expect("non-null function pointer")(pLeaf, pCell as *mut crate::src::ext::rtree::rtree::u8_0)
+        nCell = __pLeaf_ref.xCellSize.expect("non-null function pointer")(pLeaf, pCell as *mut crate::src::ext::rtree::rtree::u8_0)
             as ::core::ffi::c_int;
         pTmp = (*pBt).pTmpSpace as *mut ::core::ffi::c_uchar;
-        rc = crate::src::src::pager::sqlite3PagerWrite((*pLeaf).pDbPage as *mut crate::src::src::pcache::PgHdr);
+        rc = crate::src::src::pager::sqlite3PagerWrite(__pLeaf_ref.pDbPage as *mut crate::src::src::pcache::PgHdr);
         if rc == crate::sqlite3_h::SQLITE_OK {
             rc = insertCell(
                 pPage,
@@ -8943,7 +9066,7 @@ pub unsafe extern "C" fn sqlite3BtreeDelete(
         }
         dropCell(
             pLeaf,
-            (*pLeaf).nCell as ::core::ffi::c_int - 1 as ::core::ffi::c_int,
+            __pLeaf_ref.nCell as ::core::ffi::c_int - 1 as ::core::ffi::c_int,
             nCell,
             &raw mut rc,
         );
@@ -8951,39 +9074,39 @@ pub unsafe extern "C" fn sqlite3BtreeDelete(
             return rc;
         }
     }
-    if (*(*pCur).pPage).nFree * 3 as ::core::ffi::c_int
-        <= (*(*pCur).pBt).usableSize as ::core::ffi::c_int * 2 as ::core::ffi::c_int
+    if (*__pCur_ref.pPage).nFree * 3 as ::core::ffi::c_int
+        <= (*__pCur_ref.pBt).usableSize as ::core::ffi::c_int * 2 as ::core::ffi::c_int
     {
         rc = crate::sqlite3_h::SQLITE_OK;
     } else {
         rc = balance(pCur);
     }
-    if rc == crate::sqlite3_h::SQLITE_OK && (*pCur).iPage as ::core::ffi::c_int > iCellDepth {
-        releasePageNotNull((*pCur).pPage);
-        (*pCur).iPage -= 1;
-        while (*pCur).iPage as ::core::ffi::c_int > iCellDepth {
-            let fresh12 = (*pCur).iPage;
-            (*pCur).iPage = (*pCur).iPage - 1;
-            releasePage((*pCur).apPage[fresh12 as usize]);
+    if rc == crate::sqlite3_h::SQLITE_OK && __pCur_ref.iPage as ::core::ffi::c_int > iCellDepth {
+        releasePageNotNull(__pCur_ref.pPage);
+        __pCur_ref.iPage -= 1;
+        while __pCur_ref.iPage as ::core::ffi::c_int > iCellDepth {
+            let fresh12 = __pCur_ref.iPage;
+            __pCur_ref.iPage = __pCur_ref.iPage - 1;
+            releasePage(__pCur_ref.apPage[fresh12 as usize]);
         }
-        (*pCur).pPage = (*pCur).apPage[(*pCur).iPage as usize];
+        __pCur_ref.pPage = __pCur_ref.apPage[__pCur_ref.iPage as usize];
         rc = balance(pCur);
     }
     if rc == crate::sqlite3_h::SQLITE_OK {
         if bPreserve as ::core::ffi::c_int > 1 as ::core::ffi::c_int {
-            (*pCur).eState = crate::btreeInt_h::CURSOR_SKIPNEXT as crate::src::ext::rtree::rtree::u8_0;
+            __pCur_ref.eState = crate::btreeInt_h::CURSOR_SKIPNEXT as crate::src::ext::rtree::rtree::u8_0;
             if iCellIdx >= (*pPage).nCell as ::core::ffi::c_int {
-                (*pCur).skipNext = -(1 as ::core::ffi::c_int);
-                (*pCur).ix =
+                __pCur_ref.skipNext = -(1 as ::core::ffi::c_int);
+                __pCur_ref.ix =
                     ((*pPage).nCell as ::core::ffi::c_int - 1 as ::core::ffi::c_int) as crate::src::fts5::u16_0;
             } else {
-                (*pCur).skipNext = 1 as ::core::ffi::c_int;
+                __pCur_ref.skipNext = 1 as ::core::ffi::c_int;
             }
         } else {
             rc = moveToRoot(pCur);
             if bPreserve != 0 {
                 btreeReleaseAllCursorPages(pCur);
-                (*pCur).eState = crate::btreeInt_h::CURSOR_REQUIRESEEK as crate::src::ext::rtree::rtree::u8_0;
+                __pCur_ref.eState = crate::btreeInt_h::CURSOR_REQUIRESEEK as crate::src::ext::rtree::rtree::u8_0;
             }
             if rc == crate::sqlite3_h::SQLITE_EMPTY {
                 rc = crate::sqlite3_h::SQLITE_OK;
@@ -9157,12 +9280,13 @@ unsafe extern "C" fn clearDatabasePage(
         hdr = (*pPage).hdrOffset as ::core::ffi::c_int;
         i = 0 as ::core::ffi::c_int;
         loop {
-            if !(i < (*pPage).nCell as ::core::ffi::c_int) {
+            let __pPage_ref = unsafe { &mut *pPage };
+            if !(i < __pPage_ref.nCell as ::core::ffi::c_int) {
                 current_block = 5783071609795492627;
                 break;
             }
-            pCell = (*pPage).aData.offset(
-                ((*pPage).maskPage as ::core::ffi::c_int
+            pCell = __pPage_ref.aData.offset(
+                (__pPage_ref.maskPage as ::core::ffi::c_int
                     & ((*((*pPage)
                         .aCellIdx
                         .offset((2 as ::core::ffi::c_int * i) as isize)
@@ -9177,7 +9301,7 @@ unsafe extern "C" fn clearDatabasePage(
                             .offset(1 as isize)
                             as ::core::ffi::c_int)) as isize,
             ) as *mut ::core::ffi::c_uchar;
-            if (*pPage).leaf == 0 {
+            if __pPage_ref.leaf == 0 {
                 rc = clearDatabasePage(
                     pBt,
                     crate::src::src::util::sqlite3Get4byte(pCell) as crate::src::src::pager::Pgno,
@@ -9189,7 +9313,7 @@ unsafe extern "C" fn clearDatabasePage(
                     break;
                 }
             }
-            (*pPage).xParseCell.expect("non-null function pointer")(
+            __pPage_ref.xParseCell.expect("non-null function pointer")(
                 pPage,
                 pCell as *mut crate::src::ext::rtree::rtree::u8_0,
                 &raw mut info,
@@ -9451,20 +9575,21 @@ pub unsafe extern "C" fn sqlite3BtreeCount(
             nEntry += (*pPage).nCell as crate::src::ext::rtree::rtree::i64_0;
         }
         if (*pPage).leaf != 0 {
+            let __pCur_ref = unsafe { &mut *pCur };
             loop {
-                if (*pCur).iPage as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
+                if __pCur_ref.iPage as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
                     *pnEntry = nEntry;
                     return moveToRoot(pCur);
                 }
                 moveToParent(pCur);
-                if !((*pCur).ix as ::core::ffi::c_int
-                    >= (*(*pCur).pPage).nCell as ::core::ffi::c_int)
+                if !(__pCur_ref.ix as ::core::ffi::c_int
+                    >= (*__pCur_ref.pPage).nCell as ::core::ffi::c_int)
                 {
                     break;
                 }
             }
-            (*pCur).ix = (*pCur).ix.wrapping_add(1);
-            pPage = (*pCur).pPage;
+            __pCur_ref.ix = __pCur_ref.ix.wrapping_add(1);
+            pPage = __pCur_ref.pPage;
         }
         iIdx = (*pCur).ix as ::core::ffi::c_int;
         if iIdx == (*pPage).nCell as ::core::ffi::c_int {
@@ -9475,11 +9600,12 @@ pub unsafe extern "C" fn sqlite3BtreeCount(
                 ) as *mut crate::src::ext::rtree::rtree::u8_0),
             );
         } else {
+            let __pPage_ref = unsafe { &mut *pPage };
             rc = moveToChild(
                 pCur,
                 crate::src::src::util::sqlite3Get4byte(
-                    (*pPage).aData.offset(
-                        ((*pPage).maskPage as ::core::ffi::c_int
+                    __pPage_ref.aData.offset(
+                        (__pPage_ref.maskPage as ::core::ffi::c_int
                             & ((*((*pPage)
                                 .aCellIdx
                                 .offset((2 as ::core::ffi::c_int * iIdx) as isize)
@@ -9507,28 +9633,32 @@ pub unsafe extern "C" fn sqlite3BtreePager(mut p: *mut crate::btreeInt_h::Btree)
 }
 
 unsafe extern "C" fn checkOom(mut pCheck: *mut crate::btreeInt_h::IntegrityCk) {
-    (*pCheck).rc = crate::sqlite3_h::SQLITE_NOMEM;
-    (*pCheck).mxErr = 0 as ::core::ffi::c_int;
-    if (*pCheck).nErr == 0 as ::core::ffi::c_int {
-        (*pCheck).nErr += 1;
+    let __pCheck_ref = unsafe { &mut *pCheck };
+    __pCheck_ref.rc = crate::sqlite3_h::SQLITE_NOMEM;
+    __pCheck_ref.mxErr = 0 as ::core::ffi::c_int;
+    if __pCheck_ref.nErr == 0 as ::core::ffi::c_int {
+        __pCheck_ref.nErr += 1;
     }
 }
 
 unsafe extern "C" fn checkProgress(mut pCheck: *mut crate::btreeInt_h::IntegrityCk) {
     let mut db: *mut crate::sqliteInt_h::sqlite3 = (*pCheck).db;
     if ::core::intrinsics::atomic_load_relaxed(&raw mut (*db).u1.isInterrupted) != 0 {
-        (*pCheck).rc = crate::sqlite3_h::SQLITE_INTERRUPT;
-        (*pCheck).nErr += 1;
-        (*pCheck).mxErr = 0 as ::core::ffi::c_int;
+        let __pCheck_ref = unsafe { &mut *pCheck };
+        __pCheck_ref.rc = crate::sqlite3_h::SQLITE_INTERRUPT;
+        __pCheck_ref.nErr += 1;
+        __pCheck_ref.mxErr = 0 as ::core::ffi::c_int;
     }
     if (*db).xProgress.is_some() {
-        (*pCheck).nStep = (*pCheck).nStep.wrapping_add(1);
-        if (*pCheck).nStep.wrapping_rem((*db).nProgressOps as crate::src::ext::rtree::rtree::u32_0) == 0 as crate::src::ext::rtree::rtree::u32_0
-            && (*db).xProgress.expect("non-null function pointer")((*db).pProgressArg) != 0
+        let __pCheck_ref = unsafe { &mut *pCheck };
+        __pCheck_ref.nStep = __pCheck_ref.nStep.wrapping_add(1);
+        let __db_ref = unsafe { &mut *db };
+        if __pCheck_ref.nStep.wrapping_rem(__db_ref.nProgressOps as crate::src::ext::rtree::rtree::u32_0) == 0 as crate::src::ext::rtree::rtree::u32_0
+            && __db_ref.xProgress.expect("non-null function pointer")(__db_ref.pProgressArg) != 0
         {
-            (*pCheck).rc = crate::sqlite3_h::SQLITE_INTERRUPT;
-            (*pCheck).nErr += 1;
-            (*pCheck).mxErr = 0 as ::core::ffi::c_int;
+            __pCheck_ref.rc = crate::sqlite3_h::SQLITE_INTERRUPT;
+            __pCheck_ref.nErr += 1;
+            __pCheck_ref.mxErr = 0 as ::core::ffi::c_int;
         }
     }
 }
@@ -9540,32 +9670,33 @@ unsafe extern "C" fn checkAppendMsg(
 ) {
     let mut ap: ::core::ffi::VaListImpl;
     checkProgress(pCheck);
-    if (*pCheck).mxErr == 0 {
+    let __pCheck_ref = unsafe { &mut *pCheck };
+    if __pCheck_ref.mxErr == 0 {
         return;
     }
-    (*pCheck).mxErr -= 1;
-    (*pCheck).nErr += 1;
+    __pCheck_ref.mxErr -= 1;
+    __pCheck_ref.nErr += 1;
     ap = args.clone();
-    if (*pCheck).errMsg.nChar != 0 {
+    if __pCheck_ref.errMsg.nChar != 0 {
         crate::src::src::printf::sqlite3_str_append(
             
-            &raw mut (*pCheck).errMsg as *mut _ as *mut crate::sqliteInt_h::sqlite3_str,
+            &raw mut __pCheck_ref.errMsg as *mut _ as *mut crate::sqliteInt_h::sqlite3_str,
             b"\n\0" as *const u8 as *const ::core::ffi::c_char,
             1 as ::core::ffi::c_int,
         );
     }
-    if !(*pCheck).zPfx.is_null() {
+    if !__pCheck_ref.zPfx.is_null() {
         crate::src::src::printf::sqlite3_str_appendf(
             
-            &raw mut (*pCheck).errMsg as *mut _ as *mut crate::sqliteInt_h::sqlite3_str,
-            (*pCheck).zPfx,
-            (*pCheck).v0,
-            (*pCheck).v1,
-            (*pCheck).v2,
+            &raw mut __pCheck_ref.errMsg as *mut _ as *mut crate::sqliteInt_h::sqlite3_str,
+            __pCheck_ref.zPfx,
+            __pCheck_ref.v0,
+            __pCheck_ref.v1,
+            __pCheck_ref.v2,
         );
     }
-    crate::src::src::printf::sqlite3_str_vappendf(&raw mut (*pCheck).errMsg, zFormat, ap.as_va_list());
-    if (*pCheck).errMsg.accError as ::core::ffi::c_int == crate::sqlite3_h::SQLITE_NOMEM {
+    crate::src::src::printf::sqlite3_str_vappendf(&raw mut __pCheck_ref.errMsg, zFormat, ap.as_va_list());
+    if __pCheck_ref.errMsg.accError as ::core::ffi::c_int == crate::sqlite3_h::SQLITE_NOMEM {
         checkOom(pCheck);
     }
 }
@@ -9658,8 +9789,9 @@ unsafe extern "C" fn checkList(
 ) {
     let mut i: ::core::ffi::c_int = 0;
     let mut expected: crate::src::ext::rtree::rtree::u32_0 = N;
-    let mut nErrAtStart: ::core::ffi::c_int = (*pCheck).nErr;
-    while iPage != 0 as crate::src::src::pager::Pgno && (*pCheck).mxErr != 0 {
+    let __pCheck_ref = unsafe { &mut *pCheck };
+    let mut nErrAtStart: ::core::ffi::c_int = __pCheck_ref.nErr;
+    while iPage != 0 as crate::src::src::pager::Pgno && __pCheck_ref.mxErr != 0 {
         let mut pOvflPage: *mut crate::src::src::pager::DbPage = ::core::ptr::null_mut::<crate::src::src::pager::DbPage>();
         let mut pOvflData: *mut ::core::ffi::c_uchar =
             ::core::ptr::null_mut::<::core::ffi::c_uchar>();
@@ -9668,7 +9800,7 @@ unsafe extern "C" fn checkList(
         }
         N = N.wrapping_sub(1);
         if crate::src::src::pager::sqlite3PagerGet(
-            (*pCheck).pPager,
+            __pCheck_ref.pPager,
             iPage,
             
             &raw mut pOvflPage as *mut _ as *mut *mut crate::src::src::pcache::PgHdr,
@@ -9687,10 +9819,10 @@ unsafe extern "C" fn checkList(
                 let mut n: crate::src::ext::rtree::rtree::u32_0 =
                     crate::src::src::util::sqlite3Get4byte(pOvflData.offset(4 as isize)
                         as *mut ::core::ffi::c_uchar);
-                if (*(*pCheck).pBt).autoVacuum != 0 {
+                if (*__pCheck_ref.pBt).autoVacuum != 0 {
                     checkPtrmap(pCheck, iPage, crate::btreeInt_h::PTRMAP_FREEPAGE as crate::src::ext::rtree::rtree::u8_0, 0 as crate::src::src::pager::Pgno);
                 }
-                if n > (*(*pCheck).pBt)
+                if n > (*__pCheck_ref.pBt)
                     .usableSize
                     .wrapping_div(4 as crate::src::ext::rtree::rtree::u32_0)
                     .wrapping_sub(2 as crate::src::ext::rtree::rtree::u32_0)
@@ -9710,7 +9842,7 @@ unsafe extern "C" fn checkList(
                         )
                             as *mut ::core::ffi::c_uchar)
                             as crate::src::src::pager::Pgno;
-                        if (*(*pCheck).pBt).autoVacuum != 0 {
+                        if (*__pCheck_ref.pBt).autoVacuum != 0 {
                             checkPtrmap(pCheck, iFreePage, crate::btreeInt_h::PTRMAP_FREEPAGE as crate::src::ext::rtree::rtree::u8_0, 0 as crate::src::src::pager::Pgno);
                         }
                         checkRef(pCheck, iFreePage);
@@ -9718,7 +9850,7 @@ unsafe extern "C" fn checkList(
                     }
                     N = N.wrapping_sub(n);
                 }
-            } else if (*(*pCheck).pBt).autoVacuum as ::core::ffi::c_int != 0 && N > 0 as crate::src::ext::rtree::rtree::u32_0 {
+            } else if (*__pCheck_ref.pBt).autoVacuum as ::core::ffi::c_int != 0 && N > 0 as crate::src::ext::rtree::rtree::u32_0 {
                 i = crate::src::src::util::sqlite3Get4byte(pOvflData) as ::core::ffi::c_int;
                 checkPtrmap(pCheck, i as crate::src::src::pager::Pgno, crate::btreeInt_h::PTRMAP_OVERFLOW2 as crate::src::ext::rtree::rtree::u8_0, iPage);
             }
@@ -9726,7 +9858,7 @@ unsafe extern "C" fn checkList(
             crate::src::src::pager::sqlite3PagerUnref(pOvflPage as *mut crate::src::src::pcache::PgHdr);
         }
     }
-    if N != 0 && nErrAtStart == (*pCheck).nErr {
+    if N != 0 && nErrAtStart == __pCheck_ref.nErr {
         checkAppendMsg(
             pCheck,
             b"%s is %u but should be %u\0" as *const u8 as *const ::core::ffi::c_char,
@@ -9824,13 +9956,14 @@ unsafe extern "C" fn checkTreePage(
     let mut heap: *mut crate::src::ext::rtree::rtree::u32_0 = ::core::ptr::null_mut::<crate::src::ext::rtree::rtree::u32_0>();
     let mut x: crate::src::ext::rtree::rtree::u32_0 = 0;
     let mut prev: crate::src::ext::rtree::rtree::u32_0 = 0 as crate::src::ext::rtree::rtree::u32_0;
-    let mut saved_zPfx: *const ::core::ffi::c_char = (*pCheck).zPfx;
-    let mut saved_v1: ::core::ffi::c_int = (*pCheck).v1 as ::core::ffi::c_int;
-    let mut saved_v2: ::core::ffi::c_int = (*pCheck).v2;
+    let __pCheck_ref = unsafe { &mut *pCheck };
+    let mut saved_zPfx: *const ::core::ffi::c_char = __pCheck_ref.zPfx;
+    let mut saved_v1: ::core::ffi::c_int = __pCheck_ref.v1 as ::core::ffi::c_int;
+    let mut saved_v2: ::core::ffi::c_int = __pCheck_ref.v2;
     let mut savedIsInit: crate::src::ext::rtree::rtree::u8_0 = 0 as crate::src::ext::rtree::rtree::u8_0;
     checkProgress(pCheck);
-    if !((*pCheck).mxErr == 0 as ::core::ffi::c_int) {
-        pBt = (*pCheck).pBt;
+    if !(__pCheck_ref.mxErr == 0 as ::core::ffi::c_int) {
+        pBt = __pCheck_ref.pBt;
         usableSize = (*pBt).usableSize;
         if iPage == 0 as crate::src::src::pager::Pgno {
             return 0 as ::core::ffi::c_int;
@@ -9838,8 +9971,8 @@ unsafe extern "C" fn checkTreePage(
         if checkRef(pCheck, iPage) != 0 {
             return 0 as ::core::ffi::c_int;
         }
-        (*pCheck).zPfx = b"Tree %u page %u: \0" as *const u8 as *const ::core::ffi::c_char;
-        (*pCheck).v1 = iPage;
+        __pCheck_ref.zPfx = b"Tree %u page %u: \0" as *const u8 as *const ::core::ffi::c_char;
+        __pCheck_ref.v1 = iPage;
         rc = btreeGetPage(pBt, iPage, &raw mut pPage, 0 as ::core::ffi::c_int);
         if rc != 0 as ::core::ffi::c_int {
             checkAppendMsg(
@@ -9849,7 +9982,7 @@ unsafe extern "C" fn checkTreePage(
                 rc,
             );
             if rc == crate::sqlite3_h::SQLITE_IOERR_NOMEM {
-                (*pCheck).rc = crate::sqlite3_h::SQLITE_NOMEM;
+                __pCheck_ref.rc = crate::sqlite3_h::SQLITE_NOMEM;
             }
         } else {
             savedIsInit = (*pPage).isInit;
@@ -9871,9 +10004,10 @@ unsafe extern "C" fn checkTreePage(
                         rc,
                     );
                 } else {
-                    data = (*pPage).aData;
-                    hdr = (*pPage).hdrOffset as ::core::ffi::c_int;
-                    (*pCheck).zPfx =
+                    let __pPage_ref = unsafe { &mut *pPage };
+                    data = __pPage_ref.aData;
+                    hdr = __pPage_ref.hdrOffset as ::core::ffi::c_int;
+                    __pCheck_ref.zPfx =
                         b"Tree %u page %u cell %u: \0" as *const u8 as *const ::core::ffi::c_char;
                     contentOffset = ((((*(data.offset((hdr + 5 as ::core::ffi::c_int) as isize)
                         as *mut crate::src::ext::rtree::rtree::u8_0)
@@ -9893,34 +10027,34 @@ unsafe extern "C" fn checkTreePage(
                         | *(data.offset((hdr + 3 as ::core::ffi::c_int) as isize) as *mut crate::src::ext::rtree::rtree::u8_0)
                             .offset(1 as isize)
                             as ::core::ffi::c_int;
-                    if (*pPage).leaf as ::core::ffi::c_int != 0
-                        || (*pPage).intKey as ::core::ffi::c_int == 0 as ::core::ffi::c_int
+                    if __pPage_ref.leaf as ::core::ffi::c_int != 0
+                        || __pPage_ref.intKey as ::core::ffi::c_int == 0 as ::core::ffi::c_int
                     {
-                        (*pCheck).nRow += nCell as crate::src::ext::rtree::rtree::i64_0;
+                        __pCheck_ref.nRow += nCell as crate::src::ext::rtree::rtree::i64_0;
                     }
                     cellStart = hdr + 12 as ::core::ffi::c_int
-                        - 4 as ::core::ffi::c_int * (*pPage).leaf as ::core::ffi::c_int;
+                        - 4 as ::core::ffi::c_int * __pPage_ref.leaf as ::core::ffi::c_int;
                     pCellIdx = data.offset(
                         (cellStart + 2 as ::core::ffi::c_int * (nCell - 1 as ::core::ffi::c_int))
                             as isize,
                     ) as *mut crate::src::ext::rtree::rtree::u8_0;
-                    if (*pPage).leaf == 0 {
+                    if __pPage_ref.leaf == 0 {
                         pgno = crate::src::src::util::sqlite3Get4byte(
                             data.offset((hdr + 8 as ::core::ffi::c_int) as isize) as *mut crate::src::ext::rtree::rtree::u8_0,
                         ) as ::core::ffi::c_int;
                         if (*pBt).autoVacuum != 0 {
-                            (*pCheck).zPfx = b"Tree %u page %u right child: \0" as *const u8
+                            __pCheck_ref.zPfx = b"Tree %u page %u right child: \0" as *const u8
                                 as *const ::core::ffi::c_char;
                             checkPtrmap(pCheck, pgno as crate::src::src::pager::Pgno, crate::btreeInt_h::PTRMAP_BTREE as crate::src::ext::rtree::rtree::u8_0, iPage);
                         }
                         depth = checkTreePage(pCheck, pgno as crate::src::src::pager::Pgno, &raw mut maxKey, maxKey);
                         keyCanBeEqual = 0 as ::core::ffi::c_int;
                     } else {
-                        heap = (*pCheck).heap;
+                        heap = __pCheck_ref.heap;
                         *heap.offset(0 as isize) = 0 as crate::src::ext::rtree::rtree::u32_0;
                     }
                     i = nCell - 1 as ::core::ffi::c_int;
-                    while i >= 0 as ::core::ffi::c_int && (*pCheck).mxErr != 0 {
+                    while i >= 0 as ::core::ffi::c_int && __pCheck_ref.mxErr != 0 {
                         let mut info: crate::btreeInt_h::CellInfo = crate::btreeInt_h::CellInfo {
     nKey:  0,
     pPayload:  ::core::ptr::null_mut::<crate::src::ext::rtree::rtree::u8_0>(),
@@ -9928,7 +10062,7 @@ unsafe extern "C" fn checkTreePage(
     nLocal:  0,
     nSize:  0,
 };
-                        (*pCheck).v2 = i;
+                        __pCheck_ref.v2 = i;
                         pc = ((*pCellIdx.offset(0 as isize)
                             as ::core::ffi::c_int)
                             << 8 as ::core::ffi::c_int
@@ -9947,7 +10081,7 @@ unsafe extern "C" fn checkTreePage(
                             doCoverageCheck = 0 as ::core::ffi::c_int;
                         } else {
                             pCell = data.offset(pc as isize) as *mut crate::src::ext::rtree::rtree::u8_0;
-                            (*pPage).xParseCell.expect("non-null function pointer")(
+                            __pPage_ref.xParseCell.expect("non-null function pointer")(
                                 pPage,
                                 pCell,
                                 &raw mut info,
@@ -9960,7 +10094,7 @@ unsafe extern "C" fn checkTreePage(
                                 );
                                 doCoverageCheck = 0 as ::core::ffi::c_int;
                             } else {
-                                if (*pPage).intKey != 0 {
+                                if __pPage_ref.intKey != 0 {
                                     if if keyCanBeEqual != 0 {
                                         (info.nKey > maxKey) as ::core::ffi::c_int
                                     } else {
@@ -10002,7 +10136,7 @@ unsafe extern "C" fn checkTreePage(
                                     }
                                     checkList(pCheck, 0 as ::core::ffi::c_int, pgnoOvfl, nPage);
                                 }
-                                if (*pPage).leaf == 0 {
+                                if __pPage_ref.leaf == 0 {
                                     pgno = crate::src::src::util::sqlite3Get4byte(pCell) as ::core::ffi::c_int;
                                     if (*pBt).autoVacuum != 0 {
                                         checkPtrmap(
@@ -10040,10 +10174,10 @@ unsafe extern "C" fn checkTreePage(
                         i -= 1;
                     }
                     *piMinKey = maxKey;
-                    (*pCheck).zPfx = ::core::ptr::null::<::core::ffi::c_char>();
-                    if doCoverageCheck != 0 && (*pCheck).mxErr > 0 as ::core::ffi::c_int {
-                        if (*pPage).leaf == 0 {
-                            heap = (*pCheck).heap;
+                    __pCheck_ref.zPfx = ::core::ptr::null::<::core::ffi::c_char>();
+                    if doCoverageCheck != 0 && __pCheck_ref.mxErr > 0 as ::core::ffi::c_int {
+                        if __pPage_ref.leaf == 0 {
+                            heap = __pCheck_ref.heap;
                             *heap.offset(0 as isize) = 0 as crate::src::ext::rtree::rtree::u32_0;
                             i = nCell - 1 as ::core::ffi::c_int;
                             while i >= 0 as ::core::ffi::c_int {
@@ -10060,7 +10194,7 @@ unsafe extern "C" fn checkTreePage(
                                         .offset(1 as isize)
                                         as ::core::ffi::c_int)
                                     as crate::src::ext::rtree::rtree::u32_0;
-                                size = (*pPage).xCellSize.expect("non-null function pointer")(
+                                size = __pPage_ref.xCellSize.expect("non-null function pointer")(
                                     pPage,
                                     data.offset(pc as isize) as *mut crate::src::ext::rtree::rtree::u8_0,
                                 ) as crate::src::ext::rtree::rtree::u32_0;
@@ -10158,9 +10292,9 @@ unsafe extern "C" fn checkTreePage(
         (*pPage).isInit = savedIsInit;
     }
     releasePage(pPage);
-    (*pCheck).zPfx = saved_zPfx;
-    (*pCheck).v1 = saved_v1 as crate::src::src::pager::Pgno;
-    (*pCheck).v2 = saved_v2;
+    __pCheck_ref.zPfx = saved_zPfx;
+    __pCheck_ref.v1 = saved_v1 as crate::src::src::pager::Pgno;
+    __pCheck_ref.v2 = saved_v2;
     return depth + 1 as ::core::ffi::c_int;
 }
 #[no_mangle]
@@ -10219,8 +10353,9 @@ pub unsafe extern "C" fn sqlite3BtreeIntegrityCheck(
             if sCheck.heap.is_null() {
                 checkOom(&raw mut sCheck);
             } else {
+                let __pBt_ref = unsafe { &mut *pBt };
                 i = (crate::src::src::global::sqlite3PendingByte as crate::src::ext::rtree::rtree::u32_0)
-                    .wrapping_div((*pBt).pageSize)
+                    .wrapping_div(__pBt_ref.pageSize)
                     .wrapping_add(1 as crate::src::ext::rtree::rtree::u32_0);
                 if i <= sCheck.nCkPage {
                     setPageReferenced(&raw mut sCheck, i);
@@ -10231,13 +10366,13 @@ pub unsafe extern "C" fn sqlite3BtreeIntegrityCheck(
                         &raw mut sCheck,
                         1 as ::core::ffi::c_int,
                         crate::src::src::util::sqlite3Get4byte(
-                            (*(*pBt).pPage1)
+                            (*__pBt_ref.pPage1)
                                 .aData
                                 .offset(32 as isize)
                                 as *mut crate::src::ext::rtree::rtree::u8_0,
                         ) as crate::src::src::pager::Pgno,
                         crate::src::src::util::sqlite3Get4byte(
-                            (*(*pBt).pPage1)
+                            (*__pBt_ref.pPage1)
                                 .aData
                                 .offset(36 as isize)
                                 as *mut crate::src::ext::rtree::rtree::u8_0,
@@ -10246,7 +10381,7 @@ pub unsafe extern "C" fn sqlite3BtreeIntegrityCheck(
                     sCheck.zPfx = ::core::ptr::null::<::core::ffi::c_char>();
                 }
                 if bPartial == 0 {
-                    if (*pBt).autoVacuum != 0 {
+                    if __pBt_ref.autoVacuum != 0 {
                         let mut mx: crate::src::src::pager::Pgno = 0 as crate::src::src::pager::Pgno;
                         let mut mxInHdr: crate::src::src::pager::Pgno = 0;
                         i = 0 as crate::src::src::pager::Pgno;
@@ -10257,7 +10392,7 @@ pub unsafe extern "C" fn sqlite3BtreeIntegrityCheck(
                             i = i.wrapping_add(1);
                         }
                         mxInHdr = crate::src::src::util::sqlite3Get4byte(
-                            (*(*pBt).pPage1)
+                            (*__pBt_ref.pPage1)
                                 .aData
                                 .offset(52 as isize)
                                 as *mut crate::src::ext::rtree::rtree::u8_0,
@@ -10272,7 +10407,7 @@ pub unsafe extern "C" fn sqlite3BtreeIntegrityCheck(
                             );
                         }
                     } else if crate::src::src::util::sqlite3Get4byte(
-                        (*(*pBt).pPage1)
+                        (*__pBt_ref.pPage1)
                             .aData
                             .offset(64 as isize)
                             as *mut crate::src::ext::rtree::rtree::u8_0,
@@ -10285,13 +10420,13 @@ pub unsafe extern "C" fn sqlite3BtreeIntegrityCheck(
                         );
                     }
                 }
-                (*(*pBt).db).flags &= !(crate::sqliteInt_h::SQLITE_CellSizeCk as crate::src::ext::rtree::rtree::u64_0);
+                (*__pBt_ref.db).flags &= !(crate::sqliteInt_h::SQLITE_CellSizeCk as crate::src::ext::rtree::rtree::u64_0);
                 i = 0 as crate::src::src::pager::Pgno;
                 while (i as ::core::ffi::c_int) < nRoot && sCheck.mxErr != 0 {
                     sCheck.nRow = 0 as crate::src::ext::rtree::rtree::i64_0;
                     if *aRoot.offset(i as isize) != 0 {
                         let mut notUsed: crate::src::ext::rtree::rtree::i64_0 = 0;
-                        if (*pBt).autoVacuum as ::core::ffi::c_int != 0
+                        if __pBt_ref.autoVacuum as ::core::ffi::c_int != 0
                             && *aRoot.offset(i as isize) > 1 as crate::src::src::pager::Pgno
                             && bPartial == 0
                         {
@@ -10317,12 +10452,12 @@ pub unsafe extern "C" fn sqlite3BtreeIntegrityCheck(
                     );
                     i = i.wrapping_add(1);
                 }
-                (*(*pBt).db).flags = savedDbFlags;
+                (*__pBt_ref.db).flags = savedDbFlags;
                 if bPartial == 0 {
                     i = 1 as crate::src::src::pager::Pgno;
                     while i <= sCheck.nCkPage && sCheck.mxErr != 0 {
                         if getPageReferenced(&raw mut sCheck, i) == 0 as ::core::ffi::c_int
-                            && (ptrmapPageno(pBt, i) != i || (*pBt).autoVacuum == 0)
+                            && (ptrmapPageno(pBt, i) != i || __pBt_ref.autoVacuum == 0)
                         {
                             checkAppendMsg(
                                 &raw mut sCheck,
@@ -10332,7 +10467,7 @@ pub unsafe extern "C" fn sqlite3BtreeIntegrityCheck(
                         }
                         if getPageReferenced(&raw mut sCheck, i) != 0 as ::core::ffi::c_int
                             && (ptrmapPageno(pBt, i) == i
-                                && (*pBt).autoVacuum as ::core::ffi::c_int != 0)
+                                && __pBt_ref.autoVacuum as ::core::ffi::c_int != 0)
                         {
                             checkAppendMsg(
                                 &raw mut sCheck,
@@ -10460,7 +10595,8 @@ pub unsafe extern "C" fn sqlite3BtreePutData(
     mut z: *mut ::core::ffi::c_void,
 ) -> ::core::ffi::c_int {
     let mut rc: ::core::ffi::c_int = 0;
-    rc = if (*pCsr).eState as ::core::ffi::c_int >= crate::btreeInt_h::CURSOR_REQUIRESEEK {
+    let __pCsr_ref = unsafe { &*pCsr };
+    rc = if __pCsr_ref.eState as ::core::ffi::c_int >= crate::btreeInt_h::CURSOR_REQUIRESEEK {
         btreeRestoreCursorPosition(pCsr)
     } else {
         crate::sqlite3_h::SQLITE_OK
@@ -10468,11 +10604,11 @@ pub unsafe extern "C" fn sqlite3BtreePutData(
     if rc != crate::sqlite3_h::SQLITE_OK {
         return rc;
     }
-    if (*pCsr).eState as ::core::ffi::c_int != crate::btreeInt_h::CURSOR_VALID {
+    if __pCsr_ref.eState as ::core::ffi::c_int != crate::btreeInt_h::CURSOR_VALID {
         return crate::sqlite3_h::SQLITE_ABORT;
     }
-    saveAllCursors((*pCsr).pBt, (*pCsr).pgnoRoot, pCsr);
-    if (*pCsr).curFlags as ::core::ffi::c_int & crate::btreeInt_h::BTCF_WriteFlag == 0 as ::core::ffi::c_int {
+    saveAllCursors(__pCsr_ref.pBt, __pCsr_ref.pgnoRoot, pCsr);
+    if __pCsr_ref.curFlags as ::core::ffi::c_int & crate::btreeInt_h::BTCF_WriteFlag == 0 as ::core::ffi::c_int {
         return crate::sqlite3_h::SQLITE_READONLY;
     }
     return accessPayload(
@@ -10486,8 +10622,9 @@ pub unsafe extern "C" fn sqlite3BtreePutData(
 #[no_mangle]
 
 pub unsafe extern "C" fn sqlite3BtreeIncrblobCursor(mut pCur: *mut crate::btreeInt_h::BtCursor) {
-    (*pCur).curFlags = ((*pCur).curFlags as ::core::ffi::c_int | crate::btreeInt_h::BTCF_Incrblob) as crate::src::ext::rtree::rtree::u8_0;
-    (*(*pCur).pBtree).hasIncrblobCur = 1 as crate::src::ext::rtree::rtree::u8_0;
+    let __pCur_ref = unsafe { &mut *pCur };
+    __pCur_ref.curFlags = (__pCur_ref.curFlags as ::core::ffi::c_int | crate::btreeInt_h::BTCF_Incrblob) as crate::src::ext::rtree::rtree::u8_0;
+    (*__pCur_ref.pBtree).hasIncrblobCur = 1 as crate::src::ext::rtree::rtree::u8_0;
 }
 #[no_mangle]
 
@@ -10497,9 +10634,10 @@ pub unsafe extern "C" fn sqlite3BtreeSetVersion(
 ) -> ::core::ffi::c_int {
     let mut pBt: *mut crate::btreeInt_h::BtShared = (*pBtree).pBt;
     let mut rc: ::core::ffi::c_int = 0;
-    (*pBt).btsFlags = ((*pBt).btsFlags as ::core::ffi::c_int & !crate::btreeInt_h::BTS_NO_WAL) as crate::src::fts5::u16_0;
+    let __pBt_ref = unsafe { &mut *pBt };
+    __pBt_ref.btsFlags = (__pBt_ref.btsFlags as ::core::ffi::c_int & !crate::btreeInt_h::BTS_NO_WAL) as crate::src::fts5::u16_0;
     if iVersion == 1 as ::core::ffi::c_int {
-        (*pBt).btsFlags = ((*pBt).btsFlags as ::core::ffi::c_int | crate::btreeInt_h::BTS_NO_WAL) as crate::src::fts5::u16_0;
+        __pBt_ref.btsFlags = (__pBt_ref.btsFlags as ::core::ffi::c_int | crate::btreeInt_h::BTS_NO_WAL) as crate::src::fts5::u16_0;
     }
     rc = sqlite3BtreeBeginTrans(
         pBtree,
@@ -10507,7 +10645,7 @@ pub unsafe extern "C" fn sqlite3BtreeSetVersion(
         ::core::ptr::null_mut::<::core::ffi::c_int>(),
     );
     if rc == crate::sqlite3_h::SQLITE_OK {
-        let mut aData: *mut crate::src::ext::rtree::rtree::u8_0 = (*(*pBt).pPage1).aData;
+        let mut aData: *mut crate::src::ext::rtree::rtree::u8_0 = (*__pBt_ref.pPage1).aData;
         if *aData.offset(18 as isize) as ::core::ffi::c_int
             != iVersion as crate::src::ext::rtree::rtree::u8_0 as ::core::ffi::c_int
             || *aData.offset(19 as isize) as ::core::ffi::c_int
@@ -10519,7 +10657,7 @@ pub unsafe extern "C" fn sqlite3BtreeSetVersion(
                 ::core::ptr::null_mut::<::core::ffi::c_int>(),
             );
             if rc == crate::sqlite3_h::SQLITE_OK {
-                rc = crate::src::src::pager::sqlite3PagerWrite((*(*pBt).pPage1).pDbPage as *mut crate::src::src::pcache::PgHdr);
+                rc = crate::src::src::pager::sqlite3PagerWrite((*__pBt_ref.pPage1).pDbPage as *mut crate::src::src::pcache::PgHdr);
                 if rc == crate::sqlite3_h::SQLITE_OK {
                     *aData.offset(18 as isize) = iVersion as crate::src::ext::rtree::rtree::u8_0;
                     *aData.offset(19 as isize) = iVersion as crate::src::ext::rtree::rtree::u8_0;
@@ -10527,7 +10665,7 @@ pub unsafe extern "C" fn sqlite3BtreeSetVersion(
             }
         }
     }
-    (*pBt).btsFlags = ((*pBt).btsFlags as ::core::ffi::c_int & !crate::btreeInt_h::BTS_NO_WAL) as crate::src::fts5::u16_0;
+    __pBt_ref.btsFlags = (__pBt_ref.btsFlags as ::core::ffi::c_int & !crate::btreeInt_h::BTS_NO_WAL) as crate::src::fts5::u16_0;
     return rc;
 }
 #[no_mangle]

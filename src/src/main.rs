@@ -394,8 +394,9 @@ unsafe extern "C" fn setupLookaside(
     {
         return crate::sqlite3_h::SQLITE_BUSY;
     }
-    if (*db).lookaside.bMalloced != 0 {
-        crate::src::src::malloc::sqlite3_free((*db).lookaside.pStart);
+    let __db_ref = unsafe { &mut *db };
+    if __db_ref.lookaside.bMalloced != 0 {
+        crate::src::src::malloc::sqlite3_free(__db_ref.lookaside.pStart);
     }
     sz = sz & !(7 as ::core::ffi::c_int);
     if sz <= ::core::mem::size_of::<*mut crate::sqliteInt_h::LookasideSlot>() as ::core::ffi::c_int {
@@ -440,53 +441,53 @@ unsafe extern "C" fn setupLookaside(
         nSm = 0 as ::core::ffi::c_int;
         nBig = nSm;
     }
-    (*db).lookaside.pStart = pStart;
-    (*db).lookaside.pInit = ::core::ptr::null_mut::<crate::sqliteInt_h::LookasideSlot>();
-    (*db).lookaside.pFree = ::core::ptr::null_mut::<crate::sqliteInt_h::LookasideSlot>();
-    (*db).lookaside.sz = sz as crate::src::fts5::u16_0;
-    (*db).lookaside.szTrue = sz as crate::src::fts5::u16_0;
+    __db_ref.lookaside.pStart = pStart;
+    __db_ref.lookaside.pInit = ::core::ptr::null_mut::<crate::sqliteInt_h::LookasideSlot>();
+    __db_ref.lookaside.pFree = ::core::ptr::null_mut::<crate::sqliteInt_h::LookasideSlot>();
+    __db_ref.lookaside.sz = sz as crate::src::fts5::u16_0;
+    __db_ref.lookaside.szTrue = sz as crate::src::fts5::u16_0;
     if !pStart.is_null() {
         let mut i: ::core::ffi::c_int = 0;
         let mut p: *mut crate::sqliteInt_h::LookasideSlot = ::core::ptr::null_mut::<crate::sqliteInt_h::LookasideSlot>();
         p = pStart as *mut crate::sqliteInt_h::LookasideSlot;
         i = 0 as ::core::ffi::c_int;
         while i < nBig {
-            (*p).pNext = (*db).lookaside.pInit;
-            (*db).lookaside.pInit = p;
+            (*p).pNext = __db_ref.lookaside.pInit;
+            __db_ref.lookaside.pInit = p;
             p = (p as *mut crate::src::ext::rtree::rtree::u8_0).offset(sz as isize) as *mut crate::src::ext::rtree::rtree::u8_0 as *mut crate::sqliteInt_h::LookasideSlot;
             i += 1;
         }
-        (*db).lookaside.pSmallInit = ::core::ptr::null_mut::<crate::sqliteInt_h::LookasideSlot>();
-        (*db).lookaside.pSmallFree = ::core::ptr::null_mut::<crate::sqliteInt_h::LookasideSlot>();
-        (*db).lookaside.pMiddle = p as *mut ::core::ffi::c_void;
+        __db_ref.lookaside.pSmallInit = ::core::ptr::null_mut::<crate::sqliteInt_h::LookasideSlot>();
+        __db_ref.lookaside.pSmallFree = ::core::ptr::null_mut::<crate::sqliteInt_h::LookasideSlot>();
+        __db_ref.lookaside.pMiddle = p as *mut ::core::ffi::c_void;
         i = 0 as ::core::ffi::c_int;
         while i < nSm {
-            (*p).pNext = (*db).lookaside.pSmallInit;
-            (*db).lookaside.pSmallInit = p;
+            (*p).pNext = __db_ref.lookaside.pSmallInit;
+            __db_ref.lookaside.pSmallInit = p;
             p = (p as *mut crate::src::ext::rtree::rtree::u8_0).offset(crate::sqliteInt_h::LOOKASIDE_SMALL as isize) as *mut crate::src::ext::rtree::rtree::u8_0
                 as *mut crate::sqliteInt_h::LookasideSlot;
             i += 1;
         }
-        (*db).lookaside.pEnd = p as *mut ::core::ffi::c_void;
-        (*db).lookaside.bDisable = 0 as crate::src::ext::rtree::rtree::u32_0;
-        (*db).lookaside.bMalloced = (if pBuf.is_null() {
+        __db_ref.lookaside.pEnd = p as *mut ::core::ffi::c_void;
+        __db_ref.lookaside.bDisable = 0 as crate::src::ext::rtree::rtree::u32_0;
+        __db_ref.lookaside.bMalloced = (if pBuf.is_null() {
             1 as ::core::ffi::c_int
         } else {
             0 as ::core::ffi::c_int
         }) as crate::src::ext::rtree::rtree::u8_0;
-        (*db).lookaside.nSlot = (nBig + nSm) as crate::src::ext::rtree::rtree::u32_0;
+        __db_ref.lookaside.nSlot = (nBig + nSm) as crate::src::ext::rtree::rtree::u32_0;
     } else {
-        (*db).lookaside.pStart = ::core::ptr::null_mut::<::core::ffi::c_void>();
-        (*db).lookaside.pSmallInit = ::core::ptr::null_mut::<crate::sqliteInt_h::LookasideSlot>();
-        (*db).lookaside.pSmallFree = ::core::ptr::null_mut::<crate::sqliteInt_h::LookasideSlot>();
-        (*db).lookaside.pMiddle = ::core::ptr::null_mut::<::core::ffi::c_void>();
-        (*db).lookaside.pEnd = ::core::ptr::null_mut::<::core::ffi::c_void>();
-        (*db).lookaside.bDisable = 1 as crate::src::ext::rtree::rtree::u32_0;
-        (*db).lookaside.sz = 0 as crate::src::fts5::u16_0;
-        (*db).lookaside.bMalloced = 0 as crate::src::ext::rtree::rtree::u8_0;
-        (*db).lookaside.nSlot = 0 as crate::src::ext::rtree::rtree::u32_0;
+        __db_ref.lookaside.pStart = ::core::ptr::null_mut::<::core::ffi::c_void>();
+        __db_ref.lookaside.pSmallInit = ::core::ptr::null_mut::<crate::sqliteInt_h::LookasideSlot>();
+        __db_ref.lookaside.pSmallFree = ::core::ptr::null_mut::<crate::sqliteInt_h::LookasideSlot>();
+        __db_ref.lookaside.pMiddle = ::core::ptr::null_mut::<::core::ffi::c_void>();
+        __db_ref.lookaside.pEnd = ::core::ptr::null_mut::<::core::ffi::c_void>();
+        __db_ref.lookaside.bDisable = 1 as crate::src::ext::rtree::rtree::u32_0;
+        __db_ref.lookaside.sz = 0 as crate::src::fts5::u16_0;
+        __db_ref.lookaside.bMalloced = 0 as crate::src::ext::rtree::rtree::u8_0;
+        __db_ref.lookaside.nSlot = 0 as crate::src::ext::rtree::rtree::u32_0;
     }
-    (*db).lookaside.pTrueEnd = (*db).lookaside.pEnd;
+    __db_ref.lookaside.pTrueEnd = __db_ref.lookaside.pEnd;
     return crate::sqlite3_h::SQLITE_OK;
 }
 #[no_mangle]
@@ -498,11 +499,12 @@ pub unsafe extern "C" fn sqlite3_db_mutex(mut db: *mut crate::sqliteInt_h::sqlit
 
 pub unsafe extern "C" fn sqlite3_db_release_memory(mut db: *mut crate::sqliteInt_h::sqlite3) -> ::core::ffi::c_int {
     let mut i: ::core::ffi::c_int = 0;
-    crate::src::src::mutex::sqlite3_mutex_enter((*db).mutex);
+    let __db_ref = unsafe { &mut *db };
+    crate::src::src::mutex::sqlite3_mutex_enter(__db_ref.mutex);
     crate::src::src::btmutex::sqlite3BtreeEnterAll(db as *mut crate::sqliteInt_h::sqlite3);
     i = 0 as ::core::ffi::c_int;
-    while i < (*db).nDb {
-        let mut pBt: *mut crate::btreeInt_h::Btree = (*(*db).aDb.offset(i as isize)).pBt;
+    while i < __db_ref.nDb {
+        let mut pBt: *mut crate::btreeInt_h::Btree = (*__db_ref.aDb.offset(i as isize)).pBt;
         if !pBt.is_null() {
             let mut pPager: *mut crate::src::src::pager::Pager = crate::src::src::btree::sqlite3BtreePager(pBt) as *mut crate::src::src::pager::Pager;
             crate::src::src::pager::sqlite3PagerShrink(pPager);
@@ -510,7 +512,7 @@ pub unsafe extern "C" fn sqlite3_db_release_memory(mut db: *mut crate::sqliteInt
         i += 1;
     }
     crate::src::src::btmutex::sqlite3BtreeLeaveAll(db as *mut crate::sqliteInt_h::sqlite3);
-    crate::src::src::mutex::sqlite3_mutex_leave((*db).mutex);
+    crate::src::src::mutex::sqlite3_mutex_leave(__db_ref.mutex);
     return crate::sqlite3_h::SQLITE_OK;
 }
 #[no_mangle]
@@ -519,11 +521,12 @@ pub unsafe extern "C" fn sqlite3_db_cacheflush(mut db: *mut crate::sqliteInt_h::
     let mut i: ::core::ffi::c_int = 0;
     let mut rc: ::core::ffi::c_int = crate::sqlite3_h::SQLITE_OK;
     let mut bSeenBusy: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
-    crate::src::src::mutex::sqlite3_mutex_enter((*db).mutex);
+    let __db_ref = unsafe { &mut *db };
+    crate::src::src::mutex::sqlite3_mutex_enter(__db_ref.mutex);
     crate::src::src::btmutex::sqlite3BtreeEnterAll(db as *mut crate::sqliteInt_h::sqlite3);
     i = 0 as ::core::ffi::c_int;
-    while rc == crate::sqlite3_h::SQLITE_OK && i < (*db).nDb {
-        let mut pBt: *mut crate::btreeInt_h::Btree = (*(*db).aDb.offset(i as isize)).pBt;
+    while rc == crate::sqlite3_h::SQLITE_OK && i < __db_ref.nDb {
+        let mut pBt: *mut crate::btreeInt_h::Btree = (*__db_ref.aDb.offset(i as isize)).pBt;
         if !pBt.is_null() && crate::src::src::btree::sqlite3BtreeTxnState(pBt) == crate::sqlite3_h::SQLITE_TXN_WRITE {
             let mut pPager: *mut crate::src::src::pager::Pager = crate::src::src::btree::sqlite3BtreePager(pBt) as *mut crate::src::src::pager::Pager;
             rc = crate::src::src::pager::sqlite3PagerFlush(pPager);
@@ -535,7 +538,7 @@ pub unsafe extern "C" fn sqlite3_db_cacheflush(mut db: *mut crate::sqliteInt_h::
         i += 1;
     }
     crate::src::src::btmutex::sqlite3BtreeLeaveAll(db as *mut crate::sqliteInt_h::sqlite3);
-    crate::src::src::mutex::sqlite3_mutex_leave((*db).mutex);
+    crate::src::src::mutex::sqlite3_mutex_leave(__db_ref.mutex);
     return if rc == crate::sqlite3_h::SQLITE_OK && bSeenBusy != 0 {
         crate::sqlite3_h::SQLITE_BUSY
     } else {
@@ -773,9 +776,10 @@ pub unsafe extern "C" fn sqlite3_set_last_insert_rowid(
     mut db: *mut crate::sqliteInt_h::sqlite3,
     mut iRowid: crate::sqlite3_h::sqlite3_int64,
 ) {
-    crate::src::src::mutex::sqlite3_mutex_enter((*db).mutex);
-    (*db).lastRowid = iRowid as crate::src::ext::rtree::rtree::i64_0;
-    crate::src::src::mutex::sqlite3_mutex_leave((*db).mutex);
+    let __db_ref = unsafe { &mut *db };
+    crate::src::src::mutex::sqlite3_mutex_enter(__db_ref.mutex);
+    __db_ref.lastRowid = iRowid as crate::src::ext::rtree::rtree::i64_0;
+    crate::src::src::mutex::sqlite3_mutex_leave(__db_ref.mutex);
 }
 #[no_mangle]
 
@@ -800,14 +804,15 @@ pub unsafe extern "C" fn sqlite3_total_changes(mut db: *mut crate::sqliteInt_h::
 #[no_mangle]
 
 pub unsafe extern "C" fn sqlite3CloseSavepoints(mut db: *mut crate::sqliteInt_h::sqlite3) {
-    while !(*db).pSavepoint.is_null() {
-        let mut pTmp: *mut crate::sqliteInt_h::Savepoint = (*db).pSavepoint;
-        (*db).pSavepoint = (*pTmp).pNext;
+    let __db_ref = unsafe { &mut *db };
+    while !__db_ref.pSavepoint.is_null() {
+        let mut pTmp: *mut crate::sqliteInt_h::Savepoint = __db_ref.pSavepoint;
+        __db_ref.pSavepoint = (*pTmp).pNext;
         crate::src::src::malloc::sqlite3DbFree(db as *mut crate::sqliteInt_h::sqlite3, pTmp as *mut ::core::ffi::c_void);
     }
-    (*db).nSavepoint = 0 as ::core::ffi::c_int;
-    (*db).nStatement = 0 as ::core::ffi::c_int;
-    (*db).isTransactionSavepoint = 0 as crate::src::ext::rtree::rtree::u8_0;
+    __db_ref.nSavepoint = 0 as ::core::ffi::c_int;
+    __db_ref.nStatement = 0 as ::core::ffi::c_int;
+    __db_ref.isTransactionSavepoint = 0 as crate::src::ext::rtree::rtree::u8_0;
 }
 
 unsafe extern "C" fn functionDestroy(mut db: *mut crate::sqliteInt_h::sqlite3, mut p: *mut crate::sqliteInt_h::FuncDef) {
@@ -879,11 +884,12 @@ unsafe extern "C" fn sqlite3Close(
     if crate::src::src::util::sqlite3SafetyCheckSickOrOk(db as *mut crate::sqliteInt_h::sqlite3) == 0 {
         return sqlite3MisuseError(1253 as ::core::ffi::c_int);
     }
-    crate::src::src::mutex::sqlite3_mutex_enter((*db).mutex);
-    if (*db).mTrace as ::core::ffi::c_int & crate::sqlite3_h::SQLITE_TRACE_CLOSE != 0 {
-        (*db).trace.xV2.expect("non-null function pointer")(
+    let __db_ref = unsafe { &mut *db };
+    crate::src::src::mutex::sqlite3_mutex_enter(__db_ref.mutex);
+    if __db_ref.mTrace as ::core::ffi::c_int & crate::sqlite3_h::SQLITE_TRACE_CLOSE != 0 {
+        __db_ref.trace.xV2.expect("non-null function pointer")(
             crate::sqlite3_h::SQLITE_TRACE_CLOSE as crate::src::ext::rtree::rtree::u32_0,
-            (*db).pTraceArg,
+            __db_ref.pTraceArg,
             db as *mut ::core::ffi::c_void,
             ::core::ptr::null_mut::<::core::ffi::c_void>(),
         );
@@ -898,18 +904,18 @@ unsafe extern "C" fn sqlite3Close(
             b"unable to close due to unfinalized statements or unfinished backups\0" as *const u8
                 as *const ::core::ffi::c_char,
         );
-        crate::src::src::mutex::sqlite3_mutex_leave((*db).mutex);
+        crate::src::src::mutex::sqlite3_mutex_leave(__db_ref.mutex);
         return crate::sqlite3_h::SQLITE_BUSY;
     }
-    while !(*db).pDbData.is_null() {
-        let mut p: *mut crate::sqliteInt_h::DbClientData = (*db).pDbData;
-        (*db).pDbData = (*p).pNext;
+    while !__db_ref.pDbData.is_null() {
+        let mut p: *mut crate::sqliteInt_h::DbClientData = __db_ref.pDbData;
+        __db_ref.pDbData = (*p).pNext;
         if (*p).xDestructor.is_some() {
             (*p).xDestructor.expect("non-null function pointer")((*p).pData);
         }
         crate::src::src::malloc::sqlite3_free(p as *mut ::core::ffi::c_void);
     }
-    (*db).eOpenState = crate::sqliteInt_h::SQLITE_STATE_ZOMBIE as crate::src::ext::rtree::rtree::u8_0;
+    __db_ref.eOpenState = crate::sqliteInt_h::SQLITE_STATE_ZOMBIE as crate::src::ext::rtree::rtree::u8_0;
     sqlite3LeaveMutexAndCloseZombie(db);
     return crate::sqlite3_h::SQLITE_OK;
 }
@@ -963,15 +969,16 @@ pub unsafe extern "C" fn sqlite3_close_v2(mut db: *mut crate::sqliteInt_h::sqlit
 pub unsafe extern "C" fn sqlite3LeaveMutexAndCloseZombie(mut db: *mut crate::sqliteInt_h::sqlite3) {
     let mut i: *mut crate::src::src::hash::HashElem = ::core::ptr::null_mut::<crate::src::src::hash::HashElem>();
     let mut j: ::core::ffi::c_int = 0;
-    if (*db).eOpenState as ::core::ffi::c_int != crate::sqliteInt_h::SQLITE_STATE_ZOMBIE || connectionIsBusy(db) != 0 {
-        crate::src::src::mutex::sqlite3_mutex_leave((*db).mutex);
+    let __db_ref = unsafe { &mut *db };
+    if __db_ref.eOpenState as ::core::ffi::c_int != crate::sqliteInt_h::SQLITE_STATE_ZOMBIE || connectionIsBusy(db) != 0 {
+        crate::src::src::mutex::sqlite3_mutex_leave(__db_ref.mutex);
         return;
     }
     sqlite3RollbackAll(db, crate::sqlite3_h::SQLITE_OK);
     sqlite3CloseSavepoints(db);
     j = 0 as ::core::ffi::c_int;
-    while j < (*db).nDb {
-        let mut pDb: *mut crate::sqliteInt_h::Db = (*db).aDb.offset(j as isize) as *mut crate::sqliteInt_h::Db;
+    while j < __db_ref.nDb {
+        let mut pDb: *mut crate::sqliteInt_h::Db = __db_ref.aDb.offset(j as isize) as *mut crate::sqliteInt_h::Db;
         if !(*pDb).pBt.is_null() {
             crate::src::src::btree::sqlite3BtreeClose((*pDb).pBt);
             (*pDb).pBt = ::core::ptr::null_mut::<crate::btreeInt_h::Btree>();
@@ -981,18 +988,18 @@ pub unsafe extern "C" fn sqlite3LeaveMutexAndCloseZombie(mut db: *mut crate::sql
         }
         j += 1;
     }
-    if !(*(*db).aDb.offset(1 as isize))
+    if !(*__db_ref.aDb.offset(1 as isize))
         .pSchema
         .is_null()
     {
         crate::src::src::callback::sqlite3SchemaClear(
-            (*(*db).aDb.offset(1 as isize)).pSchema
+            (*__db_ref.aDb.offset(1 as isize)).pSchema
                 as *mut ::core::ffi::c_void,
         );
     }
     crate::src::src::vtab::sqlite3VtabUnlockList(db as *mut crate::sqliteInt_h::sqlite3);
     crate::src::src::build::sqlite3CollapseDatabaseArray(db as *mut crate::sqliteInt_h::sqlite3);
-    i = (*db).aFunc.first;
+    i = __db_ref.aFunc.first;
     while !i.is_null() {
         let mut pNext: *mut crate::sqliteInt_h::FuncDef = ::core::ptr::null_mut::<crate::sqliteInt_h::FuncDef>();
         let mut p: *mut crate::sqliteInt_h::FuncDef = ::core::ptr::null_mut::<crate::sqliteInt_h::FuncDef>();
@@ -1008,8 +1015,8 @@ pub unsafe extern "C" fn sqlite3LeaveMutexAndCloseZombie(mut db: *mut crate::sql
         }
         i = (*i).next;
     }
-    crate::src::src::hash::sqlite3HashClear(&raw mut (*db).aFunc as *mut _ as *mut crate::src::src::hash::Hash);
-    i = (*db).aCollSeq.first;
+    crate::src::src::hash::sqlite3HashClear(&raw mut __db_ref.aFunc as *mut _ as *mut crate::src::src::hash::Hash);
+    i = __db_ref.aCollSeq.first;
     while !i.is_null() {
         let mut pColl: *mut crate::sqliteInt_h::CollSeq = (*i).data as *mut crate::sqliteInt_h::CollSeq;
         j = 0 as ::core::ffi::c_int;
@@ -1026,32 +1033,32 @@ pub unsafe extern "C" fn sqlite3LeaveMutexAndCloseZombie(mut db: *mut crate::sql
         crate::src::src::malloc::sqlite3DbFree(db as *mut crate::sqliteInt_h::sqlite3, pColl as *mut ::core::ffi::c_void);
         i = (*i).next;
     }
-    crate::src::src::hash::sqlite3HashClear(&raw mut (*db).aCollSeq as *mut _ as *mut crate::src::src::hash::Hash);
-    i = (*db).aModule.first;
+    crate::src::src::hash::sqlite3HashClear(&raw mut __db_ref.aCollSeq as *mut _ as *mut crate::src::src::hash::Hash);
+    i = __db_ref.aModule.first;
     while !i.is_null() {
         let mut pMod: *mut crate::sqliteInt_h::Module = (*i).data as *mut crate::sqliteInt_h::Module;
         crate::src::src::vtab::sqlite3VtabEponymousTableClear(db as *mut crate::sqliteInt_h::sqlite3,  pMod as *mut crate::sqliteInt_h::Module);
         crate::src::src::vtab::sqlite3VtabModuleUnref(db as *mut crate::sqliteInt_h::sqlite3,  pMod as *mut crate::sqliteInt_h::Module);
         i = (*i).next;
     }
-    crate::src::src::hash::sqlite3HashClear(&raw mut (*db).aModule as *mut _ as *mut crate::src::src::hash::Hash);
+    crate::src::src::hash::sqlite3HashClear(&raw mut __db_ref.aModule as *mut _ as *mut crate::src::src::hash::Hash);
     crate::src::src::util::sqlite3Error(db as *mut crate::sqliteInt_h::sqlite3, crate::sqlite3_h::SQLITE_OK);
-    crate::src::src::vdbemem::sqlite3ValueFree((*db).pErr);
+    crate::src::src::vdbemem::sqlite3ValueFree(__db_ref.pErr);
     crate::src::src::loadext::sqlite3CloseExtensions(db as *mut crate::sqliteInt_h::sqlite3);
-    (*db).eOpenState = crate::sqliteInt_h::SQLITE_STATE_ERROR as crate::src::ext::rtree::rtree::u8_0;
+    __db_ref.eOpenState = crate::sqliteInt_h::SQLITE_STATE_ERROR as crate::src::ext::rtree::rtree::u8_0;
     crate::src::src::malloc::sqlite3DbFree(
         
         db as *mut crate::sqliteInt_h::sqlite3,
-        (*(*db).aDb.offset(1 as isize)).pSchema as *mut ::core::ffi::c_void,
+        (*__db_ref.aDb.offset(1 as isize)).pSchema as *mut ::core::ffi::c_void,
     );
-    if (*db).xAutovacDestr.is_some() {
-        (*db).xAutovacDestr.expect("non-null function pointer")((*db).pAutovacPagesArg);
+    if __db_ref.xAutovacDestr.is_some() {
+        __db_ref.xAutovacDestr.expect("non-null function pointer")(__db_ref.pAutovacPagesArg);
     }
-    crate::src::src::mutex::sqlite3_mutex_leave((*db).mutex);
-    (*db).eOpenState = crate::sqliteInt_h::SQLITE_STATE_CLOSED as crate::src::ext::rtree::rtree::u8_0;
-    crate::src::src::mutex::sqlite3_mutex_free((*db).mutex);
-    if (*db).lookaside.bMalloced != 0 {
-        crate::src::src::malloc::sqlite3_free((*db).lookaside.pStart);
+    crate::src::src::mutex::sqlite3_mutex_leave(__db_ref.mutex);
+    __db_ref.eOpenState = crate::sqliteInt_h::SQLITE_STATE_CLOSED as crate::src::ext::rtree::rtree::u8_0;
+    crate::src::src::mutex::sqlite3_mutex_free(__db_ref.mutex);
+    if __db_ref.lookaside.bMalloced != 0 {
+        crate::src::src::malloc::sqlite3_free(__db_ref.lookaside.pStart);
     }
     crate::src::src::malloc::sqlite3_free(db as *mut ::core::ffi::c_void);
 }
@@ -1066,12 +1073,13 @@ pub unsafe extern "C" fn sqlite3RollbackAll(
     let mut schemaChange: ::core::ffi::c_int = 0;
     crate::src::src::fault::sqlite3BeginBenignMalloc();
     crate::src::src::btmutex::sqlite3BtreeEnterAll(db as *mut crate::sqliteInt_h::sqlite3);
-    schemaChange = ((*db).mDbFlags & crate::sqliteInt_h::DBFLAG_SchemaChange as crate::src::ext::rtree::rtree::u32_0 != 0 as crate::src::ext::rtree::rtree::u32_0
-        && (*db).init.busy as ::core::ffi::c_int == 0 as ::core::ffi::c_int)
+    let __db_ref = unsafe { &mut *db };
+    schemaChange = (__db_ref.mDbFlags & crate::sqliteInt_h::DBFLAG_SchemaChange as crate::src::ext::rtree::rtree::u32_0 != 0 as crate::src::ext::rtree::rtree::u32_0
+        && __db_ref.init.busy as ::core::ffi::c_int == 0 as ::core::ffi::c_int)
         as ::core::ffi::c_int;
     i = 0 as ::core::ffi::c_int;
-    while i < (*db).nDb {
-        let mut p: *mut crate::btreeInt_h::Btree = (*(*db).aDb.offset(i as isize)).pBt;
+    while i < __db_ref.nDb {
+        let mut p: *mut crate::btreeInt_h::Btree = (*__db_ref.aDb.offset(i as isize)).pBt;
         if !p.is_null() {
             if crate::src::src::btree::sqlite3BtreeTxnState(p) == crate::sqlite3_h::SQLITE_TXN_WRITE {
                 inTrans = 1 as ::core::ffi::c_int;
@@ -1087,11 +1095,11 @@ pub unsafe extern "C" fn sqlite3RollbackAll(
         crate::src::src::build::sqlite3ResetAllSchemasOfConnection(db as *mut crate::sqliteInt_h::sqlite3);
     }
     crate::src::src::btmutex::sqlite3BtreeLeaveAll(db as *mut crate::sqliteInt_h::sqlite3);
-    (*db).nDeferredCons = 0 as crate::src::ext::rtree::rtree::i64_0;
-    (*db).nDeferredImmCons = 0 as crate::src::ext::rtree::rtree::i64_0;
-    (*db).flags &= !(crate::sqliteInt_h::SQLITE_DeferFKs as crate::src::ext::rtree::rtree::u64_0 | crate::sqliteInt_h::SQLITE_CorruptRdOnly);
-    if (*db).xRollbackCallback.is_some() && (inTrans != 0 || (*db).autoCommit == 0) {
-        (*db).xRollbackCallback.expect("non-null function pointer")((*db).pRollbackArg);
+    __db_ref.nDeferredCons = 0 as crate::src::ext::rtree::rtree::i64_0;
+    __db_ref.nDeferredImmCons = 0 as crate::src::ext::rtree::rtree::i64_0;
+    __db_ref.flags &= !(crate::sqliteInt_h::SQLITE_DeferFKs as crate::src::ext::rtree::rtree::u64_0 | crate::sqliteInt_h::SQLITE_CorruptRdOnly);
+    if __db_ref.xRollbackCallback.is_some() && (inTrans != 0 || __db_ref.autoCommit == 0) {
+        __db_ref.xRollbackCallback.expect("non-null function pointer")(__db_ref.pRollbackArg);
     }
 }
 #[no_mangle]
@@ -1513,14 +1521,15 @@ pub const NDELAY: ::core::ffi::c_int = (::core::mem::size_of::<[crate::src::ext:
 
 pub unsafe extern "C" fn sqlite3InvokeBusyHandler(mut p: *mut crate::sqliteInt_h::BusyHandler) -> ::core::ffi::c_int {
     let mut rc: ::core::ffi::c_int = 0;
-    if (*p).xBusyHandler.is_none() || (*p).nBusy < 0 as ::core::ffi::c_int {
+    let __p_ref = unsafe { &mut *p };
+    if __p_ref.xBusyHandler.is_none() || __p_ref.nBusy < 0 as ::core::ffi::c_int {
         return 0 as ::core::ffi::c_int;
     }
-    rc = (*p).xBusyHandler.expect("non-null function pointer")((*p).pBusyArg, (*p).nBusy);
+    rc = __p_ref.xBusyHandler.expect("non-null function pointer")(__p_ref.pBusyArg, __p_ref.nBusy);
     if rc == 0 as ::core::ffi::c_int {
-        (*p).nBusy = -(1 as ::core::ffi::c_int);
+        __p_ref.nBusy = -(1 as ::core::ffi::c_int);
     } else {
-        (*p).nBusy += 1;
+        __p_ref.nBusy += 1;
     }
     return rc;
 }
@@ -1533,12 +1542,13 @@ pub unsafe extern "C" fn sqlite3_busy_handler(
     >,
     mut pArg: *mut ::core::ffi::c_void,
 ) -> ::core::ffi::c_int {
-    crate::src::src::mutex::sqlite3_mutex_enter((*db).mutex);
-    (*db).busyHandler.xBusyHandler = xBusy;
-    (*db).busyHandler.pBusyArg = pArg;
-    (*db).busyHandler.nBusy = 0 as ::core::ffi::c_int;
-    (*db).busyTimeout = 0 as ::core::ffi::c_int;
-    crate::src::src::mutex::sqlite3_mutex_leave((*db).mutex);
+    let __db_ref = unsafe { &mut *db };
+    crate::src::src::mutex::sqlite3_mutex_enter(__db_ref.mutex);
+    __db_ref.busyHandler.xBusyHandler = xBusy;
+    __db_ref.busyHandler.pBusyArg = pArg;
+    __db_ref.busyHandler.nBusy = 0 as ::core::ffi::c_int;
+    __db_ref.busyTimeout = 0 as ::core::ffi::c_int;
+    crate::src::src::mutex::sqlite3_mutex_leave(__db_ref.mutex);
     return crate::sqlite3_h::SQLITE_OK;
 }
 #[no_mangle]
@@ -1551,13 +1561,15 @@ pub unsafe extern "C" fn sqlite3_progress_handler(
 ) {
     crate::src::src::mutex::sqlite3_mutex_enter((*db).mutex);
     if nOps > 0 as ::core::ffi::c_int {
-        (*db).xProgress = xProgress;
-        (*db).nProgressOps = nOps as ::core::ffi::c_uint;
-        (*db).pProgressArg = pArg;
+        let __db_ref = unsafe { &mut *db };
+        __db_ref.xProgress = xProgress;
+        __db_ref.nProgressOps = nOps as ::core::ffi::c_uint;
+        __db_ref.pProgressArg = pArg;
     } else {
-        (*db).xProgress = None;
-        (*db).nProgressOps = 0 as ::core::ffi::c_uint;
-        (*db).pProgressArg = ::core::ptr::null_mut::<::core::ffi::c_void>();
+        let __db_ref = unsafe { &mut *db };
+        __db_ref.xProgress = None;
+        __db_ref.nProgressOps = 0 as ::core::ffi::c_uint;
+        __db_ref.pProgressArg = ::core::ptr::null_mut::<::core::ffi::c_void>();
     }
     crate::src::src::mutex::sqlite3_mutex_leave((*db).mutex);
 }
@@ -1793,9 +1805,10 @@ unsafe extern "C" fn createFunctionApi(
             xDestroy.expect("non-null function pointer")(p);
             current_block = 16877315429588485292;
         } else {
-            (*pArg).nRef = 0 as ::core::ffi::c_int;
-            (*pArg).xDestroy = xDestroy;
-            (*pArg).pUserData = p;
+            let __pArg_ref = unsafe { &mut *pArg };
+            __pArg_ref.nRef = 0 as ::core::ffi::c_int;
+            __pArg_ref.xDestroy = xDestroy;
+            __pArg_ref.pUserData = p;
             current_block = 7815301370352969686;
         }
     } else {
@@ -2023,16 +2036,17 @@ pub unsafe extern "C" fn sqlite3_trace(
     mut pArg: *mut ::core::ffi::c_void,
 ) -> *mut ::core::ffi::c_void {
     let mut pOld: *mut ::core::ffi::c_void = ::core::ptr::null_mut::<::core::ffi::c_void>();
-    crate::src::src::mutex::sqlite3_mutex_enter((*db).mutex);
-    pOld = (*db).pTraceArg;
-    (*db).mTrace = (if xTrace.is_some() {
+    let __db_ref = unsafe { &mut *db };
+    crate::src::src::mutex::sqlite3_mutex_enter(__db_ref.mutex);
+    pOld = __db_ref.pTraceArg;
+    __db_ref.mTrace = (if xTrace.is_some() {
         crate::sqliteInt_h::SQLITE_TRACE_LEGACY
     } else {
         0 as ::core::ffi::c_int
     }) as crate::src::ext::rtree::rtree::u8_0;
-    (*db).trace.xLegacy = xTrace;
-    (*db).pTraceArg = pArg;
-    crate::src::src::mutex::sqlite3_mutex_leave((*db).mutex);
+    __db_ref.trace.xLegacy = xTrace;
+    __db_ref.pTraceArg = pArg;
+    crate::src::src::mutex::sqlite3_mutex_leave(__db_ref.mutex);
     return pOld;
 }
 #[no_mangle]
@@ -2050,15 +2064,16 @@ pub unsafe extern "C" fn sqlite3_trace_v2(
     >,
     mut pArg: *mut ::core::ffi::c_void,
 ) -> ::core::ffi::c_int {
-    crate::src::src::mutex::sqlite3_mutex_enter((*db).mutex);
+    let __db_ref = unsafe { &mut *db };
+    crate::src::src::mutex::sqlite3_mutex_enter(__db_ref.mutex);
     if mTrace == 0 as ::core::ffi::c_uint {
         xTrace = None;
     }
     if xTrace.is_none() {
         mTrace = 0 as ::core::ffi::c_uint;
     }
-    (*db).mTrace = mTrace as crate::src::ext::rtree::rtree::u8_0;
-    (*db).trace.xV2 = xTrace
+    __db_ref.mTrace = mTrace as crate::src::ext::rtree::rtree::u8_0;
+    __db_ref.trace.xV2 = xTrace
         as Option<
             unsafe extern "C" fn(
                 crate::src::ext::rtree::rtree::u32_0,
@@ -2067,8 +2082,8 @@ pub unsafe extern "C" fn sqlite3_trace_v2(
                 *mut ::core::ffi::c_void,
             ) -> ::core::ffi::c_int,
         >;
-    (*db).pTraceArg = pArg;
-    crate::src::src::mutex::sqlite3_mutex_leave((*db).mutex);
+    __db_ref.pTraceArg = pArg;
+    crate::src::src::mutex::sqlite3_mutex_leave(__db_ref.mutex);
     return crate::sqlite3_h::SQLITE_OK;
 }
 #[no_mangle]
@@ -2085,18 +2100,19 @@ pub unsafe extern "C" fn sqlite3_profile(
     mut pArg: *mut ::core::ffi::c_void,
 ) -> *mut ::core::ffi::c_void {
     let mut pOld: *mut ::core::ffi::c_void = ::core::ptr::null_mut::<::core::ffi::c_void>();
-    crate::src::src::mutex::sqlite3_mutex_enter((*db).mutex);
-    pOld = (*db).pProfileArg;
-    (*db).xProfile = xProfile
+    let __db_ref = unsafe { &mut *db };
+    crate::src::src::mutex::sqlite3_mutex_enter(__db_ref.mutex);
+    pOld = __db_ref.pProfileArg;
+    __db_ref.xProfile = xProfile
         as Option<
             unsafe extern "C" fn(*mut ::core::ffi::c_void, *const ::core::ffi::c_char, crate::src::ext::rtree::rtree::u64_0) -> (),
         >;
-    (*db).pProfileArg = pArg;
-    (*db).mTrace = ((*db).mTrace as ::core::ffi::c_int & crate::sqliteInt_h::SQLITE_TRACE_NONLEGACY_MASK) as crate::src::ext::rtree::rtree::u8_0;
-    if (*db).xProfile.is_some() {
-        (*db).mTrace = ((*db).mTrace as ::core::ffi::c_int | crate::sqliteInt_h::SQLITE_TRACE_XPROFILE) as crate::src::ext::rtree::rtree::u8_0;
+    __db_ref.pProfileArg = pArg;
+    __db_ref.mTrace = (__db_ref.mTrace as ::core::ffi::c_int & crate::sqliteInt_h::SQLITE_TRACE_NONLEGACY_MASK) as crate::src::ext::rtree::rtree::u8_0;
+    if __db_ref.xProfile.is_some() {
+        __db_ref.mTrace = (__db_ref.mTrace as ::core::ffi::c_int | crate::sqliteInt_h::SQLITE_TRACE_XPROFILE) as crate::src::ext::rtree::rtree::u8_0;
     }
-    crate::src::src::mutex::sqlite3_mutex_leave((*db).mutex);
+    crate::src::src::mutex::sqlite3_mutex_leave(__db_ref.mutex);
     return pOld;
 }
 #[no_mangle]
@@ -2107,11 +2123,12 @@ pub unsafe extern "C" fn sqlite3_commit_hook(
     mut pArg: *mut ::core::ffi::c_void,
 ) -> *mut ::core::ffi::c_void {
     let mut pOld: *mut ::core::ffi::c_void = ::core::ptr::null_mut::<::core::ffi::c_void>();
-    crate::src::src::mutex::sqlite3_mutex_enter((*db).mutex);
-    pOld = (*db).pCommitArg;
-    (*db).xCommitCallback = xCallback;
-    (*db).pCommitArg = pArg;
-    crate::src::src::mutex::sqlite3_mutex_leave((*db).mutex);
+    let __db_ref = unsafe { &mut *db };
+    crate::src::src::mutex::sqlite3_mutex_enter(__db_ref.mutex);
+    pOld = __db_ref.pCommitArg;
+    __db_ref.xCommitCallback = xCallback;
+    __db_ref.pCommitArg = pArg;
+    crate::src::src::mutex::sqlite3_mutex_leave(__db_ref.mutex);
     return pOld;
 }
 #[no_mangle]
@@ -2130,11 +2147,12 @@ pub unsafe extern "C" fn sqlite3_update_hook(
     mut pArg: *mut ::core::ffi::c_void,
 ) -> *mut ::core::ffi::c_void {
     let mut pRet: *mut ::core::ffi::c_void = ::core::ptr::null_mut::<::core::ffi::c_void>();
-    crate::src::src::mutex::sqlite3_mutex_enter((*db).mutex);
-    pRet = (*db).pUpdateArg;
-    (*db).xUpdateCallback = xCallback;
-    (*db).pUpdateArg = pArg;
-    crate::src::src::mutex::sqlite3_mutex_leave((*db).mutex);
+    let __db_ref = unsafe { &mut *db };
+    crate::src::src::mutex::sqlite3_mutex_enter(__db_ref.mutex);
+    pRet = __db_ref.pUpdateArg;
+    __db_ref.xUpdateCallback = xCallback;
+    __db_ref.pUpdateArg = pArg;
+    crate::src::src::mutex::sqlite3_mutex_leave(__db_ref.mutex);
     return pRet;
 }
 #[no_mangle]
@@ -2145,11 +2163,12 @@ pub unsafe extern "C" fn sqlite3_rollback_hook(
     mut pArg: *mut ::core::ffi::c_void,
 ) -> *mut ::core::ffi::c_void {
     let mut pRet: *mut ::core::ffi::c_void = ::core::ptr::null_mut::<::core::ffi::c_void>();
-    crate::src::src::mutex::sqlite3_mutex_enter((*db).mutex);
-    pRet = (*db).pRollbackArg;
-    (*db).xRollbackCallback = xCallback;
-    (*db).pRollbackArg = pArg;
-    crate::src::src::mutex::sqlite3_mutex_leave((*db).mutex);
+    let __db_ref = unsafe { &mut *db };
+    crate::src::src::mutex::sqlite3_mutex_enter(__db_ref.mutex);
+    pRet = __db_ref.pRollbackArg;
+    __db_ref.xRollbackCallback = xCallback;
+    __db_ref.pRollbackArg = pArg;
+    crate::src::src::mutex::sqlite3_mutex_leave(__db_ref.mutex);
     return pRet;
 }
 #[no_mangle]
@@ -2170,11 +2189,12 @@ pub unsafe extern "C" fn sqlite3_preupdate_hook(
     mut pArg: *mut ::core::ffi::c_void,
 ) -> *mut ::core::ffi::c_void {
     let mut pRet: *mut ::core::ffi::c_void = ::core::ptr::null_mut::<::core::ffi::c_void>();
-    crate::src::src::mutex::sqlite3_mutex_enter((*db).mutex);
-    pRet = (*db).pPreUpdateArg;
-    (*db).xPreUpdateCallback = xCallback;
-    (*db).pPreUpdateArg = pArg;
-    crate::src::src::mutex::sqlite3_mutex_leave((*db).mutex);
+    let __db_ref = unsafe { &mut *db };
+    crate::src::src::mutex::sqlite3_mutex_enter(__db_ref.mutex);
+    pRet = __db_ref.pPreUpdateArg;
+    __db_ref.xPreUpdateCallback = xCallback;
+    __db_ref.pPreUpdateArg = pArg;
+    crate::src::src::mutex::sqlite3_mutex_leave(__db_ref.mutex);
     return pRet;
 }
 #[no_mangle]
@@ -2193,14 +2213,15 @@ pub unsafe extern "C" fn sqlite3_autovacuum_pages(
     mut pArg: *mut ::core::ffi::c_void,
     mut xDestructor: Option<unsafe extern "C" fn(*mut ::core::ffi::c_void) -> ()>,
 ) -> ::core::ffi::c_int {
-    crate::src::src::mutex::sqlite3_mutex_enter((*db).mutex);
-    if (*db).xAutovacDestr.is_some() {
-        (*db).xAutovacDestr.expect("non-null function pointer")((*db).pAutovacPagesArg);
+    let __db_ref = unsafe { &mut *db };
+    crate::src::src::mutex::sqlite3_mutex_enter(__db_ref.mutex);
+    if __db_ref.xAutovacDestr.is_some() {
+        __db_ref.xAutovacDestr.expect("non-null function pointer")(__db_ref.pAutovacPagesArg);
     }
-    (*db).xAutovacPages = xCallback;
-    (*db).pAutovacPagesArg = pArg;
-    (*db).xAutovacDestr = xDestructor;
-    crate::src::src::mutex::sqlite3_mutex_leave((*db).mutex);
+    __db_ref.xAutovacPages = xCallback;
+    __db_ref.pAutovacPagesArg = pArg;
+    __db_ref.xAutovacDestr = xDestructor;
+    crate::src::src::mutex::sqlite3_mutex_leave(__db_ref.mutex);
     return crate::sqlite3_h::SQLITE_OK;
 }
 #[no_mangle]
@@ -2258,11 +2279,12 @@ pub unsafe extern "C" fn sqlite3_wal_hook(
     mut pArg: *mut ::core::ffi::c_void,
 ) -> *mut ::core::ffi::c_void {
     let mut pRet: *mut ::core::ffi::c_void = ::core::ptr::null_mut::<::core::ffi::c_void>();
-    crate::src::src::mutex::sqlite3_mutex_enter((*db).mutex);
-    pRet = (*db).pWalArg;
-    (*db).xWalCallback = xCallback;
-    (*db).pWalArg = pArg;
-    crate::src::src::mutex::sqlite3_mutex_leave((*db).mutex);
+    let __db_ref = unsafe { &mut *db };
+    crate::src::src::mutex::sqlite3_mutex_enter(__db_ref.mutex);
+    pRet = __db_ref.pWalArg;
+    __db_ref.xWalCallback = xCallback;
+    __db_ref.pWalArg = pArg;
+    crate::src::src::mutex::sqlite3_mutex_leave(__db_ref.mutex);
     return pRet;
 }
 #[no_mangle]
@@ -2285,7 +2307,8 @@ pub unsafe extern "C" fn sqlite3_wal_checkpoint_v2(
     if eMode < crate::sqlite3_h::SQLITE_CHECKPOINT_PASSIVE || eMode > crate::sqlite3_h::SQLITE_CHECKPOINT_TRUNCATE {
         return sqlite3MisuseError(2564 as ::core::ffi::c_int);
     }
-    crate::src::src::mutex::sqlite3_mutex_enter((*db).mutex);
+    let __db_ref = unsafe { &mut *db };
+    crate::src::src::mutex::sqlite3_mutex_enter(__db_ref.mutex);
     if !zDb.is_null() && *zDb.offset(0 as isize) as ::core::ffi::c_int != 0 {
         iDb = crate::src::src::build::sqlite3FindDbName(db as *mut crate::sqliteInt_h::sqlite3, zDb);
     } else {
@@ -2301,18 +2324,18 @@ pub unsafe extern "C" fn sqlite3_wal_checkpoint_v2(
             zDb,
         );
     } else {
-        (*db).busyHandler.nBusy = 0 as ::core::ffi::c_int;
+        __db_ref.busyHandler.nBusy = 0 as ::core::ffi::c_int;
         rc = sqlite3Checkpoint(db, iDb, eMode, pnLog, pnCkpt);
         crate::src::src::util::sqlite3Error(db as *mut crate::sqliteInt_h::sqlite3, rc);
     }
     rc = crate::src::src::malloc::sqlite3ApiExit(db as *mut crate::sqliteInt_h::sqlite3, rc);
-    if (*db).nVdbeActive == 0 as ::core::ffi::c_int {
+    if __db_ref.nVdbeActive == 0 as ::core::ffi::c_int {
         ::core::intrinsics::atomic_store_relaxed(
-            &raw mut (*db).u1.isInterrupted,
+            &raw mut __db_ref.u1.isInterrupted,
             0 as ::core::ffi::c_int,
         );
     }
-    crate::src::src::mutex::sqlite3_mutex_leave((*db).mutex);
+    crate::src::src::mutex::sqlite3_mutex_leave(__db_ref.mutex);
     return rc;
 }
 #[no_mangle]
@@ -2376,20 +2399,21 @@ pub unsafe extern "C" fn sqlite3_errmsg(mut db: *mut crate::sqliteInt_h::sqlite3
     if crate::src::src::util::sqlite3SafetyCheckSickOrOk(db as *mut crate::sqliteInt_h::sqlite3) == 0 {
         return sqlite3ErrStr(sqlite3MisuseError(2700 as ::core::ffi::c_int));
     }
-    crate::src::src::mutex::sqlite3_mutex_enter((*db).mutex);
-    if (*db).mallocFailed != 0 {
+    let __db_ref = unsafe { &*db };
+    crate::src::src::mutex::sqlite3_mutex_enter(__db_ref.mutex);
+    if __db_ref.mallocFailed != 0 {
         z = sqlite3ErrStr(crate::sqliteInt_h::SQLITE_NOMEM_BKPT);
     } else {
-        z = if (*db).errCode != 0 {
-            crate::src::src::vdbeapi::sqlite3_value_text((*db).pErr) as *mut ::core::ffi::c_char
+        z = if __db_ref.errCode != 0 {
+            crate::src::src::vdbeapi::sqlite3_value_text(__db_ref.pErr) as *mut ::core::ffi::c_char
         } else {
             ::core::ptr::null_mut::<::core::ffi::c_char>()
         };
         if z.is_null() {
-            z = sqlite3ErrStr((*db).errCode);
+            z = sqlite3ErrStr(__db_ref.errCode);
         }
     }
-    crate::src::src::mutex::sqlite3_mutex_leave((*db).mutex);
+    crate::src::src::mutex::sqlite3_mutex_leave(__db_ref.mutex);
     return z;
 }
 #[no_mangle]
@@ -2424,9 +2448,10 @@ pub unsafe extern "C" fn sqlite3_set_errmsg(
 pub unsafe extern "C" fn sqlite3_error_offset(mut db: *mut crate::sqliteInt_h::sqlite3) -> ::core::ffi::c_int {
     let mut iOffset: ::core::ffi::c_int = -(1 as ::core::ffi::c_int);
     if !db.is_null() && crate::src::src::util::sqlite3SafetyCheckSickOrOk(db as *mut crate::sqliteInt_h::sqlite3) != 0 && (*db).errCode != 0 {
-        crate::src::src::mutex::sqlite3_mutex_enter((*db).mutex);
-        iOffset = (*db).errByteOffset;
-        crate::src::src::mutex::sqlite3_mutex_leave((*db).mutex);
+        let __db_ref = unsafe { &*db };
+        crate::src::src::mutex::sqlite3_mutex_enter(__db_ref.mutex);
+        iOffset = __db_ref.errByteOffset;
+        crate::src::src::mutex::sqlite3_mutex_leave(__db_ref.mutex);
     }
     return iOffset;
 }
@@ -2492,18 +2517,19 @@ pub unsafe extern "C" fn sqlite3_errmsg16(mut db: *mut crate::sqliteInt_h::sqlit
     if crate::src::src::util::sqlite3SafetyCheckSickOrOk(db as *mut crate::sqliteInt_h::sqlite3) == 0 {
         return &raw const misuse as *const crate::src::fts5::u16_0 as *mut ::core::ffi::c_void;
     }
-    crate::src::src::mutex::sqlite3_mutex_enter((*db).mutex);
-    if (*db).mallocFailed != 0 {
+    let __db_ref = unsafe { &*db };
+    crate::src::src::mutex::sqlite3_mutex_enter(__db_ref.mutex);
+    if __db_ref.mallocFailed != 0 {
         z = &raw const outOfMem as *const crate::src::fts5::u16_0 as *mut ::core::ffi::c_void;
     } else {
-        z = crate::src::src::vdbeapi::sqlite3_value_text16((*db).pErr);
+        z = crate::src::src::vdbeapi::sqlite3_value_text16(__db_ref.pErr);
         if z.is_null() {
-            crate::src::src::util::sqlite3ErrorWithMsg(db as *mut crate::sqliteInt_h::sqlite3, (*db).errCode, sqlite3ErrStr((*db).errCode));
-            z = crate::src::src::vdbeapi::sqlite3_value_text16((*db).pErr);
+            crate::src::src::util::sqlite3ErrorWithMsg(db as *mut crate::sqliteInt_h::sqlite3, __db_ref.errCode, sqlite3ErrStr(__db_ref.errCode));
+            z = crate::src::src::vdbeapi::sqlite3_value_text16(__db_ref.pErr);
         }
         crate::src::src::malloc::sqlite3OomClear(db as *mut crate::sqliteInt_h::sqlite3);
     }
-    crate::src::src::mutex::sqlite3_mutex_leave((*db).mutex);
+    crate::src::src::mutex::sqlite3_mutex_leave(__db_ref.mutex);
     return z;
 }
 #[no_mangle]
@@ -2512,10 +2538,11 @@ pub unsafe extern "C" fn sqlite3_errcode(mut db: *mut crate::sqliteInt_h::sqlite
     if !db.is_null() && crate::src::src::util::sqlite3SafetyCheckSickOrOk(db as *mut crate::sqliteInt_h::sqlite3) == 0 {
         return sqlite3MisuseError(2802 as ::core::ffi::c_int);
     }
-    if db.is_null() || (*db).mallocFailed as ::core::ffi::c_int != 0 {
+    let __db_ref = unsafe { &*db };
+    if db.is_null() || __db_ref.mallocFailed as ::core::ffi::c_int != 0 {
         return crate::sqliteInt_h::SQLITE_NOMEM_BKPT;
     }
-    return (*db).errCode & (*db).errMask;
+    return __db_ref.errCode & __db_ref.errMask;
 }
 #[no_mangle]
 
@@ -3118,32 +3145,33 @@ unsafe extern "C" fn openDatabase(
         match current_block {
             16236786057862960873 => {}
             _ => {
-                crate::src::src::mutex::sqlite3_mutex_enter((*db).mutex);
-                (*db).errMask = (if flags & crate::sqlite3_h::SQLITE_OPEN_EXRESCODE as ::core::ffi::c_uint
+                let __db_ref = unsafe { &mut *db };
+                crate::src::src::mutex::sqlite3_mutex_enter(__db_ref.mutex);
+                __db_ref.errMask = (if flags & crate::sqlite3_h::SQLITE_OPEN_EXRESCODE as ::core::ffi::c_uint
                     != 0 as ::core::ffi::c_uint
                 {
                     0xffffffff as ::core::ffi::c_uint
                 } else {
                     0xff as ::core::ffi::c_uint
                 }) as ::core::ffi::c_int;
-                (*db).nDb = 2 as ::core::ffi::c_int;
-                (*db).eOpenState = crate::sqliteInt_h::SQLITE_STATE_BUSY as crate::src::ext::rtree::rtree::u8_0;
-                (*db).aDb = &raw mut (*db).aDbStatic as *mut crate::sqliteInt_h::Db;
-                (*db).lookaside.bDisable = 1 as crate::src::ext::rtree::rtree::u32_0;
-                (*db).lookaside.sz = 0 as crate::src::fts5::u16_0;
+                __db_ref.nDb = 2 as ::core::ffi::c_int;
+                __db_ref.eOpenState = crate::sqliteInt_h::SQLITE_STATE_BUSY as crate::src::ext::rtree::rtree::u8_0;
+                __db_ref.aDb = &raw mut __db_ref.aDbStatic as *mut crate::sqliteInt_h::Db;
+                __db_ref.lookaside.bDisable = 1 as crate::src::ext::rtree::rtree::u32_0;
+                __db_ref.lookaside.sz = 0 as crate::src::fts5::u16_0;
                 ::libc::memcpy(
-                    &raw mut (*db).aLimit as *mut ::core::ffi::c_int as *mut ::core::ffi::c_void,
+                    &raw mut __db_ref.aLimit as *mut ::core::ffi::c_int as *mut ::core::ffi::c_void,
                     &raw const aHardLimit as *const ::core::ffi::c_int
                         as *const ::core::ffi::c_void,
                     ::core::mem::size_of::<[::core::ffi::c_int; 12]>() as crate::__stddef_size_t_h::size_t,
                 );
-                (*db).aLimit[crate::sqlite3_h::SQLITE_LIMIT_WORKER_THREADS as usize] = crate::sqliteInt_h::SQLITE_DEFAULT_WORKER_THREADS;
-                (*db).autoCommit = 1 as crate::src::ext::rtree::rtree::u8_0;
-                (*db).nextAutovac = -(1 as ::core::ffi::c_int) as ::core::ffi::c_schar;
-                (*db).szMmap = crate::src::src::global::sqlite3Config.szMmap as crate::src::ext::rtree::rtree::i64_0;
-                (*db).nextPagesize = 0 as ::core::ffi::c_int;
-                (*db).init.azInit = &raw mut crate::src::src::global::sqlite3StdType as *mut *const ::core::ffi::c_char;
-                (*db).flags |=
+                __db_ref.aLimit[crate::sqlite3_h::SQLITE_LIMIT_WORKER_THREADS as usize] = crate::sqliteInt_h::SQLITE_DEFAULT_WORKER_THREADS;
+                __db_ref.autoCommit = 1 as crate::src::ext::rtree::rtree::u8_0;
+                __db_ref.nextAutovac = -(1 as ::core::ffi::c_int) as ::core::ffi::c_schar;
+                __db_ref.szMmap = crate::src::src::global::sqlite3Config.szMmap as crate::src::ext::rtree::rtree::i64_0;
+                __db_ref.nextPagesize = 0 as ::core::ffi::c_int;
+                __db_ref.init.azInit = &raw mut crate::src::src::global::sqlite3StdType as *mut *const ::core::ffi::c_char;
+                __db_ref.flags |=
                     ((crate::sqliteInt_h::SQLITE_ShortColNames | crate::sqliteInt_h::SQLITE_EnableTrigger) as ::core::ffi::c_uint
                         | crate::sqliteInt_h::SQLITE_EnableView
                         | crate::sqliteInt_h::SQLITE_CacheSpill as ::core::ffi::c_uint) as crate::src::ext::rtree::rtree::u64_0
@@ -3154,8 +3182,8 @@ unsafe extern "C" fn openDatabase(
                         | crate::sqliteInt_h::SQLITE_DqsDML as crate::src::ext::rtree::rtree::u64_0
                         | crate::sqliteInt_h::SQLITE_DqsDDL as crate::src::ext::rtree::rtree::u64_0
                         | crate::sqliteInt_h::SQLITE_AutoIndex as crate::src::ext::rtree::rtree::u64_0;
-                crate::src::src::hash::sqlite3HashInit(&raw mut (*db).aCollSeq as *mut _ as *mut crate::src::src::hash::Hash);
-                crate::src::src::hash::sqlite3HashInit(&raw mut (*db).aModule as *mut _ as *mut crate::src::src::hash::Hash);
+                crate::src::src::hash::sqlite3HashInit(&raw mut __db_ref.aCollSeq as *mut _ as *mut crate::src::src::hash::Hash);
+                crate::src::src::hash::sqlite3HashInit(&raw mut __db_ref.aModule as *mut _ as *mut crate::src::src::hash::Hash);
                 createCollation(
                     db,
                     &raw const crate::src::src::global::sqlite3StrBINARY as *const ::core::ffi::c_char,
@@ -3246,8 +3274,8 @@ unsafe extern "C" fn openDatabase(
                     ),
                     None,
                 );
-                if !((*db).mallocFailed != 0) {
-                    (*db).openFlags = flags;
+                if !(__db_ref.mallocFailed != 0) {
+                    __db_ref.openFlags = flags;
                     if (1 as ::core::ffi::c_int) << (flags & 7 as ::core::ffi::c_uint)
                         & 0x46 as ::core::ffi::c_int
                         == 0 as ::core::ffi::c_int
@@ -3261,7 +3289,7 @@ unsafe extern "C" fn openDatabase(
                             zVfs,
                             zFilename,
                             &raw mut flags,
-                            &raw mut (*db).pVfs,
+                            &raw mut __db_ref.pVfs,
                             &raw mut zOpen,
                             &raw mut zErrMsg,
                         );
@@ -3285,11 +3313,11 @@ unsafe extern "C" fn openDatabase(
                     } else {
                         rc = crate::src::src::btree::sqlite3BtreeOpen(
                             
-                            (*db).pVfs as *mut crate::sqlite3_h::sqlite3_vfs,
+                            __db_ref.pVfs as *mut crate::sqlite3_h::sqlite3_vfs,
                             zOpen,
                             
                             db as *mut crate::sqliteInt_h::sqlite3,
-                            &raw mut (*(*db).aDb.offset(0 as isize)).pBt,
+                            &raw mut (*__db_ref.aDb.offset(0 as isize)).pBt,
                             0 as ::core::ffi::c_int,
                             (flags | crate::sqlite3_h::SQLITE_OPEN_MAIN_DB as ::core::ffi::c_uint)
                                 as ::core::ffi::c_int,
@@ -3301,46 +3329,46 @@ unsafe extern "C" fn openDatabase(
                             crate::src::src::util::sqlite3Error(db as *mut crate::sqliteInt_h::sqlite3, rc);
                         } else {
                             crate::src::src::btmutex::sqlite3BtreeEnter(
-                                (*(*db).aDb.offset(0 as isize)).pBt,
+                                (*__db_ref.aDb.offset(0 as isize)).pBt,
                             );
                             let ref mut fresh1 =
-                                (*(*db).aDb.offset(0 as isize)).pSchema;
+                                (*__db_ref.aDb.offset(0 as isize)).pSchema;
                             *fresh1 =  crate::src::src::callback::sqlite3SchemaGet(
                                 
                                 db as *mut crate::sqliteInt_h::sqlite3,
-                                (*(*db).aDb.offset(0 as isize)).pBt,
+                                (*__db_ref.aDb.offset(0 as isize)).pBt,
                             ) as
     *mut crate::sqliteInt_h::Schema;
-                            if (*db).mallocFailed == 0 {
+                            if __db_ref.mallocFailed == 0 {
                                 crate::src::src::callback::sqlite3SetTextEncoding(
                                     
                                     db as *mut crate::sqliteInt_h::sqlite3,
-                                    (*(*(*db).aDb.offset(0 as isize))
+                                    (*(*__db_ref.aDb.offset(0 as isize))
                                         .pSchema)
                                         .enc,
                                 );
                             }
                             crate::src::src::btmutex::sqlite3BtreeLeave(
-                                (*(*db).aDb.offset(0 as isize)).pBt,
+                                (*__db_ref.aDb.offset(0 as isize)).pBt,
                             );
                             let ref mut fresh2 =
-                                (*(*db).aDb.offset(1 as isize)).pSchema;
+                                (*__db_ref.aDb.offset(1 as isize)).pSchema;
                             *fresh2 =  crate::src::src::callback::sqlite3SchemaGet(db as *mut crate::sqliteInt_h::sqlite3, ::core::ptr::null_mut::<crate::btreeInt_h::Btree>()) as
     *mut crate::sqliteInt_h::Schema;
                             let ref mut fresh3 =
-                                (*(*db).aDb.offset(0 as isize)).zDbSName;
+                                (*__db_ref.aDb.offset(0 as isize)).zDbSName;
                             *fresh3 = b"main\0" as *const u8 as *const ::core::ffi::c_char
                                 as *mut ::core::ffi::c_char;
-                            (*(*db).aDb.offset(0 as isize)).safety_level =
+                            (*__db_ref.aDb.offset(0 as isize)).safety_level =
                                 (crate::sqliteInt_h::SQLITE_DEFAULT_SYNCHRONOUS + 1 as ::core::ffi::c_int) as crate::src::ext::rtree::rtree::u8_0;
                             let ref mut fresh4 =
-                                (*(*db).aDb.offset(1 as isize)).zDbSName;
+                                (*__db_ref.aDb.offset(1 as isize)).zDbSName;
                             *fresh4 = b"temp\0" as *const u8 as *const ::core::ffi::c_char
                                 as *mut ::core::ffi::c_char;
-                            (*(*db).aDb.offset(1 as isize)).safety_level =
+                            (*__db_ref.aDb.offset(1 as isize)).safety_level =
                                 crate::src::src::pager::PAGER_SYNCHRONOUS_OFF as crate::src::ext::rtree::rtree::u8_0;
-                            (*db).eOpenState = crate::sqliteInt_h::SQLITE_STATE_OPEN as crate::src::ext::rtree::rtree::u8_0;
-                            if !((*db).mallocFailed != 0) {
+                            __db_ref.eOpenState = crate::sqliteInt_h::SQLITE_STATE_OPEN as crate::src::ext::rtree::rtree::u8_0;
+                            if !(__db_ref.mallocFailed != 0) {
                                 crate::src::src::util::sqlite3Error(db as *mut crate::sqliteInt_h::sqlite3, crate::sqlite3_h::SQLITE_OK);
                                 crate::src::src::func::sqlite3RegisterPerConnectionBuiltinFunctions(db as *mut crate::sqliteInt_h::sqlite3);
                                 rc = sqlite3_errcode(db);
@@ -3587,11 +3615,12 @@ pub unsafe extern "C" fn sqlite3_collation_needed(
         ) -> (),
     >,
 ) -> ::core::ffi::c_int {
-    crate::src::src::mutex::sqlite3_mutex_enter((*db).mutex);
-    (*db).xCollNeeded = xCollNeeded;
-    (*db).xCollNeeded16 = None;
-    (*db).pCollNeededArg = pCollNeededArg;
-    crate::src::src::mutex::sqlite3_mutex_leave((*db).mutex);
+    let __db_ref = unsafe { &mut *db };
+    crate::src::src::mutex::sqlite3_mutex_enter(__db_ref.mutex);
+    __db_ref.xCollNeeded = xCollNeeded;
+    __db_ref.xCollNeeded16 = None;
+    __db_ref.pCollNeededArg = pCollNeededArg;
+    crate::src::src::mutex::sqlite3_mutex_leave(__db_ref.mutex);
     return crate::sqlite3_h::SQLITE_OK;
 }
 #[no_mangle]
@@ -3608,11 +3637,12 @@ pub unsafe extern "C" fn sqlite3_collation_needed16(
         ) -> (),
     >,
 ) -> ::core::ffi::c_int {
-    crate::src::src::mutex::sqlite3_mutex_enter((*db).mutex);
-    (*db).xCollNeeded = None;
-    (*db).xCollNeeded16 = xCollNeeded16;
-    (*db).pCollNeededArg = pCollNeededArg;
-    crate::src::src::mutex::sqlite3_mutex_leave((*db).mutex);
+    let __db_ref = unsafe { &mut *db };
+    crate::src::src::mutex::sqlite3_mutex_enter(__db_ref.mutex);
+    __db_ref.xCollNeeded = None;
+    __db_ref.xCollNeeded16 = xCollNeeded16;
+    __db_ref.pCollNeededArg = pCollNeededArg;
+    crate::src::src::mutex::sqlite3_mutex_leave(__db_ref.mutex);
     return crate::sqlite3_h::SQLITE_OK;
 }
 #[no_mangle]
@@ -3622,18 +3652,19 @@ pub unsafe extern "C" fn sqlite3_get_clientdata(
     mut zName: *const ::core::ffi::c_char,
 ) -> *mut ::core::ffi::c_void {
     let mut p: *mut crate::sqliteInt_h::DbClientData = ::core::ptr::null_mut::<crate::sqliteInt_h::DbClientData>();
-    crate::src::src::mutex::sqlite3_mutex_enter((*db).mutex);
-    p = (*db).pDbData;
+    let __db_ref = unsafe { &*db };
+    crate::src::src::mutex::sqlite3_mutex_enter(__db_ref.mutex);
+    p = __db_ref.pDbData;
     while !p.is_null() {
         if ::libc::strcmp(&raw mut (*p).zName as *mut ::core::ffi::c_char, zName) == 0 as ::core::ffi::c_int
         {
             let mut pResult: *mut ::core::ffi::c_void = (*p).pData;
-            crate::src::src::mutex::sqlite3_mutex_leave((*db).mutex);
+            crate::src::src::mutex::sqlite3_mutex_leave(__db_ref.mutex);
             return pResult;
         }
         p = (*p).pNext;
     }
-    crate::src::src::mutex::sqlite3_mutex_leave((*db).mutex);
+    crate::src::src::mutex::sqlite3_mutex_leave(__db_ref.mutex);
     return ::core::ptr::null_mut::<::core::ffi::c_void>();
 }
 #[no_mangle]
@@ -3646,9 +3677,10 @@ pub unsafe extern "C" fn sqlite3_set_clientdata(
 ) -> ::core::ffi::c_int {
     let mut p: *mut crate::sqliteInt_h::DbClientData = ::core::ptr::null_mut::<crate::sqliteInt_h::DbClientData>();
     let mut pp: *mut *mut crate::sqliteInt_h::DbClientData = ::core::ptr::null_mut::<*mut crate::sqliteInt_h::DbClientData>();
-    crate::src::src::mutex::sqlite3_mutex_enter((*db).mutex);
-    pp = &raw mut (*db).pDbData;
-    p = (*db).pDbData;
+    let __db_ref = unsafe { &mut *db };
+    crate::src::src::mutex::sqlite3_mutex_enter(__db_ref.mutex);
+    pp = &raw mut __db_ref.pDbData;
+    p = __db_ref.pDbData;
     while !p.is_null() && ::libc::strcmp(&raw mut (*p).zName as *mut ::core::ffi::c_char, zName) != 0 {
         pp = &raw mut (*p).pNext;
         p = (*p).pNext;
@@ -3660,11 +3692,11 @@ pub unsafe extern "C" fn sqlite3_set_clientdata(
         if pData.is_null() {
             *pp = (*p).pNext;
             crate::src::src::malloc::sqlite3_free(p as *mut ::core::ffi::c_void);
-            crate::src::src::mutex::sqlite3_mutex_leave((*db).mutex);
+            crate::src::src::mutex::sqlite3_mutex_leave(__db_ref.mutex);
             return crate::sqlite3_h::SQLITE_OK;
         }
     } else if pData.is_null() {
-        crate::src::src::mutex::sqlite3_mutex_leave((*db).mutex);
+        crate::src::src::mutex::sqlite3_mutex_leave(__db_ref.mutex);
         return crate::sqlite3_h::SQLITE_OK;
     } else {
         let mut n: crate::__stddef_size_t_h::size_t = ::libc::strlen(zName);
@@ -3675,7 +3707,7 @@ pub unsafe extern "C" fn sqlite3_set_clientdata(
             if xDestructor.is_some() {
                 xDestructor.expect("non-null function pointer")(pData);
             }
-            crate::src::src::mutex::sqlite3_mutex_leave((*db).mutex);
+            crate::src::src::mutex::sqlite3_mutex_leave(__db_ref.mutex);
             return crate::sqlite3_h::SQLITE_NOMEM;
         }
         ::libc::memcpy(
@@ -3683,12 +3715,12 @@ pub unsafe extern "C" fn sqlite3_set_clientdata(
             zName as *const ::core::ffi::c_void,
             n.wrapping_add(1 as crate::__stddef_size_t_h::size_t),
         );
-        (*p).pNext = (*db).pDbData;
-        (*db).pDbData = p;
+        (*p).pNext = __db_ref.pDbData;
+        __db_ref.pDbData = p;
     }
     (*p).pData = pData;
     (*p).xDestructor = xDestructor;
-    crate::src::src::mutex::sqlite3_mutex_leave((*db).mutex);
+    crate::src::src::mutex::sqlite3_mutex_leave(__db_ref.mutex);
     return crate::sqlite3_h::SQLITE_OK;
 }
 #[no_mangle]
@@ -3901,13 +3933,14 @@ pub unsafe extern "C" fn sqlite3_extended_result_codes(
     mut db: *mut crate::sqliteInt_h::sqlite3,
     mut onoff: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
-    crate::src::src::mutex::sqlite3_mutex_enter((*db).mutex);
-    (*db).errMask = (if onoff != 0 {
+    let __db_ref = unsafe { &mut *db };
+    crate::src::src::mutex::sqlite3_mutex_enter(__db_ref.mutex);
+    __db_ref.errMask = (if onoff != 0 {
         0xffffffff as ::core::ffi::c_uint
     } else {
         0xff as ::core::ffi::c_uint
     }) as ::core::ffi::c_int;
-    crate::src::src::mutex::sqlite3_mutex_leave((*db).mutex);
+    crate::src::src::mutex::sqlite3_mutex_leave(__db_ref.mutex);
     return crate::sqlite3_h::SQLITE_OK;
 }
 #[no_mangle]
@@ -4122,15 +4155,16 @@ pub unsafe extern "C" fn sqlite3_test_control(
             crate::src::src::mutex::sqlite3_mutex_enter((*db_5).mutex);
             iDb = crate::src::src::build::sqlite3FindDbName(db_5 as *mut crate::sqliteInt_h::sqlite3, ap.arg::<*const ::core::ffi::c_char>());
             if iDb >= 0 as ::core::ffi::c_int {
-                (*db_5).init.iDb = iDb as crate::src::ext::rtree::rtree::u8_0;
+                let __db_5_ref = unsafe { &mut *db_5 };
+                __db_5_ref.init.iDb = iDb as crate::src::ext::rtree::rtree::u8_0;
                 (*db_5)
                     .init
                     .set_imposterTable(ap.arg::<::core::ffi::c_int>() as ::core::ffi::c_uint
                         as ::core::ffi::c_uint);
-                (*db_5).init.busy = (*db_5).init.imposterTable() as crate::src::ext::rtree::rtree::u8_0;
-                (*db_5).init.newTnum = ap.arg::<::core::ffi::c_int>() as crate::src::src::pager::Pgno;
-                if (*db_5).init.busy as ::core::ffi::c_int == 0 as ::core::ffi::c_int
-                    && (*db_5).init.newTnum > 0 as crate::src::src::pager::Pgno
+                __db_5_ref.init.busy = __db_5_ref.init.imposterTable() as crate::src::ext::rtree::rtree::u8_0;
+                __db_5_ref.init.newTnum = ap.arg::<::core::ffi::c_int>() as crate::src::src::pager::Pgno;
+                if __db_5_ref.init.busy as ::core::ffi::c_int == 0 as ::core::ffi::c_int
+                    && __db_5_ref.init.newTnum > 0 as crate::src::src::pager::Pgno
                 {
                     crate::src::src::build::sqlite3ResetAllSchemasOfConnection(db_5 as *mut crate::sqliteInt_h::sqlite3);
                 }

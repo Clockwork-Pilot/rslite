@@ -2413,18 +2413,20 @@ pub unsafe extern "C" fn sqlite3RunParser(
     let mut n: crate::src::ext::rtree::rtree::i64_0 = 0 as crate::src::ext::rtree::rtree::i64_0;
     let mut tokenType: ::core::ffi::c_int = 0;
     let mut lastTokenParsed: ::core::ffi::c_int = -(1 as ::core::ffi::c_int);
-    let mut db: *mut crate::sqliteInt_h::sqlite3 = (*pParse).db;
+    let __pParse_ref = unsafe { &mut *pParse };
+    let mut db: *mut crate::sqliteInt_h::sqlite3 = __pParse_ref.db;
     let mut mxSqlLen: ::core::ffi::c_int = 0;
     let mut pParentParse: *mut crate::sqliteInt_h::Parse = ::core::ptr::null_mut::<crate::sqliteInt_h::Parse>();
-    mxSqlLen = (*db).aLimit[crate::sqlite3_h::SQLITE_LIMIT_SQL_LENGTH as usize];
-    if (*db).nVdbeActive == 0 as ::core::ffi::c_int {
+    let __db_ref = unsafe { &mut *db };
+    mxSqlLen = __db_ref.aLimit[crate::sqlite3_h::SQLITE_LIMIT_SQL_LENGTH as usize];
+    if __db_ref.nVdbeActive == 0 as ::core::ffi::c_int {
         ::core::intrinsics::atomic_store_relaxed(
-            &raw mut (*db).u1.isInterrupted,
+            &raw mut __db_ref.u1.isInterrupted,
             0 as ::core::ffi::c_int,
         );
     }
-    (*pParse).rc = crate::sqlite3_h::SQLITE_OK;
-    (*pParse).zTail = zSql;
+    __pParse_ref.rc = crate::sqlite3_h::SQLITE_OK;
+    __pParse_ref.zTail = zSql;
     pEngine = crate::src::parse::sqlite3ParserAlloc(
         Some(crate::src::src::malloc::sqlite3Malloc as unsafe extern "C" fn(crate::src::ext::rtree::rtree::u64_0) -> *mut ::core::ffi::c_void),
         
@@ -2434,20 +2436,20 @@ pub unsafe extern "C" fn sqlite3RunParser(
         crate::src::src::malloc::sqlite3OomFault(db as *mut crate::sqliteInt_h::sqlite3);
         return crate::sqliteInt_h::SQLITE_NOMEM_BKPT;
     }
-    pParentParse = (*db).pParse;
-    (*db).pParse = pParse;
+    pParentParse = __db_ref.pParse;
+    __db_ref.pParse = pParse;
     loop {
         n = sqlite3GetToken(zSql as *mut crate::src::ext::rtree::rtree::u8_0, &raw mut tokenType);
         mxSqlLen = (mxSqlLen as crate::src::ext::rtree::rtree::i64_0 - n) as ::core::ffi::c_int;
         if mxSqlLen < 0 as ::core::ffi::c_int {
-            (*pParse).rc = crate::sqlite3_h::SQLITE_TOOBIG;
-            (*pParse).nErr += 1;
+            __pParse_ref.rc = crate::sqlite3_h::SQLITE_TOOBIG;
+            __pParse_ref.nErr += 1;
             break;
         } else {
             if tokenType >= crate::src::parse::TK_WINDOW {
-                if ::core::intrinsics::atomic_load_relaxed(&raw mut (*db).u1.isInterrupted) != 0 {
-                    (*pParse).rc = crate::sqlite3_h::SQLITE_INTERRUPT;
-                    (*pParse).nErr += 1;
+                if ::core::intrinsics::atomic_load_relaxed(&raw mut __db_ref.u1.isInterrupted) != 0 {
+                    __pParse_ref.rc = crate::sqlite3_h::SQLITE_INTERRUPT;
+                    __pParse_ref.nErr += 1;
                     break;
                 } else if tokenType == crate::src::parse::TK_SPACE {
                     zSql = zSql.offset(n as isize);
@@ -2481,8 +2483,8 @@ pub unsafe extern "C" fn sqlite3RunParser(
                         lastTokenParsed,
                     );
                 } else if tokenType == crate::src::parse::TK_COMMENT
-                    && ((*db).init.busy as ::core::ffi::c_int != 0
-                        || (*db).flags & crate::sqliteInt_h::SQLITE_Comments != 0 as crate::src::ext::rtree::rtree::u64_0)
+                    && (__db_ref.init.busy as ::core::ffi::c_int != 0
+                        || __db_ref.flags & crate::sqliteInt_h::SQLITE_Comments != 0 as crate::src::ext::rtree::rtree::u64_0)
                 {
                     zSql = zSql.offset(n as isize);
                     continue;
@@ -2502,12 +2504,12 @@ pub unsafe extern "C" fn sqlite3RunParser(
                     break;
                 }
             }
-            (*pParse).sLastToken.z = zSql;
-            (*pParse).sLastToken.n = n as crate::src::ext::rtree::rtree::u32_0 as ::core::ffi::c_uint;
-            crate::src::parse::sqlite3Parser(pEngine, tokenType,  (*pParse).sLastToken as crate::sqliteInt_h::Token);
+            __pParse_ref.sLastToken.z = zSql;
+            __pParse_ref.sLastToken.n = n as crate::src::ext::rtree::rtree::u32_0 as ::core::ffi::c_uint;
+            crate::src::parse::sqlite3Parser(pEngine, tokenType,  __pParse_ref.sLastToken as crate::sqliteInt_h::Token);
             lastTokenParsed = tokenType;
             zSql = zSql.offset(n as isize);
-            if (*pParse).rc != crate::sqlite3_h::SQLITE_OK {
+            if __pParse_ref.rc != crate::sqlite3_h::SQLITE_OK {
                 break;
             }
         }
@@ -2516,45 +2518,45 @@ pub unsafe extern "C" fn sqlite3RunParser(
         pEngine,
         Some(crate::src::src::malloc::sqlite3_free as unsafe extern "C" fn(*mut ::core::ffi::c_void) -> ()),
     );
-    if (*db).mallocFailed != 0 {
-        (*pParse).rc = crate::sqliteInt_h::SQLITE_NOMEM_BKPT;
+    if __db_ref.mallocFailed != 0 {
+        __pParse_ref.rc = crate::sqliteInt_h::SQLITE_NOMEM_BKPT;
     }
-    if !(*pParse).zErrMsg.is_null() || (*pParse).rc != crate::sqlite3_h::SQLITE_OK && (*pParse).rc != crate::sqlite3_h::SQLITE_DONE {
-        if (*pParse).zErrMsg.is_null() {
-            (*pParse).zErrMsg = crate::src::src::printf::sqlite3MPrintf(
+    if !__pParse_ref.zErrMsg.is_null() || __pParse_ref.rc != crate::sqlite3_h::SQLITE_OK && __pParse_ref.rc != crate::sqlite3_h::SQLITE_DONE {
+        if __pParse_ref.zErrMsg.is_null() {
+            __pParse_ref.zErrMsg = crate::src::src::printf::sqlite3MPrintf(
                 
                 db as *mut crate::sqliteInt_h::sqlite3,
                 b"%s\0" as *const u8 as *const ::core::ffi::c_char,
-                crate::src::src::main::sqlite3ErrStr((*pParse).rc),
+                crate::src::src::main::sqlite3ErrStr(__pParse_ref.rc),
             );
         }
-        if (*pParse).prepFlags as ::core::ffi::c_int & crate::sqlite3_h::SQLITE_PREPARE_DONT_LOG
+        if __pParse_ref.prepFlags as ::core::ffi::c_int & crate::sqlite3_h::SQLITE_PREPARE_DONT_LOG
             == 0 as ::core::ffi::c_int
         {
             crate::src::src::printf::sqlite3_log(
-                (*pParse).rc,
+                __pParse_ref.rc,
                 b"%s in \"%s\"\0" as *const u8 as *const ::core::ffi::c_char,
-                (*pParse).zErrMsg,
-                (*pParse).zTail,
+                __pParse_ref.zErrMsg,
+                __pParse_ref.zTail,
             );
         }
         nErr += 1;
     }
-    (*pParse).zTail = zSql;
-    crate::src::src::malloc::sqlite3_free((*pParse).apVtabLock as *mut ::core::ffi::c_void);
-    if !(*pParse).pNewTable.is_null()
-        && !((*pParse).eParseMode as ::core::ffi::c_int != crate::sqliteInt_h::PARSE_MODE_NORMAL)
+    __pParse_ref.zTail = zSql;
+    crate::src::src::malloc::sqlite3_free(__pParse_ref.apVtabLock as *mut ::core::ffi::c_void);
+    if !__pParse_ref.pNewTable.is_null()
+        && !(__pParse_ref.eParseMode as ::core::ffi::c_int != crate::sqliteInt_h::PARSE_MODE_NORMAL)
     {
-        crate::src::src::build::sqlite3DeleteTable(db as *mut crate::sqliteInt_h::sqlite3,  (*pParse).pNewTable as *mut crate::sqliteInt_h::Table);
+        crate::src::src::build::sqlite3DeleteTable(db as *mut crate::sqliteInt_h::sqlite3,  __pParse_ref.pNewTable as *mut crate::sqliteInt_h::Table);
     }
-    if !(*pParse).pNewTrigger.is_null()
-        && !((*pParse).eParseMode as ::core::ffi::c_int >= crate::sqliteInt_h::PARSE_MODE_RENAME)
+    if !__pParse_ref.pNewTrigger.is_null()
+        && !(__pParse_ref.eParseMode as ::core::ffi::c_int >= crate::sqliteInt_h::PARSE_MODE_RENAME)
     {
-        crate::src::src::trigger::sqlite3DeleteTrigger(db as *mut crate::sqliteInt_h::sqlite3,  (*pParse).pNewTrigger as *mut crate::sqliteInt_h::Trigger);
+        crate::src::src::trigger::sqlite3DeleteTrigger(db as *mut crate::sqliteInt_h::sqlite3,  __pParse_ref.pNewTrigger as *mut crate::sqliteInt_h::Trigger);
     }
-    if !(*pParse).pVList.is_null() {
-        crate::src::src::malloc::sqlite3DbNNFreeNN(db as *mut crate::sqliteInt_h::sqlite3, (*pParse).pVList as *mut ::core::ffi::c_void);
+    if !__pParse_ref.pVList.is_null() {
+        crate::src::src::malloc::sqlite3DbNNFreeNN(db as *mut crate::sqliteInt_h::sqlite3, __pParse_ref.pVList as *mut ::core::ffi::c_void);
     }
-    (*db).pParse = pParentParse;
+    __db_ref.pParse = pParentParse;
     return nErr;
 }
