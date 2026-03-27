@@ -1672,13 +1672,14 @@ unsafe extern "C" fn fts3BestIndexMethod(
         (*__pInfo_ref.aConstraintUsage.offset(iDocidLe as isize)).argvIndex = fresh41;
     }
     if __pInfo_ref.nOrderBy == 1 as ::core::ffi::c_int {
-        let mut pOrder: *mut crate::sqlite3_h::sqlite3_index_orderby =
-            __pInfo_ref.aOrderBy.offset(0 as isize)
-                as *mut crate::sqlite3_h::sqlite3_index_orderby;
-        if (*pOrder).iColumn < 0 as ::core::ffi::c_int
-            || (*pOrder).iColumn == (*p).nColumn + 1 as ::core::ffi::c_int
+        let pOrder = &*(__pInfo_ref.aOrderBy.offset(0 as isize)
+                as *mut crate::sqlite3_h::sqlite3_index_orderby);
+
+
+        if pOrder.iColumn < 0 as ::core::ffi::c_int
+            || pOrder.iColumn == (*p).nColumn + 1 as ::core::ffi::c_int
         {
-            if (*pOrder).desc != 0 {
+            if pOrder.desc != 0 {
                 __pInfo_ref.idxStr = b"DESC\0" as *const u8 as *const ::core::ffi::c_char
                     as *mut ::core::ffi::c_char;
             } else {
@@ -3396,8 +3397,8 @@ unsafe extern "C" fn fts3RowidMethod(
     mut pCursor: *mut crate::sqlite3_h::sqlite3_vtab_cursor,
     mut pRowid: *mut crate::sqlite3_h::sqlite_int64,
 ) -> ::core::ffi::c_int {
-    let mut pCsr: *mut crate::fts3Int_h::Fts3Cursor = pCursor as *mut crate::fts3Int_h::Fts3Cursor;
-    *pRowid = (*pCsr).iPrevId as crate::sqlite3_h::sqlite_int64;
+    let pCsr = &*(pCursor as *mut crate::fts3Int_h::Fts3Cursor);
+    *pRowid = pCsr.iPrevId as crate::sqlite3_h::sqlite_int64;
     return crate::sqlite3_h::SQLITE_OK;
 }
 
@@ -3970,8 +3971,8 @@ unsafe extern "C" fn fts3ReleaseMethod(
     mut pVtab: *mut crate::sqlite3_h::sqlite3_vtab,
     mut iSavepoint: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
-    let mut pTab: *mut crate::fts3Int_h::Fts3Table = pVtab as *mut crate::fts3Int_h::Fts3Table;
-    (*pTab).iSavepoint = iSavepoint;
+    let mut pTab = &mut *(pVtab as *mut crate::fts3Int_h::Fts3Table);
+    pTab.iSavepoint = iSavepoint;
     return crate::sqlite3_h::SQLITE_OK;
 }
 
@@ -4404,11 +4405,12 @@ unsafe extern "C" fn fts3EvalAllocateReaders(
     if !pExpr.is_null() && crate::sqlite3_h::SQLITE_OK == *pRc {
         if (*pExpr).eType == crate::fts3Int_h::FTSQUERY_PHRASE {
             let mut i: ::core::ffi::c_int = 0;
-            let mut nToken: ::core::ffi::c_int = (*(*pExpr).pPhrase).nToken;
+            let __pPhrase_ref = &mut *(*pExpr).pPhrase;
+            let mut nToken: ::core::ffi::c_int = __pPhrase_ref.nToken;
             *pnToken += nToken;
             i = 0 as ::core::ffi::c_int;
             while i < nToken {
-                let mut pToken: *mut crate::fts3Int_h::Fts3PhraseToken = (&raw mut (*(*pExpr).pPhrase).aToken
+                let mut pToken: *mut crate::fts3Int_h::Fts3PhraseToken = (&raw mut __pPhrase_ref.aToken
                     as *mut crate::fts3Int_h::Fts3PhraseToken)
                     .offset(i as isize)
                     as *mut crate::fts3Int_h::Fts3PhraseToken;
@@ -4426,7 +4428,7 @@ unsafe extern "C" fn fts3EvalAllocateReaders(
                 }
                 i += 1;
             }
-            (*(*pExpr).pPhrase).iDoclistToken = -(1 as ::core::ffi::c_int);
+            __pPhrase_ref.iDoclistToken = -(1 as ::core::ffi::c_int);
         } else {
             let __pExpr_ref = unsafe { &*pExpr };
             *pnOr += (__pExpr_ref.eType == crate::fts3Int_h::FTSQUERY_OR) as ::core::ffi::c_int;
@@ -4533,10 +4535,12 @@ unsafe extern "C" fn fts3EvalDeferredPhrase(
     };
     iToken = 0 as ::core::ffi::c_int;
     while iToken < __pPhrase_ref.nToken {
-        let mut pToken: *mut crate::fts3Int_h::Fts3PhraseToken = (&raw mut __pPhrase_ref.aToken as *mut crate::fts3Int_h::Fts3PhraseToken)
+        let pToken = &*((&raw mut __pPhrase_ref.aToken as *mut crate::fts3Int_h::Fts3PhraseToken)
             .offset(iToken as isize)
-            as *mut crate::fts3Int_h::Fts3PhraseToken;
-        let mut pDeferred: *mut crate::fts3Int_h::Fts3DeferredToken = (*pToken).pDeferred;
+            as *mut crate::fts3Int_h::Fts3PhraseToken);
+
+
+        let mut pDeferred: *mut crate::fts3Int_h::Fts3DeferredToken = pToken.pDeferred;
         if !pDeferred.is_null() {
             let mut pList: *mut ::core::ffi::c_char =
                 ::core::ptr::null_mut::<::core::ffi::c_char>();
@@ -5277,9 +5281,10 @@ unsafe extern "C" fn fts3EvalSelectDeferred(
                 }
                 if rc == crate::sqlite3_h::SQLITE_OK {
                     let mut nCount: ::core::ffi::c_int = 0;
+                    let __pPhrase_ref = &*(*pTC).pPhrase;
                     nCount = fts3DoclistCountDocids(
-                        (*(*pTC).pPhrase).doclist.aAll,
-                        (*(*pTC).pPhrase).doclist.nAll,
+                        __pPhrase_ref.doclist.aAll,
+                        __pPhrase_ref.doclist.nAll,
                     );
                     if ii == 0 as ::core::ffi::c_int || nCount < nMinEst {
                         nMinEst = nCount;
@@ -5295,7 +5300,7 @@ unsafe extern "C" fn fts3EvalSelectDeferred(
 
 unsafe extern "C" fn fts3EvalStart(mut pCsr: *mut crate::fts3Int_h::Fts3Cursor) -> ::core::ffi::c_int {
     let __pCsr_ref = unsafe { &*pCsr };
-    let mut pTab: *mut crate::fts3Int_h::Fts3Table = __pCsr_ref.base.pVtab as *mut crate::fts3Int_h::Fts3Table;
+    let pTab = &*(__pCsr_ref.base.pVtab as *mut crate::fts3Int_h::Fts3Table);
     let mut rc: ::core::ffi::c_int = crate::sqlite3_h::SQLITE_OK;
     let mut nToken: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
     let mut nOr: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
@@ -5308,7 +5313,7 @@ unsafe extern "C" fn fts3EvalStart(mut pCsr: *mut crate::fts3Int_h::Fts3Cursor) 
     );
     if rc == crate::sqlite3_h::SQLITE_OK
         && nToken > 1 as ::core::ffi::c_int
-        && (*pTab).bFts4 as ::core::ffi::c_int != 0
+        && pTab.bFts4 as ::core::ffi::c_int != 0
     {
         let mut aTC: *mut Fts3TokenAndCost = ::core::ptr::null_mut::<Fts3TokenAndCost>();
         aTC = crate::src::src::malloc::sqlite3_malloc64(

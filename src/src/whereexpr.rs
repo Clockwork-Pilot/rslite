@@ -782,9 +782,10 @@ unsafe extern "C" fn exprAnalyzeOrTerm(
                 } else {
                     let mut affLeft: ::core::ffi::c_int = 0;
                     let mut affRight: ::core::ffi::c_int = 0;
+                    let __pExpr_ref = &*(*pOrTerm).pExpr;
                     affRight =
-                        crate::src::src::expr::sqlite3ExprAffinity((*(*pOrTerm).pExpr).pRight as *const crate::sqliteInt_h::Expr) as ::core::ffi::c_int;
-                    affLeft = crate::src::src::expr::sqlite3ExprAffinity((*(*pOrTerm).pExpr).pLeft as *const crate::sqliteInt_h::Expr) as ::core::ffi::c_int;
+                        crate::src::src::expr::sqlite3ExprAffinity(__pExpr_ref.pRight as *const crate::sqliteInt_h::Expr) as ::core::ffi::c_int;
+                    affLeft = crate::src::src::expr::sqlite3ExprAffinity(__pExpr_ref.pLeft as *const crate::sqliteInt_h::Expr) as ::core::ffi::c_int;
                     if affRight != 0 as ::core::ffi::c_int && affRight != affLeft {
                         okToChngToIN = 0 as ::core::ffi::c_int;
                     } else {
@@ -807,10 +808,11 @@ unsafe extern "C" fn exprAnalyzeOrTerm(
             while i >= 0 as ::core::ffi::c_int {
                 if !((*pOrTerm).wtFlags as ::core::ffi::c_int & crate::whereInt_h::TERM_OK == 0 as ::core::ffi::c_int)
                 {
-                    pDup =  crate::src::src::expr::sqlite3ExprDup(db as *mut crate::sqliteInt_h::sqlite3,  (*(*pOrTerm).pExpr).pRight as *const crate::sqliteInt_h::Expr, 0 as ::core::ffi::c_int) as *mut crate::sqliteInt_h::Expr;
+                    let __pExpr_ref = &*(*pOrTerm).pExpr;
+                    pDup =  crate::src::src::expr::sqlite3ExprDup(db as *mut crate::sqliteInt_h::sqlite3,  __pExpr_ref.pRight as *const crate::sqliteInt_h::Expr, 0 as ::core::ffi::c_int) as *mut crate::sqliteInt_h::Expr;
                     pList =  crate::src::src::expr::sqlite3ExprListAppend((*pWInfo).pParse as *mut crate::sqliteInt_h::Parse,  pList as *mut crate::sqliteInt_h::ExprList,  pDup as *mut crate::sqliteInt_h::Expr) as
     *mut crate::sqliteInt_h::ExprList;
-                    pLeft_0 = (*(*pOrTerm).pExpr).pLeft;
+                    pLeft_0 = __pExpr_ref.pLeft;
                 }
                 i -= 1;
                 pOrTerm = pOrTerm.offset(1);
@@ -960,11 +962,12 @@ unsafe extern "C" fn exprMightBeIndexed2(
                 i = 0 as ::core::ffi::c_int;
                 while i < (*pIdx).nKeyCol as ::core::ffi::c_int {
                     if !(*(*pIdx).aiColumn.offset(i as isize) as ::core::ffi::c_int != crate::sqliteInt_h::XN_EXPR) {
+                        let __aColExpr_ref = &mut *(*pIdx).aColExpr;
                         if crate::src::src::expr::sqlite3ExprCompareSkip(
                             
                             pExpr as *mut crate::sqliteInt_h::Expr,
                             
-                            (*(&raw mut (*(*pIdx).aColExpr).a as *mut crate::sqliteInt_h::ExprList_item)
+                            (*(&raw mut __aColExpr_ref.a as *mut crate::sqliteInt_h::ExprList_item)
                                 .offset(i as isize))
                             .pExpr as *mut crate::sqliteInt_h::Expr,
                             iCur,
@@ -974,7 +977,7 @@ unsafe extern "C" fn exprMightBeIndexed2(
                                 ::core::ptr::null_mut::<crate::sqliteInt_h::Parse>() as
     *mut crate::sqliteInt_h::Parse,
                                 
-                                (*(&raw mut (*(*pIdx).aColExpr).a as *mut crate::sqliteInt_h::ExprList_item)
+                                (*(&raw mut __aColExpr_ref.a as *mut crate::sqliteInt_h::ExprList_item)
                                     .offset(i as isize))
                                 .pExpr as *mut crate::sqliteInt_h::Expr,
                             ) == 0
@@ -1393,13 +1396,14 @@ unsafe extern "C" fn exprAnalyze(
             markTermAsChild(pWC, idxNew2, idxTerm);
         }
     }
+    let __pLeft_ref = &*(*pExpr).pLeft;
     if ((*pExpr).op as ::core::ffi::c_int == crate::src::parse::TK_EQ || (*pExpr).op as ::core::ffi::c_int == crate::src::parse::TK_IS)
         && {
             nLeft = crate::src::src::expr::sqlite3ExprVectorSize((*pExpr).pLeft as *const crate::sqliteInt_h::Expr);
             nLeft > 1 as ::core::ffi::c_int
         }
         && crate::src::src::expr::sqlite3ExprVectorSize((*pExpr).pRight as *const crate::sqliteInt_h::Expr) == nLeft
-        && ((*(*pExpr).pLeft).flags & crate::sqliteInt_h::EP_xIsSelect as crate::src::ext::rtree::rtree::u32_0 == 0 as crate::src::ext::rtree::rtree::u32_0
+        && (__pLeft_ref.flags & crate::sqliteInt_h::EP_xIsSelect as crate::src::ext::rtree::rtree::u32_0 == 0 as crate::src::ext::rtree::rtree::u32_0
             || (*(*pExpr).pRight).flags & crate::sqliteInt_h::EP_xIsSelect as crate::src::ext::rtree::rtree::u32_0 == 0 as crate::src::ext::rtree::rtree::u32_0)
         && __pWC_ref.op as ::core::ffi::c_int == crate::src::parse::TK_AND
     {
@@ -1430,7 +1434,7 @@ unsafe extern "C" fn exprAnalyze(
         (*pTerm).eOperator = crate::whereInt_h::WO_ROWVAL as crate::src::fts5::u16_0;
     } else if (*pExpr).op as ::core::ffi::c_int == crate::src::parse::TK_IN
         && (*pTerm).u.x.iField == 0 as ::core::ffi::c_int
-        && (*(*pExpr).pLeft).op as ::core::ffi::c_int == crate::src::parse::TK_VECTOR
+        && __pLeft_ref.op as ::core::ffi::c_int == crate::src::parse::TK_VECTOR
         && (*pExpr).flags & 0x1000 as crate::src::ext::rtree::rtree::u32_0 != 0 as crate::src::ext::rtree::rtree::u32_0
         && ((*(*pExpr).x.pSelect).pPrior.is_null()
             || (*(*pExpr).x.pSelect).selFlags & crate::sqliteInt_h::SF_Values as crate::src::ext::rtree::rtree::u32_0 != 0)

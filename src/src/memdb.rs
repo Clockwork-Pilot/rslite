@@ -430,10 +430,10 @@ unsafe extern "C" fn memdbLock(
     mut pFile: *mut crate::sqlite3_h::sqlite3_file,
     mut eLock: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
-    let mut pThis: *mut MemFile = pFile as *mut MemFile;
-    let mut p: *mut MemStore = (*pThis).pStore;
+    let mut pThis = &mut *(pFile as *mut MemFile);
+    let mut p: *mut MemStore = pThis.pStore;
     let mut rc: ::core::ffi::c_int = crate::sqlite3_h::SQLITE_OK;
-    if eLock <= (*pThis).eLock {
+    if eLock <= pThis.eLock {
         return crate::sqlite3_h::SQLITE_OK;
     }
     memdbEnter(p);
@@ -452,7 +452,7 @@ unsafe extern "C" fn memdbLock(
             }
     crate::sqlite3_h::SQLITE_LOCK_RESERVED |
         crate::sqlite3_h::SQLITE_LOCK_PENDING =>  {
-                if (*pThis).eLock == 1 as ::core::ffi::c_int {
+                if pThis.eLock == 1 as ::core::ffi::c_int {
                     if (*p).nWrLock > 0 as ::core::ffi::c_int {
                         rc = crate::sqlite3_h::SQLITE_BUSY;
                     } else {
@@ -463,14 +463,14 @@ unsafe extern "C" fn memdbLock(
     _ =>  {
                 if (*p).nRdLock > 1 as ::core::ffi::c_int {
                     rc = crate::sqlite3_h::SQLITE_BUSY;
-                } else if (*pThis).eLock == crate::sqlite3_h::SQLITE_LOCK_SHARED {
+                } else if pThis.eLock == crate::sqlite3_h::SQLITE_LOCK_SHARED {
                     (*p).nWrLock = 1 as ::core::ffi::c_int;
                 }
             }
 }
     }
     if rc == crate::sqlite3_h::SQLITE_OK {
-        (*pThis).eLock = eLock;
+        pThis.eLock = eLock;
     }
     memdbLeave(p);
     return rc;

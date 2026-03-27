@@ -1167,21 +1167,21 @@ unsafe extern "C" fn filterPullDown(
         let mut pLevel: *mut crate::whereInt_h::WhereLevel =
             (&raw mut (*pWInfo).a as *mut crate::whereInt_h::WhereLevel).offset(iLevel as isize) as *mut crate::whereInt_h::WhereLevel;
         let __pLevel_ref = unsafe { &mut *pLevel };
-        let mut pLoop: *mut crate::whereInt_h::WhereLoop = __pLevel_ref.pWLoop as *mut crate::whereInt_h::WhereLoop;
+        let pLoop = &*(__pLevel_ref.pWLoop as *mut crate::whereInt_h::WhereLoop);
         if __pLevel_ref.regFilter == 0 as ::core::ffi::c_int {
             continue;
         }
         if (*__pLevel_ref.pWLoop).nSkip != 0 {
             continue;
         }
-        if (*pLoop).prereq & notReady != 0 {
+        if pLoop.prereq & notReady != 0 {
             continue;
         }
         saved_addrBrk = __pLevel_ref.addrBrk;
         __pLevel_ref.addrBrk = addrNxt;
-        if (*pLoop).wsFlags & crate::whereInt_h::WHERE_IPK as crate::src::ext::rtree::rtree::u32_0 != 0 {
+        if pLoop.wsFlags & crate::whereInt_h::WHERE_IPK as crate::src::ext::rtree::rtree::u32_0 != 0 {
             let mut pTerm: *mut crate::whereInt_h::WhereTerm =
-                *(*pLoop).aLTerm.offset(0 as isize);
+                *pLoop.aLTerm.offset(0 as isize);
             let mut regRowid: ::core::ffi::c_int = 0;
             regRowid = crate::src::src::expr::sqlite3GetTempReg(pParse as *mut crate::sqliteInt_h::Parse);
             regRowid = codeEqualityTerm(
@@ -1202,7 +1202,7 @@ unsafe extern "C" fn filterPullDown(
                 1 as ::core::ffi::c_int,
             );
         } else {
-            let mut nEq: crate::src::fts5::u16_0 = (*pLoop).u.btree.nEq;
+            let mut nEq: crate::src::fts5::u16_0 = pLoop.u.btree.nEq;
             let mut r1: ::core::ffi::c_int = 0;
             let mut zStartAff: *mut ::core::ffi::c_char =
                 ::core::ptr::null_mut::<::core::ffi::c_char>();
@@ -2212,16 +2212,16 @@ pub unsafe extern "C" fn sqlite3WhereCodeOneLoopStart(
                                     iSet,
                                 );
                             } else {
-                                let mut pPk_1: *mut crate::sqliteInt_h::Index =  crate::src::src::build::sqlite3PrimaryKeyIndex(pTab as *mut crate::sqliteInt_h::Table) as *mut crate::sqliteInt_h::Index;
+                                let pPk_1 = &*(crate::src::src::build::sqlite3PrimaryKeyIndex(pTab as *mut crate::sqliteInt_h::Table) as *mut crate::sqliteInt_h::Index);
                                 let mut nPk: ::core::ffi::c_int =
-                                    (*pPk_1).nKeyCol as ::core::ffi::c_int;
+                                    pPk_1.nKeyCol as ::core::ffi::c_int;
                                 let mut iPk: ::core::ffi::c_int = 0;
                                 let mut r: ::core::ffi::c_int = 0;
                                 r = crate::src::src::expr::sqlite3GetTempRange(pParse as *mut crate::sqliteInt_h::Parse, nPk);
                                 iPk = 0 as ::core::ffi::c_int;
                                 while iPk < nPk {
                                     let mut iCol: ::core::ffi::c_int =
-                                        *(*pPk_1).aiColumn.offset(iPk as isize)
+                                        *pPk_1.aiColumn.offset(iPk as isize)
                                             as ::core::ffi::c_int;
                                     crate::src::src::expr::sqlite3ExprCodeGetColumnOfTable(v,  pTab as *mut crate::sqliteInt_h::Table, iCur, iCol, r + iPk);
                                     iPk += 1;
@@ -2521,13 +2521,13 @@ pub unsafe extern "C" fn sqlite3WhereCodeOneLoopStart(
             nPk_0 = 1 as ::core::ffi::c_int;
         } else {
             let mut iPk_0: ::core::ffi::c_int = 0;
-            let mut pPk_2: *mut crate::sqliteInt_h::Index =  crate::src::src::build::sqlite3PrimaryKeyIndex(pTab_0 as *mut crate::sqliteInt_h::Table) as *mut crate::sqliteInt_h::Index;
-            nPk_0 = (*pPk_2).nKeyCol as ::core::ffi::c_int;
+            let pPk_2 = &*(crate::src::src::build::sqlite3PrimaryKeyIndex(pTab_0 as *mut crate::sqliteInt_h::Table) as *mut crate::sqliteInt_h::Index);
+            nPk_0 = pPk_2.nKeyCol as ::core::ffi::c_int;
             r_0 = crate::src::src::expr::sqlite3GetTempRange(pParse as *mut crate::sqliteInt_h::Parse, nPk_0 + 1 as ::core::ffi::c_int);
             iPk_0 = 0 as ::core::ffi::c_int;
             while iPk_0 < nPk_0 {
                 let mut iCol_0: ::core::ffi::c_int =
-                    *(*pPk_2).aiColumn.offset(iPk_0 as isize) as ::core::ffi::c_int;
+                    *pPk_2.aiColumn.offset(iPk_0 as isize) as ::core::ffi::c_int;
                 crate::src::src::expr::sqlite3ExprCodeGetColumnOfTable(
                     v,
                     
@@ -2761,13 +2761,13 @@ pub unsafe extern "C" fn sqlite3WhereRightJoinLoop(
             nPk = 1 as ::core::ffi::c_int;
         } else {
             let mut iPk: ::core::ffi::c_int = 0;
-            let mut pPk: *mut crate::sqliteInt_h::Index =  crate::src::src::build::sqlite3PrimaryKeyIndex(pTab as *mut crate::sqliteInt_h::Table) as *mut crate::sqliteInt_h::Index;
-            nPk = (*pPk).nKeyCol as ::core::ffi::c_int;
+            let pPk = &*(crate::src::src::build::sqlite3PrimaryKeyIndex(pTab as *mut crate::sqliteInt_h::Table) as *mut crate::sqliteInt_h::Index);
+            nPk = pPk.nKeyCol as ::core::ffi::c_int;
             __pParse_ref.nMem += nPk - 1 as ::core::ffi::c_int;
             iPk = 0 as ::core::ffi::c_int;
             while iPk < nPk {
                 let mut iCol: ::core::ffi::c_int =
-                    *(*pPk).aiColumn.offset(iPk as isize) as ::core::ffi::c_int;
+                    *pPk.aiColumn.offset(iPk as isize) as ::core::ffi::c_int;
                 crate::src::src::expr::sqlite3ExprCodeGetColumnOfTable(v,  pTab as *mut crate::sqliteInt_h::Table, iCur, iCol, r + iPk);
                 iPk += 1;
             }

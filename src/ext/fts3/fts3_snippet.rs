@@ -446,10 +446,10 @@ unsafe extern "C" fn fts3SnippetNextCandidate(mut pIter: *mut SnippetIter) -> ::
         i = 0 as ::core::ffi::c_int;
         let __pIter_ref = unsafe { &mut *pIter };
         while i < __pIter_ref.nPhrase {
-            let mut pPhrase_0: *mut SnippetPhrase =
-                __pIter_ref.aPhrase.offset(i as isize) as *mut SnippetPhrase;
-            if !(*pPhrase_0).pHead.is_null() && (*pPhrase_0).iHead < iEnd as crate::src::ext::rtree::rtree::i64_0 {
-                iEnd = (*pPhrase_0).iHead as ::core::ffi::c_int;
+            let pPhrase_0 = &*(__pIter_ref.aPhrase.offset(i as isize) as *mut SnippetPhrase);
+
+            if !pPhrase_0.pHead.is_null() && pPhrase_0.iHead < iEnd as crate::src::ext::rtree::rtree::i64_0 {
+                iEnd = pPhrase_0.iHead as ::core::ffi::c_int;
             }
             i += 1;
         }
@@ -1163,9 +1163,9 @@ unsafe extern "C" fn fts3MatchinfoLcs(
     );
     i = 0 as ::core::ffi::c_int;
     while i < (*pInfo).nPhrase {
-        let mut pIter: *mut LcsIterator = aIter.offset(i as isize) as *mut LcsIterator;
-        nToken -= (*(*(*pIter).pExpr).pPhrase).nToken;
-        (*pIter).iPosOffset = nToken;
+        let mut pIter = &mut *(aIter.offset(i as isize) as *mut LcsIterator);
+        nToken -= (*(*pIter.pExpr).pPhrase).nToken;
+        pIter.iPosOffset = nToken;
         i += 1;
     }
     iCol = 0 as ::core::ffi::c_int;

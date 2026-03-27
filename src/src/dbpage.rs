@@ -99,11 +99,11 @@ unsafe extern "C" fn dbpageBestIndex(
     i = 0 as ::core::ffi::c_int;
     let __pIdxInfo_ref = unsafe { &mut *pIdxInfo };
     while i < __pIdxInfo_ref.nConstraint {
-        let mut p: *mut crate::sqlite3_h::sqlite3_index_constraint =
-            __pIdxInfo_ref.aConstraint.offset(i as isize) as *mut crate::sqlite3_h::sqlite3_index_constraint;
-        if !((*p).iColumn != DBPAGE_COLUMN_SCHEMA) {
-            if !((*p).op as ::core::ffi::c_int != crate::sqlite3_h::SQLITE_INDEX_CONSTRAINT_EQ) {
-                if (*p).usable == 0 {
+        let p = &*(__pIdxInfo_ref.aConstraint.offset(i as isize) as *mut crate::sqlite3_h::sqlite3_index_constraint);
+
+        if !(p.iColumn != DBPAGE_COLUMN_SCHEMA) {
+            if !(p.op as ::core::ffi::c_int != crate::sqlite3_h::SQLITE_INDEX_CONSTRAINT_EQ) {
+                if p.usable == 0 {
                     return crate::sqlite3_h::SQLITE_CONSTRAINT;
                 }
                 iPlan = 2 as ::core::ffi::c_int;
@@ -191,14 +191,14 @@ unsafe extern "C" fn dbpageClose(mut pCursor: *mut crate::sqlite3_h::sqlite3_vta
 
 unsafe extern "C" fn dbpageNext(mut pCursor: *mut crate::sqlite3_h::sqlite3_vtab_cursor) -> ::core::ffi::c_int {
     let mut rc: ::core::ffi::c_int = crate::sqlite3_h::SQLITE_OK;
-    let mut pCsr: *mut DbpageCursor = pCursor as *mut DbpageCursor;
-    (*pCsr).pgno = (*pCsr).pgno.wrapping_add(1);
+    let mut pCsr = &mut *(pCursor as *mut DbpageCursor);
+    pCsr.pgno = pCsr.pgno.wrapping_add(1);
     return rc;
 }
 
 unsafe extern "C" fn dbpageEof(mut pCursor: *mut crate::sqlite3_h::sqlite3_vtab_cursor) -> ::core::ffi::c_int {
-    let mut pCsr: *mut DbpageCursor = pCursor as *mut DbpageCursor;
-    return ((*pCsr).pgno > (*pCsr).mxPgno) as ::core::ffi::c_int;
+    let pCsr = &*(pCursor as *mut DbpageCursor);
+    return (pCsr.pgno > pCsr.mxPgno) as ::core::ffi::c_int;
 }
 
 unsafe extern "C" fn dbpageFilter(
@@ -314,8 +314,8 @@ unsafe extern "C" fn dbpageRowid(
     mut pCursor: *mut crate::sqlite3_h::sqlite3_vtab_cursor,
     mut pRowid: *mut crate::sqlite3_h::sqlite_int64,
 ) -> ::core::ffi::c_int {
-    let mut pCsr: *mut DbpageCursor = pCursor as *mut DbpageCursor;
-    *pRowid = (*pCsr).pgno as crate::sqlite3_h::sqlite_int64;
+    let pCsr = &*(pCursor as *mut DbpageCursor);
+    *pRowid = pCsr.pgno as crate::sqlite3_h::sqlite_int64;
     return crate::sqlite3_h::SQLITE_OK;
 }
 
@@ -486,8 +486,8 @@ unsafe extern "C" fn dbpageUpdate(
 }
 
 unsafe extern "C" fn dbpageBegin(mut pVtab: *mut crate::sqlite3_h::sqlite3_vtab) -> ::core::ffi::c_int {
-    let mut pTab: *mut DbpageTable = pVtab as *mut DbpageTable;
-    (*pTab).pgnoTrunc = 0 as crate::src::src::pager::Pgno;
+    let mut pTab = &mut *(pVtab as *mut DbpageTable);
+    pTab.pgnoTrunc = 0 as crate::src::src::pager::Pgno;
     return crate::sqlite3_h::SQLITE_OK;
 }
 
@@ -511,8 +511,8 @@ unsafe extern "C" fn dbpageRollbackTo(
     mut pVtab: *mut crate::sqlite3_h::sqlite3_vtab,
     mut _notUsed1: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
-    let mut pTab: *mut DbpageTable = pVtab as *mut DbpageTable;
-    (*pTab).pgnoTrunc = 0 as crate::src::src::pager::Pgno;
+    let mut pTab = &mut *(pVtab as *mut DbpageTable);
+    pTab.pgnoTrunc = 0 as crate::src::src::pager::Pgno;
     return crate::sqlite3_h::SQLITE_OK;
 }
 #[no_mangle]

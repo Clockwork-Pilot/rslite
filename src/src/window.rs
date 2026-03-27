@@ -1268,7 +1268,8 @@ unsafe extern "C" fn selectWindowRewriteExprCb(
     match current_block_46 {
         1109700713171191020 => {
             let mut iCol: ::core::ffi::c_int = -(1 as ::core::ffi::c_int);
-            if (*(*pParse).db).mallocFailed != 0 {
+            let __db_ref = &*(*pParse).db;
+            if __db_ref.mallocFailed != 0 {
                 return crate::sqliteInt_h::WRC_Abort;
             }
             if !(*p).pSub.is_null() {
@@ -1328,7 +1329,7 @@ unsafe extern "C" fn selectWindowRewriteExprCb(
                 __pExpr_ref.y.pTab = (*p).pTab;
                 __pExpr_ref.flags = f as crate::src::ext::rtree::rtree::u32_0;
             }
-            if (*(*pParse).db).mallocFailed != 0 {
+            if __db_ref.mallocFailed != 0 {
                 return crate::sqliteInt_h::WRC_Abort;
             }
         }
@@ -2376,12 +2377,13 @@ unsafe extern "C" fn windowAggStep(
                 );
                 iEnd = crate::src::src::vdbeaux::sqlite3VdbeCurrentAddr(v);
                 while iOp < iEnd {
-                    let mut pOp: *mut crate::src::src::vdbe::VdbeOp =  crate::src::src::vdbeaux::sqlite3VdbeGetOp(v, iOp) as
-    *mut crate::src::src::vdbe::VdbeOp;
-                    if (*pOp).opcode as ::core::ffi::c_int == crate::opcodes_h::OP_Column
-                        && (*pOp).p1 == (*pMWin).iEphCsr
+                    let mut pOp = &mut *(crate::src::src::vdbeaux::sqlite3VdbeGetOp(v, iOp) as
+    *mut crate::src::src::vdbe::VdbeOp);
+
+                    if pOp.opcode as ::core::ffi::c_int == crate::opcodes_h::OP_Column
+                        && pOp.p1 == (*pMWin).iEphCsr
                     {
-                        (*pOp).p1 = csr;
+                        pOp.p1 = csr;
                     }
                     iOp += 1;
                 }

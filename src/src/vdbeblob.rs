@@ -401,14 +401,15 @@ pub unsafe extern "C" fn sqlite3_blob_open(
                     ];
                     let mut v: *mut crate::vdbeInt_h::Vdbe = __pBlob_ref.pStmt as *mut crate::vdbeInt_h::Vdbe;
                     let mut aOp: *mut crate::src::src::vdbe::VdbeOp = ::core::ptr::null_mut::<crate::src::src::vdbe::VdbeOp>();
+                    let __pSchema_ref = &*(*pTab).pSchema;
                     crate::src::src::vdbeaux::sqlite3VdbeAddOp4Int(
                         
                         v as *mut crate::vdbeInt_h::Vdbe,
                         crate::opcodes_h::OP_Transaction,
                         iDb,
                         wrFlag,
-                        (*(*pTab).pSchema).schema_cookie,
-                        (*(*pTab).pSchema).iGeneration,
+                        __pSchema_ref.schema_cookie,
+                        __pSchema_ref.iGeneration,
                     );
                     crate::src::src::vdbeaux::sqlite3VdbeChangeP5(v as *mut crate::vdbeInt_h::Vdbe, 1 as crate::src::fts5::u16_0);
                     aOp =  crate::src::src::vdbeaux::sqlite3VdbeAddOpList(

@@ -713,9 +713,10 @@ unsafe extern "C" fn contextMalloc(
     mut nByte: crate::src::ext::rtree::rtree::i64_0,
 ) -> *mut ::core::ffi::c_void {
     let mut z: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
-    let mut db: *mut crate::sqliteInt_h::sqlite3 =  crate::src::src::vdbeapi::sqlite3_context_db_handle(context as *mut crate::vdbeInt_h::sqlite3_context) as
-    *mut crate::sqliteInt_h::sqlite3;
-    if nByte > (*db).aLimit[crate::sqlite3_h::SQLITE_LIMIT_LENGTH as usize] as crate::src::ext::rtree::rtree::i64_0 {
+    let db = &*(crate::src::src::vdbeapi::sqlite3_context_db_handle(context as *mut crate::vdbeInt_h::sqlite3_context) as
+    *mut crate::sqliteInt_h::sqlite3);
+
+    if nByte > db.aLimit[crate::sqlite3_h::SQLITE_LIMIT_LENGTH as usize] as crate::src::ext::rtree::rtree::i64_0 {
         crate::src::src::vdbeapi::sqlite3_result_error_toobig(context as *mut crate::vdbeInt_h::sqlite3_context);
         z = ::core::ptr::null_mut::<::core::ffi::c_char>();
     } else {
@@ -1176,8 +1177,9 @@ unsafe extern "C" fn likeFunc(
     let mut zB: *const ::core::ffi::c_uchar = ::core::ptr::null::<::core::ffi::c_uchar>();
     let mut escape: crate::src::ext::rtree::rtree::u32_0 = 0;
     let mut nPat: ::core::ffi::c_int = 0;
-    let mut db: *mut crate::sqliteInt_h::sqlite3 =  crate::src::src::vdbeapi::sqlite3_context_db_handle(context as *mut crate::vdbeInt_h::sqlite3_context) as
-    *mut crate::sqliteInt_h::sqlite3;
+    let db = &*(crate::src::src::vdbeapi::sqlite3_context_db_handle(context as *mut crate::vdbeInt_h::sqlite3_context) as
+    *mut crate::sqliteInt_h::sqlite3);
+
     let mut pInfo: *mut compareInfo = crate::src::src::vdbeapi::sqlite3_user_data(context as *mut crate::vdbeInt_h::sqlite3_context) as *mut compareInfo;
     let mut backupInfo: compareInfo = compareInfo {
         matchAll: 0,
@@ -1187,7 +1189,7 @@ unsafe extern "C" fn likeFunc(
     };
     nPat = crate::src::src::vdbeapi::sqlite3_value_bytes(*argv.offset(0 as isize) as
     *mut crate::vdbeInt_h::sqlite3_value);
-    if nPat > (*db).aLimit[crate::sqlite3_h::SQLITE_LIMIT_LIKE_PATTERN_LENGTH as usize] {
+    if nPat > db.aLimit[crate::sqlite3_h::SQLITE_LIMIT_LIKE_PATTERN_LENGTH as usize] {
         crate::src::src::vdbeapi::sqlite3_result_error(
             
             context as *mut crate::vdbeInt_h::sqlite3_context,
@@ -2778,12 +2780,13 @@ unsafe extern "C" fn groupConcatStep(
         ::core::mem::size_of::<GroupConcatCtx>() as ::core::ffi::c_int,
     ) as *mut GroupConcatCtx;
     if !pGCC.is_null() {
-        let mut db: *mut crate::sqliteInt_h::sqlite3 =  crate::src::src::vdbeapi::sqlite3_context_db_handle(context as *mut crate::vdbeInt_h::sqlite3_context) as
-    *mut crate::sqliteInt_h::sqlite3;
+        let db = &*(crate::src::src::vdbeapi::sqlite3_context_db_handle(context as *mut crate::vdbeInt_h::sqlite3_context) as
+    *mut crate::sqliteInt_h::sqlite3);
+
         let __pGCC_ref = unsafe { &mut *pGCC };
         let mut firstTerm: ::core::ffi::c_int =
             (__pGCC_ref.str_0.mxAlloc == 0 as crate::src::ext::rtree::rtree::u32_0) as ::core::ffi::c_int;
-        __pGCC_ref.str_0.mxAlloc = (*db).aLimit[crate::sqlite3_h::SQLITE_LIMIT_LENGTH as usize] as crate::src::ext::rtree::rtree::u32_0;
+        __pGCC_ref.str_0.mxAlloc = db.aLimit[crate::sqlite3_h::SQLITE_LIMIT_LENGTH as usize] as crate::src::ext::rtree::rtree::u32_0;
         if argc == 1 as ::core::ffi::c_int {
             if firstTerm == 0 {
                 crate::src::src::printf::sqlite3_str_appendchar(

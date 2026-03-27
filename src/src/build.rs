@@ -3671,7 +3671,8 @@ pub unsafe extern "C" fn sqlite3RootPageMoved(
     let mut pHash: *mut crate::src::src::hash::Hash = ::core::ptr::null_mut::<crate::src::src::hash::Hash>();
     let mut pDb: *mut crate::sqliteInt_h::Db = ::core::ptr::null_mut::<crate::sqliteInt_h::Db>();
     pDb = (*db).aDb.offset(iDb as isize) as *mut crate::sqliteInt_h::Db;
-    pHash = &raw mut (*(*pDb).pSchema).tblHash;
+    let __pSchema_ref = &mut *(*pDb).pSchema;
+    pHash = &raw mut __pSchema_ref.tblHash;
     pElem = (*pHash).first;
     while !pElem.is_null() {
         let mut pTab: *mut crate::sqliteInt_h::Table = (*pElem).data as *mut crate::sqliteInt_h::Table;
@@ -3680,7 +3681,7 @@ pub unsafe extern "C" fn sqlite3RootPageMoved(
         }
         pElem = (*pElem).next;
     }
-    pHash = &raw mut (*(*pDb).pSchema).idxHash;
+    pHash = &raw mut __pSchema_ref.idxHash;
     pElem = (*pHash).first;
     while !pElem.is_null() {
         let mut pIdx: *mut crate::sqliteInt_h::Index = (*pElem).data as *mut crate::sqliteInt_h::Index;

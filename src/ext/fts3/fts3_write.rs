@@ -6093,13 +6093,13 @@ pub unsafe extern "C" fn sqlite3Fts3CacheDeferredDoclists(
         let mut iDocid: crate::sqlite3_h::sqlite3_int64 = 0;
         let mut pDef: *mut Fts3DeferredToken = ::core::ptr::null_mut::<Fts3DeferredToken>();
         let __pCsr_ref = unsafe { &*pCsr };
-        let mut p: *mut crate::fts3Int_h::Fts3Table = __pCsr_ref.base.pVtab as *mut crate::fts3Int_h::Fts3Table;
-        let mut pT: *mut crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer = (*p).pTokenizer;
+        let p = &*(__pCsr_ref.base.pVtab as *mut crate::fts3Int_h::Fts3Table);
+        let mut pT: *mut crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer = p.pTokenizer;
         let mut pModule: *const crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_module = (*pT).pModule;
         iDocid = crate::src::src::vdbeapi::sqlite3_column_int64(__pCsr_ref.pStmt, 0 as ::core::ffi::c_int);
         i = 0 as ::core::ffi::c_int;
-        while i < (*p).nColumn && rc == crate::sqlite3_h::SQLITE_OK {
-            if *(*p).abNotindexed.offset(i as isize) as ::core::ffi::c_int
+        while i < p.nColumn && rc == crate::sqlite3_h::SQLITE_OK {
+            if *p.abNotindexed.offset(i as isize) as ::core::ffi::c_int
                 == 0 as ::core::ffi::c_int
             {
                 let mut zText: *const ::core::ffi::c_char =
@@ -6136,7 +6136,7 @@ pub unsafe extern "C" fn sqlite3Fts3CacheDeferredDoclists(
                     while !pDef.is_null() && rc == crate::sqlite3_h::SQLITE_OK {
                         let mut pPT: *mut crate::fts3Int_h::Fts3PhraseToken = (*pDef).pToken;
                         let __pPT_ref = unsafe { &*pPT };
-                        if ((*pDef).iCol >= (*p).nColumn || (*pDef).iCol == i)
+                        if ((*pDef).iCol >= p.nColumn || (*pDef).iCol == i)
                             && (__pPT_ref.bFirst == 0 as ::core::ffi::c_int
                                 || iPos == 0 as ::core::ffi::c_int)
                             && (__pPT_ref.n == nToken || __pPT_ref.isPrefix != 0 && __pPT_ref.n < nToken)

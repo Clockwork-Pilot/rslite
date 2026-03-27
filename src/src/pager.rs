@@ -4118,15 +4118,15 @@ pub unsafe extern "C" fn sqlite3PagerSavepoint(
         }
         __pPager_ref.nSavepoint = nNew;
         if op == crate::sqliteInt_h::SAVEPOINT_RELEASE {
-            let mut pRel: *mut PagerSavepoint =
-                __pPager_ref.aSavepoint.offset(nNew as isize) as *mut PagerSavepoint;
-            if (*pRel).bTruncateOnRelease != 0 && !(*__pPager_ref.sjfd).pMethods.is_null() {
+            let pRel = &*(__pPager_ref.aSavepoint.offset(nNew as isize) as *mut PagerSavepoint);
+
+            if pRel.bTruncateOnRelease != 0 && !(*__pPager_ref.sjfd).pMethods.is_null() {
                 if crate::src::src::memjournal::sqlite3JournalIsInMemory(__pPager_ref.sjfd as *mut crate::sqlite3_h::sqlite3_file) != 0 {
                     let mut sz: crate::src::ext::rtree::rtree::i64_0 =
-                        (__pPager_ref.pageSize + 4 as crate::src::ext::rtree::rtree::i64_0) * (*pRel).iSubRec as crate::src::ext::rtree::rtree::i64_0;
+                        (__pPager_ref.pageSize + 4 as crate::src::ext::rtree::rtree::i64_0) * pRel.iSubRec as crate::src::ext::rtree::rtree::i64_0;
                     rc = crate::src::src::os::sqlite3OsTruncate(__pPager_ref.sjfd as *mut crate::sqlite3_h::sqlite3_file, sz);
                 }
-                __pPager_ref.nSubRec = (*pRel).iSubRec as crate::src::ext::rtree::rtree::u32_0;
+                __pPager_ref.nSubRec = pRel.iSubRec as crate::src::ext::rtree::rtree::u32_0;
             }
         } else if !__pPager_ref.pWal.is_null() || !(*__pPager_ref.jfd).pMethods.is_null() {
             let mut pSavepoint: *mut PagerSavepoint = if nNew == 0 as ::core::ffi::c_int {
@@ -4443,13 +4443,13 @@ pub unsafe extern "C" fn sqlite3PagerWalCallback(mut pPager: *mut Pager) -> ::co
 
 pub unsafe extern "C" fn sqlite3PagerWalSupported(mut pPager: *mut Pager) -> ::core::ffi::c_int {
     let __pPager_ref = unsafe { &*pPager };
-    let mut pMethods: *const crate::sqlite3_h::sqlite3_io_methods =
-        (*__pPager_ref.fd).pMethods as *const crate::sqlite3_h::sqlite3_io_methods;
+    let pMethods = &*((*__pPager_ref.fd).pMethods as *const crate::sqlite3_h::sqlite3_io_methods);
+
     if __pPager_ref.noLock != 0 {
         return 0 as ::core::ffi::c_int;
     }
     return (__pPager_ref.exclusiveMode as ::core::ffi::c_int != 0
-        || (*pMethods).iVersion >= 2 as ::core::ffi::c_int && (*pMethods).xShmMap.is_some())
+        || pMethods.iVersion >= 2 as ::core::ffi::c_int && pMethods.xShmMap.is_some())
         as ::core::ffi::c_int;
 }
 

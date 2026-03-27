@@ -542,8 +542,8 @@ unsafe extern "C" fn fts3auxFilterMethod(
 }
 
 unsafe extern "C" fn fts3auxEofMethod(mut pCursor: *mut crate::sqlite3_h::sqlite3_vtab_cursor) -> ::core::ffi::c_int {
-    let mut pCsr: *mut Fts3auxCursor = pCursor as *mut Fts3auxCursor;
-    return (*pCsr).isEof;
+    let pCsr = &*(pCursor as *mut Fts3auxCursor);
+    return pCsr.isEof;
 }
 
 unsafe extern "C" fn fts3auxColumnMethod(
@@ -593,8 +593,8 @@ unsafe extern "C" fn fts3auxRowidMethod(
     mut pCursor: *mut crate::sqlite3_h::sqlite3_vtab_cursor,
     mut pRowid: *mut crate::sqlite3_h::sqlite_int64,
 ) -> ::core::ffi::c_int {
-    let mut pCsr: *mut Fts3auxCursor = pCursor as *mut Fts3auxCursor;
-    *pRowid = (*pCsr).iRowid as crate::sqlite3_h::sqlite_int64;
+    let pCsr = &*(pCursor as *mut Fts3auxCursor);
+    *pRowid = pCsr.iRowid as crate::sqlite3_h::sqlite_int64;
     return crate::sqlite3_h::SQLITE_OK;
 }
 #[no_mangle]

@@ -903,8 +903,8 @@ unsafe extern "C" fn statNext(mut pCursor: *mut crate::sqlite3_h::sqlite3_vtab_c
 }
 
 unsafe extern "C" fn statEof(mut pCursor: *mut crate::sqlite3_h::sqlite3_vtab_cursor) -> ::core::ffi::c_int {
-    let mut pCsr: *mut StatCursor = pCursor as *mut StatCursor;
-    return (*pCsr).isEof as ::core::ffi::c_int;
+    let pCsr = &*(pCursor as *mut StatCursor);
+    return pCsr.isEof as ::core::ffi::c_int;
 }
 
 unsafe extern "C" fn statFilter(
@@ -1087,8 +1087,8 @@ unsafe extern "C" fn statRowid(
     mut pCursor: *mut crate::sqlite3_h::sqlite3_vtab_cursor,
     mut pRowid: *mut crate::sqlite3_h::sqlite_int64,
 ) -> ::core::ffi::c_int {
-    let mut pCsr: *mut StatCursor = pCursor as *mut StatCursor;
-    *pRowid = (*pCsr).iPageno as crate::sqlite3_h::sqlite_int64;
+    let pCsr = &*(pCursor as *mut StatCursor);
+    *pRowid = pCsr.iPageno as crate::sqlite3_h::sqlite_int64;
     return crate::sqlite3_h::SQLITE_OK;
 }
 #[no_mangle]

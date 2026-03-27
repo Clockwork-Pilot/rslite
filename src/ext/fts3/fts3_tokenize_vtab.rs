@@ -247,8 +247,8 @@ unsafe extern "C" fn fts3tokOpenMethod(
 unsafe extern "C" fn fts3tokResetCursor(mut pCsr: *mut Fts3tokCursor) {
     let __pCsr_ref = unsafe { &mut *pCsr };
     if !__pCsr_ref.pCsr.is_null() {
-        let mut pTab: *mut Fts3tokTable = __pCsr_ref.base.pVtab as *mut Fts3tokTable;
-        (*(*pTab).pMod).xClose.expect("non-null function pointer")(__pCsr_ref.pCsr);
+        let pTab = &*(__pCsr_ref.base.pVtab as *mut Fts3tokTable);
+        (*pTab.pMod).xClose.expect("non-null function pointer")(__pCsr_ref.pCsr);
         __pCsr_ref.pCsr = ::core::ptr::null_mut::<crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_cursor>();
     }
     crate::src::src::malloc::sqlite3_free(__pCsr_ref.zInput as *mut ::core::ffi::c_void);
@@ -344,8 +344,8 @@ unsafe extern "C" fn fts3tokFilterMethod(
 }
 
 unsafe extern "C" fn fts3tokEofMethod(mut pCursor: *mut crate::sqlite3_h::sqlite3_vtab_cursor) -> ::core::ffi::c_int {
-    let mut pCsr: *mut Fts3tokCursor = pCursor as *mut Fts3tokCursor;
-    return ((*pCsr).zToken == ::core::ptr::null::<::core::ffi::c_char>()) as ::core::ffi::c_int;
+    let pCsr = &*(pCursor as *mut Fts3tokCursor);
+    return (pCsr.zToken == ::core::ptr::null::<::core::ffi::c_char>()) as ::core::ffi::c_int;
 }
 
 unsafe extern "C" fn fts3tokColumnMethod(
@@ -394,8 +394,8 @@ unsafe extern "C" fn fts3tokRowidMethod(
     mut pCursor: *mut crate::sqlite3_h::sqlite3_vtab_cursor,
     mut pRowid: *mut crate::sqlite3_h::sqlite_int64,
 ) -> ::core::ffi::c_int {
-    let mut pCsr: *mut Fts3tokCursor = pCursor as *mut Fts3tokCursor;
-    *pRowid = (*pCsr).iRowid as crate::sqlite3_h::sqlite3_int64 as crate::sqlite3_h::sqlite_int64;
+    let pCsr = &*(pCursor as *mut Fts3tokCursor);
+    *pRowid = pCsr.iRowid as crate::sqlite3_h::sqlite3_int64 as crate::sqlite3_h::sqlite_int64;
     return crate::sqlite3_h::SQLITE_OK;
 }
 #[no_mangle]

@@ -591,8 +591,9 @@ pub unsafe extern "C" fn sqlite3VdbeEndCoroutine(
     mut regYield: ::core::ffi::c_int,
 ) {
     sqlite3VdbeAddOp1(v, crate::opcodes_h::OP_EndCoroutine_1, regYield);
-    (*(*v).pParse).nTempReg = 0 as crate::src::ext::rtree::rtree::u8_0;
-    (*(*v).pParse).nRangeReg = 0 as ::core::ffi::c_int;
+    let __pParse_ref = &mut *(*v).pParse;
+    __pParse_ref.nTempReg = 0 as crate::src::ext::rtree::rtree::u8_0;
+    __pParse_ref.nRangeReg = 0 as ::core::ffi::c_int;
 }
 #[no_mangle]
 
@@ -1959,8 +1960,9 @@ pub unsafe extern "C" fn sqlite3VdbeFreeCursorNN(mut p: *mut crate::vdbeInt_h::V
         }
     crate::vdbeInt_h::CURTYPE_VTAB_1 =>  {
             let mut pVCur: *mut crate::sqlite3_h::sqlite3_vtab_cursor = (*pCx).uc.pVCur;
-            let mut pModule: *const crate::sqlite3_h::sqlite3_module = (*(*pVCur).pVtab).pModule;
-            (*(*pVCur).pVtab).nRef -= 1;
+            let __pVtab_ref = &mut *(*pVCur).pVtab;
+            let mut pModule: *const crate::sqlite3_h::sqlite3_module = __pVtab_ref.pModule;
+            __pVtab_ref.nRef -= 1;
             (*pModule).xClose.expect("non-null function pointer")(pVCur);
         }
     _ =>  {}

@@ -211,14 +211,14 @@ unsafe extern "C" fn carrayRowid(
     mut cur: *mut crate::sqlite3_h::sqlite3_vtab_cursor,
     mut pRowid: *mut crate::sqlite3_h::sqlite_int64,
 ) -> ::core::ffi::c_int {
-    let mut pCur: *mut carray_cursor = cur as *mut carray_cursor;
-    *pRowid = (*pCur).iRowid as crate::sqlite3_h::sqlite_int64;
+    let pCur = &*(cur as *mut carray_cursor);
+    *pRowid = pCur.iRowid as crate::sqlite3_h::sqlite_int64;
     return crate::sqlite3_h::SQLITE_OK;
 }
 
 unsafe extern "C" fn carrayEof(mut cur: *mut crate::sqlite3_h::sqlite3_vtab_cursor) -> ::core::ffi::c_int {
-    let mut pCur: *mut carray_cursor = cur as *mut carray_cursor;
-    return ((*pCur).iRowid > (*pCur).iCnt) as ::core::ffi::c_int;
+    let pCur = &*(cur as *mut carray_cursor);
+    return (pCur.iRowid > pCur.iCnt) as ::core::ffi::c_int;
 }
 
 unsafe extern "C" fn carrayFilter(

@@ -141,8 +141,8 @@ unsafe extern "C" fn stmtColumn(
     mut ctx: *mut crate::vdbeInt_h::sqlite3_context,
     mut i: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
-    let mut pCur: *mut stmt_cursor = cur as *mut stmt_cursor;
-    let mut pRow: *mut StmtRow = (*pCur).pRow;
+    let pCur = &*(cur as *mut stmt_cursor);
+    let mut pRow: *mut StmtRow = pCur.pRow;
     if i == STMT_COLUMN_SQL {
         crate::src::src::vdbeapi::sqlite3_result_text(
             ctx,
@@ -163,14 +163,14 @@ unsafe extern "C" fn stmtRowid(
     mut cur: *mut crate::sqlite3_h::sqlite3_vtab_cursor,
     mut pRowid: *mut crate::sqlite3_h::sqlite_int64,
 ) -> ::core::ffi::c_int {
-    let mut pCur: *mut stmt_cursor = cur as *mut stmt_cursor;
-    *pRowid = (*(*pCur).pRow).iRowid as crate::sqlite3_h::sqlite_int64;
+    let pCur = &*(cur as *mut stmt_cursor);
+    *pRowid = (*pCur.pRow).iRowid as crate::sqlite3_h::sqlite_int64;
     return crate::sqlite3_h::SQLITE_OK;
 }
 
 unsafe extern "C" fn stmtEof(mut cur: *mut crate::sqlite3_h::sqlite3_vtab_cursor) -> ::core::ffi::c_int {
-    let mut pCur: *mut stmt_cursor = cur as *mut stmt_cursor;
-    return ((*pCur).pRow == ::core::ptr::null_mut::<StmtRow>()) as ::core::ffi::c_int;
+    let pCur = &*(cur as *mut stmt_cursor);
+    return (pCur.pRow == ::core::ptr::null_mut::<StmtRow>()) as ::core::ffi::c_int;
 }
 
 unsafe extern "C" fn stmtFilter(

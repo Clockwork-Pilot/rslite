@@ -2637,7 +2637,8 @@ pub unsafe extern "C" fn sqlite3BtreeGetPageSize(mut p: *mut crate::btreeInt_h::
 
 pub unsafe extern "C" fn sqlite3BtreeGetReserveNoMutex(mut p: *mut crate::btreeInt_h::Btree) -> ::core::ffi::c_int {
     let mut n: ::core::ffi::c_int = 0;
-    n = (*(*p).pBt).pageSize.wrapping_sub((*(*p).pBt).usableSize) as ::core::ffi::c_int;
+    let __pBt_ref = &*(*p).pBt;
+    n = __pBt_ref.pageSize.wrapping_sub(__pBt_ref.usableSize) as ::core::ffi::c_int;
     return n;
 }
 #[no_mangle]
@@ -2721,9 +2722,10 @@ pub unsafe extern "C" fn sqlite3BtreeSetAutoVacuum(
 pub unsafe extern "C" fn sqlite3BtreeGetAutoVacuum(mut p: *mut crate::btreeInt_h::Btree) -> ::core::ffi::c_int {
     let mut rc: ::core::ffi::c_int = 0;
     crate::src::src::btmutex::sqlite3BtreeEnter(p as *mut crate::btreeInt_h::Btree);
-    rc = if (*(*p).pBt).autoVacuum == 0 {
+    let __pBt_ref = &*(*p).pBt;
+    rc = if __pBt_ref.autoVacuum == 0 {
         crate::src::src::btree::BTREE_AUTOVACUUM_NONE
-    } else if (*(*p).pBt).incrVacuum == 0 {
+    } else if __pBt_ref.incrVacuum == 0 {
         crate::src::src::btree::BTREE_AUTOVACUUM_FULL
     } else {
         crate::src::src::btree::BTREE_AUTOVACUUM_INCR
@@ -4105,7 +4107,8 @@ pub unsafe extern "C" fn sqlite3BtreePayloadSize(mut pCur: *mut crate::btreeInt_
 #[no_mangle]
 
 pub unsafe extern "C" fn sqlite3BtreeMaxRecordSize(mut pCur: *mut crate::btreeInt_h::BtCursor) -> crate::sqlite3_h::sqlite3_int64 {
-    return (*(*pCur).pBt).pageSize as crate::sqlite3_h::sqlite3_int64 * (*(*pCur).pBt).nPage as crate::sqlite3_h::sqlite3_int64;
+    let __pBt_ref = &*(*pCur).pBt;
+    return __pBt_ref.pageSize as crate::sqlite3_h::sqlite3_int64 * __pBt_ref.nPage as crate::sqlite3_h::sqlite3_int64;
 }
 
 unsafe extern "C" fn getOverflowPage(
@@ -8570,12 +8573,13 @@ pub unsafe extern "C" fn sqlite3BtreeInsert(
     newCell = (*(*p).pBt).pTmpSpace as *mut ::core::ffi::c_uchar;
     if flags & crate::src::src::btree::BTREE_PREFORMAT != 0 {
         rc = crate::sqlite3_h::SQLITE_OK;
-        szNew = (*(*p).pBt).nPreformatSize;
+        let __pBt_ref = &*(*p).pBt;
+        szNew = __pBt_ref.nPreformatSize;
         if szNew < 4 as ::core::ffi::c_int {
             szNew = 4 as ::core::ffi::c_int;
             *newCell.offset(3 as isize) = 0 as ::core::ffi::c_uchar;
         }
-        if (*(*p).pBt).autoVacuum as ::core::ffi::c_int != 0
+        if __pBt_ref.autoVacuum as ::core::ffi::c_int != 0
             && szNew > (*pPage).maxLocal as ::core::ffi::c_int
         {
             let mut info: crate::btreeInt_h::CellInfo = crate::btreeInt_h::CellInfo {
@@ -9536,8 +9540,9 @@ pub unsafe extern "C" fn sqlite3BtreeUpdateMeta(
     let mut pP1: *mut ::core::ffi::c_uchar = ::core::ptr::null_mut::<::core::ffi::c_uchar>();
     let mut rc: ::core::ffi::c_int = 0;
     crate::src::src::btmutex::sqlite3BtreeEnter(p as *mut crate::btreeInt_h::Btree);
-    pP1 = (*(*pBt).pPage1).aData as *mut ::core::ffi::c_uchar;
-    rc = crate::src::src::pager::sqlite3PagerWrite((*(*pBt).pPage1).pDbPage as *mut crate::src::src::pcache::PgHdr);
+    let __pPage1_ref = &*(*pBt).pPage1;
+    pP1 = __pPage1_ref.aData as *mut ::core::ffi::c_uchar;
+    rc = crate::src::src::pager::sqlite3PagerWrite(__pPage1_ref.pDbPage as *mut crate::src::src::pcache::PgHdr);
     if rc == crate::sqlite3_h::SQLITE_OK {
         crate::src::src::util::sqlite3Put4byte(
             pP1.offset((36 as ::core::ffi::c_int + idx * 4 as ::core::ffi::c_int) as isize)

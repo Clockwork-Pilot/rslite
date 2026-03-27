@@ -3745,8 +3745,8 @@ unsafe extern "C" fn rtreeClose(mut cur: *mut crate::sqlite3_h::sqlite3_vtab_cur
 }
 
 unsafe extern "C" fn rtreeEof(mut cur: *mut crate::sqlite3_h::sqlite3_vtab_cursor) -> ::core::ffi::c_int {
-    let mut pCsr: *mut RtreeCursor = cur as *mut RtreeCursor;
-    return (*pCsr).atEOF as ::core::ffi::c_int;
+    let pCsr = &*(cur as *mut RtreeCursor);
+    return pCsr.atEOF as ::core::ffi::c_int;
 }
 
 unsafe extern "C" fn rtreeCallbackConstraint(
@@ -4852,7 +4852,7 @@ unsafe extern "C" fn rtreeBestIndex(
     mut tab: *mut crate::sqlite3_h::sqlite3_vtab,
     mut pIdxInfo: *mut crate::sqlite3_h::sqlite3_index_info,
 ) -> ::core::ffi::c_int {
-    let mut pRtree: *mut Rtree = tab as *mut Rtree;
+    let pRtree = &*(tab as *mut Rtree);
     let mut rc: ::core::ffi::c_int = crate::sqlite3_h::SQLITE_OK;
     let mut ii: ::core::ffi::c_int = 0;
     let mut bMatch: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
@@ -4902,7 +4902,7 @@ unsafe extern "C" fn rtreeBestIndex(
         }
         if __p_ref.usable as ::core::ffi::c_int != 0
             && (__p_ref.iColumn > 0 as ::core::ffi::c_int
-                && __p_ref.iColumn <= (*pRtree).nDim2 as ::core::ffi::c_int
+                && __p_ref.iColumn <= pRtree.nDim2 as ::core::ffi::c_int
                 || __p_ref.op as ::core::ffi::c_int == crate::sqlite3_h::SQLITE_INDEX_CONSTRAINT_MATCH_1)
         {
             let mut op: u8_0 = 0;
@@ -4963,7 +4963,7 @@ unsafe extern "C" fn rtreeBestIndex(
             (iIdx + 1 as ::core::ffi::c_int) as crate::__stddef_size_t_h::size_t,
         );
     }
-    nRow = (*pRtree).nRowEst >> iIdx / 2 as ::core::ffi::c_int;
+    nRow = pRtree.nRowEst >> iIdx / 2 as ::core::ffi::c_int;
     __pIdxInfo_ref.estimatedCost = 6.0f64 * nRow as ::core::ffi::c_double;
     __pIdxInfo_ref.estimatedRows = nRow as crate::sqlite3_h::sqlite3_int64;
     return rc;
@@ -6527,8 +6527,8 @@ unsafe extern "C" fn rtreeUpdate(
 }
 
 unsafe extern "C" fn rtreeBeginTransaction(mut pVtab: *mut crate::sqlite3_h::sqlite3_vtab) -> ::core::ffi::c_int {
-    let mut pRtree: *mut Rtree = pVtab as *mut Rtree;
-    (*pRtree).inWrTrans = 1 as u8_0;
+    let mut pRtree = &mut *(pVtab as *mut Rtree);
+    pRtree.inWrTrans = 1 as u8_0;
     return crate::sqlite3_h::SQLITE_OK;
 }
 

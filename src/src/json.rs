@@ -6784,8 +6784,8 @@ unsafe extern "C" fn jsonEachClose(mut cur: *mut crate::sqlite3_h::sqlite3_vtab_
 }
 
 unsafe extern "C" fn jsonEachEof(mut cur: *mut crate::sqlite3_h::sqlite3_vtab_cursor) -> ::core::ffi::c_int {
-    let mut p: *mut JsonEachCursor = cur as *mut JsonEachCursor;
-    return ((*p).i >= (*p).iEnd) as ::core::ffi::c_int;
+    let p = &*(cur as *mut JsonEachCursor);
+    return (p.i >= p.iEnd) as ::core::ffi::c_int;
 }
 
 unsafe extern "C" fn jsonSkipLabel(mut p: *mut JsonEachCursor) -> ::core::ffi::c_int {
@@ -7183,8 +7183,8 @@ unsafe extern "C" fn jsonEachRowid(
     mut cur: *mut crate::sqlite3_h::sqlite3_vtab_cursor,
     mut pRowid: *mut crate::sqlite3_h::sqlite_int64,
 ) -> ::core::ffi::c_int {
-    let mut p: *mut JsonEachCursor = cur as *mut JsonEachCursor;
-    *pRowid = (*p).iRowid as crate::sqlite3_h::sqlite_int64;
+    let p = &*(cur as *mut JsonEachCursor);
+    *pRowid = p.iRowid as crate::sqlite3_h::sqlite_int64;
     return crate::sqlite3_h::SQLITE_OK;
 }
 

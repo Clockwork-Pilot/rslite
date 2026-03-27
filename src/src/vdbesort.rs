@@ -679,10 +679,12 @@ pub unsafe extern "C" fn sqlite3VdbeSorterInit(
         __pSorter_ref.db = db;
         i = 0 as ::core::ffi::c_int;
         while i < __pSorter_ref.nTask as ::core::ffi::c_int {
-            let mut pTask: *mut SortSubtask = (&raw mut __pSorter_ref.aTask as *mut SortSubtask)
+            let mut pTask = &mut *((&raw mut __pSorter_ref.aTask as *mut SortSubtask)
                 .offset(i as isize)
-                as *mut SortSubtask;
-            (*pTask).pSorter = pSorter;
+                as *mut SortSubtask);
+
+
+            pTask.pSorter = pSorter;
             i += 1;
         }
         if crate::src::src::main::sqlite3TempInMemory(db as *const crate::sqliteInt_h::sqlite3) == 0 {
@@ -2222,9 +2224,9 @@ unsafe extern "C" fn vdbeSorterRowkey(
         if (*pSorter).bUseThreads != 0 {
             pReader = (*pSorter).pReader;
         } else {
-            pReader = (*(*pSorter).pMerger).aReadr.offset(
-                *(*(*pSorter).pMerger)
-                    .aTree
+            let __pMerger_ref = &*(*pSorter).pMerger;
+            pReader = __pMerger_ref.aReadr.offset(
+                *__pMerger_ref.aTree
                     .offset(1 as isize) as isize,
             ) as *mut PmaReader;
         }

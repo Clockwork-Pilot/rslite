@@ -365,14 +365,14 @@ pub unsafe extern "C" fn sqlite3DbFreeNN(mut db: *mut crate::sqliteInt_h::sqlite
     if !db.is_null() {
         if (p as crate::sqliteInt_h::uptr) < (*db).lookaside.pEnd as crate::sqliteInt_h::uptr {
             if p as crate::sqliteInt_h::uptr >= (*db).lookaside.pMiddle as crate::sqliteInt_h::uptr {
-                let mut pBuf: *mut crate::sqliteInt_h::LookasideSlot = p as *mut crate::sqliteInt_h::LookasideSlot;
-                (*pBuf).pNext = (*db).lookaside.pSmallFree;
+                let mut pBuf = &mut *(p as *mut crate::sqliteInt_h::LookasideSlot);
+                pBuf.pNext = (*db).lookaside.pSmallFree;
                 (*db).lookaside.pSmallFree = pBuf;
                 return;
             }
             if p as crate::sqliteInt_h::uptr >= (*db).lookaside.pStart as crate::sqliteInt_h::uptr {
-                let mut pBuf_0: *mut crate::sqliteInt_h::LookasideSlot = p as *mut crate::sqliteInt_h::LookasideSlot;
-                (*pBuf_0).pNext = (*db).lookaside.pFree;
+                let mut pBuf_0 = &mut *(p as *mut crate::sqliteInt_h::LookasideSlot);
+                pBuf_0.pNext = (*db).lookaside.pFree;
                 (*db).lookaside.pFree = pBuf_0;
                 return;
             }
@@ -389,14 +389,14 @@ pub unsafe extern "C" fn sqlite3DbFreeNN(mut db: *mut crate::sqliteInt_h::sqlite
 pub unsafe extern "C" fn sqlite3DbNNFreeNN(mut db: *mut crate::sqliteInt_h::sqlite3, mut p: *mut ::core::ffi::c_void) {
     if (p as crate::sqliteInt_h::uptr) < (*db).lookaside.pEnd as crate::sqliteInt_h::uptr {
         if p as crate::sqliteInt_h::uptr >= (*db).lookaside.pMiddle as crate::sqliteInt_h::uptr {
-            let mut pBuf: *mut crate::sqliteInt_h::LookasideSlot = p as *mut crate::sqliteInt_h::LookasideSlot;
-            (*pBuf).pNext = (*db).lookaside.pSmallFree;
+            let mut pBuf = &mut *(p as *mut crate::sqliteInt_h::LookasideSlot);
+            pBuf.pNext = (*db).lookaside.pSmallFree;
             (*db).lookaside.pSmallFree = pBuf;
             return;
         }
         if p as crate::sqliteInt_h::uptr >= (*db).lookaside.pStart as crate::sqliteInt_h::uptr {
-            let mut pBuf_0: *mut crate::sqliteInt_h::LookasideSlot = p as *mut crate::sqliteInt_h::LookasideSlot;
-            (*pBuf_0).pNext = (*db).lookaside.pFree;
+            let mut pBuf_0 = &mut *(p as *mut crate::sqliteInt_h::LookasideSlot);
+            pBuf_0.pNext = (*db).lookaside.pFree;
             (*db).lookaside.pFree = pBuf_0;
             return;
         }

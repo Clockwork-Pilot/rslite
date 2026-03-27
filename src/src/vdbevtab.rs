@@ -176,8 +176,8 @@ unsafe extern "C" fn bytecodevtabNext(mut cur: *mut crate::sqlite3_h::sqlite3_vt
 }
 
 unsafe extern "C" fn bytecodevtabEof(mut cur: *mut crate::sqlite3_h::sqlite3_vtab_cursor) -> ::core::ffi::c_int {
-    let mut pCur: *mut bytecodevtab_cursor = cur as *mut bytecodevtab_cursor;
-    return ((*pCur).aOp == ::core::ptr::null_mut::<crate::vdbeInt_h::Op>()) as ::core::ffi::c_int;
+    let pCur = &*(cur as *mut bytecodevtab_cursor);
+    return (pCur.aOp == ::core::ptr::null_mut::<crate::vdbeInt_h::Op>()) as ::core::ffi::c_int;
 }
 
 unsafe extern "C" fn bytecodevtabColumn(
@@ -337,8 +337,8 @@ unsafe extern "C" fn bytecodevtabRowid(
     mut cur: *mut crate::sqlite3_h::sqlite3_vtab_cursor,
     mut pRowid: *mut crate::sqlite3_h::sqlite_int64,
 ) -> ::core::ffi::c_int {
-    let mut pCur: *mut bytecodevtab_cursor = cur as *mut bytecodevtab_cursor;
-    *pRowid = (*pCur).iRowid as crate::sqlite3_h::sqlite_int64;
+    let pCur = &*(cur as *mut bytecodevtab_cursor);
+    *pRowid = pCur.iRowid as crate::sqlite3_h::sqlite_int64;
     return crate::sqlite3_h::SQLITE_OK;
 }
 
@@ -408,8 +408,8 @@ unsafe extern "C" fn bytecodevtabBestIndex(
     let mut i: ::core::ffi::c_int = 0;
     let mut rc: ::core::ffi::c_int = crate::sqlite3_h::SQLITE_CONSTRAINT;
     let mut p: *mut crate::sqlite3_h::sqlite3_index_constraint = ::core::ptr::null_mut::<crate::sqlite3_h::sqlite3_index_constraint>();
-    let mut pVTab: *mut bytecodevtab = tab as *mut bytecodevtab;
-    let mut iBaseCol: ::core::ffi::c_int = if (*pVTab).bTablesUsed != 0 {
+    let pVTab = &*(tab as *mut bytecodevtab);
+    let mut iBaseCol: ::core::ffi::c_int = if pVTab.bTablesUsed != 0 {
         4 as ::core::ffi::c_int
     } else {
         10 as ::core::ffi::c_int

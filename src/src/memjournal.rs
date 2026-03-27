@@ -286,8 +286,8 @@ unsafe extern "C" fn memjrnlFileSize(
     mut pJfd: *mut crate::sqlite3_h::sqlite3_file,
     mut pSize: *mut crate::sqlite3_h::sqlite_int64,
 ) -> ::core::ffi::c_int {
-    let mut p: *mut MemJournal = pJfd as *mut MemJournal;
-    *pSize = (*p).endpoint.iOffset;
+    let p = &*(pJfd as *mut MemJournal);
+    *pSize = p.endpoint.iOffset;
     return crate::sqlite3_h::SQLITE_OK;
 }
 

@@ -4388,8 +4388,9 @@ unsafe extern "C" fn unixOpen(
                 *pOutFlags = flags;
             }
             if !(*p).pPreallocatedUnused.is_null() {
-                (*(*p).pPreallocatedUnused).fd = fd;
-                (*(*p).pPreallocatedUnused).flags =
+                let __pPreallocatedUnused_ref = &mut *(*p).pPreallocatedUnused;
+                __pPreallocatedUnused_ref.fd = fd;
+                __pPreallocatedUnused_ref.flags =
                     flags & (crate::sqlite3_h::SQLITE_OPEN_READONLY | crate::sqlite3_h::SQLITE_OPEN_READWRITE);
             }
             if isDelete != 0 {

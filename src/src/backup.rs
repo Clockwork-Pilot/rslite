@@ -651,9 +651,10 @@ unsafe extern "C" fn backupUpdate(
     loop {
         if isFatalError((*p).rc) == 0 && iPage < (*p).iNext {
             let mut rc: ::core::ffi::c_int = 0;
-            crate::src::src::mutex::sqlite3_mutex_enter((*(*p).pDestDb).mutex);
+            let __pDestDb_ref = &*(*p).pDestDb;
+            crate::src::src::mutex::sqlite3_mutex_enter(__pDestDb_ref.mutex);
             rc = backupOnePage(p, iPage, aData, 1 as ::core::ffi::c_int);
-            crate::src::src::mutex::sqlite3_mutex_leave((*(*p).pDestDb).mutex);
+            crate::src::src::mutex::sqlite3_mutex_leave(__pDestDb_ref.mutex);
             if rc != crate::sqlite3_h::SQLITE_OK {
                 (*p).rc = rc;
             }
@@ -728,8 +729,9 @@ pub unsafe extern "C" fn sqlite3BtreeCopyFile(
             sqlite3_backup_step(&raw mut b, 0x7fffffff as ::core::ffi::c_int);
             rc = sqlite3_backup_finish(&raw mut b);
             if rc == crate::sqlite3_h::SQLITE_OK {
-                (*(*pTo).pBt).btsFlags =
-                    ((*(*pTo).pBt).btsFlags as ::core::ffi::c_int & !crate::btreeInt_h::BTS_PAGESIZE_FIXED) as crate::src::fts5::u16_0;
+                let __pBt_ref = &mut *(*pTo).pBt;
+                __pBt_ref.btsFlags =
+                    (__pBt_ref.btsFlags as ::core::ffi::c_int & !crate::btreeInt_h::BTS_PAGESIZE_FIXED) as crate::src::fts5::u16_0;
             } else {
                 crate::src::src::pager::sqlite3PagerClearCache(crate::src::src::btree::sqlite3BtreePager(b.pDest as *mut crate::btreeInt_h::Btree) as *mut crate::src::src::pager::Pager);
             }

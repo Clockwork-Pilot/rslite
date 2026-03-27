@@ -612,8 +612,8 @@ unsafe extern "C" fn pcache1Shrink(mut p: *mut crate::sqlite3_h::sqlite3_pcache)
 
 unsafe extern "C" fn pcache1Pagecount(mut p: *mut crate::sqlite3_h::sqlite3_pcache) -> ::core::ffi::c_int {
     let mut n: ::core::ffi::c_int = 0;
-    let mut pCache: *mut PCache1 = p as *mut PCache1;
-    n = (*pCache).nPage as ::core::ffi::c_int;
+    let pCache = &*(p as *mut PCache1);
+    n = pCache.nPage as ::core::ffi::c_int;
     return n;
 }
 #[inline(never)]
@@ -721,9 +721,9 @@ unsafe extern "C" fn pcache1Unpin(
     mut pPg: *mut crate::sqlite3_h::sqlite3_pcache_page,
     mut reuseUnlikely: ::core::ffi::c_int,
 ) {
-    let mut pCache: *mut PCache1 = p as *mut PCache1;
+    let mut pCache = &mut *(p as *mut PCache1);
     let mut pPage: *mut PgHdr1 = pPg as *mut PgHdr1;
-    let mut pGroup: *mut PGroup = (*pCache).pGroup;
+    let mut pGroup: *mut PGroup = pCache.pGroup;
     if reuseUnlikely != 0 || (*pGroup).nPurgeable > (*pGroup).nMaxPage {
         pcache1RemoveFromHash(pPage, 1 as ::core::ffi::c_int);
     } else {
@@ -733,7 +733,7 @@ unsafe extern "C" fn pcache1Unpin(
         __pPage_ref.pLruNext = *ppFirst;
         (*__pPage_ref.pLruNext).pLruPrev = pPage;
         *ppFirst = pPage;
-        (*pCache).nRecyclable = (*pCache).nRecyclable.wrapping_add(1);
+        pCache.nRecyclable = pCache.nRecyclable.wrapping_add(1);
     };
 }
 

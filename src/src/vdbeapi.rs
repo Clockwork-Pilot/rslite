@@ -210,9 +210,9 @@ pub unsafe extern "C" fn sqlite3_value_int64(mut pVal: *mut crate::vdbeInt_h::sq
 pub unsafe extern "C" fn sqlite3_value_subtype(
     mut pVal: *mut crate::vdbeInt_h::sqlite3_value,
 ) -> ::core::ffi::c_uint {
-    let mut pMem: *mut crate::src::src::vdbe::Mem = pVal as *mut crate::src::src::vdbe::Mem;
-    return (if (*pMem).flags as ::core::ffi::c_int & crate::vdbeInt_h::MEM_Subtype != 0 {
-        (*pMem).eSubtype as ::core::ffi::c_int
+    let pMem = &*(pVal as *mut crate::src::src::vdbe::Mem);
+    return (if pMem.flags as ::core::ffi::c_int & crate::vdbeInt_h::MEM_Subtype != 0 {
+        pMem.eSubtype as ::core::ffi::c_int
     } else {
         0 as ::core::ffi::c_int
     }) as ::core::ffi::c_uint;
@@ -1966,7 +1966,8 @@ pub unsafe extern "C" fn sqlite3TransferBindings(
     let mut pFrom: *mut crate::vdbeInt_h::Vdbe = pFromStmt as *mut crate::vdbeInt_h::Vdbe;
     let mut pTo: *mut crate::vdbeInt_h::Vdbe = pToStmt as *mut crate::vdbeInt_h::Vdbe;
     let mut i: ::core::ffi::c_int = 0;
-    crate::src::src::mutex::sqlite3_mutex_enter((*(*pTo).db).mutex);
+    let __db_ref = &*(*pTo).db;
+    crate::src::src::mutex::sqlite3_mutex_enter(__db_ref.mutex);
     i = 0 as ::core::ffi::c_int;
     while i < (*pFrom).nVar as ::core::ffi::c_int {
         crate::src::src::vdbemem::sqlite3VdbeMemMove(
@@ -1977,7 +1978,7 @@ pub unsafe extern "C" fn sqlite3TransferBindings(
         );
         i += 1;
     }
-    crate::src::src::mutex::sqlite3_mutex_leave((*(*pTo).db).mutex);
+    crate::src::src::mutex::sqlite3_mutex_leave(__db_ref.mutex);
     return crate::sqlite3_h::SQLITE_OK;
 }
 #[no_mangle]
@@ -1986,16 +1987,16 @@ pub unsafe extern "C" fn sqlite3_transfer_bindings(
     mut pFromStmt: *mut crate::sqlite3_h::sqlite3_stmt,
     mut pToStmt: *mut crate::sqlite3_h::sqlite3_stmt,
 ) -> ::core::ffi::c_int {
-    let mut pFrom: *mut crate::vdbeInt_h::Vdbe = pFromStmt as *mut crate::vdbeInt_h::Vdbe;
-    let mut pTo: *mut crate::vdbeInt_h::Vdbe = pToStmt as *mut crate::vdbeInt_h::Vdbe;
-    if (*pFrom).nVar as ::core::ffi::c_int != (*pTo).nVar as ::core::ffi::c_int {
+    let mut pFrom = &mut *(pFromStmt as *mut crate::vdbeInt_h::Vdbe);
+    let mut pTo = &mut *(pToStmt as *mut crate::vdbeInt_h::Vdbe);
+    if pFrom.nVar as ::core::ffi::c_int != pTo.nVar as ::core::ffi::c_int {
         return crate::sqlite3_h::SQLITE_ERROR;
     }
-    if (*pTo).expmask != 0 {
-        (*pTo).set_expired(1 as crate::sqliteInt_h::bft as crate::sqliteInt_h::bft);
+    if pTo.expmask != 0 {
+        pTo.set_expired(1 as crate::sqliteInt_h::bft as crate::sqliteInt_h::bft);
     }
-    if (*pFrom).expmask != 0 {
-        (*pFrom).set_expired(1 as crate::sqliteInt_h::bft as crate::sqliteInt_h::bft);
+    if pFrom.expmask != 0 {
+        pFrom.set_expired(1 as crate::sqliteInt_h::bft as crate::sqliteInt_h::bft);
     }
     return sqlite3TransferBindings(pFromStmt, pToStmt);
 }
@@ -2138,9 +2139,10 @@ pub unsafe extern "C" fn sqlite3_expanded_sql(
     let mut zSql: *const ::core::ffi::c_char = sqlite3_sql(pStmt);
     if !zSql.is_null() {
         let mut p: *mut crate::vdbeInt_h::Vdbe = pStmt as *mut crate::vdbeInt_h::Vdbe;
-        crate::src::src::mutex::sqlite3_mutex_enter((*(*p).db).mutex);
+        let __db_ref = &*(*p).db;
+        crate::src::src::mutex::sqlite3_mutex_enter(__db_ref.mutex);
         z = crate::src::src::vdbetrace::sqlite3VdbeExpandSql(p as *mut crate::vdbeInt_h::Vdbe, zSql);
-        crate::src::src::mutex::sqlite3_mutex_leave((*(*p).db).mutex);
+        crate::src::src::mutex::sqlite3_mutex_leave(__db_ref.mutex);
     }
     return z;
 }

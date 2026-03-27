@@ -4993,7 +4993,7 @@ unsafe extern "C" fn pragmaVtabBestIndex(
     mut tab: *mut crate::sqlite3_h::sqlite3_vtab,
     mut pIdxInfo: *mut crate::sqlite3_h::sqlite3_index_info,
 ) -> ::core::ffi::c_int {
-    let mut pTab: *mut PragmaVtab = tab as *mut PragmaVtab;
+    let pTab = &*(tab as *mut PragmaVtab);
     let mut pConstraint: *const crate::sqlite3_h::sqlite3_index_constraint =
         ::core::ptr::null::<crate::sqlite3_h::sqlite3_index_constraint>();
     let mut i: ::core::ffi::c_int = 0;
@@ -5001,7 +5001,7 @@ unsafe extern "C" fn pragmaVtabBestIndex(
     let mut seen: [::core::ffi::c_int; 2] = [0; 2];
     let __pIdxInfo_ref = unsafe { &mut *pIdxInfo };
     __pIdxInfo_ref.estimatedCost = 1 as ::core::ffi::c_int as ::core::ffi::c_double;
-    if (*pTab).nHidden as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
+    if pTab.nHidden as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
         return crate::sqlite3_h::SQLITE_OK;
     }
     pConstraint = __pIdxInfo_ref.aConstraint;
@@ -5009,12 +5009,12 @@ unsafe extern "C" fn pragmaVtabBestIndex(
     seen[1 as ::core::ffi::c_int as usize] = 0 as ::core::ffi::c_int;
     i = 0 as ::core::ffi::c_int;
     while i < __pIdxInfo_ref.nConstraint {
-        if !((*pConstraint).iColumn < (*pTab).iHidden as ::core::ffi::c_int) {
+        if !((*pConstraint).iColumn < pTab.iHidden as ::core::ffi::c_int) {
             if !((*pConstraint).op as ::core::ffi::c_int != crate::sqlite3_h::SQLITE_INDEX_CONSTRAINT_EQ) {
                 if (*pConstraint).usable as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
                     return crate::sqlite3_h::SQLITE_CONSTRAINT;
                 }
-                j = (*pConstraint).iColumn - (*pTab).iHidden as ::core::ffi::c_int;
+                j = (*pConstraint).iColumn - pTab.iHidden as ::core::ffi::c_int;
                 seen[j as usize] = i + 1 as ::core::ffi::c_int;
             }
         }
@@ -5202,8 +5202,8 @@ unsafe extern "C" fn pragmaVtabFilter(
 unsafe extern "C" fn pragmaVtabEof(
     mut pVtabCursor: *mut crate::sqlite3_h::sqlite3_vtab_cursor,
 ) -> ::core::ffi::c_int {
-    let mut pCsr: *mut PragmaVtabCursor = pVtabCursor as *mut PragmaVtabCursor;
-    return ((*pCsr).pPragma == ::core::ptr::null_mut::<crate::sqlite3_h::sqlite3_stmt>()) as ::core::ffi::c_int;
+    let pCsr = &*(pVtabCursor as *mut PragmaVtabCursor);
+    return (pCsr.pPragma == ::core::ptr::null_mut::<crate::sqlite3_h::sqlite3_stmt>()) as ::core::ffi::c_int;
 }
 
 unsafe extern "C" fn pragmaVtabColumn(
@@ -5233,8 +5233,8 @@ unsafe extern "C" fn pragmaVtabRowid(
     mut pVtabCursor: *mut crate::sqlite3_h::sqlite3_vtab_cursor,
     mut p: *mut crate::sqlite3_h::sqlite_int64,
 ) -> ::core::ffi::c_int {
-    let mut pCsr: *mut PragmaVtabCursor = pVtabCursor as *mut PragmaVtabCursor;
-    *p = (*pCsr).iRowid;
+    let pCsr = &*(pVtabCursor as *mut PragmaVtabCursor);
+    *p = pCsr.iRowid;
     return crate::sqlite3_h::SQLITE_OK;
 }
 

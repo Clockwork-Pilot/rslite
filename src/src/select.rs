@@ -6774,14 +6774,15 @@ unsafe extern "C" fn isSelfJoinView(
         if (*pItem).zName.is_null() {
             continue;
         }
-        if (*(*pItem).pSTab).pSchema != (*(*pThis).pSTab).pSchema {
+        let __pSTab_ref = &*(*pItem).pSTab;
+        if __pSTab_ref.pSchema != (*(*pThis).pSTab).pSchema {
             continue;
         }
         if crate::src::src::util::sqlite3_stricmp((*pItem).zName, (*pThis).zName) != 0 as ::core::ffi::c_int {
             continue;
         }
         pS1 = (*(*pItem).u4.pSubq).pSelect;
-        if (*(*pItem).pSTab).pSchema.is_null() && (*pSel).selId != (*pS1).selId {
+        if __pSTab_ref.pSchema.is_null() && (*pSel).selId != (*pS1).selId {
             continue;
         }
         if (*pS1).selFlags & crate::sqliteInt_h::SF_PushDown as crate::src::ext::rtree::rtree::u32_0 != 0 {
