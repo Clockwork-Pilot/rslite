@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
-SRC="/sqlite"
+# get value from SQLITE_SRC env var, default to /sqlite
+SRC="${SQLITE_SRC:-/sqlite}"
 PROJ=$(pwd)
 
 # Parse optional function names as arguments

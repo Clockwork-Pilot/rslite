@@ -2,6 +2,7 @@
 
 set -euo pipefail
 
+export SQLITE_SRC="${SQLITE_SRC:-/sqlite}"
 # Content-hash build cache: if src/ is identical to a previously passing
 # build+test run, skip the expensive recompile and test execution.
 _PROJ=$(cd "$(dirname "$0")" && pwd)
@@ -32,7 +33,7 @@ while true; do
 
     ./testfixture_build.sh
 
-    ( cd /sqlite && ./rustfixture test/testrunner.tcl 2>&1 | tee /tmp/test_output.log )
+    ( cd "$SQLITE_SRC" && ./rustfixture test/testrunner.tcl 2>&1 | tee /tmp/test_output.log )
 
     if grep -q "0 errors out of" /tmp/test_output.log; then
         _POST_HASH=$(_calc_hash)

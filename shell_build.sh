@@ -2,7 +2,8 @@
 set -euo pipefail
 
 PROJ=$(pwd)
-SRC="/sqlite"
+# get from env var or use default
+SRC="${SQLITE_SRC:-/sqlite}"
 
 mkdir -p "$PROJ/target"
 mkdir -p "$PROJ/sqlite-shell"
