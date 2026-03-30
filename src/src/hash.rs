@@ -32,7 +32,7 @@ pub struct Hash {
 pub use crate::__stddef_size_t_h::size_t;
 
 
-pub use crate::src::src::malloc::sqlite3_free;pub use crate::sqlite3_h::sqlite_uint64;pub use crate::src::src::fault::sqlite3BeginBenignMalloc;pub use crate::src::src::fault::sqlite3EndBenignMalloc;pub use crate::src::src::malloc::sqlite3Malloc;pub use crate::src::src::malloc::sqlite3MallocSize;pub use crate::src::src::util::sqlite3StrICmp;pub use crate::src::ext::rtree::rtree::u64_0;pub use crate::sqliteInt_h::SQLITE_MALLOC_SOFT_LIMIT;
+pub use crate::src::src::malloc::sqlite3_free;pub use crate::src::headers::sqlite3_h::sqlite_uint64;pub use crate::src::src::fault::sqlite3BeginBenignMalloc;pub use crate::src::src::fault::sqlite3EndBenignMalloc;pub use crate::src::src::malloc::sqlite3Malloc;pub use crate::src::src::malloc::sqlite3MallocSize;pub use crate::src::src::util::sqlite3StrICmp;pub use crate::src::ext::rtree::rtree::u64_0;pub use crate::src::headers::sqliteInt_h::SQLITE_MALLOC_SOFT_LIMIT;
 
 #[no_mangle]
 
@@ -122,9 +122,9 @@ unsafe extern "C" fn rehash(
     let mut elem: *mut crate::src::src::hash::HashElem = ::core::ptr::null_mut::<crate::src::src::hash::HashElem>();
     let mut next_elem: *mut crate::src::src::hash::HashElem = ::core::ptr::null_mut::<crate::src::src::hash::HashElem>();
     if (new_size as usize).wrapping_mul(::core::mem::size_of::<crate::src::src::hash::_ht>() as usize)
-        > crate::sqliteInt_h::SQLITE_MALLOC_SOFT_LIMIT as usize
+        > crate::src::headers::sqliteInt_h::SQLITE_MALLOC_SOFT_LIMIT as usize
     {
-        new_size = (crate::sqliteInt_h::SQLITE_MALLOC_SOFT_LIMIT as usize)
+        new_size = (crate::src::headers::sqliteInt_h::SQLITE_MALLOC_SOFT_LIMIT as usize)
             .wrapping_div(::core::mem::size_of::<crate::src::src::hash::_ht>() as usize)
             as ::core::ffi::c_uint;
     }

@@ -6,9 +6,9 @@
 
 
 pub use crate::internal::SQLITE_THREADSAFE;
-pub use crate::opcodes_h::OP_Ne;
+pub use crate::src::headers::opcodes_h::OP_Ne;
 
-pub use crate::vdbeInt_h::sqlite3_context;pub use crate::sqlite3_h::sqlite3_int64;pub use crate::sqlite3_h::sqlite3_mem_methods;pub use crate::src::src::mutex_unix::sqlite3_mutex;pub use crate::sqlite3_h::sqlite3_mutex_methods;pub use crate::sqlite3_h::sqlite3_pcache;pub use crate::sqlite3_h::sqlite3_pcache_methods2;pub use crate::sqlite3_h::sqlite3_pcache_page;pub use crate::vdbeInt_h::sqlite3_value;pub use crate::sqlite3_h::sqlite_int64;pub use crate::src::ext::rtree::rtree::u32_0;pub use crate::src::ext::rtree::rtree::u8_0;pub use crate::sqliteInt_h::FuncDef;pub use crate::sqliteInt_h::FuncDestructor;pub use crate::sqliteInt_h::__anon_union_2;pub use crate::src::fts5::i16_0;pub use crate::sqliteInt_h::FuncDefHash;pub use crate::sqliteInt_h::Sqlite3Config;pub use crate::sqliteInt_h::SQLITE_AFF_BLOB;pub use crate::sqliteInt_h::SQLITE_AFF_INTEGER;pub use crate::sqliteInt_h::SQLITE_AFF_NUMERIC;pub use crate::sqliteInt_h::SQLITE_AFF_REAL;pub use crate::sqliteInt_h::SQLITE_AFF_TEXT;pub use crate::sqliteInt_h::SQLITE_DEFAULT_MEMSTATUS;pub use crate::sqliteInt_h::SQLITE_DEFAULT_MMAP_SIZE;pub use crate::sqliteInt_h::SQLITE_DEFAULT_PCACHE_INITSZ;pub use crate::sqliteInt_h::SQLITE_DEFAULT_SORTERREF_SIZE;pub use crate::sqliteInt_h::SQLITE_MAX_MMAP_SIZE;
+pub use crate::src::headers::vdbeInt_h::sqlite3_context;pub use crate::src::headers::sqlite3_h::sqlite3_int64;pub use crate::src::headers::sqlite3_h::sqlite3_mem_methods;pub use crate::src::src::mutex_unix::sqlite3_mutex;pub use crate::src::headers::sqlite3_h::sqlite3_mutex_methods;pub use crate::src::headers::sqlite3_h::sqlite3_pcache;pub use crate::src::headers::sqlite3_h::sqlite3_pcache_methods2;pub use crate::src::headers::sqlite3_h::sqlite3_pcache_page;pub use crate::src::headers::vdbeInt_h::sqlite3_value;pub use crate::src::headers::sqlite3_h::sqlite_int64;pub use crate::src::ext::rtree::rtree::u32_0;pub use crate::src::ext::rtree::rtree::u8_0;pub use crate::src::headers::sqliteInt_h::FuncDef;pub use crate::src::headers::sqliteInt_h::FuncDestructor;pub use crate::src::headers::sqliteInt_h::__anon_union_2;pub use crate::src::fts5::i16_0;pub use crate::src::headers::sqliteInt_h::FuncDefHash;pub use crate::src::headers::sqliteInt_h::Sqlite3Config;pub use crate::src::headers::sqliteInt_h::SQLITE_AFF_BLOB;pub use crate::src::headers::sqliteInt_h::SQLITE_AFF_INTEGER;pub use crate::src::headers::sqliteInt_h::SQLITE_AFF_NUMERIC;pub use crate::src::headers::sqliteInt_h::SQLITE_AFF_REAL;pub use crate::src::headers::sqliteInt_h::SQLITE_AFF_TEXT;pub use crate::src::headers::sqliteInt_h::SQLITE_DEFAULT_MEMSTATUS;pub use crate::src::headers::sqliteInt_h::SQLITE_DEFAULT_MMAP_SIZE;pub use crate::src::headers::sqliteInt_h::SQLITE_DEFAULT_PCACHE_INITSZ;pub use crate::src::headers::sqliteInt_h::SQLITE_DEFAULT_SORTERREF_SIZE;pub use crate::src::headers::sqliteInt_h::SQLITE_MAX_MMAP_SIZE;
 pub use crate::stdlib::int16_t;
 
 pub use crate::stdlib::uint32_t;pub use crate::stdlib::uint8_t;pub use crate::stdlib::__int16_t;pub use crate::stdlib::__uint32_t;pub use crate::stdlib::__uint8_t;
@@ -575,8 +575,8 @@ pub const SQLITE_STMTJRNL_SPILL: ::core::ffi::c_int =
 pub const SQLITE_MEMDB_DEFAULT_MAXSIZE: ::core::ffi::c_int = 1073741824 as ::core::ffi::c_int;
 #[no_mangle]
 
-pub static mut sqlite3Config: crate::sqliteInt_h::Sqlite3Config = crate::sqliteInt_h::Sqlite3Config {
-    bMemstat:  crate::sqliteInt_h::SQLITE_DEFAULT_MEMSTATUS,
+pub static mut sqlite3Config: crate::src::headers::sqliteInt_h::Sqlite3Config = crate::src::headers::sqliteInt_h::Sqlite3Config {
+    bMemstat:  crate::src::headers::sqliteInt_h::SQLITE_DEFAULT_MEMSTATUS,
     bCoreMutex:  1 as crate::src::ext::rtree::rtree::u8_0,
     bFullMutex:  (crate::internal::SQLITE_THREADSAFE == 1 as ::core::ffi::c_int) as ::core::ffi::c_int as crate::src::ext::rtree::rtree::u8_0,
     bOpenUri:  SQLITE_USE_URI as crate::src::ext::rtree::rtree::u8_0,
@@ -588,7 +588,7 @@ pub static mut sqlite3Config: crate::sqliteInt_h::Sqlite3Config = crate::sqliteI
     szLookaside:  1200 as ::core::ffi::c_int,
     nLookaside:  40 as ::core::ffi::c_int,
     nStmtSpill:  SQLITE_STMTJRNL_SPILL,
-    m:  crate::sqlite3_h::sqlite3_mem_methods {
+    m:  crate::src::headers::sqlite3_h::sqlite3_mem_methods {
     xMalloc:  None,
     xFree:  None,
     xRealloc:  None,
@@ -598,7 +598,7 @@ pub static mut sqlite3Config: crate::sqliteInt_h::Sqlite3Config = crate::sqliteI
     xShutdown:  None,
     pAppData:  ::core::ptr::null::<::core::ffi::c_void>() as *mut ::core::ffi::c_void,
 },
-    mutex:  crate::sqlite3_h::sqlite3_mutex_methods {
+    mutex:  crate::src::headers::sqlite3_h::sqlite3_mutex_methods {
     xMutexInit:  None,
     xMutexEnd:  None,
     xMutexAlloc:  None,
@@ -609,7 +609,7 @@ pub static mut sqlite3Config: crate::sqliteInt_h::Sqlite3Config = crate::sqliteI
     xMutexHeld:  None,
     xMutexNotheld:  None,
 },
-    pcache2:  crate::sqlite3_h::sqlite3_pcache_methods2 {
+    pcache2:  crate::src::headers::sqlite3_h::sqlite3_pcache_methods2 {
     iVersion:  0 as ::core::ffi::c_int,
     pArg:  ::core::ptr::null::<::core::ffi::c_void>() as *mut ::core::ffi::c_void,
     xInit:  None,
@@ -628,11 +628,11 @@ pub static mut sqlite3Config: crate::sqliteInt_h::Sqlite3Config = crate::sqliteI
     nHeap:  0 as ::core::ffi::c_int,
     mnReq:  0 as ::core::ffi::c_int,
     mxReq:  0 as ::core::ffi::c_int,
-    szMmap:  crate::sqliteInt_h::SQLITE_DEFAULT_MMAP_SIZE as crate::sqlite3_h::sqlite3_int64,
-    mxMmap:  crate::sqliteInt_h::SQLITE_MAX_MMAP_SIZE as crate::sqlite3_h::sqlite3_int64,
+    szMmap:  crate::src::headers::sqliteInt_h::SQLITE_DEFAULT_MMAP_SIZE as crate::src::headers::sqlite3_h::sqlite3_int64,
+    mxMmap:  crate::src::headers::sqliteInt_h::SQLITE_MAX_MMAP_SIZE as crate::src::headers::sqlite3_h::sqlite3_int64,
     pPage:  ::core::ptr::null::<::core::ffi::c_void>() as *mut ::core::ffi::c_void,
     szPage:  0 as ::core::ffi::c_int,
-    nPage:  crate::sqliteInt_h::SQLITE_DEFAULT_PCACHE_INITSZ,
+    nPage:  crate::src::headers::sqliteInt_h::SQLITE_DEFAULT_PCACHE_INITSZ,
     mxParserStack:  0 as ::core::ffi::c_int,
     sharedCacheEnabled:  0 as ::core::ffi::c_int,
     szPma:  SQLITE_SORTER_PMASZ as crate::src::ext::rtree::rtree::u32_0,
@@ -645,18 +645,18 @@ pub static mut sqlite3Config: crate::sqliteInt_h::Sqlite3Config = crate::sqliteI
     pInitMutex:  ::core::ptr::null::<crate::src::src::mutex_unix::sqlite3_mutex>() as *mut crate::src::src::mutex_unix::sqlite3_mutex,
     xLog:  None,
     pLogArg:  ::core::ptr::null::<::core::ffi::c_void>() as *mut ::core::ffi::c_void,
-    mxMemdbSize:  SQLITE_MEMDB_DEFAULT_MAXSIZE as crate::sqlite3_h::sqlite3_int64,
+    mxMemdbSize:  SQLITE_MEMDB_DEFAULT_MAXSIZE as crate::src::headers::sqlite3_h::sqlite3_int64,
     xTestCallback:  None,
     bLocaltimeFault:  0 as ::core::ffi::c_int,
     xAltLocaltime:  None,
     iOnceResetThreshold:  0x7ffffffe as ::core::ffi::c_int,
-    szSorterRef:  crate::sqliteInt_h::SQLITE_DEFAULT_SORTERREF_SIZE as crate::src::ext::rtree::rtree::u32_0,
+    szSorterRef:  crate::src::headers::sqliteInt_h::SQLITE_DEFAULT_SORTERREF_SIZE as crate::src::ext::rtree::rtree::u32_0,
     iPrngSeed:  0 as ::core::ffi::c_uint,
 };
 #[no_mangle]
 
-pub static mut sqlite3BuiltinFunctions: crate::sqliteInt_h::FuncDefHash = crate::sqliteInt_h::FuncDefHash {
-    a:  [::core::ptr::null::<crate::sqliteInt_h::FuncDef>() as *mut crate::sqliteInt_h::FuncDef; 23],
+pub static mut sqlite3BuiltinFunctions: crate::src::headers::sqliteInt_h::FuncDefHash = crate::src::headers::sqliteInt_h::FuncDefHash {
+    a:  [::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>() as *mut crate::src::headers::sqliteInt_h::FuncDef; 23],
 };
 #[no_mangle]
 
@@ -879,12 +879,12 @@ pub static mut sqlite3StdTypeLen: [::core::ffi::c_uchar; 6] = [
 #[no_mangle]
 
 pub static mut sqlite3StdTypeAffinity: [::core::ffi::c_char; 6] = [
-    crate::sqliteInt_h::SQLITE_AFF_NUMERIC as ::core::ffi::c_char,
-    crate::sqliteInt_h::SQLITE_AFF_BLOB as ::core::ffi::c_char,
-    crate::sqliteInt_h::SQLITE_AFF_INTEGER as ::core::ffi::c_char,
-    crate::sqliteInt_h::SQLITE_AFF_INTEGER as ::core::ffi::c_char,
-    crate::sqliteInt_h::SQLITE_AFF_REAL as ::core::ffi::c_char,
-    crate::sqliteInt_h::SQLITE_AFF_TEXT as ::core::ffi::c_char,
+    crate::src::headers::sqliteInt_h::SQLITE_AFF_NUMERIC as ::core::ffi::c_char,
+    crate::src::headers::sqliteInt_h::SQLITE_AFF_BLOB as ::core::ffi::c_char,
+    crate::src::headers::sqliteInt_h::SQLITE_AFF_INTEGER as ::core::ffi::c_char,
+    crate::src::headers::sqliteInt_h::SQLITE_AFF_INTEGER as ::core::ffi::c_char,
+    crate::src::headers::sqliteInt_h::SQLITE_AFF_REAL as ::core::ffi::c_char,
+    crate::src::headers::sqliteInt_h::SQLITE_AFF_TEXT as ::core::ffi::c_char,
 ];
 #[no_mangle]
 
@@ -898,13 +898,13 @@ pub static mut sqlite3StdType: [*const ::core::ffi::c_char; 6] = [
 ];
 unsafe extern "C" fn run_static_initializers() {
     sqlite3aLTb = (&raw const sqlite3UpperToLower as *const ::core::ffi::c_uchar)
-        .offset((256 as ::core::ffi::c_int - crate::opcodes_h::OP_Ne) as isize)
+        .offset((256 as ::core::ffi::c_int - crate::src::headers::opcodes_h::OP_Ne) as isize)
         as *const ::core::ffi::c_uchar;
     sqlite3aEQb = (&raw const sqlite3UpperToLower as *const ::core::ffi::c_uchar)
-        .offset((256 as ::core::ffi::c_int + 6 as ::core::ffi::c_int - crate::opcodes_h::OP_Ne) as isize)
+        .offset((256 as ::core::ffi::c_int + 6 as ::core::ffi::c_int - crate::src::headers::opcodes_h::OP_Ne) as isize)
         as *const ::core::ffi::c_uchar;
     sqlite3aGTb = (&raw const sqlite3UpperToLower as *const ::core::ffi::c_uchar)
-        .offset((256 as ::core::ffi::c_int + 12 as ::core::ffi::c_int - crate::opcodes_h::OP_Ne) as isize)
+        .offset((256 as ::core::ffi::c_int + 12 as ::core::ffi::c_int - crate::src::headers::opcodes_h::OP_Ne) as isize)
         as *const ::core::ffi::c_uchar;
 }
 #[used]

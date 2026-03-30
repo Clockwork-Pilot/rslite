@@ -1487,13 +1487,13 @@ pub mod keywordhash_h {
         mut pnName: *mut ::core::ffi::c_int,
     ) -> ::core::ffi::c_int {
         if i < 0 as ::core::ffi::c_int || i >= crate::keywordhash_h::SQLITE_N_KEYWORD {
-            return crate::sqlite3_h::SQLITE_ERROR;
+            return crate::src::headers::sqlite3_h::SQLITE_ERROR;
         }
         i += 1;
         *pzName = (&raw const zKWText as *const ::core::ffi::c_char)
             .offset(aKWOffset[i as usize] as ::core::ffi::c_int as isize);
         *pnName = aKWLen[i as usize] as ::core::ffi::c_int;
-        crate::sqlite3_h::SQLITE_OK
+        crate::src::headers::sqlite3_h::SQLITE_OK
     }
     #[no_mangle]
     
@@ -1522,11 +1522,11 @@ pub use crate::src::src::tokenize::keywordhash_h::aKWCode;pub use crate::src::sr
 pub use crate::src::src::pager::Pgno;
 
 
-pub use crate::src::parse::TK_ABORT;pub use crate::src::parse::TK_ACTION;pub use crate::src::parse::TK_ADD;pub use crate::src::parse::TK_AFTER;pub use crate::src::parse::TK_ALL;pub use crate::src::parse::TK_ALTER;pub use crate::src::parse::TK_ALWAYS;pub use crate::src::parse::TK_ANALYZE;pub use crate::src::parse::TK_AND;pub use crate::src::parse::TK_AS;pub use crate::src::parse::TK_ASC;pub use crate::src::parse::TK_ATTACH;pub use crate::src::parse::TK_AUTOINCR;pub use crate::src::parse::TK_BEFORE;pub use crate::src::parse::TK_BEGIN;pub use crate::src::parse::TK_BETWEEN;pub use crate::src::parse::TK_BITAND_1;pub use crate::src::parse::TK_BITNOT_1;pub use crate::src::parse::TK_BITOR_1;pub use crate::src::parse::TK_BLOB_1;pub use crate::src::parse::TK_BY;pub use crate::src::parse::TK_CASCADE;pub use crate::src::parse::TK_CASE;pub use crate::src::parse::TK_CAST;pub use crate::src::parse::TK_CHECK;pub use crate::src::parse::TK_COLLATE;pub use crate::src::parse::TK_COLUMNKW;pub use crate::src::parse::TK_COMMA;pub use crate::src::parse::TK_COMMENT;pub use crate::src::parse::TK_COMMIT;pub use crate::src::parse::TK_CONCAT_1;pub use crate::src::parse::TK_CONFLICT;pub use crate::src::parse::TK_CONSTRAINT;pub use crate::src::parse::TK_CREATE;pub use crate::src::parse::TK_CTIME_KW;pub use crate::src::parse::TK_CURRENT;pub use crate::src::parse::TK_DATABASE;pub use crate::src::parse::TK_DEFAULT;pub use crate::src::parse::TK_DEFERRABLE;pub use crate::src::parse::TK_DEFERRED;pub use crate::src::parse::TK_DELETE;pub use crate::src::parse::TK_DESC;pub use crate::src::parse::TK_DETACH;pub use crate::src::parse::TK_DISTINCT;pub use crate::src::parse::TK_DO;pub use crate::src::parse::TK_DOT;pub use crate::src::parse::TK_DROP;pub use crate::src::parse::TK_EACH;pub use crate::src::parse::TK_ELSE;pub use crate::src::parse::TK_END;pub use crate::src::parse::TK_EQ;pub use crate::src::parse::TK_ESCAPE;pub use crate::src::parse::TK_EXCEPT_1;pub use crate::src::parse::TK_EXCLUDE;pub use crate::src::parse::TK_EXCLUSIVE;pub use crate::src::parse::TK_EXISTS;pub use crate::src::parse::TK_EXPLAIN;pub use crate::src::parse::TK_FAIL;pub use crate::src::parse::TK_FILTER;pub use crate::src::parse::TK_FIRST;pub use crate::src::parse::TK_FLOAT_1;pub use crate::src::parse::TK_FOLLOWING;pub use crate::src::parse::TK_FOR;pub use crate::src::parse::TK_FOREIGN;pub use crate::src::parse::TK_FROM;pub use crate::src::parse::TK_GE;pub use crate::src::parse::TK_GENERATED;pub use crate::src::parse::TK_GROUP;pub use crate::src::parse::TK_GROUPS;pub use crate::src::parse::TK_GT_1;pub use crate::src::parse::TK_HAVING;pub use crate::src::parse::TK_ID;pub use crate::src::parse::TK_IF;pub use crate::src::parse::TK_IGNORE;pub use crate::src::parse::TK_ILLEGAL;pub use crate::src::parse::TK_IMMEDIATE;pub use crate::src::parse::TK_IN;pub use crate::src::parse::TK_INDEX;pub use crate::src::parse::TK_INDEXED;pub use crate::src::parse::TK_INITIALLY;pub use crate::src::parse::TK_INSERT;pub use crate::src::parse::TK_INSTEAD;pub use crate::src::parse::TK_INTEGER;pub use crate::src::parse::TK_INTERSECT_1;pub use crate::src::parse::TK_INTO;pub use crate::src::parse::TK_IS;pub use crate::src::parse::TK_ISNULL;pub use crate::src::parse::TK_JOIN;pub use crate::src::parse::TK_JOIN_KW;pub use crate::src::parse::TK_KEY;pub use crate::src::parse::TK_LAST;pub use crate::src::parse::TK_LE;pub use crate::src::parse::TK_LIKE_KW;pub use crate::src::parse::TK_LIMIT;pub use crate::src::parse::TK_LP;pub use crate::src::parse::TK_LSHIFT_1;pub use crate::src::parse::TK_LT_1;pub use crate::src::parse::TK_MATCH;pub use crate::src::parse::TK_MATERIALIZED;pub use crate::src::parse::TK_MINUS_1;pub use crate::src::parse::TK_NE;pub use crate::src::parse::TK_NO;pub use crate::src::parse::TK_NOT;pub use crate::src::parse::TK_NOTHING;pub use crate::src::parse::TK_NOTNULL;pub use crate::src::parse::TK_NULL;pub use crate::src::parse::TK_NULLS_1;pub use crate::src::parse::TK_OF;pub use crate::src::parse::TK_OFFSET;pub use crate::src::parse::TK_ON;pub use crate::src::parse::TK_OR;pub use crate::src::parse::TK_ORDER;pub use crate::src::parse::TK_OTHERS;pub use crate::src::parse::TK_OVER;pub use crate::src::parse::TK_PARTITION;pub use crate::src::parse::TK_PLAN;pub use crate::src::parse::TK_PLUS;pub use crate::src::parse::TK_PRAGMA;pub use crate::src::parse::TK_PRECEDING;pub use crate::src::parse::TK_PRIMARY;pub use crate::src::parse::TK_PTR;pub use crate::src::parse::TK_QNUMBER;pub use crate::src::parse::TK_QUERY;pub use crate::src::parse::TK_RAISE;pub use crate::src::parse::TK_RANGE;pub use crate::src::parse::TK_RECURSIVE;pub use crate::src::parse::TK_REFERENCES;pub use crate::src::parse::TK_REINDEX;pub use crate::src::parse::TK_RELEASE;pub use crate::src::parse::TK_REM_1;pub use crate::src::parse::TK_RENAME;pub use crate::src::parse::TK_REPLACE;pub use crate::src::parse::TK_RESTRICT;pub use crate::src::parse::TK_RETURNING;pub use crate::src::parse::TK_ROLLBACK;pub use crate::src::parse::TK_ROW_1;pub use crate::src::parse::TK_ROWS;pub use crate::src::parse::TK_RP;pub use crate::src::parse::TK_RSHIFT_1;pub use crate::src::parse::TK_SAVEPOINT;pub use crate::src::parse::TK_SELECT;pub use crate::src::parse::TK_SEMI;pub use crate::src::parse::TK_SET;pub use crate::src::parse::TK_SLASH_1;pub use crate::src::parse::TK_SPACE;pub use crate::src::parse::TK_STAR_1;pub use crate::src::parse::TK_STRING;pub use crate::src::parse::TK_TABLE;pub use crate::src::parse::TK_TEMP;pub use crate::src::parse::TK_THEN;pub use crate::src::parse::TK_TIES;pub use crate::src::parse::TK_TO;pub use crate::src::parse::TK_TRANSACTION;pub use crate::src::parse::TK_TRIGGER;pub use crate::src::parse::TK_UNBOUNDED;pub use crate::src::parse::TK_UNION;pub use crate::src::parse::TK_UNIQUE;pub use crate::src::parse::TK_UPDATE;pub use crate::src::parse::TK_USING;pub use crate::src::parse::TK_VACUUM;pub use crate::src::parse::TK_VALUES;pub use crate::src::parse::TK_VARIABLE;pub use crate::src::parse::TK_VIEW;pub use crate::src::parse::TK_VIRTUAL;pub use crate::src::parse::TK_WHEN;pub use crate::src::parse::TK_WHERE;pub use crate::src::parse::TK_WINDOW;pub use crate::src::parse::TK_WITH;pub use crate::src::parse::TK_WITHOUT;pub use crate::vdbeInt_h::sqlite3_context;pub use crate::sqlite3_h::sqlite3_file;pub use crate::sqlite3_h::sqlite3_filename;pub use crate::src::src::malloc::sqlite3_free;pub use crate::sqlite3_h::sqlite3_index_constraint;pub use crate::sqlite3_h::sqlite3_index_constraint_usage;pub use crate::sqlite3_h::sqlite3_index_info;pub use crate::sqlite3_h::sqlite3_index_orderby;pub use crate::sqlite3_h::sqlite3_int64;pub use crate::sqlite3_h::sqlite3_io_methods;pub use crate::src::src::printf::sqlite3_log;pub use crate::sqlite3_h::sqlite3_module;pub use crate::src::src::mutex_unix::sqlite3_mutex;pub use crate::sqlite3_h::sqlite3_syscall_ptr;pub use crate::sqlite3_h::sqlite3_uint64;pub use crate::vdbeInt_h::sqlite3_value;pub use crate::sqlite3_h::sqlite3_vfs;pub use crate::sqlite3_h::sqlite3_vtab;pub use crate::sqlite3_h::sqlite3_vtab_cursor;pub use crate::sqlite3_h::sqlite_int64;pub use crate::sqlite3_h::sqlite_uint64;pub use crate::sqlite3_h::SQLITE_DONE;pub use crate::sqlite3_h::SQLITE_ERROR;pub use crate::sqlite3_h::SQLITE_INTERRUPT;pub use crate::sqlite3_h::SQLITE_LIMIT_SQL_LENGTH;pub use crate::sqlite3_h::SQLITE_NOMEM;pub use crate::sqlite3_h::SQLITE_OK;pub use crate::sqlite3_h::SQLITE_PREPARE_DONT_LOG;pub use crate::sqlite3_h::SQLITE_TOOBIG;pub use crate::sqliteInt_h::__anon_struct_0;pub use crate::sqliteInt_h::__anon_struct_1;pub use crate::sqliteInt_h::__anon_struct_2;pub use crate::sqliteInt_h::__anon_struct_3;pub use crate::sqliteInt_h::__anon_struct_4;pub use crate::sqliteInt_h::__anon_struct_5;pub use crate::sqliteInt_h::__anon_struct_6;pub use crate::sqliteInt_h::__anon_struct_7;pub use crate::sqliteInt_h::__anon_struct_8;pub use crate::sqliteInt_h::__anon_union_0;pub use crate::sqliteInt_h::__anon_union_1;pub use crate::sqliteInt_h::__anon_union_10;pub use crate::sqliteInt_h::__anon_union_11;pub use crate::sqliteInt_h::__anon_union_12;pub use crate::sqliteInt_h::__anon_union_13;pub use crate::sqliteInt_h::__anon_union_15;pub use crate::sqliteInt_h::__anon_union_2;pub use crate::sqliteInt_h::__anon_union_3;pub use crate::sqliteInt_h::__anon_union_5;pub use crate::sqliteInt_h::__anon_union_6;pub use crate::sqliteInt_h::__anon_union_7;pub use crate::sqliteInt_h::__anon_union_8;pub use crate::sqliteInt_h::__anon_union_9;pub use crate::sqliteInt_h::bft;pub use crate::src::fts5::i16_0;pub use crate::src::ext::rtree::rtree::i64_0;pub use crate::sqliteInt_h::sColMap;pub use crate::sqliteInt_h::sqlite3;pub use crate::src::src::global::sqlite3CtypeMap;pub use crate::src::src::malloc::sqlite3DbNNFreeNN;pub use crate::src::src::build::sqlite3DeleteTable;pub use crate::src::src::trigger::sqlite3DeleteTrigger;pub use crate::src::src::main::sqlite3ErrStr;pub use crate::src::src::util::sqlite3ErrorMsg;pub use crate::sqliteInt_h::sqlite3InitInfo;pub use crate::src::src::printf::sqlite3MPrintf;pub use crate::src::src::malloc::sqlite3Malloc;pub use crate::src::src::malloc::sqlite3OomFault;pub use crate::src::parse::sqlite3Parser;pub use crate::src::parse::sqlite3ParserAlloc;pub use crate::src::parse::sqlite3ParserFallback;pub use crate::src::parse::sqlite3ParserFree;pub use crate::src::src::global::sqlite3UpperToLower;pub use crate::sqliteInt_h::sqlite3_xauth;pub use crate::src::fts5::u16_0;pub use crate::src::ext::rtree::rtree::u32_0;pub use crate::src::ext::rtree::rtree::u64_0;pub use crate::src::ext::rtree::rtree::u8_0;pub use crate::sqliteInt_h::yDbMask;pub use crate::sqliteInt_h::ynVar;pub use crate::sqliteInt_h::AggInfo;pub use crate::sqliteInt_h::AggInfo_col;pub use crate::sqliteInt_h::AggInfo_func;pub use crate::sqliteInt_h::AutoincInfo;pub use crate::sqliteInt_h::Bitmask;pub use crate::sqliteInt_h::BusyHandler;pub use crate::sqliteInt_h::CollSeq;pub use crate::sqliteInt_h::Column;pub use crate::sqliteInt_h::Cte;pub use crate::sqliteInt_h::CteUse;pub use crate::sqliteInt_h::Db;pub use crate::sqliteInt_h::DbClientData;pub use crate::sqliteInt_h::Expr;pub use crate::sqliteInt_h::ExprList;pub use crate::sqliteInt_h::ExprList_item;pub use crate::sqliteInt_h::FKey;pub use crate::sqliteInt_h::FuncDef;pub use crate::sqliteInt_h::FuncDestructor;pub use crate::sqliteInt_h::IdList;pub use crate::sqliteInt_h::IdList_item;pub use crate::sqliteInt_h::Index;pub use crate::sqliteInt_h::IndexedExpr;pub use crate::sqliteInt_h::KeyInfo;pub use crate::sqliteInt_h::LogEst;pub use crate::sqliteInt_h::Lookaside;pub use crate::sqliteInt_h::LookasideSlot;pub use crate::sqliteInt_h::Module;pub use crate::sqliteInt_h::Parse;pub use crate::sqliteInt_h::ParseCleanup;pub use crate::vdbeInt_h::PreUpdate;pub use crate::sqliteInt_h::RenameToken;pub use crate::sqliteInt_h::Returning;pub use crate::sqliteInt_h::SQLITE_Comments;pub use crate::sqliteInt_h::Savepoint;pub use crate::sqliteInt_h::Schema;pub use crate::sqliteInt_h::Select;pub use crate::sqliteInt_h::SrcItem;pub use crate::sqliteInt_h::SrcList;pub use crate::sqliteInt_h::Subquery;pub use crate::sqliteInt_h::Table;pub use crate::sqliteInt_h::TableLock;pub use crate::sqliteInt_h::Token;pub use crate::sqliteInt_h::Trigger;pub use crate::sqliteInt_h::TriggerPrg;pub use crate::sqliteInt_h::TriggerStep;pub use crate::sqliteInt_h::Upsert;pub use crate::sqliteInt_h::VList;pub use crate::sqliteInt_h::VTable;pub use crate::sqliteInt_h::VtabCtx;pub use crate::sqliteInt_h::Window;pub use crate::sqliteInt_h::With;pub use crate::sqliteInt_h::PARSE_MODE_NORMAL;pub use crate::sqliteInt_h::PARSE_MODE_RENAME;pub use crate::sqliteInt_h::SQLITE_DIGIT_SEPARATOR;pub use crate::sqliteInt_h::SQLITE_NOMEM_BKPT;
+pub use crate::src::parse::TK_ABORT;pub use crate::src::parse::TK_ACTION;pub use crate::src::parse::TK_ADD;pub use crate::src::parse::TK_AFTER;pub use crate::src::parse::TK_ALL;pub use crate::src::parse::TK_ALTER;pub use crate::src::parse::TK_ALWAYS;pub use crate::src::parse::TK_ANALYZE;pub use crate::src::parse::TK_AND;pub use crate::src::parse::TK_AS;pub use crate::src::parse::TK_ASC;pub use crate::src::parse::TK_ATTACH;pub use crate::src::parse::TK_AUTOINCR;pub use crate::src::parse::TK_BEFORE;pub use crate::src::parse::TK_BEGIN;pub use crate::src::parse::TK_BETWEEN;pub use crate::src::parse::TK_BITAND_1;pub use crate::src::parse::TK_BITNOT_1;pub use crate::src::parse::TK_BITOR_1;pub use crate::src::parse::TK_BLOB_1;pub use crate::src::parse::TK_BY;pub use crate::src::parse::TK_CASCADE;pub use crate::src::parse::TK_CASE;pub use crate::src::parse::TK_CAST;pub use crate::src::parse::TK_CHECK;pub use crate::src::parse::TK_COLLATE;pub use crate::src::parse::TK_COLUMNKW;pub use crate::src::parse::TK_COMMA;pub use crate::src::parse::TK_COMMENT;pub use crate::src::parse::TK_COMMIT;pub use crate::src::parse::TK_CONCAT_1;pub use crate::src::parse::TK_CONFLICT;pub use crate::src::parse::TK_CONSTRAINT;pub use crate::src::parse::TK_CREATE;pub use crate::src::parse::TK_CTIME_KW;pub use crate::src::parse::TK_CURRENT;pub use crate::src::parse::TK_DATABASE;pub use crate::src::parse::TK_DEFAULT;pub use crate::src::parse::TK_DEFERRABLE;pub use crate::src::parse::TK_DEFERRED;pub use crate::src::parse::TK_DELETE;pub use crate::src::parse::TK_DESC;pub use crate::src::parse::TK_DETACH;pub use crate::src::parse::TK_DISTINCT;pub use crate::src::parse::TK_DO;pub use crate::src::parse::TK_DOT;pub use crate::src::parse::TK_DROP;pub use crate::src::parse::TK_EACH;pub use crate::src::parse::TK_ELSE;pub use crate::src::parse::TK_END;pub use crate::src::parse::TK_EQ;pub use crate::src::parse::TK_ESCAPE;pub use crate::src::parse::TK_EXCEPT_1;pub use crate::src::parse::TK_EXCLUDE;pub use crate::src::parse::TK_EXCLUSIVE;pub use crate::src::parse::TK_EXISTS;pub use crate::src::parse::TK_EXPLAIN;pub use crate::src::parse::TK_FAIL;pub use crate::src::parse::TK_FILTER;pub use crate::src::parse::TK_FIRST;pub use crate::src::parse::TK_FLOAT_1;pub use crate::src::parse::TK_FOLLOWING;pub use crate::src::parse::TK_FOR;pub use crate::src::parse::TK_FOREIGN;pub use crate::src::parse::TK_FROM;pub use crate::src::parse::TK_GE;pub use crate::src::parse::TK_GENERATED;pub use crate::src::parse::TK_GROUP;pub use crate::src::parse::TK_GROUPS;pub use crate::src::parse::TK_GT_1;pub use crate::src::parse::TK_HAVING;pub use crate::src::parse::TK_ID;pub use crate::src::parse::TK_IF;pub use crate::src::parse::TK_IGNORE;pub use crate::src::parse::TK_ILLEGAL;pub use crate::src::parse::TK_IMMEDIATE;pub use crate::src::parse::TK_IN;pub use crate::src::parse::TK_INDEX;pub use crate::src::parse::TK_INDEXED;pub use crate::src::parse::TK_INITIALLY;pub use crate::src::parse::TK_INSERT;pub use crate::src::parse::TK_INSTEAD;pub use crate::src::parse::TK_INTEGER;pub use crate::src::parse::TK_INTERSECT_1;pub use crate::src::parse::TK_INTO;pub use crate::src::parse::TK_IS;pub use crate::src::parse::TK_ISNULL;pub use crate::src::parse::TK_JOIN;pub use crate::src::parse::TK_JOIN_KW;pub use crate::src::parse::TK_KEY;pub use crate::src::parse::TK_LAST;pub use crate::src::parse::TK_LE;pub use crate::src::parse::TK_LIKE_KW;pub use crate::src::parse::TK_LIMIT;pub use crate::src::parse::TK_LP;pub use crate::src::parse::TK_LSHIFT_1;pub use crate::src::parse::TK_LT_1;pub use crate::src::parse::TK_MATCH;pub use crate::src::parse::TK_MATERIALIZED;pub use crate::src::parse::TK_MINUS_1;pub use crate::src::parse::TK_NE;pub use crate::src::parse::TK_NO;pub use crate::src::parse::TK_NOT;pub use crate::src::parse::TK_NOTHING;pub use crate::src::parse::TK_NOTNULL;pub use crate::src::parse::TK_NULL;pub use crate::src::parse::TK_NULLS_1;pub use crate::src::parse::TK_OF;pub use crate::src::parse::TK_OFFSET;pub use crate::src::parse::TK_ON;pub use crate::src::parse::TK_OR;pub use crate::src::parse::TK_ORDER;pub use crate::src::parse::TK_OTHERS;pub use crate::src::parse::TK_OVER;pub use crate::src::parse::TK_PARTITION;pub use crate::src::parse::TK_PLAN;pub use crate::src::parse::TK_PLUS;pub use crate::src::parse::TK_PRAGMA;pub use crate::src::parse::TK_PRECEDING;pub use crate::src::parse::TK_PRIMARY;pub use crate::src::parse::TK_PTR;pub use crate::src::parse::TK_QNUMBER;pub use crate::src::parse::TK_QUERY;pub use crate::src::parse::TK_RAISE;pub use crate::src::parse::TK_RANGE;pub use crate::src::parse::TK_RECURSIVE;pub use crate::src::parse::TK_REFERENCES;pub use crate::src::parse::TK_REINDEX;pub use crate::src::parse::TK_RELEASE;pub use crate::src::parse::TK_REM_1;pub use crate::src::parse::TK_RENAME;pub use crate::src::parse::TK_REPLACE;pub use crate::src::parse::TK_RESTRICT;pub use crate::src::parse::TK_RETURNING;pub use crate::src::parse::TK_ROLLBACK;pub use crate::src::parse::TK_ROW_1;pub use crate::src::parse::TK_ROWS;pub use crate::src::parse::TK_RP;pub use crate::src::parse::TK_RSHIFT_1;pub use crate::src::parse::TK_SAVEPOINT;pub use crate::src::parse::TK_SELECT;pub use crate::src::parse::TK_SEMI;pub use crate::src::parse::TK_SET;pub use crate::src::parse::TK_SLASH_1;pub use crate::src::parse::TK_SPACE;pub use crate::src::parse::TK_STAR_1;pub use crate::src::parse::TK_STRING;pub use crate::src::parse::TK_TABLE;pub use crate::src::parse::TK_TEMP;pub use crate::src::parse::TK_THEN;pub use crate::src::parse::TK_TIES;pub use crate::src::parse::TK_TO;pub use crate::src::parse::TK_TRANSACTION;pub use crate::src::parse::TK_TRIGGER;pub use crate::src::parse::TK_UNBOUNDED;pub use crate::src::parse::TK_UNION;pub use crate::src::parse::TK_UNIQUE;pub use crate::src::parse::TK_UPDATE;pub use crate::src::parse::TK_USING;pub use crate::src::parse::TK_VACUUM;pub use crate::src::parse::TK_VALUES;pub use crate::src::parse::TK_VARIABLE;pub use crate::src::parse::TK_VIEW;pub use crate::src::parse::TK_VIRTUAL;pub use crate::src::parse::TK_WHEN;pub use crate::src::parse::TK_WHERE;pub use crate::src::parse::TK_WINDOW;pub use crate::src::parse::TK_WITH;pub use crate::src::parse::TK_WITHOUT;pub use crate::src::headers::vdbeInt_h::sqlite3_context;pub use crate::src::headers::sqlite3_h::sqlite3_file;pub use crate::src::headers::sqlite3_h::sqlite3_filename;pub use crate::src::src::malloc::sqlite3_free;pub use crate::src::headers::sqlite3_h::sqlite3_index_constraint;pub use crate::src::headers::sqlite3_h::sqlite3_index_constraint_usage;pub use crate::src::headers::sqlite3_h::sqlite3_index_info;pub use crate::src::headers::sqlite3_h::sqlite3_index_orderby;pub use crate::src::headers::sqlite3_h::sqlite3_int64;pub use crate::src::headers::sqlite3_h::sqlite3_io_methods;pub use crate::src::src::printf::sqlite3_log;pub use crate::src::headers::sqlite3_h::sqlite3_module;pub use crate::src::src::mutex_unix::sqlite3_mutex;pub use crate::src::headers::sqlite3_h::sqlite3_syscall_ptr;pub use crate::src::headers::sqlite3_h::sqlite3_uint64;pub use crate::src::headers::vdbeInt_h::sqlite3_value;pub use crate::src::headers::sqlite3_h::sqlite3_vfs;pub use crate::src::headers::sqlite3_h::sqlite3_vtab;pub use crate::src::headers::sqlite3_h::sqlite3_vtab_cursor;pub use crate::src::headers::sqlite3_h::sqlite_int64;pub use crate::src::headers::sqlite3_h::sqlite_uint64;pub use crate::src::headers::sqlite3_h::SQLITE_DONE;pub use crate::src::headers::sqlite3_h::SQLITE_ERROR;pub use crate::src::headers::sqlite3_h::SQLITE_INTERRUPT;pub use crate::src::headers::sqlite3_h::SQLITE_LIMIT_SQL_LENGTH;pub use crate::src::headers::sqlite3_h::SQLITE_NOMEM;pub use crate::src::headers::sqlite3_h::SQLITE_OK;pub use crate::src::headers::sqlite3_h::SQLITE_PREPARE_DONT_LOG;pub use crate::src::headers::sqlite3_h::SQLITE_TOOBIG;pub use crate::src::headers::sqliteInt_h::__anon_struct_0;pub use crate::src::headers::sqliteInt_h::__anon_struct_1;pub use crate::src::headers::sqliteInt_h::__anon_struct_2;pub use crate::src::headers::sqliteInt_h::__anon_struct_3;pub use crate::src::headers::sqliteInt_h::__anon_struct_4;pub use crate::src::headers::sqliteInt_h::__anon_struct_5;pub use crate::src::headers::sqliteInt_h::__anon_struct_6;pub use crate::src::headers::sqliteInt_h::__anon_struct_7;pub use crate::src::headers::sqliteInt_h::__anon_struct_8;pub use crate::src::headers::sqliteInt_h::__anon_union_0;pub use crate::src::headers::sqliteInt_h::__anon_union_1;pub use crate::src::headers::sqliteInt_h::__anon_union_10;pub use crate::src::headers::sqliteInt_h::__anon_union_11;pub use crate::src::headers::sqliteInt_h::__anon_union_12;pub use crate::src::headers::sqliteInt_h::__anon_union_13;pub use crate::src::headers::sqliteInt_h::__anon_union_15;pub use crate::src::headers::sqliteInt_h::__anon_union_2;pub use crate::src::headers::sqliteInt_h::__anon_union_3;pub use crate::src::headers::sqliteInt_h::__anon_union_5;pub use crate::src::headers::sqliteInt_h::__anon_union_6;pub use crate::src::headers::sqliteInt_h::__anon_union_7;pub use crate::src::headers::sqliteInt_h::__anon_union_8;pub use crate::src::headers::sqliteInt_h::__anon_union_9;pub use crate::src::headers::sqliteInt_h::bft;pub use crate::src::fts5::i16_0;pub use crate::src::ext::rtree::rtree::i64_0;pub use crate::src::headers::sqliteInt_h::sColMap;pub use crate::src::headers::sqliteInt_h::sqlite3;pub use crate::src::src::global::sqlite3CtypeMap;pub use crate::src::src::malloc::sqlite3DbNNFreeNN;pub use crate::src::src::build::sqlite3DeleteTable;pub use crate::src::src::trigger::sqlite3DeleteTrigger;pub use crate::src::src::main::sqlite3ErrStr;pub use crate::src::src::util::sqlite3ErrorMsg;pub use crate::src::headers::sqliteInt_h::sqlite3InitInfo;pub use crate::src::src::printf::sqlite3MPrintf;pub use crate::src::src::malloc::sqlite3Malloc;pub use crate::src::src::malloc::sqlite3OomFault;pub use crate::src::parse::sqlite3Parser;pub use crate::src::parse::sqlite3ParserAlloc;pub use crate::src::parse::sqlite3ParserFallback;pub use crate::src::parse::sqlite3ParserFree;pub use crate::src::src::global::sqlite3UpperToLower;pub use crate::src::headers::sqliteInt_h::sqlite3_xauth;pub use crate::src::fts5::u16_0;pub use crate::src::ext::rtree::rtree::u32_0;pub use crate::src::ext::rtree::rtree::u64_0;pub use crate::src::ext::rtree::rtree::u8_0;pub use crate::src::headers::sqliteInt_h::yDbMask;pub use crate::src::headers::sqliteInt_h::ynVar;pub use crate::src::headers::sqliteInt_h::AggInfo;pub use crate::src::headers::sqliteInt_h::AggInfo_col;pub use crate::src::headers::sqliteInt_h::AggInfo_func;pub use crate::src::headers::sqliteInt_h::AutoincInfo;pub use crate::src::headers::sqliteInt_h::Bitmask;pub use crate::src::headers::sqliteInt_h::BusyHandler;pub use crate::src::headers::sqliteInt_h::CollSeq;pub use crate::src::headers::sqliteInt_h::Column;pub use crate::src::headers::sqliteInt_h::Cte;pub use crate::src::headers::sqliteInt_h::CteUse;pub use crate::src::headers::sqliteInt_h::Db;pub use crate::src::headers::sqliteInt_h::DbClientData;pub use crate::src::headers::sqliteInt_h::Expr;pub use crate::src::headers::sqliteInt_h::ExprList;pub use crate::src::headers::sqliteInt_h::ExprList_item;pub use crate::src::headers::sqliteInt_h::FKey;pub use crate::src::headers::sqliteInt_h::FuncDef;pub use crate::src::headers::sqliteInt_h::FuncDestructor;pub use crate::src::headers::sqliteInt_h::IdList;pub use crate::src::headers::sqliteInt_h::IdList_item;pub use crate::src::headers::sqliteInt_h::Index;pub use crate::src::headers::sqliteInt_h::IndexedExpr;pub use crate::src::headers::sqliteInt_h::KeyInfo;pub use crate::src::headers::sqliteInt_h::LogEst;pub use crate::src::headers::sqliteInt_h::Lookaside;pub use crate::src::headers::sqliteInt_h::LookasideSlot;pub use crate::src::headers::sqliteInt_h::Module;pub use crate::src::headers::sqliteInt_h::Parse;pub use crate::src::headers::sqliteInt_h::ParseCleanup;pub use crate::src::headers::vdbeInt_h::PreUpdate;pub use crate::src::headers::sqliteInt_h::RenameToken;pub use crate::src::headers::sqliteInt_h::Returning;pub use crate::src::headers::sqliteInt_h::SQLITE_Comments;pub use crate::src::headers::sqliteInt_h::Savepoint;pub use crate::src::headers::sqliteInt_h::Schema;pub use crate::src::headers::sqliteInt_h::Select;pub use crate::src::headers::sqliteInt_h::SrcItem;pub use crate::src::headers::sqliteInt_h::SrcList;pub use crate::src::headers::sqliteInt_h::Subquery;pub use crate::src::headers::sqliteInt_h::Table;pub use crate::src::headers::sqliteInt_h::TableLock;pub use crate::src::headers::sqliteInt_h::Token;pub use crate::src::headers::sqliteInt_h::Trigger;pub use crate::src::headers::sqliteInt_h::TriggerPrg;pub use crate::src::headers::sqliteInt_h::TriggerStep;pub use crate::src::headers::sqliteInt_h::Upsert;pub use crate::src::headers::sqliteInt_h::VList;pub use crate::src::headers::sqliteInt_h::VTable;pub use crate::src::headers::sqliteInt_h::VtabCtx;pub use crate::src::headers::sqliteInt_h::Window;pub use crate::src::headers::sqliteInt_h::With;pub use crate::src::headers::sqliteInt_h::PARSE_MODE_NORMAL;pub use crate::src::headers::sqliteInt_h::PARSE_MODE_RENAME;pub use crate::src::headers::sqliteInt_h::SQLITE_DIGIT_SEPARATOR;pub use crate::src::headers::sqliteInt_h::SQLITE_NOMEM_BKPT;
 pub use crate::stdlib::int16_t;
 
 
-pub use crate::stdlib::uint16_t;pub use crate::stdlib::uint32_t;pub use crate::stdlib::uint8_t;pub use crate::stdlib::__int16_t;pub use crate::stdlib::__uint16_t;pub use crate::stdlib::__uint32_t;pub use crate::stdlib::__uint8_t;pub use crate::src::src::vdbe::p4union;pub use crate::src::src::vdbe::Mem;pub use crate::src::src::vdbe::SubProgram;pub use crate::src::src::vdbe::SubrtnSig;pub use crate::vdbeInt_h::Vdbe;pub use crate::src::src::vdbe::VdbeOp;
+pub use crate::stdlib::uint16_t;pub use crate::stdlib::uint32_t;pub use crate::stdlib::uint8_t;pub use crate::stdlib::__int16_t;pub use crate::stdlib::__uint16_t;pub use crate::stdlib::__uint32_t;pub use crate::stdlib::__uint8_t;pub use crate::src::src::vdbe::p4union;pub use crate::src::src::vdbe::Mem;pub use crate::src::src::vdbe::SubProgram;pub use crate::src::src::vdbe::SubrtnSig;pub use crate::src::headers::vdbeInt_h::Vdbe;pub use crate::src::src::vdbe::VdbeOp;
 
 pub const CC_X: ::core::ffi::c_int = 0;
 
@@ -2291,7 +2291,7 @@ pub unsafe extern "C" fn sqlite3GetToken(
                         & 0x8 as ::core::ffi::c_int
                         == 0 as ::core::ffi::c_int
                     {
-                        if !(*z.offset(i as isize) as ::core::ffi::c_int == crate::sqliteInt_h::SQLITE_DIGIT_SEPARATOR)
+                        if !(*z.offset(i as isize) as ::core::ffi::c_int == crate::src::headers::sqliteInt_h::SQLITE_DIGIT_SEPARATOR)
                         {
                             break;
                         }
@@ -2308,7 +2308,7 @@ pub unsafe extern "C" fn sqlite3GetToken(
                         & 0x4 as ::core::ffi::c_int
                         == 0 as ::core::ffi::c_int
                     {
-                        if !(*z.offset(i as isize) as ::core::ffi::c_int == crate::sqliteInt_h::SQLITE_DIGIT_SEPARATOR)
+                        if !(*z.offset(i as isize) as ::core::ffi::c_int == crate::src::headers::sqliteInt_h::SQLITE_DIGIT_SEPARATOR)
                         {
                             break;
                         }
@@ -2329,7 +2329,7 @@ pub unsafe extern "C" fn sqlite3GetToken(
                             == 0 as ::core::ffi::c_int
                         {
                             if !(*z.offset(i as isize) as ::core::ffi::c_int
-                                == crate::sqliteInt_h::SQLITE_DIGIT_SEPARATOR)
+                                == crate::src::headers::sqliteInt_h::SQLITE_DIGIT_SEPARATOR)
                             {
                                 break;
                             }
@@ -2367,7 +2367,7 @@ pub unsafe extern "C" fn sqlite3GetToken(
                             == 0 as ::core::ffi::c_int
                         {
                             if !(*z.offset(i as isize) as ::core::ffi::c_int
-                                == crate::sqliteInt_h::SQLITE_DIGIT_SEPARATOR)
+                                == crate::src::headers::sqliteInt_h::SQLITE_DIGIT_SEPARATOR)
                             {
                                 break;
                             }
@@ -2405,7 +2405,7 @@ pub unsafe extern "C" fn sqlite3GetToken(
 #[no_mangle]
 
 pub unsafe extern "C" fn sqlite3RunParser(
-    mut pParse: *mut crate::sqliteInt_h::Parse,
+    mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
     mut zSql: *const ::core::ffi::c_char,
 ) -> ::core::ffi::c_int {
     let mut nErr: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
@@ -2414,27 +2414,27 @@ pub unsafe extern "C" fn sqlite3RunParser(
     let mut tokenType: ::core::ffi::c_int = 0;
     let mut lastTokenParsed: ::core::ffi::c_int = -(1 as ::core::ffi::c_int);
     let __pParse_ref = unsafe { &mut *pParse };
-    let mut db: *mut crate::sqliteInt_h::sqlite3 = __pParse_ref.db;
+    let mut db: *mut crate::src::headers::sqliteInt_h::sqlite3 = __pParse_ref.db;
     let mut mxSqlLen: ::core::ffi::c_int = 0;
-    let mut pParentParse: *mut crate::sqliteInt_h::Parse = ::core::ptr::null_mut::<crate::sqliteInt_h::Parse>();
+    let mut pParentParse: *mut crate::src::headers::sqliteInt_h::Parse = ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::Parse>();
     let __db_ref = unsafe { &mut *db };
-    mxSqlLen = __db_ref.aLimit[crate::sqlite3_h::SQLITE_LIMIT_SQL_LENGTH as usize];
+    mxSqlLen = __db_ref.aLimit[crate::src::headers::sqlite3_h::SQLITE_LIMIT_SQL_LENGTH as usize];
     if __db_ref.nVdbeActive == 0 as ::core::ffi::c_int {
         ::core::intrinsics::atomic_store_relaxed(
             &raw mut __db_ref.u1.isInterrupted,
             0 as ::core::ffi::c_int,
         );
     }
-    __pParse_ref.rc = crate::sqlite3_h::SQLITE_OK;
+    __pParse_ref.rc = crate::src::headers::sqlite3_h::SQLITE_OK;
     __pParse_ref.zTail = zSql;
     pEngine = crate::src::parse::sqlite3ParserAlloc(
         Some(crate::src::src::malloc::sqlite3Malloc as unsafe extern "C" fn(crate::src::ext::rtree::rtree::u64_0) -> *mut ::core::ffi::c_void),
         
-        pParse as *mut crate::sqliteInt_h::Parse,
+        pParse as *mut crate::src::headers::sqliteInt_h::Parse,
     );
     if pEngine.is_null() {
-        crate::src::src::malloc::sqlite3OomFault(db as *mut crate::sqliteInt_h::sqlite3);
-        return crate::sqliteInt_h::SQLITE_NOMEM_BKPT;
+        crate::src::src::malloc::sqlite3OomFault(db as *mut crate::src::headers::sqliteInt_h::sqlite3);
+        return crate::src::headers::sqliteInt_h::SQLITE_NOMEM_BKPT;
     }
     pParentParse = __db_ref.pParse;
     __db_ref.pParse = pParse;
@@ -2442,13 +2442,13 @@ pub unsafe extern "C" fn sqlite3RunParser(
         n = sqlite3GetToken(zSql as *mut crate::src::ext::rtree::rtree::u8_0, &raw mut tokenType);
         mxSqlLen = (mxSqlLen as crate::src::ext::rtree::rtree::i64_0 - n) as ::core::ffi::c_int;
         if mxSqlLen < 0 as ::core::ffi::c_int {
-            __pParse_ref.rc = crate::sqlite3_h::SQLITE_TOOBIG;
+            __pParse_ref.rc = crate::src::headers::sqlite3_h::SQLITE_TOOBIG;
             __pParse_ref.nErr += 1;
             break;
         } else {
             if tokenType >= crate::src::parse::TK_WINDOW {
                 if ::core::intrinsics::atomic_load_relaxed(&raw mut __db_ref.u1.isInterrupted) != 0 {
-                    __pParse_ref.rc = crate::sqlite3_h::SQLITE_INTERRUPT;
+                    __pParse_ref.rc = crate::src::headers::sqlite3_h::SQLITE_INTERRUPT;
                     __pParse_ref.nErr += 1;
                     break;
                 } else if tokenType == crate::src::parse::TK_SPACE {
@@ -2484,12 +2484,12 @@ pub unsafe extern "C" fn sqlite3RunParser(
                     );
                 } else if tokenType == crate::src::parse::TK_COMMENT
                     && (__db_ref.init.busy as ::core::ffi::c_int != 0
-                        || __db_ref.flags & crate::sqliteInt_h::SQLITE_Comments != 0 as crate::src::ext::rtree::rtree::u64_0)
+                        || __db_ref.flags & crate::src::headers::sqliteInt_h::SQLITE_Comments != 0 as crate::src::ext::rtree::rtree::u64_0)
                 {
                     zSql = zSql.offset(n as isize);
                     continue;
                 } else if tokenType != crate::src::parse::TK_QNUMBER {
-                    let mut x: crate::sqliteInt_h::Token = crate::sqliteInt_h::Token {
+                    let mut x: crate::src::headers::sqliteInt_h::Token = crate::src::headers::sqliteInt_h::Token {
     z:  ::core::ptr::null::<::core::ffi::c_char>(),
     n:  0,
 };
@@ -2497,7 +2497,7 @@ pub unsafe extern "C" fn sqlite3RunParser(
                     x.n = n as crate::src::ext::rtree::rtree::u32_0 as ::core::ffi::c_uint;
                     crate::src::src::util::sqlite3ErrorMsg(
                         
-                        pParse as *mut crate::sqliteInt_h::Parse,
+                        pParse as *mut crate::src::headers::sqliteInt_h::Parse,
                         b"unrecognized token: \"%T\"\0" as *const u8 as *const ::core::ffi::c_char,
                         &raw mut x,
                     );
@@ -2506,10 +2506,10 @@ pub unsafe extern "C" fn sqlite3RunParser(
             }
             __pParse_ref.sLastToken.z = zSql;
             __pParse_ref.sLastToken.n = n as crate::src::ext::rtree::rtree::u32_0 as ::core::ffi::c_uint;
-            crate::src::parse::sqlite3Parser(pEngine, tokenType,  __pParse_ref.sLastToken as crate::sqliteInt_h::Token);
+            crate::src::parse::sqlite3Parser(pEngine, tokenType,  __pParse_ref.sLastToken as crate::src::headers::sqliteInt_h::Token);
             lastTokenParsed = tokenType;
             zSql = zSql.offset(n as isize);
-            if __pParse_ref.rc != crate::sqlite3_h::SQLITE_OK {
+            if __pParse_ref.rc != crate::src::headers::sqlite3_h::SQLITE_OK {
                 break;
             }
         }
@@ -2519,18 +2519,18 @@ pub unsafe extern "C" fn sqlite3RunParser(
         Some(crate::src::src::malloc::sqlite3_free as unsafe extern "C" fn(*mut ::core::ffi::c_void) -> ()),
     );
     if __db_ref.mallocFailed != 0 {
-        __pParse_ref.rc = crate::sqliteInt_h::SQLITE_NOMEM_BKPT;
+        __pParse_ref.rc = crate::src::headers::sqliteInt_h::SQLITE_NOMEM_BKPT;
     }
-    if !__pParse_ref.zErrMsg.is_null() || __pParse_ref.rc != crate::sqlite3_h::SQLITE_OK && __pParse_ref.rc != crate::sqlite3_h::SQLITE_DONE {
+    if !__pParse_ref.zErrMsg.is_null() || __pParse_ref.rc != crate::src::headers::sqlite3_h::SQLITE_OK && __pParse_ref.rc != crate::src::headers::sqlite3_h::SQLITE_DONE {
         if __pParse_ref.zErrMsg.is_null() {
             __pParse_ref.zErrMsg = crate::src::src::printf::sqlite3MPrintf(
                 
-                db as *mut crate::sqliteInt_h::sqlite3,
+                db as *mut crate::src::headers::sqliteInt_h::sqlite3,
                 b"%s\0" as *const u8 as *const ::core::ffi::c_char,
                 crate::src::src::main::sqlite3ErrStr(__pParse_ref.rc),
             );
         }
-        if __pParse_ref.prepFlags as ::core::ffi::c_int & crate::sqlite3_h::SQLITE_PREPARE_DONT_LOG
+        if __pParse_ref.prepFlags as ::core::ffi::c_int & crate::src::headers::sqlite3_h::SQLITE_PREPARE_DONT_LOG
             == 0 as ::core::ffi::c_int
         {
             crate::src::src::printf::sqlite3_log(
@@ -2545,17 +2545,17 @@ pub unsafe extern "C" fn sqlite3RunParser(
     __pParse_ref.zTail = zSql;
     crate::src::src::malloc::sqlite3_free(__pParse_ref.apVtabLock as *mut ::core::ffi::c_void);
     if !__pParse_ref.pNewTable.is_null()
-        && !(__pParse_ref.eParseMode as ::core::ffi::c_int != crate::sqliteInt_h::PARSE_MODE_NORMAL)
+        && !(__pParse_ref.eParseMode as ::core::ffi::c_int != crate::src::headers::sqliteInt_h::PARSE_MODE_NORMAL)
     {
-        crate::src::src::build::sqlite3DeleteTable(db as *mut crate::sqliteInt_h::sqlite3,  __pParse_ref.pNewTable as *mut crate::sqliteInt_h::Table);
+        crate::src::src::build::sqlite3DeleteTable(db as *mut crate::src::headers::sqliteInt_h::sqlite3,  __pParse_ref.pNewTable as *mut crate::src::headers::sqliteInt_h::Table);
     }
     if !__pParse_ref.pNewTrigger.is_null()
-        && !(__pParse_ref.eParseMode as ::core::ffi::c_int >= crate::sqliteInt_h::PARSE_MODE_RENAME)
+        && !(__pParse_ref.eParseMode as ::core::ffi::c_int >= crate::src::headers::sqliteInt_h::PARSE_MODE_RENAME)
     {
-        crate::src::src::trigger::sqlite3DeleteTrigger(db as *mut crate::sqliteInt_h::sqlite3,  __pParse_ref.pNewTrigger as *mut crate::sqliteInt_h::Trigger);
+        crate::src::src::trigger::sqlite3DeleteTrigger(db as *mut crate::src::headers::sqliteInt_h::sqlite3,  __pParse_ref.pNewTrigger as *mut crate::src::headers::sqliteInt_h::Trigger);
     }
     if !__pParse_ref.pVList.is_null() {
-        crate::src::src::malloc::sqlite3DbNNFreeNN(db as *mut crate::sqliteInt_h::sqlite3, __pParse_ref.pVList as *mut ::core::ffi::c_void);
+        crate::src::src::malloc::sqlite3DbNNFreeNN(db as *mut crate::src::headers::sqliteInt_h::sqlite3, __pParse_ref.pVList as *mut ::core::ffi::c_void);
     }
     __db_ref.pParse = pParentParse;
     nErr

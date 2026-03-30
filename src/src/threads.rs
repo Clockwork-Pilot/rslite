@@ -8,7 +8,7 @@ pub use crate::__stddef_size_t_h::size_t;
 
 
 
-pub use crate::stdlib::pthread_attr_t;pub use crate::stdlib::pthread_t;pub use crate::src::src::malloc::sqlite3_free;pub use crate::sqlite3_h::sqlite_uint64;pub use crate::sqlite3_h::SQLITE_ERROR;pub use crate::sqlite3_h::SQLITE_NOMEM;pub use crate::sqlite3_h::SQLITE_OK;pub use crate::src::src::util::sqlite3FaultSim;pub use crate::src::src::malloc::sqlite3Malloc;pub use crate::src::ext::rtree::rtree::u64_0;pub use crate::sqliteInt_h::SQLITE_NOMEM_BKPT;
+pub use crate::stdlib::pthread_attr_t;pub use crate::stdlib::pthread_t;pub use crate::src::src::malloc::sqlite3_free;pub use crate::src::headers::sqlite3_h::sqlite_uint64;pub use crate::src::headers::sqlite3_h::SQLITE_ERROR;pub use crate::src::headers::sqlite3_h::SQLITE_NOMEM;pub use crate::src::headers::sqlite3_h::SQLITE_OK;pub use crate::src::src::util::sqlite3FaultSim;pub use crate::src::src::malloc::sqlite3Malloc;pub use crate::src::ext::rtree::rtree::u64_0;pub use crate::src::headers::sqliteInt_h::SQLITE_NOMEM_BKPT;
 
 #[derive(Copy, Clone)]
 #[repr(C)]
@@ -32,7 +32,7 @@ pub unsafe extern "C" fn sqlite3ThreadCreate(
     *ppThread = ::core::ptr::null_mut::<SQLiteThread>();
     p = crate::src::src::malloc::sqlite3Malloc(::core::mem::size_of::<SQLiteThread>() as crate::src::ext::rtree::rtree::u64_0) as *mut SQLiteThread;
     if p.is_null() {
-        return crate::sqliteInt_h::SQLITE_NOMEM_BKPT;
+        return crate::src::headers::sqliteInt_h::SQLITE_NOMEM_BKPT;
     }
     ::libc::memset(
         p as *mut ::core::ffi::c_void,
@@ -56,7 +56,7 @@ pub unsafe extern "C" fn sqlite3ThreadCreate(
         (*p).pOut = xTask.expect("non-null function pointer")(pIn);
     }
     *ppThread = p;
-    crate::sqlite3_h::SQLITE_OK
+    crate::src::headers::sqlite3_h::SQLITE_OK
 }
 #[no_mangle]
 
@@ -66,16 +66,16 @@ pub unsafe extern "C" fn sqlite3ThreadJoin(
 ) -> ::core::ffi::c_int {
     let mut rc: ::core::ffi::c_int = 0;
     if p.is_null() {
-        return crate::sqliteInt_h::SQLITE_NOMEM_BKPT;
+        return crate::src::headers::sqliteInt_h::SQLITE_NOMEM_BKPT;
     }
     if (*p).done != 0 {
         *ppOut = (*p).pOut;
-        rc = crate::sqlite3_h::SQLITE_OK;
+        rc = crate::src::headers::sqlite3_h::SQLITE_OK;
     } else {
         rc = if ::libc::pthread_join((*p).tid, ppOut) != 0 {
-            crate::sqlite3_h::SQLITE_ERROR
+            crate::src::headers::sqlite3_h::SQLITE_ERROR
         } else {
-            crate::sqlite3_h::SQLITE_OK
+            crate::src::headers::sqlite3_h::SQLITE_OK
         };
     }
     crate::src::src::malloc::sqlite3_free(p as *mut ::core::ffi::c_void);

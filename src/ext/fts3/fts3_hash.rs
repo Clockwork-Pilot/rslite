@@ -35,10 +35,10 @@ pub struct Fts3Hash {
 pub use crate::__stddef_size_t_h::size_t;
 
 
-pub use crate::src::src::malloc::sqlite3_free;pub use crate::sqlite3_h::sqlite3_int64;pub use crate::src::src::malloc::sqlite3_malloc64;pub use crate::sqlite3_h::sqlite3_uint64;pub use crate::sqlite3_h::sqlite_int64;pub use crate::sqlite3_h::sqlite_uint64;
+pub use crate::src::src::malloc::sqlite3_free;pub use crate::src::headers::sqlite3_h::sqlite3_int64;pub use crate::src::src::malloc::sqlite3_malloc64;pub use crate::src::headers::sqlite3_h::sqlite3_uint64;pub use crate::src::headers::sqlite3_h::sqlite_int64;pub use crate::src::headers::sqlite3_h::sqlite_uint64;
 
-unsafe extern "C" fn fts3HashMalloc(mut n: crate::sqlite3_h::sqlite3_int64) -> *mut ::core::ffi::c_void {
-    let mut p: *mut ::core::ffi::c_void = crate::src::src::malloc::sqlite3_malloc64(n as crate::sqlite3_h::sqlite3_uint64);
+unsafe extern "C" fn fts3HashMalloc(mut n: crate::src::headers::sqlite3_h::sqlite3_int64) -> *mut ::core::ffi::c_void {
+    let mut p: *mut ::core::ffi::c_void = crate::src::src::malloc::sqlite3_malloc64(n as crate::src::headers::sqlite3_h::sqlite3_uint64);
     if !p.is_null() {
         ::libc::memset(p, 0 as ::core::ffi::c_int, n as crate::__stddef_size_t_h::size_t);
     }
@@ -249,7 +249,7 @@ unsafe extern "C" fn fts3Rehash(
     > = None;
     new_ht = fts3HashMalloc(
         (new_size as usize).wrapping_mul(::core::mem::size_of::<crate::src::ext::fts3::fts3_hash::_fts3ht>() as usize)
-            as crate::sqlite3_h::sqlite3_int64,
+            as crate::src::headers::sqlite3_h::sqlite3_int64,
     ) as *mut crate::src::ext::fts3::fts3_hash::_fts3ht;
     if new_ht.is_null() {
         return 1 as ::core::ffi::c_int;
@@ -422,14 +422,14 @@ pub unsafe extern "C" fn sqlite3Fts3HashInsert(
         __pH_ref.count = 0 as ::core::ffi::c_int;
         return data;
     }
-    new_elem = fts3HashMalloc(::core::mem::size_of::<crate::src::ext::fts3::fts3_hash::Fts3HashElem>() as crate::sqlite3_h::sqlite3_int64)
+    new_elem = fts3HashMalloc(::core::mem::size_of::<crate::src::ext::fts3::fts3_hash::Fts3HashElem>() as crate::src::headers::sqlite3_h::sqlite3_int64)
         as *mut crate::src::ext::fts3::fts3_hash::Fts3HashElem;
     if new_elem.is_null() {
         return data;
     }
     if __pH_ref.copyKey as ::core::ffi::c_int != 0 && !pKey.is_null() {
         let __new_elem_ref = unsafe { &mut *new_elem };
-        __new_elem_ref.pKey = fts3HashMalloc(nKey as crate::sqlite3_h::sqlite3_int64);
+        __new_elem_ref.pKey = fts3HashMalloc(nKey as crate::src::headers::sqlite3_h::sqlite3_int64);
         if __new_elem_ref.pKey.is_null() {
             fts3HashFree(new_elem as *mut ::core::ffi::c_void);
             return data;

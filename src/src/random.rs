@@ -11,7 +11,7 @@ pub use crate::__stddef_size_t_h::size_t;
 
 
 
-pub use crate::sqlite3_h::sqlite3_file;pub use crate::sqlite3_h::sqlite3_filename;pub use crate::src::src::main::sqlite3_initialize;pub use crate::sqlite3_h::sqlite3_int64;pub use crate::sqlite3_h::sqlite3_io_methods;pub use crate::src::src::mutex_unix::sqlite3_mutex;pub use crate::src::src::mutex::sqlite3_mutex_enter;pub use crate::src::src::mutex::sqlite3_mutex_leave;pub use crate::sqlite3_h::sqlite3_syscall_ptr;pub use crate::sqlite3_h::sqlite3_vfs;pub use crate::src::src::os::sqlite3_vfs_find;pub use crate::sqlite3_h::sqlite_int64;pub use crate::sqlite3_h::SQLITE_MUTEX_STATIC_PRNG;pub use crate::src::src::mutex::sqlite3MutexAlloc;pub use crate::src::ext::rtree::rtree::u32_0;pub use crate::src::ext::rtree::rtree::u8_0;pub use crate::stdlib::uint32_t;pub use crate::stdlib::uint8_t;pub use crate::stdlib::__uint32_t;pub use crate::stdlib::__uint8_t;
+pub use crate::src::headers::sqlite3_h::sqlite3_file;pub use crate::src::headers::sqlite3_h::sqlite3_filename;pub use crate::src::src::main::sqlite3_initialize;pub use crate::src::headers::sqlite3_h::sqlite3_int64;pub use crate::src::headers::sqlite3_h::sqlite3_io_methods;pub use crate::src::src::mutex_unix::sqlite3_mutex;pub use crate::src::src::mutex::sqlite3_mutex_enter;pub use crate::src::src::mutex::sqlite3_mutex_leave;pub use crate::src::headers::sqlite3_h::sqlite3_syscall_ptr;pub use crate::src::headers::sqlite3_h::sqlite3_vfs;pub use crate::src::src::os::sqlite3_vfs_find;pub use crate::src::headers::sqlite3_h::sqlite_int64;pub use crate::src::headers::sqlite3_h::SQLITE_MUTEX_STATIC_PRNG;pub use crate::src::src::mutex::sqlite3MutexAlloc;pub use crate::src::ext::rtree::rtree::u32_0;pub use crate::src::ext::rtree::rtree::u8_0;pub use crate::stdlib::uint32_t;pub use crate::stdlib::uint8_t;pub use crate::stdlib::__uint32_t;pub use crate::stdlib::__uint8_t;
 #[derive(Copy, Clone)]
 #[repr(C)]
 
@@ -280,7 +280,7 @@ pub unsafe extern "C" fn sqlite3_randomness(
     if crate::src::src::main::sqlite3_initialize() != 0 {
         return;
     }
-    mutex = crate::src::src::mutex::sqlite3MutexAlloc(crate::sqlite3_h::SQLITE_MUTEX_STATIC_PRNG);
+    mutex = crate::src::src::mutex::sqlite3MutexAlloc(crate::src::headers::sqlite3_h::SQLITE_MUTEX_STATIC_PRNG);
     crate::src::src::mutex::sqlite3_mutex_enter(mutex);
     if N <= 0 as ::core::ffi::c_int || pBuf.is_null() {
         sqlite3Prng.s[0 as ::core::ffi::c_int as usize] = 0 as crate::src::ext::rtree::rtree::u32_0;
@@ -288,10 +288,10 @@ pub unsafe extern "C" fn sqlite3_randomness(
         return;
     }
     if sqlite3Prng.s[0 as ::core::ffi::c_int as usize] == 0 as crate::src::ext::rtree::rtree::u32_0 {
-        let mut pVfs: *mut crate::sqlite3_h::sqlite3_vfs =
+        let mut pVfs: *mut crate::src::headers::sqlite3_h::sqlite3_vfs =
             
             crate::src::src::os::sqlite3_vfs_find(::core::ptr::null::<::core::ffi::c_char>())
-    as *mut crate::sqlite3_h::sqlite3_vfs;
+    as *mut crate::src::headers::sqlite3_h::sqlite3_vfs;
         static mut chacha20_init: [crate::src::ext::rtree::rtree::u32_0; 4] = [
             0x61707865 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::u32_0,
             0x3320646e as ::core::ffi::c_int as crate::src::ext::rtree::rtree::u32_0,
@@ -314,7 +314,7 @@ pub unsafe extern "C" fn sqlite3_randomness(
         } else {
             crate::src::src::os::sqlite3OsRandomness(
                 
-                pVfs as *mut crate::sqlite3_h::sqlite3_vfs,
+                pVfs as *mut crate::src::headers::sqlite3_h::sqlite3_vfs,
                 44 as ::core::ffi::c_int,
                 (&raw mut sqlite3Prng.s as *mut crate::src::ext::rtree::rtree::u32_0).offset(4 as isize)
                     as *mut crate::src::ext::rtree::rtree::u32_0 as *mut ::core::ffi::c_char,

@@ -7,7 +7,7 @@ pub use crate::__stddef_null_h::NULL;
 pub use crate::__stddef_size_t_h::size_t;
 
 
-pub use crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer;pub use crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_cursor;pub use crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_module;pub use crate::src::src::malloc::sqlite3_free;pub use crate::src::src::malloc::sqlite3_malloc;pub use crate::src::src::malloc::sqlite3_realloc64;pub use crate::sqlite3_h::sqlite3_uint64;pub use crate::sqlite3_h::sqlite_uint64;pub use crate::sqlite3_h::SQLITE_DONE;pub use crate::sqlite3_h::SQLITE_ERROR;pub use crate::sqlite3_h::SQLITE_NOMEM;pub use crate::sqlite3_h::SQLITE_OK;
+pub use crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer;pub use crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_cursor;pub use crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_module;pub use crate::src::src::malloc::sqlite3_free;pub use crate::src::src::malloc::sqlite3_malloc;pub use crate::src::src::malloc::sqlite3_realloc64;pub use crate::src::headers::sqlite3_h::sqlite3_uint64;pub use crate::src::headers::sqlite3_h::sqlite_uint64;pub use crate::src::headers::sqlite3_h::SQLITE_DONE;pub use crate::src::headers::sqlite3_h::SQLITE_ERROR;pub use crate::src::headers::sqlite3_h::SQLITE_NOMEM;pub use crate::src::headers::sqlite3_h::SQLITE_OK;
 #[derive(Copy, Clone)]
 #[repr(C)]
 
@@ -51,7 +51,7 @@ unsafe extern "C" fn simpleCreate(
     t = crate::src::src::malloc::sqlite3_malloc(::core::mem::size_of::<simple_tokenizer>() as ::core::ffi::c_int)
         as *mut simple_tokenizer;
     if t.is_null() {
-        return crate::sqlite3_h::SQLITE_NOMEM;
+        return crate::src::headers::sqlite3_h::SQLITE_NOMEM;
     }
     ::libc::memset(
         t as *mut ::core::ffi::c_void,
@@ -69,7 +69,7 @@ unsafe extern "C" fn simpleCreate(
                 as ::core::ffi::c_uchar;
             if ch as ::core::ffi::c_int >= 0x80 as ::core::ffi::c_int {
                 crate::src::src::malloc::sqlite3_free(t as *mut ::core::ffi::c_void);
-                return crate::sqlite3_h::SQLITE_ERROR;
+                return crate::src::headers::sqlite3_h::SQLITE_ERROR;
             }
             (*t).delim[ch as usize] = 1 as ::core::ffi::c_char;
             i += 1;
@@ -87,12 +87,12 @@ unsafe extern "C" fn simpleCreate(
         }
     }
     *ppTokenizer = &raw mut (*t).base;
-    crate::sqlite3_h::SQLITE_OK
+    crate::src::headers::sqlite3_h::SQLITE_OK
 }
 
 unsafe extern "C" fn simpleDestroy(mut pTokenizer: *mut crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer) -> ::core::ffi::c_int {
     crate::src::src::malloc::sqlite3_free(pTokenizer as *mut ::core::ffi::c_void);
-    crate::sqlite3_h::SQLITE_OK
+    crate::src::headers::sqlite3_h::SQLITE_OK
 }
 
 unsafe extern "C" fn simpleOpen(
@@ -105,7 +105,7 @@ unsafe extern "C" fn simpleOpen(
     c = crate::src::src::malloc::sqlite3_malloc(::core::mem::size_of::<simple_tokenizer_cursor>() as ::core::ffi::c_int)
         as *mut simple_tokenizer_cursor;
     if c.is_null() {
-        return crate::sqlite3_h::SQLITE_NOMEM;
+        return crate::src::headers::sqlite3_h::SQLITE_NOMEM;
     }
     (*c).pInput = pInput;
     if pInput.is_null() {
@@ -120,14 +120,14 @@ unsafe extern "C" fn simpleOpen(
     (*c).pToken = ::core::ptr::null_mut::<::core::ffi::c_char>();
     (*c).nTokenAllocated = 0 as ::core::ffi::c_int;
     *ppCursor = &raw mut (*c).base;
-    crate::sqlite3_h::SQLITE_OK
+    crate::src::headers::sqlite3_h::SQLITE_OK
 }
 
 unsafe extern "C" fn simpleClose(mut pCursor: *mut crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_cursor) -> ::core::ffi::c_int {
     let mut c: *mut simple_tokenizer_cursor = pCursor as *mut simple_tokenizer_cursor;
     crate::src::src::malloc::sqlite3_free((*c).pToken as *mut ::core::ffi::c_void);
     crate::src::src::malloc::sqlite3_free(c as *mut ::core::ffi::c_void);
-    crate::sqlite3_h::SQLITE_OK
+    crate::src::headers::sqlite3_h::SQLITE_OK
 }
 
 unsafe extern "C" fn simpleNext(
@@ -160,10 +160,10 @@ unsafe extern "C" fn simpleNext(
                 __c_ref.nTokenAllocated = n + 20 as ::core::ffi::c_int;
                 pNew = crate::src::src::malloc::sqlite3_realloc64(
                     __c_ref.pToken as *mut ::core::ffi::c_void,
-                    __c_ref.nTokenAllocated as crate::sqlite3_h::sqlite3_uint64,
+                    __c_ref.nTokenAllocated as crate::src::headers::sqlite3_h::sqlite3_uint64,
                 ) as *mut ::core::ffi::c_char;
                 if pNew.is_null() {
-                    return crate::sqlite3_h::SQLITE_NOMEM;
+                    return crate::src::headers::sqlite3_h::SQLITE_NOMEM;
                 }
                 __c_ref.pToken = pNew;
             }
@@ -186,10 +186,10 @@ unsafe extern "C" fn simpleNext(
             let fresh0 = __c_ref.iToken;
             __c_ref.iToken += 1;
             *piPosition = fresh0;
-            return crate::sqlite3_h::SQLITE_OK;
+            return crate::src::headers::sqlite3_h::SQLITE_OK;
         }
     }
-    crate::sqlite3_h::SQLITE_DONE
+    crate::src::headers::sqlite3_h::SQLITE_DONE
 }
 
 static mut simpleTokenizerModule: crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_module = unsafe {

@@ -9,7 +9,7 @@ pub use crate::__stddef_size_t_h::size_t;
 
 
 
-pub use crate::src::ext::fts3::fts3_unicode2::sqlite3FtsUnicodeFold;pub use crate::src::ext::fts3::fts3_unicode2::sqlite3FtsUnicodeIsalnum;pub use crate::src::ext::fts3::fts3_unicode2::sqlite3FtsUnicodeIsdiacritic;pub use crate::src::ext::rtree::rtree::u8_0;pub use crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer;pub use crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_cursor;pub use crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_module;pub use crate::src::src::malloc::sqlite3_free;pub use crate::src::src::malloc::sqlite3_malloc;pub use crate::src::src::malloc::sqlite3_realloc64;pub use crate::sqlite3_h::sqlite3_uint64;pub use crate::sqlite3_h::sqlite_uint64;pub use crate::sqlite3_h::SQLITE_DONE;pub use crate::sqlite3_h::SQLITE_ERROR;pub use crate::sqlite3_h::SQLITE_NOMEM;pub use crate::sqlite3_h::SQLITE_OK;
+pub use crate::src::ext::fts3::fts3_unicode2::sqlite3FtsUnicodeFold;pub use crate::src::ext::fts3::fts3_unicode2::sqlite3FtsUnicodeIsalnum;pub use crate::src::ext::fts3::fts3_unicode2::sqlite3FtsUnicodeIsdiacritic;pub use crate::src::ext::rtree::rtree::u8_0;pub use crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer;pub use crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_cursor;pub use crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_module;pub use crate::src::src::malloc::sqlite3_free;pub use crate::src::src::malloc::sqlite3_malloc;pub use crate::src::src::malloc::sqlite3_realloc64;pub use crate::src::headers::sqlite3_h::sqlite3_uint64;pub use crate::src::headers::sqlite3_h::sqlite_uint64;pub use crate::src::headers::sqlite3_h::SQLITE_DONE;pub use crate::src::headers::sqlite3_h::SQLITE_ERROR;pub use crate::src::headers::sqlite3_h::SQLITE_NOMEM;pub use crate::src::headers::sqlite3_h::SQLITE_OK;
 #[derive(Copy, Clone)]
 #[repr(C)]
 
@@ -105,7 +105,7 @@ unsafe extern "C" fn unicodeDestroy(mut pTokenizer: *mut crate::src::ext::fts3::
         crate::src::src::malloc::sqlite3_free((*p).aiException as *mut ::core::ffi::c_void);
         crate::src::src::malloc::sqlite3_free(p as *mut ::core::ffi::c_void);
     }
-    crate::sqlite3_h::SQLITE_OK
+    crate::src::headers::sqlite3_h::SQLITE_OK
 }
 
 unsafe extern "C" fn unicodeAddExceptions(
@@ -158,10 +158,10 @@ unsafe extern "C" fn unicodeAddExceptions(
             __p_ref.aiException as *mut ::core::ffi::c_void,
             ((__p_ref.nException + nEntry) as usize)
                 .wrapping_mul(::core::mem::size_of::<::core::ffi::c_int>() as usize)
-                as crate::sqlite3_h::sqlite3_uint64,
+                as crate::src::headers::sqlite3_h::sqlite3_uint64,
         ) as *mut ::core::ffi::c_int;
         if aNew.is_null() {
-            return crate::sqlite3_h::SQLITE_NOMEM;
+            return crate::src::headers::sqlite3_h::SQLITE_NOMEM;
         }
         nNew = __p_ref.nException;
         z = zIn as *const ::core::ffi::c_uchar;
@@ -212,7 +212,7 @@ unsafe extern "C" fn unicodeAddExceptions(
         __p_ref.aiException = aNew;
         __p_ref.nException = nNew;
     }
-    crate::sqlite3_h::SQLITE_OK
+    crate::src::headers::sqlite3_h::SQLITE_OK
 }
 
 unsafe extern "C" fn unicodeIsException(
@@ -251,11 +251,11 @@ unsafe extern "C" fn unicodeCreate(
 ) -> ::core::ffi::c_int {
     let mut pNew: *mut unicode_tokenizer = ::core::ptr::null_mut::<unicode_tokenizer>();
     let mut i: ::core::ffi::c_int = 0;
-    let mut rc: ::core::ffi::c_int = crate::sqlite3_h::SQLITE_OK;
+    let mut rc: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_OK;
     pNew = crate::src::src::malloc::sqlite3_malloc(::core::mem::size_of::<unicode_tokenizer>() as ::core::ffi::c_int)
         as *mut unicode_tokenizer;
     if pNew.is_null() {
-        return crate::sqlite3_h::SQLITE_NOMEM;
+        return crate::src::headers::sqlite3_h::SQLITE_NOMEM;
     }
     ::libc::memset(
         pNew as *mut ::core::ffi::c_void,
@@ -264,7 +264,7 @@ unsafe extern "C" fn unicodeCreate(
     );
     (*pNew).eRemoveDiacritic = 1 as ::core::ffi::c_int;
     i = 0 as ::core::ffi::c_int;
-    while rc == crate::sqlite3_h::SQLITE_OK && i < nArg {
+    while rc == crate::src::headers::sqlite3_h::SQLITE_OK && i < nArg {
         let mut z: *const ::core::ffi::c_char = *azArg.offset(i as isize);
         let mut n: ::core::ffi::c_int = ::libc::strlen(z) as ::core::ffi::c_int;
         if n == 19 as ::core::ffi::c_int
@@ -323,11 +323,11 @@ unsafe extern "C" fn unicodeCreate(
                 n - 11 as ::core::ffi::c_int,
             );
         } else {
-            rc = crate::sqlite3_h::SQLITE_ERROR;
+            rc = crate::src::headers::sqlite3_h::SQLITE_ERROR;
         }
         i += 1;
     }
-    if rc != crate::sqlite3_h::SQLITE_OK {
+    if rc != crate::src::headers::sqlite3_h::SQLITE_OK {
         unicodeDestroy(pNew as *mut crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer);
         pNew = ::core::ptr::null_mut::<unicode_tokenizer>();
     }
@@ -345,7 +345,7 @@ unsafe extern "C" fn unicodeOpen(
     pCsr = crate::src::src::malloc::sqlite3_malloc(::core::mem::size_of::<unicode_cursor>() as ::core::ffi::c_int)
         as *mut unicode_cursor;
     if pCsr.is_null() {
-        return crate::sqlite3_h::SQLITE_NOMEM;
+        return crate::src::headers::sqlite3_h::SQLITE_NOMEM;
     }
     ::libc::memset(
         pCsr as *mut ::core::ffi::c_void,
@@ -363,7 +363,7 @@ unsafe extern "C" fn unicodeOpen(
         (*pCsr).nInput = nInput;
     }
     *pp = &raw mut (*pCsr).base;
-    crate::sqlite3_h::SQLITE_OK
+    crate::src::headers::sqlite3_h::SQLITE_OK
 }
 
 unsafe extern "C" fn unicodeClose(
@@ -372,7 +372,7 @@ unsafe extern "C" fn unicodeClose(
     let mut pCsr: *mut unicode_cursor = pCursor as *mut unicode_cursor;
     crate::src::src::malloc::sqlite3_free((*pCsr).zToken as *mut ::core::ffi::c_void);
     crate::src::src::malloc::sqlite3_free(pCsr as *mut ::core::ffi::c_void);
-    crate::sqlite3_h::SQLITE_OK
+    crate::src::headers::sqlite3_h::SQLITE_OK
 }
 
 unsafe extern "C" fn unicodeNext(
@@ -425,7 +425,7 @@ unsafe extern "C" fn unicodeNext(
         zStart = z;
     }
     if zStart >= zTerm {
-        return crate::sqlite3_h::SQLITE_DONE;
+        return crate::src::headers::sqlite3_h::SQLITE_DONE;
     }
     zOut = __pCsr_ref.zToken;
     loop {
@@ -435,10 +435,10 @@ unsafe extern "C" fn unicodeNext(
         {
             let mut zNew: *mut ::core::ffi::c_char = crate::src::src::malloc::sqlite3_realloc64(
                 __pCsr_ref.zToken as *mut ::core::ffi::c_void,
-                (__pCsr_ref.nAlloc + 64 as ::core::ffi::c_int) as crate::sqlite3_h::sqlite3_uint64,
+                (__pCsr_ref.nAlloc + 64 as ::core::ffi::c_int) as crate::src::headers::sqlite3_h::sqlite3_uint64,
             ) as *mut ::core::ffi::c_char;
             if zNew.is_null() {
-                return crate::sqlite3_h::SQLITE_NOMEM;
+                return crate::src::headers::sqlite3_h::SQLITE_NOMEM;
             }
             zOut = zNew.offset(zOut.offset_from(__pCsr_ref.zToken) as ::core::ffi::c_long as isize)
                 as *mut ::core::ffi::c_char;
@@ -543,7 +543,7 @@ unsafe extern "C" fn unicodeNext(
     let fresh18 = __pCsr_ref.iToken;
     __pCsr_ref.iToken += 1;
     *piPos = fresh18;
-    crate::sqlite3_h::SQLITE_OK
+    crate::src::headers::sqlite3_h::SQLITE_OK
 }
 #[no_mangle]
 
