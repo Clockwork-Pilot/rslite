@@ -646,7 +646,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::src::headers::vdbeIn
         __p_ref.rc = crate::src::headers::sqlite3_h::SQLITE_OK;
         __p_ref.iCurrentTime = 0 as crate::src::ext::rtree::rtree::i64_0;
         (*db).busyHandler.nBusy = 0 as ::core::ffi::c_int;
-        if ::core::intrinsics::atomic_load_relaxed(&raw mut (*db).u1.isInterrupted) != 0 {
+        if (*((&raw mut (*db).u1.isInterrupted) as *mut std::sync::atomic::AtomicI32)).load(std::sync::atomic::Ordering::Relaxed) != 0 {
             current_block = 9771092749923633615;
         } else {
             pOp = aOp.offset(__p_ref.pc as isize) as *mut crate::src::headers::vdbeInt_h::Op;
@@ -6214,7 +6214,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(mut p: *mut crate::src::headers::vdbeIn
                 }
                 match current_block {
                     20147595251170673 => {
-                        if ::core::intrinsics::atomic_load_relaxed(&raw mut (*db).u1.isInterrupted)
+                        if (*((&raw mut (*db).u1.isInterrupted) as *mut std::sync::atomic::AtomicI32)).load(std::sync::atomic::Ordering::Relaxed)
                             != 0
                         {
                             current_block = 9771092749923633615;

@@ -1498,6 +1498,7 @@ pub mod src {
         } // mod session
     } // mod ext
     pub mod fts5;
+    pub mod mutex_pl;
     pub mod opcodes;
     pub mod parse;
     pub mod src {

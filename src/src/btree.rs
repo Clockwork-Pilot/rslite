@@ -9544,7 +9544,7 @@ pub unsafe extern "C" fn sqlite3BtreeCount(
         return crate::src::headers::sqlite3_h::SQLITE_OK;
     }
     while rc == crate::src::headers::sqlite3_h::SQLITE_OK
-        && ::core::intrinsics::atomic_load_relaxed(&raw mut (*db).u1.isInterrupted) == 0
+        && (*((&raw mut (*db).u1.isInterrupted) as *mut std::sync::atomic::AtomicI32)).load(std::sync::atomic::Ordering::Relaxed) == 0
     {
         let mut iIdx: ::core::ffi::c_int = 0;
         let mut pPage: *mut crate::src::headers::btreeInt_h::MemPage = ::core::ptr::null_mut::<crate::src::headers::btreeInt_h::MemPage>();
@@ -9621,7 +9621,7 @@ unsafe extern "C" fn checkOom(mut pCheck: *mut crate::src::headers::btreeInt_h::
 
 unsafe extern "C" fn checkProgress(mut pCheck: *mut crate::src::headers::btreeInt_h::IntegrityCk) {
     let mut db: *mut crate::src::headers::sqliteInt_h::sqlite3 = (*pCheck).db;
-    if ::core::intrinsics::atomic_load_relaxed(&raw mut (*db).u1.isInterrupted) != 0 {
+    if (*((&raw mut (*db).u1.isInterrupted) as *mut std::sync::atomic::AtomicI32)).load(std::sync::atomic::Ordering::Relaxed) != 0 {
         let __pCheck_ref = unsafe { &mut *pCheck };
         __pCheck_ref.rc = crate::src::headers::sqlite3_h::SQLITE_INTERRUPT;
         __pCheck_ref.nErr += 1;

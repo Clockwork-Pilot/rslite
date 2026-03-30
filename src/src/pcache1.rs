@@ -146,10 +146,7 @@ pub unsafe extern "C" fn sqlite3PCacheBufferSetup(
         };
         pcache1_g.pStart = pBuf;
         pcache1_g.pFree = ::core::ptr::null_mut::<PgFreeslot>();
-        ::core::intrinsics::atomic_store_relaxed(
-            &raw mut pcache1_g.bUnderPressure,
-            0 as ::core::ffi::c_int,
-        );
+        (*((&raw mut pcache1_g.bUnderPressure) as *mut std::sync::atomic::AtomicI32)).store(0 as ::core::ffi::c_int, std::sync::atomic::Ordering::Relaxed);
         loop {
             let fresh0 = n;
             n -= 1;
@@ -223,10 +220,7 @@ unsafe extern "C" fn pcache1Alloc(mut nByte: ::core::ffi::c_int) -> *mut ::core:
         if !p.is_null() {
             pcache1_g.pFree = (*pcache1_g.pFree).pNext;
             pcache1_g.nFreeSlot -= 1;
-            ::core::intrinsics::atomic_store_relaxed(
-                &raw mut pcache1_g.bUnderPressure,
-                (pcache1_g.nFreeSlot < pcache1_g.nReserve) as ::core::ffi::c_int,
-            );
+            (*((&raw mut pcache1_g.bUnderPressure) as *mut std::sync::atomic::AtomicI32)).store((pcache1_g.nFreeSlot < pcache1_g.nReserve) as ::core::ffi::c_int, std::sync::atomic::Ordering::Relaxed);
             crate::src::src::status::sqlite3StatusHighwater(crate::src::headers::sqlite3_h::SQLITE_STATUS_PAGECACHE_SIZE, nByte);
             crate::src::src::status::sqlite3StatusUp(crate::src::headers::sqlite3_h::SQLITE_STATUS_PAGECACHE_USED, 1 as ::core::ffi::c_int);
         }
@@ -257,10 +251,7 @@ unsafe extern "C" fn pcache1Free(mut p: *mut ::core::ffi::c_void) {
         (*pSlot).pNext = pcache1_g.pFree;
         pcache1_g.pFree = pSlot;
         pcache1_g.nFreeSlot += 1;
-        ::core::intrinsics::atomic_store_relaxed(
-            &raw mut pcache1_g.bUnderPressure,
-            (pcache1_g.nFreeSlot < pcache1_g.nReserve) as ::core::ffi::c_int,
-        );
+        (*((&raw mut pcache1_g.bUnderPressure) as *mut std::sync::atomic::AtomicI32)).store((pcache1_g.nFreeSlot < pcache1_g.nReserve) as ::core::ffi::c_int, std::sync::atomic::Ordering::Relaxed);
         crate::src::src::mutex::sqlite3_mutex_leave(pcache1_g.mutex);
     } else {
         let mut nFreed: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
@@ -334,7 +325,7 @@ pub unsafe extern "C" fn sqlite3PageFree(mut p: *mut ::core::ffi::c_void) {
 
 unsafe extern "C" fn pcache1UnderMemoryPressure(mut pCache: *mut PCache1) -> ::core::ffi::c_int {
     if pcache1_g.nSlot != 0 && (*pCache).szPage + (*pCache).szExtra <= pcache1_g.szSlot {
-        return ::core::intrinsics::atomic_load_relaxed(&raw mut pcache1_g.bUnderPressure);
+        return (*((&raw mut pcache1_g.bUnderPressure) as *mut std::sync::atomic::AtomicI32)).load(std::sync::atomic::Ordering::Relaxed);
     } else {
         return crate::src::src::malloc::sqlite3HeapNearlyFull();
     };

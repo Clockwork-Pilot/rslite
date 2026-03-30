@@ -1681,7 +1681,7 @@ pub unsafe extern "C" fn sqlite3VdbeList(mut p: *mut crate::src::headers::vdbeIn
     );
     if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
         pOp = aOp.offset(i as isize);
-        if ::core::intrinsics::atomic_load_relaxed(&raw mut (*db).u1.isInterrupted) != 0 {
+        if (*((&raw mut (*db).u1.isInterrupted) as *mut std::sync::atomic::AtomicI32)).load(std::sync::atomic::Ordering::Relaxed) != 0 {
             __p_ref.rc = crate::src::headers::sqlite3_h::SQLITE_INTERRUPT;
             rc = crate::src::headers::sqlite3_h::SQLITE_ERROR;
             sqlite3VdbeError(p, crate::src::src::main::sqlite3ErrStr(__p_ref.rc));

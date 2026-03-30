@@ -2420,10 +2420,7 @@ pub unsafe extern "C" fn sqlite3RunParser(
     let __db_ref = unsafe { &mut *db };
     mxSqlLen = __db_ref.aLimit[crate::src::headers::sqlite3_h::SQLITE_LIMIT_SQL_LENGTH as usize];
     if __db_ref.nVdbeActive == 0 as ::core::ffi::c_int {
-        ::core::intrinsics::atomic_store_relaxed(
-            &raw mut __db_ref.u1.isInterrupted,
-            0 as ::core::ffi::c_int,
-        );
+        (*((&raw mut __db_ref.u1.isInterrupted) as *mut std::sync::atomic::AtomicI32)).store(0 as ::core::ffi::c_int, std::sync::atomic::Ordering::Relaxed);
     }
     __pParse_ref.rc = crate::src::headers::sqlite3_h::SQLITE_OK;
     __pParse_ref.zTail = zSql;
@@ -2447,7 +2444,7 @@ pub unsafe extern "C" fn sqlite3RunParser(
             break;
         } else {
             if tokenType >= crate::src::parse::TK_WINDOW {
-                if ::core::intrinsics::atomic_load_relaxed(&raw mut __db_ref.u1.isInterrupted) != 0 {
+                if (*((&raw mut __db_ref.u1.isInterrupted) as *mut std::sync::atomic::AtomicI32)).load(std::sync::atomic::Ordering::Relaxed) != 0 {
                     __pParse_ref.rc = crate::src::headers::sqlite3_h::SQLITE_INTERRUPT;
                     __pParse_ref.nErr += 1;
                     break;

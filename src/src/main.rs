@@ -17,7 +17,6 @@
 
 
 
-
 pub use crate::stdlib::va_list;
 pub use crate::__stddef_size_t_h::size_t;
 
@@ -325,21 +324,12 @@ pub unsafe extern "C" fn sqlite3_config(
             )
                 -> ()>());
             let mut pLogArg: *mut ::core::ffi::c_void = ap.arg::<*mut ::core::ffi::c_void>();
-            ::core::intrinsics::atomic_store_relaxed(
-                &raw mut crate::src::src::global::sqlite3Config.xLog as *mut LOGFUNC_t as *mut usize,
-                ::core::mem::transmute::<LOGFUNC_t, usize>(xLog),
-            );
-            ::core::intrinsics::atomic_store_relaxed(
-                &raw mut crate::src::src::global::sqlite3Config.pLogArg as *mut *mut ::core::ffi::c_void as *mut usize,
-                pLogArg as usize,
-            );
+            (*(&raw mut crate::src::src::global::sqlite3Config.xLog as *mut LOGFUNC_t as *mut std::sync::atomic::AtomicUsize)).store(::core::mem::transmute::<LOGFUNC_t, usize>(xLog), std::sync::atomic::Ordering::Relaxed);
+            (*(&raw mut crate::src::src::global::sqlite3Config.pLogArg as *mut *mut ::core::ffi::c_void as *mut std::sync::atomic::AtomicUsize)).store(pLogArg as usize, std::sync::atomic::Ordering::Relaxed);
         }
     crate::src::headers::sqlite3_h::SQLITE_CONFIG_URI =>  {
             let mut bOpenUri: ::core::ffi::c_int = ap.arg::<::core::ffi::c_int>();
-            ::core::intrinsics::atomic_store_relaxed(
-                &raw mut crate::src::src::global::sqlite3Config.bOpenUri,
-                bOpenUri as crate::src::ext::rtree::rtree::u8_0,
-            );
+            (*((&raw mut crate::src::src::global::sqlite3Config.bOpenUri) as *mut std::sync::atomic::AtomicU8)).store(bOpenUri as crate::src::ext::rtree::rtree::u8_0, std::sync::atomic::Ordering::Relaxed);
         }
     crate::src::headers::sqlite3_h::SQLITE_CONFIG_COVERING_INDEX_SCAN =>  {
             crate::src::src::global::sqlite3Config.bUseCis = ap.arg::<::core::ffi::c_int>() as crate::src::ext::rtree::rtree::u8_0;
@@ -1612,15 +1602,12 @@ pub unsafe extern "C" fn sqlite3_setlk_timeout(
 #[no_mangle]
 
 pub unsafe extern "C" fn sqlite3_interrupt(mut db: *mut crate::src::headers::sqliteInt_h::sqlite3) {
-    ::core::intrinsics::atomic_store_relaxed(
-        &raw mut (*db).u1.isInterrupted,
-        1 as ::core::ffi::c_int,
-    );
+    (*((&raw mut (*db).u1.isInterrupted) as *mut std::sync::atomic::AtomicI32)).store(1 as ::core::ffi::c_int, std::sync::atomic::Ordering::Relaxed);
 }
 #[no_mangle]
 
 pub unsafe extern "C" fn sqlite3_is_interrupted(mut db: *mut crate::src::headers::sqliteInt_h::sqlite3) -> ::core::ffi::c_int {
-    (::core::intrinsics::atomic_load_relaxed(&raw mut (*db).u1.isInterrupted)
+    ((*((&raw mut (*db).u1.isInterrupted) as *mut std::sync::atomic::AtomicI32)).load(std::sync::atomic::Ordering::Relaxed)
         != 0 as ::core::ffi::c_int) as ::core::ffi::c_int
 }
 #[no_mangle]
@@ -2330,10 +2317,7 @@ pub unsafe extern "C" fn sqlite3_wal_checkpoint_v2(
     }
     rc = crate::src::src::malloc::sqlite3ApiExit(db as *mut crate::src::headers::sqliteInt_h::sqlite3, rc);
     if __db_ref.nVdbeActive == 0 as ::core::ffi::c_int {
-        ::core::intrinsics::atomic_store_relaxed(
-            &raw mut __db_ref.u1.isInterrupted,
-            0 as ::core::ffi::c_int,
-        );
+        (*((&raw mut __db_ref.u1.isInterrupted) as *mut std::sync::atomic::AtomicI32)).store(0 as ::core::ffi::c_int, std::sync::atomic::Ordering::Relaxed);
     }
     crate::src::src::mutex::sqlite3_mutex_leave(__db_ref.mutex);
     rc
@@ -2691,7 +2675,7 @@ pub unsafe extern "C" fn sqlite3ParseUri(
     let mut c: ::core::ffi::c_char = 0;
     let mut nUri: ::core::ffi::c_int = crate::src::src::util::sqlite3Strlen30(zUri);
     if (flags & crate::src::headers::sqlite3_h::SQLITE_OPEN_URI as ::core::ffi::c_uint != 0
-        || ::core::intrinsics::atomic_load_relaxed(&raw mut crate::src::src::global::sqlite3Config.bOpenUri)
+        || (*((&raw mut crate::src::src::global::sqlite3Config.bOpenUri) as *mut std::sync::atomic::AtomicU8)).load(std::sync::atomic::Ordering::Relaxed)
             as ::core::ffi::c_int
             != 0)
         && nUri >= 5 as ::core::ffi::c_int

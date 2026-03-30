@@ -733,10 +733,7 @@ unsafe extern "C" fn walIndexAppend(
             sLoc.aPgno.offset((idx - 1 as ::core::ffi::c_int) as isize),
             iPage,
         );
-        ::core::intrinsics::atomic_store_relaxed(
-            sLoc.aHash.offset(iKey as isize) as *mut ht_slot,
-            idx as ht_slot,
-        );
+        (*(sLoc.aHash.offset(iKey as isize) as *mut std::sync::atomic::AtomicU16)).store(idx as ht_slot, std::sync::atomic::Ordering::Relaxed);
     }
     rc
 }
@@ -1437,10 +1434,7 @@ unsafe extern "C" fn walRestartHdr(mut pWal: *mut Wal, mut salt1: crate::src::ex
                 );
     walIndexWriteHdr(pWal);
     let __pInfo_ref = unsafe { &mut *pInfo };
-    ::core::intrinsics::atomic_store_relaxed(
-        &raw mut __pInfo_ref.nBackfill,
-        0 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::u32_0,
-    );
+    (*((&raw mut __pInfo_ref.nBackfill) as *mut std::sync::atomic::AtomicU32)).store(0 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::u32_0, std::sync::atomic::Ordering::Relaxed);
     ::core::ptr::write_volatile(&mut __pInfo_ref.nBackfillAttempted as *mut crate::src::ext::rtree::rtree::u32_0, 0 as crate::src::ext::rtree::rtree::u32_0);
     ::core::ptr::write_volatile(
         &mut __pInfo_ref.aReadMark[1 as ::core::ffi::c_int as usize] as *mut crate::src::ext::rtree::rtree::u32_0,
@@ -1486,9 +1480,7 @@ unsafe extern "C" fn walCheckpoint(
                 current_block = 5634871135123216486;
                 break;
             }
-            let mut y: crate::src::ext::rtree::rtree::u32_0 = ::core::intrinsics::atomic_load_relaxed(
-                (&raw mut (*pInfo).aReadMark as *mut crate::src::ext::rtree::rtree::u32_0).offset(i as isize),
-            );
+            let mut y: crate::src::ext::rtree::rtree::u32_0 = (*((&raw mut (*pInfo).aReadMark as *mut crate::src::ext::rtree::rtree::u32_0).offset(i as isize) as *mut std::sync::atomic::AtomicU32)).load(std::sync::atomic::Ordering::Relaxed);
             if mxSafeFrame > y {
                 rc = walBusyLock(
                     pWal,
@@ -1503,10 +1495,7 @@ unsafe extern "C" fn walCheckpoint(
                     } else {
                         READMARK_NOT_USED as crate::src::ext::rtree::rtree::u32_0
                     };
-                    ::core::intrinsics::atomic_store_relaxed(
-                        (&raw mut (*pInfo).aReadMark as *mut crate::src::ext::rtree::rtree::u32_0).offset(i as isize),
-                        iMark,
-                    );
+                    (*((&raw mut (*pInfo).aReadMark as *mut crate::src::ext::rtree::rtree::u32_0).offset(i as isize) as *mut std::sync::atomic::AtomicU32)).store(iMark, std::sync::atomic::Ordering::Relaxed);
                     walUnlockExclusive(pWal, 3 as ::core::ffi::c_int + i, 1 as ::core::ffi::c_int);
                 } else {
                     if !(rc == crate::src::headers::sqlite3_h::SQLITE_BUSY) {
@@ -1577,7 +1566,7 @@ unsafe extern "C" fn walCheckpoint(
                             == walIteratorNext(pIter, &raw mut iDbpage, &raw mut iFrame)
                     {
                         let mut iOffset: crate::src::ext::rtree::rtree::i64_0 = 0;
-                        if ::core::intrinsics::atomic_load_relaxed(&raw mut (*db).u1.isInterrupted)
+                        if (*((&raw mut (*db).u1.isInterrupted) as *mut std::sync::atomic::AtomicI32)).load(std::sync::atomic::Ordering::Relaxed)
                             != 0
                         {
                             rc = if (*db).mallocFailed as ::core::ffi::c_int != 0 {
@@ -1637,10 +1626,7 @@ unsafe extern "C" fn walCheckpoint(
                             }
                         }
                         if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
-                            ::core::intrinsics::atomic_store_relaxed(
-                                &raw mut (*pInfo).nBackfill,
-                                mxSafeFrame,
-                            );
+                            (*((&raw mut (*pInfo).nBackfill) as *mut std::sync::atomic::AtomicU32)).store(mxSafeFrame, std::sync::atomic::Ordering::Relaxed);
                         }
                     }
                     walUnlockExclusive(
@@ -2136,7 +2122,7 @@ unsafe extern "C" fn walTryBeginRead(
     let mut i: ::core::ffi::c_int = 0;
     let mut mxFrame: crate::src::ext::rtree::rtree::u32_0 = 0;
     if useWal == 0
-        && ::core::intrinsics::atomic_load_relaxed(&raw mut (*pInfo).nBackfill)
+        && (*((&raw mut (*pInfo).nBackfill) as *mut std::sync::atomic::AtomicU32)).load(std::sync::atomic::Ordering::Relaxed)
             == __pWal_ref.hdr.mxFrame
     {
         rc = walLockShared(pWal, 3 as ::core::ffi::c_int + 0 as ::core::ffi::c_int);
@@ -2162,9 +2148,7 @@ unsafe extern "C" fn walTryBeginRead(
     mxFrame = __pWal_ref.hdr.mxFrame;
     i = 1 as ::core::ffi::c_int;
     while i < WAL_NREADER {
-        let mut thisMark: crate::src::ext::rtree::rtree::u32_0 = ::core::intrinsics::atomic_load_relaxed(
-            (&raw mut (*pInfo).aReadMark as *mut crate::src::ext::rtree::rtree::u32_0).offset(i as isize),
-        );
+        let mut thisMark: crate::src::ext::rtree::rtree::u32_0 = (*((&raw mut (*pInfo).aReadMark as *mut crate::src::ext::rtree::rtree::u32_0).offset(i as isize) as *mut std::sync::atomic::AtomicU32)).load(std::sync::atomic::Ordering::Relaxed);
         if mxReadMark <= thisMark && thisMark <= mxFrame {
             mxReadMark = thisMark;
             mxI = i;
@@ -2178,10 +2162,7 @@ unsafe extern "C" fn walTryBeginRead(
         while i < WAL_NREADER {
             rc = walLockExclusive(pWal, 3 as ::core::ffi::c_int + i, 1 as ::core::ffi::c_int);
             if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
-                ::core::intrinsics::atomic_store_relaxed(
-                    (&raw mut (*pInfo).aReadMark as *mut crate::src::ext::rtree::rtree::u32_0).offset(i as isize),
-                    mxFrame,
-                );
+                (*((&raw mut (*pInfo).aReadMark as *mut crate::src::ext::rtree::rtree::u32_0).offset(i as isize) as *mut std::sync::atomic::AtomicU32)).store(mxFrame, std::sync::atomic::Ordering::Relaxed);
                 mxReadMark = mxFrame;
                 mxI = i;
                 walUnlockExclusive(pWal, 3 as ::core::ffi::c_int + i, 1 as ::core::ffi::c_int);
@@ -2209,12 +2190,10 @@ unsafe extern "C" fn walTryBeginRead(
             rc
         };
     }
-    __pWal_ref.minFrame = ::core::intrinsics::atomic_load_relaxed(&raw mut (*pInfo).nBackfill)
+    __pWal_ref.minFrame = (*((&raw mut (*pInfo).nBackfill) as *mut std::sync::atomic::AtomicU32)).load(std::sync::atomic::Ordering::Relaxed)
         .wrapping_add(1 as crate::src::ext::rtree::rtree::u32_0);
     walShmBarrier(pWal);
-    if ::core::intrinsics::atomic_load_relaxed(
-        (&raw mut (*pInfo).aReadMark as *mut crate::src::ext::rtree::rtree::u32_0).offset(mxI as isize),
-    ) != mxReadMark
+    if (*((&raw mut (*pInfo).aReadMark as *mut crate::src::ext::rtree::rtree::u32_0).offset(mxI as isize) as *mut std::sync::atomic::AtomicU32)).load(std::sync::atomic::Ordering::Relaxed) != mxReadMark
         || ::libc::memcmp(
             walIndexHdr(pWal) as *mut ::core::ffi::c_void,
             &raw mut __pWal_ref.hdr as *const ::core::ffi::c_void,
@@ -2302,9 +2281,8 @@ unsafe extern "C" fn walFindFrame(
         nCollide = HASHTABLE_NSLOT;
         iKey = walHash(pgno as crate::src::ext::rtree::rtree::u32_0);
         loop {
-            iH = ::core::intrinsics::atomic_load_relaxed(
-                sLoc.aHash.offset(iKey as isize) as *mut ht_slot
-            ) as crate::src::ext::rtree::rtree::u32_0;
+            iH = (*(sLoc.aHash.offset(iKey as isize) as *mut std::sync::atomic::AtomicU16)).load(std::sync::atomic::Ordering::Relaxed)
+                as crate::src::ext::rtree::rtree::u32_0;
             if !(iH != 0 as crate::src::ext::rtree::rtree::u32_0) {
                 break;
             }

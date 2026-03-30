@@ -85,10 +85,7 @@ pub unsafe extern "C" fn sqlite3_soft_heap_limit64(mut n: crate::src::headers::s
     }
     mem0.alarmThreshold = n;
     nUsed = crate::src::src::status::sqlite3StatusValue(crate::src::headers::sqlite3_h::SQLITE_STATUS_MEMORY_USED);
-    ::core::intrinsics::atomic_store_relaxed(
-        &raw mut mem0.nearlyFull,
-        (n > 0 as crate::src::headers::sqlite3_h::sqlite3_int64 && n <= nUsed) as ::core::ffi::c_int,
-    );
+    (*((&raw mut mem0.nearlyFull) as *mut std::sync::atomic::AtomicI32)).store((n > 0 as crate::src::headers::sqlite3_h::sqlite3_int64 && n <= nUsed) as ::core::ffi::c_int, std::sync::atomic::Ordering::Relaxed);
     crate::src::src::mutex::sqlite3_mutex_leave(mem0.mutex);
     excess = sqlite3_memory_used() - n;
     if excess > 0 as crate::src::headers::sqlite3_h::sqlite3_int64 {
@@ -151,7 +148,7 @@ pub unsafe extern "C" fn sqlite3MallocInit() -> ::core::ffi::c_int {
 #[no_mangle]
 
 pub unsafe extern "C" fn sqlite3HeapNearlyFull() -> ::core::ffi::c_int {
-    ::core::intrinsics::atomic_load_relaxed(&raw mut mem0.nearlyFull)
+    (*((&raw mut mem0.nearlyFull) as *mut std::sync::atomic::AtomicI32)).load(std::sync::atomic::Ordering::Relaxed)
 }
 #[no_mangle]
 
@@ -217,10 +214,7 @@ unsafe extern "C" fn mallocWithAlarm(
     if mem0.alarmThreshold > 0 as crate::src::headers::sqlite3_h::sqlite3_int64 {
         let mut nUsed: crate::src::headers::sqlite3_h::sqlite3_int64 = crate::src::src::status::sqlite3StatusValue(crate::src::headers::sqlite3_h::SQLITE_STATUS_MEMORY_USED);
         if nUsed >= mem0.alarmThreshold - nFull as crate::src::headers::sqlite3_h::sqlite3_int64 {
-            ::core::intrinsics::atomic_store_relaxed(
-                &raw mut mem0.nearlyFull,
-                1 as ::core::ffi::c_int,
-            );
+            (*((&raw mut mem0.nearlyFull) as *mut std::sync::atomic::AtomicI32)).store(1 as ::core::ffi::c_int, std::sync::atomic::Ordering::Relaxed);
             sqlite3MallocAlarm(nFull);
             if mem0.hardLimit != 0 {
                 nUsed = crate::src::src::status::sqlite3StatusValue(crate::src::headers::sqlite3_h::SQLITE_STATUS_MEMORY_USED);
@@ -230,10 +224,7 @@ unsafe extern "C" fn mallocWithAlarm(
                 }
             }
         } else {
-            ::core::intrinsics::atomic_store_relaxed(
-                &raw mut mem0.nearlyFull,
-                0 as ::core::ffi::c_int,
-            );
+            (*((&raw mut mem0.nearlyFull) as *mut std::sync::atomic::AtomicI32)).store(0 as ::core::ffi::c_int, std::sync::atomic::Ordering::Relaxed);
         }
     }
     p = crate::src::src::global::sqlite3Config.m.xMalloc.expect("non-null function pointer")(nFull);
@@ -750,10 +741,7 @@ pub unsafe extern "C" fn sqlite3OomFault(mut db: *mut crate::src::headers::sqlit
         let __db_ref = unsafe { &mut *db };
         __db_ref.mallocFailed = 1 as crate::src::ext::rtree::rtree::u8_0;
         if __db_ref.nVdbeExec > 0 as ::core::ffi::c_int {
-            ::core::intrinsics::atomic_store_relaxed(
-                &raw mut __db_ref.u1.isInterrupted,
-                1 as ::core::ffi::c_int,
-            );
+            (*((&raw mut __db_ref.u1.isInterrupted) as *mut std::sync::atomic::AtomicI32)).store(1 as ::core::ffi::c_int, std::sync::atomic::Ordering::Relaxed);
         }
         __db_ref.lookaside.bDisable = __db_ref.lookaside.bDisable.wrapping_add(1);
         __db_ref.lookaside.sz = 0 as crate::src::fts5::u16_0;
@@ -781,10 +769,7 @@ pub unsafe extern "C" fn sqlite3OomClear(mut db: *mut crate::src::headers::sqlit
     if (*db).mallocFailed as ::core::ffi::c_int != 0 && (*db).nVdbeExec == 0 as ::core::ffi::c_int {
         let __db_ref = unsafe { &mut *db };
         __db_ref.mallocFailed = 0 as crate::src::ext::rtree::rtree::u8_0;
-        ::core::intrinsics::atomic_store_relaxed(
-            &raw mut __db_ref.u1.isInterrupted,
-            0 as ::core::ffi::c_int,
-        );
+        (*((&raw mut __db_ref.u1.isInterrupted) as *mut std::sync::atomic::AtomicI32)).store(0 as ::core::ffi::c_int, std::sync::atomic::Ordering::Relaxed);
         __db_ref.lookaside.bDisable = __db_ref.lookaside.bDisable.wrapping_sub(1);
         __db_ref.lookaside.sz = (if __db_ref.lookaside.bDisable != 0 {
             0 as ::core::ffi::c_int
