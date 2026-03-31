@@ -1905,10 +1905,7 @@ pub mod geopoly_c {
         } else {
             rc = crate::src::src::vtab::sqlite3_declare_vtab(db, zSql);
             if crate::src::headers::sqlite3_h::SQLITE_OK != rc {
-                *pzErr = crate::src::src::printf::sqlite3_mprintf(
-                    b"%s\0" as *const u8 as *const ::core::ffi::c_char,
-                    crate::src::src::main::sqlite3_errmsg(db),
-                );
+                *pzErr = crate::sqlite_printf!("%s", crate::src::src::main::sqlite3_errmsg(db));
             }
         }
         crate::src::src::malloc::sqlite3_free(zSql as *mut ::core::ffi::c_void);
@@ -1926,10 +1923,7 @@ pub mod geopoly_c {
                     isCreate,
                 );
                 if rc != 0 {
-                    *pzErr = crate::src::src::printf::sqlite3_mprintf(
-                        b"%s\0" as *const u8 as *const ::core::ffi::c_char,
-                        crate::src::src::main::sqlite3_errmsg(db),
-                    );
+                    *pzErr = crate::sqlite_printf!("%s", crate::src::src::main::sqlite3_errmsg(db));
                 } else {
                     *ppVtab = pRtree as *mut crate::src::headers::sqlite3_h::sqlite3_vtab;
                     return crate::src::headers::sqlite3_h::SQLITE_OK;
@@ -2290,10 +2284,7 @@ pub mod geopoly_c {
             );
             if rc != 0 {
                 if rc == crate::src::headers::sqlite3_h::SQLITE_ERROR {
-                    (*pVtab).zErrMsg = crate::src::src::printf::sqlite3_mprintf(
-                        b"_shape does not contain a valid polygon\0" as *const u8
-                            as *const ::core::ffi::c_char,
-                    );
+                    (*pVtab).zErrMsg = crate::sqlite_printf!("_shape does not contain a valid polygon");
                 }
                 current_block = 12797311492648718431;
             } else {
@@ -3636,9 +3627,8 @@ unsafe extern "C" fn rtreeDestroy(mut pVtab: *mut crate::src::headers::sqlite3_h
     let mut pRtree: *mut Rtree = pVtab as *mut Rtree;
     let mut rc: ::core::ffi::c_int = 0;
     let __pRtree_ref = unsafe { &*pRtree };
-    let mut zCreate: *mut ::core::ffi::c_char = crate::src::src::printf::sqlite3_mprintf(
-        b"DROP TABLE '%q'.'%q_node';DROP TABLE '%q'.'%q_rowid';DROP TABLE '%q'.'%q_parent';\0"
-            as *const u8 as *const ::core::ffi::c_char,
+    let mut zCreate: *mut ::core::ffi::c_char = crate::sqlite_printf!(
+        "DROP TABLE '%q'.'%q_node';DROP TABLE '%q'.'%q_rowid';DROP TABLE '%q'.'%q_parent';",
         __pRtree_ref.zDb,
         __pRtree_ref.zName,
         __pRtree_ref.zDb,
@@ -6304,11 +6294,7 @@ unsafe extern "C" fn rtreeConstraintError(
     let mut pStmt: *mut crate::src::headers::sqlite3_h::sqlite3_stmt = ::core::ptr::null_mut::<crate::src::headers::sqlite3_h::sqlite3_stmt>();
     let mut zSql: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
     let mut rc: ::core::ffi::c_int = 0;
-    zSql = crate::src::src::printf::sqlite3_mprintf(
-        b"SELECT * FROM %Q.%Q\0" as *const u8 as *const ::core::ffi::c_char,
-        (*pRtree).zDb,
-        (*pRtree).zName,
-    );
+    zSql = crate::sqlite_printf!("SELECT * FROM %Q.%Q", (*pRtree).zDb, (*pRtree).zName);
     if !zSql.is_null() {
         rc = crate::src::src::prepare::sqlite3_prepare_v2(
             (*pRtree).db,
@@ -6325,22 +6311,12 @@ unsafe extern "C" fn rtreeConstraintError(
         if iCol == 0 as ::core::ffi::c_int {
             let mut zCol: *const ::core::ffi::c_char =
                 crate::src::src::vdbeapi::sqlite3_column_name(pStmt, 0 as ::core::ffi::c_int);
-            (*pRtree).base.zErrMsg = crate::src::src::printf::sqlite3_mprintf(
-                b"UNIQUE constraint failed: %s.%s\0" as *const u8 as *const ::core::ffi::c_char,
-                (*pRtree).zName,
-                zCol,
-            );
+            (*pRtree).base.zErrMsg = crate::sqlite_printf!("UNIQUE constraint failed: %s.%s", (*pRtree).zName, zCol);
         } else {
             let mut zCol1: *const ::core::ffi::c_char = crate::src::src::vdbeapi::sqlite3_column_name(pStmt, iCol);
             let mut zCol2: *const ::core::ffi::c_char =
                 crate::src::src::vdbeapi::sqlite3_column_name(pStmt, iCol + 1 as ::core::ffi::c_int);
-            (*pRtree).base.zErrMsg = crate::src::src::printf::sqlite3_mprintf(
-                b"rtree constraint failed: %s.(%s<=%s)\0" as *const u8
-                    as *const ::core::ffi::c_char,
-                (*pRtree).zName,
-                zCol1,
-                zCol2,
-            );
+            (*pRtree).base.zErrMsg = crate::sqlite_printf!("rtree constraint failed: %s.(%s<=%s)", (*pRtree).zName, zCol1, zCol2);
         }
     }
     crate::src::src::vdbeapi::sqlite3_finalize(pStmt);
@@ -6549,9 +6525,8 @@ unsafe extern "C" fn rtreeRename(
     let mut pRtree: *mut Rtree = pVtab as *mut Rtree;
     let mut rc: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_NOMEM;
     let __pRtree_ref = unsafe { &*pRtree };
-    let mut zSql: *mut ::core::ffi::c_char = crate::src::src::printf::sqlite3_mprintf(
-        b"ALTER TABLE %Q.'%q_node'   RENAME TO \"%w_node\";ALTER TABLE %Q.'%q_parent' RENAME TO \"%w_parent\";ALTER TABLE %Q.'%q_rowid'  RENAME TO \"%w_rowid\";\0"
-            as *const u8 as *const ::core::ffi::c_char,
+    let mut zSql: *mut ::core::ffi::c_char = crate::sqlite_printf!(
+        "ALTER TABLE %Q.'%q_node'   RENAME TO \"%w_node\";ALTER TABLE %Q.'%q_parent' RENAME TO \"%w_parent\";ALTER TABLE %Q.'%q_rowid'  RENAME TO \"%w_rowid\";",
         __pRtree_ref.zDb,
         __pRtree_ref.zName,
         zNewName,
@@ -6593,9 +6568,6 @@ unsafe extern "C" fn rtreeQueryStat1(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
     mut pRtree: *mut Rtree,
 ) -> ::core::ffi::c_int {
-    let mut zFmt: *const ::core::ffi::c_char =
-        b"SELECT stat FROM %Q.sqlite_stat1 WHERE tbl = '%q_rowid'\0" as *const u8
-            as *const ::core::ffi::c_char;
     let mut zSql: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
     let mut p: *mut crate::src::headers::sqlite3_h::sqlite3_stmt = ::core::ptr::null_mut::<crate::src::headers::sqlite3_h::sqlite3_stmt>();
     let mut rc: ::core::ffi::c_int = 0;
@@ -6616,7 +6588,7 @@ unsafe extern "C" fn rtreeQueryStat1(
         __pRtree_ref.nRowEst = RTREE_DEFAULT_ROWEST as i64_0;
         return if rc == crate::src::headers::sqlite3_h::SQLITE_ERROR { crate::src::headers::sqlite3_h::SQLITE_OK } else { rc };
     }
-    zSql = crate::src::src::printf::sqlite3_mprintf(zFmt, __pRtree_ref.zDb, __pRtree_ref.zName);
+    zSql = crate::sqlite_printf!("SELECT stat FROM %Q.sqlite_stat1 WHERE tbl = '%q_rowid'", __pRtree_ref.zDb, __pRtree_ref.zName);
     if zSql.is_null() {
         rc = crate::src::headers::sqlite3_h::SQLITE_NOMEM;
     } else {
@@ -6894,17 +6866,25 @@ unsafe extern "C" fn rtreeSqlInit(
     rc = rtreeQueryStat1(db, pRtree);
     i = 0 as ::core::ffi::c_int;
     while i < N_STATEMENT && rc == crate::src::headers::sqlite3_h::SQLITE_OK {
-        let mut zSql: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
-        let mut zFormat: *const ::core::ffi::c_char = ::core::ptr::null::<::core::ffi::c_char>();
-        if i != 3 as ::core::ffi::c_int
-            || __pRtree_ref.nAux as ::core::ffi::c_int == 0 as ::core::ffi::c_int
-        {
-            zFormat = azSql[i as usize];
+        let zSql: *mut ::core::ffi::c_char = if i == 0 as ::core::ffi::c_int {
+            crate::sqlite_printf!("INSERT OR REPLACE INTO '%q'.'%q_node' VALUES(?1, ?2)", zDb, zPrefix)
+        } else if i == 1 as ::core::ffi::c_int {
+            crate::sqlite_printf!("DELETE FROM '%q'.'%q_node' WHERE nodeno = ?1", zDb, zPrefix)
+        } else if i == 2 as ::core::ffi::c_int {
+            crate::sqlite_printf!("SELECT nodeno FROM '%q'.'%q_rowid' WHERE rowid = ?1", zDb, zPrefix)
+        } else if i == 3 as ::core::ffi::c_int && __pRtree_ref.nAux as ::core::ffi::c_int != 0 as ::core::ffi::c_int {
+            crate::sqlite_printf!("INSERT INTO\"%w\".\"%w_rowid\"(rowid,nodeno)VALUES(?1,?2)ON CONFLICT(rowid)DO UPDATE SET nodeno=excluded.nodeno", zDb, zPrefix)
+        } else if i == 3 as ::core::ffi::c_int {
+            crate::sqlite_printf!("INSERT OR REPLACE INTO '%q'.'%q_rowid' VALUES(?1, ?2)", zDb, zPrefix)
+        } else if i == 4 as ::core::ffi::c_int {
+            crate::sqlite_printf!("DELETE FROM '%q'.'%q_rowid' WHERE rowid = ?1", zDb, zPrefix)
+        } else if i == 5 as ::core::ffi::c_int {
+            crate::sqlite_printf!("SELECT parentnode FROM '%q'.'%q_parent' WHERE nodeno = ?1", zDb, zPrefix)
+        } else if i == 6 as ::core::ffi::c_int {
+            crate::sqlite_printf!("INSERT OR REPLACE INTO '%q'.'%q_parent' VALUES(?1, ?2)", zDb, zPrefix)
         } else {
-            zFormat = b"INSERT INTO\"%w\".\"%w_rowid\"(rowid,nodeno)VALUES(?1,?2)ON CONFLICT(rowid)DO UPDATE SET nodeno=excluded.nodeno\0"
-                as *const u8 as *const ::core::ffi::c_char;
-        }
-        zSql = crate::src::src::printf::sqlite3_mprintf(zFormat, zDb, zPrefix);
+            crate::sqlite_printf!("DELETE FROM '%q'.'%q_parent' WHERE nodeno = ?1", zDb, zPrefix)
+        };
         if !zSql.is_null() {
             rc = crate::src::src::prepare::sqlite3_prepare_v3(
                 db,
@@ -6921,12 +6901,7 @@ unsafe extern "C" fn rtreeSqlInit(
         i += 1;
     }
     if __pRtree_ref.nAux as ::core::ffi::c_int != 0 && rc != crate::src::headers::sqlite3_h::SQLITE_NOMEM {
-        __pRtree_ref.zReadAuxSql = crate::src::src::printf::sqlite3_mprintf(
-            b"SELECT * FROM \"%w\".\"%w_rowid\" WHERE rowid=?1\0" as *const u8
-                as *const ::core::ffi::c_char,
-            zDb,
-            zPrefix,
-        );
+        __pRtree_ref.zReadAuxSql = crate::sqlite_printf!("SELECT * FROM \"%w\".\"%w_rowid\" WHERE rowid=?1", zDb, zPrefix);
         if __pRtree_ref.zReadAuxSql.is_null() {
             rc = crate::src::headers::sqlite3_h::SQLITE_NOMEM;
         } else {
@@ -7027,10 +7002,7 @@ unsafe extern "C" fn getNodeSize(
     let mut zSql: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
     if isCreate != 0 {
         let mut iPageSize: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
-        zSql = crate::src::src::printf::sqlite3_mprintf(
-            b"PRAGMA %Q.page_size\0" as *const u8 as *const ::core::ffi::c_char,
-            (*pRtree).zDb,
-        );
+        zSql = crate::sqlite_printf!("PRAGMA %Q.page_size", (*pRtree).zDb);
         rc = getIntFromStmt(db, zSql, &raw mut iPageSize);
         if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
             let __pRtree_ref = unsafe { &mut *pRtree };
@@ -7043,32 +7015,17 @@ unsafe extern "C" fn getNodeSize(
                     + __pRtree_ref.nBytesPerCell as ::core::ffi::c_int * RTREE_MAXCELLS;
             }
         } else {
-            *pzErr = crate::src::src::printf::sqlite3_mprintf(
-                b"%s\0" as *const u8 as *const ::core::ffi::c_char,
-                crate::src::src::main::sqlite3_errmsg(db),
-            );
+            *pzErr = crate::sqlite_printf!("%s", crate::src::src::main::sqlite3_errmsg(db));
         }
     } else {
         let __pRtree_ref = unsafe { &mut *pRtree };
-        zSql = crate::src::src::printf::sqlite3_mprintf(
-            b"SELECT length(data) FROM '%q'.'%q_node' WHERE nodeno = 1\0" as *const u8
-                as *const ::core::ffi::c_char,
-            __pRtree_ref.zDb,
-            __pRtree_ref.zName,
-        );
+        zSql = crate::sqlite_printf!("SELECT length(data) FROM '%q'.'%q_node' WHERE nodeno = 1", __pRtree_ref.zDb, __pRtree_ref.zName);
         rc = getIntFromStmt(db, zSql, &raw mut __pRtree_ref.iNodeSize);
         if rc != crate::src::headers::sqlite3_h::SQLITE_OK {
-            *pzErr = crate::src::src::printf::sqlite3_mprintf(
-                b"%s\0" as *const u8 as *const ::core::ffi::c_char,
-                crate::src::src::main::sqlite3_errmsg(db),
-            );
+            *pzErr = crate::sqlite_printf!("%s", crate::src::src::main::sqlite3_errmsg(db));
         } else if __pRtree_ref.iNodeSize < 512 as ::core::ffi::c_int - 64 as ::core::ffi::c_int {
             rc = crate::src::headers::sqlite3_h::SQLITE_CORRUPT_VTAB;
-            *pzErr = crate::src::src::printf::sqlite3_mprintf(
-                b"undersize RTree blobs in \"%q_node\"\0" as *const u8
-                    as *const ::core::ffi::c_char,
-                __pRtree_ref.zName,
-            );
+            *pzErr = crate::sqlite_printf!("undersize RTree blobs in \"%q_node\"", __pRtree_ref.zName);
         }
     }
     crate::src::src::malloc::sqlite3_free(zSql as *mut ::core::ffi::c_void);
@@ -7110,12 +7067,7 @@ unsafe extern "C" fn rtreeInit(
         b"Auxiliary rtree columns must be last\0" as *const u8 as *const ::core::ffi::c_char,
     ];
     if argc < 6 as ::core::ffi::c_int || argc > RTREE_MAX_AUX_COLUMN + 3 as ::core::ffi::c_int {
-        *pzErr = crate::src::src::printf::sqlite3_mprintf(
-            b"%s\0" as *const u8 as *const ::core::ffi::c_char,
-            aErrMsg[(2 as ::core::ffi::c_int
-                + (argc >= 6 as ::core::ffi::c_int) as ::core::ffi::c_int)
-                as usize],
-        );
+        *pzErr = crate::sqlite_printf!("%s", aErrMsg[(2 as ::core::ffi::c_int + (argc >= 6 as ::core::ffi::c_int) as ::core::ffi::c_int) as usize]);
         return crate::src::headers::sqlite3_h::SQLITE_ERROR;
     }
     crate::src::src::vtab::sqlite3_vtab_config(db, crate::src::headers::sqlite3_h::SQLITE_VTAB_CONSTRAINT_SUPPORT, 1 as ::core::ffi::c_int);
@@ -7214,18 +7166,12 @@ unsafe extern "C" fn rtreeInit(
     if zSql.is_null() {
         rc = crate::src::headers::sqlite3_h::SQLITE_NOMEM;
     } else if ii < argc {
-        *pzErr = crate::src::src::printf::sqlite3_mprintf(
-            b"%s\0" as *const u8 as *const ::core::ffi::c_char,
-            aErrMsg[4 as ::core::ffi::c_int as usize],
-        );
+        *pzErr = crate::sqlite_printf!("%s", aErrMsg[4 as ::core::ffi::c_int as usize]);
         rc = crate::src::headers::sqlite3_h::SQLITE_ERROR;
     } else {
         rc = crate::src::src::vtab::sqlite3_declare_vtab(db, zSql);
         if crate::src::headers::sqlite3_h::SQLITE_OK != rc {
-            *pzErr = crate::src::src::printf::sqlite3_mprintf(
-                b"%s\0" as *const u8 as *const ::core::ffi::c_char,
-                crate::src::src::main::sqlite3_errmsg(db),
-            );
+            *pzErr = crate::sqlite_printf!("%s", crate::src::src::main::sqlite3_errmsg(db));
         }
     }
     crate::src::src::malloc::sqlite3_free(zSql as *mut ::core::ffi::c_void);
@@ -7244,10 +7190,7 @@ unsafe extern "C" fn rtreeInit(
             iErr = 0 as ::core::ffi::c_int;
         }
         if iErr != 0 {
-            *pzErr = crate::src::src::printf::sqlite3_mprintf(
-                b"%s\0" as *const u8 as *const ::core::ffi::c_char,
-                aErrMsg[iErr as usize],
-            );
+            *pzErr = crate::sqlite_printf!("%s", aErrMsg[iErr as usize]);
         } else {
             __pRtree_ref.nBytesPerCell = (8 as ::core::ffi::c_int
                 + __pRtree_ref.nDim2 as ::core::ffi::c_int * 4 as ::core::ffi::c_int)
@@ -7262,10 +7205,7 @@ unsafe extern "C" fn rtreeInit(
                     isCreate,
                 );
                 if rc != 0 {
-                    *pzErr = crate::src::src::printf::sqlite3_mprintf(
-                        b"%s\0" as *const u8 as *const ::core::ffi::c_char,
-                        crate::src::src::main::sqlite3_errmsg(db),
-                    );
+                    *pzErr = crate::sqlite_printf!("%s", crate::src::src::main::sqlite3_errmsg(db));
                 } else {
                     *ppVtab = pRtree as *mut crate::src::headers::sqlite3_h::sqlite3_vtab;
                     return crate::src::headers::sqlite3_h::SQLITE_OK;
@@ -7389,6 +7329,63 @@ unsafe extern "C" fn rtreedepth(
 }
 
 pub const RTREE_CHECK_MAX_ERROR: ::core::ffi::c_int = 100 as ::core::ffi::c_int;
+
+pub unsafe extern "C" fn rtreeCheckPrepare(
+    mut pCheck: *mut RtreeCheck,
+    mut zFmt: *const ::core::ffi::c_char,
+    mut args: ...
+) -> *mut crate::src::headers::sqlite3_h::sqlite3_stmt {
+    let mut z: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
+    let mut pRet: *mut crate::src::headers::sqlite3_h::sqlite3_stmt = ::core::ptr::null_mut::<crate::src::headers::sqlite3_h::sqlite3_stmt>();
+    z = crate::src::src::printf::sqlite3_vmprintf(zFmt, args);
+    if (*pCheck).rc == crate::src::headers::sqlite3_h::SQLITE_OK {
+        if z.is_null() {
+            (*pCheck).rc = crate::src::headers::sqlite3_h::SQLITE_NOMEM;
+        } else {
+            (*pCheck).rc = crate::src::src::prepare::sqlite3_prepare_v2(
+                (*pCheck).db,
+                z,
+                -(1 as ::core::ffi::c_int),
+                &raw mut pRet,
+                ::core::ptr::null_mut::<*const ::core::ffi::c_char>(),
+            );
+        }
+    }
+    crate::src::src::malloc::sqlite3_free(z as *mut ::core::ffi::c_void);
+    pRet
+}
+
+pub unsafe extern "C" fn rtreeCheckAppendMsg(
+    mut pCheck: *mut RtreeCheck,
+    mut zFmt: *const ::core::ffi::c_char,
+    mut args: ...
+) {
+    if (*pCheck).rc == crate::src::headers::sqlite3_h::SQLITE_OK && (*pCheck).nErr < RTREE_CHECK_MAX_ERROR {
+        let mut z: *mut ::core::ffi::c_char = crate::src::src::printf::sqlite3_vmprintf(zFmt, args);
+        if z.is_null() {
+            (*pCheck).rc = crate::src::headers::sqlite3_h::SQLITE_NOMEM;
+        } else {
+            let __pCheck_ref = unsafe { &mut *pCheck };
+            let zOldReport: *mut ::core::ffi::c_char = __pCheck_ref.zReport;
+            __pCheck_ref.zReport = crate::sqlite_printf!(
+                "%s%s%s",
+                zOldReport,
+                if !zOldReport.is_null() {
+                    b"\n\0" as *const u8 as *const ::core::ffi::c_char
+                } else {
+                    b"\0" as *const u8 as *const ::core::ffi::c_char
+                },
+                z,
+            );
+            crate::src::src::malloc::sqlite3_free(zOldReport as *mut ::core::ffi::c_void);
+            crate::src::src::malloc::sqlite3_free(z as *mut ::core::ffi::c_void);
+            if __pCheck_ref.zReport.is_null() {
+                __pCheck_ref.rc = crate::src::headers::sqlite3_h::SQLITE_NOMEM;
+            }
+        }
+        (*pCheck).nErr += 1;
+    }
+}
 
 unsafe extern "C" fn rtreeCheckReset(mut pCheck: *mut RtreeCheck, mut pStmt: *mut crate::src::headers::sqlite3_h::sqlite3_stmt) {
     let mut rc: ::core::ffi::c_int = crate::src::src::vdbeapi::sqlite3_reset(pStmt);
@@ -7796,12 +7793,9 @@ unsafe extern "C" fn rtreeIntegrity(
     let __pRtree_ref = unsafe { &*pRtree };
     rc = rtreeCheckTable(__pRtree_ref.db, __pRtree_ref.zDb, __pRtree_ref.zName, pzErr);
     if rc == crate::src::headers::sqlite3_h::SQLITE_OK && !(*pzErr).is_null() {
-        *pzErr = crate::src::src::printf::sqlite3_mprintf(
-            b"In RTree %s.%s:\n%z\0" as *const u8 as *const ::core::ffi::c_char,
-            __pRtree_ref.zDb,
-            __pRtree_ref.zName,
-            *pzErr,
-        );
+        let zOldErr: *mut ::core::ffi::c_char = *pzErr;
+        *pzErr = crate::sqlite_printf!("In RTree %s.%s:\n%s", __pRtree_ref.zDb, __pRtree_ref.zName, zOldErr);
+        crate::src::src::malloc::sqlite3_free(zOldErr as *mut ::core::ffi::c_void);
         if (*pzErr).is_null() {
             rc = crate::src::headers::sqlite3_h::SQLITE_NOMEM;
         }
@@ -8100,6 +8094,3 @@ pub unsafe extern "C" fn sqlite3_rtree_query_callback(
     )
 }
 
-// Re-export variadic functions from printf_c_variadic module
-pub use crate::src::printf_c_variadic::rtreeCheckPrepare;
-pub use crate::src::printf_c_variadic::rtreeCheckAppendMsg;

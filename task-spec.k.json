@@ -385,6 +385,76 @@
           "fails_count": 1
         }
       }
+    },
+    "sqlite3session_and_snprintf_migration": {
+      "type": "Feature",
+      "model_version": 1,
+      "id": "sqlite3session_and_snprintf_migration",
+      "description": "Combined migration of src/ext/session/sqlite3session.rs away from c_variadic functions and implementation of sqlite_snprintf! proc macro",
+      "goals": [
+        "Remove sqlite3_mprintf usage from src/ext/session/sqlite3session.rs",
+        "Remove sessionAppendPrintf usage and re-export from printf_c_variadic module",
+        "Implement sqlite_snprintf! proc macro in sqlite-printf-macros",
+        "Support buffer-safe formatting with compile-time validation",
+        "Replace all format string calls with sqlite_printf! and sqlite_snprintf! macros"
+      ],
+      "constraints": {
+        "sqlite3session_no_sqlite3_mprintf": {
+          "id": "sqlite3session_no_sqlite3_mprintf",
+          "cmd": "grep -n \"sqlite3_mprintf\" \"$WORKSPACE_ROOT/src/ext/session/sqlite3session.rs\" 2>/dev/null && exit 1 || exit 0",
+          "description": "sqlite3session.rs must not use sqlite3_mprintf",
+          "fails_count": 1
+        },
+        "sqlite3session_no_printf_c_variadic": {
+          "id": "sqlite3session_no_printf_c_variadic",
+          "cmd": "grep -n \"printf_c_variadic\\|sessionAppendPrintf\" \"$WORKSPACE_ROOT/src/ext/session/sqlite3session.rs\" 2>/dev/null && exit 1 || exit 0",
+          "description": "sqlite3session.rs must not import from printf_c_variadic or use sessionAppendPrintf",
+          "fails_count": 1
+        },
+        "sqlite_snprintf_exists": {
+          "id": "sqlite_snprintf_exists",
+          "cmd": "grep -n \"pub fn sqlite_snprintf\" \"$WORKSPACE_ROOT/sqlite-printf-macros/src/lib.rs\" 2>/dev/null && exit 0 || exit 1",
+          "description": "sqlite_snprintf! macro must exist in sqlite-printf-macros/src/lib.rs",
+          "fails_count": 1
+        },
+        "sqlite_snprintf_is_proc_macro": {
+          "id": "sqlite_snprintf_is_proc_macro",
+          "cmd": "grep -B 1 \"pub fn sqlite_snprintf\" \"$WORKSPACE_ROOT/sqlite-printf-macros/src/lib.rs\" 2>/dev/null | grep -q \"#\\[proc_macro\\]\" && exit 0 || exit 1",
+          "description": "sqlite_snprintf must be a proc_macro (have #[proc_macro] attribute)",
+          "fails_count": 1
+        },
+        "sqlite3session_no_sqlite3_snprintf": {
+          "id": "sqlite3session_no_sqlite3_snprintf",
+          "cmd": "grep -n \"sqlite3_snprintf\" \"$WORKSPACE_ROOT/src/ext/session/sqlite3session.rs\" 2>/dev/null && exit 1 || exit 0",
+          "description": "sqlite3session.rs must not use sqlite3_snprintf",
+          "fails_count": 1
+        }
+      }
+    },
+    "rtree_c_variadic_migration": {
+      "type": "Feature",
+      "model_version": 1,
+      "id": "rtree_c_variadic_migration",
+      "description": "Migrate src/ext/rtree/rtree.rs away from sqlite3_mprintf to sqlite_printf! proc macro",
+      "goals": [
+        "Remove all sqlite3_mprintf calls from src/ext/rtree/rtree.rs",
+        "Replace with compile-time validated sqlite_printf! macro calls",
+        "Ensure all 394649 tests pass after migration"
+      ],
+      "constraints": {
+        "rtree_no_sqlite3_mprintf": {
+          "id": "rtree_no_sqlite3_mprintf",
+          "cmd": "grep -E \"\\bsqlite3_mprintf\\(\" \"$WORKSPACE_ROOT/src/ext/rtree/rtree.rs\" 2>/dev/null && exit 1 || exit 0",
+          "description": "rtree.rs must not use sqlite3_mprintf function calls",
+          "fails_count": 1
+        },
+        "rtree_uses_sqlite_printf_macro": {
+          "id": "rtree_uses_sqlite_printf_macro",
+          "cmd": "grep -c \"sqlite_printf!\" \"$WORKSPACE_ROOT/src/ext/rtree/rtree.rs\" 2>/dev/null | grep -qE \"^[1-9]\" && exit 0 || exit 1",
+          "description": "rtree.rs must use sqlite_printf! macro for string formatting",
+          "fails_count": 1
+        }
+      }
     }
   }
 }

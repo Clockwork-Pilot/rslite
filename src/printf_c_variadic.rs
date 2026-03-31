@@ -9,7 +9,6 @@ pub use crate::src::src::printf;
 // Import required types and functions from their original modules
 use crate::src::src::main::{C2RustUnnamed, LOGFUNC_t, void_function, sqlite3MisuseError, setupLookaside};
 use crate::src::fts5::{Fts5Buffer, Fts5Config, Fts5FullTable, Fts5Parse, sqlite3Fts5BufferAppendString};
-use crate::src::ext::rtree::rtree::{RtreeCheck, RTREE_CHECK_MAX_ERROR};
 use crate::src::src::btree::{checkOom, checkProgress};
 
 
@@ -998,61 +997,6 @@ pub unsafe extern "C" fn checkAppendMsg(
 }
 
 
-pub unsafe extern "C" fn rtreeCheckPrepare(
-    mut pCheck: *mut RtreeCheck,
-    mut zFmt: *const ::core::ffi::c_char,
-    mut args: ...
-) -> *mut crate::src::headers::sqlite3_h::sqlite3_stmt {
-    let mut z: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
-    let mut pRet: *mut crate::src::headers::sqlite3_h::sqlite3_stmt = ::core::ptr::null_mut::<crate::src::headers::sqlite3_h::sqlite3_stmt>();
-    z = crate::src::src::printf::sqlite3_vmprintf(zFmt, args);
-    if (*pCheck).rc == crate::src::headers::sqlite3_h::SQLITE_OK {
-        if z.is_null() {
-            (*pCheck).rc = crate::src::headers::sqlite3_h::SQLITE_NOMEM;
-        } else {
-            (*pCheck).rc = crate::src::src::prepare::sqlite3_prepare_v2(
-                (*pCheck).db,
-                z,
-                -(1 as ::core::ffi::c_int),
-                &raw mut pRet,
-                ::core::ptr::null_mut::<*const ::core::ffi::c_char>(),
-            );
-        }
-    }
-    crate::src::src::malloc::sqlite3_free(z as *mut ::core::ffi::c_void);
-    pRet
-}
-
-
-
-pub unsafe extern "C" fn rtreeCheckAppendMsg(
-    mut pCheck: *mut RtreeCheck,
-    mut zFmt: *const ::core::ffi::c_char,
-    mut args: ...
-) {
-    if (*pCheck).rc == crate::src::headers::sqlite3_h::SQLITE_OK && (*pCheck).nErr < RTREE_CHECK_MAX_ERROR {
-                let mut z: *mut ::core::ffi::c_char = crate::src::src::printf::sqlite3_vmprintf(zFmt, args);
-        if z.is_null() {
-            (*pCheck).rc = crate::src::headers::sqlite3_h::SQLITE_NOMEM;
-        } else {
-            let __pCheck_ref = unsafe { &mut *pCheck };
-            __pCheck_ref.zReport = crate::src::src::printf::sqlite3_mprintf(
-                b"%z%s%z\0" as *const u8 as *const ::core::ffi::c_char,
-                __pCheck_ref.zReport,
-                if !__pCheck_ref.zReport.is_null() {
-                    b"\n\0" as *const u8 as *const ::core::ffi::c_char
-                } else {
-                    b"\0" as *const u8 as *const ::core::ffi::c_char
-                },
-                z,
-            );
-            if __pCheck_ref.zReport.is_null() {
-                __pCheck_ref.rc = crate::src::headers::sqlite3_h::SQLITE_NOMEM;
-            }
-        }
-        (*pCheck).nErr += 1;
-    }
-}
 
 
 
