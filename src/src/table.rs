@@ -166,7 +166,7 @@ unsafe extern "C" fn sqlite3_get_table_cb(
     __p_ref.rc = crate::src::headers::sqliteInt_h::SQLITE_NOMEM_BKPT;
     1 as ::core::ffi::c_int
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3_get_table(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -272,7 +272,7 @@ pub unsafe extern "C" fn sqlite3_get_table(
     }
     rc
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3_free_table(mut azResult: *mut *mut ::core::ffi::c_char) {
     if !azResult.is_null() {

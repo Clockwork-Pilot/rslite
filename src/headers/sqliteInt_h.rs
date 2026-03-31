@@ -1,4 +1,4 @@
-extern "C" {
+unsafe extern "C" {
     pub type CCurHint;
 }
 pub use crate::src::src::alter::RenameToken;

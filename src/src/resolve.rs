@@ -105,7 +105,7 @@ unsafe extern "C" fn resolveAlias(
         crate::src::src::expr::sqlite3ExprDeferredDelete(pParse as *mut crate::src::headers::sqliteInt_h::Parse,  pDup as *mut crate::src::headers::sqliteInt_h::Expr);
     };
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3MatchEName(
     mut pItem: *const crate::src::headers::sqliteInt_h::ExprList_item,
@@ -177,7 +177,7 @@ unsafe extern "C" fn areDoubleQuotedStringsEnabled(
         return ((*db).flags & crate::src::headers::sqliteInt_h::SQLITE_DqsDML as crate::src::ext::rtree::rtree::u64_0 != 0 as crate::src::ext::rtree::rtree::u64_0) as ::core::ffi::c_int;
     };
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprColUsed(mut pExpr: *mut crate::src::headers::sqliteInt_h::Expr) -> crate::src::headers::sqliteInt_h::Bitmask {
     let mut n: ::core::ffi::c_int = 0;
@@ -983,7 +983,7 @@ unsafe extern "C" fn lookupName(
         return crate::src::headers::sqliteInt_h::WRC_Abort;
     };
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3CreateColumnExpr(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -1876,7 +1876,7 @@ unsafe extern "C" fn resolveCompoundOrderBy(
     }
     0 as ::core::ffi::c_int
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ResolveOrderGroupBy(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -2253,7 +2253,7 @@ unsafe extern "C" fn resolveSelectStep(
     }
     crate::src::headers::sqliteInt_h::WRC_Prune
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ResolveExprNames(
     mut pNC: *mut crate::src::headers::sqliteInt_h::NameContext,
@@ -2306,7 +2306,7 @@ pub unsafe extern "C" fn sqlite3ResolveExprNames(
     (__pNC_ref.nNcErr > 0 as ::core::ffi::c_int || (*w.pParse).nErr > 0 as ::core::ffi::c_int)
         as ::core::ffi::c_int
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ResolveExprListNames(
     mut pNC: *mut crate::src::headers::sqliteInt_h::NameContext,
@@ -2370,7 +2370,7 @@ pub unsafe extern "C" fn sqlite3ResolveExprListNames(
     __pNC_ref.ncFlags |= savedHasAgg;
     crate::src::headers::sqlite3_h::SQLITE_OK
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ResolveSelectNames(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -2401,7 +2401,7 @@ pub unsafe extern "C" fn sqlite3ResolveSelectNames(
     w.u.pNC = pOuterNC;
     crate::src::src::walker::sqlite3WalkSelect(&raw mut w as *mut _ as *mut crate::src::headers::sqliteInt_h::Walker,  p as *mut crate::src::headers::sqliteInt_h::Select);
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ResolveSelfReference(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,

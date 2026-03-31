@@ -46,7 +46,7 @@ unsafe extern "C" fn findNextHostParameter(
     }
     nTotal
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3VdbeExpandSql(
     mut p: *mut crate::src::headers::vdbeInt_h::Vdbe,

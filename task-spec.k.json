@@ -49,6 +49,23 @@
           "fails_count": 1
         }
       }
+    },
+    "toolchain_version": {
+      "type": "Feature",
+      "model_version": 1,
+      "id": "toolchain_version",
+      "description": "Enforce Rust toolchain version nightly-2026-03-26",
+      "goals": [
+        "rust-toolchain.toml must specify channel nightly-2026-03-26"
+      ],
+      "constraints": {
+        "c6": {
+          "id": "toolchain_nightly_version",
+          "cmd": "grep -q \"nightly-2026-03-26\" \"$PROJECT_ROOT/rust-toolchain.toml\" && exit 0 || exit 1",
+          "description": "rust-toolchain.toml must use channel nightly-2026-03-26",
+          "fails_count": 1
+        }
+      }
     }
   }
 }

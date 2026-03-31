@@ -49,7 +49,7 @@ pub struct RefSrcList {
 pub struct EdupBuf {
     pub zAlloc: *mut crate::src::ext::rtree::rtree::u8_0,
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3TableColumnAffinity(
     mut pTab: *const crate::src::headers::sqliteInt_h::Table,
@@ -60,7 +60,7 @@ pub unsafe extern "C" fn sqlite3TableColumnAffinity(
     }
     (*(*pTab).aCol.offset(iCol as isize)).affinity
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprAffinity(mut pExpr: *const crate::src::headers::sqliteInt_h::Expr) -> ::core::ffi::c_char {
     let mut op: ::core::ffi::c_int = 0;
@@ -116,7 +116,7 @@ pub unsafe extern "C" fn sqlite3ExprAffinity(mut pExpr: *const crate::src::heade
     }
     (*pExpr).affExpr
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprDataType(mut pExpr: *const crate::src::headers::sqliteInt_h::Expr) -> ::core::ffi::c_int {
     while !pExpr.is_null() {
@@ -173,7 +173,7 @@ pub unsafe extern "C" fn sqlite3ExprDataType(mut pExpr: *const crate::src::heade
     }
     0 as ::core::ffi::c_int
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprAddCollateToken(
     mut pParse: *const crate::src::headers::sqliteInt_h::Parse,
@@ -191,7 +191,7 @@ pub unsafe extern "C" fn sqlite3ExprAddCollateToken(
     }
     pExpr
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprAddCollateString(
     mut pParse: *const crate::src::headers::sqliteInt_h::Parse,
@@ -202,7 +202,7 @@ pub unsafe extern "C" fn sqlite3ExprAddCollateString(
     crate::src::src::util::sqlite3TokenInit(&raw mut s as *mut _ as *mut crate::src::headers::sqliteInt_h::Token, zC as *mut ::core::ffi::c_char);
     sqlite3ExprAddCollateToken(pParse, pExpr, &raw mut s, 0 as ::core::ffi::c_int)
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprSkipCollate(mut pExpr: *mut crate::src::headers::sqliteInt_h::Expr) -> *mut crate::src::headers::sqliteInt_h::Expr {
     while !pExpr.is_null() && (*pExpr).flags & 0x2000 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::u32_0 != 0 as crate::src::ext::rtree::rtree::u32_0 {
@@ -210,7 +210,7 @@ pub unsafe extern "C" fn sqlite3ExprSkipCollate(mut pExpr: *mut crate::src::head
     }
     pExpr
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprSkipCollateAndLikely(mut pExpr: *mut crate::src::headers::sqliteInt_h::Expr) -> *mut crate::src::headers::sqliteInt_h::Expr {
     while !pExpr.is_null()
@@ -230,7 +230,7 @@ pub unsafe extern "C" fn sqlite3ExprSkipCollateAndLikely(mut pExpr: *mut crate::
     }
     pExpr
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprCollSeq(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -313,7 +313,7 @@ pub unsafe extern "C" fn sqlite3ExprCollSeq(
     }
     pColl
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprNNCollSeq(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -325,7 +325,7 @@ pub unsafe extern "C" fn sqlite3ExprNNCollSeq(
     }
     p
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprCollSeqMatch(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -337,7 +337,7 @@ pub unsafe extern "C" fn sqlite3ExprCollSeqMatch(
     (crate::src::src::util::sqlite3StrICmp((*pColl1).zName, (*pColl2).zName) == 0 as ::core::ffi::c_int)
         as ::core::ffi::c_int
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3CompareAffinity(
     mut pExpr: *const crate::src::headers::sqliteInt_h::Expr,
@@ -379,7 +379,7 @@ unsafe extern "C" fn comparisonAffinity(mut pExpr: *const crate::src::headers::s
     }
     aff
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3IndexAffinityOk(
     mut pExpr: *const crate::src::headers::sqliteInt_h::Expr,
@@ -405,7 +405,7 @@ unsafe extern "C" fn binaryCompareP5(
         | jumpIfNull as crate::src::ext::rtree::rtree::u8_0 as ::core::ffi::c_int) as crate::src::ext::rtree::rtree::u8_0;
     aff
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3BinaryCompareCollSeq(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -425,7 +425,7 @@ pub unsafe extern "C" fn sqlite3BinaryCompareCollSeq(
     }
     pColl
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprCompareCollSeq(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -474,12 +474,12 @@ unsafe extern "C" fn codeCompare(
     crate::src::src::vdbeaux::sqlite3VdbeChangeP5(__pParse_ref.pVdbe, p5 as crate::src::fts5::u16_0);
     addr
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprIsVector(mut pExpr: *const crate::src::headers::sqliteInt_h::Expr) -> ::core::ffi::c_int {
     (sqlite3ExprVectorSize(pExpr) > 1 as ::core::ffi::c_int) as ::core::ffi::c_int
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprVectorSize(mut pExpr: *const crate::src::headers::sqliteInt_h::Expr) -> ::core::ffi::c_int {
     let mut op: crate::src::ext::rtree::rtree::u8_0 = (*pExpr).op;
@@ -494,7 +494,7 @@ pub unsafe extern "C" fn sqlite3ExprVectorSize(mut pExpr: *const crate::src::hea
         return 1 as ::core::ffi::c_int;
     };
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3VectorFieldSubexpr(
     mut pVector: *mut crate::src::headers::sqliteInt_h::Expr,
@@ -514,7 +514,7 @@ pub unsafe extern "C" fn sqlite3VectorFieldSubexpr(
     }
     pVector
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprForVectorField(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -692,7 +692,7 @@ unsafe extern "C" fn codeVectorCompare(
         crate::src::src::vdbeaux::sqlite3VdbeAddOp2(v, crate::src::headers::opcodes_h::OP_Not, dest, dest);
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprCheckHeight(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -773,7 +773,7 @@ unsafe extern "C" fn exprSetHeight(mut p: *mut crate::src::headers::sqliteInt_h:
     }
     __p_ref.nHeight = nHeight + 1 as ::core::ffi::c_int;
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprSetHeightAndFlags(mut pParse: *mut crate::src::headers::sqliteInt_h::Parse, mut p: *mut crate::src::headers::sqliteInt_h::Expr) {
     if (*pParse).nErr != 0 {
@@ -782,14 +782,14 @@ pub unsafe extern "C" fn sqlite3ExprSetHeightAndFlags(mut pParse: *mut crate::sr
     exprSetHeight(p);
     sqlite3ExprCheckHeight(pParse, (*p).nHeight);
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3SelectExprHeight(mut p: *const crate::src::headers::sqliteInt_h::Select) -> ::core::ffi::c_int {
     let mut nHeight: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
     heightOfSelect(p, &raw mut nHeight);
     nHeight
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprSetErrorOffset(
     mut pExpr: *mut crate::src::headers::sqliteInt_h::Expr,
@@ -805,7 +805,7 @@ pub unsafe extern "C" fn sqlite3ExprSetErrorOffset(
     }
     (*pExpr).w.iOfst = iOfst;
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprAlloc(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -871,7 +871,7 @@ pub unsafe extern "C" fn sqlite3ExprAlloc(
     }
     pNew
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3Expr(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -883,7 +883,7 @@ pub unsafe extern "C" fn sqlite3Expr(
     x.n = crate::src::src::util::sqlite3Strlen30(zToken) as ::core::ffi::c_uint;
     sqlite3ExprAlloc(db, op, &raw mut x, 0 as ::core::ffi::c_int)
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprAttachSubtrees(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -913,7 +913,7 @@ pub unsafe extern "C" fn sqlite3ExprAttachSubtrees(
         }
     };
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3PExpr(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -940,7 +940,7 @@ pub unsafe extern "C" fn sqlite3PExpr(
     }
     p
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3PExprAddSelect(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -955,7 +955,7 @@ pub unsafe extern "C" fn sqlite3PExprAddSelect(
         crate::src::src::select::sqlite3SelectDelete((*pParse).db as *mut crate::src::headers::sqliteInt_h::sqlite3,  pSelect as *mut crate::src::headers::sqliteInt_h::Select);
     };
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprListToValues(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -1033,7 +1033,7 @@ pub unsafe extern "C" fn sqlite3ExprListToValues(
     sqlite3ExprListDelete((*pParse).db, pEList);
     pRet
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprAnd(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -1062,7 +1062,7 @@ pub unsafe extern "C" fn sqlite3ExprAnd(
         }
     };
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprFunction(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -1099,7 +1099,7 @@ pub unsafe extern "C" fn sqlite3ExprFunction(
     }
     pNew
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprOrderByAggregateError(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -1113,7 +1113,7 @@ pub unsafe extern "C" fn sqlite3ExprOrderByAggregateError(
         p,
     );
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprAddFunctionOrderBy(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -1175,7 +1175,7 @@ pub unsafe extern "C" fn sqlite3ExprAddFunctionOrderBy(
     __pExpr_ref.pLeft = pOB;
     (*pOB).flags |= 0x20000 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::u32_0;
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprFunctionUsable(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -1195,7 +1195,7 @@ pub unsafe extern "C" fn sqlite3ExprFunctionUsable(
         }
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprAssignVarNumber(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -1315,14 +1315,14 @@ unsafe extern "C" fn sqlite3ExprDeleteNN(mut db: *mut crate::src::headers::sqlit
         crate::src::src::malloc::sqlite3DbNNFreeNN(db as *mut crate::src::headers::sqliteInt_h::sqlite3, p as *mut ::core::ffi::c_void);
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprDelete(mut db: *mut crate::src::headers::sqliteInt_h::sqlite3, mut p: *mut crate::src::headers::sqliteInt_h::Expr) {
     if !p.is_null() {
         sqlite3ExprDeleteNN(db, p);
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprDeleteGeneric(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -1332,7 +1332,7 @@ pub unsafe extern "C" fn sqlite3ExprDeleteGeneric(
         sqlite3ExprDeleteNN(db, p as *mut crate::src::headers::sqliteInt_h::Expr);
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ClearOnOrUsing(mut db: *mut crate::src::headers::sqliteInt_h::sqlite3, mut p: *mut crate::src::headers::sqliteInt_h::OnOrUsing) {
     if !p.is_null() {
@@ -1343,7 +1343,7 @@ pub unsafe extern "C" fn sqlite3ClearOnOrUsing(mut db: *mut crate::src::headers:
         }
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprDeferredDelete(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -1363,7 +1363,7 @@ pub unsafe extern "C" fn sqlite3ExprDeferredDelete(
             pExpr as *mut ::core::ffi::c_void,
         )) as ::core::ffi::c_int
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprUnmapAndDelete(mut pParse: *mut crate::src::headers::sqliteInt_h::Parse, mut p: *mut crate::src::headers::sqliteInt_h::Expr) {
     if !p.is_null() {
@@ -1575,7 +1575,7 @@ unsafe extern "C" fn exprDup(
     }
     pNew
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3WithDup(mut db: *mut crate::src::headers::sqliteInt_h::sqlite3, mut p: *mut crate::src::headers::sqliteInt_h::With) -> *mut crate::src::headers::sqliteInt_h::With {
     let mut pRet: *mut crate::src::headers::sqliteInt_h::With = ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::With>();
@@ -1671,7 +1671,7 @@ unsafe extern "C" fn gatherSelectWindows(mut p: *mut crate::src::headers::sqlite
     w.u.pSelect = p;
     crate::src::src::walker::sqlite3WalkSelect(&raw mut w as *mut _ as *mut crate::src::headers::sqliteInt_h::Walker,  p as *mut crate::src::headers::sqliteInt_h::Select);
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprDup(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -1684,7 +1684,7 @@ pub unsafe extern "C" fn sqlite3ExprDup(
         ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::Expr>()
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprListDup(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -1745,7 +1745,7 @@ pub unsafe extern "C" fn sqlite3ExprListDup(
     }
     pNew
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3SrcListDup(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -1835,7 +1835,7 @@ pub unsafe extern "C" fn sqlite3SrcListDup(
     }
     pNew
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3IdListDup(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -1868,7 +1868,7 @@ pub unsafe extern "C" fn sqlite3IdListDup(
     }
     pNew
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3SelectDup(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -1939,7 +1939,7 @@ static mut zeroItem: crate::src::headers::sqliteInt_h::ExprList_item = crate::sr
     x:  crate::src::headers::sqliteInt_h::__anon_struct_5 { iOrderByCol:  0, iAlias:  0 },
 },
 };
-#[no_mangle]
+#[unsafe(no_mangle)]
 #[inline(never)]
 
 pub unsafe extern "C" fn sqlite3ExprListAppendNew(
@@ -1967,7 +1967,7 @@ pub unsafe extern "C" fn sqlite3ExprListAppendNew(
     (*pItem).pExpr = pExpr;
     pList
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 #[inline(never)]
 
 pub unsafe extern "C" fn sqlite3ExprListAppendGrow(
@@ -2002,7 +2002,7 @@ pub unsafe extern "C" fn sqlite3ExprListAppendGrow(
     (*pItem).pExpr = pExpr;
     pList
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprListAppend(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -2025,7 +2025,7 @@ pub unsafe extern "C" fn sqlite3ExprListAppend(
     (*pItem).pExpr = pExpr;
     pList
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprListAppendVector(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -2094,7 +2094,7 @@ pub unsafe extern "C" fn sqlite3ExprListAppendVector(
     crate::src::src::build::sqlite3IdListDelete(db as *mut crate::src::headers::sqliteInt_h::sqlite3,  pColumns as *mut crate::src::headers::sqliteInt_h::IdList);
     pList
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprListSetSortOrder(
     mut p: *mut crate::src::headers::sqliteInt_h::ExprList,
@@ -2122,7 +2122,7 @@ pub unsafe extern "C" fn sqlite3ExprListSetSortOrder(
         }
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprListSetName(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -2144,7 +2144,7 @@ pub unsafe extern "C" fn sqlite3ExprListSetName(
         }
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprListSetSpan(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -2165,7 +2165,7 @@ pub unsafe extern "C" fn sqlite3ExprListSetSpan(
         }
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprListCheckLength(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -2200,14 +2200,14 @@ unsafe extern "C" fn exprListDeleteNN(mut db: *mut crate::src::headers::sqliteIn
     }
     crate::src::src::malloc::sqlite3DbNNFreeNN(db as *mut crate::src::headers::sqliteInt_h::sqlite3, pList as *mut ::core::ffi::c_void);
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprListDelete(mut db: *mut crate::src::headers::sqliteInt_h::sqlite3, mut pList: *mut crate::src::headers::sqliteInt_h::ExprList) {
     if !pList.is_null() {
         exprListDeleteNN(db, pList);
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprListDeleteGeneric(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -2217,7 +2217,7 @@ pub unsafe extern "C" fn sqlite3ExprListDeleteGeneric(
         exprListDeleteNN(db, pList as *mut crate::src::headers::sqliteInt_h::ExprList);
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprListFlags(mut pList: *const crate::src::headers::sqliteInt_h::ExprList) -> crate::src::ext::rtree::rtree::u32_0 {
     let mut i: ::core::ffi::c_int = 0;
@@ -2231,7 +2231,7 @@ pub unsafe extern "C" fn sqlite3ExprListFlags(mut pList: *const crate::src::head
     }
     m
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3SelectWalkFail(
     mut pWalker: *mut crate::src::headers::sqliteInt_h::Walker,
@@ -2240,7 +2240,7 @@ pub unsafe extern "C" fn sqlite3SelectWalkFail(
     (*pWalker).eCode = 0 as crate::src::fts5::u16_0;
     crate::src::headers::sqliteInt_h::WRC_Abort
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3IsTrueOrFalse(mut zIn: *const ::core::ffi::c_char) -> crate::src::ext::rtree::rtree::u32_0 {
     if crate::src::src::util::sqlite3StrICmp(zIn, b"true\0" as *const u8 as *const ::core::ffi::c_char)
@@ -2255,7 +2255,7 @@ pub unsafe extern "C" fn sqlite3IsTrueOrFalse(mut zIn: *const ::core::ffi::c_cha
     }
     0 as crate::src::ext::rtree::rtree::u32_0
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprIdToTrueFalse(mut pExpr: *mut crate::src::headers::sqliteInt_h::Expr) -> ::core::ffi::c_int {
     let mut v: crate::src::ext::rtree::rtree::u32_0 = 0;
@@ -2272,14 +2272,14 @@ pub unsafe extern "C" fn sqlite3ExprIdToTrueFalse(mut pExpr: *mut crate::src::he
     }
     0 as ::core::ffi::c_int
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprTruthValue(mut pExpr: *const crate::src::headers::sqliteInt_h::Expr) -> ::core::ffi::c_int {
     pExpr = sqlite3ExprSkipCollateAndLikely(pExpr as *mut crate::src::headers::sqliteInt_h::Expr);
     (*(*pExpr).u.zToken.offset(4 as isize) as ::core::ffi::c_int
         == 0 as ::core::ffi::c_int) as ::core::ffi::c_int
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprSimplifiedAndOr(mut pExpr: *mut crate::src::headers::sqliteInt_h::Expr) -> *mut crate::src::headers::sqliteInt_h::Expr {
     if (*pExpr).op as ::core::ffi::c_int == crate::src::parse::TK_AND || (*pExpr).op as ::core::ffi::c_int == crate::src::parse::TK_OR {
@@ -2493,7 +2493,7 @@ unsafe extern "C" fn exprIsConst(
     crate::src::src::walker::sqlite3WalkExpr(&raw mut w as *mut _ as *mut crate::src::headers::sqliteInt_h::Walker,  p as *mut crate::src::headers::sqliteInt_h::Expr);
     w.eCode as ::core::ffi::c_int
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprIsConstant(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -2560,7 +2560,7 @@ unsafe extern "C" fn sqlite3ExprIsTableConstant(
     crate::src::src::walker::sqlite3WalkExpr(&raw mut w as *mut _ as *mut crate::src::headers::sqliteInt_h::Walker,  p as *mut crate::src::headers::sqliteInt_h::Expr);
     w.eCode as ::core::ffi::c_int
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprIsSingleTableConstraint(
     mut pExpr: *mut crate::src::headers::sqliteInt_h::Expr,
@@ -2645,7 +2645,7 @@ unsafe extern "C" fn exprNodeIsConstantOrGroupBy(
     }
     exprNodeIsConstant(pWalker, pExpr)
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprIsConstantOrGroupBy(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -2676,7 +2676,7 @@ pub unsafe extern "C" fn sqlite3ExprIsConstantOrGroupBy(
     crate::src::src::walker::sqlite3WalkExpr(&raw mut w as *mut _ as *mut crate::src::headers::sqliteInt_h::Walker,  p as *mut crate::src::headers::sqliteInt_h::Expr);
     w.eCode as ::core::ffi::c_int
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprIsConstantOrFunction(
     mut p: *mut crate::src::headers::sqliteInt_h::Expr,
@@ -2688,7 +2688,7 @@ pub unsafe extern "C" fn sqlite3ExprIsConstantOrFunction(
         4 as ::core::ffi::c_int + isInit as ::core::ffi::c_int,
     )
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprIsInteger(
     mut p: *const crate::src::headers::sqliteInt_h::Expr,
@@ -2743,7 +2743,7 @@ pub unsafe extern "C" fn sqlite3ExprIsInteger(
 }
     rc
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprCanBeNull(mut p: *const crate::src::headers::sqliteInt_h::Expr) -> ::core::ffi::c_int {
     let mut op: crate::src::ext::rtree::rtree::u8_0 = 0;
@@ -2772,7 +2772,7 @@ pub unsafe extern "C" fn sqlite3ExprCanBeNull(mut p: *const crate::src::headers:
     _ =>  return 1 as ::core::ffi::c_int,
 };
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprNeedsNoAffinityChange(
     mut p: *const crate::src::headers::sqliteInt_h::Expr,
@@ -2814,7 +2814,7 @@ pub unsafe extern "C" fn sqlite3ExprNeedsNoAffinityChange(
     _ =>  return 0 as ::core::ffi::c_int,
 };
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3IsRowid(mut z: *const ::core::ffi::c_char) -> ::core::ffi::c_int {
     if crate::src::src::util::sqlite3StrICmp(z, b"_ROWID_\0" as *const u8 as *const ::core::ffi::c_char)
@@ -2834,7 +2834,7 @@ pub unsafe extern "C" fn sqlite3IsRowid(mut z: *const ::core::ffi::c_char) -> ::
     }
     0 as ::core::ffi::c_int
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3RowidAlias(mut pTab: *mut crate::src::headers::sqliteInt_h::Table) -> *const ::core::ffi::c_char {
     let mut azOpt: [*const ::core::ffi::c_char; 3] = [
@@ -2937,7 +2937,7 @@ unsafe extern "C" fn sqlite3InRhsIsConstant(
     __pIn_ref.pLeft = pLHS;
     res
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3FindInIndex(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -3223,7 +3223,7 @@ unsafe extern "C" fn exprINAffinity(
     }
     zRet
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3SubselectError(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -3237,7 +3237,7 @@ pub unsafe extern "C" fn sqlite3SubselectError(
         crate::src::src::util::sqlite3ErrorMsg(pParse as *mut crate::src::headers::sqliteInt_h::Parse, zFmt, nActual, nExpect);
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3VectorErrorMsg(mut pParse: *mut crate::src::headers::sqliteInt_h::Parse, mut pExpr: *mut crate::src::headers::sqliteInt_h::Expr) {
     if (*pExpr).flags & crate::src::headers::sqliteInt_h::EP_xIsSelect as crate::src::ext::rtree::rtree::u32_0 != 0 as crate::src::ext::rtree::rtree::u32_0 {
@@ -3299,7 +3299,7 @@ unsafe extern "C" fn findCompatibleInRhsSubrtn(
     }
     0 as ::core::ffi::c_int
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3CodeRhsOfIN(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -3517,7 +3517,7 @@ pub unsafe extern "C" fn sqlite3CodeRhsOfIN(
         sqlite3ClearTempRegCache(pParse);
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3CodeSubselect(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -3663,7 +3663,7 @@ pub unsafe extern "C" fn sqlite3CodeSubselect(
     sqlite3ClearTempRegCache(pParse);
     rReg
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprCheckIN(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -4041,7 +4041,7 @@ unsafe extern "C" fn codeInteger(
         }
     };
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprCodeLoadIndexColumn(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -4070,7 +4070,7 @@ pub unsafe extern "C" fn sqlite3ExprCodeLoadIndexColumn(
         );
     };
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprCodeGeneratedColumn(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -4127,7 +4127,7 @@ pub unsafe extern "C" fn sqlite3ExprCodeGeneratedColumn(
         (*__pParse_ref.db).errByteOffset = -(1 as ::core::ffi::c_int);
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprCodeGetColumnOfTable(
     mut v: *mut crate::src::headers::vdbeInt_h::Vdbe,
@@ -4184,7 +4184,7 @@ pub unsafe extern "C" fn sqlite3ExprCodeGetColumnOfTable(
         crate::src::src::update::sqlite3ColumnDefault(v,  pTab as *mut crate::src::headers::sqliteInt_h::Table, iCol, regOut);
     };
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprCodeGetColumn(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -4207,7 +4207,7 @@ pub unsafe extern "C" fn sqlite3ExprCodeGetColumn(
     }
     iReg
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprCodeMove(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -4217,7 +4217,7 @@ pub unsafe extern "C" fn sqlite3ExprCodeMove(
 ) {
     crate::src::src::vdbeaux::sqlite3VdbeAddOp3((*pParse).pVdbe, crate::src::headers::opcodes_h::OP_Move, iFrom, iTo, nReg);
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprToRegister(mut pExpr: *mut crate::src::headers::sqliteInt_h::Expr, mut iReg: ::core::ffi::c_int) {
     let mut p: *mut crate::src::headers::sqliteInt_h::Expr = sqlite3ExprSkipCollateAndLikely(pExpr);
@@ -4629,7 +4629,7 @@ unsafe extern "C" fn exprCodeTargetAndOr(
     }
     target
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprCodeTarget(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -5537,7 +5537,7 @@ pub unsafe extern "C" fn sqlite3ExprCodeTarget(
     sqlite3ReleaseTempReg(pParse, regFree2);
     inReg
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprCodeRunJustOnce(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -5603,7 +5603,7 @@ pub unsafe extern "C" fn sqlite3ExprCodeRunJustOnce(
     }
     regDest
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 #[inline(never)]
 
 pub unsafe extern "C" fn sqlite3ExprNullRegisterRange(
@@ -5620,7 +5620,7 @@ pub unsafe extern "C" fn sqlite3ExprNullRegisterRange(
     sqlite3ExprCodeRunJustOnce(pParse, &raw mut t, iReg);
     __pParse_ref.set_okConstFactor(okConstFactor as crate::src::headers::sqliteInt_h::bft as crate::src::headers::sqliteInt_h::bft);
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprCodeTemp(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -5648,7 +5648,7 @@ pub unsafe extern "C" fn sqlite3ExprCodeTemp(
     }
     r2
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprCode(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -5674,7 +5674,7 @@ pub unsafe extern "C" fn sqlite3ExprCode(
         crate::src::src::vdbeaux::sqlite3VdbeAddOp2((*pParse).pVdbe, op as ::core::ffi::c_int, inReg, target);
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprCodeCopy(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -5688,7 +5688,7 @@ pub unsafe extern "C" fn sqlite3ExprCodeCopy(
     }
     sqlite3ExprDelete(db, pExpr);
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprCodeFactorable(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -5703,7 +5703,7 @@ pub unsafe extern "C" fn sqlite3ExprCodeFactorable(
         sqlite3ExprCodeCopy(pParse, pExpr, target);
     };
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprCodeExprList(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -5816,7 +5816,7 @@ unsafe extern "C" fn exprCodeBetween(
     }
     sqlite3ExprDelete(db, pDel);
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprIfTrue(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -6016,7 +6016,7 @@ pub unsafe extern "C" fn sqlite3ExprIfTrue(
     sqlite3ReleaseTempReg(pParse, regFree1);
     sqlite3ReleaseTempReg(pParse, regFree2);
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprIfFalse(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -6222,7 +6222,7 @@ pub unsafe extern "C" fn sqlite3ExprIfFalse(
     sqlite3ReleaseTempReg(pParse, regFree1);
     sqlite3ReleaseTempReg(pParse, regFree2);
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprIfFalseDup(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -6285,7 +6285,7 @@ unsafe extern "C" fn exprCompareVariable(
     }
     res
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprCompare(
     mut pParse: *const crate::src::headers::sqliteInt_h::Parse,
@@ -6412,7 +6412,7 @@ pub unsafe extern "C" fn sqlite3ExprCompare(
     }
     0 as ::core::ffi::c_int
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprListCompare(
     mut pA: *const crate::src::headers::sqliteInt_h::ExprList,
@@ -6453,7 +6453,7 @@ pub unsafe extern "C" fn sqlite3ExprListCompare(
     }
     0 as ::core::ffi::c_int
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprCompareSkip(
     mut pA: *mut crate::src::headers::sqliteInt_h::Expr,
@@ -6630,7 +6630,7 @@ unsafe extern "C" fn sqlite3ExprIsIIF(
     }
     0 as ::core::ffi::c_int
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprImpliesExpr(
     mut pParse: *const crate::src::headers::sqliteInt_h::Parse,
@@ -6752,7 +6752,7 @@ unsafe extern "C" fn impliesNotNullRow(
 }
     crate::src::headers::sqliteInt_h::WRC_Continue
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprImpliesNonNullRow(
     mut p: *mut crate::src::headers::sqliteInt_h::Expr,
@@ -6816,7 +6816,7 @@ unsafe extern "C" fn exprIdxCover(
     }
     crate::src::headers::sqliteInt_h::WRC_Continue
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprCoveredByIndex(
     mut pExpr: *mut crate::src::headers::sqliteInt_h::Expr,
@@ -6920,7 +6920,7 @@ unsafe extern "C" fn exprRefToSrcList(
     }
     crate::src::headers::sqliteInt_h::WRC_Continue
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ReferencesSrcList(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -6997,7 +6997,7 @@ unsafe extern "C" fn agginfoPersistExprCb(
     }
     crate::src::headers::sqliteInt_h::WRC_Continue
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3AggInfoPersistWalkerInit(
     mut pWalker: *mut crate::src::headers::sqliteInt_h::Walker,
@@ -7358,7 +7358,7 @@ unsafe extern "C" fn analyzeAggregate(
 }
     crate::src::headers::sqliteInt_h::WRC_Continue
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprAnalyzeAggregates(
     mut pNC: *mut crate::src::headers::sqliteInt_h::NameContext,
@@ -7393,7 +7393,7 @@ pub unsafe extern "C" fn sqlite3ExprAnalyzeAggregates(
     w.pParse = ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::Parse>();
     crate::src::src::walker::sqlite3WalkExpr(&raw mut w as *mut _ as *mut crate::src::headers::sqliteInt_h::Walker,  pExpr as *mut crate::src::headers::sqliteInt_h::Expr);
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ExprAnalyzeAggList(
     mut pNC: *mut crate::src::headers::sqliteInt_h::NameContext,
@@ -7411,7 +7411,7 @@ pub unsafe extern "C" fn sqlite3ExprAnalyzeAggList(
         }
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3GetTempReg(mut pParse: *mut crate::src::headers::sqliteInt_h::Parse) -> ::core::ffi::c_int {
     let __pParse_ref = unsafe { &mut *pParse };
@@ -7422,7 +7422,7 @@ pub unsafe extern "C" fn sqlite3GetTempReg(mut pParse: *mut crate::src::headers:
     __pParse_ref.nTempReg = __pParse_ref.nTempReg.wrapping_sub(1);
     __pParse_ref.aTempReg[__pParse_ref.nTempReg as usize]
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ReleaseTempReg(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -7441,7 +7441,7 @@ pub unsafe extern "C" fn sqlite3ReleaseTempReg(
         }
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3GetTempRange(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -7463,7 +7463,7 @@ pub unsafe extern "C" fn sqlite3GetTempRange(
     }
     i
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ReleaseTempRange(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -7479,13 +7479,13 @@ pub unsafe extern "C" fn sqlite3ReleaseTempRange(
         (*pParse).iRangeReg = iReg;
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ClearTempRegCache(mut pParse: *mut crate::src::headers::sqliteInt_h::Parse) {
     (*pParse).nTempReg = 0 as crate::src::ext::rtree::rtree::u8_0;
     (*pParse).nRangeReg = 0 as ::core::ffi::c_int;
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3TouchRegister(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,

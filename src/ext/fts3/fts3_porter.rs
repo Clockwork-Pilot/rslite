@@ -1165,7 +1165,7 @@ static mut porterTokenizerModule: crate::src::ext::fts3::fts3_tokenizer::sqlite3
     xLanguageid:  None,
 }
 };
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3Fts3PorterTokenizerModule(
     mut ppModule: *mut *const crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_module,

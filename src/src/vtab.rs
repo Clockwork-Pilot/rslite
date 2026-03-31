@@ -38,7 +38,7 @@ pub struct VtabCtx {
     pub pPrior: *mut VtabCtx,
     pub bDeclared: ::core::ffi::c_int,
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3VtabCreateModule(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -114,7 +114,7 @@ unsafe extern "C" fn createModule(
     crate::src::src::mutex::sqlite3_mutex_leave((*db).mutex);
     rc
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3_create_module(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -124,7 +124,7 @@ pub unsafe extern "C" fn sqlite3_create_module(
 ) -> ::core::ffi::c_int {
     createModule(db, zName, pModule, pAux, None)
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3_create_module_v2(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -135,7 +135,7 @@ pub unsafe extern "C" fn sqlite3_create_module_v2(
 ) -> ::core::ffi::c_int {
     createModule(db, zName, pModule, pAux, xDestroy)
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3_drop_modules(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -180,7 +180,7 @@ pub unsafe extern "C" fn sqlite3_drop_modules(
     }
     crate::src::headers::sqlite3_h::SQLITE_OK
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3VtabModuleUnref(mut db: *mut crate::src::headers::sqliteInt_h::sqlite3, mut pMod: *mut crate::src::headers::sqliteInt_h::Module) {
     (*pMod).nRefModule -= 1;
@@ -191,12 +191,12 @@ pub unsafe extern "C" fn sqlite3VtabModuleUnref(mut db: *mut crate::src::headers
         crate::src::src::malloc::sqlite3DbFree(db as *mut crate::src::headers::sqliteInt_h::sqlite3, pMod as *mut ::core::ffi::c_void);
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3VtabLock(mut pVTab: *mut crate::src::headers::sqliteInt_h::VTable) {
     (*pVTab).nRef += 1;
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3GetVTable(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -209,7 +209,7 @@ pub unsafe extern "C" fn sqlite3GetVTable(
     }
     pVtab
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3VtabUnlock(mut pVTab: *mut crate::src::headers::sqliteInt_h::VTable) {
     let __pVTab_ref = unsafe { &mut *pVTab };
@@ -247,7 +247,7 @@ unsafe extern "C" fn vtabDisconnectAll(mut db: *mut crate::src::headers::sqliteI
     }
     pRet
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3VtabDisconnect(mut db: *mut crate::src::headers::sqliteInt_h::sqlite3, mut p: *mut crate::src::headers::sqliteInt_h::Table) {
     let mut ppVTab: *mut *mut crate::src::headers::sqliteInt_h::VTable = ::core::ptr::null_mut::<*mut crate::src::headers::sqliteInt_h::VTable>();
@@ -263,7 +263,7 @@ pub unsafe extern "C" fn sqlite3VtabDisconnect(mut db: *mut crate::src::headers:
         }
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3VtabUnlockList(mut db: *mut crate::src::headers::sqliteInt_h::sqlite3) {
     let mut p: *mut crate::src::headers::sqliteInt_h::VTable = (*db).pDisconnect;
@@ -279,7 +279,7 @@ pub unsafe extern "C" fn sqlite3VtabUnlockList(mut db: *mut crate::src::headers:
         }
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3VtabClear(mut db: *mut crate::src::headers::sqliteInt_h::sqlite3, mut p: *mut crate::src::headers::sqliteInt_h::Table) {
     if (*db).pnBytesFreed.is_null() {
@@ -343,7 +343,7 @@ unsafe extern "C" fn addModuleArgument(
         __pTable_ref.u.vtab.azArg = azModuleArg;
     };
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3VtabBeginParse(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -415,7 +415,7 @@ unsafe extern "C" fn addArgumentToVtab(mut pParse: *mut crate::src::headers::sql
         );
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3VtabFinishParse(mut pParse: *mut crate::src::headers::sqliteInt_h::Parse, mut pEnd: *mut crate::src::headers::sqliteInt_h::Token) {
     let __pParse_ref = unsafe { &mut *pParse };
@@ -495,14 +495,14 @@ pub unsafe extern "C" fn sqlite3VtabFinishParse(mut pParse: *mut crate::src::hea
         __pParse_ref.pNewTable = ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::Table>();
     };
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3VtabArgInit(mut pParse: *mut crate::src::headers::sqliteInt_h::Parse) {
     addArgumentToVtab(pParse);
     (*pParse).sArg.z = ::core::ptr::null::<::core::ffi::c_char>();
     (*pParse).sArg.n = 0 as ::core::ffi::c_uint;
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3VtabArgExtend(mut pParse: *mut crate::src::headers::sqliteInt_h::Parse, mut p: *mut crate::src::headers::sqliteInt_h::Token) {
     let mut pArg: *mut crate::src::headers::sqliteInt_h::Token = &raw mut (*pParse).sArg;
@@ -702,7 +702,7 @@ unsafe extern "C" fn vtabCallConstructor(
     crate::src::src::malloc::sqlite3DbFree(db as *mut crate::src::headers::sqliteInt_h::sqlite3, zModuleName as *mut ::core::ffi::c_void);
     rc
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3VtabCallConnect(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -789,7 +789,7 @@ unsafe extern "C" fn addToVTrans(mut db: *mut crate::src::headers::sqliteInt_h::
     *fresh8 = pVTab;
     sqlite3VtabLock(pVTab);
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3VtabCallCreate(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -831,7 +831,7 @@ pub unsafe extern "C" fn sqlite3VtabCallCreate(
     }
     rc
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3_declare_vtab(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -939,7 +939,7 @@ pub unsafe extern "C" fn sqlite3_declare_vtab(
     crate::src::src::mutex::sqlite3_mutex_leave(__db_ref.mutex);
     rc
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3VtabCallDestroy(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -1009,7 +1009,7 @@ unsafe extern "C" fn callFinaliser(mut db: *mut crate::src::headers::sqliteInt_h
         __db_ref.nVTrans = 0 as ::core::ffi::c_int;
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3VtabSync(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -1036,19 +1036,19 @@ pub unsafe extern "C" fn sqlite3VtabSync(
     __db_ref.aVTrans = aVTrans;
     rc
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3VtabRollback(mut db: *mut crate::src::headers::sqliteInt_h::sqlite3) -> ::core::ffi::c_int {
     callFinaliser(db, 136 as ::core::ffi::c_ulong as ::core::ffi::c_int);
     crate::src::headers::sqlite3_h::SQLITE_OK
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3VtabCommit(mut db: *mut crate::src::headers::sqliteInt_h::sqlite3) -> ::core::ffi::c_int {
     callFinaliser(db, 128 as ::core::ffi::c_ulong as ::core::ffi::c_int);
     crate::src::headers::sqlite3_h::SQLITE_OK
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3VtabBegin(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -1090,7 +1090,7 @@ pub unsafe extern "C" fn sqlite3VtabBegin(
     }
     rc
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3VtabSavepoint(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -1138,7 +1138,7 @@ pub unsafe extern "C" fn sqlite3VtabSavepoint(
     }
     rc
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3VtabOverloadFunction(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -1211,7 +1211,7 @@ pub unsafe extern "C" fn sqlite3VtabOverloadFunction(
     (*pNew).funcFlags |= crate::src::headers::sqliteInt_h::SQLITE_FUNC_EPHEM as crate::src::ext::rtree::rtree::u32_0;
     pNew
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3VtabMakeWritable(mut pParse: *mut crate::src::headers::sqliteInt_h::Parse, mut pTab: *mut crate::src::headers::sqliteInt_h::Table) {
     let mut pToplevel: *mut crate::src::headers::sqliteInt_h::Parse = if !(*pParse).pToplevel.is_null() {
@@ -1246,7 +1246,7 @@ pub unsafe extern "C" fn sqlite3VtabMakeWritable(mut pParse: *mut crate::src::he
         crate::src::src::malloc::sqlite3OomFault(__pToplevel_ref.db as *mut crate::src::headers::sqliteInt_h::sqlite3);
     };
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3VtabEponymousTableInit(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -1299,7 +1299,7 @@ pub unsafe extern "C" fn sqlite3VtabEponymousTableInit(
     }
     1 as ::core::ffi::c_int
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3VtabEponymousTableClear(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -1312,7 +1312,7 @@ pub unsafe extern "C" fn sqlite3VtabEponymousTableClear(
         (*pMod).pEpoTab = ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::Table>();
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3_vtab_on_conflict(mut db: *mut crate::src::headers::sqliteInt_h::sqlite3) -> ::core::ffi::c_int {
     static mut aMap: [::core::ffi::c_uchar; 5] = [
@@ -1325,7 +1325,7 @@ pub unsafe extern "C" fn sqlite3_vtab_on_conflict(mut db: *mut crate::src::heade
     aMap[((*db).vtabOnConflict as ::core::ffi::c_int - 1 as ::core::ffi::c_int) as usize]
         as ::core::ffi::c_int
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 // sqlite3_vtab_config moved to printf_c_variadic.rs to use c_variadic feature
 // Re-export from printf_c_variadic for backward compatibility

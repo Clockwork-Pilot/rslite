@@ -6,7 +6,7 @@ name = "sqlite_noamalgam"
 authors = ["C2Rust"]
 version = "0.0.0"
 publish = false
-edition = "2021"
+edition = "2024"
 autobins = false
 
 [lib]

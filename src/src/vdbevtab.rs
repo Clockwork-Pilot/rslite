@@ -527,7 +527,7 @@ static mut bytecodevtabModule: crate::src::headers::sqlite3_h::sqlite3_module = 
     xIntegrity:  None,
 }
 };
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3VdbeBytecodeVtabInit(mut db: *mut crate::src::headers::sqliteInt_h::sqlite3) -> ::core::ffi::c_int {
     let mut rc: ::core::ffi::c_int = 0;

@@ -1088,7 +1088,7 @@ unsafe extern "C" fn statRowid(
     *pRowid = pCsr.iPageno as crate::src::headers::sqlite3_h::sqlite_int64;
     crate::src::headers::sqlite3_h::SQLITE_OK
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3DbstatRegister(mut db: *mut crate::src::headers::sqliteInt_h::sqlite3) -> ::core::ffi::c_int {
     static mut dbstat_module: crate::src::headers::sqlite3_h::sqlite3_module = unsafe {

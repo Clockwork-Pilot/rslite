@@ -2108,7 +2108,7 @@ unsafe extern "C" fn ctimestampFunc(
         ::core::ptr::null_mut::<*mut crate::src::headers::vdbeInt_h::sqlite3_value>(),
     );
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3RegisterDateTimeFunctions() {
     static mut aDateTimeFuncs: [crate::src::headers::sqliteInt_h::FuncDef; 10] = unsafe {

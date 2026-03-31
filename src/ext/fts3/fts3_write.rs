@@ -151,11 +151,11 @@ pub struct NodeReader {
 pub const FTS_MAX_APPENDABLE_HEIGHT: ::core::ffi::c_int = 16 as ::core::ffi::c_int;
 
 pub const FTS3_NODE_PADDING: ::core::ffi::c_int = crate::fts3Int_h::FTS3_VARINT_MAX * 2 as ::core::ffi::c_int;
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub static mut test_fts3_node_chunksize: ::core::ffi::c_int =
     4 as ::core::ffi::c_int * 1024 as ::core::ffi::c_int;
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub static mut test_fts3_node_chunk_threshold: ::core::ffi::c_int =
     4 as ::core::ffi::c_int * 1024 as ::core::ffi::c_int * 4 as ::core::ffi::c_int;
@@ -401,7 +401,7 @@ unsafe extern "C" fn fts3SelectDocsize(
     *ppStmt = pStmt;
     rc
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3Fts3SelectDoctotal(
     mut pTab: *mut crate::fts3Int_h::Fts3Table,
@@ -430,7 +430,7 @@ pub unsafe extern "C" fn sqlite3Fts3SelectDoctotal(
     *ppStmt = pStmt;
     rc
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3Fts3SelectDocsize(
     mut pTab: *mut crate::fts3Int_h::Fts3Table,
@@ -489,7 +489,7 @@ unsafe extern "C" fn getAbsoluteLevel(
         * crate::fts3Int_h::FTS3_SEGDIR_MAXLEVEL as crate::src::headers::sqlite3_h::sqlite3_int64;
     iBase + iLevel as crate::src::headers::sqlite3_h::sqlite3_int64
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3Fts3AllSegdirs(
     mut p: *mut crate::fts3Int_h::Fts3Table,
@@ -832,7 +832,7 @@ unsafe extern "C" fn fts3PendingTermsDocid(
     __p_ref.bPrevDelete = bDelete;
     crate::src::headers::sqlite3_h::SQLITE_OK
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3Fts3PendingTermsClear(mut p: *mut crate::fts3Int_h::Fts3Table) {
     let mut i: ::core::ffi::c_int = 0;
@@ -1095,7 +1095,7 @@ unsafe extern "C" fn fts3AllocateSegdirIdx(
     }
     rc
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3Fts3ReadBlock(
     mut p: *mut crate::fts3Int_h::Fts3Table,
@@ -1166,7 +1166,7 @@ pub unsafe extern "C" fn sqlite3Fts3ReadBlock(
     }
     rc
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3Fts3SegmentsClose(mut p: *mut crate::fts3Int_h::Fts3Table) {
     crate::src::src::vdbeblob::sqlite3_blob_close((*p).pSegments);
@@ -1513,7 +1513,7 @@ unsafe extern "C" fn fts3SegReaderNextDocid(
     }
     rc
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3Fts3MsrOvfl(
     mut pCsr: *mut crate::fts3Int_h::Fts3Cursor,
@@ -1556,7 +1556,7 @@ pub unsafe extern "C" fn sqlite3Fts3MsrOvfl(
     *pnOvfl = nOvfl;
     rc
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3Fts3SegReaderFree(mut pReader: *mut Fts3SegReader) {
     if !pReader.is_null() {
@@ -1569,7 +1569,7 @@ pub unsafe extern "C" fn sqlite3Fts3SegReaderFree(mut pReader: *mut Fts3SegReade
     }
     crate::src::src::malloc::sqlite3_free(pReader as *mut ::core::ffi::c_void);
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3Fts3SegReaderNew(
     mut iAge: ::core::ffi::c_int,
@@ -1653,7 +1653,7 @@ unsafe extern "C" fn fts3CompareElemByTerm(
     }
     c
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3Fts3SegReaderPending(
     mut p: *mut crate::fts3Int_h::Fts3Table,
@@ -1938,7 +1938,7 @@ unsafe extern "C" fn fts3WriteSegment(
     }
     rc
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3Fts3MaxLevel(
     mut p: *mut crate::fts3Int_h::Fts3Table,
@@ -2742,7 +2742,7 @@ unsafe extern "C" fn fts3MsrBufferData(
     );
     crate::src::headers::sqlite3_h::SQLITE_OK
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3Fts3MsrIncrNext(
     mut p: *mut crate::fts3Int_h::Fts3Table,
@@ -2889,7 +2889,7 @@ unsafe extern "C" fn fts3SegReaderStart(
     );
     crate::src::headers::sqlite3_h::SQLITE_OK
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3Fts3SegReaderStart(
     mut p: *mut crate::fts3Int_h::Fts3Table,
@@ -2899,7 +2899,7 @@ pub unsafe extern "C" fn sqlite3Fts3SegReaderStart(
     (*pCsr).pFilter = pFilter;
     fts3SegReaderStart(p, pCsr, (*pFilter).zTerm, (*pFilter).nTerm)
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3Fts3MsrIncrStart(
     mut p: *mut crate::fts3Int_h::Fts3Table,
@@ -2956,7 +2956,7 @@ pub unsafe extern "C" fn sqlite3Fts3MsrIncrStart(
     __pCsr_ref.iColFilter = iCol;
     crate::src::headers::sqlite3_h::SQLITE_OK
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3Fts3MsrIncrRestart(
     mut pCsr: *mut crate::fts3Int_h::Fts3MultiSegReader,
@@ -2995,7 +2995,7 @@ unsafe extern "C" fn fts3GrowSegReaderBuffer(
     }
     crate::src::headers::sqlite3_h::SQLITE_OK
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3Fts3SegReaderStep(
     mut p: *mut crate::fts3Int_h::Fts3Table,
@@ -3256,7 +3256,7 @@ pub unsafe extern "C" fn sqlite3Fts3SegReaderStep(
     }
     rc
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3Fts3SegReaderFinish(mut pCsr: *mut crate::fts3Int_h::Fts3MultiSegReader) {
     if !pCsr.is_null() {
@@ -3561,7 +3561,7 @@ unsafe extern "C" fn fts3SegmentMerge(
     sqlite3Fts3SegReaderFinish(&raw mut csr);
     rc
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3Fts3PendingTermsFlush(mut p: *mut crate::fts3Int_h::Fts3Table) -> ::core::ffi::c_int {
     let mut rc: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_OK;
@@ -5330,7 +5330,7 @@ unsafe extern "C" fn fts3IncrmergeHintPop(
     }
     crate::src::headers::sqlite3_h::SQLITE_OK
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3Fts3Incrmerge(
     mut p: *mut crate::fts3Int_h::Fts3Table,
@@ -5702,7 +5702,7 @@ unsafe extern "C" fn fts3ChecksumIndex(
     *pRc = rc;
     cksum
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3Fts3IntegrityCheck(
     mut p: *mut crate::fts3Int_h::Fts3Table,
@@ -5985,7 +5985,7 @@ unsafe extern "C" fn fts3SpecialInsert(
     }
     rc
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3Fts3FreeDeferredDoclists(mut pCsr: *mut crate::fts3Int_h::Fts3Cursor) {
     let mut pDef: *mut Fts3DeferredToken = ::core::ptr::null_mut::<Fts3DeferredToken>();
@@ -5996,7 +5996,7 @@ pub unsafe extern "C" fn sqlite3Fts3FreeDeferredDoclists(mut pCsr: *mut crate::f
         pDef = (*pDef).pNext;
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3Fts3FreeDeferredTokens(mut pCsr: *mut crate::fts3Int_h::Fts3Cursor) {
     let mut pDef: *mut Fts3DeferredToken = ::core::ptr::null_mut::<Fts3DeferredToken>();
@@ -6010,7 +6010,7 @@ pub unsafe extern "C" fn sqlite3Fts3FreeDeferredTokens(mut pCsr: *mut crate::fts
     }
     (*pCsr).pDeferred = ::core::ptr::null_mut::<Fts3DeferredToken>();
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3Fts3CacheDeferredDoclists(
     mut pCsr: *mut crate::fts3Int_h::Fts3Cursor,
@@ -6105,7 +6105,7 @@ pub unsafe extern "C" fn sqlite3Fts3CacheDeferredDoclists(
     }
     rc
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3Fts3DeferredTokenList(
     mut p: *mut Fts3DeferredToken,
@@ -6135,7 +6135,7 @@ pub unsafe extern "C" fn sqlite3Fts3DeferredTokenList(
                 );
     crate::src::headers::sqlite3_h::SQLITE_OK
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3Fts3DeferToken(
     mut pCsr: *mut crate::fts3Int_h::Fts3Cursor,
@@ -6197,7 +6197,7 @@ unsafe extern "C" fn fts3DeleteByRowid(
     }
     rc
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3Fts3UpdateMethod(
     mut pVtab: *mut crate::src::headers::sqlite3_h::sqlite3_vtab,
@@ -6314,7 +6314,7 @@ pub unsafe extern "C" fn sqlite3Fts3UpdateMethod(
     sqlite3Fts3SegmentsClose(p);
     rc
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3Fts3Optimize(mut p: *mut crate::fts3Int_h::Fts3Table) -> ::core::ffi::c_int {
     let mut rc: ::core::ffi::c_int = 0;

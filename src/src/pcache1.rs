@@ -119,7 +119,7 @@ static mut pcache1_g: PCacheGlobal = PCacheGlobal {
     nFreeSlot: 0,
     bUnderPressure: 0,
 };
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3PCacheBufferSetup(
     mut pBuf: *mut ::core::ffi::c_void,
@@ -312,12 +312,12 @@ unsafe extern "C" fn pcache1FreePage(mut p: *mut PgHdr1) {
     }
     *(*pCache).pnPurgeable = (*(*pCache).pnPurgeable).wrapping_sub(1);
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3PageMalloc(mut sz: ::core::ffi::c_int) -> *mut ::core::ffi::c_void {
     pcache1Alloc(sz)
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3PageFree(mut p: *mut ::core::ffi::c_void) {
     pcache1Free(p);
@@ -784,7 +784,7 @@ unsafe extern "C" fn pcache1Destroy(mut p: *mut crate::src::headers::sqlite3_h::
     crate::src::src::malloc::sqlite3_free(__pCache_ref.apHash as *mut ::core::ffi::c_void);
     crate::src::src::malloc::sqlite3_free(pCache as *mut ::core::ffi::c_void);
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3PCacheSetDefault() {
     static mut defaultMethods: crate::src::headers::sqlite3_h::sqlite3_pcache_methods2 = unsafe {
@@ -847,18 +847,18 @@ pub unsafe extern "C" fn sqlite3PCacheSetDefault() {
     };
     crate::src::src::main::sqlite3_config(crate::src::headers::sqlite3_h::SQLITE_CONFIG_PCACHE2_1, &raw const defaultMethods);
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3HeaderSizePcache1() -> ::core::ffi::c_int {
     ((::core::mem::size_of::<PgHdr1>() as usize).wrapping_add(7 as usize)
         & !(7 as ::core::ffi::c_int) as usize) as ::core::ffi::c_int
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3Pcache1Mutex() -> *mut crate::src::src::mutex_unix::sqlite3_mutex {
     pcache1_g.mutex
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3PcacheStats(
     mut pnCurrent: *mut ::core::ffi::c_int,

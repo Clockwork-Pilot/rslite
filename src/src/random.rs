@@ -269,7 +269,7 @@ unsafe extern "C" fn chacha_block(mut out: *mut crate::src::ext::rtree::rtree::u
         i += 1;
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3_randomness(
     mut N: ::core::ffi::c_int,
@@ -363,7 +363,7 @@ static mut sqlite3SavedPrng: sqlite3PrngType = sqlite3PrngType {
     out: [0; 64],
     n: 0,
 };
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3PrngSaveState() {
     ::core::ptr::copy_nonoverlapping(
@@ -372,7 +372,7 @@ pub unsafe extern "C" fn sqlite3PrngSaveState() {
                     ::core::mem::size_of::<sqlite3PrngType>() as usize,
                 );
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3PrngRestoreState() {
     ::core::ptr::copy_nonoverlapping(

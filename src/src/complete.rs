@@ -33,7 +33,7 @@ pub const tkTEMP: ::core::ffi::c_int = 5 as ::core::ffi::c_int;
 pub const tkTRIGGER: ::core::ffi::c_int = 6 as ::core::ffi::c_int;
 
 pub const tkEND: ::core::ffi::c_int = 7 as ::core::ffi::c_int;
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3_complete(
     mut zSql: *const ::core::ffi::c_char,
@@ -306,7 +306,7 @@ pub unsafe extern "C" fn sqlite3_complete(
     }
     (state as ::core::ffi::c_int == 1 as ::core::ffi::c_int) as ::core::ffi::c_int
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3_complete16(
     mut zSql: *const ::core::ffi::c_void,

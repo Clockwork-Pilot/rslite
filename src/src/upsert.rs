@@ -42,14 +42,14 @@ unsafe extern "C" fn upsertDelete(mut db: *mut crate::src::headers::sqliteInt_h:
         }
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3UpsertDelete(mut db: *mut crate::src::headers::sqliteInt_h::sqlite3, mut p: *mut crate::src::headers::sqliteInt_h::Upsert) {
     if !p.is_null() {
         upsertDelete(db, p);
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3UpsertDup(mut db: *mut crate::src::headers::sqliteInt_h::sqlite3, mut p: *mut crate::src::headers::sqliteInt_h::Upsert) -> *mut crate::src::headers::sqliteInt_h::Upsert {
     if p.is_null() {
@@ -69,7 +69,7 @@ pub unsafe extern "C" fn sqlite3UpsertDup(mut db: *mut crate::src::headers::sqli
         sqlite3UpsertDup(db, __p_ref.pNextUpsert),
     )
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3UpsertNew(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -100,7 +100,7 @@ pub unsafe extern "C" fn sqlite3UpsertNew(
     }
     pNew
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3UpsertAnalyzeTarget(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -278,7 +278,7 @@ pub unsafe extern "C" fn sqlite3UpsertAnalyzeTarget(
     }
     crate::src::headers::sqlite3_h::SQLITE_OK
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3UpsertNextIsIPK(mut pUpsert: *mut crate::src::headers::sqliteInt_h::Upsert) -> ::core::ffi::c_int {
     let mut pNext: *mut crate::src::headers::sqliteInt_h::Upsert = ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::Upsert>();
@@ -302,7 +302,7 @@ pub unsafe extern "C" fn sqlite3UpsertNextIsIPK(mut pUpsert: *mut crate::src::he
         pNext = (*pNext).pNextUpsert;
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3UpsertOfIndex(
     mut pUpsert: *mut crate::src::headers::sqliteInt_h::Upsert,
@@ -314,7 +314,7 @@ pub unsafe extern "C" fn sqlite3UpsertOfIndex(
     }
     pUpsert
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3UpsertDoUpdate(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,

@@ -7331,7 +7331,7 @@ static mut jsonEachModule: crate::src::headers::sqlite3_h::sqlite3_module = unsa
     xIntegrity:  None,
 }
 };
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3RegisterJsonFunctions() {
     static mut aJsonFunc: [crate::src::headers::sqliteInt_h::FuncDef; 34] = unsafe {
@@ -8349,7 +8349,7 @@ pub unsafe extern "C" fn sqlite3RegisterJsonFunctions() {
             .wrapping_div(::core::mem::size_of::<crate::src::headers::sqliteInt_h::FuncDef>() as usize) as ::core::ffi::c_int,
     );
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3JsonVtabRegister(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,

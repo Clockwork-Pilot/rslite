@@ -3,6 +3,7 @@
 #![allow(non_upper_case_globals)]
 #![allow(unused_assignments)]
 #![allow(unused_mut)]
+#![allow(static_mut_refs)]
 #![feature(
     c_variadic
 )]
@@ -206,7 +207,7 @@ pub mod __stddef_null_h {
 }
 pub mod fts3Int_h {
     #[cfg(feature = "test")]
-    extern "C" {
+    unsafe extern "C" {
         pub fn sqlite3Fts3InitTerm(
             db: *mut crate::src::headers::sqliteInt_h::sqlite3,
         ) -> ::core::ffi::c_int;
@@ -455,7 +456,7 @@ pub mod fts3Int_h {
 }
 
 pub mod stdlib {
-    extern "C" {
+    unsafe extern "C" {
         pub fn __ctype_b_loc() -> *mut *const ::core::ffi::c_ushort;
         pub fn acos(__x: ::core::ffi::c_double) -> ::core::ffi::c_double;
 

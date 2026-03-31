@@ -208,7 +208,7 @@ unsafe extern "C" fn explainIndexRange(mut pStr: *mut crate::src::headers::sqlit
         1 as ::core::ffi::c_int,
     );
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3WhereAddExplainText(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -367,7 +367,7 @@ pub unsafe extern "C" fn sqlite3WhereAddExplainText(
         __pOp_ref.p4.z = crate::src::src::printf::sqlite3StrAccumFinish(&raw mut str as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str);
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3WhereExplainOneScan(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -402,7 +402,7 @@ pub unsafe extern "C" fn sqlite3WhereExplainOneScan(
     }
     ret
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3WhereExplainBloomFilter(
     mut pParse: *const crate::src::headers::sqliteInt_h::Parse,
@@ -1235,7 +1235,7 @@ unsafe extern "C" fn whereLoopIsOneRow(mut pLoop: *mut crate::src::headers::wher
     }
     0 as ::core::ffi::c_int
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3WhereCodeOneLoopStart(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -2582,7 +2582,7 @@ pub unsafe extern "C" fn sqlite3WhereCodeOneLoopStart(
     }
     __pLevel_ref.notReady
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 #[inline(never)]
 
 pub unsafe extern "C" fn sqlite3WhereRightJoinLoop(

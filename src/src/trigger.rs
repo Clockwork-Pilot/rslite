@@ -32,7 +32,7 @@ pub union C2RustUnnamed {
     pub sSrc: crate::src::headers::sqliteInt_h::SrcList,
     pub fromSpace: [crate::src::ext::rtree::rtree::u8_0; 80],
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3DeleteTriggerStep(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -52,7 +52,7 @@ pub unsafe extern "C" fn sqlite3DeleteTriggerStep(
         crate::src::src::malloc::sqlite3DbFree(db as *mut crate::src::headers::sqliteInt_h::sqlite3, pTmp as *mut ::core::ffi::c_void);
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3TriggerList(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -84,7 +84,7 @@ pub unsafe extern "C" fn sqlite3TriggerList(
     }
     pList
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3BeginTrigger(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -468,7 +468,7 @@ pub unsafe extern "C" fn sqlite3BeginTrigger(
         sqlite3DeleteTrigger(db, pTrigger);
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3FinishTrigger(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -662,7 +662,7 @@ unsafe extern "C" fn triggerSpanDup(
     }
     z
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3TriggerSelectStep(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -729,7 +729,7 @@ unsafe extern "C" fn triggerStepAllocate(
     }
     pTriggerStep
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3TriggerInsertStep(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -765,7 +765,7 @@ pub unsafe extern "C" fn sqlite3TriggerInsertStep(
     crate::src::src::select::sqlite3SelectDelete(db as *mut crate::src::headers::sqliteInt_h::sqlite3,  pSelect as *mut crate::src::headers::sqliteInt_h::Select);
     pTriggerStep
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3TriggerUpdateStep(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -804,7 +804,7 @@ pub unsafe extern "C" fn sqlite3TriggerUpdateStep(
     crate::src::src::build::sqlite3SrcListDelete(db as *mut crate::src::headers::sqliteInt_h::sqlite3,  pFrom as *mut crate::src::headers::sqliteInt_h::SrcList);
     pTriggerStep
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3TriggerDeleteStep(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -828,7 +828,7 @@ pub unsafe extern "C" fn sqlite3TriggerDeleteStep(
     crate::src::src::expr::sqlite3ExprDelete(db as *mut crate::src::headers::sqliteInt_h::sqlite3,  pWhere as *mut crate::src::headers::sqliteInt_h::Expr);
     pTriggerStep
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3DeleteTrigger(mut db: *mut crate::src::headers::sqliteInt_h::sqlite3, mut pTrigger: *mut crate::src::headers::sqliteInt_h::Trigger) {
     let __pTrigger_ref = unsafe { &*pTrigger };
@@ -842,7 +842,7 @@ pub unsafe extern "C" fn sqlite3DeleteTrigger(mut db: *mut crate::src::headers::
     crate::src::src::build::sqlite3IdListDelete(db as *mut crate::src::headers::sqliteInt_h::sqlite3,  __pTrigger_ref.pColumns as *mut crate::src::headers::sqliteInt_h::IdList);
     crate::src::src::malloc::sqlite3DbFree(db as *mut crate::src::headers::sqliteInt_h::sqlite3, pTrigger as *mut ::core::ffi::c_void);
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3DropTrigger(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -910,7 +910,7 @@ unsafe extern "C" fn tableOfTrigger(mut pTrigger: *mut crate::src::headers::sqli
         (*pTrigger).table,
     ) as *mut crate::src::headers::sqliteInt_h::Table
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3DropTriggerPtr(mut pParse: *mut crate::src::headers::sqliteInt_h::Parse, mut pTrigger: *mut crate::src::headers::sqliteInt_h::Trigger) {
     let mut pTable: *mut crate::src::headers::sqliteInt_h::Table = ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::Table>();
@@ -966,7 +966,7 @@ pub unsafe extern "C" fn sqlite3DropTriggerPtr(mut pParse: *mut crate::src::head
         );
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3UnlinkAndDeleteTrigger(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -1122,7 +1122,7 @@ unsafe extern "C" fn triggersReallyExist(
         ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::Trigger>()
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3TriggersExist(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -1141,7 +1141,7 @@ pub unsafe extern "C" fn sqlite3TriggersExist(
     }
     triggersReallyExist(pParse, pTab, op, pChanges, pMask)
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3TriggerStepSrc(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -1750,7 +1750,7 @@ unsafe extern "C" fn getRowTrigger(
     }
     pPrg
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3CodeRowTriggerDirect(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -1781,7 +1781,7 @@ pub unsafe extern "C" fn sqlite3CodeRowTriggerDirect(
         crate::src::src::vdbeaux::sqlite3VdbeChangeP5(v, bRecursive as crate::src::fts5::u16_0);
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3CodeRowTrigger(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -1813,7 +1813,7 @@ pub unsafe extern "C" fn sqlite3CodeRowTrigger(
         p = (*p).pNext;
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3TriggerColmask(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,

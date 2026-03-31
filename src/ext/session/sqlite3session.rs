@@ -2501,7 +2501,7 @@ unsafe extern "C" fn sessionDiffFindModified(
     }
     rc
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3session_diff(
     mut pSession: *mut sqlite3_session,
@@ -2676,7 +2676,7 @@ pub unsafe extern "C" fn sqlite3session_diff(
     crate::src::src::mutex::sqlite3_mutex_leave(crate::src::src::main::sqlite3_db_mutex(__pSession_ref.db as *mut crate::src::headers::sqliteInt_h::sqlite3));
     rc
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3session_create(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -2769,7 +2769,7 @@ unsafe extern "C" fn sessionDeleteTable(
         pTab = pNext;
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3session_delete(mut pSession: *mut sqlite3_session) {
     let __pSession_ref = unsafe { &*pSession };
@@ -2818,7 +2818,7 @@ pub unsafe extern "C" fn sqlite3session_delete(mut pSession: *mut sqlite3_sessio
     sessionDeleteTable(pSession, __pSession_ref.pTable);
     crate::src::src::malloc::sqlite3_free(pSession as *mut ::core::ffi::c_void);
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3session_table_filter(
     mut pSession: *mut sqlite3_session,
@@ -2835,7 +2835,7 @@ pub unsafe extern "C" fn sqlite3session_table_filter(
     __pSession_ref.pFilterCtx = pCtx;
     __pSession_ref.xTableFilter = xFilter;
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3session_attach(
     mut pSession: *mut sqlite3_session,
@@ -3622,7 +3622,7 @@ unsafe extern "C" fn sessionGenerateChangeset(
     crate::src::src::mutex::sqlite3_mutex_leave(crate::src::src::main::sqlite3_db_mutex(db as *mut crate::src::headers::sqliteInt_h::sqlite3));
     rc
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3session_changeset(
     mut pSession: *mut sqlite3_session,
@@ -3643,7 +3643,7 @@ pub unsafe extern "C" fn sqlite3session_changeset(
     );
     rc
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3session_changeset_strm(
     mut pSession: *mut sqlite3_session,
@@ -3668,7 +3668,7 @@ pub unsafe extern "C" fn sqlite3session_changeset_strm(
         ::core::ptr::null_mut::<*mut ::core::ffi::c_void>(),
     )
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3session_patchset_strm(
     mut pSession: *mut sqlite3_session,
@@ -3693,7 +3693,7 @@ pub unsafe extern "C" fn sqlite3session_patchset_strm(
         ::core::ptr::null_mut::<*mut ::core::ffi::c_void>(),
     )
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3session_patchset(
     mut pSession: *mut sqlite3_session,
@@ -3712,7 +3712,7 @@ pub unsafe extern "C" fn sqlite3session_patchset(
         ppPatchset,
     )
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3session_enable(
     mut pSession: *mut sqlite3_session,
@@ -3728,7 +3728,7 @@ pub unsafe extern "C" fn sqlite3session_enable(
     crate::src::src::mutex::sqlite3_mutex_leave(crate::src::src::main::sqlite3_db_mutex(__pSession_ref.db as *mut crate::src::headers::sqliteInt_h::sqlite3));
     ret
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3session_indirect(
     mut pSession: *mut sqlite3_session,
@@ -3744,7 +3744,7 @@ pub unsafe extern "C" fn sqlite3session_indirect(
     crate::src::src::mutex::sqlite3_mutex_leave(crate::src::src::main::sqlite3_db_mutex(__pSession_ref.db as *mut crate::src::headers::sqliteInt_h::sqlite3));
     ret
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3session_isempty(
     mut pSession: *mut sqlite3_session,
@@ -3761,14 +3761,14 @@ pub unsafe extern "C" fn sqlite3session_isempty(
     crate::src::src::mutex::sqlite3_mutex_leave(crate::src::src::main::sqlite3_db_mutex(__pSession_ref.db as *mut crate::src::headers::sqliteInt_h::sqlite3));
     (ret == 0 as ::core::ffi::c_int) as ::core::ffi::c_int
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3session_memory_used(
     mut pSession: *mut sqlite3_session,
 ) -> crate::src::headers::sqlite3_h::sqlite3_int64 {
     (*pSession).nMalloc as crate::src::headers::sqlite3_h::sqlite3_int64
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3session_object_config(
     mut pSession: *mut sqlite3_session,
@@ -3809,7 +3809,7 @@ pub unsafe extern "C" fn sqlite3session_object_config(
 }
     rc
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3session_changeset_size(
     mut pSession: *mut sqlite3_session,
@@ -3859,7 +3859,7 @@ unsafe extern "C" fn sessionChangesetStart(
     *pp = pRet;
     crate::src::headers::sqlite3_h::SQLITE_OK
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3changeset_start(
     mut pp: *mut *mut sqlite3_changeset_iter,
@@ -3876,7 +3876,7 @@ pub unsafe extern "C" fn sqlite3changeset_start(
         0 as ::core::ffi::c_int,
     )
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3changeset_start_v2(
     mut pp: *mut *mut sqlite3_changeset_iter,
@@ -3896,7 +3896,7 @@ pub unsafe extern "C" fn sqlite3changeset_start_v2(
         0 as ::core::ffi::c_int,
     )
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3changeset_start_strm(
     mut pp: *mut *mut sqlite3_changeset_iter,
@@ -3919,7 +3919,7 @@ pub unsafe extern "C" fn sqlite3changeset_start_strm(
         0 as ::core::ffi::c_int,
     )
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3changeset_start_v2_strm(
     mut pp: *mut *mut sqlite3_changeset_iter,
@@ -4464,7 +4464,7 @@ unsafe extern "C" fn sessionChangesetNext(
     }
     rc
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3changeset_next(
     mut p: *mut sqlite3_changeset_iter,
@@ -4476,7 +4476,7 @@ pub unsafe extern "C" fn sqlite3changeset_next(
         ::core::ptr::null_mut::<::core::ffi::c_int>(),
     )
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3changeset_op(
     mut pIter: *mut sqlite3_changeset_iter,
@@ -4494,7 +4494,7 @@ pub unsafe extern "C" fn sqlite3changeset_op(
     }
     crate::src::headers::sqlite3_h::SQLITE_OK
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3changeset_pk(
     mut pIter: *mut sqlite3_changeset_iter,
@@ -4507,7 +4507,7 @@ pub unsafe extern "C" fn sqlite3changeset_pk(
     }
     crate::src::headers::sqlite3_h::SQLITE_OK
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3changeset_old(
     mut pIter: *mut sqlite3_changeset_iter,
@@ -4524,7 +4524,7 @@ pub unsafe extern "C" fn sqlite3changeset_old(
     *ppValue = *__pIter_ref.apValue.offset(iVal as isize);
     crate::src::headers::sqlite3_h::SQLITE_OK
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3changeset_new(
     mut pIter: *mut sqlite3_changeset_iter,
@@ -4541,7 +4541,7 @@ pub unsafe extern "C" fn sqlite3changeset_new(
     *ppValue = *__pIter_ref.apValue.offset((__pIter_ref.nCol + iVal) as isize);
     crate::src::headers::sqlite3_h::SQLITE_OK
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3changeset_conflict(
     mut pIter: *mut sqlite3_changeset_iter,
@@ -4559,7 +4559,7 @@ pub unsafe extern "C" fn sqlite3changeset_conflict(
     *mut crate::src::headers::vdbeInt_h::sqlite3_value;
     crate::src::headers::sqlite3_h::SQLITE_OK
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3changeset_fk_conflicts(
     mut pIter: *mut sqlite3_changeset_iter,
@@ -4572,7 +4572,7 @@ pub unsafe extern "C" fn sqlite3changeset_fk_conflicts(
     *pnOut = __pIter_ref.nCol;
     crate::src::headers::sqlite3_h::SQLITE_OK
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3changeset_finalize(
     mut p: *mut sqlite3_changeset_iter,
@@ -4828,7 +4828,7 @@ unsafe extern "C" fn sessionChangesetInvert(
     crate::src::src::malloc::sqlite3_free(sPK.aBuf as *mut ::core::ffi::c_void);
     rc
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3changeset_invert(
     mut nChangeset: ::core::ffi::c_int,
@@ -4847,7 +4847,7 @@ pub unsafe extern "C" fn sqlite3changeset_invert(
         ppInverted,
     )
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3changeset_invert_strm(
     mut xInput: Option<
@@ -6285,7 +6285,7 @@ unsafe extern "C" fn sessionChangesetApplyV23(
     }
     rc
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3changeset_apply_v2(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -6324,7 +6324,7 @@ pub unsafe extern "C" fn sqlite3changeset_apply_v2(
         flags,
     )
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3changeset_apply_v3(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -6363,7 +6363,7 @@ pub unsafe extern "C" fn sqlite3changeset_apply_v3(
         flags,
     )
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3changeset_apply(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -6399,7 +6399,7 @@ pub unsafe extern "C" fn sqlite3changeset_apply(
         0 as ::core::ffi::c_int,
     )
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3changeset_apply_v3_strm(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -6444,7 +6444,7 @@ pub unsafe extern "C" fn sqlite3changeset_apply_v3_strm(
         flags,
     )
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3changeset_apply_v2_strm(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -6489,7 +6489,7 @@ pub unsafe extern "C" fn sqlite3changeset_apply_v2_strm(
         flags,
     )
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3changeset_apply_strm(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -7171,7 +7171,7 @@ unsafe extern "C" fn sessionChangegroupOutput(
     crate::src::src::malloc::sqlite3_free(buf.aBuf as *mut ::core::ffi::c_void);
     rc
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3changegroup_new(
     mut pp: *mut *mut sqlite3_changegroup,
@@ -7192,7 +7192,7 @@ pub unsafe extern "C" fn sqlite3changegroup_new(
     *pp = p;
     rc
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3changegroup_schema(
     mut pGrp: *mut sqlite3_changegroup,
@@ -7212,7 +7212,7 @@ pub unsafe extern "C" fn sqlite3changegroup_schema(
     }
     rc
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3changegroup_add(
     mut pGrp: *mut sqlite3_changegroup,
@@ -7228,7 +7228,7 @@ pub unsafe extern "C" fn sqlite3changegroup_add(
     sqlite3changeset_finalize(pIter);
     rc
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3changegroup_add_change(
     mut pGrp: *mut sqlite3_changegroup,
@@ -7247,7 +7247,7 @@ pub unsafe extern "C" fn sqlite3changegroup_add_change(
     }
     rc
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3changegroup_output(
     mut pGrp: *mut sqlite3_changegroup,
@@ -7262,7 +7262,7 @@ pub unsafe extern "C" fn sqlite3changegroup_output(
         ppData,
     )
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3changegroup_add_strm(
     mut pGrp: *mut sqlite3_changegroup,
@@ -7284,7 +7284,7 @@ pub unsafe extern "C" fn sqlite3changegroup_add_strm(
     sqlite3changeset_finalize(pIter);
     rc
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3changegroup_output_strm(
     mut pGrp: *mut sqlite3_changegroup,
@@ -7305,7 +7305,7 @@ pub unsafe extern "C" fn sqlite3changegroup_output_strm(
         ::core::ptr::null_mut::<*mut ::core::ffi::c_void>(),
     )
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3changegroup_delete(mut pGrp: *mut sqlite3_changegroup) {
     if !pGrp.is_null() {
@@ -7316,7 +7316,7 @@ pub unsafe extern "C" fn sqlite3changegroup_delete(mut pGrp: *mut sqlite3_change
         crate::src::src::malloc::sqlite3_free(pGrp as *mut ::core::ffi::c_void);
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3changeset_concat(
     mut nLeft: ::core::ffi::c_int,
@@ -7341,7 +7341,7 @@ pub unsafe extern "C" fn sqlite3changeset_concat(
     sqlite3changegroup_delete(pGrp);
     rc
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3changeset_concat_strm(
     mut xInputA: Option<
@@ -7713,7 +7713,7 @@ unsafe extern "C" fn sessionRebase(
     crate::src::src::malloc::sqlite3_free(sOut.aBuf as *mut ::core::ffi::c_void);
     rc
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3rebaser_create(
     mut ppNew: *mut *mut sqlite3_rebaser,
@@ -7734,7 +7734,7 @@ pub unsafe extern "C" fn sqlite3rebaser_create(
     *ppNew = pNew;
     rc
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3rebaser_configure(
     mut p: *mut sqlite3_rebaser,
@@ -7750,7 +7750,7 @@ pub unsafe extern "C" fn sqlite3rebaser_configure(
     sqlite3changeset_finalize(pIter);
     rc
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3rebaser_rebase(
     mut p: *mut sqlite3_rebaser,
@@ -7775,7 +7775,7 @@ pub unsafe extern "C" fn sqlite3rebaser_rebase(
     }
     rc
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3rebaser_rebase_strm(
     mut p: *mut sqlite3_rebaser,
@@ -7811,7 +7811,7 @@ pub unsafe extern "C" fn sqlite3rebaser_rebase_strm(
     }
     rc
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3rebaser_delete(mut p: *mut sqlite3_rebaser) {
     if !p.is_null() {
@@ -7820,7 +7820,7 @@ pub unsafe extern "C" fn sqlite3rebaser_delete(mut p: *mut sqlite3_rebaser) {
         crate::src::src::malloc::sqlite3_free(p as *mut ::core::ffi::c_void);
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3session_config(
     mut op: ::core::ffi::c_int,

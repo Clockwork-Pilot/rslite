@@ -597,7 +597,7 @@ unsafe extern "C" fn fts3auxRowidMethod(
     *pRowid = pCsr.iRowid as crate::src::headers::sqlite3_h::sqlite_int64;
     crate::src::headers::sqlite3_h::SQLITE_OK
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3Fts3InitAux(mut db: *mut crate::src::headers::sqliteInt_h::sqlite3) -> ::core::ffi::c_int {
     static mut fts3aux_module: crate::src::headers::sqlite3_h::sqlite3_module = unsafe {

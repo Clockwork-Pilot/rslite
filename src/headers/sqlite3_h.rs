@@ -1,4 +1,4 @@
-extern "C" {
+unsafe extern "C" {
     pub type sqlite3_stmt;
 
     pub type sqlite3_blob;

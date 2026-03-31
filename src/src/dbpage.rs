@@ -515,7 +515,7 @@ unsafe extern "C" fn dbpageRollbackTo(
     pTab.pgnoTrunc = 0 as crate::src::src::pager::Pgno;
     crate::src::headers::sqlite3_h::SQLITE_OK
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3DbpageRegister(mut db: *mut crate::src::headers::sqliteInt_h::sqlite3) -> ::core::ffi::c_int {
     static mut dbpage_module: crate::src::headers::sqlite3_h::sqlite3_module = unsafe {

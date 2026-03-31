@@ -619,7 +619,7 @@ unsafe extern "C" fn vdbeSorterCompareInt(
     }
     res
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3VdbeSorterInit(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -874,7 +874,7 @@ unsafe extern "C" fn vdbeIncrFree(mut pIncr: *mut IncrMerger) {
         crate::src::src::malloc::sqlite3_free(pIncr as *mut ::core::ffi::c_void);
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3VdbeSorterReset(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -909,7 +909,7 @@ pub unsafe extern "C" fn sqlite3VdbeSorterReset(
     crate::src::src::malloc::sqlite3DbFree(db as *mut crate::src::headers::sqliteInt_h::sqlite3, __pSorter_ref.pUnpacked as *mut ::core::ffi::c_void);
     __pSorter_ref.pUnpacked = ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::UnpackedRecord>();
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3VdbeSorterClose(mut db: *mut crate::src::headers::sqliteInt_h::sqlite3, mut pCsr: *mut crate::src::headers::vdbeInt_h::VdbeCursor) {
     let mut pSorter: *mut VdbeSorter = ::core::ptr::null_mut::<VdbeSorter>();
@@ -1463,7 +1463,7 @@ unsafe extern "C" fn vdbeSorterFlushPMA(mut pSorter: *mut VdbeSorter) -> ::core:
     }
     rc
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3VdbeSorterWrite(
     mut pCsr: *const crate::src::headers::vdbeInt_h::VdbeCursor,
@@ -2135,7 +2135,7 @@ unsafe extern "C" fn vdbeSorterSetupMerge(mut pSorter: *mut VdbeSorter) -> ::cor
     }
     rc
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3VdbeSorterRewind(
     mut pCsr: *const crate::src::headers::vdbeInt_h::VdbeCursor,
@@ -2165,7 +2165,7 @@ pub unsafe extern "C" fn sqlite3VdbeSorterRewind(
     }
     rc
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3VdbeSorterNext(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -2231,7 +2231,7 @@ unsafe extern "C" fn vdbeSorterRowkey(
     }
     pKey
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3VdbeSorterRowkey(
     mut pCsr: *const crate::src::headers::vdbeInt_h::VdbeCursor,
@@ -2252,7 +2252,7 @@ pub unsafe extern "C" fn sqlite3VdbeSorterRowkey(
     ::libc::memcpy(__pOut_ref.z as *mut ::core::ffi::c_void, pKey, nKey as crate::__stddef_size_t_h::size_t);
     crate::src::headers::sqlite3_h::SQLITE_OK
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3VdbeSorterCompare(
     mut pCsr: *const crate::src::headers::vdbeInt_h::VdbeCursor,

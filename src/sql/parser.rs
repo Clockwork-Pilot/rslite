@@ -283,12 +283,13 @@ impl Parser {
             return Ok(ResultColumn::Star);
         }
         // name.*
-        if let TokenKind::Identifier(_) = self.peek()
-            && matches!(self.peek_at(1), TokenKind::Dot) && matches!(self.peek_at(2), TokenKind::Star) {
+        if let TokenKind::Identifier(_) = self.peek() {
+            if matches!(self.peek_at(1), TokenKind::Dot) && matches!(self.peek_at(2), TokenKind::Star) {
                 let name = self.expect_name()?;
                 self.pos += 2; // skip . and *
                 return Ok(ResultColumn::TableStar(name));
             }
+        }
         let expr = self.parse_expr(0)?;
         let alias = self.parse_alias()?;
         Ok(ResultColumn::Expr { expr, alias })
@@ -677,8 +678,9 @@ impl Parser {
         let mut args = Vec::new();
         if self.eat(&TokenKind::LParen) {
             if let TokenKind::Integer(n) = self.peek().clone() { self.pos += 1; args.push(n); }
-            if self.eat(&TokenKind::Comma)
-                && let TokenKind::Integer(n) = self.peek().clone() { self.pos += 1; args.push(n); }
+            if self.eat(&TokenKind::Comma) {
+                if let TokenKind::Integer(n) = self.peek().clone() { self.pos += 1; args.push(n); }
+            }
             let _ = self.eat(&TokenKind::RParen);
         }
         Some(TypeName { name: full, args })

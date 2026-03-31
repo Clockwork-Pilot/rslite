@@ -25,7 +25,7 @@ pub use crate::stdlib::uint16_t;pub use crate::stdlib::uint32_t;pub use crate::s
 
 
 pub use crate::stdlib::__int16_t;pub use crate::stdlib::__uint16_t;pub use crate::stdlib::__uint32_t;pub use crate::stdlib::__uint8_t;pub use crate::src::src::vdbe::p4union;pub use crate::src::src::vdbeaux::sqlite3VdbeAddOp0;pub use crate::src::src::vdbeaux::sqlite3VdbeAddOp1;pub use crate::src::src::vdbeaux::sqlite3VdbeAddOp2;pub use crate::src::src::vdbeaux::sqlite3VdbeAddOp3;pub use crate::src::src::vdbeaux::sqlite3VdbeAddOp4;pub use crate::src::src::vdbeaux::sqlite3VdbeAddOp4Int;pub use crate::src::src::vdbeaux::sqlite3VdbeAppendP4;pub use crate::src::src::vdbeaux::sqlite3VdbeChangeP5;pub use crate::src::src::vdbeaux::sqlite3VdbeChangeToNoop;pub use crate::src::src::vdbeaux::sqlite3VdbeCountChanges;pub use crate::src::src::vdbeaux::sqlite3VdbeCurrentAddr;pub use crate::src::src::vdbeaux::sqlite3VdbeDeletePriorOpcode;pub use crate::src::src::vdbeaux::sqlite3VdbeGoto;pub use crate::src::src::vdbeaux::sqlite3VdbeJumpHere;pub use crate::src::src::vdbeaux::sqlite3VdbeJumpHereOrPopInst;pub use crate::src::src::vdbeaux::sqlite3VdbeMakeLabel;pub use crate::src::src::vdbeaux::sqlite3VdbeResolveLabel;pub use crate::src::src::vdbeaux::sqlite3VdbeSetColName;pub use crate::src::src::vdbeaux::sqlite3VdbeSetNumCols;pub use crate::src::src::vdbeaux::sqlite3VdbeSetP4KeyInfo;pub use crate::src::src::vdbe::Mem;pub use crate::src::src::vdbe::SubProgram;pub use crate::src::src::vdbe::SubrtnSig;pub use crate::src::headers::vdbeInt_h::Vdbe;pub use crate::src::src::vdbe::VdbeOp;pub use crate::src::src::vdbe::COLNAME_NAME;pub use crate::src::src::vdbe::P4_STATIC;pub use crate::src::src::vdbe::P4_TABLE;pub use crate::src::src::vdbe::P4_VTAB;
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3SrcListLookup(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -53,7 +53,7 @@ pub unsafe extern "C" fn sqlite3SrcListLookup(
     }
     pTab
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3CodeChangeCount(
     mut v: *mut crate::src::headers::vdbeInt_h::Vdbe,
@@ -119,7 +119,7 @@ unsafe extern "C" fn tabIsReadOnly(
     }
     crate::src::src::build::sqlite3ReadOnlyShadowTables(db as *mut crate::src::headers::sqliteInt_h::sqlite3)
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3IsReadOnly(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -149,7 +149,7 @@ pub unsafe extern "C" fn sqlite3IsReadOnly(
     }
     0 as ::core::ffi::c_int
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3MaterializeView(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -225,7 +225,7 @@ pub unsafe extern "C" fn sqlite3MaterializeView(
     crate::src::src::select::sqlite3Select(pParse as *mut crate::src::headers::sqliteInt_h::Parse,  pSel as *mut crate::src::headers::sqliteInt_h::Select,  &raw mut dest as *mut _ as *mut crate::src::headers::sqliteInt_h::SelectDest);
     crate::src::src::select::sqlite3SelectDelete(db as *mut crate::src::headers::sqliteInt_h::sqlite3,  pSel as *mut crate::src::headers::sqliteInt_h::Select);
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3DeleteFrom(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -761,7 +761,7 @@ pub unsafe extern "C" fn sqlite3DeleteFrom(
         crate::src::src::malloc::sqlite3DbNNFreeNN(db as *mut crate::src::headers::sqliteInt_h::sqlite3, aToOpen as *mut ::core::ffi::c_void);
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3GenerateRowDelete(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -961,7 +961,7 @@ pub unsafe extern "C" fn sqlite3GenerateRowDelete(
     }
     crate::src::src::vdbeaux::sqlite3VdbeResolveLabel(v, iLabel);
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3GenerateRowIndexDelete(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -1022,7 +1022,7 @@ pub unsafe extern "C" fn sqlite3GenerateRowIndexDelete(
         pIdx = (*pIdx).pNext;
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3GenerateIndexKey(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -1086,7 +1086,7 @@ pub unsafe extern "C" fn sqlite3GenerateIndexKey(
     crate::src::src::expr::sqlite3ReleaseTempRange(pParse as *mut crate::src::headers::sqliteInt_h::Parse, regBase, nCol);
     regBase
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ResolvePartIdxLabel(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,

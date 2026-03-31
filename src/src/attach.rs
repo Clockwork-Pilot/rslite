@@ -40,7 +40,7 @@ unsafe extern "C" fn resolveAttachExpr(
     }
     rc
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3DbIsNamed(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -487,7 +487,7 @@ unsafe extern "C" fn codeAttach(
     crate::src::src::expr::sqlite3ExprDelete(db as *mut crate::src::headers::sqliteInt_h::sqlite3,  pDbname as *mut crate::src::headers::sqliteInt_h::Expr);
     crate::src::src::expr::sqlite3ExprDelete(db as *mut crate::src::headers::sqliteInt_h::sqlite3,  pKey as *mut crate::src::headers::sqliteInt_h::Expr);
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3Detach(mut pParse: *mut crate::src::headers::sqliteInt_h::Parse, mut pDbname: *mut crate::src::headers::sqliteInt_h::Expr) {
     static mut detach_func: crate::src::headers::sqliteInt_h::FuncDef = unsafe {
@@ -523,7 +523,7 @@ pub unsafe extern "C" fn sqlite3Detach(mut pParse: *mut crate::src::headers::sql
         pDbname,
     );
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3Attach(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -675,7 +675,7 @@ unsafe extern "C" fn fixSelectCb(
     }
     crate::src::headers::sqliteInt_h::WRC_Continue
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3FixInit(
     mut pFix: *mut crate::src::headers::sqliteInt_h::DbFixer,
@@ -707,7 +707,7 @@ pub unsafe extern "C" fn sqlite3FixInit(
     __pFix_ref.w.eCode = 0 as crate::src::fts5::u16_0;
     __pFix_ref.w.u.pFix = pFix;
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3FixSrcList(
     mut pFix: *mut crate::src::headers::sqliteInt_h::DbFixer,
@@ -721,7 +721,7 @@ pub unsafe extern "C" fn sqlite3FixSrcList(
     }
     res
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3FixSelect(
     mut pFix: *mut crate::src::headers::sqliteInt_h::DbFixer,
@@ -729,7 +729,7 @@ pub unsafe extern "C" fn sqlite3FixSelect(
 ) -> ::core::ffi::c_int {
     crate::src::src::walker::sqlite3WalkSelect(&raw mut (*pFix).w as *mut _ as *mut crate::src::headers::sqliteInt_h::Walker,  pSelect as *mut crate::src::headers::sqliteInt_h::Select)
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3FixExpr(
     mut pFix: *mut crate::src::headers::sqliteInt_h::DbFixer,
@@ -737,7 +737,7 @@ pub unsafe extern "C" fn sqlite3FixExpr(
 ) -> ::core::ffi::c_int {
     crate::src::src::walker::sqlite3WalkExpr(&raw mut (*pFix).w as *mut _ as *mut crate::src::headers::sqliteInt_h::Walker,  pExpr as *mut crate::src::headers::sqliteInt_h::Expr)
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3FixTriggerStep(
     mut pFix: *mut crate::src::headers::sqliteInt_h::DbFixer,

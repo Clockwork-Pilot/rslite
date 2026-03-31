@@ -20,7 +20,7 @@ pub struct SQLiteThread {
     pub xTask: Option<unsafe extern "C" fn(*mut ::core::ffi::c_void) -> *mut ::core::ffi::c_void>,
     pub pIn: *mut ::core::ffi::c_void,
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ThreadCreate(
     mut ppThread: *mut *mut SQLiteThread,
@@ -58,7 +58,7 @@ pub unsafe extern "C" fn sqlite3ThreadCreate(
     *ppThread = p;
     crate::src::headers::sqlite3_h::SQLITE_OK
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3ThreadJoin(
     mut p: *mut SQLiteThread,

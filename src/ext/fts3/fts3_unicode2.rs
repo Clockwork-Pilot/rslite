@@ -6,7 +6,7 @@ pub struct TableEntry {
     pub flags: ::core::ffi::c_uchar,
     pub nRange: ::core::ffi::c_uchar,
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3FtsUnicodeIsalnum(mut c: ::core::ffi::c_int) -> ::core::ffi::c_int {
     static mut aEntry: [::core::ffi::c_uint; 406] = [
@@ -748,7 +748,7 @@ unsafe extern "C" fn remove_diacritic(
 }
 
 pub const HIBIT: ::core::ffi::c_uchar = 0x80 as ::core::ffi::c_int as ::core::ffi::c_uchar;
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3FtsUnicodeIsdiacritic(
     mut c: ::core::ffi::c_int,
@@ -766,7 +766,7 @@ pub unsafe extern "C" fn sqlite3FtsUnicodeIsdiacritic(
                 << c - 768 as ::core::ffi::c_int - 32 as ::core::ffi::c_int
     }) as ::core::ffi::c_int
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3FtsUnicodeFold(
     mut c: ::core::ffi::c_int,

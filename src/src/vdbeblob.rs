@@ -115,7 +115,7 @@ unsafe extern "C" fn blobSeekToRow(
     *pzErr = zErr;
     rc
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3_blob_open(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -407,7 +407,7 @@ pub unsafe extern "C" fn sqlite3_blob_open(
     crate::src::src::mutex::sqlite3_mutex_leave(__db_ref.mutex);
     rc
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3_blob_close(mut pBlob: *mut crate::src::headers::sqlite3_h::sqlite3_blob) -> ::core::ffi::c_int {
     let mut p: *mut Incrblob = pBlob as *mut Incrblob;
@@ -516,7 +516,7 @@ unsafe extern "C" fn blobReadWrite(
     crate::src::src::mutex::sqlite3_mutex_leave((*db).mutex);
     rc
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3_blob_read(
     mut pBlob: *mut crate::src::headers::sqlite3_h::sqlite3_blob,
@@ -540,7 +540,7 @@ pub unsafe extern "C" fn sqlite3_blob_read(
         ),
     )
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3_blob_write(
     mut pBlob: *mut crate::src::headers::sqlite3_h::sqlite3_blob,
@@ -564,7 +564,7 @@ pub unsafe extern "C" fn sqlite3_blob_write(
         ),
     )
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3_blob_bytes(mut pBlob: *mut crate::src::headers::sqlite3_h::sqlite3_blob) -> ::core::ffi::c_int {
     let mut p: *mut Incrblob = pBlob as *mut Incrblob;
@@ -574,7 +574,7 @@ pub unsafe extern "C" fn sqlite3_blob_bytes(mut pBlob: *mut crate::src::headers:
         0 as ::core::ffi::c_int
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3_blob_reopen(
     mut pBlob: *mut crate::src::headers::sqlite3_h::sqlite3_blob,

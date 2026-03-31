@@ -2894,7 +2894,7 @@ pub use crate::stdlib::C2RustUnnamed_0_1;pub use crate::stdlib::_ISalnum;pub use
 pub use crate::src::ext::rtree::rtree::stdlib_float_h::atof;
 
 
-extern "C" {
+unsafe extern "C" {
     
     pub fn sqlite3GetToken(
         _: *const ::core::ffi::c_uchar,
@@ -7856,7 +7856,7 @@ unsafe extern "C" fn rtreecheck(
         crate::src::src::malloc::sqlite3_free(zReport as *mut ::core::ffi::c_void);
     };
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3RtreeInit(mut db: *mut crate::src::headers::sqliteInt_h::sqlite3) -> ::core::ffi::c_int {
     let utf8: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_UTF8;
@@ -8012,7 +8012,7 @@ unsafe extern "C" fn geomCallback(
         }
     };
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3_rtree_geometry_callback(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -8056,7 +8056,7 @@ pub unsafe extern "C" fn sqlite3_rtree_geometry_callback(
         Some(rtreeFreeCallback as unsafe extern "C" fn(*mut ::core::ffi::c_void) -> ()),
     )
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3_rtree_query_callback(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,

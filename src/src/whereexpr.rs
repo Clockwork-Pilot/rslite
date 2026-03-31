@@ -1513,7 +1513,7 @@ unsafe extern "C" fn exprAnalyze(
     pTerm = __pWC_ref.a.offset(idxTerm as isize) as *mut crate::src::headers::whereInt_h::WhereTerm;
     (*pTerm).prereqRight |= extraRight;
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3WhereSplit(
     mut pWC: *mut crate::src::headers::whereInt_h::WhereClause,
@@ -1580,7 +1580,7 @@ unsafe extern "C" fn whereAddLimitExpr(
         (*pTerm).eMatchOp = eMatchOp as crate::src::ext::rtree::rtree::u8_0;
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 #[inline(never)]
 
 pub unsafe extern "C" fn sqlite3WhereAddLimit(mut pWC: *mut crate::src::headers::whereInt_h::WhereClause, mut p: *mut crate::src::headers::sqliteInt_h::Select) {
@@ -1680,7 +1680,7 @@ pub unsafe extern "C" fn sqlite3WhereAddLimit(mut pWC: *mut crate::src::headers:
         }
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3WhereClauseInit(
     mut pWC: *mut crate::src::headers::whereInt_h::WhereClause,
@@ -1697,7 +1697,7 @@ pub unsafe extern "C" fn sqlite3WhereClauseInit(
         as ::core::ffi::c_int;
     __pWC_ref.a = &raw mut __pWC_ref.aStatic as *mut crate::src::headers::whereInt_h::WhereTerm;
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3WhereClauseClear(mut pWC: *mut crate::src::headers::whereInt_h::WhereClause) {
     let mut db: *mut crate::src::headers::sqliteInt_h::sqlite3 = (*(*(*pWC).pWInfo).pParse).db;
@@ -1762,7 +1762,7 @@ unsafe extern "C" fn sqlite3WhereExprUsageFull(
     }
     mask
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3WhereExprUsageNN(
     mut pMaskSet: *mut crate::src::headers::whereInt_h::WhereMaskSet,
@@ -1780,7 +1780,7 @@ pub unsafe extern "C" fn sqlite3WhereExprUsageNN(
     }
     sqlite3WhereExprUsageFull(pMaskSet, p)
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3WhereExprUsage(
     mut pMaskSet: *mut crate::src::headers::whereInt_h::WhereMaskSet,
@@ -1792,7 +1792,7 @@ pub unsafe extern "C" fn sqlite3WhereExprUsage(
         0 as crate::src::headers::sqliteInt_h::Bitmask
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3WhereExprListUsage(
     mut pMaskSet: *mut crate::src::headers::whereInt_h::WhereMaskSet,
@@ -1812,7 +1812,7 @@ pub unsafe extern "C" fn sqlite3WhereExprListUsage(
     }
     mask
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3WhereExprAnalyze(
     mut pTabList: *mut crate::src::headers::sqliteInt_h::SrcList,
@@ -1825,7 +1825,7 @@ pub unsafe extern "C" fn sqlite3WhereExprAnalyze(
         i -= 1;
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3WhereTabFuncArgs(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,

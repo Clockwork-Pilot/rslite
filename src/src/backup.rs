@@ -111,7 +111,7 @@ unsafe extern "C" fn checkReadTransaction(
     }
     crate::src::headers::sqlite3_h::SQLITE_OK
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3_backup_init(
     mut pDestDb: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -243,7 +243,7 @@ unsafe extern "C" fn attachBackupObject(mut p: *mut sqlite3_backup) {
     *pp = p;
     __p_ref.isAttached = 1 as ::core::ffi::c_int;
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3_backup_step(
     mut p: *mut sqlite3_backup,
@@ -493,7 +493,7 @@ pub unsafe extern "C" fn sqlite3_backup_step(
     crate::src::src::mutex::sqlite3_mutex_leave((*__p_ref.pSrcDb).mutex);
     rc
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3_backup_finish(mut p: *mut sqlite3_backup) -> ::core::ffi::c_int {
     let mut pp: *mut *mut sqlite3_backup = ::core::ptr::null_mut::<*mut sqlite3_backup>();
@@ -536,14 +536,14 @@ pub unsafe extern "C" fn sqlite3_backup_finish(mut p: *mut sqlite3_backup) -> ::
     crate::src::src::main::sqlite3LeaveMutexAndCloseZombie(pSrcDb as *mut crate::src::headers::sqliteInt_h::sqlite3);
     rc
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3_backup_remaining(
     mut p: *mut sqlite3_backup,
 ) -> ::core::ffi::c_int {
     (*p).nRemaining as ::core::ffi::c_int
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3_backup_pagecount(
     mut p: *mut sqlite3_backup,
@@ -574,7 +574,7 @@ unsafe extern "C" fn backupUpdate(
         }
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3BackupUpdate(
     mut pBackup: *mut sqlite3_backup,
@@ -585,7 +585,7 @@ pub unsafe extern "C" fn sqlite3BackupUpdate(
         backupUpdate(pBackup, iPage, aData);
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3BackupRestart(mut pBackup: *mut sqlite3_backup) {
     let mut p: *mut sqlite3_backup = ::core::ptr::null_mut::<sqlite3_backup>();
@@ -595,7 +595,7 @@ pub unsafe extern "C" fn sqlite3BackupRestart(mut pBackup: *mut sqlite3_backup) 
         p = (*p).pNext;
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3BtreeCopyFile(
     mut pTo: *mut crate::src::headers::btreeInt_h::Btree,

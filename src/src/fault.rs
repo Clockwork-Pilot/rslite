@@ -10,7 +10,7 @@ static mut sqlite3Hooks: BenignMallocHooks = BenignMallocHooks {
     xBenignBegin: None,
     xBenignEnd: None,
 };
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3BenignMallocHooks(
     mut xBenignBegin: Option<unsafe extern "C" fn() -> ()>,
@@ -19,7 +19,7 @@ pub unsafe extern "C" fn sqlite3BenignMallocHooks(
     sqlite3Hooks.xBenignBegin = xBenignBegin;
     sqlite3Hooks.xBenignEnd = xBenignEnd;
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3BeginBenignMalloc() {
     if sqlite3Hooks.xBenignBegin.is_some() {
@@ -28,7 +28,7 @@ pub unsafe extern "C" fn sqlite3BeginBenignMalloc() {
             .expect("non-null function pointer")();
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3EndBenignMalloc() {
     if sqlite3Hooks.xBenignEnd.is_some() {

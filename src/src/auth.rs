@@ -19,7 +19,7 @@ pub use crate::stdlib::int16_t;
 
 
 pub use crate::stdlib::uint16_t;pub use crate::stdlib::uint32_t;pub use crate::stdlib::uint8_t;pub use crate::stdlib::__int16_t;pub use crate::stdlib::__uint16_t;pub use crate::stdlib::__uint32_t;pub use crate::stdlib::__uint8_t;pub use crate::src::src::vdbe::p4union;pub use crate::src::src::vdbe::Mem;pub use crate::src::src::vdbe::SubProgram;pub use crate::src::src::vdbe::SubrtnSig;pub use crate::src::headers::vdbeInt_h::Vdbe;pub use crate::src::src::vdbe::VdbeOp;
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3_set_authorizer(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -54,7 +54,7 @@ unsafe extern "C" fn sqliteAuthBadReturnCode(mut pParse: *mut crate::src::header
     );
     (*pParse).rc = crate::src::headers::sqlite3_h::SQLITE_ERROR;
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3AuthReadCol(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -102,7 +102,7 @@ pub unsafe extern "C" fn sqlite3AuthReadCol(
     }
     rc
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3AuthRead(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -149,7 +149,7 @@ pub unsafe extern "C" fn sqlite3AuthRead(
         (*pExpr).op = crate::src::parse::TK_NULL as crate::src::ext::rtree::rtree::u8_0;
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3AuthCheck(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -189,7 +189,7 @@ pub unsafe extern "C" fn sqlite3AuthCheck(
     }
     rc
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3AuthContextPush(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -200,7 +200,7 @@ pub unsafe extern "C" fn sqlite3AuthContextPush(
     (*pContext).zAuthContext = (*pParse).zAuthContext;
     (*pParse).zAuthContext = zContext;
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3AuthContextPop(mut pContext: *mut crate::src::headers::sqliteInt_h::AuthContext) {
     if !(*pContext).pParse.is_null() {

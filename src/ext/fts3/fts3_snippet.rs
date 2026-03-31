@@ -251,7 +251,7 @@ unsafe extern "C" fn fts3MIBufferSetGlobal(mut p: *mut MatchinfoBuffer) {
                     ((__p_ref.nElem as crate::__stddef_size_t_h::size_t).wrapping_mul(::core::mem::size_of::<crate::src::ext::rtree::rtree::u32_0>() as crate::__stddef_size_t_h::size_t)) as usize,
                 );
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3Fts3MIBufferFree(mut p: *mut MatchinfoBuffer) {
     if !p.is_null() {
@@ -310,7 +310,7 @@ unsafe extern "C" fn fts3ExprIterate2(
     }
     rc
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3Fts3ExprIterate(
     mut pExpr: *mut crate::fts3Int_h::Fts3Expr,
@@ -1500,7 +1500,7 @@ unsafe extern "C" fn fts3GetMatchinfo(
         crate::src::src::vdbeapi::sqlite3_result_blob(pCtx, aOut as *const ::core::ffi::c_void, n, xDestroyOut);
     };
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3Fts3Snippet(
     mut pCtx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
@@ -1679,7 +1679,7 @@ unsafe extern "C" fn fts3ExprRestartIfCb(
     }
     rc
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3Fts3Offsets(
     mut pCtx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
@@ -1884,7 +1884,7 @@ pub unsafe extern "C" fn sqlite3Fts3Offsets(
         );
     };
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3Fts3Matchinfo(
     mut pContext: *mut crate::src::headers::vdbeInt_h::sqlite3_context,

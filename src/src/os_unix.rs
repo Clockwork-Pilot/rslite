@@ -1963,10 +1963,10 @@ unsafe extern "C" fn unixWrite(
     }
     crate::src::headers::sqlite3_h::SQLITE_OK
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub static mut sqlite3_sync_count: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub static mut sqlite3_fullsync_count: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
 
@@ -4608,7 +4608,7 @@ unsafe extern "C" fn unixSleep(
     ::libc::nanosleep(&raw mut sp as *mut _ as *const ::libc::timespec,  ::core::ptr::null_mut::<::libc::timespec>() as *mut ::libc::timespec);
     microseconds
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub static mut sqlite3_current_time: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
 
@@ -4651,7 +4651,7 @@ unsafe extern "C" fn unixGetLastError(
 ) -> ::core::ffi::c_int {
     *::libc::__errno_location()
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3_os_init() -> ::core::ffi::c_int {
     static mut aVfs: [crate::src::headers::sqlite3_h::sqlite3_vfs; 4] = unsafe {
@@ -5207,7 +5207,7 @@ pub unsafe extern "C" fn sqlite3_os_init() -> ::core::ffi::c_int {
     unixTempFileInit();
     crate::src::headers::sqlite3_h::SQLITE_OK
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3_os_end() -> ::core::ffi::c_int {
     unixBigLock = ::core::ptr::null_mut::<crate::src::src::mutex_unix::sqlite3_mutex>();
