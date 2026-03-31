@@ -8,13 +8,7 @@
 #![feature(
     c_variadic
 )]
-#![feature(extern_types)]
-#![feature(raw_ref_op)]
-#![feature(register_tool)]
-#![register_tool(c2rust)]
-#![feature(atomic_from_ptr)]
-#![feature(let_chains)]
-#![feature(result_option_inspect)]
+
 
 // Re-export sqlite_printf! macro from proc-macro crate
 pub use sqlite_printf_macros::sqlite_printf;

@@ -1,20 +1,27 @@
-unsafe extern "C" {
-    pub type sqlite3_stmt;
+pub type sqlite3_stmt = crate::src::headers::vdbeInt_h::Vdbe;
 
-    pub type sqlite3_blob;
+pub type sqlite3_blob = *mut std::ffi::c_void;
 
-    pub type sqlite3_pcache;
-}
+pub type sqlite3_pcache = *mut std::ffi::c_void;
+
 pub const SQLITE_VERSION: [::core::ffi::c_char; 7] =
     unsafe { ::core::mem::transmute::<[u8; 7], [::core::ffi::c_char; 7]>(*b"3.51.2\0") };
 
 pub const SQLITE_VERSION_NUMBER: ::core::ffi::c_int = 3051002 as ::core::ffi::c_int;
 
-pub const SQLITE_SOURCE_ID: [::core::ffi::c_char; 85] = unsafe {
-    ::core::mem::transmute::<[u8; 85], [::core::ffi::c_char; 85]>(
-        *b"2026-01-09 17:27:48 b270f8339eb13b504d0b2ba154ebca966b7dde08e40c3ed7d559749818cbalt1\0",
-    )
-};
+const fn str_to_i8_array<const N: usize>(s: &str) -> [i8; N] {
+    assert!(s.len() == N, "string length does not match array size");
+    let mut arr = [0i8; N];
+    let bytes = s.as_bytes();
+    let mut i = 0;
+    while i < N {
+        arr[i] = bytes[i] as i8;
+        i += 1;
+    }
+    arr
+}
+
+pub const SQLITE_SOURCE_ID: [i8; 85] = str_to_i8_array::<85>("2026-01-09 17:27:48 b270f8339eb13b504d0b2ba154ebca966b7dde08e40c3ed7d559749818cbalt1\0");
 
 pub type sqlite_int64 = ::core::ffi::c_longlong;
 

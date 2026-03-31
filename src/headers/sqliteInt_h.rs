@@ -1,6 +1,3 @@
-unsafe extern "C" {
-    pub type CCurHint;
-}
 pub use crate::src::src::alter::RenameToken;
 
 pub use crate::src::src::build::TableLock;
@@ -991,6 +988,14 @@ pub struct UnpackedRecord {
 pub union __anon_union_4 {
     pub z: *mut ::core::ffi::c_char,
     pub i: crate::src::ext::rtree::rtree::i64_0,
+}
+
+#[derive(Copy, Clone)]
+#[repr(C)]
+pub struct CCurHint {
+    pub iTabCur: ::core::ffi::c_int,
+    pub iIdxCur: ::core::ffi::c_int,
+    pub pIdx: *mut Index,
 }
 
 #[derive(Copy, Clone, BitfieldStruct)]
