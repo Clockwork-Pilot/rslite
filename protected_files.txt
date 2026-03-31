@@ -1,0 +1,4 @@
+/workspace/checks_results.k.json
+/workspace/checks_results.k.md
+/workspace/task-spec.k.json
+/workspace/task-spec.k.md

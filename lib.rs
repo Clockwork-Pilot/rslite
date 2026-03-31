@@ -16,6 +16,9 @@
 #![feature(let_chains)]
 #![feature(result_option_inspect)]
 
+// Re-export sqlite_printf! macro from proc-macro crate
+pub use sqlite_printf_macros::sqlite_printf;
+
 #[path = "src/vdbe/mod.rs"]
 pub mod vdbe;
 #[path = "src/sql/mod.rs"]
@@ -26,6 +29,10 @@ pub mod schema;
 pub mod wip_db;
 #[path = "src/db.rs"]
 pub mod db;
+#[path = "src/safe_format.rs"]
+pub mod safe_format;
+#[path = "src/format_utils.rs"]
+pub mod format_utils;
 pub mod pcache_h {
     pub use crate::src::src::pcache::PCache;
 }

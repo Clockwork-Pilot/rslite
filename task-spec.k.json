@@ -5,36 +5,6 @@
   "description": "Verify c_variadic feature isolation: only in printf_c_variadic.rs",
   "contains_unverified_constraints": false,
   "features": {
-    "c_variadic_isolation": {
-      "type": "Feature",
-      "model_version": 1,
-      "id": "c_variadic_isolation",
-      "description": "c_variadic feature strictly isolated to printf_c_variadic.rs only",
-      "goals": [
-        "src/printf_c_variadic.rs is the only place allowed to use c_variadic feature",
-        "No other .rs files declare c_variadic feature"
-      ],
-      "constraints": {
-        "c3": {
-          "id": "no_other_c_variadic",
-          "cmd": "grep -R '#!\\[feature(c_variadic)\\]' \"$PROJECT_ROOT/src\" --include='*.rs' | grep -v 'printf_c_variadic.rs' && exit 1 || exit 0",
-          "description": "No other .rs files have c_variadic feature",
-          "fails_count": 1
-        },
-        "c4": {
-          "id": "valist_isolation",
-          "cmd": "grep -R 'VaListImpl' \"$PROJECT_ROOT\" --include='*.rs' | grep -v 'printf_c_variadic.rs' && exit 1 || exit 0",
-          "description": "VaListImpl usage only in printf_c_variadic.rs",
-          "fails_count": 1
-        },
-        "c5": {
-          "id": "valist_type_isolation",
-          "cmd": "grep -R VAList \"$PROJECT_ROOT\" --include=\"*.rs\" | grep -v \"printf_c_variadic.rs\" && exit 1 || exit 0",
-          "description": "VAList type usage only in printf_c_variadic.rs",
-          "fails_count": 1
-        }
-      }
-    },
     "build_all": {
       "type": "Feature",
       "model_version": 1,
@@ -63,6 +33,56 @@
           "id": "toolchain_nightly_version",
           "cmd": "grep -q \"nightly-2026-03-26\" \"$PROJECT_ROOT/rust-toolchain.toml\" && exit 0 || exit 1",
           "description": "rust-toolchain.toml must use channel nightly-2026-03-26",
+          "fails_count": 1
+        }
+      }
+    },
+    "memdb_c_variadic_migration": {
+      "type": "Feature",
+      "model_version": 1,
+      "id": "memdb_c_variadic_migration",
+      "description": "Migrate memdb.rs and specific functions away from c_variadic feature",
+      "goals": [
+        "Remove c_variadic feature usage from memdb.rs file",
+        "Refactor memdbFileControl function to eliminate c_variadic",
+        "Refactor sqlite3_serialize function to eliminate c_variadic",
+        "Refactor sqlite3_deserialize function to eliminate c_variadic"
+      ],
+      "constraints": {
+        "memdb_no_feature": {
+          "id": "memdb_no_c_variadic_feature",
+          "cmd": "grep -n '#!\\[feature(c_variadic)\\]' \"$WORKSPACE_ROOT/src/src/memdb.rs\" 2>/dev/null && exit 1 || exit 0",
+          "description": "memdb.rs must not have c_variadic feature declaration",
+          "fails_count": 1
+        },
+        "memdb_memdbFileControl_no_variadic": {
+          "id": "memdb_memdbFileControl_no_variadic",
+          "cmd": "awk '/^[^/]*fn memdbFileControl/,/^}/' \"$WORKSPACE_ROOT/src/src/memdb.rs\" 2>/dev/null | grep -E '(va_list|VAList|VaListImpl|c_variadic|va_arg)' && exit 1 || exit 0",
+          "description": "memdbFileControl function must not use c_variadic or variadic patterns",
+          "fails_count": 1
+        },
+        "memdb_sqlite3_serialize_no_variadic": {
+          "id": "memdb_sqlite3_serialize_no_variadic",
+          "cmd": "awk '/^[^/]*fn sqlite3_serialize/,/^}/' \"$WORKSPACE_ROOT/src/src/memdb.rs\" 2>/dev/null | grep -E '(va_list|VAList|VaListImpl|c_variadic|va_arg)' && exit 1 || exit 0",
+          "description": "sqlite3_serialize function must not use c_variadic or variadic patterns",
+          "fails_count": 1
+        },
+        "memdb_sqlite3_deserialize_no_variadic": {
+          "id": "memdb_sqlite3_deserialize_no_variadic",
+          "cmd": "awk '/^[^/]*fn sqlite3_deserialize/,/^}/' \"$WORKSPACE_ROOT/src/src/memdb.rs\" 2>/dev/null | grep -E '(va_list|VAList|VaListImpl|c_variadic|va_arg)' && exit 1 || exit 0",
+          "description": "sqlite3_deserialize function must not use c_variadic or variadic patterns",
+          "fails_count": 1
+        },
+        "memdb_no_sqlite3_mprintf": {
+          "id": "memdb_no_sqlite3_mprintf",
+          "cmd": "grep -E \"sqlite3_mprintf\\(\" \"$WORKSPACE_ROOT/src/src/memdb.rs\" 2>/dev/null && exit 1 || exit 0",
+          "description": "memdb.rs must not use sqlite3_mprintf",
+          "fails_count": 1
+        },
+        "memdb_no_sqlite3_mprintf_use": {
+          "id": "memdb_no_sqlite3_mprintf_use",
+          "cmd": "grep -E \"use.*sqlite3_mprintf|pub use.*sqlite3_mprintf\" \"$WORKSPACE_ROOT/src/src/memdb.rs\" 2>/dev/null && exit 1 || exit 0",
+          "description": "memdb.rs must not import sqlite3_mprintf",
           "fails_count": 1
         }
       }

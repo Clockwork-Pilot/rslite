@@ -1,4 +1,6 @@
 testdir*/
 target/
-sqlite-*/
+sqlite-shell/
+sqlite-testfixture/
+sqlite-shell-src/
 .claude/

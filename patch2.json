@@ -1,0 +1,1 @@
+[{"op": "add", "path": "/features/c_variadic_isolation/constraints/c8", "value": {"id": "no_c_variadic_feature_flexible", "cmd": "grep -RE '#!?\\s*\\[\\s*feature\\s*\\(\\s*c_variadic\\s*\\)' \"$PROJECT_ROOT\" --include='*.rs' && exit 1 || exit 0", "description": "feature(c_variadic) must not exist in any files (! optional, whitespaces ignored)", "fails_count": 1}}]

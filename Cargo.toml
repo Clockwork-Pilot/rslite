@@ -1,5 +1,6 @@
 [workspace]
 members = [
+    "sqlite-printf-macros",
 ]
 [package]
 name = "sqlite_noamalgam"
@@ -19,6 +20,7 @@ c2rust-bitfields = "0.22.1"
 libc = "0.2"
 parking_lot = "0.10.2"
 snafu = "0.7"
+sqlite-printf-macros = { path = "sqlite-printf-macros" }
 
 [features]
 default = []
