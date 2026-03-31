@@ -25,6 +25,11 @@ Verify c_variadic feature isolation: only in printf_c_variadic.rs
       - [fts3_write_no_format_sql_1arg](#fts3_write_no_format_sql_1arg)
       - [fts3_write_no_format_sql_2args](#fts3_write_no_format_sql_2args)
       - [fts3_write_no_format_sql_3args](#fts3_write_no_format_sql_3args)
+    - [Feature: json_c_variadic_migration](#json_c_variadic_migration)
+      - [json_no_forbidden_functions](#json_no_forbidden_functions)
+      - [json_no_jsonPrintf_call](#json_no_jsonprintf_call)
+      - [json_no_jsonPrintf_reexport](#json_no_jsonprintf_reexport)
+      - [json_no_sqlite3_mprintf](#json_no_sqlite3_mprintf)
     - [Feature: memdb_c_variadic_migration](#memdb_c_variadic_migration)
       - [memdb_memdbFileControl_no_variadic](#memdb_memdbfilecontrol_no_variadic)
       - [memdb_no_feature](#memdb_no_feature)
@@ -120,6 +125,31 @@ Verify c_variadic feature isolation: only in printf_c_variadic.rs
 #### fts3_write_no_format_sql_3args
 **Description:** fts3_write.rs must not use format_sql_3args function
 **Command:** `grep -n "format_sql_3args" "$WORKSPACE_ROOT/src/ext/fts3/fts3_write.rs" 2>/dev/null && exit 1 || exit 0`
+
+### Feature: json_c_variadic_migration
+**Migrate src/src/json.rs away from c_variadic functions (jsonPrintf) and sqlite3_mprintf**
+
+**Goals:**
+- Remove jsonPrintf c_variadic usage from json.rs
+- Replace all jsonPrintf call sites with safe Rust alternatives
+- Replace all sqlite3_mprintf calls with compile-time validated sqlite_printf! macro
+- Remove re-export of jsonPrintf from printf_c_variadic module
+
+#### json_no_forbidden_functions
+**Description:** printf_c_variadic.rs and json.rs must not contain jsonPrintf or any json_append_* helper functions
+**Command:** `grep -En "\bjsonPrintf\b|\bjson_append_u64_or_overflow\b|\bjson_append_array_index\b|\bjson_append_double\b|\bjson_append_key_quoted\b|\bjson_append_key_unquoted\b" "$WORKSPACE_ROOT/src/printf_c_variadic.rs" "$WORKSPACE_ROOT/src/src/json.rs" 2>/dev/null && exit 1 || exit 0`
+
+#### json_no_jsonPrintf_call
+**Description:** json.rs must not call jsonPrintf
+**Command:** `grep -n "jsonPrintf(" "$WORKSPACE_ROOT/src/src/json.rs" 2>/dev/null && exit 1 || exit 0`
+
+#### json_no_jsonPrintf_reexport
+**Description:** json.rs must not re-export jsonPrintf from printf_c_variadic
+**Command:** `grep -n "printf_c_variadic::jsonPrintf" "$WORKSPACE_ROOT/src/src/json.rs" 2>/dev/null && exit 1 || exit 0`
+
+#### json_no_sqlite3_mprintf
+**Description:** json.rs must not use sqlite3_mprintf function calls
+**Command:** `grep -n "sqlite3_mprintf(" "$WORKSPACE_ROOT/src/src/json.rs" 2>/dev/null && exit 1 || exit 0`
 
 ### Feature: memdb_c_variadic_migration
 **Migrate memdb.rs and specific functions away from c_variadic feature**

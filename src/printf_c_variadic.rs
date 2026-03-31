@@ -875,31 +875,6 @@ pub unsafe extern "C" fn sqlite3NestedParse(
 
 
 
-pub unsafe extern "C" fn jsonPrintf(
-    mut N: ::core::ffi::c_int,
-    mut p: *mut JsonString,
-    mut zFormat: *const ::core::ffi::c_char,
-    mut args: ...
-) {
-    // VaListImpl type handling - using args directly
-    let __p_ref = unsafe { &mut *p };
-    if __p_ref.nUsed.wrapping_add(N as crate::src::ext::rtree::rtree::u64_0) >= __p_ref.nAlloc && jsonStringGrow(p, N as crate::src::ext::rtree::rtree::u32_0) != 0 {
-        return;
-    }
-    crate::src::src::printf::sqlite3_vsnprintf(
-        N,
-        __p_ref.zBuf.offset(__p_ref.nUsed as isize),
-        zFormat,
-        args,
-    );
-    __p_ref.nUsed = (*p)
-        .nUsed
-        .wrapping_add(::libc::strlen(__p_ref.zBuf.offset(__p_ref.nUsed as isize)) as ::core::ffi::c_int as crate::src::ext::rtree::rtree::u64_0);
-}
-
-
-
-
 
 pub unsafe extern "C" fn getDigits(
     mut zDate: *const ::core::ffi::c_char,

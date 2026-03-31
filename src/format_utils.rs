@@ -81,17 +81,37 @@ pub unsafe fn json_printf(
     Ok(())
 }
 
-/// Ergonomic macro for formatted output to JsonString
-///
-/// # Example
-/// ```ignore
-/// json_printf!(p, "key: {}, value: {}", key, value);
-/// ```
-#[macro_export]
-macro_rules! json_printf {
-    ($p:expr, $($arg:tt)*) => {
-        unsafe {
-            $crate::format_utils::json_printf($p, format_args!($($arg)*))
-        }
+/// Format float using SQLite's %!0.15g format
+/// Formats with 15 significant digits and strips trailing zeros after decimal
+pub fn format_g15(v: f64) -> String {
+    if v.is_nan() {
+        return "nan".to_string();
+    }
+    if v.is_infinite() {
+        return if v.is_sign_positive() { "1e999".to_string() } else { "-1e999".to_string() };
+    }
+
+    // Use exponential notation if exponent is outside [-4, 15) range
+    let log10_abs = v.abs().log10();
+    let use_exp = v != 0.0 && (log10_abs < -4.0 || log10_abs >= 15.0);
+
+    let s = if use_exp {
+        // Exponential: %.14e gives 15 significant figures total
+        format!("{:.14e}", v)
+    } else {
+        // Fixed: format with enough precision and strip trailing zeros
+        format!("{:.15}", v)
     };
+
+    // Strip trailing zeros after decimal point
+    if s.contains('.') && !s.contains('e') && !s.contains('E') {
+        let trimmed = s.trim_end_matches('0');
+        if trimmed.ends_with('.') {
+            trimmed[..trimmed.len()-1].to_string()
+        } else {
+            trimmed.to_string()
+        }
+    } else {
+        s
+    }
 }

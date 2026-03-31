@@ -16,8 +16,9 @@
 #![feature(let_chains)]
 #![feature(result_option_inspect)]
 
-// Re-export sqlite_printf! macro from proc-macro crate
+// Re-export sqlite_printf! and json_printf! macros from proc-macro crate
 pub use sqlite_printf_macros::sqlite_printf;
+pub use sqlite_printf_macros::json_printf;
 
 #[path = "src/vdbe/mod.rs"]
 pub mod vdbe;
@@ -31,9 +32,6 @@ pub mod wip_db;
 pub mod db;
 #[path = "src/safe_format.rs"]
 pub mod safe_format;
-#[cfg(feature = "sqlite_printf_tokens")]
-#[path = "src/safe_format_runtime.rs"]
-pub mod safe_format_runtime;
 #[path = "src/format_utils.rs"]
 pub mod format_utils;
 pub mod pcache_h {
