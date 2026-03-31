@@ -10,10 +10,10 @@ pub use crate::__stddef_size_t_h::size_t;
 pub use crate::internal::__ATOMIC_RELAXED;
 
 pub use crate::src::src::main::sqlite3_config;pub use crate::src::src::malloc::sqlite3_free;pub use crate::src::headers::sqlite3_h::sqlite3_int64;pub use crate::src::headers::sqlite3_h::sqlite3_mem_methods;pub use crate::src::src::mutex_unix::sqlite3_mutex;pub use crate::src::src::mutex::sqlite3_mutex_enter;pub use crate::src::src::mutex::sqlite3_mutex_leave;pub use crate::src::headers::sqlite3_h::sqlite3_mutex_methods;pub use crate::src::headers::sqlite3_h::sqlite3_pcache;pub use crate::src::headers::sqlite3_h::sqlite3_pcache_methods2;pub use crate::src::headers::sqlite3_h::sqlite3_pcache_page;pub use crate::src::headers::sqlite3_h::sqlite_int64;pub use crate::src::headers::sqlite3_h::sqlite_uint64;pub use crate::src::headers::sqlite3_h::SQLITE_CONFIG_PCACHE2_1;pub use crate::src::headers::sqlite3_h::SQLITE_MUTEX_STATIC_LRU;pub use crate::src::headers::sqlite3_h::SQLITE_MUTEX_STATIC_PMEM;pub use crate::src::headers::sqlite3_h::SQLITE_OK;pub use crate::src::headers::sqlite3_h::SQLITE_STATUS_PAGECACHE_OVERFLOW;pub use crate::src::headers::sqlite3_h::SQLITE_STATUS_PAGECACHE_SIZE;pub use crate::src::headers::sqlite3_h::SQLITE_STATUS_PAGECACHE_USED;pub use crate::src::ext::rtree::rtree::i64_0;pub use crate::src::src::fault::sqlite3BeginBenignMalloc;pub use crate::src::src::global::sqlite3Config;pub use crate::src::src::fault::sqlite3EndBenignMalloc;pub use crate::src::src::malloc::sqlite3HeapNearlyFull;pub use crate::src::src::malloc::sqlite3Malloc;pub use crate::src::src::malloc::sqlite3MallocSize;pub use crate::src::src::malloc::sqlite3MallocZero;pub use crate::src::src::mutex::sqlite3MutexAlloc;pub use crate::src::src::status::sqlite3StatusDown;pub use crate::src::src::status::sqlite3StatusHighwater;pub use crate::src::src::status::sqlite3StatusUp;pub use crate::src::fts5::u16_0;pub use crate::src::ext::rtree::rtree::u32_0;pub use crate::src::ext::rtree::rtree::u64_0;pub use crate::src::ext::rtree::rtree::u8_0;pub use crate::src::headers::sqliteInt_h::uptr;pub use crate::src::headers::sqliteInt_h::Sqlite3Config;
-pub use crate::stdlib::uintptr_t;
-pub use crate::stdlib::uint16_t;pub use crate::stdlib::uint32_t;pub use crate::stdlib::uint8_t;
+pub use crate::src::headers::stdlib::uintptr_t;
+pub use crate::src::headers::stdlib::uint16_t;pub use crate::src::headers::stdlib::uint32_t;pub use crate::src::headers::stdlib::uint8_t;
 
-pub use crate::stdlib::__uint16_t;pub use crate::stdlib::__uint32_t;pub use crate::stdlib::__uint8_t;
+pub use crate::src::headers::stdlib::__uint16_t;pub use crate::src::headers::stdlib::__uint32_t;pub use crate::src::headers::stdlib::__uint8_t;
 #[derive(Copy, Clone)]
 #[repr(C)]
 

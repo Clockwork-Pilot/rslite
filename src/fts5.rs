@@ -5,7 +5,7 @@
 
 
 
-pub use crate::stdlib::va_list;
+pub use crate::src::headers::stdlib::va_list;
 pub use crate::__stddef_size_t_h::size_t;
 pub use crate::internal::__builtin_va_list;pub use crate::internal::__va_list_tag;
 
@@ -13278,7 +13278,7 @@ unsafe extern "C" fn fts5Bm25GetData(
                 ),
             );
             if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
-                let mut idf: ::core::ffi::c_double = crate::stdlib::log(((nRow - nHit) as ::core::ffi::c_double
+                let mut idf: ::core::ffi::c_double = crate::src::headers::stdlib::log(((nRow - nHit) as ::core::ffi::c_double
                     + 0.5f64)
                     / (nHit as ::core::ffi::c_double + 0.5f64));
                 if idf <= 0.0f64 {

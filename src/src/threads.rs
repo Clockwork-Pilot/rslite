@@ -8,13 +8,13 @@ pub use crate::__stddef_size_t_h::size_t;
 
 
 
-pub use crate::stdlib::pthread_attr_t;pub use crate::stdlib::pthread_t;pub use crate::src::src::malloc::sqlite3_free;pub use crate::src::headers::sqlite3_h::sqlite_uint64;pub use crate::src::headers::sqlite3_h::SQLITE_ERROR;pub use crate::src::headers::sqlite3_h::SQLITE_NOMEM;pub use crate::src::headers::sqlite3_h::SQLITE_OK;pub use crate::src::src::util::sqlite3FaultSim;pub use crate::src::src::malloc::sqlite3Malloc;pub use crate::src::ext::rtree::rtree::u64_0;pub use crate::src::headers::sqliteInt_h::SQLITE_NOMEM_BKPT;
+pub use crate::src::headers::stdlib::pthread_attr_t;pub use crate::src::headers::stdlib::pthread_t;pub use crate::src::src::malloc::sqlite3_free;pub use crate::src::headers::sqlite3_h::sqlite_uint64;pub use crate::src::headers::sqlite3_h::SQLITE_ERROR;pub use crate::src::headers::sqlite3_h::SQLITE_NOMEM;pub use crate::src::headers::sqlite3_h::SQLITE_OK;pub use crate::src::src::util::sqlite3FaultSim;pub use crate::src::src::malloc::sqlite3Malloc;pub use crate::src::ext::rtree::rtree::u64_0;pub use crate::src::headers::sqliteInt_h::SQLITE_NOMEM_BKPT;
 
 #[derive(Copy, Clone)]
 #[repr(C)]
 
 pub struct SQLiteThread {
-    pub tid: crate::stdlib::pthread_t,
+    pub tid: crate::src::headers::stdlib::pthread_t,
     pub done: ::core::ffi::c_int,
     pub pOut: *mut ::core::ffi::c_void,
     pub xTask: Option<unsafe extern "C" fn(*mut ::core::ffi::c_void) -> *mut ::core::ffi::c_void>,
@@ -44,9 +44,9 @@ pub unsafe extern "C" fn sqlite3ThreadCreate(
     if crate::src::src::util::sqlite3FaultSim(200 as ::core::ffi::c_int) != 0 {
         rc = 1 as ::core::ffi::c_int;
     } else {
-        rc = crate::stdlib::pthread_create(
+        rc = crate::src::headers::stdlib::pthread_create(
             &raw mut (*p).tid,
-            ::core::ptr::null::<crate::stdlib::pthread_attr_t>(),
+            ::core::ptr::null::<crate::src::headers::stdlib::pthread_attr_t>(),
             xTask,
             pIn,
         );

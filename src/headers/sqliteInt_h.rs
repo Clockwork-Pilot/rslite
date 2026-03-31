@@ -43,7 +43,7 @@ pub const SQLITE_DEFAULT_PCACHE_INITSZ: ::core::ffi::c_int = 20 as ::core::ffi::
 
 pub const SQLITE_DEFAULT_SORTERREF_SIZE: ::core::ffi::c_int = 0x7fffffff as ::core::ffi::c_int;
 
-pub type i8_0 = crate::stdlib::int8_t;
+pub type i8_0 = crate::src::headers::stdlib::int8_t;
 
 pub type bft = ::core::ffi::c_uint;
 
@@ -53,13 +53,13 @@ pub const SQLITE_MAX_U32: crate::src::ext::rtree::rtree::u64_0 =
 
 pub type tRowcnt = crate::src::ext::rtree::rtree::u64_0;
 
-pub type LogEst = crate::stdlib::int16_t;
+pub type LogEst = crate::src::headers::stdlib::int16_t;
 
 pub const LOGEST_MIN: ::core::ffi::c_int = -(32768 as ::core::ffi::c_int);
 
 pub const SQLITE_PTRSIZE: ::core::ffi::c_int = crate::internal::__SIZEOF_POINTER__;
 
-pub type uptr = crate::stdlib::uintptr_t;
+pub type uptr = crate::src::headers::stdlib::uintptr_t;
 
 pub const SQLITE_BYTEORDER: ::core::ffi::c_int = 1234 as ::core::ffi::c_int;
 

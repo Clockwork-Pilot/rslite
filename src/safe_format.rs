@@ -3,7 +3,7 @@
 
 extern crate alloc;
 
-use ::core::ffi::{c_char, c_void, CStr};
+use ::core::ffi::{c_char, CStr};
 use alloc::string::String;
 use alloc::vec::Vec;
 

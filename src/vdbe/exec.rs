@@ -1,9 +1,9 @@
 //! VDBE register types and the `step()` execution loop.
 
 use super::{Opcode, P4, Program};
-use super::storage::{SQLITE_OK, SQLITE_ERROR, SQLITE_CORRUPT, SQLITE_FULL, SQLITE_ROW, SQLITE_DONE};
+use super::storage::{SQLITE_ERROR, SQLITE_CORRUPT, SQLITE_ROW, SQLITE_DONE};
 use snafu::Snafu;
-use std::collections::{BTreeMap, HashMap};
+use std::collections::HashMap;
 
 pub use super::storage::{MemStorage, MemCursor, StorageBackend, TableCursor};
 

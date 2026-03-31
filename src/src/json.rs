@@ -14,7 +14,7 @@
 
 
 
-pub use crate::stdlib::va_list;
+pub use crate::src::headers::stdlib::va_list;
 pub use crate::__stddef_size_t_h::size_t;
 
 
@@ -22,12 +22,12 @@ pub use crate::src::src::hash::Hash;pub use crate::src::src::hash::HashElem;pub 
 pub use crate::src::src::pager::Pgno;
 
 pub use crate::src::src::vdbeapi::sqlite3_aggregate_context;pub use crate::src::headers::vdbeInt_h::sqlite3_context;pub use crate::src::src::vdbeapi::sqlite3_context_db_handle;pub use crate::src::src::vtab::sqlite3_declare_vtab;pub use crate::src::headers::sqlite3_h::sqlite3_destructor_type;pub use crate::src::headers::sqlite3_h::sqlite3_file;pub use crate::src::headers::sqlite3_h::sqlite3_filename;pub use crate::src::src::malloc::sqlite3_free;pub use crate::src::src::vdbeapi::sqlite3_get_auxdata;pub use crate::src::headers::sqlite3_h::sqlite3_index_constraint;pub use crate::src::headers::sqlite3_h::sqlite3_index_constraint_usage;pub use crate::src::headers::sqlite3_h::sqlite3_index_info;pub use crate::src::headers::sqlite3_h::sqlite3_index_orderby;pub use crate::src::headers::sqlite3_h::sqlite3_int64;pub use crate::src::headers::sqlite3_h::sqlite3_io_methods;pub use crate::src::headers::sqlite3_h::sqlite3_module;pub use crate::src::src::printf::sqlite3_mprintf;pub use crate::src::src::mutex_unix::sqlite3_mutex;pub use crate::src::src::vdbeapi::sqlite3_result_blob;pub use crate::src::src::vdbeapi::sqlite3_result_double;pub use crate::src::src::vdbeapi::sqlite3_result_error;pub use crate::src::src::vdbeapi::sqlite3_result_error_nomem;pub use crate::src::src::vdbeapi::sqlite3_result_int;pub use crate::src::src::vdbeapi::sqlite3_result_int64;pub use crate::src::src::vdbeapi::sqlite3_result_null;pub use crate::src::src::vdbeapi::sqlite3_result_subtype;pub use crate::src::src::vdbeapi::sqlite3_result_text;pub use crate::src::src::vdbeapi::sqlite3_result_text64;pub use crate::src::src::vdbeapi::sqlite3_set_auxdata;pub use crate::src::src::util::sqlite3_strnicmp;pub use crate::src::headers::sqlite3_h::sqlite3_syscall_ptr;pub use crate::src::headers::sqlite3_h::sqlite3_uint64;pub use crate::src::src::vdbeapi::sqlite3_user_data;pub use crate::src::headers::vdbeInt_h::sqlite3_value;pub use crate::src::src::vdbeapi::sqlite3_value_blob;pub use crate::src::src::vdbeapi::sqlite3_value_bytes;pub use crate::src::src::vdbeapi::sqlite3_value_double;pub use crate::src::src::vdbeapi::sqlite3_value_int64;pub use crate::src::src::vdbeapi::sqlite3_value_subtype;pub use crate::src::src::vdbeapi::sqlite3_value_text;pub use crate::src::src::vdbeapi::sqlite3_value_type;pub use crate::src::headers::sqlite3_h::sqlite3_vfs;pub use crate::src::src::printf::sqlite3_vsnprintf;pub use crate::src::headers::sqlite3_h::sqlite3_vtab;pub use crate::src::src::vtab::sqlite3_vtab_config;pub use crate::src::headers::sqlite3_h::sqlite3_vtab_cursor;pub use crate::src::headers::sqlite3_h::sqlite_int64;pub use crate::src::headers::sqlite3_h::sqlite_uint64;pub use crate::src::headers::sqlite3_h::SQLITE_BLOB;pub use crate::src::headers::sqlite3_h::SQLITE_CONSTRAINT;pub use crate::src::headers::sqlite3_h::SQLITE_DETERMINISTIC;pub use crate::src::headers::sqlite3_h::SQLITE_ERROR;pub use crate::src::headers::sqlite3_h::SQLITE_FLOAT_1;pub use crate::src::headers::sqlite3_h::SQLITE_INDEX_CONSTRAINT_EQ;pub use crate::src::headers::sqlite3_h::SQLITE_INTEGER_1;pub use crate::src::headers::sqlite3_h::SQLITE_NOMEM;pub use crate::src::headers::sqlite3_h::SQLITE_NULL_1;pub use crate::src::headers::sqlite3_h::SQLITE_OK;pub use crate::src::headers::sqlite3_h::SQLITE_RESULT_SUBTYPE;pub use crate::src::headers::sqlite3_h::SQLITE_STATIC;pub use crate::src::headers::sqlite3_h::SQLITE_SUBTYPE;pub use crate::src::headers::sqlite3_h::SQLITE_TEXT_1;pub use crate::src::headers::sqlite3_h::SQLITE_UTF8;pub use crate::src::headers::sqlite3_h::SQLITE_VTAB_INNOCUOUS;pub use crate::src::headers::sqliteInt_h::__anon_struct_0;pub use crate::src::headers::sqliteInt_h::__anon_struct_1;pub use crate::src::headers::sqliteInt_h::__anon_struct_2;pub use crate::src::headers::sqliteInt_h::__anon_struct_3;pub use crate::src::headers::sqliteInt_h::__anon_struct_4;pub use crate::src::headers::sqliteInt_h::__anon_struct_5;pub use crate::src::headers::sqliteInt_h::__anon_struct_6;pub use crate::src::headers::sqliteInt_h::__anon_struct_7;pub use crate::src::headers::sqliteInt_h::__anon_struct_8;pub use crate::src::headers::sqliteInt_h::__anon_union_0;pub use crate::src::headers::sqliteInt_h::__anon_union_1;pub use crate::src::headers::sqliteInt_h::__anon_union_10;pub use crate::src::headers::sqliteInt_h::__anon_union_11;pub use crate::src::headers::sqliteInt_h::__anon_union_12;pub use crate::src::headers::sqliteInt_h::__anon_union_13;pub use crate::src::headers::sqliteInt_h::__anon_union_15;pub use crate::src::headers::sqliteInt_h::__anon_union_2;pub use crate::src::headers::sqliteInt_h::__anon_union_3;pub use crate::src::headers::sqliteInt_h::__anon_union_5;pub use crate::src::headers::sqliteInt_h::__anon_union_6;pub use crate::src::headers::sqliteInt_h::__anon_union_7;pub use crate::src::headers::sqliteInt_h::__anon_union_8;pub use crate::src::headers::sqliteInt_h::__anon_union_9;pub use crate::src::headers::sqliteInt_h::bft;pub use crate::src::fts5::i16_0;pub use crate::src::ext::rtree::rtree::i64_0;pub use crate::src::headers::sqliteInt_h::sColMap;pub use crate::src::headers::sqliteInt_h::sqlite3;pub use crate::src::src::util::sqlite3AtoF;pub use crate::src::src::util::sqlite3Atoi64;pub use crate::src::src::global::sqlite3CtypeMap;pub use crate::src::src::malloc::sqlite3DbFree;pub use crate::src::src::malloc::sqlite3DbMallocRaw;pub use crate::src::src::malloc::sqlite3DbMallocZero;pub use crate::src::src::malloc::sqlite3DbRealloc;pub use crate::src::src::malloc::sqlite3DbStrNDup;pub use crate::src::src::util::sqlite3DecOrHexToI64;pub use crate::src::src::util::sqlite3HexToInt;pub use crate::src::headers::sqliteInt_h::sqlite3InitInfo;pub use crate::src::src::callback::sqlite3InsertBuiltinFuncs;pub use crate::src::src::util::sqlite3IsNaN;pub use crate::src::src::printf::sqlite3RCStrNew;pub use crate::src::src::printf::sqlite3RCStrRef;pub use crate::src::src::printf::sqlite3RCStrResize;pub use crate::src::src::printf::sqlite3RCStrUnref;pub use crate::src::src::rowset::sqlite3RowSetClear;pub use crate::src::src::util::sqlite3StrICmp;pub use crate::src::src::util::sqlite3Strlen30;pub use crate::src::src::utf::sqlite3Utf8ReadLimited;pub use crate::src::src::vdbemem::sqlite3ValueIsOfClass;pub use crate::src::src::vtab::sqlite3VtabCreateModule;pub use crate::src::headers::sqliteInt_h::sqlite3_xauth;pub use crate::src::fts5::u16_0;pub use crate::src::ext::rtree::rtree::u32_0;pub use crate::src::ext::rtree::rtree::u64_0;pub use crate::src::ext::rtree::rtree::u8_0;pub use crate::src::headers::sqliteInt_h::yDbMask;pub use crate::src::headers::sqliteInt_h::ynVar;pub use crate::src::headers::sqliteInt_h::AggInfo;pub use crate::src::headers::sqliteInt_h::AggInfo_col;pub use crate::src::headers::sqliteInt_h::AggInfo_func;pub use crate::src::headers::sqliteInt_h::AutoincInfo;pub use crate::src::headers::sqliteInt_h::Bitmask;pub use crate::src::headers::sqliteInt_h::BusyHandler;pub use crate::src::headers::sqliteInt_h::CollSeq;pub use crate::src::headers::sqliteInt_h::Column;pub use crate::src::headers::sqliteInt_h::Cte;pub use crate::src::headers::sqliteInt_h::CteUse;pub use crate::src::headers::sqliteInt_h::Db;pub use crate::src::headers::sqliteInt_h::DbClientData;pub use crate::src::headers::sqliteInt_h::Expr;pub use crate::src::headers::sqliteInt_h::ExprList;pub use crate::src::headers::sqliteInt_h::ExprList_item;pub use crate::src::headers::sqliteInt_h::FKey;pub use crate::src::headers::sqliteInt_h::FuncDef;pub use crate::src::headers::sqliteInt_h::FuncDestructor;pub use crate::src::headers::sqliteInt_h::IdList;pub use crate::src::headers::sqliteInt_h::IdList_item;pub use crate::src::headers::sqliteInt_h::Index;pub use crate::src::headers::sqliteInt_h::IndexedExpr;pub use crate::src::headers::sqliteInt_h::KeyInfo;pub use crate::src::headers::sqliteInt_h::LogEst;pub use crate::src::headers::sqliteInt_h::Lookaside;pub use crate::src::headers::sqliteInt_h::LookasideSlot;pub use crate::src::headers::sqliteInt_h::Module;pub use crate::src::headers::sqliteInt_h::Parse;pub use crate::src::headers::sqliteInt_h::ParseCleanup;pub use crate::src::headers::vdbeInt_h::PreUpdate;pub use crate::src::headers::sqliteInt_h::RenameToken;pub use crate::src::headers::sqliteInt_h::Returning;pub use crate::src::headers::sqliteInt_h::Savepoint;pub use crate::src::headers::sqliteInt_h::Schema;pub use crate::src::headers::sqliteInt_h::Select;pub use crate::src::headers::sqliteInt_h::SrcItem;pub use crate::src::headers::sqliteInt_h::SrcList;pub use crate::src::headers::sqliteInt_h::Subquery;pub use crate::src::headers::sqliteInt_h::Table;pub use crate::src::headers::sqliteInt_h::TableLock;pub use crate::src::headers::sqliteInt_h::Token;pub use crate::src::headers::sqliteInt_h::Trigger;pub use crate::src::headers::sqliteInt_h::TriggerPrg;pub use crate::src::headers::sqliteInt_h::TriggerStep;pub use crate::src::headers::sqliteInt_h::Upsert;pub use crate::src::headers::sqliteInt_h::VList;pub use crate::src::headers::sqliteInt_h::VTable;pub use crate::src::headers::sqliteInt_h::VtabCtx;pub use crate::src::headers::sqliteInt_h::Window;pub use crate::src::headers::sqliteInt_h::With;pub use crate::fts3Int_h::LARGEST_INT64;pub use crate::fts3Int_h::SMALLEST_INT64;pub use crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN;pub use crate::src::headers::sqliteInt_h::SQLITE_FUNC_CONSTANT;pub use crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL;pub use crate::src::headers::sqliteInt_h::SQLITE_FUNC_RUNONLY;
-pub use crate::stdlib::intptr_t;
-pub use crate::stdlib::int16_t;
+pub use crate::src::headers::stdlib::intptr_t;
+pub use crate::src::headers::stdlib::int16_t;
 
 
 
-pub use crate::stdlib::uint16_t;pub use crate::stdlib::uint32_t;pub use crate::stdlib::uint8_t;pub use crate::stdlib::__int16_t;pub use crate::stdlib::__uint16_t;pub use crate::stdlib::__uint32_t;pub use crate::stdlib::__uint8_t;pub use crate::src::src::vdbe::p4union;pub use crate::src::src::vdbe::Mem;pub use crate::src::src::vdbe::SubProgram;pub use crate::src::src::vdbe::SubrtnSig;pub use crate::src::headers::vdbeInt_h::Vdbe;pub use crate::src::src::vdbe::VdbeOp;
+pub use crate::src::headers::stdlib::uint16_t;pub use crate::src::headers::stdlib::uint32_t;pub use crate::src::headers::stdlib::uint8_t;pub use crate::src::headers::stdlib::__int16_t;pub use crate::src::headers::stdlib::__uint16_t;pub use crate::src::headers::stdlib::__uint32_t;pub use crate::src::headers::stdlib::__uint8_t;pub use crate::src::src::vdbe::p4union;pub use crate::src::src::vdbe::Mem;pub use crate::src::src::vdbe::SubProgram;pub use crate::src::src::vdbe::SubrtnSig;pub use crate::src::headers::vdbeInt_h::Vdbe;pub use crate::src::src::vdbe::VdbeOp;
 #[derive(Copy, Clone)]
 #[repr(C)]
 
@@ -1269,7 +1269,7 @@ unsafe extern "C" fn jsonReturnString(
     let __p_ref = unsafe { &*p };
     if __p_ref.eErr as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
         let mut flags: ::core::ffi::c_int =
-            crate::src::src::vdbeapi::sqlite3_user_data(__p_ref.pCtx) as crate::stdlib::intptr_t as ::core::ffi::c_int;
+            crate::src::src::vdbeapi::sqlite3_user_data(__p_ref.pCtx) as crate::src::headers::stdlib::intptr_t as ::core::ffi::c_int;
         if flags & JSON_BLOB != 0 {
             jsonReturnStringAsBlob(p);
         } else if __p_ref.bStatic != 0 {
@@ -2355,7 +2355,7 @@ unsafe extern "C" fn jsonTranslateTextToBlob(
                         }
                         if jsonIsSpace[*z.offset(j as isize) as ::core::ffi::c_uchar as usize] != 0
                         {
-                            j = j.wrapping_add((1 as crate::src::ext::rtree::rtree::u32_0).wrapping_add(crate::stdlib::strspn(
+                            j = j.wrapping_add((1 as crate::src::ext::rtree::rtree::u32_0).wrapping_add(crate::src::headers::stdlib::strspn(
                                 z.offset(j.wrapping_add(1 as crate::src::ext::rtree::rtree::u32_0) as isize)
                                     as *const ::core::ffi::c_char,
                                 &raw const jsonSpaces as *const ::core::ffi::c_char,
@@ -2438,7 +2438,7 @@ unsafe extern "C" fn jsonTranslateTextToBlob(
                             if jsonIsSpace[*z.offset(j as isize) as ::core::ffi::c_uchar as usize]
                                 != 0
                             {
-                                j = j.wrapping_add((1 as crate::src::ext::rtree::rtree::u32_0).wrapping_add(crate::stdlib::strspn(
+                                j = j.wrapping_add((1 as crate::src::ext::rtree::rtree::u32_0).wrapping_add(crate::src::headers::stdlib::strspn(
                                     z.offset(j.wrapping_add(1 as crate::src::ext::rtree::rtree::u32_0) as isize)
                                         as *const ::core::ffi::c_char,
                                     &raw const jsonSpaces as *const ::core::ffi::c_char,
@@ -2573,7 +2573,7 @@ unsafe extern "C" fn jsonTranslateTextToBlob(
             }
             0 => return 0 as ::core::ffi::c_int,
             9 | 10 | 13 | 32 => {
-                i = i.wrapping_add((1 as crate::src::ext::rtree::rtree::u32_0).wrapping_add(crate::stdlib::strspn(
+                i = i.wrapping_add((1 as crate::src::ext::rtree::rtree::u32_0).wrapping_add(crate::src::headers::stdlib::strspn(
                     z.offset(i.wrapping_add(1 as crate::src::ext::rtree::rtree::u32_0) as isize) as *const ::core::ffi::c_char,
                     &raw const jsonSpaces as *const ::core::ffi::c_char,
                 ) as crate::src::ext::rtree::rtree::u32_0));
@@ -4691,7 +4691,7 @@ unsafe extern "C" fn jsonReturnFromBlob(
         }
         JSONB_ARRAY | JSONB_OBJECT => {
             if eMode == 0 as ::core::ffi::c_int {
-                if crate::src::src::vdbeapi::sqlite3_user_data(pCtx) as crate::stdlib::intptr_t as ::core::ffi::c_int & JSON_BLOB
+                if crate::src::src::vdbeapi::sqlite3_user_data(pCtx) as crate::src::headers::stdlib::intptr_t as ::core::ffi::c_int & JSON_BLOB
                     != 0 as ::core::ffi::c_int
                 {
                     eMode = 2 as ::core::ffi::c_int;
@@ -5226,7 +5226,7 @@ unsafe extern "C" fn jsonReturnParse(mut ctx: *mut crate::src::headers::vdbeInt_
         crate::src::src::vdbeapi::sqlite3_result_error_nomem(ctx);
         return;
     }
-    flgs = crate::src::src::vdbeapi::sqlite3_user_data(ctx) as crate::stdlib::intptr_t as ::core::ffi::c_int;
+    flgs = crate::src::src::vdbeapi::sqlite3_user_data(ctx) as crate::src::headers::stdlib::intptr_t as ::core::ffi::c_int;
     if flgs & JSON_BLOB != 0 {
         if (*p).nBlobAlloc > 0 as crate::src::ext::rtree::rtree::u32_0 && (*p).bReadOnly == 0 {
             let __p_ref = unsafe { &mut *p };
@@ -5402,7 +5402,7 @@ unsafe extern "C" fn jsonExtractFunc(
     if p.is_null() {
         return;
     }
-    flags = crate::src::src::vdbeapi::sqlite3_user_data(ctx) as crate::stdlib::intptr_t as ::core::ffi::c_int;
+    flags = crate::src::src::vdbeapi::sqlite3_user_data(ctx) as crate::src::headers::stdlib::intptr_t as ::core::ffi::c_int;
     jsonStringInit(&raw mut jx, ctx);
     if argc > 2 as ::core::ffi::c_int {
         jsonAppendChar(&raw mut jx, '[' as i32 as ::core::ffi::c_char);
@@ -6009,7 +6009,7 @@ unsafe extern "C" fn jsonSetFunc(
     mut argc: ::core::ffi::c_int,
     mut argv: *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
 ) {
-    let mut flags: ::core::ffi::c_int = crate::src::src::vdbeapi::sqlite3_user_data(ctx) as crate::stdlib::intptr_t as ::core::ffi::c_int;
+    let mut flags: ::core::ffi::c_int = crate::src::src::vdbeapi::sqlite3_user_data(ctx) as crate::src::headers::stdlib::intptr_t as ::core::ffi::c_int;
     let mut bIsSet: ::core::ffi::c_int =
         (flags & JSON_ISSET != 0 as ::core::ffi::c_int) as ::core::ffi::c_int;
     if argc < 1 as ::core::ffi::c_int {
@@ -6186,7 +6186,7 @@ unsafe extern "C" fn jsonValidFunc(
 }
     match current_block_31 {
         17833034027772472439 => {
-            let mut px: JsonParse = unsafe { ::core::mem::zeroed() };
+            let _px: JsonParse = unsafe { ::core::mem::zeroed() };
             if !(flags as ::core::ffi::c_int & 0x3 as ::core::ffi::c_int == 0 as ::core::ffi::c_int)
             {
                 p = jsonParseFuncArg(
@@ -6294,7 +6294,7 @@ unsafe extern "C" fn jsonArrayCompute(
         let mut flags: ::core::ffi::c_int = 0;
         (*pStr).pCtx = ctx;
         jsonAppendChar(pStr, ']' as i32 as ::core::ffi::c_char);
-        flags = crate::src::src::vdbeapi::sqlite3_user_data(ctx) as crate::stdlib::intptr_t as ::core::ffi::c_int;
+        flags = crate::src::src::vdbeapi::sqlite3_user_data(ctx) as crate::src::headers::stdlib::intptr_t as ::core::ffi::c_int;
         if (*pStr).eErr != 0 {
             jsonReturnString(
                 pStr,
@@ -6450,7 +6450,7 @@ unsafe extern "C" fn jsonObjectCompute(
         let mut flags: ::core::ffi::c_int = 0;
         jsonAppendChar(pStr, '}' as i32 as ::core::ffi::c_char);
         (*pStr).pCtx = ctx;
-        flags = crate::src::src::vdbeapi::sqlite3_user_data(ctx) as crate::stdlib::intptr_t as ::core::ffi::c_int;
+        flags = crate::src::src::vdbeapi::sqlite3_user_data(ctx) as crate::src::headers::stdlib::intptr_t as ::core::ffi::c_int;
         if (*pStr).eErr != 0 {
             jsonReturnString(
                 pStr,
@@ -7376,7 +7376,7 @@ pub unsafe extern "C" fn sqlite3RegisterJsonFunctions() {
                     as crate::src::ext::rtree::rtree::u32_0,
     pUserData:  (0 as ::core::ffi::c_int
                     | 1 as ::core::ffi::c_int * 0x8 as ::core::ffi::c_int)
-                    as crate::stdlib::intptr_t as *mut ::core::ffi::c_void,
+                    as crate::src::headers::stdlib::intptr_t as *mut ::core::ffi::c_void,
     pNext:  ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>() as *mut crate::src::headers::sqliteInt_h::FuncDef,
     xSFunc:  Some(
                     jsonRemoveFunc
@@ -7434,7 +7434,7 @@ pub unsafe extern "C" fn sqlite3RegisterJsonFunctions() {
                     as crate::src::ext::rtree::rtree::u32_0,
     pUserData:  (0 as ::core::ffi::c_int
                     | 1 as ::core::ffi::c_int * 0x8 as ::core::ffi::c_int)
-                    as crate::stdlib::intptr_t as *mut ::core::ffi::c_void,
+                    as crate::src::headers::stdlib::intptr_t as *mut ::core::ffi::c_void,
     pNext:  ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>() as *mut crate::src::headers::sqliteInt_h::FuncDef,
     xSFunc:  Some(
                     jsonArrayFunc
@@ -7576,7 +7576,7 @@ pub unsafe extern "C" fn sqlite3RegisterJsonFunctions() {
                     as crate::src::ext::rtree::rtree::u32_0,
     pUserData:  (0 as ::core::ffi::c_int
                     | 1 as ::core::ffi::c_int * 0x8 as ::core::ffi::c_int)
-                    as crate::stdlib::intptr_t as *mut ::core::ffi::c_void,
+                    as crate::src::headers::stdlib::intptr_t as *mut ::core::ffi::c_void,
     pNext:  ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>() as *mut crate::src::headers::sqliteInt_h::FuncDef,
     xSFunc:  Some(
                     jsonExtractFunc
@@ -7606,7 +7606,7 @@ pub unsafe extern "C" fn sqlite3RegisterJsonFunctions() {
                     as crate::src::ext::rtree::rtree::u32_0,
     pUserData:  (0x1 as ::core::ffi::c_int
                     | 0 as ::core::ffi::c_int * 0x8 as ::core::ffi::c_int)
-                    as crate::stdlib::intptr_t as *mut ::core::ffi::c_void,
+                    as crate::src::headers::stdlib::intptr_t as *mut ::core::ffi::c_void,
     pNext:  ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>() as *mut crate::src::headers::sqliteInt_h::FuncDef,
     xSFunc:  Some(
                     jsonExtractFunc
@@ -7636,7 +7636,7 @@ pub unsafe extern "C" fn sqlite3RegisterJsonFunctions() {
                     as crate::src::ext::rtree::rtree::u32_0,
     pUserData:  (0x2 as ::core::ffi::c_int
                     | 0 as ::core::ffi::c_int * 0x8 as ::core::ffi::c_int)
-                    as crate::stdlib::intptr_t as *mut ::core::ffi::c_void,
+                    as crate::src::headers::stdlib::intptr_t as *mut ::core::ffi::c_void,
     pNext:  ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>() as *mut crate::src::headers::sqliteInt_h::FuncDef,
     xSFunc:  Some(
                     jsonExtractFunc
@@ -7694,7 +7694,7 @@ pub unsafe extern "C" fn sqlite3RegisterJsonFunctions() {
                     as crate::src::ext::rtree::rtree::u32_0,
     pUserData:  (0 as ::core::ffi::c_int
                     | 1 as ::core::ffi::c_int * 0x8 as ::core::ffi::c_int)
-                    as crate::stdlib::intptr_t as *mut ::core::ffi::c_void,
+                    as crate::src::headers::stdlib::intptr_t as *mut ::core::ffi::c_void,
     pNext:  ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>() as *mut crate::src::headers::sqliteInt_h::FuncDef,
     xSFunc:  Some(
                     jsonSetFunc
@@ -7752,7 +7752,7 @@ pub unsafe extern "C" fn sqlite3RegisterJsonFunctions() {
                     as crate::src::ext::rtree::rtree::u32_0,
     pUserData:  (0 as ::core::ffi::c_int
                     | 1 as ::core::ffi::c_int * 0x8 as ::core::ffi::c_int)
-                    as crate::stdlib::intptr_t as *mut ::core::ffi::c_void,
+                    as crate::src::headers::stdlib::intptr_t as *mut ::core::ffi::c_void,
     pNext:  ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>() as *mut crate::src::headers::sqliteInt_h::FuncDef,
     xSFunc:  Some(
                     jsonObjectFunc
@@ -7810,7 +7810,7 @@ pub unsafe extern "C" fn sqlite3RegisterJsonFunctions() {
                     as crate::src::ext::rtree::rtree::u32_0,
     pUserData:  (0 as ::core::ffi::c_int
                     | 1 as ::core::ffi::c_int * 0x8 as ::core::ffi::c_int)
-                    as crate::stdlib::intptr_t as *mut ::core::ffi::c_void,
+                    as crate::src::headers::stdlib::intptr_t as *mut ::core::ffi::c_void,
     pNext:  ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>() as *mut crate::src::headers::sqliteInt_h::FuncDef,
     xSFunc:  Some(
                     jsonPatchFunc
@@ -7952,7 +7952,7 @@ pub unsafe extern "C" fn sqlite3RegisterJsonFunctions() {
                     as crate::src::ext::rtree::rtree::u32_0,
     pUserData:  (0 as ::core::ffi::c_int
                     | 1 as ::core::ffi::c_int * 0x8 as ::core::ffi::c_int)
-                    as crate::stdlib::intptr_t as *mut ::core::ffi::c_void,
+                    as crate::src::headers::stdlib::intptr_t as *mut ::core::ffi::c_void,
     pNext:  ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>() as *mut crate::src::headers::sqliteInt_h::FuncDef,
     xSFunc:  Some(
                     jsonRemoveFunc
@@ -8010,7 +8010,7 @@ pub unsafe extern "C" fn sqlite3RegisterJsonFunctions() {
                     as crate::src::ext::rtree::rtree::u32_0,
     pUserData:  (0 as ::core::ffi::c_int
                     | 1 as ::core::ffi::c_int * 0x8 as ::core::ffi::c_int)
-                    as crate::stdlib::intptr_t as *mut ::core::ffi::c_void,
+                    as crate::src::headers::stdlib::intptr_t as *mut ::core::ffi::c_void,
     pNext:  ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>() as *mut crate::src::headers::sqliteInt_h::FuncDef,
     xSFunc:  Some(
                     jsonReplaceFunc
@@ -8040,7 +8040,7 @@ pub unsafe extern "C" fn sqlite3RegisterJsonFunctions() {
                     as crate::src::ext::rtree::rtree::u32_0,
     pUserData:  (0x4 as ::core::ffi::c_int
                     | 0 as ::core::ffi::c_int * 0x8 as ::core::ffi::c_int)
-                    as crate::stdlib::intptr_t as *mut ::core::ffi::c_void,
+                    as crate::src::headers::stdlib::intptr_t as *mut ::core::ffi::c_void,
     pNext:  ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>() as *mut crate::src::headers::sqliteInt_h::FuncDef,
     xSFunc:  Some(
                     jsonSetFunc
@@ -8070,7 +8070,7 @@ pub unsafe extern "C" fn sqlite3RegisterJsonFunctions() {
                     as crate::src::ext::rtree::rtree::u32_0,
     pUserData:  (0x4 as ::core::ffi::c_int
                     | 1 as ::core::ffi::c_int * 0x8 as ::core::ffi::c_int)
-                    as crate::stdlib::intptr_t as *mut ::core::ffi::c_void,
+                    as crate::src::headers::stdlib::intptr_t as *mut ::core::ffi::c_void,
     pNext:  ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>() as *mut crate::src::headers::sqliteInt_h::FuncDef,
     xSFunc:  Some(
                     jsonSetFunc
@@ -8243,7 +8243,7 @@ pub unsafe extern "C" fn sqlite3RegisterJsonFunctions() {
                     | 0x1000000 as ::core::ffi::c_int
                     | 1 as ::core::ffi::c_int
                     | 0x800 as ::core::ffi::c_int) as crate::src::ext::rtree::rtree::u32_0,
-    pUserData:  0x8 as ::core::ffi::c_int as crate::stdlib::intptr_t as *mut ::core::ffi::c_void,
+    pUserData:  0x8 as ::core::ffi::c_int as crate::src::headers::stdlib::intptr_t as *mut ::core::ffi::c_void,
     pNext:  ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>() as *mut crate::src::headers::sqliteInt_h::FuncDef,
     xSFunc:  Some(
                     jsonArrayStep
@@ -8313,7 +8313,7 @@ pub unsafe extern "C" fn sqlite3RegisterJsonFunctions() {
                     | 0x1000000 as ::core::ffi::c_int
                     | 1 as ::core::ffi::c_int
                     | 0x800 as ::core::ffi::c_int) as crate::src::ext::rtree::rtree::u32_0,
-    pUserData:  0x8 as ::core::ffi::c_int as crate::stdlib::intptr_t as *mut ::core::ffi::c_void,
+    pUserData:  0x8 as ::core::ffi::c_int as crate::src::headers::stdlib::intptr_t as *mut ::core::ffi::c_void,
     pNext:  ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>() as *mut crate::src::headers::sqliteInt_h::FuncDef,
     xSFunc:  Some(
                     jsonObjectStep

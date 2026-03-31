@@ -9,9 +9,9 @@ pub use crate::internal::SQLITE_THREADSAFE;
 pub use crate::src::headers::opcodes_h::OP_Ne;
 
 pub use crate::src::headers::vdbeInt_h::sqlite3_context;pub use crate::src::headers::sqlite3_h::sqlite3_int64;pub use crate::src::headers::sqlite3_h::sqlite3_mem_methods;pub use crate::src::src::mutex_unix::sqlite3_mutex;pub use crate::src::headers::sqlite3_h::sqlite3_mutex_methods;pub use crate::src::headers::sqlite3_h::sqlite3_pcache;pub use crate::src::headers::sqlite3_h::sqlite3_pcache_methods2;pub use crate::src::headers::sqlite3_h::sqlite3_pcache_page;pub use crate::src::headers::vdbeInt_h::sqlite3_value;pub use crate::src::headers::sqlite3_h::sqlite_int64;pub use crate::src::ext::rtree::rtree::u32_0;pub use crate::src::ext::rtree::rtree::u8_0;pub use crate::src::headers::sqliteInt_h::FuncDef;pub use crate::src::headers::sqliteInt_h::FuncDestructor;pub use crate::src::headers::sqliteInt_h::__anon_union_2;pub use crate::src::fts5::i16_0;pub use crate::src::headers::sqliteInt_h::FuncDefHash;pub use crate::src::headers::sqliteInt_h::Sqlite3Config;pub use crate::src::headers::sqliteInt_h::SQLITE_AFF_BLOB;pub use crate::src::headers::sqliteInt_h::SQLITE_AFF_INTEGER;pub use crate::src::headers::sqliteInt_h::SQLITE_AFF_NUMERIC;pub use crate::src::headers::sqliteInt_h::SQLITE_AFF_REAL;pub use crate::src::headers::sqliteInt_h::SQLITE_AFF_TEXT;pub use crate::src::headers::sqliteInt_h::SQLITE_DEFAULT_MEMSTATUS;pub use crate::src::headers::sqliteInt_h::SQLITE_DEFAULT_MMAP_SIZE;pub use crate::src::headers::sqliteInt_h::SQLITE_DEFAULT_PCACHE_INITSZ;pub use crate::src::headers::sqliteInt_h::SQLITE_DEFAULT_SORTERREF_SIZE;pub use crate::src::headers::sqliteInt_h::SQLITE_MAX_MMAP_SIZE;
-pub use crate::stdlib::int16_t;
+pub use crate::src::headers::stdlib::int16_t;
 
-pub use crate::stdlib::uint32_t;pub use crate::stdlib::uint8_t;pub use crate::stdlib::__int16_t;pub use crate::stdlib::__uint32_t;pub use crate::stdlib::__uint8_t;
+pub use crate::src::headers::stdlib::uint32_t;pub use crate::src::headers::stdlib::uint8_t;pub use crate::src::headers::stdlib::__int16_t;pub use crate::src::headers::stdlib::__uint32_t;pub use crate::src::headers::stdlib::__uint8_t;
 #[unsafe(no_mangle)]
 
 pub static mut sqlite3UpperToLower: [::core::ffi::c_uchar; 274] = [
