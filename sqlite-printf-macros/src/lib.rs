@@ -165,32 +165,31 @@ impl FormatSpec {
     }
 }
 
-/// Generate code to handle format argument based on spec
-fn gen_arg_handler_old(arg: &Expr, spec: &FormatSpec) -> proc_macro2::TokenStream {
+/// Generate code to handle format argument based on spec (native approach, no overhead)
+fn gen_arg_handler(arg: &Expr, spec: &FormatSpec) -> proc_macro2::TokenStream {
     match spec {
-        FormatSpec::String => quote! { #arg },
+        FormatSpec::String | FormatSpec::ZeroCopy => {
+            // Convert C string to Rust String
+            quote! {{
+                if #arg.is_null() {
+                    String::new()
+                } else {
+                    std::ffi::CStr::from_ptr(#arg)
+                        .to_str()
+                        .unwrap_or("")
+                        .to_string()
+                }
+            }}
+        }
+        // Numeric types - pass through for format! to handle
         FormatSpec::Integer | FormatSpec::Long | FormatSpec::Long64 => quote! { #arg },
         FormatSpec::Unsigned | FormatSpec::ULong64 => quote! { #arg },
         FormatSpec::Hex => quote! { #arg },
         FormatSpec::Pointer => quote! { #arg },
         FormatSpec::Float => quote! { #arg },
         FormatSpec::Char => quote! { #arg as u8 as char },
-        FormatSpec::ZeroCopy => quote! { #arg },
         FormatSpec::SqliteQuote => {
             // %q: SQL string literal - escape quotes
-            quote! {{
-                if #arg.is_null() {
-                    "".to_string()
-                } else {
-                    let s = std::ffi::CStr::from_ptr(#arg)
-                        .to_str()
-                        .unwrap_or("");
-                    s.replace('\'', "''")
-                }
-            }}
-        }
-        FormatSpec::SqliteIdentifier => {
-            // %Q or %w: SQL identifier - escape quotes only (format string has the wrapping quotes)
             quote! {{
                 if #arg.is_null() {
                     String::new()
@@ -202,11 +201,26 @@ fn gen_arg_handler_old(arg: &Expr, spec: &FormatSpec) -> proc_macro2::TokenStrea
                 }
             }}
         }
+        FormatSpec::SqliteIdentifier => {
+            // %Q or %w: SQL identifier - escape quotes for identifier
+            quote! {{
+                if #arg.is_null() {
+                    String::new()
+                } else {
+                    let s = std::ffi::CStr::from_ptr(#arg)
+                        .to_str()
+                        .unwrap_or("");
+                    // This will be wrapped in quotes by apply_tokens
+                    s.replace('"', "\"\"")
+                }
+            }}
+        }
         FormatSpec::Percent => quote! {},
     }
 }
 
-fn gen_arg_handler(arg: &Expr, spec: &FormatSpec) -> proc_macro2::TokenStream {
+#[cfg(feature = "sqlite_printf_tokens")]
+fn gen_arg_handler_runtime(arg: &Expr, spec: &FormatSpec) -> proc_macro2::TokenStream {
     match spec {
         FormatSpec::String | FormatSpec::ZeroCopy => {
             // Convert C string to Rust String
@@ -281,7 +295,16 @@ fn convert_format_string(format: &str, specs: &[FormatSpec]) -> String {
             if let Some(&next) = chars.peek() {
                 if next == '%' {
                     chars.next();
-                    result.push('%');
+                    // %% -> consume the Percent spec and output a single %
+                    if let Some(spec) = spec_iter.next() {
+                        // For %%, we output a literal % (the spec is FormatSpec::Percent)
+                        if spec.is_argument_consuming() {
+                            result.push_str(spec.rust_format());
+                        } else {
+                            // Not consuming, output as literal
+                            result.push('%');
+                        }
+                    }
                     continue;
                 }
 
@@ -324,6 +347,7 @@ fn convert_format_string(format: &str, specs: &[FormatSpec]) -> String {
 }
 
 /// Generate token array from parsed format string
+#[cfg(feature = "sqlite_printf_tokens")]
 fn gen_token_array(format: &str, specs: &[FormatSpec]) -> proc_macro2::TokenStream {
     let mut token_exprs = Vec::new();
     let mut literal = String::new();
@@ -490,8 +514,8 @@ pub fn sqlite_printf(input: TokenStream) -> TokenStream {
     for spec in &specs {
         if spec.is_argument_consuming() {
             if let Some(arg) = arg_iter.next() {
-                // Use the original gen_arg_handler that returns different types
-                arg_handlers.push(gen_arg_handler_old(arg, spec));
+                // Use the native gen_arg_handler (no overhead, direct type passing)
+                arg_handlers.push(gen_arg_handler(arg, spec));
             }
         }
     }

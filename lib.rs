@@ -31,6 +31,9 @@ pub mod wip_db;
 pub mod db;
 #[path = "src/safe_format.rs"]
 pub mod safe_format;
+#[cfg(feature = "sqlite_printf_tokens")]
+#[path = "src/safe_format_runtime.rs"]
+pub mod safe_format_runtime;
 #[path = "src/format_utils.rs"]
 pub mod format_utils;
 pub mod pcache_h {
