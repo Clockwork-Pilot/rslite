@@ -82,7 +82,7 @@ fn parse_format_specs(format: &str) -> Result<Vec<FormatSpec>, String> {
                     }
                     'Q' => {
                         chars.next();
-                        specs.push(FormatSpec::SqliteIdentifier);
+                        specs.push(FormatSpec::SqliteQuotedString);
                     }
                     'w' => {
                         chars.next();
@@ -138,6 +138,7 @@ enum FormatSpec {
     Char,
     ZeroCopy,
     SqliteQuote,
+    SqliteQuotedString,
     SqliteIdentifier,
     Long,
     Long64,
@@ -156,6 +157,7 @@ impl FormatSpec {
             FormatSpec::Float => "{}",
             FormatSpec::Char => "{}",
             FormatSpec::SqliteQuote => "{}",
+            FormatSpec::SqliteQuotedString => "{}",
             FormatSpec::SqliteIdentifier => "{}",
         }
     }
@@ -189,7 +191,7 @@ fn gen_arg_handler(arg: &Expr, spec: &FormatSpec) -> proc_macro2::TokenStream {
         FormatSpec::Float => quote! { #arg },
         FormatSpec::Char => quote! { #arg as u8 as char },
         FormatSpec::SqliteQuote => {
-            // %q: SQL string literal - escape quotes
+            // %q: escape single quotes, no wrapping
             quote! {{
                 if #arg.is_null() {
                     String::new()
@@ -201,8 +203,21 @@ fn gen_arg_handler(arg: &Expr, spec: &FormatSpec) -> proc_macro2::TokenStream {
                 }
             }}
         }
+        FormatSpec::SqliteQuotedString => {
+            // %Q: escape single quotes AND wrap in single quotes; NULL -> "NULL"
+            quote! {{
+                if #arg.is_null() {
+                    "NULL".to_string()
+                } else {
+                    let s = std::ffi::CStr::from_ptr(#arg)
+                        .to_str()
+                        .unwrap_or("");
+                    format!("'{}'", s.replace('\'', "''"))
+                }
+            }}
+        }
         FormatSpec::SqliteIdentifier => {
-            // %Q or %w: SQL identifier - escape quotes for identifier
+            // %w: double-quote SQL identifier, escape double quotes
             quote! {{
                 if #arg.is_null() {
                     String::new()
@@ -210,8 +225,7 @@ fn gen_arg_handler(arg: &Expr, spec: &FormatSpec) -> proc_macro2::TokenStream {
                     let s = std::ffi::CStr::from_ptr(#arg)
                         .to_str()
                         .unwrap_or("");
-                    // This will be wrapped in quotes by apply_tokens
-                    s.replace('"', "\"\"")
+                    format!("\"{}\"", s.replace('"', "\"\""))
                 }
             }}
         }

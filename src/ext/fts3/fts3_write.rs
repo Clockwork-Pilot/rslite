@@ -160,85 +160,66 @@ pub static mut test_fts3_node_chunksize: ::core::ffi::c_int =
 pub static mut test_fts3_node_chunk_threshold: ::core::ffi::c_int =
     4 as ::core::ffi::c_int * 1024 as ::core::ffi::c_int * 4 as ::core::ffi::c_int;
 
-pub const FTS_STAT_DOCTOTAL: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
+use crate::sqlite_printf;
 
-pub const FTS_STAT_INCRMERGEHINT: ::core::ffi::c_int = 1 as ::core::ffi::c_int;
+#[repr(i32)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum FtsStatConstant {
+    FTS_STAT_DOCTOTAL = 0,
+    FTS_STAT_INCRMERGEHINT = 1,
+    FTS_STAT_AUTOINCRMERGE = 2,
+}
 
-pub const FTS_STAT_AUTOINCRMERGE: ::core::ffi::c_int = 2 as ::core::ffi::c_int;
+impl From<FtsStatConstant> for i32 {
+    fn from(v: FtsStatConstant) -> i32 { v as i32 }
+}
 
-pub const SQL_DELETE_CONTENT: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
+#[repr(i32)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, strum_macros::FromRepr)]
+pub enum SqlConstant {
+    SQL_DELETE_CONTENT = 0,
+    SQL_IS_EMPTY = 1,
+    SQL_DELETE_ALL_CONTENT = 2,
+    SQL_DELETE_ALL_SEGMENTS = 3,
+    SQL_DELETE_ALL_SEGDIR = 4,
+    SQL_DELETE_ALL_DOCSIZE = 5,
+    SQL_DELETE_ALL_STAT = 6,
+    SQL_SELECT_CONTENT_BY_ROWID = 7,
+    SQL_NEXT_SEGMENT_INDEX = 8,
+    SQL_INSERT_SEGMENTS = 9,
+    SQL_NEXT_SEGMENTS_ID = 10,
+    SQL_INSERT_SEGDIR = 11,
+    SQL_SELECT_LEVEL = 12,
+    SQL_SELECT_LEVEL_RANGE = 13,
+    SQL_COUNT_SEGDIR_AT_LEVEL = 14,
+    SQL_SELECT_SEGDIR_MAX_LEVEL = 15,
+    SQL_DELETE_SEGDIR_LEVEL = 16,
+    SQL_DELETE_SEGMENTS_RANGE = 17,
+    SQL_CONTENT_INSERT = 18,
+    SQL_DELETE_DOCSIZE = 19,
+    SQL_REPLACE_DOCSIZE = 20,
+    SQL_SELECT_DOCSIZE = 21,
+    SQL_SELECT_STAT = 22,
+    SQL_REPLACE_STAT = 23,
+    SQL_RESERVED_24 = 24,
+    SQL_RESERVED_25 = 25,
+    SQL_DELETE_SEGDIR_RANGE = 26,
+    SQL_SELECT_ALL_LANGID = 27,
+    SQL_FIND_MERGE_LEVEL = 28,
+    SQL_MAX_LEAF_NODE_ESTIMATE = 29,
+    SQL_DELETE_SEGDIR_ENTRY = 30,
+    SQL_SHIFT_SEGDIR_ENTRY = 31,
+    SQL_SELECT_SEGDIR = 32,
+    SQL_CHOMP_SEGDIR = 33,
+    SQL_SEGMENT_IS_APPENDABLE = 34,
+    SQL_SELECT_INDEXES = 35,
+    SQL_SELECT_MXLEVEL = 36,
+    SQL_SELECT_LEVEL_RANGE2 = 37,
+    SQL_UPDATE_LEVEL_IDX = 38,
+    SQL_UPDATE_LEVEL = 39,
+}
 
-pub const SQL_IS_EMPTY: ::core::ffi::c_int = 1 as ::core::ffi::c_int;
 
-pub const SQL_DELETE_ALL_CONTENT: ::core::ffi::c_int = 2 as ::core::ffi::c_int;
-
-pub const SQL_DELETE_ALL_SEGMENTS: ::core::ffi::c_int = 3 as ::core::ffi::c_int;
-
-pub const SQL_DELETE_ALL_SEGDIR: ::core::ffi::c_int = 4 as ::core::ffi::c_int;
-
-pub const SQL_DELETE_ALL_DOCSIZE: ::core::ffi::c_int = 5 as ::core::ffi::c_int;
-
-pub const SQL_DELETE_ALL_STAT: ::core::ffi::c_int = 6 as ::core::ffi::c_int;
-
-pub const SQL_SELECT_CONTENT_BY_ROWID: ::core::ffi::c_int = 7 as ::core::ffi::c_int;
-
-pub const SQL_NEXT_SEGMENT_INDEX: ::core::ffi::c_int = 8 as ::core::ffi::c_int;
-
-pub const SQL_INSERT_SEGMENTS: ::core::ffi::c_int = 9 as ::core::ffi::c_int;
-
-pub const SQL_NEXT_SEGMENTS_ID: ::core::ffi::c_int = 10 as ::core::ffi::c_int;
-
-pub const SQL_INSERT_SEGDIR: ::core::ffi::c_int = 11 as ::core::ffi::c_int;
-
-pub const SQL_SELECT_LEVEL: ::core::ffi::c_int = 12 as ::core::ffi::c_int;
-
-pub const SQL_SELECT_LEVEL_RANGE: ::core::ffi::c_int = 13 as ::core::ffi::c_int;
-
-pub const SQL_SELECT_SEGDIR_MAX_LEVEL: ::core::ffi::c_int = 15 as ::core::ffi::c_int;
-
-pub const SQL_DELETE_SEGDIR_LEVEL: ::core::ffi::c_int = 16 as ::core::ffi::c_int;
-
-pub const SQL_DELETE_SEGMENTS_RANGE: ::core::ffi::c_int = 17 as ::core::ffi::c_int;
-
-pub const SQL_CONTENT_INSERT: ::core::ffi::c_int = 18 as ::core::ffi::c_int;
-
-pub const SQL_DELETE_DOCSIZE: ::core::ffi::c_int = 19 as ::core::ffi::c_int;
-
-pub const SQL_REPLACE_DOCSIZE: ::core::ffi::c_int = 20 as ::core::ffi::c_int;
-
-pub const SQL_SELECT_DOCSIZE: ::core::ffi::c_int = 21 as ::core::ffi::c_int;
-
-pub const SQL_SELECT_STAT: ::core::ffi::c_int = 22 as ::core::ffi::c_int;
-
-pub const SQL_REPLACE_STAT: ::core::ffi::c_int = 23 as ::core::ffi::c_int;
-
-pub const SQL_DELETE_SEGDIR_RANGE: ::core::ffi::c_int = 26 as ::core::ffi::c_int;
-
-pub const SQL_SELECT_ALL_LANGID: ::core::ffi::c_int = 27 as ::core::ffi::c_int;
-
-pub const SQL_FIND_MERGE_LEVEL: ::core::ffi::c_int = 28 as ::core::ffi::c_int;
-
-pub const SQL_MAX_LEAF_NODE_ESTIMATE: ::core::ffi::c_int = 29 as ::core::ffi::c_int;
-
-pub const SQL_DELETE_SEGDIR_ENTRY: ::core::ffi::c_int = 30 as ::core::ffi::c_int;
-
-pub const SQL_SHIFT_SEGDIR_ENTRY: ::core::ffi::c_int = 31 as ::core::ffi::c_int;
-
-pub const SQL_SELECT_SEGDIR: ::core::ffi::c_int = 32 as ::core::ffi::c_int;
-
-pub const SQL_CHOMP_SEGDIR: ::core::ffi::c_int = 33 as ::core::ffi::c_int;
-
-pub const SQL_SEGMENT_IS_APPENDABLE: ::core::ffi::c_int = 34 as ::core::ffi::c_int;
-
-pub const SQL_SELECT_INDEXES: ::core::ffi::c_int = 35 as ::core::ffi::c_int;
-
-pub const SQL_SELECT_MXLEVEL: ::core::ffi::c_int = 36 as ::core::ffi::c_int;
-
-pub const SQL_SELECT_LEVEL_RANGE2: ::core::ffi::c_int = 37 as ::core::ffi::c_int;
-
-pub const SQL_UPDATE_LEVEL_IDX: ::core::ffi::c_int = 38 as ::core::ffi::c_int;
-
-pub const SQL_UPDATE_LEVEL: ::core::ffi::c_int = 39 as ::core::ffi::c_int;
 
 unsafe extern "C" fn fts3SqlStmt(
     mut p: *mut crate::fts3Int_h::Fts3Table,
@@ -246,100 +227,56 @@ unsafe extern "C" fn fts3SqlStmt(
     mut pp: *mut *mut crate::src::headers::sqlite3_h::sqlite3_stmt,
     mut apVal: *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
 ) -> ::core::ffi::c_int {
-    let mut azSql: [*const ::core::ffi::c_char; 40] = [
-        b"DELETE FROM %Q.'%q_content' WHERE rowid = ?\0" as *const u8
-            as *const ::core::ffi::c_char,
-        b"SELECT NOT EXISTS(SELECT docid FROM %Q.'%q_content' WHERE rowid!=?)\0"
-            as *const u8 as *const ::core::ffi::c_char,
-        b"DELETE FROM %Q.'%q_content'\0" as *const u8 as *const ::core::ffi::c_char,
-        b"DELETE FROM %Q.'%q_segments'\0" as *const u8 as *const ::core::ffi::c_char,
-        b"DELETE FROM %Q.'%q_segdir'\0" as *const u8 as *const ::core::ffi::c_char,
-        b"DELETE FROM %Q.'%q_docsize'\0" as *const u8 as *const ::core::ffi::c_char,
-        b"DELETE FROM %Q.'%q_stat'\0" as *const u8 as *const ::core::ffi::c_char,
-        b"SELECT %s WHERE rowid=?\0" as *const u8 as *const ::core::ffi::c_char,
-        b"SELECT (SELECT max(idx) FROM %Q.'%q_segdir' WHERE level = ?) + 1\0"
-            as *const u8 as *const ::core::ffi::c_char,
-        b"REPLACE INTO %Q.'%q_segments'(blockid, block) VALUES(?, ?)\0" as *const u8
-            as *const ::core::ffi::c_char,
-        b"SELECT coalesce((SELECT max(blockid) FROM %Q.'%q_segments') + 1, 1)\0"
-            as *const u8 as *const ::core::ffi::c_char,
-        b"REPLACE INTO %Q.'%q_segdir' VALUES(?,?,?,?,?,?)\0" as *const u8
-            as *const ::core::ffi::c_char,
-        b"SELECT idx, start_block, leaves_end_block, end_block, root FROM %Q.'%q_segdir' WHERE level = ? ORDER BY idx ASC\0"
-            as *const u8 as *const ::core::ffi::c_char,
-        b"SELECT idx, start_block, leaves_end_block, end_block, root FROM %Q.'%q_segdir' WHERE level BETWEEN ? AND ?ORDER BY level DESC, idx ASC\0"
-            as *const u8 as *const ::core::ffi::c_char,
-        b"SELECT count(*) FROM %Q.'%q_segdir' WHERE level = ?\0" as *const u8
-            as *const ::core::ffi::c_char,
-        b"SELECT max(level) FROM %Q.'%q_segdir' WHERE level BETWEEN ? AND ?\0"
-            as *const u8 as *const ::core::ffi::c_char,
-        b"DELETE FROM %Q.'%q_segdir' WHERE level = ?\0" as *const u8
-            as *const ::core::ffi::c_char,
-        b"DELETE FROM %Q.'%q_segments' WHERE blockid BETWEEN ? AND ?\0" as *const u8
-            as *const ::core::ffi::c_char,
-        b"INSERT INTO %Q.'%q_content' VALUES(%s)\0" as *const u8
-            as *const ::core::ffi::c_char,
-        b"DELETE FROM %Q.'%q_docsize' WHERE docid = ?\0" as *const u8
-            as *const ::core::ffi::c_char,
-        b"REPLACE INTO %Q.'%q_docsize' VALUES(?,?)\0" as *const u8
-            as *const ::core::ffi::c_char,
-        b"SELECT size FROM %Q.'%q_docsize' WHERE docid=?\0" as *const u8
-            as *const ::core::ffi::c_char,
-        b"SELECT value FROM %Q.'%q_stat' WHERE id=?\0" as *const u8
-            as *const ::core::ffi::c_char,
-        b"REPLACE INTO %Q.'%q_stat' VALUES(?,?)\0" as *const u8
-            as *const ::core::ffi::c_char,
-        b"\0" as *const u8 as *const ::core::ffi::c_char,
-        b"\0" as *const u8 as *const ::core::ffi::c_char,
-        b"DELETE FROM %Q.'%q_segdir' WHERE level BETWEEN ? AND ?\0" as *const u8
-            as *const ::core::ffi::c_char,
-        b"SELECT ? UNION SELECT level / (1024 * ?) FROM %Q.'%q_segdir'\0" as *const u8
-            as *const ::core::ffi::c_char,
-        b"SELECT level, count(*) AS cnt FROM %Q.'%q_segdir'   GROUP BY level HAVING cnt>=?  ORDER BY (level %% 1024) ASC, 2 DESC LIMIT 1\0"
-            as *const u8 as *const ::core::ffi::c_char,
-        b"SELECT 2 * total(1 + leaves_end_block - start_block)   FROM (SELECT * FROM %Q.'%q_segdir'         WHERE level = ? ORDER BY idx ASC LIMIT ?  )\0"
-            as *const u8 as *const ::core::ffi::c_char,
-        b"DELETE FROM %Q.'%q_segdir' WHERE level = ? AND idx = ?\0" as *const u8
-            as *const ::core::ffi::c_char,
-        b"UPDATE %Q.'%q_segdir' SET idx = ? WHERE level=? AND idx=?\0" as *const u8
-            as *const ::core::ffi::c_char,
-        b"SELECT idx, start_block, leaves_end_block, end_block, root FROM %Q.'%q_segdir' WHERE level = ? AND idx = ?\0"
-            as *const u8 as *const ::core::ffi::c_char,
-        b"UPDATE %Q.'%q_segdir' SET start_block = ?, root = ?WHERE level = ? AND idx = ?\0"
-            as *const u8 as *const ::core::ffi::c_char,
-        b"SELECT 1 FROM %Q.'%q_segments' WHERE blockid=? AND block IS NULL\0"
-            as *const u8 as *const ::core::ffi::c_char,
-        b"SELECT idx FROM %Q.'%q_segdir' WHERE level=? ORDER BY 1 ASC\0" as *const u8
-            as *const ::core::ffi::c_char,
-        b"SELECT max( level %% 1024 ) FROM %Q.'%q_segdir'\0" as *const u8
-            as *const ::core::ffi::c_char,
-        b"SELECT level, idx, end_block FROM %Q.'%q_segdir' WHERE level BETWEEN ? AND ? ORDER BY level DESC, idx ASC\0"
-            as *const u8 as *const ::core::ffi::c_char,
-        b"UPDATE OR FAIL %Q.'%q_segdir' SET level=-1,idx=? WHERE level=? AND idx=?\0"
-            as *const u8 as *const ::core::ffi::c_char,
-        b"UPDATE OR FAIL %Q.'%q_segdir' SET level=? WHERE level=-1\0" as *const u8
-            as *const ::core::ffi::c_char,
-    ];
     let mut rc: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_OK;
     let mut pStmt: *mut crate::src::headers::sqlite3_h::sqlite3_stmt = ::core::ptr::null_mut::<crate::src::headers::sqlite3_h::sqlite3_stmt>();
     pStmt = (*p).aStmt[eStmt as usize];
     if pStmt.is_null() {
         let mut f: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_PREPARE_PERSISTENT | crate::src::headers::sqlite3_h::SQLITE_PREPARE_NO_VTAB;
         let mut zSql: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
-        if eStmt == SQL_CONTENT_INSERT {
-            let __p_ref = unsafe { &*p };
-            zSql = crate::safe_format::format_sql_3args(
-                azSql[eStmt as usize],
-                __p_ref.zDb,
-                __p_ref.zName,
-                __p_ref.zWriteExprlist,
-            );
-        } else if eStmt == SQL_SELECT_CONTENT_BY_ROWID {
-            f &= !crate::src::headers::sqlite3_h::SQLITE_PREPARE_NO_VTAB;
-            zSql = crate::safe_format::format_sql_1arg(azSql[eStmt as usize], (*p).zReadExprlist);
-        } else {
-            zSql = crate::safe_format::format_sql_2args(azSql[eStmt as usize], (*p).zDb, (*p).zName);
-        }
+        zSql = match SqlConstant::from_repr(eStmt).unwrap_or(SqlConstant::SQL_RESERVED_24) {
+            SqlConstant::SQL_DELETE_CONTENT => sqlite_printf!("DELETE FROM %Q.'%q_content' WHERE rowid = ?", (*p).zDb, (*p).zName),
+            SqlConstant::SQL_IS_EMPTY => sqlite_printf!("SELECT NOT EXISTS(SELECT docid FROM %Q.'%q_content' WHERE rowid!=?)", (*p).zDb, (*p).zName),
+            SqlConstant::SQL_DELETE_ALL_CONTENT => sqlite_printf!("DELETE FROM %Q.'%q_content'", (*p).zDb, (*p).zName),
+            SqlConstant::SQL_DELETE_ALL_SEGMENTS => sqlite_printf!("DELETE FROM %Q.'%q_segments'", (*p).zDb, (*p).zName),
+            SqlConstant::SQL_DELETE_ALL_SEGDIR => sqlite_printf!("DELETE FROM %Q.'%q_segdir'", (*p).zDb, (*p).zName),
+            SqlConstant::SQL_DELETE_ALL_DOCSIZE => sqlite_printf!("DELETE FROM %Q.'%q_docsize'", (*p).zDb, (*p).zName),
+            SqlConstant::SQL_DELETE_ALL_STAT => sqlite_printf!("DELETE FROM %Q.'%q_stat'", (*p).zDb, (*p).zName),
+            SqlConstant::SQL_SELECT_CONTENT_BY_ROWID => {
+                f &= !crate::src::headers::sqlite3_h::SQLITE_PREPARE_NO_VTAB;
+                sqlite_printf!("SELECT %s WHERE rowid=?", (*p).zReadExprlist)
+            },
+            SqlConstant::SQL_NEXT_SEGMENT_INDEX => sqlite_printf!("SELECT (SELECT max(idx) FROM %Q.'%q_segdir' WHERE level = ?) + 1", (*p).zDb, (*p).zName),
+            SqlConstant::SQL_INSERT_SEGMENTS => sqlite_printf!("REPLACE INTO %Q.'%q_segments'(blockid, block) VALUES(?, ?)", (*p).zDb, (*p).zName),
+            SqlConstant::SQL_NEXT_SEGMENTS_ID => sqlite_printf!("SELECT coalesce((SELECT max(blockid) FROM %Q.'%q_segments') + 1, 1)", (*p).zDb, (*p).zName),
+            SqlConstant::SQL_INSERT_SEGDIR => sqlite_printf!("REPLACE INTO %Q.'%q_segdir' VALUES(?,?,?,?,?,?)", (*p).zDb, (*p).zName),
+            SqlConstant::SQL_SELECT_LEVEL => sqlite_printf!("SELECT idx, start_block, leaves_end_block, end_block, root FROM %Q.'%q_segdir' WHERE level = ? ORDER BY idx ASC", (*p).zDb, (*p).zName),
+            SqlConstant::SQL_SELECT_LEVEL_RANGE => sqlite_printf!("SELECT idx, start_block, leaves_end_block, end_block, root FROM %Q.'%q_segdir' WHERE level BETWEEN ? AND ?ORDER BY level DESC, idx ASC", (*p).zDb, (*p).zName),
+            SqlConstant::SQL_COUNT_SEGDIR_AT_LEVEL => sqlite_printf!("SELECT count(*) FROM %Q.'%q_segdir' WHERE level = ?", (*p).zDb, (*p).zName),
+            SqlConstant::SQL_SELECT_SEGDIR_MAX_LEVEL => sqlite_printf!("SELECT max(level) FROM %Q.'%q_segdir' WHERE level BETWEEN ? AND ?", (*p).zDb, (*p).zName),
+            SqlConstant::SQL_DELETE_SEGDIR_LEVEL => sqlite_printf!("DELETE FROM %Q.'%q_segdir' WHERE level = ?", (*p).zDb, (*p).zName),
+            SqlConstant::SQL_DELETE_SEGMENTS_RANGE => sqlite_printf!("DELETE FROM %Q.'%q_segments' WHERE blockid BETWEEN ? AND ?", (*p).zDb, (*p).zName),
+            SqlConstant::SQL_CONTENT_INSERT => sqlite_printf!("INSERT INTO %Q.'%q_content' VALUES(%s)", (*p).zDb, (*p).zName, (*p).zWriteExprlist),
+            SqlConstant::SQL_DELETE_DOCSIZE => sqlite_printf!("DELETE FROM %Q.'%q_docsize' WHERE docid = ?", (*p).zDb, (*p).zName),
+            SqlConstant::SQL_REPLACE_DOCSIZE => sqlite_printf!("REPLACE INTO %Q.'%q_docsize' VALUES(?,?)", (*p).zDb, (*p).zName),
+            SqlConstant::SQL_SELECT_DOCSIZE => sqlite_printf!("SELECT size FROM %Q.'%q_docsize' WHERE docid=?", (*p).zDb, (*p).zName),
+            SqlConstant::SQL_SELECT_STAT => sqlite_printf!("SELECT value FROM %Q.'%q_stat' WHERE id=?", (*p).zDb, (*p).zName),
+            SqlConstant::SQL_REPLACE_STAT => sqlite_printf!("REPLACE INTO %Q.'%q_stat' VALUES(?,?)", (*p).zDb, (*p).zName),
+            SqlConstant::SQL_RESERVED_24 | SqlConstant::SQL_RESERVED_25 => ::core::ptr::null_mut(),
+            SqlConstant::SQL_DELETE_SEGDIR_RANGE => sqlite_printf!("DELETE FROM %Q.'%q_segdir' WHERE level BETWEEN ? AND ?", (*p).zDb, (*p).zName),
+            SqlConstant::SQL_SELECT_ALL_LANGID => sqlite_printf!("SELECT ? UNION SELECT level / (1024 * ?) FROM %Q.'%q_segdir'", (*p).zDb, (*p).zName),
+            SqlConstant::SQL_FIND_MERGE_LEVEL => sqlite_printf!("SELECT level, count(*) AS cnt FROM %Q.'%q_segdir'   GROUP BY level HAVING cnt>=?  ORDER BY (level %% 1024) ASC, 2 DESC LIMIT 1", (*p).zDb, (*p).zName),
+            SqlConstant::SQL_MAX_LEAF_NODE_ESTIMATE => sqlite_printf!("SELECT 2 * total(1 + leaves_end_block - start_block)   FROM (SELECT * FROM %Q.'%q_segdir'         WHERE level = ? ORDER BY idx ASC LIMIT ?  )", (*p).zDb, (*p).zName),
+            SqlConstant::SQL_DELETE_SEGDIR_ENTRY => sqlite_printf!("DELETE FROM %Q.'%q_segdir' WHERE level = ? AND idx = ?", (*p).zDb, (*p).zName),
+            SqlConstant::SQL_SHIFT_SEGDIR_ENTRY => sqlite_printf!("UPDATE %Q.'%q_segdir' SET idx = ? WHERE level=? AND idx=?", (*p).zDb, (*p).zName),
+            SqlConstant::SQL_SELECT_SEGDIR => sqlite_printf!("SELECT idx, start_block, leaves_end_block, end_block, root FROM %Q.'%q_segdir' WHERE level = ? AND idx = ?", (*p).zDb, (*p).zName),
+            SqlConstant::SQL_CHOMP_SEGDIR => sqlite_printf!("UPDATE %Q.'%q_segdir' SET start_block = ?, root = ?WHERE level = ? AND idx = ?", (*p).zDb, (*p).zName),
+            SqlConstant::SQL_SEGMENT_IS_APPENDABLE => sqlite_printf!("SELECT 1 FROM %Q.'%q_segments' WHERE blockid=? AND block IS NULL", (*p).zDb, (*p).zName),
+            SqlConstant::SQL_SELECT_INDEXES => sqlite_printf!("SELECT idx FROM %Q.'%q_segdir' WHERE level=? ORDER BY 1 ASC", (*p).zDb, (*p).zName),
+            SqlConstant::SQL_SELECT_MXLEVEL => sqlite_printf!("SELECT max( level %% 1024 ) FROM %Q.'%q_segdir'", (*p).zDb, (*p).zName),
+            SqlConstant::SQL_SELECT_LEVEL_RANGE2 => sqlite_printf!("SELECT level, idx, end_block FROM %Q.'%q_segdir' WHERE level BETWEEN ? AND ? ORDER BY level DESC, idx ASC", (*p).zDb, (*p).zName),
+            SqlConstant::SQL_UPDATE_LEVEL_IDX => sqlite_printf!("UPDATE OR FAIL %Q.'%q_segdir' SET level=-1,idx=? WHERE level=? AND idx=?", (*p).zDb, (*p).zName),
+            SqlConstant::SQL_UPDATE_LEVEL => sqlite_printf!("UPDATE OR FAIL %Q.'%q_segdir' SET level=? WHERE level=-1", (*p).zDb, (*p).zName),
+        };
         if zSql.is_null() {
             rc = crate::src::headers::sqlite3_h::SQLITE_NOMEM;
         } else {
@@ -381,7 +318,7 @@ unsafe extern "C" fn fts3SelectDocsize(
     let mut rc: ::core::ffi::c_int = 0;
     rc = fts3SqlStmt(
         pTab,
-        SQL_SELECT_DOCSIZE,
+        SqlConstant::SQL_SELECT_DOCSIZE as ::core::ffi::c_int,
         &raw mut pStmt,
         ::core::ptr::null_mut::<*mut crate::src::headers::vdbeInt_h::sqlite3_value>(),
     );
@@ -411,12 +348,12 @@ pub unsafe extern "C" fn sqlite3Fts3SelectDoctotal(
     let mut rc: ::core::ffi::c_int = 0;
     rc = fts3SqlStmt(
         pTab,
-        SQL_SELECT_STAT,
+        SqlConstant::SQL_SELECT_STAT as ::core::ffi::c_int,
         &raw mut pStmt,
         ::core::ptr::null_mut::<*mut crate::src::headers::vdbeInt_h::sqlite3_value>(),
     );
     if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
-        crate::src::src::vdbeapi::sqlite3_bind_int(pStmt, 1 as ::core::ffi::c_int, FTS_STAT_DOCTOTAL);
+        crate::src::src::vdbeapi::sqlite3_bind_int(pStmt, 1 as ::core::ffi::c_int, FtsStatConstant::FTS_STAT_DOCTOTAL as ::core::ffi::c_int);
         if crate::src::src::vdbeapi::sqlite3_step(pStmt) != crate::src::headers::sqlite3_h::SQLITE_ROW
             || crate::src::src::vdbeapi::sqlite3_column_type(pStmt, 0 as ::core::ffi::c_int) != crate::src::headers::sqlite3_h::SQLITE_BLOB
         {
@@ -465,7 +402,7 @@ unsafe extern "C" fn fts3Writelock(mut p: *mut crate::fts3Int_h::Fts3Table) -> :
         let mut pStmt: *mut crate::src::headers::sqlite3_h::sqlite3_stmt = ::core::ptr::null_mut::<crate::src::headers::sqlite3_h::sqlite3_stmt>();
         rc = fts3SqlStmt(
             p,
-            SQL_DELETE_SEGDIR_LEVEL,
+            SqlConstant::SQL_DELETE_SEGDIR_LEVEL as ::core::ffi::c_int,
             &raw mut pStmt,
             ::core::ptr::null_mut::<*mut crate::src::headers::vdbeInt_h::sqlite3_value>(),
         );
@@ -503,7 +440,7 @@ pub unsafe extern "C" fn sqlite3Fts3AllSegdirs(
     if iLevel < 0 as ::core::ffi::c_int {
         rc = fts3SqlStmt(
             p,
-            SQL_SELECT_LEVEL_RANGE,
+            SqlConstant::SQL_SELECT_LEVEL_RANGE as ::core::ffi::c_int,
             &raw mut pStmt,
             ::core::ptr::null_mut::<*mut crate::src::headers::vdbeInt_h::sqlite3_value>(),
         );
@@ -527,7 +464,7 @@ pub unsafe extern "C" fn sqlite3Fts3AllSegdirs(
     } else {
         rc = fts3SqlStmt(
             p,
-            SQL_SELECT_LEVEL,
+            SqlConstant::SQL_SELECT_LEVEL as ::core::ffi::c_int,
             &raw mut pStmt,
             ::core::ptr::null_mut::<*mut crate::src::headers::vdbeInt_h::sqlite3_value>(),
         );
@@ -907,7 +844,7 @@ unsafe extern "C" fn fts3InsertData(
     }
     rc = fts3SqlStmt(
         p,
-        SQL_CONTENT_INSERT,
+        SqlConstant::SQL_CONTENT_INSERT as ::core::ffi::c_int,
         &raw mut pContentInsert,
         apVal.offset(1 as isize) as *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
     );
@@ -954,27 +891,27 @@ unsafe extern "C" fn fts3DeleteAll(
         fts3SqlExec(
             &raw mut rc,
             p,
-            SQL_DELETE_ALL_CONTENT,
+            SqlConstant::SQL_DELETE_ALL_CONTENT as ::core::ffi::c_int,
             ::core::ptr::null_mut::<*mut crate::src::headers::vdbeInt_h::sqlite3_value>(),
         );
     }
     fts3SqlExec(
         &raw mut rc,
         p,
-        SQL_DELETE_ALL_SEGMENTS,
+        SqlConstant::SQL_DELETE_ALL_SEGMENTS as ::core::ffi::c_int,
         ::core::ptr::null_mut::<*mut crate::src::headers::vdbeInt_h::sqlite3_value>(),
     );
     fts3SqlExec(
         &raw mut rc,
         p,
-        SQL_DELETE_ALL_SEGDIR,
+        SqlConstant::SQL_DELETE_ALL_SEGDIR as ::core::ffi::c_int,
         ::core::ptr::null_mut::<*mut crate::src::headers::vdbeInt_h::sqlite3_value>(),
     );
     if (*p).bHasDocsize != 0 {
         fts3SqlExec(
             &raw mut rc,
             p,
-            SQL_DELETE_ALL_DOCSIZE,
+            SqlConstant::SQL_DELETE_ALL_DOCSIZE as ::core::ffi::c_int,
             ::core::ptr::null_mut::<*mut crate::src::headers::vdbeInt_h::sqlite3_value>(),
         );
     }
@@ -982,7 +919,7 @@ unsafe extern "C" fn fts3DeleteAll(
         fts3SqlExec(
             &raw mut rc,
             p,
-            SQL_DELETE_ALL_STAT,
+            SqlConstant::SQL_DELETE_ALL_STAT as ::core::ffi::c_int,
             ::core::ptr::null_mut::<*mut crate::src::headers::vdbeInt_h::sqlite3_value>(),
         );
     }
@@ -1014,7 +951,7 @@ unsafe extern "C" fn fts3DeleteTerms(
     }
     rc = fts3SqlStmt(
         p,
-        SQL_SELECT_CONTENT_BY_ROWID,
+        SqlConstant::SQL_SELECT_CONTENT_BY_ROWID as ::core::ffi::c_int,
         &raw mut pSelect,
         &raw mut pRowid,
     );
@@ -1070,7 +1007,7 @@ unsafe extern "C" fn fts3AllocateSegdirIdx(
     let mut iNext: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
     rc = fts3SqlStmt(
         p,
-        SQL_NEXT_SEGMENT_INDEX,
+        SqlConstant::SQL_NEXT_SEGMENT_INDEX as ::core::ffi::c_int,
         &raw mut pNextIdx,
         ::core::ptr::null_mut::<*mut crate::src::headers::vdbeInt_h::sqlite3_value>(),
     );
@@ -1110,10 +1047,7 @@ pub unsafe extern "C" fn sqlite3Fts3ReadBlock(
     } else {
         let __p_ref = unsafe { &mut *p };
         if __p_ref.zSegmentsTbl.is_null() {
-            __p_ref.zSegmentsTbl = crate::safe_format::format_sql_1arg(
-                b"%s_segments\0" as *const u8 as *const ::core::ffi::c_char,
-                __p_ref.zName,
-            );
+            __p_ref.zSegmentsTbl = sqlite_printf!("%s_segments", __p_ref.zName);
             if __p_ref.zSegmentsTbl.is_null() {
                 return crate::src::headers::sqlite3_h::SQLITE_NOMEM;
             }
@@ -1919,7 +1853,7 @@ unsafe extern "C" fn fts3WriteSegment(
     let mut pStmt: *mut crate::src::headers::sqlite3_h::sqlite3_stmt = ::core::ptr::null_mut::<crate::src::headers::sqlite3_h::sqlite3_stmt>();
     let mut rc: ::core::ffi::c_int = fts3SqlStmt(
         p,
-        SQL_INSERT_SEGMENTS,
+        SqlConstant::SQL_INSERT_SEGMENTS as ::core::ffi::c_int,
         &raw mut pStmt,
         ::core::ptr::null_mut::<*mut crate::src::headers::vdbeInt_h::sqlite3_value>(),
     );
@@ -1949,7 +1883,7 @@ pub unsafe extern "C" fn sqlite3Fts3MaxLevel(
     let mut pStmt: *mut crate::src::headers::sqlite3_h::sqlite3_stmt = ::core::ptr::null_mut::<crate::src::headers::sqlite3_h::sqlite3_stmt>();
     rc = fts3SqlStmt(
         p,
-        SQL_SELECT_MXLEVEL,
+        SqlConstant::SQL_SELECT_MXLEVEL as ::core::ffi::c_int,
         &raw mut pStmt,
         ::core::ptr::null_mut::<*mut crate::src::headers::vdbeInt_h::sqlite3_value>(),
     );
@@ -1977,7 +1911,7 @@ unsafe extern "C" fn fts3WriteSegdir(
     let mut pStmt: *mut crate::src::headers::sqlite3_h::sqlite3_stmt = ::core::ptr::null_mut::<crate::src::headers::sqlite3_h::sqlite3_stmt>();
     let mut rc: ::core::ffi::c_int = fts3SqlStmt(
         p,
-        SQL_INSERT_SEGDIR,
+        SqlConstant::SQL_INSERT_SEGDIR as ::core::ffi::c_int,
         &raw mut pStmt,
         ::core::ptr::null_mut::<*mut crate::src::headers::vdbeInt_h::sqlite3_value>(),
     );
@@ -2270,7 +2204,7 @@ unsafe extern "C" fn fts3SegWriterAdd(
         (*pWriter).nSize = (*p).nNodeSize;
         rc = fts3SqlStmt(
             p,
-            SQL_NEXT_SEGMENTS_ID,
+            SqlConstant::SQL_NEXT_SEGMENTS_ID as ::core::ffi::c_int,
             &raw mut pStmt,
             ::core::ptr::null_mut::<*mut crate::src::headers::vdbeInt_h::sqlite3_value>(),
         );
@@ -2475,7 +2409,7 @@ unsafe extern "C" fn fts3IsEmpty(
         *pisEmpty = 0 as ::core::ffi::c_int;
         rc = crate::src::headers::sqlite3_h::SQLITE_OK;
     } else {
-        rc = fts3SqlStmt(p, SQL_IS_EMPTY, &raw mut pStmt, &raw mut pRowid);
+        rc = fts3SqlStmt(p, SqlConstant::SQL_IS_EMPTY as ::core::ffi::c_int, &raw mut pStmt, &raw mut pRowid);
         if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
             if crate::src::headers::sqlite3_h::SQLITE_ROW == crate::src::src::vdbeapi::sqlite3_step(pStmt) {
                 *pisEmpty = crate::src::src::vdbeapi::sqlite3_column_int(pStmt, 0 as ::core::ffi::c_int);
@@ -2496,7 +2430,7 @@ unsafe extern "C" fn fts3SegmentMaxLevel(
     let mut rc: ::core::ffi::c_int = 0;
     rc = fts3SqlStmt(
         p,
-        SQL_SELECT_SEGDIR_MAX_LEVEL,
+        SqlConstant::SQL_SELECT_SEGDIR_MAX_LEVEL as ::core::ffi::c_int,
         &raw mut pStmt,
         ::core::ptr::null_mut::<*mut crate::src::headers::vdbeInt_h::sqlite3_value>(),
     );
@@ -2532,7 +2466,7 @@ unsafe extern "C" fn fts3SegmentIsMaxLevel(
     let mut pStmt: *mut crate::src::headers::sqlite3_h::sqlite3_stmt = ::core::ptr::null_mut::<crate::src::headers::sqlite3_h::sqlite3_stmt>();
     let mut rc: ::core::ffi::c_int = fts3SqlStmt(
         p,
-        SQL_SELECT_SEGDIR_MAX_LEVEL,
+        SqlConstant::SQL_SELECT_SEGDIR_MAX_LEVEL as ::core::ffi::c_int,
         &raw mut pStmt,
         ::core::ptr::null_mut::<*mut crate::src::headers::vdbeInt_h::sqlite3_value>(),
     );
@@ -2569,7 +2503,7 @@ unsafe extern "C" fn fts3DeleteSegment(
         let mut pDelete: *mut crate::src::headers::sqlite3_h::sqlite3_stmt = ::core::ptr::null_mut::<crate::src::headers::sqlite3_h::sqlite3_stmt>();
         rc = fts3SqlStmt(
             p,
-            SQL_DELETE_SEGMENTS_RANGE,
+            SqlConstant::SQL_DELETE_SEGMENTS_RANGE as ::core::ffi::c_int,
             &raw mut pDelete,
             ::core::ptr::null_mut::<*mut crate::src::headers::vdbeInt_h::sqlite3_value>(),
         );
@@ -2605,7 +2539,7 @@ unsafe extern "C" fn fts3DeleteSegdir(
     if iLevel == crate::fts3Int_h::FTS3_SEGCURSOR_ALL {
         rc = fts3SqlStmt(
             p,
-            SQL_DELETE_SEGDIR_RANGE,
+            SqlConstant::SQL_DELETE_SEGDIR_RANGE as ::core::ffi::c_int,
             &raw mut pDelete,
             ::core::ptr::null_mut::<*mut crate::src::headers::vdbeInt_h::sqlite3_value>(),
         );
@@ -2629,7 +2563,7 @@ unsafe extern "C" fn fts3DeleteSegdir(
     } else {
         rc = fts3SqlStmt(
             p,
-            SQL_DELETE_SEGDIR_LEVEL,
+            SqlConstant::SQL_DELETE_SEGDIR_LEVEL as ::core::ffi::c_int,
             &raw mut pDelete,
             ::core::ptr::null_mut::<*mut crate::src::headers::vdbeInt_h::sqlite3_value>(),
         );
@@ -3322,7 +3256,7 @@ unsafe extern "C" fn fts3PromoteSegments(
     let mut pRange: *mut crate::src::headers::sqlite3_h::sqlite3_stmt = ::core::ptr::null_mut::<crate::src::headers::sqlite3_h::sqlite3_stmt>();
     rc = fts3SqlStmt(
         p,
-        SQL_SELECT_LEVEL_RANGE2,
+        SqlConstant::SQL_SELECT_LEVEL_RANGE2 as ::core::ffi::c_int,
         &raw mut pRange,
         ::core::ptr::null_mut::<*mut crate::src::headers::vdbeInt_h::sqlite3_value>(),
     );
@@ -3362,7 +3296,7 @@ unsafe extern "C" fn fts3PromoteSegments(
             if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
                 rc = fts3SqlStmt(
                     p,
-                    SQL_UPDATE_LEVEL_IDX,
+                    SqlConstant::SQL_UPDATE_LEVEL_IDX as ::core::ffi::c_int,
                     &raw mut pUpdate1,
                     ::core::ptr::null_mut::<*mut crate::src::headers::vdbeInt_h::sqlite3_value>(),
                 );
@@ -3370,7 +3304,7 @@ unsafe extern "C" fn fts3PromoteSegments(
             if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
                 rc = fts3SqlStmt(
                     p,
-                    SQL_UPDATE_LEVEL,
+                    SqlConstant::SQL_UPDATE_LEVEL as ::core::ffi::c_int,
                     &raw mut pUpdate2,
                     ::core::ptr::null_mut::<*mut crate::src::headers::vdbeInt_h::sqlite3_value>(),
                 );
@@ -3580,12 +3514,12 @@ pub unsafe extern "C" fn sqlite3Fts3PendingTermsFlush(mut p: *mut crate::fts3Int
         let mut pStmt: *mut crate::src::headers::sqlite3_h::sqlite3_stmt = ::core::ptr::null_mut::<crate::src::headers::sqlite3_h::sqlite3_stmt>();
         rc = fts3SqlStmt(
             p,
-            SQL_SELECT_STAT,
+            SqlConstant::SQL_SELECT_STAT as ::core::ffi::c_int,
             &raw mut pStmt,
             ::core::ptr::null_mut::<*mut crate::src::headers::vdbeInt_h::sqlite3_value>(),
         );
         if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
-            crate::src::src::vdbeapi::sqlite3_bind_int(pStmt, 1 as ::core::ffi::c_int, FTS_STAT_AUTOINCRMERGE);
+            crate::src::src::vdbeapi::sqlite3_bind_int(pStmt, 1 as ::core::ffi::c_int, FtsStatConstant::FTS_STAT_AUTOINCRMERGE as ::core::ffi::c_int);
             rc = crate::src::src::vdbeapi::sqlite3_step(pStmt);
             if rc == crate::src::headers::sqlite3_h::SQLITE_ROW {
                 __p_ref.nAutoincrmerge = crate::src::src::vdbeapi::sqlite3_column_int(pStmt, 0 as ::core::ffi::c_int);
@@ -3679,7 +3613,7 @@ unsafe extern "C" fn fts3InsertDocsize(
     fts3EncodeIntArray(__p_ref.nColumn, aSz, pBlob, &raw mut nBlob);
     rc = fts3SqlStmt(
         p,
-        SQL_REPLACE_DOCSIZE,
+        SqlConstant::SQL_REPLACE_DOCSIZE as ::core::ffi::c_int,
         &raw mut pStmt,
         ::core::ptr::null_mut::<*mut crate::src::headers::vdbeInt_h::sqlite3_value>(),
     );
@@ -3732,7 +3666,7 @@ unsafe extern "C" fn fts3UpdateDocTotals(
     pBlob = a.offset(nStat as isize) as *mut crate::src::ext::rtree::rtree::u32_0 as *mut ::core::ffi::c_char;
     rc = fts3SqlStmt(
         p,
-        SQL_SELECT_STAT,
+        SqlConstant::SQL_SELECT_STAT as ::core::ffi::c_int,
         &raw mut pStmt,
         ::core::ptr::null_mut::<*mut crate::src::headers::vdbeInt_h::sqlite3_value>(),
     );
@@ -3741,7 +3675,7 @@ unsafe extern "C" fn fts3UpdateDocTotals(
         *pRC = rc;
         return;
     }
-    crate::src::src::vdbeapi::sqlite3_bind_int(pStmt, 1 as ::core::ffi::c_int, FTS_STAT_DOCTOTAL);
+    crate::src::src::vdbeapi::sqlite3_bind_int(pStmt, 1 as ::core::ffi::c_int, FtsStatConstant::FTS_STAT_DOCTOTAL.into());
     if crate::src::src::vdbeapi::sqlite3_step(pStmt) == crate::src::headers::sqlite3_h::SQLITE_ROW {
         fts3DecodeIntArray(
             nStat,
@@ -3786,7 +3720,7 @@ unsafe extern "C" fn fts3UpdateDocTotals(
     fts3EncodeIntArray(nStat, a, pBlob, &raw mut nBlob);
     rc = fts3SqlStmt(
         p,
-        SQL_REPLACE_STAT,
+        SqlConstant::SQL_REPLACE_STAT as ::core::ffi::c_int,
         &raw mut pStmt,
         ::core::ptr::null_mut::<*mut crate::src::headers::vdbeInt_h::sqlite3_value>(),
     );
@@ -3795,7 +3729,7 @@ unsafe extern "C" fn fts3UpdateDocTotals(
         *pRC = rc;
         return;
     }
-    crate::src::src::vdbeapi::sqlite3_bind_int(pStmt, 1 as ::core::ffi::c_int, FTS_STAT_DOCTOTAL);
+    crate::src::src::vdbeapi::sqlite3_bind_int(pStmt, 1 as ::core::ffi::c_int, FtsStatConstant::FTS_STAT_DOCTOTAL.into());
     crate::src::src::vdbeapi::sqlite3_bind_blob(
         pStmt,
         2 as ::core::ffi::c_int,
@@ -3820,7 +3754,7 @@ unsafe extern "C" fn fts3DoOptimize(
     if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
         rc = fts3SqlStmt(
             p,
-            SQL_SELECT_ALL_LANGID,
+            SqlConstant::SQL_SELECT_ALL_LANGID as ::core::ffi::c_int,
             &raw mut pAllLangid,
             ::core::ptr::null_mut::<*mut crate::src::headers::vdbeInt_h::sqlite3_value>(),
         );
@@ -3865,10 +3799,7 @@ unsafe extern "C" fn fts3DoRebuild(mut p: *mut crate::fts3Int_h::Fts3Table) -> :
         let mut aSzDel: *mut crate::src::ext::rtree::rtree::u32_0 = ::core::ptr::null_mut::<crate::src::ext::rtree::rtree::u32_0>();
         let mut pStmt: *mut crate::src::headers::sqlite3_h::sqlite3_stmt = ::core::ptr::null_mut::<crate::src::headers::sqlite3_h::sqlite3_stmt>();
         let mut nEntry: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
-        let mut zSql: *mut ::core::ffi::c_char = crate::safe_format::format_sql_1arg(
-            b"SELECT %s\0" as *const u8 as *const ::core::ffi::c_char,
-            (*p).zReadExprlist,
-        );
+        let mut zSql: *mut ::core::ffi::c_char = sqlite_printf!("SELECT %s", (*p).zReadExprlist);
         if zSql.is_null() {
             rc = crate::src::headers::sqlite3_h::SQLITE_NOMEM;
         } else {
@@ -4000,7 +3931,7 @@ unsafe extern "C" fn fts3IncrmergeCsr(
         );
         rc = fts3SqlStmt(
             p,
-            SQL_SELECT_LEVEL,
+            SqlConstant::SQL_SELECT_LEVEL as ::core::ffi::c_int,
             &raw mut pStmt,
             ::core::ptr::null_mut::<*mut crate::src::headers::vdbeInt_h::sqlite3_value>(),
         );
@@ -4511,7 +4442,7 @@ unsafe extern "C" fn fts3IsAppendable(
     let mut rc: ::core::ffi::c_int = 0;
     rc = fts3SqlStmt(
         p,
-        SQL_SEGMENT_IS_APPENDABLE,
+        SqlConstant::SQL_SEGMENT_IS_APPENDABLE as ::core::ffi::c_int,
         &raw mut pCheck,
         ::core::ptr::null_mut::<*mut crate::src::headers::vdbeInt_h::sqlite3_value>(),
     );
@@ -4538,7 +4469,7 @@ unsafe extern "C" fn fts3IncrmergeLoad(
     let mut pSelect: *mut crate::src::headers::sqlite3_h::sqlite3_stmt = ::core::ptr::null_mut::<crate::src::headers::sqlite3_h::sqlite3_stmt>();
     rc = fts3SqlStmt(
         p,
-        SQL_SELECT_SEGDIR,
+        SqlConstant::SQL_SELECT_SEGDIR as ::core::ffi::c_int,
         &raw mut pSelect,
         ::core::ptr::null_mut::<*mut crate::src::headers::vdbeInt_h::sqlite3_value>(),
     );
@@ -4747,7 +4678,7 @@ unsafe extern "C" fn fts3IncrmergeOutputIdx(
     let mut pOutputIdx: *mut crate::src::headers::sqlite3_h::sqlite3_stmt = ::core::ptr::null_mut::<crate::src::headers::sqlite3_h::sqlite3_stmt>();
     rc = fts3SqlStmt(
         p,
-        SQL_NEXT_SEGMENT_INDEX,
+        SqlConstant::SQL_NEXT_SEGMENT_INDEX as ::core::ffi::c_int,
         &raw mut pOutputIdx,
         ::core::ptr::null_mut::<*mut crate::src::headers::vdbeInt_h::sqlite3_value>(),
     );
@@ -4778,7 +4709,7 @@ unsafe extern "C" fn fts3IncrmergeWriter(
     let mut pFirstBlock: *mut crate::src::headers::sqlite3_h::sqlite3_stmt = ::core::ptr::null_mut::<crate::src::headers::sqlite3_h::sqlite3_stmt>();
     rc = fts3SqlStmt(
         p,
-        SQL_MAX_LEAF_NODE_ESTIMATE,
+        SqlConstant::SQL_MAX_LEAF_NODE_ESTIMATE as ::core::ffi::c_int,
         &raw mut pLeafEst,
         ::core::ptr::null_mut::<*mut crate::src::headers::vdbeInt_h::sqlite3_value>(),
     );
@@ -4799,7 +4730,7 @@ unsafe extern "C" fn fts3IncrmergeWriter(
     }
     rc = fts3SqlStmt(
         p,
-        SQL_NEXT_SEGMENTS_ID,
+        SqlConstant::SQL_NEXT_SEGMENTS_ID as ::core::ffi::c_int,
         &raw mut pFirstBlock,
         ::core::ptr::null_mut::<*mut crate::src::headers::vdbeInt_h::sqlite3_value>(),
     );
@@ -4845,7 +4776,7 @@ unsafe extern "C" fn fts3RemoveSegdirEntry(
     let mut pDelete: *mut crate::src::headers::sqlite3_h::sqlite3_stmt = ::core::ptr::null_mut::<crate::src::headers::sqlite3_h::sqlite3_stmt>();
     rc = fts3SqlStmt(
         p,
-        SQL_DELETE_SEGDIR_ENTRY,
+        SqlConstant::SQL_DELETE_SEGDIR_ENTRY as ::core::ffi::c_int,
         &raw mut pDelete,
         ::core::ptr::null_mut::<*mut crate::src::headers::vdbeInt_h::sqlite3_value>(),
     );
@@ -4871,7 +4802,7 @@ unsafe extern "C" fn fts3RepackSegdirLevel(
     let mut pUpdate: *mut crate::src::headers::sqlite3_h::sqlite3_stmt = ::core::ptr::null_mut::<crate::src::headers::sqlite3_h::sqlite3_stmt>();
     rc = fts3SqlStmt(
         p,
-        SQL_SELECT_INDEXES,
+        SqlConstant::SQL_SELECT_INDEXES as ::core::ffi::c_int,
         &raw mut pSelect,
         ::core::ptr::null_mut::<*mut crate::src::headers::vdbeInt_h::sqlite3_value>(),
     );
@@ -4908,7 +4839,7 @@ unsafe extern "C" fn fts3RepackSegdirLevel(
     if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
         rc = fts3SqlStmt(
             p,
-            SQL_SHIFT_SEGDIR_ENTRY,
+            SqlConstant::SQL_SHIFT_SEGDIR_ENTRY as ::core::ffi::c_int,
             &raw mut pUpdate,
             ::core::ptr::null_mut::<*mut crate::src::headers::vdbeInt_h::sqlite3_value>(),
         );
@@ -5040,7 +4971,7 @@ unsafe extern "C" fn fts3TruncateSegment(
     let mut pFetch: *mut crate::src::headers::sqlite3_h::sqlite3_stmt = ::core::ptr::null_mut::<crate::src::headers::sqlite3_h::sqlite3_stmt>();
     rc = fts3SqlStmt(
         p,
-        SQL_SELECT_SEGDIR,
+        SqlConstant::SQL_SELECT_SEGDIR as ::core::ffi::c_int,
         &raw mut pFetch,
         ::core::ptr::null_mut::<*mut crate::src::headers::vdbeInt_h::sqlite3_value>(),
     );
@@ -5091,7 +5022,7 @@ unsafe extern "C" fn fts3TruncateSegment(
         let mut pDel: *mut crate::src::headers::sqlite3_h::sqlite3_stmt = ::core::ptr::null_mut::<crate::src::headers::sqlite3_h::sqlite3_stmt>();
         rc = fts3SqlStmt(
             p,
-            SQL_DELETE_SEGMENTS_RANGE,
+            SqlConstant::SQL_DELETE_SEGMENTS_RANGE as ::core::ffi::c_int,
             &raw mut pDel,
             ::core::ptr::null_mut::<*mut crate::src::headers::vdbeInt_h::sqlite3_value>(),
         );
@@ -5110,7 +5041,7 @@ unsafe extern "C" fn fts3TruncateSegment(
         let mut pChomp: *mut crate::src::headers::sqlite3_h::sqlite3_stmt = ::core::ptr::null_mut::<crate::src::headers::sqlite3_h::sqlite3_stmt>();
         rc = fts3SqlStmt(
             p,
-            SQL_CHOMP_SEGDIR,
+            SqlConstant::SQL_CHOMP_SEGDIR as ::core::ffi::c_int,
             &raw mut pChomp,
             ::core::ptr::null_mut::<*mut crate::src::headers::vdbeInt_h::sqlite3_value>(),
         );
@@ -5186,12 +5117,12 @@ unsafe extern "C" fn fts3IncrmergeHintStore(
     let mut rc: ::core::ffi::c_int = 0;
     rc = fts3SqlStmt(
         p,
-        SQL_REPLACE_STAT,
+        SqlConstant::SQL_REPLACE_STAT as ::core::ffi::c_int,
         &raw mut pReplace,
         ::core::ptr::null_mut::<*mut crate::src::headers::vdbeInt_h::sqlite3_value>(),
     );
     if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
-        crate::src::src::vdbeapi::sqlite3_bind_int(pReplace, 1 as ::core::ffi::c_int, FTS_STAT_INCRMERGEHINT);
+        crate::src::src::vdbeapi::sqlite3_bind_int(pReplace, 1 as ::core::ffi::c_int, FtsStatConstant::FTS_STAT_INCRMERGEHINT.into());
         crate::src::src::vdbeapi::sqlite3_bind_blob(
             pReplace,
             2 as ::core::ffi::c_int,
@@ -5215,13 +5146,13 @@ unsafe extern "C" fn fts3IncrmergeHintLoad(
     (*pHint).n = 0 as ::core::ffi::c_int;
     rc = fts3SqlStmt(
         p,
-        SQL_SELECT_STAT,
+        SqlConstant::SQL_SELECT_STAT as ::core::ffi::c_int,
         &raw mut pSelect,
         ::core::ptr::null_mut::<*mut crate::src::headers::vdbeInt_h::sqlite3_value>(),
     );
     if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
         let mut rc2: ::core::ffi::c_int = 0;
-        crate::src::src::vdbeapi::sqlite3_bind_int(pSelect, 1 as ::core::ffi::c_int, FTS_STAT_INCRMERGEHINT);
+        crate::src::src::vdbeapi::sqlite3_bind_int(pSelect, 1 as ::core::ffi::c_int, FtsStatConstant::FTS_STAT_INCRMERGEHINT.into());
         if crate::src::headers::sqlite3_h::SQLITE_ROW == crate::src::src::vdbeapi::sqlite3_step(pSelect) {
             let mut aHint: *const ::core::ffi::c_char =
                 crate::src::src::vdbeapi::sqlite3_column_blob(pSelect, 0 as ::core::ffi::c_int) as *const ::core::ffi::c_char;
@@ -5363,7 +5294,7 @@ pub unsafe extern "C" fn sqlite3Fts3Incrmerge(
         let mut iIdx: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
         rc = fts3SqlStmt(
             p,
-            SQL_FIND_MERGE_LEVEL,
+            SqlConstant::SQL_FIND_MERGE_LEVEL as ::core::ffi::c_int,
             &raw mut pFindLevel,
             ::core::ptr::null_mut::<*mut crate::src::headers::vdbeInt_h::sqlite3_value>(),
         );
@@ -5579,14 +5510,14 @@ unsafe extern "C" fn fts3DoAutoincrmerge(
     }
     rc = fts3SqlStmt(
         p,
-        SQL_REPLACE_STAT,
+        SqlConstant::SQL_REPLACE_STAT as ::core::ffi::c_int,
         &raw mut pStmt,
         ::core::ptr::null_mut::<*mut crate::src::headers::vdbeInt_h::sqlite3_value>(),
     );
     if rc != 0 {
         return rc;
     }
-    crate::src::src::vdbeapi::sqlite3_bind_int(pStmt, 1 as ::core::ffi::c_int, FTS_STAT_AUTOINCRMERGE);
+    crate::src::src::vdbeapi::sqlite3_bind_int(pStmt, 1 as ::core::ffi::c_int, FtsStatConstant::FTS_STAT_AUTOINCRMERGE.into());
     crate::src::src::vdbeapi::sqlite3_bind_int(pStmt, 2 as ::core::ffi::c_int, __p_ref.nAutoincrmerge);
     crate::src::src::vdbeapi::sqlite3_step(pStmt);
     rc = crate::src::src::vdbeapi::sqlite3_reset(pStmt);
@@ -5711,7 +5642,7 @@ pub unsafe extern "C" fn sqlite3Fts3IntegrityCheck(
     let mut pAllLangid: *mut crate::src::headers::sqlite3_h::sqlite3_stmt = ::core::ptr::null_mut::<crate::src::headers::sqlite3_h::sqlite3_stmt>();
     rc = fts3SqlStmt(
         p,
-        SQL_SELECT_ALL_LANGID,
+        SqlConstant::SQL_SELECT_ALL_LANGID as ::core::ffi::c_int,
         &raw mut pAllLangid,
         ::core::ptr::null_mut::<*mut crate::src::headers::vdbeInt_h::sqlite3_value>(),
     );
@@ -5737,11 +5668,7 @@ pub unsafe extern "C" fn sqlite3Fts3IntegrityCheck(
     if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
         let mut pModule: *const crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_module = (*(*p).pTokenizer).pModule;
         let mut pStmt: *mut crate::src::headers::sqlite3_h::sqlite3_stmt = ::core::ptr::null_mut::<crate::src::headers::sqlite3_h::sqlite3_stmt>();
-        let mut zSql: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
-        zSql = crate::safe_format::format_sql_1arg(
-            b"SELECT %s\0" as *const u8 as *const ::core::ffi::c_char,
-            (*p).zReadExprlist,
-        );
+        let mut zSql: *mut ::core::ffi::c_char = sqlite_printf!("SELECT %s", (*p).zReadExprlist);
         if zSql.is_null() {
             rc = crate::src::headers::sqlite3_h::SQLITE_NOMEM;
         } else {
@@ -6184,10 +6111,10 @@ unsafe extern "C" fn fts3DeleteByRowid(
             } else {
                 *pnChng -= 1 as ::core::ffi::c_int;
                 if (*p).zContentTbl.is_null() {
-                    fts3SqlExec(&raw mut rc, p, SQL_DELETE_CONTENT, &raw mut pRowid);
+                    fts3SqlExec(&raw mut rc, p, SqlConstant::SQL_DELETE_CONTENT as ::core::ffi::c_int, &raw mut pRowid);
                 }
                 if (*p).bHasDocsize != 0 {
-                    fts3SqlExec(&raw mut rc, p, SQL_DELETE_DOCSIZE, &raw mut pRowid);
+                    fts3SqlExec(&raw mut rc, p, SqlConstant::SQL_DELETE_DOCSIZE as ::core::ffi::c_int, &raw mut pRowid);
                 }
             }
         }

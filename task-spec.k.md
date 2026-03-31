@@ -16,6 +16,15 @@ Verify c_variadic feature isolation: only in printf_c_variadic.rs
       - [fts3_write_no_feature](#fts3_write_no_feature)
       - [fts3_write_no_sqlite3_mprintf](#fts3_write_no_sqlite3_mprintf)
       - [fts3_write_no_sqlite3_mprintf_use](#fts3_write_no_sqlite3_mprintf_use)
+    - [Feature: fts3_write_enum_constants](#fts3_write_enum_constants)
+      - [fts3_write_fts_stat_enum_defined](#fts3_write_fts_stat_enum_defined)
+      - [fts3_write_no_fts_stat_incrmergehint_const](#fts3_write_no_fts_stat_incrmergehint_const)
+      - [fts3_write_no_sql_delete_all_segdir_const](#fts3_write_no_sql_delete_all_segdir_const)
+      - [fts3_write_sql_const_enum_defined](#fts3_write_sql_const_enum_defined)
+    - [Feature: fts3_write_sqlite_printf_migration](#fts3_write_sqlite_printf_migration)
+      - [fts3_write_no_format_sql_1arg](#fts3_write_no_format_sql_1arg)
+      - [fts3_write_no_format_sql_2args](#fts3_write_no_format_sql_2args)
+      - [fts3_write_no_format_sql_3args](#fts3_write_no_format_sql_3args)
     - [Feature: memdb_c_variadic_migration](#memdb_c_variadic_migration)
       - [memdb_memdbFileControl_no_variadic](#memdb_memdbfilecontrol_no_variadic)
       - [memdb_no_feature](#memdb_no_feature)
@@ -63,6 +72,54 @@ Verify c_variadic feature isolation: only in printf_c_variadic.rs
 #### fts3_write_no_sqlite3_mprintf_use
 **Description:** fts3_write.rs must not import sqlite3_mprintf
 **Command:** `grep -E "use.*sqlite3_mprintf|pub use.*sqlite3_mprintf" "$WORKSPACE_ROOT/src/ext/fts3/fts3_write.rs" 2>/dev/null && exit 1 || exit 0`
+
+### Feature: fts3_write_enum_constants
+**Migrate FTS3 and SQL constants from individual const definitions to enum variants**
+
+**Goals:**
+- Replace individual const SQL_* definitions with enum SqlConstant variants
+- Replace individual const FTS_STAT_* definitions with enum FtsStatConstant variants
+- Define enums with proper c_int assigned values
+- Maintain all constant values and usage compatibility
+- Verify all 394649 tests still pass
+
+#### fts3_write_fts_stat_enum_defined
+**Description:** fts3_write.rs must define FtsStatConstant enum or similar with FTS_STAT values
+**Command:** `grep -n "enum.*FtsStatConstant\|enum.*FTS_STAT" "$WORKSPACE_ROOT/src/ext/fts3/fts3_write.rs" 2>/dev/null || exit 1`
+
+#### fts3_write_no_fts_stat_incrmergehint_const
+**Description:** fts3_write.rs must not define FTS_STAT_INCRMERGEHINT as const (should be enum variant)
+**Command:** `grep -n "pub const FTS_STAT_INCRMERGEHINT" "$WORKSPACE_ROOT/src/ext/fts3/fts3_write.rs" 2>/dev/null && exit 1 || exit 0`
+
+#### fts3_write_no_sql_delete_all_segdir_const
+**Description:** fts3_write.rs must not define SQL_DELETE_ALL_SEGDIR as const (should be enum variant)
+**Command:** `grep -n "pub const SQL_DELETE_ALL_SEGDIR" "$WORKSPACE_ROOT/src/ext/fts3/fts3_write.rs" 2>/dev/null && exit 1 || exit 0`
+
+#### fts3_write_sql_const_enum_defined
+**Description:** fts3_write.rs must define SqlConstant enum or similar with SQL_* values
+**Command:** `grep -n "enum.*SqlConstant\|enum.*SQL_" "$WORKSPACE_ROOT/src/ext/fts3/fts3_write.rs" 2>/dev/null || exit 1`
+
+### Feature: fts3_write_sqlite_printf_migration
+**Migrate fts3_write.rs from format_sql_* helpers to sqlite_printf! proc macro**
+
+**Goals:**
+- Replace all safe_format::format_sql_1arg calls with sqlite_printf! macro
+- Replace all safe_format::format_sql_2args calls with sqlite_printf! macro
+- Replace all safe_format::format_sql_3args calls with sqlite_printf! macro
+- Verify no format_sql_* functions are used in fts3_write.rs
+- All 394649 tests must pass after migration
+
+#### fts3_write_no_format_sql_1arg
+**Description:** fts3_write.rs must not use format_sql_1arg function
+**Command:** `grep -n "format_sql_1arg" "$WORKSPACE_ROOT/src/ext/fts3/fts3_write.rs" 2>/dev/null && exit 1 || exit 0`
+
+#### fts3_write_no_format_sql_2args
+**Description:** fts3_write.rs must not use format_sql_2args function
+**Command:** `grep -n "format_sql_2args" "$WORKSPACE_ROOT/src/ext/fts3/fts3_write.rs" 2>/dev/null && exit 1 || exit 0`
+
+#### fts3_write_no_format_sql_3args
+**Description:** fts3_write.rs must not use format_sql_3args function
+**Command:** `grep -n "format_sql_3args" "$WORKSPACE_ROOT/src/ext/fts3/fts3_write.rs" 2>/dev/null && exit 1 || exit 0`
 
 ### Feature: memdb_c_variadic_migration
 **Migrate memdb.rs and specific functions away from c_variadic feature**

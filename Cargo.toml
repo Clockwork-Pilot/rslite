@@ -21,6 +21,7 @@ libc = "0.2"
 parking_lot = "0.10.2"
 snafu = "0.7"
 sqlite-printf-macros = { path = "sqlite-printf-macros" }
+strum_macros = "0.27"
 
 [features]
 default = []

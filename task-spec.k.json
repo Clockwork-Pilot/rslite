@@ -130,6 +130,78 @@
           "fails_count": 1
         }
       }
+    },
+    "fts3_write_sqlite_printf_migration": {
+      "type": "Feature",
+      "model_version": 1,
+      "id": "fts3_write_sqlite_printf_migration",
+      "description": "Migrate fts3_write.rs from format_sql_* helpers to sqlite_printf! proc macro",
+      "goals": [
+        "Replace all safe_format::format_sql_1arg calls with sqlite_printf! macro",
+        "Replace all safe_format::format_sql_2args calls with sqlite_printf! macro",
+        "Replace all safe_format::format_sql_3args calls with sqlite_printf! macro",
+        "Verify no format_sql_* functions are used in fts3_write.rs",
+        "All 394649 tests must pass after migration"
+      ],
+      "constraints": {
+        "fts3_write_no_format_sql_1arg": {
+          "id": "fts3_write_no_format_sql_1arg",
+          "cmd": "grep -n \"format_sql_1arg\" \"$WORKSPACE_ROOT/src/ext/fts3/fts3_write.rs\" 2>/dev/null && exit 1 || exit 0",
+          "description": "fts3_write.rs must not use format_sql_1arg function",
+          "fails_count": 1
+        },
+        "fts3_write_no_format_sql_2args": {
+          "id": "fts3_write_no_format_sql_2args",
+          "cmd": "grep -n \"format_sql_2args\" \"$WORKSPACE_ROOT/src/ext/fts3/fts3_write.rs\" 2>/dev/null && exit 1 || exit 0",
+          "description": "fts3_write.rs must not use format_sql_2args function",
+          "fails_count": 1
+        },
+        "fts3_write_no_format_sql_3args": {
+          "id": "fts3_write_no_format_sql_3args",
+          "cmd": "grep -n \"format_sql_3args\" \"$WORKSPACE_ROOT/src/ext/fts3/fts3_write.rs\" 2>/dev/null && exit 1 || exit 0",
+          "description": "fts3_write.rs must not use format_sql_3args function",
+          "fails_count": 1
+        }
+      }
+    },
+    "fts3_write_enum_constants": {
+      "type": "Feature",
+      "model_version": 1,
+      "id": "fts3_write_enum_constants",
+      "description": "Migrate FTS3 and SQL constants from individual const definitions to enum variants",
+      "goals": [
+        "Replace individual const SQL_* definitions with enum SqlConstant variants",
+        "Replace individual const FTS_STAT_* definitions with enum FtsStatConstant variants",
+        "Define enums with proper c_int assigned values",
+        "Maintain all constant values and usage compatibility",
+        "Verify all 394649 tests still pass"
+      ],
+      "constraints": {
+        "fts3_write_no_fts_stat_incrmergehint_const": {
+          "id": "fts3_write_no_fts_stat_incrmergehint_const",
+          "cmd": "grep -n \"pub const FTS_STAT_INCRMERGEHINT\" \"$WORKSPACE_ROOT/src/ext/fts3/fts3_write.rs\" 2>/dev/null && exit 1 || exit 0",
+          "description": "fts3_write.rs must not define FTS_STAT_INCRMERGEHINT as const (should be enum variant)",
+          "fails_count": 1
+        },
+        "fts3_write_no_sql_delete_all_segdir_const": {
+          "id": "fts3_write_no_sql_delete_all_segdir_const",
+          "cmd": "grep -n \"pub const SQL_DELETE_ALL_SEGDIR\" \"$WORKSPACE_ROOT/src/ext/fts3/fts3_write.rs\" 2>/dev/null && exit 1 || exit 0",
+          "description": "fts3_write.rs must not define SQL_DELETE_ALL_SEGDIR as const (should be enum variant)",
+          "fails_count": 1
+        },
+        "fts3_write_fts_stat_enum_defined": {
+          "id": "fts3_write_fts_stat_enum_defined",
+          "cmd": "grep -n \"enum.*FtsStatConstant\\|enum.*FTS_STAT\" \"$WORKSPACE_ROOT/src/ext/fts3/fts3_write.rs\" 2>/dev/null || exit 1",
+          "description": "fts3_write.rs must define FtsStatConstant enum or similar with FTS_STAT values",
+          "fails_count": 1
+        },
+        "fts3_write_sql_const_enum_defined": {
+          "id": "fts3_write_sql_const_enum_defined",
+          "cmd": "grep -n \"enum.*SqlConstant\\|enum.*SQL_\" \"$WORKSPACE_ROOT/src/ext/fts3/fts3_write.rs\" 2>/dev/null || exit 1",
+          "description": "fts3_write.rs must define SqlConstant enum or similar with SQL_* values",
+          "fails_count": 1
+        }
+      }
     }
   }
 }

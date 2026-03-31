@@ -876,7 +876,7 @@ pub unsafe extern "C" fn sqlite3_serialize(
         return ::core::ptr::null_mut::<::core::ffi::c_uchar>();
     }
     szPage = crate::src::src::btree::sqlite3BtreeGetPageSize(pBt);
-    zSql = crate::sqlite_printf!("PRAGMA \"%w\".page_count", zSchema);
+    zSql = crate::sqlite_printf!("PRAGMA %w.page_count", zSchema);
     rc = if !zSql.is_null() {
         crate::src::src::prepare::sqlite3_prepare_v2(
             
