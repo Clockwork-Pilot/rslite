@@ -10,6 +10,11 @@ Verify c_variadic feature isolation: only in printf_c_variadic.rs
 - [Features](#features)
     - [Feature: build_all](#build_all)
       - [constraint_build_all](#constraint_build_all)
+    - [Feature: fts3_c_variadic_migration](#fts3_c_variadic_migration)
+      - [fts3_no_printf_c_variadic](#fts3_no_printf_c_variadic)
+      - [fts3_no_sqlite3_mprintf](#fts3_no_sqlite3_mprintf)
+      - [fts3_no_sqlite3_mprintf_use](#fts3_no_sqlite3_mprintf_use)
+      - [fts3_uses_sqlite_printf_macro](#fts3_uses_sqlite_printf_macro)
     - [Feature: fts3_expr_c_variadic_migration](#fts3_expr_c_variadic_migration)
       - [fts3_expr_no_sqlite3_mprintf](#fts3_expr_no_sqlite3_mprintf)
       - [fts3_expr_no_sqlite3_mprintf_use](#fts3_expr_no_sqlite3_mprintf_use)
@@ -81,6 +86,31 @@ Verify c_variadic feature isolation: only in printf_c_variadic.rs
 #### constraint_build_all
 **Description:** Ensure our rust codebase is healthy
 **Command:** `cd $WORKSPACE_ROOT && ./build_all.sh`
+
+### Feature: fts3_c_variadic_migration
+**Migrate src/ext/fts3/fts3.rs away from sqlite3_mprintf and printf_c_variadic variadic helpers**
+
+**Goals:**
+- Remove all sqlite3_mprintf calls from src/ext/fts3/fts3.rs
+- Remove sqlite3_mprintf import from src/ext/fts3/fts3.rs
+- Remove re-exports of fts3DbExec, fts3Appendf, sqlite3Fts3ErrMsg from printf_c_variadic
+- Replace with compile-time validated sqlite_printf! macro calls
+
+#### fts3_no_printf_c_variadic
+**Description:** fts3.rs must not import from printf_c_variadic (fts3DbExec, fts3Appendf, sqlite3Fts3ErrMsg must be moved out)
+**Command:** `grep -n "printf_c_variadic" "$WORKSPACE_ROOT/src/ext/fts3/fts3.rs" 2>/dev/null && exit 1 || exit 0`
+
+#### fts3_no_sqlite3_mprintf
+**Description:** fts3.rs must not use sqlite3_mprintf function calls
+**Command:** `grep -E "\bsqlite3_mprintf\(" "$WORKSPACE_ROOT/src/ext/fts3/fts3.rs" 2>/dev/null && exit 1 || exit 0`
+
+#### fts3_no_sqlite3_mprintf_use
+**Description:** fts3.rs must not import sqlite3_mprintf
+**Command:** `grep -E "use.*sqlite3_mprintf|pub use.*sqlite3_mprintf" "$WORKSPACE_ROOT/src/ext/fts3/fts3.rs" 2>/dev/null && exit 1 || exit 0`
+
+#### fts3_uses_sqlite_printf_macro
+**Description:** fts3.rs must use sqlite_printf! macro for string formatting
+**Command:** `grep -c "sqlite_printf!" "$WORKSPACE_ROOT/src/ext/fts3/fts3.rs" 2>/dev/null | grep -qE "^[1-9]" && exit 0 || exit 1`
 
 ### Feature: fts3_expr_c_variadic_migration
 **Migrate src/ext/fts3/fts3_expr.rs away from sqlite3_mprintf to sqlite_printf! proc macro**

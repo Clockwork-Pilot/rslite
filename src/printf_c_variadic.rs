@@ -1001,17 +1001,6 @@ pub unsafe extern "C" fn checkAppendMsg(
 
 
 
-#[unsafe(no_mangle)]
-
-pub unsafe extern "C" fn sqlite3Fts3ErrMsg(
-    mut pzErr: *mut *mut ::core::ffi::c_char,
-    mut zFormat: *const ::core::ffi::c_char,
-    mut args: ...
-) {
-    crate::src::src::malloc::sqlite3_free(*pzErr as *mut ::core::ffi::c_void);
-    *pzErr = crate::src::src::printf::sqlite3_vmprintf(zFormat, args);
-}
-
 
 
 pub unsafe extern "C" fn fts3DbExec(

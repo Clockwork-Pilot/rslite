@@ -486,6 +486,44 @@
           "fails_count": 1
         }
       }
+    },
+    "fts3_c_variadic_migration": {
+      "type": "Feature",
+      "model_version": 1,
+      "id": "fts3_c_variadic_migration",
+      "description": "Migrate src/ext/fts3/fts3.rs away from sqlite3_mprintf and printf_c_variadic variadic helpers",
+      "goals": [
+        "Remove all sqlite3_mprintf calls from src/ext/fts3/fts3.rs",
+        "Remove sqlite3_mprintf import from src/ext/fts3/fts3.rs",
+        "Remove re-exports of fts3DbExec, fts3Appendf, sqlite3Fts3ErrMsg from printf_c_variadic",
+        "Replace with compile-time validated sqlite_printf! macro calls"
+      ],
+      "constraints": {
+        "fts3_no_sqlite3_mprintf": {
+          "id": "fts3_no_sqlite3_mprintf",
+          "cmd": "grep -E \"\\bsqlite3_mprintf\\(\" \"$WORKSPACE_ROOT/src/ext/fts3/fts3.rs\" 2>/dev/null && exit 1 || exit 0",
+          "description": "fts3.rs must not use sqlite3_mprintf function calls",
+          "fails_count": 1
+        },
+        "fts3_no_sqlite3_mprintf_use": {
+          "id": "fts3_no_sqlite3_mprintf_use",
+          "cmd": "grep -E \"use.*sqlite3_mprintf|pub use.*sqlite3_mprintf\" \"$WORKSPACE_ROOT/src/ext/fts3/fts3.rs\" 2>/dev/null && exit 1 || exit 0",
+          "description": "fts3.rs must not import sqlite3_mprintf",
+          "fails_count": 1
+        },
+        "fts3_no_printf_c_variadic": {
+          "id": "fts3_no_printf_c_variadic",
+          "cmd": "grep -n \"printf_c_variadic\" \"$WORKSPACE_ROOT/src/ext/fts3/fts3.rs\" 2>/dev/null && exit 1 || exit 0",
+          "description": "fts3.rs must not import from printf_c_variadic (fts3DbExec, fts3Appendf, sqlite3Fts3ErrMsg must be moved out)",
+          "fails_count": 1
+        },
+        "fts3_uses_sqlite_printf_macro": {
+          "id": "fts3_uses_sqlite_printf_macro",
+          "cmd": "grep -c \"sqlite_printf!\" \"$WORKSPACE_ROOT/src/ext/fts3/fts3.rs\" 2>/dev/null | grep -qE \"^[1-9]\" && exit 0 || exit 1",
+          "description": "fts3.rs must use sqlite_printf! macro for string formatting",
+          "fails_count": 1
+        }
+      }
     }
   }
 }
