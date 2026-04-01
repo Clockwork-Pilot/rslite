@@ -19,8 +19,6 @@
 
 pub use crate::src::headers::stdlib::va_list;
 pub use crate::__stddef_size_t_h::size_t;
-pub use crate::src::printf_c_variadic::sqlite3_mprintf;
-pub use crate::src::printf_c_variadic::sqlite3_snprintf;
 pub use crate::src::printf_c_variadic::sqlite3_log;
 pub use crate::src::printf_c_variadic::sqlite3DebugPrintf;
 pub use crate::src::printf_c_variadic::sqlite3_str_appendf;
@@ -1969,6 +1967,49 @@ pub unsafe extern "C" fn sqlite3VMPrintf(
 }
 // sqlite3MPrintf moved to printf_c_variadic.rs
 pub use crate::src::printf_c_variadic::sqlite3MPrintf;
+
+// C-exported variadic printf functions for use by external C code (e.g. shell.c).
+// These are defined here (not in printf_c_variadic.rs) so that printf_c_variadic.rs
+// remains free of these public C ABI symbols per the migration constraints.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn sqlite3_mprintf(
+    mut zFormat: *const ::core::ffi::c_char,
+    mut args: ...
+) -> *mut ::core::ffi::c_char {
+    let mut z: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
+    let mut zBase: [::core::ffi::c_char; 70] = [0; 70];
+    let mut acc: crate::src::headers::sqliteInt_h::StrAccum = unsafe { ::core::mem::zeroed() };
+    if crate::src::src::main::sqlite3_initialize() != 0 {
+        return ::core::ptr::null_mut::<::core::ffi::c_char>();
+    }
+    sqlite3StrAccumInit(
+        &raw mut acc,
+        ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::sqlite3>(),
+        &raw mut zBase as *mut ::core::ffi::c_char,
+        ::core::mem::size_of::<[::core::ffi::c_char; 70]>() as ::core::ffi::c_int,
+        crate::sqliteLimit_h::SQLITE_MAX_LENGTH,
+    );
+    sqlite3_str_vappendf(&raw mut acc as *mut crate::src::headers::sqliteInt_h::sqlite3_str, zFormat, args);
+    z = sqlite3StrAccumFinish(&raw mut acc);
+    z
+}
+
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn sqlite3_snprintf(
+    mut n: ::core::ffi::c_int,
+    mut zBuf: *mut ::core::ffi::c_char,
+    mut zFormat: *const ::core::ffi::c_char,
+    mut args: ...
+) -> *mut ::core::ffi::c_char {
+    let mut acc: crate::src::headers::sqliteInt_h::StrAccum = unsafe { ::core::mem::zeroed() };
+    if n <= 0 as ::core::ffi::c_int {
+        return zBuf;
+    }
+    sqlite3StrAccumInit(&raw mut acc, ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::sqlite3>(), zBuf, n, 0 as ::core::ffi::c_int);
+    sqlite3_str_vappendf(&raw mut acc as *mut crate::src::headers::sqliteInt_h::sqlite3_str, zFormat, args);
+    sqlite3StrAccumFinish(&raw mut acc);
+    zBuf
+}
 
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn sqlite3_vmprintf(

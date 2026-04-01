@@ -617,6 +617,72 @@
           "fails_count": 1
         }
       }
+    },
+    "auth_carray_dbpage_dbstat_func_main_c_variadic_migration": {
+      "type": "Feature",
+      "model_version": 1,
+      "id": "auth_carray_dbpage_dbstat_func_main_c_variadic_migration",
+      "description": "Migrate auth, carray, dbpage, dbstat, func, main away from sqlite3_mprintf/sqlite3_snprintf",
+      "goals": [
+        "Replace all sqlite3_mprintf and sqlite3_snprintf calls in auth.rs, carray.rs, dbpage.rs, dbstat.rs, func.rs, main.rs with sqlite_printf! and sqlite_snprintf! macros",
+        "Remove sqlite3_mprintf and sqlite3_snprintf function definitions from printf_c_variadic.rs"
+      ],
+      "constraints": {
+        "auth_no_sqlite3_mprintf": {
+          "id": "auth_no_sqlite3_mprintf",
+          "cmd": "grep -E \"\\bsqlite3_mprintf\\(\" \"$WORKSPACE_ROOT/src/src/auth.rs\" 2>/dev/null && exit 1 || exit 0",
+          "description": "auth.rs must not use sqlite3_mprintf",
+          "fails_count": 1
+        },
+        "carray_no_sqlite3_mprintf": {
+          "id": "carray_no_sqlite3_mprintf",
+          "cmd": "grep -E \"\\bsqlite3_mprintf\\(\" \"$WORKSPACE_ROOT/src/src/carray.rs\" 2>/dev/null && exit 1 || exit 0",
+          "description": "carray.rs must not use sqlite3_mprintf",
+          "fails_count": 1
+        },
+        "dbpage_no_sqlite3_mprintf": {
+          "id": "dbpage_no_sqlite3_mprintf",
+          "cmd": "grep -E \"\\bsqlite3_mprintf\\(\" \"$WORKSPACE_ROOT/src/src/dbpage.rs\" 2>/dev/null && exit 1 || exit 0",
+          "description": "dbpage.rs must not use sqlite3_mprintf",
+          "fails_count": 1
+        },
+        "dbstat_no_sqlite3_mprintf": {
+          "id": "dbstat_no_sqlite3_mprintf",
+          "cmd": "grep -E \"\\bsqlite3_mprintf\\(\" \"$WORKSPACE_ROOT/src/src/dbstat.rs\" 2>/dev/null && exit 1 || exit 0",
+          "description": "dbstat.rs must not use sqlite3_mprintf",
+          "fails_count": 1
+        },
+        "func_no_sqlite3_mprintf": {
+          "id": "func_no_sqlite3_mprintf",
+          "cmd": "grep -E \"\\bsqlite3_mprintf\\(\" \"$WORKSPACE_ROOT/src/src/func.rs\" 2>/dev/null && exit 1 || exit 0",
+          "description": "func.rs must not use sqlite3_mprintf",
+          "fails_count": 1
+        },
+        "main_no_sqlite3_mprintf": {
+          "id": "main_no_sqlite3_mprintf",
+          "cmd": "grep -E \"\\bsqlite3_mprintf\\(\" \"$WORKSPACE_ROOT/src/src/main.rs\" 2>/dev/null && exit 1 || exit 0",
+          "description": "main.rs must not use sqlite3_mprintf",
+          "fails_count": 1
+        },
+        "main_no_sqlite3_snprintf": {
+          "id": "main_no_sqlite3_snprintf",
+          "cmd": "grep -E \"\\bsqlite3_snprintf\\(\" \"$WORKSPACE_ROOT/src/src/main.rs\" 2>/dev/null && exit 1 || exit 0",
+          "description": "main.rs must not use sqlite3_snprintf",
+          "fails_count": 1
+        },
+        "no_sqlite3_mprintf_definition": {
+          "id": "no_sqlite3_mprintf_definition",
+          "cmd": "grep -E \"^pub unsafe extern.*fn sqlite3_mprintf\" \"$WORKSPACE_ROOT/src/printf_c_variadic.rs\" 2>/dev/null && exit 1 || exit 0",
+          "description": "sqlite3_mprintf function must be removed from printf_c_variadic.rs",
+          "fails_count": 1
+        },
+        "no_sqlite3_snprintf_definition": {
+          "id": "no_sqlite3_snprintf_definition",
+          "cmd": "grep -E \"^pub unsafe extern.*fn sqlite3_snprintf\" \"$WORKSPACE_ROOT/src/printf_c_variadic.rs\" 2>/dev/null && exit 1 || exit 0",
+          "description": "sqlite3_snprintf function must be removed from printf_c_variadic.rs",
+          "fails_count": 1
+        }
+      }
     }
   }
 }

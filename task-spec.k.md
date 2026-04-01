@@ -8,6 +8,16 @@ Verify c_variadic feature isolation: only in printf_c_variadic.rs
 
 - [Overview](#overview)
 - [Features](#features)
+    - [Feature: auth_carray_dbpage_dbstat_func_main_c_variadic_migration](#auth_carray_dbpage_dbstat_func_main_c_variadic_migration)
+      - [auth_no_sqlite3_mprintf](#auth_no_sqlite3_mprintf)
+      - [carray_no_sqlite3_mprintf](#carray_no_sqlite3_mprintf)
+      - [dbpage_no_sqlite3_mprintf](#dbpage_no_sqlite3_mprintf)
+      - [dbstat_no_sqlite3_mprintf](#dbstat_no_sqlite3_mprintf)
+      - [func_no_sqlite3_mprintf](#func_no_sqlite3_mprintf)
+      - [main_no_sqlite3_mprintf](#main_no_sqlite3_mprintf)
+      - [main_no_sqlite3_snprintf](#main_no_sqlite3_snprintf)
+      - [no_sqlite3_mprintf_definition](#no_sqlite3_mprintf_definition)
+      - [no_sqlite3_snprintf_definition](#no_sqlite3_snprintf_definition)
     - [Feature: build_all](#build_all)
       - [constraint_build_all](#constraint_build_all)
     - [Feature: fts3_aux_c_variadic_migration](#fts3_aux_c_variadic_migration)
@@ -91,6 +101,49 @@ Verify c_variadic feature isolation: only in printf_c_variadic.rs
       - [vdbevtab_no_sqlite3_mprintf](#vdbevtab_no_sqlite3_mprintf)
 
 ## Features
+
+### Feature: auth_carray_dbpage_dbstat_func_main_c_variadic_migration
+**Migrate auth, carray, dbpage, dbstat, func, main away from sqlite3_mprintf/sqlite3_snprintf**
+
+**Goals:**
+- Replace all sqlite3_mprintf and sqlite3_snprintf calls in auth.rs, carray.rs, dbpage.rs, dbstat.rs, func.rs, main.rs with sqlite_printf! and sqlite_snprintf! macros
+- Remove sqlite3_mprintf and sqlite3_snprintf function definitions from printf_c_variadic.rs
+
+#### auth_no_sqlite3_mprintf
+**Description:** auth.rs must not use sqlite3_mprintf
+**Command:** `grep -E "\bsqlite3_mprintf\(" "$WORKSPACE_ROOT/src/src/auth.rs" 2>/dev/null && exit 1 || exit 0`
+
+#### carray_no_sqlite3_mprintf
+**Description:** carray.rs must not use sqlite3_mprintf
+**Command:** `grep -E "\bsqlite3_mprintf\(" "$WORKSPACE_ROOT/src/src/carray.rs" 2>/dev/null && exit 1 || exit 0`
+
+#### dbpage_no_sqlite3_mprintf
+**Description:** dbpage.rs must not use sqlite3_mprintf
+**Command:** `grep -E "\bsqlite3_mprintf\(" "$WORKSPACE_ROOT/src/src/dbpage.rs" 2>/dev/null && exit 1 || exit 0`
+
+#### dbstat_no_sqlite3_mprintf
+**Description:** dbstat.rs must not use sqlite3_mprintf
+**Command:** `grep -E "\bsqlite3_mprintf\(" "$WORKSPACE_ROOT/src/src/dbstat.rs" 2>/dev/null && exit 1 || exit 0`
+
+#### func_no_sqlite3_mprintf
+**Description:** func.rs must not use sqlite3_mprintf
+**Command:** `grep -E "\bsqlite3_mprintf\(" "$WORKSPACE_ROOT/src/src/func.rs" 2>/dev/null && exit 1 || exit 0`
+
+#### main_no_sqlite3_mprintf
+**Description:** main.rs must not use sqlite3_mprintf
+**Command:** `grep -E "\bsqlite3_mprintf\(" "$WORKSPACE_ROOT/src/src/main.rs" 2>/dev/null && exit 1 || exit 0`
+
+#### main_no_sqlite3_snprintf
+**Description:** main.rs must not use sqlite3_snprintf
+**Command:** `grep -E "\bsqlite3_snprintf\(" "$WORKSPACE_ROOT/src/src/main.rs" 2>/dev/null && exit 1 || exit 0`
+
+#### no_sqlite3_mprintf_definition
+**Description:** sqlite3_mprintf function must be removed from printf_c_variadic.rs
+**Command:** `grep -E "^pub unsafe extern.*fn sqlite3_mprintf" "$WORKSPACE_ROOT/src/printf_c_variadic.rs" 2>/dev/null && exit 1 || exit 0`
+
+#### no_sqlite3_snprintf_definition
+**Description:** sqlite3_snprintf function must be removed from printf_c_variadic.rs
+**Command:** `grep -E "^pub unsafe extern.*fn sqlite3_snprintf" "$WORKSPACE_ROOT/src/printf_c_variadic.rs" 2>/dev/null && exit 1 || exit 0`
 
 ### Feature: build_all
 **Check that our rust codebase is healthy**

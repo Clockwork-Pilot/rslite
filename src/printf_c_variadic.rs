@@ -25,43 +25,6 @@ pub unsafe extern "C" fn sqlite3MPrintf(
 }
 
 #[unsafe(no_mangle)]
-pub unsafe extern "C" fn sqlite3_mprintf(
-    mut zFormat: *const ::core::ffi::c_char,
-    mut args: ...
-) -> *mut ::core::ffi::c_char {
-    let mut z: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
-    if crate::src::src::main::sqlite3_initialize() != 0 {
-        return ::core::ptr::null_mut::<::core::ffi::c_char>();
-    }
-    z = crate::src::src::printf::sqlite3_vmprintf(zFormat, args);
-    z
-}
-
-#[unsafe(no_mangle)]
-pub unsafe extern "C" fn sqlite3_snprintf(
-    mut n: ::core::ffi::c_int,
-    mut zBuf: *mut ::core::ffi::c_char,
-    mut zFormat: *const ::core::ffi::c_char,
-    mut args: ...
-) -> *mut ::core::ffi::c_char {
-    let mut acc: crate::src::headers::sqliteInt_h::StrAccum = unsafe { ::core::mem::zeroed() };
-    // VaListImpl type handling - using args directly
-    if n <= 0 as ::core::ffi::c_int {
-        return zBuf;
-    }
-    crate::src::src::printf::sqlite3StrAccumInit(
-        &raw mut acc,
-        ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::sqlite3>(),
-        zBuf,
-        n,
-        0 as ::core::ffi::c_int,
-    );
-    crate::src::src::printf::sqlite3_str_vappendf(&raw mut acc, zFormat, args);
-    *zBuf.offset(acc.nChar as isize) = 0 as ::core::ffi::c_char;
-    zBuf
-}
-
-#[unsafe(no_mangle)]
 pub unsafe extern "C" fn sqlite3_log(
     mut iErrCode: ::core::ffi::c_int,
     mut zFormat: *const ::core::ffi::c_char,
@@ -946,7 +909,18 @@ pub unsafe extern "C" fn percentError(
     let mut zMsg2: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
     zMsg1 = crate::src::src::printf::sqlite3_vmprintf(zFormat, args);
     zMsg2 = if !zMsg1.is_null() {
-        crate::src::src::printf::sqlite3_mprintf(zMsg1, crate::src::src::vdbeaux::sqlite3VdbeFuncName(pCtx as *const crate::src::headers::vdbeInt_h::sqlite3_context))
+        // zMsg1 is a format string with %s for the function name (from %%s in the original)
+        let msg1 = ::std::ffi::CStr::from_ptr(zMsg1).to_str().unwrap_or("");
+        let fname_ptr = crate::src::src::vdbeaux::sqlite3VdbeFuncName(pCtx as *const crate::src::headers::vdbeInt_h::sqlite3_context);
+        let fname = if fname_ptr.is_null() { "" } else { ::std::ffi::CStr::from_ptr(fname_ptr).to_str().unwrap_or("") };
+        let msg2 = msg1.replacen("%s", fname, 1);
+        let bytes = msg2.as_bytes();
+        let ptr = crate::src::src::malloc::sqlite3_malloc64((bytes.len() + 1) as u64) as *mut u8;
+        if !ptr.is_null() {
+            ::core::ptr::copy_nonoverlapping(bytes.as_ptr(), ptr, bytes.len());
+            *ptr.add(bytes.len()) = 0;
+        }
+        ptr as *mut ::core::ffi::c_char
     } else {
         ::core::ptr::null_mut::<::core::ffi::c_char>()
     };
@@ -1040,8 +1014,7 @@ pub unsafe extern "C" fn fts3Appendf(
         let mut z: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
                 z = crate::src::src::printf::sqlite3_vmprintf(zFormat, args);
         if !z.is_null() && !(*pz).is_null() {
-            let mut z2: *mut ::core::ffi::c_char =
-                crate::src::src::printf::sqlite3_mprintf(b"%s%s\0" as *const u8 as *const ::core::ffi::c_char, *pz, z);
+            let mut z2: *mut ::core::ffi::c_char = crate::sqlite_printf!("%s%s", *pz, z);
             crate::src::src::malloc::sqlite3_free(z as *mut ::core::ffi::c_void);
             z = z2;
         }
@@ -1204,11 +1177,7 @@ pub unsafe extern "C" fn fts5PrintfAppend(
     let mut zNew: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
     zNew = crate::src::src::printf::sqlite3_vmprintf(zFmt, args);
     if !zApp.is_null() && !zNew.is_null() {
-        let mut zNew2: *mut ::core::ffi::c_char = crate::src::src::printf::sqlite3_mprintf(
-            b"%s%s\0" as *const u8 as *const ::core::ffi::c_char,
-            zApp,
-            zNew,
-        );
+        let mut zNew2: *mut ::core::ffi::c_char = crate::sqlite_printf!("%s%s", zApp, zNew);
         crate::src::src::malloc::sqlite3_free(zNew as *mut ::core::ffi::c_void);
         zNew = zNew2;
     }

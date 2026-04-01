@@ -10,8 +10,9 @@
 )]
 
 
-// Re-export sqlite_printf! and json_printf! macros from proc-macro crate
+// Re-export sqlite_printf!, sqlite_snprintf! and json_printf! macros from proc-macro crate
 pub use sqlite_printf_macros::sqlite_printf;
+pub use sqlite_printf_macros::sqlite_snprintf;
 pub use sqlite_printf_macros::json_printf;
 
 #[path = "src/vdbe/mod.rs"]

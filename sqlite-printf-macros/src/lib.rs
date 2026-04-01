@@ -135,6 +135,11 @@ fn parse_format_specs(format: &str) -> Result<Vec<FormatSpec>, String> {
                                             chars.next();
                                             specs.push(FormatSpec::ULong64);
                                         }
+                                        'x' | 'X' => {
+                                            chars.next();
+                                            let upper = third == 'X';
+                                            specs.push(FormatSpec::HexWidthLong { width: 0, zero_pad: false, upper });
+                                        }
                                         _ => {
                                             return Err(format!("Unknown format specifier: %ll{}", third));
                                         }
@@ -148,14 +153,13 @@ fn parse_format_specs(format: &str) -> Result<Vec<FormatSpec>, String> {
                     }
                     '!' => {
                         chars.next();
-                        // Check for !0.15g (SQLite float formatting)
                         if let Some(&second) = chars.peek() {
                             if second == '0' {
+                                // Check for %!0.15g (SQLite float formatting for json_printf)
                                 chars.next();
                                 if let Some(&third) = chars.peek() {
                                     if third == '.' {
                                         chars.next();
-                                        // Consume digits after '.'
                                         while let Some(&d) = chars.peek() {
                                             if d.is_ascii_digit() {
                                                 chars.next();
@@ -171,11 +175,31 @@ fn parse_format_specs(format: &str) -> Result<Vec<FormatSpec>, String> {
                                         }
                                     }
                                 }
+                            } else if second == '.' {
+                                // Check for %!.*f (float with dynamic precision, strip trailing zeros)
+                                chars.next();
+                                if let Some(&third) = chars.peek() {
+                                    if third == '*' {
+                                        chars.next();
+                                        if let Some(&fourth) = chars.peek() {
+                                            if matches!(fourth, 'f' | 'F') {
+                                                chars.next();
+                                                specs.push(FormatSpec::FloatPrecisionStripped);
+                                            } else {
+                                                return Err(format!("Unknown format specifier: %!.*{}", fourth));
+                                            }
+                                        }
+                                    } else {
+                                        return Err(format!("Unknown format specifier: %!.{}", third));
+                                    }
+                                }
+                            } else {
+                                return Err(format!("Unknown format specifier: %!{}", second));
                             }
                         }
                     }
                     '.' => {
-                        // Check for %.*s (raw bytes with length prefix)
+                        // Check for %.*s (raw bytes with length prefix) or %.Nx (precision hex)
                         chars.next();
                         if let Some(&next2) = chars.peek() {
                             if next2 == '*' {
@@ -190,9 +214,108 @@ fn parse_format_specs(format: &str) -> Result<Vec<FormatSpec>, String> {
                                 } else {
                                     return Err("Incomplete format specifier: %.*".to_string());
                                 }
+                            } else if next2.is_ascii_digit() {
+                                // Parse numeric precision, e.g. %.3x or %.6x
+                                let mut prec_str = String::new();
+                                while let Some(&d) = chars.peek() {
+                                    if d.is_ascii_digit() {
+                                        prec_str.push(d);
+                                        chars.next();
+                                    } else {
+                                        break;
+                                    }
+                                }
+                                let prec: usize = prec_str.parse().unwrap_or(0);
+                                if let Some(&type_ch) = chars.peek() {
+                                    match type_ch {
+                                        'x' | 'X' => {
+                                            chars.next();
+                                            specs.push(FormatSpec::HexPrecision(prec));
+                                        }
+                                        _ => {
+                                            return Err(format!("Unknown format specifier: %.{}{}", prec_str, type_ch));
+                                        }
+                                    }
+                                } else {
+                                    return Err(format!("Incomplete format specifier: %.{}", prec_str));
+                                }
                             } else {
                                 return Err(format!("Unknown format specifier: %.{}", next2));
                             }
+                        }
+                    }
+                    'r' => {
+                        chars.next();
+                        specs.push(FormatSpec::Ordinal);
+                    }
+                    '-' | '+' | ' ' | '#' | '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' => {
+                        // Parse optional flags then width digits
+                        let mut zero_pad = next == '0';
+                        // consume flags (-, +, space, #, 0)
+                        while let Some(&c) = chars.peek() {
+                            if matches!(c, '-' | '+' | ' ' | '#') {
+                                if c == '0' { zero_pad = true; }
+                                chars.next();
+                            } else {
+                                break;
+                            }
+                        }
+                        // consume width digits (already consumed `next` below)
+                        let mut width_str = String::new();
+                        if next.is_ascii_digit() {
+                            width_str.push(next);
+                        }
+                        while let Some(&c) = chars.peek() {
+                            if c.is_ascii_digit() {
+                                width_str.push(c);
+                                chars.next();
+                            } else {
+                                break;
+                            }
+                        }
+                        let width: usize = width_str.parse().unwrap_or(0);
+                        // Check for ll prefix
+                        let ll_prefix = if chars.peek() == Some(&'l') {
+                            chars.next(); // consume first 'l'
+                            if chars.peek() == Some(&'l') {
+                                chars.next(); // consume second 'l'
+                                true
+                            } else {
+                                false
+                            }
+                        } else {
+                            false
+                        };
+                        // Now get the type char
+                        if let Some(&type_ch) = chars.peek() {
+                            match type_ch {
+                                'x' | 'X' => {
+                                    chars.next();
+                                    let upper = type_ch == 'X';
+                                    if ll_prefix {
+                                        specs.push(FormatSpec::HexWidthLong { width, zero_pad, upper });
+                                    } else {
+                                        specs.push(FormatSpec::HexWidth { width, zero_pad, upper });
+                                    }
+                                }
+                                'd' | 'i' | 'u' => {
+                                    chars.next();
+                                    if ll_prefix {
+                                        specs.push(FormatSpec::Long64);
+                                    } else {
+                                        specs.push(FormatSpec::Integer);
+                                    }
+                                }
+                                's' | 'S' => {
+                                    chars.next();
+                                    specs.push(FormatSpec::String);
+                                }
+                                _ => {
+                                    return Err(format!("Unknown format specifier: %{}{}{}", width_str, if ll_prefix { "ll" } else { "" }, type_ch));
+                                }
+                            }
+                        } else {
+                            return Err(format!("Incomplete format specifier after %{}", width_str));
                         }
                     }
                     _ => {
@@ -225,24 +348,42 @@ enum FormatSpec {
     ULong64,
     FloatG15,      // %!0.15g for json_printf
     RawBytes,      // %.*s for json_printf (consumes 2 args: len, ptr)
+    HexPrecision(usize), // %.Nx — zero-padded hex with width N
+    FloatPrecisionStripped, // %!.*f — float with dynamic precision, strip trailing zeros (consumes 2 args: precision, value)
+    Ordinal,                // %r — SQLite ordinal (1st, 2nd, 3rd, ...)
+    HexWidth { width: usize, zero_pad: bool, upper: bool }, // %016llx, %06X, %02X etc.
+    HexWidthLong { width: usize, zero_pad: bool, upper: bool }, // %016llx (ll prefix)
 }
 
 impl FormatSpec {
-    fn rust_format(&self) -> &'static str {
+    fn rust_format(&self) -> String {
         match self {
-            FormatSpec::Percent => "%",
-            FormatSpec::String | FormatSpec::ZeroCopy => "{}",
-            FormatSpec::Integer | FormatSpec::Long | FormatSpec::Long64 => "{}",
-            FormatSpec::Unsigned | FormatSpec::ULong64 => "{}",
-            FormatSpec::Hex => "{:x}",
-            FormatSpec::Pointer => "{:p}",
-            FormatSpec::Float => "{}",
-            FormatSpec::Char => "{}",
-            FormatSpec::SqliteQuote => "{}",
-            FormatSpec::SqliteQuotedString => "{}",
-            FormatSpec::SqliteIdentifier => "{}",
-            FormatSpec::FloatG15 => "{}",  // Not used in sqlite_printf, only json_printf
-            FormatSpec::RawBytes => "{}",  // Not used in sqlite_printf, only json_printf
+            FormatSpec::Percent => "%".to_string(),
+            FormatSpec::String | FormatSpec::ZeroCopy => "{}".to_string(),
+            FormatSpec::Integer | FormatSpec::Long | FormatSpec::Long64 => "{}".to_string(),
+            FormatSpec::Unsigned | FormatSpec::ULong64 => "{}".to_string(),
+            FormatSpec::Hex => "{:x}".to_string(),
+            FormatSpec::Pointer => "{:p}".to_string(),
+            FormatSpec::Float => "{}".to_string(),
+            FormatSpec::Char => "{}".to_string(),
+            FormatSpec::SqliteQuote => "{}".to_string(),
+            FormatSpec::SqliteQuotedString => "{}".to_string(),
+            FormatSpec::SqliteIdentifier => "{}".to_string(),
+            FormatSpec::FloatG15 => "{}".to_string(),  // Not used in sqlite_printf, only json_printf
+            FormatSpec::RawBytes => "{}".to_string(),  // Not used in sqlite_printf, only json_printf
+            FormatSpec::HexPrecision(n) => format!("{{:0{}x}}", n),
+            FormatSpec::FloatPrecisionStripped => "{}".to_string(),
+            FormatSpec::Ordinal => "{}".to_string(),
+            FormatSpec::HexWidth { width, zero_pad, upper } => {
+                let pad = if *zero_pad { "0" } else { "" };
+                let case = if *upper { "X" } else { "x" };
+                format!("{{:{}{}{}}}", pad, width, case)
+            }
+            FormatSpec::HexWidthLong { width, zero_pad, upper } => {
+                let pad = if *zero_pad { "0" } else { "" };
+                let case = if *upper { "X" } else { "x" };
+                format!("{{:{}{}{}}}", pad, width, case)
+            }
         }
     }
 
@@ -253,6 +394,7 @@ impl FormatSpec {
     fn arg_count(&self) -> usize {
         match self {
             FormatSpec::RawBytes => 2, // %.*s consumes 2 args: length and pointer
+            FormatSpec::FloatPrecisionStripped => 2, // %!.*f consumes 2 args: precision and value
             FormatSpec::Percent => 0,
             _ => if self.is_argument_consuming() { 1 } else { 0 },
         }
@@ -340,10 +482,11 @@ fn gen_arg_handler(arg: &Expr, spec: &FormatSpec) -> proc_macro2::TokenStream {
         FormatSpec::String | FormatSpec::ZeroCopy => {
             // Convert C string to Rust String
             quote! {{
-                if #arg.is_null() {
+                let __arg = #arg;
+                if __arg.is_null() {
                     String::new()
                 } else {
-                    std::ffi::CStr::from_ptr(#arg)
+                    unsafe { std::ffi::CStr::from_ptr(__arg) }
                         .to_str()
                         .unwrap_or("")
                         .to_string()
@@ -360,10 +503,11 @@ fn gen_arg_handler(arg: &Expr, spec: &FormatSpec) -> proc_macro2::TokenStream {
         FormatSpec::SqliteQuote => {
             // %q: escape single quotes, no wrapping
             quote! {{
-                if #arg.is_null() {
+                let __arg = #arg;
+                if __arg.is_null() {
                     String::new()
                 } else {
-                    let s = std::ffi::CStr::from_ptr(#arg)
+                    let s = unsafe { std::ffi::CStr::from_ptr(__arg) }
                         .to_str()
                         .unwrap_or("");
                     s.replace('\'', "''")
@@ -373,10 +517,11 @@ fn gen_arg_handler(arg: &Expr, spec: &FormatSpec) -> proc_macro2::TokenStream {
         FormatSpec::SqliteQuotedString => {
             // %Q: escape single quotes AND wrap in single quotes; NULL -> "NULL"
             quote! {{
-                if #arg.is_null() {
+                let __arg = #arg;
+                if __arg.is_null() {
                     "NULL".to_string()
                 } else {
-                    let s = std::ffi::CStr::from_ptr(#arg)
+                    let s = unsafe { std::ffi::CStr::from_ptr(__arg) }
                         .to_str()
                         .unwrap_or("");
                     format!("'{}'", s.replace('\'', "''"))
@@ -386,10 +531,11 @@ fn gen_arg_handler(arg: &Expr, spec: &FormatSpec) -> proc_macro2::TokenStream {
         FormatSpec::SqliteIdentifier => {
             // %w: escape double quotes in SQL identifier (quotes are in format string)
             quote! {{
-                if #arg.is_null() {
+                let __arg = #arg;
+                if __arg.is_null() {
                     String::new()
                 } else {
-                    let s = std::ffi::CStr::from_ptr(#arg)
+                    let s = unsafe { std::ffi::CStr::from_ptr(__arg) }
                         .to_str()
                         .unwrap_or("");
                     s.replace('"', "\"\"").to_string()
@@ -401,11 +547,32 @@ fn gen_arg_handler(arg: &Expr, spec: &FormatSpec) -> proc_macro2::TokenStream {
             // Only used in json_printf
             quote! { compile_error!("FloatG15 specifier only supported in json_printf!") }
         }
-        FormatSpec::RawBytes => {
-            // Handled specially in the generation loop (consumes 2 args)
+        FormatSpec::RawBytes | FormatSpec::FloatPrecisionStripped => {
+            // Handled specially in the generation loop (consume 2 args each)
             // This branch should not be reached
-            quote! { compile_error!("RawBytes must be handled in the generation loop") }
+            quote! { compile_error!("RawBytes/FloatPrecisionStripped must be handled in the generation loop") }
         }
+        FormatSpec::HexPrecision(_) => quote! { #arg },
+        FormatSpec::Ordinal => {
+            // %r: ordinal number (1st, 2nd, 3rd, ...)
+            quote! {{
+                let __n = (#arg) as i64;
+                let __abs = __n.unsigned_abs() % 100;
+                let __suffix = if __abs >= 11 && __abs <= 13 {
+                    "th"
+                } else {
+                    match __abs % 10 {
+                        1 => "st",
+                        2 => "nd",
+                        3 => "rd",
+                        _ => "th",
+                    }
+                };
+                format!("{}{}", __n, __suffix)
+            }}
+        }
+        FormatSpec::HexWidth { .. } => quote! { #arg },
+        FormatSpec::HexWidthLong { .. } => quote! { #arg },
     }
 }
 
@@ -424,7 +591,7 @@ fn convert_format_string(format: &str, specs: &[FormatSpec]) -> String {
                     if let Some(spec) = spec_iter.next() {
                         // For %%, we output a literal % (the spec is FormatSpec::Percent)
                         if spec.is_argument_consuming() {
-                            result.push_str(spec.rust_format());
+                            result.push_str(&spec.rust_format());
                         } else {
                             // Not consuming, output as literal
                             result.push('%');
@@ -437,7 +604,31 @@ fn convert_format_string(format: &str, specs: &[FormatSpec]) -> String {
                 chars.next();
 
                 // Handle multi-character specifiers
-                if next == 'l' {
+                if next == 'r' {
+                    // %r: single-char ordinal specifier, nothing extra to skip
+                } else if matches!(next, '-' | '+' | ' ' | '#' | '0'..='9') {
+                    // Width/flag prefix: skip remaining flag/digit chars, optional 'll', then type char
+                    while let Some(&c) = chars.peek() {
+                        if matches!(c, '-' | '+' | ' ' | '#' | '0'..='9') {
+                            chars.next();
+                        } else {
+                            break;
+                        }
+                    }
+                    // Optional 'll' prefix
+                    if chars.peek() == Some(&'l') {
+                        chars.next(); // consume first 'l'
+                        if chars.peek() == Some(&'l') {
+                            chars.next(); // consume second 'l'
+                        }
+                    }
+                    // Consume type character (x, X, d, i, u, s)
+                    if let Some(&type_ch) = chars.peek() {
+                        if matches!(type_ch, 'x' | 'X' | 'd' | 'i' | 'u' | 's' | 'S') {
+                            chars.next();
+                        }
+                    }
+                } else if next == 'l' {
                     if let Some(&second) = chars.peek() {
                         if second == 'l' {
                             chars.next();
@@ -451,13 +642,55 @@ fn convert_format_string(format: &str, specs: &[FormatSpec]) -> String {
                         }
                     }
                 } else if next == '.' {
-                    // %.*s: skip '*' and 's'
+                    // %.*s or %.Nx: skip remaining specifier characters
                     if let Some(&second) = chars.peek() {
                         if second == '*' {
                             chars.next();
                             if let Some(&third) = chars.peek() {
                                 if third == 's' || third == 'S' {
                                     chars.next();
+                                }
+                            }
+                        } else if second.is_ascii_digit() {
+                            // Skip digits then the type character (x/X)
+                            while let Some(&d) = chars.peek() {
+                                if d.is_ascii_digit() {
+                                    chars.next();
+                                } else {
+                                    break;
+                                }
+                            }
+                            if let Some(&type_ch) = chars.peek() {
+                                if matches!(type_ch, 'x' | 'X') {
+                                    chars.next();
+                                }
+                            }
+                        }
+                    }
+                } else if next == '!' {
+                    // %!0.15g or %!.*f: skip remaining specifier characters
+                    if let Some(&second) = chars.peek() {
+                        if second == '0' {
+                            chars.next(); // consume '0'
+                            if let Some(&dot) = chars.peek() {
+                                if dot == '.' {
+                                    chars.next(); // consume '.'
+                                    while let Some(&d) = chars.peek() {
+                                        if d.is_ascii_digit() { chars.next(); } else { break; }
+                                    }
+                                    if let Some(&g) = chars.peek() {
+                                        if matches!(g, 'g' | 'G') { chars.next(); }
+                                    }
+                                }
+                            }
+                        } else if second == '.' {
+                            chars.next(); // consume '.'
+                            if let Some(&star) = chars.peek() {
+                                if star == '*' {
+                                    chars.next(); // consume '*'
+                                    if let Some(&f) = chars.peek() {
+                                        if matches!(f, 'f' | 'F') { chars.next(); }
+                                    }
                                 }
                             }
                         }
@@ -467,7 +700,7 @@ fn convert_format_string(format: &str, specs: &[FormatSpec]) -> String {
                 // Add Rust format specifier
                 if let Some(spec) = spec_iter.next() {
                     if spec.is_argument_consuming() {
-                        result.push_str(spec.rust_format());
+                        result.push_str(&spec.rust_format());
                     } else {
                         result.push('%');
                     }
@@ -569,6 +802,25 @@ pub fn sqlite_printf(input: TokenStream) -> TokenStream {
                     } else {
                         ::std::string::String::new()
                     }
+                }});
+            }
+            FormatSpec::FloatPrecisionStripped => {
+                // %!.*f consumes 2 args: precision (int) and value (float)
+                let prec_arg = match arg_iter.next() {
+                    Some(a) => a,
+                    None => break,
+                };
+                let val_arg = match arg_iter.next() {
+                    Some(a) => a,
+                    None => break,
+                };
+                arg_handlers.push(quote! {{
+                    let __prec = #prec_arg as usize;
+                    let __val = #val_arg as f64;
+                    let __s = format!("{:.prec$}", __val, prec = __prec);
+                    let __s = __s.trim_end_matches('0');
+                    let __s = __s.trim_end_matches('.');
+                    __s.to_string()
                 }});
             }
             _ if spec.is_argument_consuming() => {
@@ -808,6 +1060,24 @@ pub fn sqlite_snprintf(input: TokenStream) -> TokenStream {
                     } else {
                         ::std::string::String::new()
                     }
+                }});
+            }
+            FormatSpec::FloatPrecisionStripped => {
+                let prec_arg = match arg_iter.next() {
+                    Some(a) => a,
+                    None => break,
+                };
+                let val_arg = match arg_iter.next() {
+                    Some(a) => a,
+                    None => break,
+                };
+                arg_handlers.push(quote! {{
+                    let __prec = #prec_arg as usize;
+                    let __val = #val_arg as f64;
+                    let __s = format!("{:.prec$}", __val, prec = __prec);
+                    let __s = __s.trim_end_matches('0');
+                    let __s = __s.trim_end_matches('.');
+                    __s.to_string()
                 }});
             }
             _ if spec.is_argument_consuming() => {
