@@ -2057,6 +2057,22 @@ pub unsafe extern "C" fn sqlite3_vsnprintf(
     zBuf
 }
 
+pub unsafe extern "C" fn printf_vmprintf_impl(
+    zFormat: *const ::core::ffi::c_char,
+    ap: ::core::ffi::VaList,
+) -> *mut ::core::ffi::c_char {
+    sqlite3_vmprintf(zFormat, ap)
+}
+
+pub unsafe extern "C" fn printf_vsnprintf_impl(
+    n: ::core::ffi::c_int,
+    zBuf: *mut ::core::ffi::c_char,
+    zFormat: *const ::core::ffi::c_char,
+    ap: ::core::ffi::VaList,
+) -> *mut ::core::ffi::c_char {
+    sqlite3_vsnprintf(n, zBuf, zFormat, ap)
+}
+
 pub unsafe extern "C" fn renderLogMsg(
     mut iErrCode: ::core::ffi::c_int,
     mut zFormat: *const ::core::ffi::c_char,

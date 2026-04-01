@@ -14,6 +14,8 @@
 pub use sqlite_printf_macros::sqlite_printf;
 pub use sqlite_printf_macros::sqlite_snprintf;
 pub use sqlite_printf_macros::json_printf;
+pub use sqlite_printf_macros::sqlite_vmprintf;
+pub use sqlite_printf_macros::sqlite_vsnprintf;
 
 #[path = "src/vdbe/mod.rs"]
 pub mod vdbe;

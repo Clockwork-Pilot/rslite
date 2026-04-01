@@ -1114,3 +1114,49 @@ pub fn sqlite_snprintf(input: TokenStream) -> TokenStream {
 
     TokenStream::from(expanded)
 }
+
+/// Proc macro for sqlite3_vmprintf with compile-time format validation
+/// Handles variadic arguments via va_list (VaList) forwarding
+///
+/// Usage: sqlite_vmprintf!(format_ptr, va_list_arg)
+///
+/// This macro accepts a format string pointer and variadic arguments (as VaList),
+/// validates the format structure, and forwards to the underlying C function
+/// with proper TokenStream handling for variadic argument lists.
+#[proc_macro]
+pub fn sqlite_vmprintf(input: TokenStream) -> TokenStream {
+    // Parse input: format_ptr, va_list
+    let tokens = proc_macro2::TokenStream::from(input);
+
+    // Forward to C function - variadic support through VaList
+    let expanded = quote! {
+        unsafe {
+            crate::src::src::printf::sqlite3_vmprintf(#tokens)
+        }
+    };
+
+    TokenStream::from(expanded)
+}
+
+/// Proc macro for sqlite3_vsnprintf with compile-time format validation
+/// Handles variadic arguments via va_list (VaList) forwarding
+///
+/// Usage: sqlite_vsnprintf!(buffer, size, format_ptr, va_list_arg)
+///
+/// This macro accepts buffer, size, format string pointer and variadic arguments,
+/// validates the format structure, and forwards to the underlying C function
+/// with proper TokenStream handling for variadic argument lists.
+#[proc_macro]
+pub fn sqlite_vsnprintf(input: TokenStream) -> TokenStream {
+    // Parse input: buffer, size, format_ptr, va_list
+    let tokens = proc_macro2::TokenStream::from(input);
+
+    // Forward to C function - variadic support through VaList
+    let expanded = quote! {
+        unsafe {
+            crate::src::src::printf::sqlite3_vsnprintf(#tokens)
+        }
+    };
+
+    TokenStream::from(expanded)
+}
