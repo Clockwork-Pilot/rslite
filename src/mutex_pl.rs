@@ -22,7 +22,6 @@ use parking_lot::ReentrantMutex;
 // ---------------------------------------------------------------------------
 pub const SQLITE_OK: i32 = 0;
 pub const SQLITE_BUSY: i32 = 5;
-const SQLITE_CONFIG_MUTEX: c_int = 10;
 
 pub const SQLITE_MUTEX_FAST: i32 = 0;
 pub const SQLITE_MUTEX_RECURSIVE: i32 = 1;

@@ -60,7 +60,7 @@ static mut memdb_g: MemFS = MemFS {
     apMemStore: ::core::ptr::null::<*mut MemStore>() as *mut *mut MemStore,
 };
 
-static mut memdb_vfs: crate::src::headers::sqlite3_h::sqlite3_vfs = unsafe {
+static mut memdb_vfs: crate::src::headers::sqlite3_h::sqlite3_vfs = {
     crate::src::headers::sqlite3_h::sqlite3_vfs {
     iVersion:  2 as ::core::ffi::c_int,
     szOsFile:  0 as ::core::ffi::c_int,
@@ -154,7 +154,7 @@ static mut memdb_vfs: crate::src::headers::sqlite3_h::sqlite3_vfs = unsafe {
 }
 };
 
-static mut memdb_io_methods: crate::src::headers::sqlite3_h::sqlite3_io_methods = unsafe {
+static mut memdb_io_methods: crate::src::headers::sqlite3_h::sqlite3_io_methods = {
     crate::src::headers::sqlite3_h::sqlite3_io_methods {
     iVersion:  3 as ::core::ffi::c_int,
     xClose:  Some(memdbClose as unsafe extern "C" fn(*mut crate::src::headers::sqlite3_h::sqlite3_file) -> ::core::ffi::c_int),
@@ -253,7 +253,7 @@ unsafe extern "C" fn memdbLeave(mut p: *mut MemStore) {
 
 unsafe extern "C" fn memdbClose(mut pFile: *mut crate::src::headers::sqlite3_h::sqlite3_file) -> ::core::ffi::c_int {
     let mut p: *mut MemStore = (*(pFile as *mut MemFile)).pStore;
-    let __p_ref = unsafe { &mut *p };
+    let __p_ref = { &mut *p };
     if !__p_ref.zFName.is_null() {
         let mut i: ::core::ffi::c_int = 0;
         let mut pVfsMutex: *mut crate::src::src::mutex_unix::sqlite3_mutex = crate::src::src::mutex::sqlite3MutexAlloc(crate::src::headers::sqlite3_h::SQLITE_MUTEX_STATIC_VFS1);
@@ -328,7 +328,7 @@ unsafe extern "C" fn memdbEnlarge(
     mut newSz: crate::src::headers::sqlite3_h::sqlite3_int64,
 ) -> ::core::ffi::c_int {
     let mut pNew: *mut ::core::ffi::c_uchar = ::core::ptr::null_mut::<::core::ffi::c_uchar>();
-    let __p_ref = unsafe { &mut *p };
+    let __p_ref = { &mut *p };
     if __p_ref.mFlags & crate::src::headers::sqlite3_h::SQLITE_DESERIALIZE_RESIZEABLE as ::core::ffi::c_uint
         == 0 as ::core::ffi::c_uint
         || __p_ref.nMmap > 0 as ::core::ffi::c_int
@@ -360,7 +360,7 @@ unsafe extern "C" fn memdbWrite(
 ) -> ::core::ffi::c_int {
     let mut p: *mut MemStore = (*(pFile as *mut MemFile)).pStore;
     memdbEnter(p);
-    let __p_ref = unsafe { &mut *p };
+    let __p_ref = { &mut *p };
     if __p_ref.mFlags & 4 as ::core::ffi::c_uint != 0 {
         memdbLeave(p);
         return crate::src::headers::sqlite3_h::SQLITE_IOERR_WRITE_1;
@@ -481,7 +481,7 @@ unsafe extern "C" fn memdbUnlock(
     mut eLock: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
     let mut pThis: *mut MemFile = pFile as *mut MemFile;
-    let __pThis_ref = unsafe { &mut *pThis };
+    let __pThis_ref = { &mut *pThis };
     let mut p: *mut MemStore = __pThis_ref.pStore;
     if eLock >= __pThis_ref.eLock {
         return crate::src::headers::sqlite3_h::SQLITE_OK;
@@ -1000,7 +1000,7 @@ pub unsafe extern "C" fn sqlite3_deserialize(
             crate::src::src::malloc::sqlite3_free(zSql as *mut ::core::ffi::c_void);
         }
         if !(rc != 0) {
-            let __db_ref = unsafe { &mut *db };
+            let __db_ref = { &mut *db };
             __db_ref.init.iDb = iDb as crate::src::ext::rtree::rtree::u8_0;
             (*db)
                 .init
@@ -1017,7 +1017,7 @@ pub unsafe extern "C" fn sqlite3_deserialize(
                     rc = crate::src::headers::sqlite3_h::SQLITE_ERROR;
                 } else {
                     let mut pStore: *mut MemStore = (*p).pStore;
-                    let __pStore_ref = unsafe { &mut *pStore };
+                    let __pStore_ref = { &mut *pStore };
                     __pStore_ref.aData = pData;
                     pData = ::core::ptr::null_mut::<::core::ffi::c_uchar>();
                     __pStore_ref.sz = szDb;

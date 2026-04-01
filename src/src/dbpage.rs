@@ -97,7 +97,7 @@ unsafe extern "C" fn dbpageBestIndex(
     let mut i: ::core::ffi::c_int = 0;
     let mut iPlan: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
     i = 0 as ::core::ffi::c_int;
-    let __pIdxInfo_ref = unsafe { &mut *pIdxInfo };
+    let __pIdxInfo_ref = { &mut *pIdxInfo };
     while i < __pIdxInfo_ref.nConstraint {
         let p = &*(__pIdxInfo_ref.aConstraint.offset(i as isize) as *mut crate::src::headers::sqlite3_h::sqlite3_index_constraint);
 
@@ -120,7 +120,7 @@ unsafe extern "C" fn dbpageBestIndex(
     while i < __pIdxInfo_ref.nConstraint {
         let mut p_0: *mut crate::src::headers::sqlite3_h::sqlite3_index_constraint =
             __pIdxInfo_ref.aConstraint.offset(i as isize) as *mut crate::src::headers::sqlite3_h::sqlite3_index_constraint;
-        let __p_0_ref = unsafe { &*p_0 };
+        let __p_0_ref = { &*p_0 };
         if __p_0_ref.usable as ::core::ffi::c_int != 0
             && __p_0_ref.iColumn <= 0 as ::core::ffi::c_int
             && __p_0_ref.op as ::core::ffi::c_int == crate::src::headers::sqlite3_h::SQLITE_INDEX_CONSTRAINT_EQ
@@ -213,7 +213,7 @@ unsafe extern "C" fn dbpageFilter(
     let mut rc: ::core::ffi::c_int = 0;
     let mut db: *mut crate::src::headers::sqliteInt_h::sqlite3 = (*pTab).db;
     let mut pBt: *mut crate::src::headers::btreeInt_h::Btree = ::core::ptr::null_mut::<crate::src::headers::btreeInt_h::Btree>();
-    let __pCsr_ref = unsafe { &mut *pCsr };
+    let __pCsr_ref = { &mut *pCsr };
     __pCsr_ref.pgno = 1 as crate::src::src::pager::Pgno;
     __pCsr_ref.mxPgno = 0 as crate::src::src::pager::Pgno;
     if idxNum & 2 as ::core::ffi::c_int != 0 {
@@ -494,7 +494,7 @@ unsafe extern "C" fn dbpageBegin(mut pVtab: *mut crate::src::headers::sqlite3_h:
 unsafe extern "C" fn dbpageSync(mut pVtab: *mut crate::src::headers::sqlite3_h::sqlite3_vtab) -> ::core::ffi::c_int {
     let mut pTab: *mut DbpageTable = pVtab as *mut DbpageTable;
     if (*pTab).pgnoTrunc > 0 as crate::src::src::pager::Pgno {
-        let __pTab_ref = unsafe { &mut *pTab };
+        let __pTab_ref = { &mut *pTab };
         let mut pBt: *mut crate::src::headers::btreeInt_h::Btree = (*(*__pTab_ref.db).aDb.offset(__pTab_ref.iDbTrunc as isize)).pBt;
         let mut pPager: *mut crate::src::src::pager::Pager = crate::src::src::btree::sqlite3BtreePager(pBt) as *mut crate::src::src::pager::Pager;
         crate::src::src::btmutex::sqlite3BtreeEnter(pBt);
@@ -518,7 +518,7 @@ unsafe extern "C" fn dbpageRollbackTo(
 #[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3DbpageRegister(mut db: *mut crate::src::headers::sqliteInt_h::sqlite3) -> ::core::ffi::c_int {
-    static mut dbpage_module: crate::src::headers::sqlite3_h::sqlite3_module = unsafe {
+    static mut dbpage_module: crate::src::headers::sqlite3_h::sqlite3_module = {
         crate::src::headers::sqlite3_h::sqlite3_module {
     iVersion:  2 as ::core::ffi::c_int,
     xCreate:  Some(

@@ -2264,7 +2264,7 @@ unsafe extern "C" fn sessionExprComparePK(
     while i < nCol {
         if *abPK.offset(i as isize) != 0 {
             let zCol = *azCol.offset(i as isize);
-            zRet = sqlite_printf!("%z%s\"%w\".\"%w\".\"%w\"=\"%w\".\"%w\".\"%w\"", zRet, (zSep), zDb1, zTab, zCol, zDb2, zTab, zCol);
+            zRet = sqlite_printf!("%z%s\"%w\".\"%w\".\"%w\"=\"%w\".\"%w\".\"%w\"", zRet, zSep, zDb1, zTab, zCol, zDb2, zTab, zCol);
             zSep = b" AND \0" as *const u8 as *const ::core::ffi::c_char;
             if zRet.is_null() {
                 break;
@@ -2292,7 +2292,7 @@ unsafe extern "C" fn sessionExprCompareOther(
         if *abPK.offset(i as isize) as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
             bHave = 1 as ::core::ffi::c_int;
             let zCol = *azCol.offset(i as isize);
-            zRet = sqlite_printf!("%z%s\"%w\".\"%w\".\"%w\" IS NOT \"%w\".\"%w\".\"%w\"", zRet, (zSep), zDb1, zTab, zCol, zDb2, zTab, zCol);
+            zRet = sqlite_printf!("%z%s\"%w\".\"%w\".\"%w\" IS NOT \"%w\".\"%w\".\"%w\"", zRet, zSep, zDb1, zTab, zCol, zDb2, zTab, zCol);
             zSep = b" OR \0" as *const u8 as *const ::core::ffi::c_char;
             if zRet.is_null() {
                 break;
@@ -3282,16 +3282,16 @@ unsafe extern "C" fn sessionSelectStmt(
     if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
         zSql = sqlite_printf!(
             "SELECT %s%s FROM %Q.%Q WHERE (%s) IS (%s)",
-            ((cols.aBuf) as *mut ::core::ffi::c_char),
+            (cols.aBuf) as *mut ::core::ffi::c_char,
             if bIgnoreNoop != 0 {
-                ((nooptest.aBuf) as *mut ::core::ffi::c_char as *const ::core::ffi::c_char)
+                (nooptest.aBuf) as *mut ::core::ffi::c_char as *const ::core::ffi::c_char
             } else {
                 b"\0" as *const u8 as *const ::core::ffi::c_char
             },
             zDb,
             zTab,
-            ((pkfield.aBuf) as *mut ::core::ffi::c_char),
-            ((pkvar.aBuf) as *mut ::core::ffi::c_char),
+            (pkfield.aBuf) as *mut ::core::ffi::c_char,
+            (pkvar.aBuf) as *mut ::core::ffi::c_char,
         );
         if zSql.is_null() {
             rc = crate::src::headers::sqlite3_h::SQLITE_NOMEM;

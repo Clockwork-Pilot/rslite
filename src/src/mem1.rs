@@ -70,7 +70,7 @@ unsafe extern "C" fn sqlite3MemShutdown(mut _NotUsed: *mut ::core::ffi::c_void) 
 #[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3MemSetDefault() {
-    static mut defaultMethods: crate::src::headers::sqlite3_h::sqlite3_mem_methods = unsafe {
+    static mut defaultMethods: crate::src::headers::sqlite3_h::sqlite3_mem_methods = {
         crate::src::headers::sqlite3_h::sqlite3_mem_methods {
     xMalloc:  Some(
                 sqlite3MemMalloc

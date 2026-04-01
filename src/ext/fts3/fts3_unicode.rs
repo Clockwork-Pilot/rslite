@@ -153,7 +153,7 @@ unsafe extern "C" fn unicodeAddExceptions(
     if nEntry != 0 {
         let mut aNew: *mut ::core::ffi::c_int = ::core::ptr::null_mut::<::core::ffi::c_int>();
         let mut nNew: ::core::ffi::c_int = 0;
-        let __p_ref = unsafe { &mut *p };
+        let __p_ref = { &mut *p };
         aNew = crate::src::src::malloc::sqlite3_realloc64(
             __p_ref.aiException as *mut ::core::ffi::c_void,
             ((__p_ref.nException + nEntry) as usize)
@@ -384,7 +384,7 @@ unsafe extern "C" fn unicodeNext(
     mut piPos: *mut ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
     let mut pCsr: *mut unicode_cursor = pC as *mut unicode_cursor;
-    let __pCsr_ref = unsafe { &mut *pCsr };
+    let __pCsr_ref = { &mut *pCsr };
     let mut p: *mut unicode_tokenizer = __pCsr_ref.base.pTokenizer as *mut unicode_tokenizer;
     let mut iCode: ::core::ffi::c_uint = 0 as ::core::ffi::c_uint;
     let mut zOut: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
@@ -550,7 +550,7 @@ unsafe extern "C" fn unicodeNext(
 pub unsafe extern "C" fn sqlite3Fts3UnicodeTokenizer(
     mut ppModule: *mut *const crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_module,
 ) {
-    static mut module: crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_module = unsafe {
+    static mut module: crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_module = {
         crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_module {
     iVersion:  0 as ::core::ffi::c_int,
     xCreate:  Some(

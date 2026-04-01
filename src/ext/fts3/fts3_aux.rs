@@ -495,7 +495,7 @@ unsafe extern "C" fn fts3auxFilterMethod(
             crate::src::src::vdbeapi::sqlite3_value_text(*apVal.offset(0 as isize));
         if !zStr.is_null() {
             __pCsr_ref.filter.zTerm =
-                crate::sqlite_printf!("%s", (zStr as *const ::core::ffi::c_char));
+                crate::sqlite_printf!("%s", zStr as *const ::core::ffi::c_char);
             if __pCsr_ref.filter.zTerm.is_null() {
                 return crate::src::headers::sqlite3_h::SQLITE_NOMEM;
             }
@@ -503,7 +503,7 @@ unsafe extern "C" fn fts3auxFilterMethod(
         }
     }
     if iLe >= 0 as ::core::ffi::c_int {
-        __pCsr_ref.zStop = crate::sqlite_printf!("%s", (crate::src::src::vdbeapi::sqlite3_value_text(*apVal.offset(iLe as isize)) as *const ::core::ffi::c_char));
+        __pCsr_ref.zStop = crate::sqlite_printf!("%s", crate::src::src::vdbeapi::sqlite3_value_text(*apVal.offset(iLe as isize)) as *const ::core::ffi::c_char);
         if __pCsr_ref.zStop.is_null() {
             return crate::src::headers::sqlite3_h::SQLITE_NOMEM;
         }

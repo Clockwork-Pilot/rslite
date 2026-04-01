@@ -54,7 +54,7 @@ unsafe extern "C" fn memjrnlRead(
     let mut nRead: ::core::ffi::c_int = iAmt;
     let mut iChunkOffset: ::core::ffi::c_int = 0;
     let mut pChunk: *mut FileChunk = ::core::ptr::null_mut::<FileChunk>();
-    let __p_ref = unsafe { &mut *p };
+    let __p_ref = { &mut *p };
     if iAmt as crate::src::headers::sqlite3_h::sqlite_int64 + iOfst > __p_ref.endpoint.iOffset {
         return crate::src::headers::sqlite3_h::SQLITE_IOERR_SHORT_READ_1;
     }
@@ -194,7 +194,7 @@ unsafe extern "C" fn memjrnlWrite(
             );
         } else {
             while nWrite > 0 as ::core::ffi::c_int {
-                let __p_ref = unsafe { &mut *p };
+                let __p_ref = { &mut *p };
                 let mut pChunk: *mut FileChunk = __p_ref.endpoint.pChunk;
                 let mut iChunkOffset: ::core::ffi::c_int = (__p_ref.endpoint.iOffset
                     % __p_ref.nChunkSize as crate::src::headers::sqlite3_h::sqlite3_int64)
@@ -243,7 +243,7 @@ unsafe extern "C" fn memjrnlTruncate(
     let mut p: *mut MemJournal = pJfd as *mut MemJournal;
     if size < (*p).endpoint.iOffset {
         let mut pIter: *mut FileChunk = ::core::ptr::null_mut::<FileChunk>();
-        let __p_ref = unsafe { &mut *p };
+        let __p_ref = { &mut *p };
         if size == 0 as crate::src::headers::sqlite3_h::sqlite_int64 {
             memjrnlFreeChunks(__p_ref.pFirst);
             __p_ref.pFirst = ::core::ptr::null_mut::<FileChunk>();
@@ -289,7 +289,7 @@ unsafe extern "C" fn memjrnlFileSize(
     crate::src::headers::sqlite3_h::SQLITE_OK
 }
 
-static mut MemJournalMethods: crate::src::headers::sqlite3_h::sqlite3_io_methods = unsafe {
+static mut MemJournalMethods: crate::src::headers::sqlite3_h::sqlite3_io_methods = {
     crate::src::headers::sqlite3_h::sqlite3_io_methods {
     iVersion:  1 as ::core::ffi::c_int,
     xClose:  Some(memjrnlClose as unsafe extern "C" fn(*mut crate::src::headers::sqlite3_h::sqlite3_file) -> ::core::ffi::c_int),
@@ -366,7 +366,7 @@ pub unsafe extern "C" fn sqlite3JournalOpen(
             ::core::ptr::null_mut::<::core::ffi::c_int>(),
         );
     }
-    let __p_ref = unsafe { &mut *p };
+    let __p_ref = { &mut *p };
     if nSpill > 0 as ::core::ffi::c_int {
         __p_ref.nChunkSize = nSpill;
     } else {

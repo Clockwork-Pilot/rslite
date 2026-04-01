@@ -119,7 +119,7 @@ unsafe extern "C" fn bytecodevtabOpen(
 }
 
 unsafe extern "C" fn bytecodevtabCursorClear(mut pCur: *mut bytecodevtab_cursor) {
-    let __pCur_ref = unsafe { &mut *pCur };
+    let __pCur_ref = { &mut *pCur };
     crate::src::src::malloc::sqlite3_free(__pCur_ref.zP4 as *mut ::core::ffi::c_void);
     __pCur_ref.zP4 = ::core::ptr::null_mut::<::core::ffi::c_char>();
     crate::src::src::vdbemem::sqlite3VdbeMemRelease(&raw mut __pCur_ref.sub as *mut _ as *mut crate::src::headers::vdbeInt_h::sqlite3_value);
@@ -145,7 +145,7 @@ unsafe extern "C" fn bytecodevtabNext(mut cur: *mut crate::src::headers::sqlite3
     let mut pCur: *mut bytecodevtab_cursor = cur as *mut bytecodevtab_cursor;
     let mut pTab: *mut bytecodevtab = (*cur).pVtab as *mut bytecodevtab;
     let mut rc: ::core::ffi::c_int = 0;
-    let __pCur_ref = unsafe { &mut *pCur };
+    let __pCur_ref = { &mut *pCur };
     if !__pCur_ref.zP4.is_null() {
         crate::src::src::malloc::sqlite3_free(__pCur_ref.zP4 as *mut ::core::ffi::c_void);
         __pCur_ref.zP4 = ::core::ptr::null_mut::<::core::ffi::c_char>();
@@ -265,7 +265,7 @@ unsafe extern "C" fn bytecodevtabColumn(
             crate::src::src::vdbeapi::sqlite3_result_int(ctx as *mut crate::src::headers::vdbeInt_h::sqlite3_context, (*pOp).p5 as ::core::ffi::c_int);
         }
         8 => {
-            let __pCur_ref = unsafe { &*pCur };
+            let __pCur_ref = { &*pCur };
             let mut aOp: *mut crate::src::headers::vdbeInt_h::Op = __pCur_ref.aOp;
             if !(__pCur_ref.iRowid == __pCur_ref.iAddr + 1 as ::core::ffi::c_int) {
                 if !(*aOp.offset(0 as isize))
@@ -356,7 +356,7 @@ unsafe extern "C" fn bytecodevtabFilter(
     let mut pVTab: *mut bytecodevtab = (*pVtabCursor).pVtab as *mut bytecodevtab;
     let mut rc: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_OK;
     bytecodevtabCursorClear(pCur);
-    let __pCur_ref = unsafe { &mut *pCur };
+    let __pCur_ref = { &mut *pCur };
     __pCur_ref.iRowid = 0 as ::core::ffi::c_int;
     __pCur_ref.iAddr = 0 as ::core::ffi::c_int;
     __pCur_ref.showSubprograms = (idxNum == 0 as ::core::ffi::c_int) as ::core::ffi::c_int;
@@ -416,7 +416,7 @@ unsafe extern "C" fn bytecodevtabBestIndex(
     } else {
         10 as ::core::ffi::c_int
     };
-    let __pIdxInfo_ref = unsafe { &mut *pIdxInfo };
+    let __pIdxInfo_ref = { &mut *pIdxInfo };
     __pIdxInfo_ref.estimatedCost = 100 as ::core::ffi::c_int as ::core::ffi::c_double;
     __pIdxInfo_ref.estimatedRows = 100 as crate::src::headers::sqlite3_h::sqlite3_int64;
     __pIdxInfo_ref.idxNum = 0 as ::core::ffi::c_int;
@@ -424,7 +424,7 @@ unsafe extern "C" fn bytecodevtabBestIndex(
     p = __pIdxInfo_ref.aConstraint as *mut crate::src::headers::sqlite3_h::sqlite3_index_constraint;
     while i < __pIdxInfo_ref.nConstraint {
         if !((*p).usable as ::core::ffi::c_int == 0 as ::core::ffi::c_int) {
-            let __p_ref = unsafe { &*p };
+            let __p_ref = { &*p };
             if __p_ref.op as ::core::ffi::c_int == crate::src::headers::sqlite3_h::SQLITE_INDEX_CONSTRAINT_EQ
                 && __p_ref.iColumn == iBaseCol + 1 as ::core::ffi::c_int
             {
@@ -446,7 +446,7 @@ unsafe extern "C" fn bytecodevtabBestIndex(
     rc
 }
 
-static mut bytecodevtabModule: crate::src::headers::sqlite3_h::sqlite3_module = unsafe {
+static mut bytecodevtabModule: crate::src::headers::sqlite3_h::sqlite3_module = {
     crate::src::headers::sqlite3_h::sqlite3_module {
     iVersion:  0 as ::core::ffi::c_int,
     xCreate:  None,

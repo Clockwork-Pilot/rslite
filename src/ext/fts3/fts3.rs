@@ -117,7 +117,7 @@ unsafe fn fts3_appendf_raw(
         return;
     }
     let z = if !zNew.is_null() && !(*pz).is_null() {
-        let z2 = crate::sqlite_printf!("%s%s", (*pz), zNew);
+        let z2 = crate::sqlite_printf!("%s%s", *pz, zNew);
         crate::src::src::malloc::sqlite3_free(zNew as *mut ::core::ffi::c_void);
         z2
     } else {
@@ -454,10 +454,10 @@ unsafe extern "C" fn fts3DeclareVtab(mut pRc: *mut ::core::ffi::c_int, mut p: *m
             1 as ::core::ffi::c_int,
         );
         crate::src::src::vtab::sqlite3_vtab_config(__p_ref.db, crate::src::headers::sqlite3_h::SQLITE_VTAB_INNOCUOUS);
-        zCols = crate::sqlite_printf!("%Q, ", (*__p_ref.azColumn.offset(0 as isize)));
+        zCols = crate::sqlite_printf!("%Q, ", *__p_ref.azColumn.offset(0 as isize));
         i = 1 as ::core::ffi::c_int;
         while !zCols.is_null() && i < __p_ref.nColumn {
-            zCols = crate::sqlite_printf!("%z%Q, ", zCols, (*__p_ref.azColumn.offset(i as isize)));
+            zCols = crate::sqlite_printf!("%z%Q, ", zCols, *__p_ref.azColumn.offset(i as isize));
             i += 1;
         }
         zSql = crate::sqlite_printf!(
@@ -589,7 +589,7 @@ unsafe extern "C" fn fts3IsSpecialColumn(
         zCsr = zCsr.offset(1);
     }
     *pnKey = zCsr.offset_from(z) as ::core::ffi::c_long as ::core::ffi::c_int;
-    zValue = crate::sqlite_printf!("%s", (zCsr.offset(1 as isize) as *const ::core::ffi::c_char));
+    zValue = crate::sqlite_printf!("%s", zCsr.offset(1 as isize) as *const ::core::ffi::c_char);
     if !zValue.is_null() {
         sqlite3Fts3Dequote(zValue);
     }
@@ -658,7 +658,7 @@ unsafe extern "C" fn fts3ReadExprList(
             fts3_appendf_raw(
                 pRc,
                 &raw mut zRet,
-                crate::sqlite_printf!(",%s(x.'c%d%q')", zFunction, i, (*__p_ref.azColumn.offset(i as isize))),
+                crate::sqlite_printf!(",%s(x.'c%d%q')", zFunction, i, *__p_ref.azColumn.offset(i as isize)),
             );
             i += 1;
         }
@@ -666,7 +666,7 @@ unsafe extern "C" fn fts3ReadExprList(
             fts3_appendf_raw(
                 pRc,
                 &raw mut zRet,
-                crate::sqlite_printf!(", x.%Q", (b"langid\0" as *const u8 as *const ::core::ffi::c_char)),
+                crate::sqlite_printf!(", x.%Q", b"langid\0" as *const u8 as *const ::core::ffi::c_char),
             );
         }
         crate::src::src::malloc::sqlite3_free(zFree as *mut ::core::ffi::c_void);
@@ -677,7 +677,7 @@ unsafe extern "C" fn fts3ReadExprList(
             fts3_appendf_raw(
                 pRc,
                 &raw mut zRet,
-                crate::sqlite_printf!(", x.'%q'", (*__p_ref.azColumn.offset(i as isize))),
+                crate::sqlite_printf!(", x.'%q'", *__p_ref.azColumn.offset(i as isize)),
             );
             i += 1;
         }
@@ -1364,7 +1364,7 @@ unsafe extern "C" fn fts3InitVtab(
                             while i < nNotindexed {
                                 if !(*azNotindexed.offset(i as isize)).is_null() {
                                     crate::src::src::malloc::sqlite3_free(*pzErr as *mut ::core::ffi::c_void);
-                                    *pzErr = crate::sqlite_printf!("no such column: %s", (*azNotindexed.offset(i as isize)));
+                                    *pzErr = crate::sqlite_printf!("no such column: %s", *azNotindexed.offset(i as isize));
                                     rc = crate::src::headers::sqlite3_h::SQLITE_ERROR;
                                 }
                                 i += 1;

@@ -49,7 +49,7 @@ pub const sqlite3_column_origin_name: ::core::ffi::c_int = 0 as ::core::ffi::c_i
 
 pub const sqlite3_column_origin_name16: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
 
-static mut sqlite3Apis: crate::src::headers::sqlite3ext_h::sqlite3_api_routines = unsafe {
+static mut sqlite3Apis: crate::src::headers::sqlite3ext_h::sqlite3_api_routines = {
     crate::src::headers::sqlite3ext_h::sqlite3_api_routines {
     aggregate_context:  Some(
             crate::src::src::vdbeapi::sqlite3_aggregate_context
@@ -1788,9 +1788,9 @@ unsafe extern "C" fn sqlite3LoadExtension(
                     as ::core::ffi::c_int
                 && handle.is_null()
             {
-                let file_str = unsafe { libc::strlen(zFile as *const ::core::ffi::c_char) };
+                let file_str = { libc::strlen(zFile as *const ::core::ffi::c_char) };
                 let ending_str = azEndings[ii as usize];
-                let ending_len = unsafe { libc::strlen(ending_str as *const ::core::ffi::c_char) };
+                let ending_len = { libc::strlen(ending_str as *const ::core::ffi::c_char) };
                 let total_len = file_str + 1 + ending_len;
                 let ptr = crate::src::src::malloc::sqlite3_malloc((total_len + 1) as ::core::ffi::c_int);
                 let mut zAltFile: *mut ::core::ffi::c_char = ptr as *mut ::core::ffi::c_char;
@@ -1917,7 +1917,7 @@ unsafe extern "C" fn sqlite3LoadExtension(
                     if !pzErrMsg.is_null() {
                         let prefix = b"error during initialization: ";
                         let prefix_len = prefix.len();
-                        let msg_len = unsafe { libc::strlen(zErrmsg as *const ::core::ffi::c_char) };
+                        let msg_len = { libc::strlen(zErrmsg as *const ::core::ffi::c_char) };
                         let total_len = prefix_len + msg_len;
                         let ptr = crate::src::src::malloc::sqlite3_malloc((total_len + 1) as ::core::ffi::c_int);
                         if !ptr.is_null() {
@@ -1932,7 +1932,7 @@ unsafe extern "C" fn sqlite3LoadExtension(
                     crate::src::src::os::sqlite3OsDlClose(pVfs as *mut crate::src::headers::sqlite3_h::sqlite3_vfs, handle);
                     return crate::src::headers::sqlite3_h::SQLITE_ERROR;
                 }
-                let __db_ref = unsafe { &mut *db };
+                let __db_ref = { &mut *db };
                 aHandle = crate::src::src::malloc::sqlite3DbMallocZero(
                     
                     db as *mut crate::src::headers::sqliteInt_h::sqlite3,

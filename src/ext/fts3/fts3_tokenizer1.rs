@@ -140,7 +140,7 @@ unsafe extern "C" fn simpleNext(
 ) -> ::core::ffi::c_int {
     let mut c: *mut simple_tokenizer_cursor = pCursor as *mut simple_tokenizer_cursor;
     let mut t: *mut simple_tokenizer = (*pCursor).pTokenizer as *mut simple_tokenizer;
-    let __c_ref = unsafe { &mut *c };
+    let __c_ref = { &mut *c };
     let mut p: *mut ::core::ffi::c_uchar = __c_ref.pInput as *mut ::core::ffi::c_uchar;
     while __c_ref.iOffset < __c_ref.nBytes {
         let mut iStartOffset: ::core::ffi::c_int = 0;
@@ -192,7 +192,7 @@ unsafe extern "C" fn simpleNext(
     crate::src::headers::sqlite3_h::SQLITE_DONE
 }
 
-static mut simpleTokenizerModule: crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_module = unsafe {
+static mut simpleTokenizerModule: crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_module = {
     crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_module {
     iVersion:  0 as ::core::ffi::c_int,
     xCreate:  Some(

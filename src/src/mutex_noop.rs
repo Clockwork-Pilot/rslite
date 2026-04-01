@@ -25,7 +25,7 @@ unsafe extern "C" fn noopMutexLeave(mut _p: *mut crate::src::src::mutex_unix::sq
 #[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3NoopMutex() -> *const crate::src::headers::sqlite3_h::sqlite3_mutex_methods {
-    static mut sMutex: crate::src::headers::sqlite3_h::sqlite3_mutex_methods = unsafe {
+    static mut sMutex: crate::src::headers::sqlite3_h::sqlite3_mutex_methods = {
         crate::src::headers::sqlite3_h::sqlite3_mutex_methods {
     xMutexInit:  Some(noopMutexInit as unsafe extern "C" fn() -> ::core::ffi::c_int),
     xMutexEnd:  Some(noopMutexEnd as unsafe extern "C" fn() -> ::core::ffi::c_int),

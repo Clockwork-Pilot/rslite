@@ -702,6 +702,7 @@ pub unsafe extern "C" fn sqlite3Utf16ByteLen(
 }
 #[unsafe(no_mangle)]
 
+#[allow(unused_assignments)]
 pub unsafe extern "C" fn sqlite3UtfSelfTest() {
     let mut i: ::core::ffi::c_uint = 0;
     let mut t: ::core::ffi::c_uint = 0;

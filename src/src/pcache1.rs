@@ -169,7 +169,7 @@ unsafe extern "C" fn pcache1InitBulk(mut pCache: *mut PCache1) -> ::core::ffi::c
     if pcache1_g.nInitPage == 0 as ::core::ffi::c_int {
         return 0 as ::core::ffi::c_int;
     }
-    let __pCache_ref = unsafe { &mut *pCache };
+    let __pCache_ref = { &mut *pCache };
     if __pCache_ref.nMax < 3 as ::core::ffi::c_uint {
         return 0 as ::core::ffi::c_int;
     }
@@ -191,7 +191,7 @@ unsafe extern "C" fn pcache1InitBulk(mut pCache: *mut PCache1) -> ::core::ffi::c
         loop {
             let mut pX: *mut PgHdr1 =
                 zBulk.offset(__pCache_ref.szPage as isize) as *mut ::core::ffi::c_char as *mut PgHdr1;
-            let __pX_ref = unsafe { &mut *pX };
+            let __pX_ref = { &mut *pX };
             __pX_ref.page.pBuf = zBulk as *mut ::core::ffi::c_void;
             __pX_ref.page.pExtra = (pX as *mut crate::src::ext::rtree::rtree::u8_0).offset(
                 ((::core::mem::size_of::<PgHdr1>() as usize).wrapping_add(7 as usize)
@@ -269,7 +269,7 @@ unsafe extern "C" fn pcache1AllocPage(
 ) -> *mut PgHdr1 {
     let mut p: *mut PgHdr1 = ::core::ptr::null_mut::<PgHdr1>();
     let mut pPg: *mut ::core::ffi::c_void = ::core::ptr::null_mut::<::core::ffi::c_void>();
-    let __pCache_ref = unsafe { &mut *pCache };
+    let __pCache_ref = { &mut *pCache };
     if !__pCache_ref.pFree.is_null()
         || __pCache_ref.nPage == 0 as ::core::ffi::c_uint && pcache1InitBulk(pCache) != 0
     {
@@ -335,7 +335,7 @@ unsafe extern "C" fn pcache1ResizeHash(mut p: *mut PCache1) {
     let mut apNew: *mut *mut PgHdr1 = ::core::ptr::null_mut::<*mut PgHdr1>();
     let mut nNew: crate::src::ext::rtree::rtree::u64_0 = 0;
     let mut i: crate::src::ext::rtree::rtree::u32_0 = 0;
-    let __p_ref = unsafe { &mut *p };
+    let __p_ref = { &mut *p };
     nNew = (2 as crate::src::ext::rtree::rtree::u64_0).wrapping_mul(__p_ref.nHash as crate::src::ext::rtree::rtree::u64_0);
     if nNew < 256 as crate::src::ext::rtree::rtree::u64_0 {
         nNew = 256 as crate::src::ext::rtree::rtree::u64_0;
@@ -374,7 +374,7 @@ unsafe extern "C" fn pcache1ResizeHash(mut p: *mut PCache1) {
 }
 
 unsafe extern "C" fn pcache1PinPage(mut pPage: *mut PgHdr1) -> *mut PgHdr1 {
-    let __pPage_ref = unsafe { &mut *pPage };
+    let __pPage_ref = { &mut *pPage };
     (*__pPage_ref.pLruPrev).pLruNext = __pPage_ref.pLruNext;
     (*__pPage_ref.pLruNext).pLruPrev = __pPage_ref.pLruPrev;
     __pPage_ref.pLruNext = ::core::ptr::null_mut::<PgHdr1>();
@@ -389,7 +389,7 @@ unsafe extern "C" fn pcache1RemoveFromHash(
     let mut h: ::core::ffi::c_uint = 0;
     let mut pCache: *mut PCache1 = (*pPage).pCache;
     let mut pp: *mut *mut PgHdr1 = ::core::ptr::null_mut::<*mut PgHdr1>();
-    let __pCache_ref = unsafe { &mut *pCache };
+    let __pCache_ref = { &mut *pCache };
     h = (*pPage).iKey.wrapping_rem(__pCache_ref.nHash);
     pp = __pCache_ref.apHash.offset(h as isize) as *mut *mut PgHdr1;
     while *pp != pPage {
@@ -403,7 +403,7 @@ unsafe extern "C" fn pcache1RemoveFromHash(
 }
 
 unsafe extern "C" fn pcache1EnforceMaxPage(mut pCache: *mut PCache1) {
-    let __pCache_ref = unsafe { &mut *pCache };
+    let __pCache_ref = { &mut *pCache };
     let mut pGroup: *mut PGroup = __pCache_ref.pGroup;
     let mut p: *mut PgHdr1 = ::core::ptr::null_mut::<PgHdr1>();
     while (*pGroup).nPurgeable > (*pGroup).nMaxPage && {
@@ -427,7 +427,7 @@ unsafe extern "C" fn pcache1TruncateUnsafe(
     let mut h: ::core::ffi::c_uint = 0;
     let mut iStop: ::core::ffi::c_uint = 0;
     if (*pCache).iMaxKey.wrapping_sub(iLimit) < (*pCache).nHash {
-        let __pCache_ref = unsafe { &mut *pCache };
+        let __pCache_ref = { &mut *pCache };
         h = iLimit.wrapping_rem(__pCache_ref.nHash);
         iStop = __pCache_ref.iMaxKey.wrapping_rem(__pCache_ref.nHash);
     } else {
@@ -517,7 +517,7 @@ unsafe extern "C" fn pcache1Create(
             pGroup = &raw mut pcache1_g.grp;
         }
         if (*pGroup).lru.isAnchor as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
-            let __pGroup_ref = unsafe { &mut *pGroup };
+            let __pGroup_ref = { &mut *pGroup };
             __pGroup_ref.lru.isAnchor = 1 as crate::src::fts5::u16_0;
             __pGroup_ref.lru.pLruNext = &raw mut __pGroup_ref.lru;
             __pGroup_ref.lru.pLruPrev = __pGroup_ref.lru.pLruNext;
@@ -536,9 +536,9 @@ unsafe extern "C" fn pcache1Create(
         };
         pcache1ResizeHash(pCache);
         if bPurgeable != 0 {
-            let __pCache_ref = unsafe { &mut *pCache };
+            let __pCache_ref = { &mut *pCache };
             __pCache_ref.nMin = 10 as ::core::ffi::c_uint;
-            let __pGroup_ref = unsafe { &mut *pGroup };
+            let __pGroup_ref = { &mut *pGroup };
             __pGroup_ref.nMinPage = __pGroup_ref.nMinPage.wrapping_add(__pCache_ref.nMin);
             __pGroup_ref.mxPinned = (*pGroup)
                 .nMaxPage
@@ -560,10 +560,10 @@ unsafe extern "C" fn pcache1Cachesize(mut p: *mut crate::src::headers::sqlite3_h
     let mut pCache: *mut PCache1 = p as *mut PCache1;
     let mut n: crate::src::ext::rtree::rtree::u32_0 = 0;
     if (*pCache).bPurgeable != 0 {
-        let __pCache_ref = unsafe { &mut *pCache };
+        let __pCache_ref = { &mut *pCache };
         let mut pGroup: *mut PGroup = __pCache_ref.pGroup;
         n = nMax as crate::src::ext::rtree::rtree::u32_0;
-        let __pGroup_ref = unsafe { &mut *pGroup };
+        let __pGroup_ref = { &mut *pGroup };
         if n > (0x7fff0000 as crate::src::ext::rtree::rtree::u32_0)
             .wrapping_sub(__pGroup_ref.nMaxPage as crate::src::ext::rtree::rtree::u32_0)
             .wrapping_add(__pCache_ref.nMax as crate::src::ext::rtree::rtree::u32_0)
@@ -593,7 +593,7 @@ unsafe extern "C" fn pcache1Shrink(mut p: *mut crate::src::headers::sqlite3_h::s
     if (*pCache).bPurgeable != 0 {
         let mut pGroup: *mut PGroup = (*pCache).pGroup;
         let mut savedMaxPage: ::core::ffi::c_uint = 0;
-        let __pGroup_ref = unsafe { &mut *pGroup };
+        let __pGroup_ref = { &mut *pGroup };
         savedMaxPage = __pGroup_ref.nMaxPage;
         __pGroup_ref.nMaxPage = 0 as ::core::ffi::c_uint;
         pcache1EnforceMaxPage(pCache);
@@ -615,7 +615,7 @@ unsafe extern "C" fn pcache1FetchStage2(
     mut createFlag: ::core::ffi::c_int,
 ) -> *mut PgHdr1 {
     let mut nPinned: ::core::ffi::c_uint = 0;
-    let __pCache_ref = unsafe { &mut *pCache };
+    let __pCache_ref = { &mut *pCache };
     let mut pGroup: *mut PGroup = __pCache_ref.pGroup;
     let mut pPage: *mut PgHdr1 = ::core::ptr::null_mut::<PgHdr1>();
     nPinned = __pCache_ref.nPage.wrapping_sub(__pCache_ref.nRecyclable);
@@ -657,7 +657,7 @@ unsafe extern "C" fn pcache1FetchStage2(
     if !pPage.is_null() {
         let mut h: ::core::ffi::c_uint = iKey.wrapping_rem(__pCache_ref.nHash);
         __pCache_ref.nPage = __pCache_ref.nPage.wrapping_add(1);
-        let __pPage_ref = unsafe { &mut *pPage };
+        let __pPage_ref = { &mut *pPage };
         __pPage_ref.iKey = iKey;
         __pPage_ref.pNext = *__pCache_ref.apHash.offset(h as isize);
         __pPage_ref.pCache = pCache;
@@ -719,7 +719,7 @@ unsafe extern "C" fn pcache1Unpin(
         pcache1RemoveFromHash(pPage, 1 as ::core::ffi::c_int);
     } else {
         let mut ppFirst: *mut *mut PgHdr1 = &raw mut (*pGroup).lru.pLruNext;
-        let __pPage_ref = unsafe { &mut *pPage };
+        let __pPage_ref = { &mut *pPage };
         __pPage_ref.pLruPrev = &raw mut (*pGroup).lru;
         __pPage_ref.pLruNext = *ppFirst;
         (*__pPage_ref.pLruNext).pLruPrev = pPage;
@@ -739,13 +739,13 @@ unsafe extern "C" fn pcache1Rekey(
     let mut pp: *mut *mut PgHdr1 = ::core::ptr::null_mut::<*mut PgHdr1>();
     let mut hOld: ::core::ffi::c_uint = 0;
     let mut hNew: ::core::ffi::c_uint = 0;
-    let __pCache_ref = unsafe { &mut *pCache };
+    let __pCache_ref = { &mut *pCache };
     hOld = iOld.wrapping_rem(__pCache_ref.nHash);
     pp = __pCache_ref.apHash.offset(hOld as isize) as *mut *mut PgHdr1;
     while *pp != pPage {
         pp = &raw mut (**pp).pNext;
     }
-    let __pPage_ref = unsafe { &mut *pPage };
+    let __pPage_ref = { &mut *pPage };
     *pp = __pPage_ref.pNext;
     hNew = iNew.wrapping_rem(__pCache_ref.nHash);
     __pPage_ref.iKey = iNew;
@@ -767,12 +767,12 @@ unsafe extern "C" fn pcache1Truncate(mut p: *mut crate::src::headers::sqlite3_h:
 
 unsafe extern "C" fn pcache1Destroy(mut p: *mut crate::src::headers::sqlite3_h::sqlite3_pcache) {
     let mut pCache: *mut PCache1 = p as *mut PCache1;
-    let __pCache_ref = unsafe { &*pCache };
+    let __pCache_ref = { &*pCache };
     let mut pGroup: *mut PGroup = __pCache_ref.pGroup;
     if __pCache_ref.nPage != 0 {
         pcache1TruncateUnsafe(pCache, 0 as ::core::ffi::c_uint);
     }
-    let __pGroup_ref = unsafe { &mut *pGroup };
+    let __pGroup_ref = { &mut *pGroup };
     __pGroup_ref.nMaxPage = __pGroup_ref.nMaxPage.wrapping_sub(__pCache_ref.nMax);
     __pGroup_ref.nMinPage = __pGroup_ref.nMinPage.wrapping_sub(__pCache_ref.nMin);
     __pGroup_ref.mxPinned = (*pGroup)
@@ -787,7 +787,7 @@ unsafe extern "C" fn pcache1Destroy(mut p: *mut crate::src::headers::sqlite3_h::
 #[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3PCacheSetDefault() {
-    static mut defaultMethods: crate::src::headers::sqlite3_h::sqlite3_pcache_methods2 = unsafe {
+    static mut defaultMethods: crate::src::headers::sqlite3_h::sqlite3_pcache_methods2 = {
         crate::src::headers::sqlite3_h::sqlite3_pcache_methods2 {
     iVersion:  1 as ::core::ffi::c_int,
     pArg:  ::core::ptr::null::<::core::ffi::c_void>() as *mut ::core::ffi::c_void,

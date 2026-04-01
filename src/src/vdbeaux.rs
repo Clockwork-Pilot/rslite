@@ -1710,7 +1710,6 @@ unsafe extern "C" fn allocSpace(
     mut nByte: crate::src::headers::sqlite3_h::sqlite3_int64,
 ) -> *mut ::core::ffi::c_void {
     if pBuf.is_null() {
-        nByte = nByte;
         if nByte <= (*p).nFree {
             let __p_ref = unsafe { &mut *p };
             __p_ref.nFree -= nByte;

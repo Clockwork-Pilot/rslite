@@ -195,7 +195,7 @@ unsafe extern "C" fn fts3TokenizerFunc(
             pPtr = crate::src::ext::fts3::fts3_hash::sqlite3Fts3HashFind(pHash as *const crate::src::ext::fts3::fts3_hash::Fts3Hash, zName as *const ::core::ffi::c_void, nName);
         }
         if pPtr.is_null() {
-            let mut zErr: *mut ::core::ffi::c_char = crate::sqlite_printf!("unknown tokenizer: %s", (zName as *const ::core::ffi::c_char));
+            let mut zErr: *mut ::core::ffi::c_char = crate::sqlite_printf!("unknown tokenizer: %s", zName as *const ::core::ffi::c_char);
             crate::src::src::vdbeapi::sqlite3_result_error(context, zErr, -(1 as ::core::ffi::c_int));
             crate::src::src::malloc::sqlite3_free(zErr as *mut ::core::ffi::c_void);
             return;

@@ -991,7 +991,7 @@ unsafe extern "C" fn invalidateTempStorage(mut pParse: *mut crate::src::headers:
         .pBt
         .is_null()
     {
-        let __db_ref = unsafe { &mut *db };
+        let __db_ref = { &mut *db };
         if __db_ref.autoCommit == 0
             || crate::src::src::btree::sqlite3BtreeTxnState((*__db_ref.aDb.offset(1 as isize)).pBt)
                 != crate::src::headers::sqlite3_h::SQLITE_TXN_NONE
@@ -1210,7 +1210,7 @@ unsafe extern "C" fn pragmaFunclistLine(
             if !((*p).funcFlags & crate::src::headers::sqliteInt_h::SQLITE_FUNC_INTERNAL as crate::src::ext::rtree::rtree::u32_0 != 0 as crate::src::ext::rtree::rtree::u32_0
                 && showInternFuncs == 0 as ::core::ffi::c_int)
             {
-                let __p_ref = unsafe { &mut *p };
+                let __p_ref = { &mut *p };
                 if __p_ref.xValue.is_some() {
                     zType = b"w\0" as *const u8 as *const ::core::ffi::c_char;
                 } else if __p_ref.xFinalize.is_some() {
@@ -1374,7 +1374,7 @@ pub unsafe extern "C" fn sqlite3Pragma(
                 match current_block {
                     9454828942646539263 => {}
                     _ => {
-                        let __pPragma_ref = unsafe { &*pPragma };
+                        let __pPragma_ref = { &*pPragma };
                         if __pPragma_ref.mPragFlg as ::core::ffi::c_int & crate::src::src::pragma::PragFlg_NoColumns
                             == 0 as ::core::ffi::c_int
                             && (__pPragma_ref.mPragFlg as ::core::ffi::c_int & crate::src::src::pragma::PragFlg_NoColumns1
@@ -1478,7 +1478,7 @@ pub unsafe extern "C" fn sqlite3Pragma(
                                         crate::src::src::btree::BTREE_DEFAULT_CACHE_SIZE,
                                         size,
                                     );
-                                    let __pDb_ref = unsafe { &mut *pDb };
+                                    let __pDb_ref = { &mut *pDb };
                                     (*__pDb_ref.pSchema).cache_size = size;
                                     crate::src::src::btree::sqlite3BtreeSetCacheSize(
                                         __pDb_ref.pBt,
@@ -1791,7 +1791,7 @@ pub unsafe extern "C" fn sqlite3Pragma(
                                     returnSingleInt(v, (*(*pDb).pSchema).cache_size as crate::src::ext::rtree::rtree::i64_0);
                                 } else {
                                     let mut size_1: ::core::ffi::c_int = crate::src::src::util::sqlite3Atoi(zRight);
-                                    let __pDb_ref = unsafe { &mut *pDb };
+                                    let __pDb_ref = { &mut *pDb };
                                     (*__pDb_ref.pSchema).cache_size = size_1;
                                     crate::src::src::btree::sqlite3BtreeSetCacheSize(
                                         __pDb_ref.pBt,
@@ -1931,7 +1931,7 @@ pub unsafe extern "C" fn sqlite3Pragma(
                                             );
                                             if *zRight.offset(0 as isize) != 0
                                             {
-                                                let len = unsafe { libc::strlen(zRight as *const ::core::ffi::c_char) };
+                                                let len = { libc::strlen(zRight as *const ::core::ffi::c_char) };
                                                 let ptr = crate::src::src::malloc::sqlite3_malloc((len + 1) as ::core::ffi::c_int);
                                                 if !ptr.is_null() {
                                                     unsafe {
@@ -2089,7 +2089,7 @@ pub unsafe extern "C" fn sqlite3Pragma(
                                             }
                                             match current_block_303 {
                                                 4839309778395429725 => {
-                                                    let __pCol_ref = unsafe { &mut *pCol };
+                                                    let __pCol_ref = { &mut *pCol };
                                                     if __pCol_ref.colFlags as ::core::ffi::c_int
                                                         & crate::src::headers::sqliteInt_h::COLFLAG_PRIMKEY
                                                         == 0 as ::core::ffi::c_int
@@ -2262,7 +2262,7 @@ pub unsafe extern "C" fn sqlite3Pragma(
                                                 && crate::src::src::util::sqlite3_stricmp(zRight, (*pTab_1).zName)
                                                     != 0 as ::core::ffi::c_int)
                                             {
-                                                let __pTab_1_ref = unsafe { &*pTab_1 };
+                                                let __pTab_1_ref = { &*pTab_1 };
                                                 if __pTab_1_ref.eTabType as ::core::ffi::c_int
                                                     == crate::src::headers::sqliteInt_h::TABTYP_VIEW
                                                 {
@@ -2362,7 +2362,7 @@ pub unsafe extern "C" fn sqlite3Pragma(
                                                 },
                                             );
                                             if __pPragma_ref.iArg != 0 {
-                                                let __pIdx_ref = unsafe { &mut *pIdx };
+                                                let __pIdx_ref = { &mut *pIdx };
                                                 crate::src::src::vdbeaux::sqlite3VdbeMultiLoad(
                                                     v,
                                                     4 as ::core::ffi::c_int,
@@ -2559,7 +2559,7 @@ pub unsafe extern "C" fn sqlite3Pragma(
                                                 let mut j_1: ::core::ffi::c_int = 0;
                                                 j_1 = 0 as ::core::ffi::c_int;
                                                 while j_1 < (*pFK).nCol {
-                                                    let __pFK_ref = unsafe { &mut *pFK };
+                                                    let __pFK_ref = { &mut *pFK };
                                                     crate::src::src::vdbeaux::sqlite3VdbeMultiLoad(
                                                         v,
                                                         1 as ::core::ffi::c_int,
@@ -2615,7 +2615,7 @@ pub unsafe extern "C" fn sqlite3Pragma(
                                 let mut addrOk: ::core::ffi::c_int = 0;
                                 let mut aiCols: *mut ::core::ffi::c_int =
                                     ::core::ptr::null_mut::<::core::ffi::c_int>();
-                                let __pParse_ref = unsafe { &mut *pParse };
+                                let __pParse_ref = { &mut *pParse };
                                 regResult = __pParse_ref.nMem + 1 as ::core::ffi::c_int;
                                 __pParse_ref.nMem += 4 as ::core::ffi::c_int;
                                 __pParse_ref.nMem += 1;
@@ -2772,7 +2772,7 @@ pub unsafe extern "C" fn sqlite3Pragma(
                                             j_2 += 1;
                                         }
                                         if !pIdx_1.is_null() {
-                                            let __pFK_0_ref = unsafe { &*pFK_0 };
+                                            let __pFK_0_ref = { &*pFK_0 };
                                             crate::src::src::vdbeaux::sqlite3VdbeAddOp4(
                                                 v,
                                                 crate::src::headers::opcodes_h::OP_Affinity,
@@ -2962,7 +2962,7 @@ pub unsafe extern "C" fn sqlite3Pragma(
                                                     *aRoot.offset(cnt as isize) =
                                                         0 as ::core::ffi::c_int;
                                                 }
-                                                let __pTbls_ref = unsafe { &*pTbls };
+                                                let __pTbls_ref = { &*pTbls };
                                                 x_1 = __pTbls_ref.first;
                                                 while !x_1.is_null() {
                                                     let mut pTab_7: *mut crate::src::headers::sqliteInt_h::Table =
@@ -3144,7 +3144,7 @@ pub unsafe extern "C" fn sqlite3Pragma(
                                                         if (*pTab_9).eTabType as ::core::ffi::c_int
                                                             == crate::src::headers::sqliteInt_h::TABTYP_NORM
                                                         {
-                                                            let __pTab_9_ref = unsafe { &mut *pTab_9 };
+                                                            let __pTab_9_ref = { &mut *pTab_9 };
                                                             if isQuick != 0
                                                                 || __pTab_9_ref.tabFlags
                                                                     & crate::src::headers::sqliteInt_h::TF_WithoutRowid as crate::src::ext::rtree::rtree::u32_0
@@ -3371,7 +3371,7 @@ pub unsafe extern "C" fn sqlite3Pragma(
                                                                         && doTypeCheck == 0)
                                                                     {
                                                                         p4 = crate::src::headers::sqlite3_h::SQLITE_NULL;
-                                                                        let __pCol_0_ref = unsafe { &mut *pCol_0 };
+                                                                        let __pCol_0_ref = { &mut *pCol_0 };
                                                                         if __pCol_0_ref.colFlags
                                                                             as ::core::ffi::c_int
                                                                             & crate::src::headers::sqliteInt_h::COLFLAG_VIRTUAL
@@ -3753,7 +3753,7 @@ pub unsafe extern "C" fn sqlite3Pragma(
                                                                                 + j_3,
                                                                             1 as ::core::ffi::c_int,
                                                                         );
-                                                                        let __pIdx_5_ref = unsafe { &mut *pIdx_5 };
+                                                                        let __pIdx_5_ref = { &mut *pIdx_5 };
                                                                         jmp2_0 = crate::src::src::vdbeaux::sqlite3VdbeAddOp4Int(
                                                                             v,
                                                                             crate::src::headers::opcodes_h::OP_Found,
@@ -4511,7 +4511,7 @@ pub unsafe extern "C" fn sqlite3Pragma(
                                 match current_block {
                                     17607975748632905087 => {}
                                     _ => {
-                                        let __db_ref = unsafe { &mut *db };
+                                        let __db_ref = { &mut *db };
                                         if opMask & 0x10 as crate::src::ext::rtree::rtree::u32_0 == 0 as crate::src::ext::rtree::rtree::u32_0 {
                                             nLimit = 0 as ::core::ffi::c_int;
                                         } else if __db_ref.nAnalysisLimit > 0 as ::core::ffi::c_int
@@ -4521,7 +4521,7 @@ pub unsafe extern "C" fn sqlite3Pragma(
                                         } else {
                                             nLimit = SQLITE_DEFAULT_OPTIMIZE_LIMIT;
                                         }
-                                        let __pParse_ref = unsafe { &mut *pParse };
+                                        let __pParse_ref = { &mut *pParse };
                                         let fresh6 = __pParse_ref.nTab;
                                         __pParse_ref.nTab += 1;
                                         iTabCur = fresh6;
@@ -4549,7 +4549,7 @@ pub unsafe extern "C" fn sqlite3Pragma(
                                                                 7 as ::core::ffi::c_int,
                                                             ))
                                                         {
-                                                            let __pTab_11_ref = unsafe { &mut *pTab_11 };
+                                                            let __pTab_11_ref = { &mut *pTab_11 };
                                                             szThreshold = __pTab_11_ref.nRowLogEst;
                                                             nIndex = 0 as ::core::ffi::c_int;
                                                             pIdx_6 = __pTab_11_ref.pIndex;
@@ -4911,7 +4911,7 @@ unsafe extern "C" fn pragmaVtabConnect(
         b"CREATE TABLE x\0" as *const u8 as *const ::core::ffi::c_char,
     );
     i = 0 as ::core::ffi::c_int;
-    let __pPragma_ref = unsafe { &*pPragma };
+    let __pPragma_ref = { &*pPragma };
     j = __pPragma_ref.iPragCName as ::core::ffi::c_int;
     while i < __pPragma_ref.nPragCName as ::core::ffi::c_int {
         crate::src::src::printf::sqlite3_str_appendf(
@@ -4970,7 +4970,7 @@ unsafe extern "C" fn pragmaVtabConnect(
                 0 as ::core::ffi::c_int,
                 ::core::mem::size_of::<PragmaVtab>() as crate::__stddef_size_t_h::size_t,
             );
-            let __pTab_ref = unsafe { &mut *pTab };
+            let __pTab_ref = { &mut *pTab };
             __pTab_ref.pName = pPragma;
             __pTab_ref.db = db;
             __pTab_ref.iHidden = i as crate::src::ext::rtree::rtree::u8_0;
@@ -4978,7 +4978,7 @@ unsafe extern "C" fn pragmaVtabConnect(
         }
     } else {
         let err_str = crate::src::src::main::sqlite3_errmsg(db as *mut crate::src::headers::sqliteInt_h::sqlite3);
-        let len = unsafe { libc::strlen(err_str as *const ::core::ffi::c_char) };
+        let len = { libc::strlen(err_str as *const ::core::ffi::c_char) };
         let ptr = crate::src::src::malloc::sqlite3_malloc((len + 1) as ::core::ffi::c_int);
         if !ptr.is_null() {
             unsafe {
@@ -5007,7 +5007,7 @@ unsafe extern "C" fn pragmaVtabBestIndex(
     let mut i: ::core::ffi::c_int = 0;
     let mut j: ::core::ffi::c_int = 0;
     let mut seen: [::core::ffi::c_int; 2] = [0; 2];
-    let __pIdxInfo_ref = unsafe { &mut *pIdxInfo };
+    let __pIdxInfo_ref = { &mut *pIdxInfo };
     __pIdxInfo_ref.estimatedCost = 1 as ::core::ffi::c_int as ::core::ffi::c_double;
     if pTab.nHidden as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
         return crate::src::headers::sqlite3_h::SQLITE_OK;
@@ -5069,7 +5069,7 @@ unsafe extern "C" fn pragmaVtabOpen(
 
 unsafe extern "C" fn pragmaVtabCursorClear(mut pCsr: *mut PragmaVtabCursor) {
     let mut i: ::core::ffi::c_int = 0;
-    let __pCsr_ref = unsafe { &mut *pCsr };
+    let __pCsr_ref = { &mut *pCsr };
     crate::src::src::vdbeapi::sqlite3_finalize(__pCsr_ref.pPragma);
     __pCsr_ref.pPragma = ::core::ptr::null_mut::<crate::src::headers::sqlite3_h::sqlite3_stmt>();
     __pCsr_ref.iRowid = 0 as crate::src::headers::sqlite3_h::sqlite_int64;
@@ -5129,7 +5129,7 @@ unsafe extern "C" fn pragmaVtabFilter(
 };
     let mut zSql: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
     pragmaVtabCursorClear(pCsr);
-    let __pTab_ref = unsafe { &mut *pTab };
+    let __pTab_ref = { &mut *pTab };
     j = if (*__pTab_ref.pName).mPragFlg as ::core::ffi::c_int & crate::src::src::pragma::PragFlg_Result1
         != 0 as ::core::ffi::c_int
     {
@@ -5138,12 +5138,12 @@ unsafe extern "C" fn pragmaVtabFilter(
         1 as ::core::ffi::c_int
     };
     i = 0 as ::core::ffi::c_int;
-    let __pCsr_ref = unsafe { &mut *pCsr };
+    let __pCsr_ref = { &mut *pCsr };
     while i < argc {
         let mut zText: *const ::core::ffi::c_char =
             crate::src::src::vdbeapi::sqlite3_value_text(*argv.offset(i as isize)) as *const ::core::ffi::c_char;
         if !zText.is_null() {
-            let len = unsafe { libc::strlen(zText as *const ::core::ffi::c_char) };
+            let len = { libc::strlen(zText as *const ::core::ffi::c_char) };
             let ptr = crate::src::src::malloc::sqlite3_malloc((len + 1) as ::core::ffi::c_int);
             if ptr.is_null() {
                 return crate::src::headers::sqlite3_h::SQLITE_NOMEM;
@@ -5203,7 +5203,7 @@ unsafe extern "C" fn pragmaVtabFilter(
     crate::src::src::malloc::sqlite3_free(zSql as *mut ::core::ffi::c_void);
     if rc != crate::src::headers::sqlite3_h::SQLITE_OK {
         let err_str = crate::src::src::main::sqlite3_errmsg(__pTab_ref.db as *mut crate::src::headers::sqliteInt_h::sqlite3);
-        let len = unsafe { libc::strlen(err_str as *const ::core::ffi::c_char) };
+        let len = { libc::strlen(err_str as *const ::core::ffi::c_char) };
         let ptr = crate::src::src::malloc::sqlite3_malloc((len + 1) as ::core::ffi::c_int);
         if !ptr.is_null() {
             unsafe {
@@ -5255,7 +5255,7 @@ unsafe extern "C" fn pragmaVtabRowid(
     crate::src::headers::sqlite3_h::SQLITE_OK
 }
 
-static mut pragmaVtabModule: crate::src::headers::sqlite3_h::sqlite3_module = unsafe {
+static mut pragmaVtabModule: crate::src::headers::sqlite3_h::sqlite3_module = {
     crate::src::headers::sqlite3_h::sqlite3_module {
     iVersion:  0 as ::core::ffi::c_int,
     xCreate:  None,

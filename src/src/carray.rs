@@ -187,7 +187,7 @@ unsafe extern "C" fn carrayColumn(
                 return crate::src::headers::sqlite3_h::SQLITE_OK;
             }
     _ =>  {
-                let __pCur_ref = unsafe { &*pCur };
+                let __pCur_ref = { &*pCur };
                 let mut p_3: *const ::libc::iovec = __pCur_ref.pPtr as *mut ::libc::iovec;
                 crate::src::src::vdbeapi::sqlite3_result_blob(
                     ctx,
@@ -229,7 +229,7 @@ unsafe extern "C" fn carrayFilter(
     mut argv: *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
 ) -> ::core::ffi::c_int {
     let mut pCur: *mut carray_cursor = pVtabCursor as *mut carray_cursor;
-    let __pCur_ref = unsafe { &mut *pCur };
+    let __pCur_ref = { &mut *pCur };
     __pCur_ref.pPtr = ::core::ptr::null_mut::<::core::ffi::c_void>();
     __pCur_ref.iCnt = 0 as crate::src::headers::sqlite3_h::sqlite3_int64;
     match idxNum {
@@ -239,7 +239,7 @@ unsafe extern "C" fn carrayFilter(
                 b"carray-bind\0" as *const u8 as *const ::core::ffi::c_char,
             ) as *mut carray_bind;
             if !pBind.is_null() {
-                let __pBind_ref = unsafe { &*pBind };
+                let __pBind_ref = { &*pBind };
                 __pCur_ref.pPtr = __pBind_ref.aData;
                 __pCur_ref.iCnt = __pBind_ref.nData as crate::src::headers::sqlite3_h::sqlite3_int64;
                 __pCur_ref.eType =
@@ -328,7 +328,7 @@ unsafe extern "C" fn carrayBestIndex(
         pConstraint = pConstraint.offset(1);
     }
     if ptrIdx >= 0 as ::core::ffi::c_int {
-        let __pIdxInfo_ref = unsafe { &mut *pIdxInfo };
+        let __pIdxInfo_ref = { &mut *pIdxInfo };
         (*__pIdxInfo_ref.aConstraintUsage.offset(ptrIdx as isize)).argvIndex = 1 as ::core::ffi::c_int;
         (*__pIdxInfo_ref.aConstraintUsage.offset(ptrIdx as isize)).omit = 1 as ::core::ffi::c_uchar;
         __pIdxInfo_ref.estimatedCost = 1 as ::core::ffi::c_int as ::core::ffi::c_double;
@@ -358,7 +358,7 @@ unsafe extern "C" fn carrayBestIndex(
             return crate::src::headers::sqlite3_h::SQLITE_CONSTRAINT;
         }
     } else {
-        let __pIdxInfo_ref = unsafe { &mut *pIdxInfo };
+        let __pIdxInfo_ref = { &mut *pIdxInfo };
         __pIdxInfo_ref.estimatedCost = 2147483647 as ::core::ffi::c_int as ::core::ffi::c_double;
         __pIdxInfo_ref.estimatedRows = 2147483647 as crate::src::headers::sqlite3_h::sqlite3_int64;
         __pIdxInfo_ref.idxNum = 0 as ::core::ffi::c_int;
@@ -366,7 +366,7 @@ unsafe extern "C" fn carrayBestIndex(
     crate::src::headers::sqlite3_h::SQLITE_OK
 }
 
-static mut carrayModule: crate::src::headers::sqlite3_h::sqlite3_module = unsafe {
+static mut carrayModule: crate::src::headers::sqlite3_h::sqlite3_module = {
     crate::src::headers::sqlite3_h::sqlite3_module {
     iVersion:  0 as ::core::ffi::c_int,
     xCreate:  None,
