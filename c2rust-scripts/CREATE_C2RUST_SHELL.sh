@@ -90,7 +90,7 @@ echo -e "${YELLOW}[3/7] Generating C2Rust configuration...${NC}"
 mapfile -t FLAGS < <(sed 's/\r//' "$DEFINES_SHELL" | grep -v '^$')
 
 # Create c2rust config
-cat > "$PROJ_DIR/c2rust-shell.toml" << 'TOML'
+cat > "$PROJ_DIR/crust-sqlite-shell/c2rust-shell.toml" << 'TOML'
 [transpilation]
 # Emit Rust code that compiles
 emit_modules = true
@@ -104,15 +104,15 @@ output_dir = "crust-sqlite-shell/src/generated/"
 # Compilation settings matching defines_shell.txt
 TOML
 
-echo "compile_flags = [" >> "$PROJ_DIR/c2rust-shell.toml"
+echo "compile_flags = [" >> "$PROJ_DIR/crust-sqlite-shell/c2rust-shell.toml"
 for flag in "${FLAGS[@]}"; do
-    echo "  \"$flag\"," >> "$PROJ_DIR/c2rust-shell.toml"
+    echo "  \"$flag\"," >> "$PROJ_DIR/crust-sqlite-shell/c2rust-shell.toml"
 done
-echo "  \"-I.\"," >> "$PROJ_DIR/c2rust-shell.toml"
-echo "  \"-I./sqlite-shell-src\"," >> "$PROJ_DIR/c2rust-shell.toml"
-echo "]" >> "$PROJ_DIR/c2rust-shell.toml"
+echo "  \"-I.\"," >> "$PROJ_DIR/crust-sqlite-shell/c2rust-shell.toml"
+echo "  \"-I./sqlite-shell-src\"," >> "$PROJ_DIR/crust-sqlite-shell/c2rust-shell.toml"
+echo "]" >> "$PROJ_DIR/crust-sqlite-shell/c2rust-shell.toml"
 
-cat >> "$PROJ_DIR/c2rust-shell.toml" << 'TOML'
+cat >> "$PROJ_DIR/crust-sqlite-shell/c2rust-shell.toml" << 'TOML'
 
 [c2rust.options]
 simplify_extern_crates = true
@@ -297,7 +297,7 @@ echo "  ✓ $OUTPUT_DIR/Cargo.toml"
 echo "  ✓ $OUTPUT_DIR/build.rs"
 echo "  ✓ $OUTPUT_DIR/src/main.rs"
 echo "  ✓ $OUTPUT_DIR/src/shell.rs ($RUST_LINES lines transpiled)"
-echo "  ✓ $PROJ_DIR/c2rust-shell.toml (configuration)"
+echo "  ✓ $PROJ_DIR/crust-sqlite-shell/c2rust-shell.toml (configuration)"
 echo ""
 echo "Next Steps:"
 echo "  1. Review the transpiled code:"

@@ -9,6 +9,11 @@
 #![allow(warnings)]
 #![allow(static_mut_refs)]
 
+// Force cargo to link sqlite_noamalgam — shell.rs calls its symbols via C FFI
+// so cargo would not detect the dependency automatically without this.
+// Remove once shell.rs has real `use sqlite_noamalgam::...` imports.
+extern crate sqlite_noamalgam;
+
 mod shell;
 
 // Entry point: delegates to the transpiled main() from shell.rs

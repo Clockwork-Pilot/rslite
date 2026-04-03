@@ -3,4 +3,5 @@ target/
 sqlite-shell/
 sqlite-testfixture/
 sqlite-shell-src/
+crust-sqlite-shell/target-testfixture/release/
 .claude/

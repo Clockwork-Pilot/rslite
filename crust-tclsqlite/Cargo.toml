@@ -1,0 +1,27 @@
+[package]
+name = "crust-tclsqlite"
+version = "0.1.0"
+edition = "2024"
+authors = ["C2Rust Automated Migration"]
+build = "build.rs"
+
+[[bin]]
+name = "rustfixture"
+path = "src/main.rs"
+
+[dependencies]
+sqlite_noamalgam = { path = "../" }
+libc = "0.2"
+c2rust-bitfields = "0.22.1"
+
+[build-dependencies]
+pkg-config = "0.3"
+
+[features]
+default = []
+test = ["sqlite_noamalgam/test"]
+
+[profile.release]
+lto = true
+codegen-units = 1
+opt-level = 3

@@ -23,3 +23,6 @@ docker run --rm \
 ## Apply particular pattern plugin fix, and check if it goes well
 # from sqlite-rust-port, also doing indempotency check
 ./run-docker-patterns.sh "unsafe-rust-fixer.py --match-patterns=clippy_warning_patterns --fix src/ && ./build_all.sh && unsafe-rust-fixer.py --match-patterns=clippy_warning_patterns --fix --dry-run src/"
+
+## Run separate test
+cd /sqlite && ./rustfixture test/capi3.test

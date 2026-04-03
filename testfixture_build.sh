@@ -2,10 +2,12 @@
 set -euo pipefail
 
 PROJ=$(pwd)
+SRC="${SQLITE_SRC:-/sqlite}"
 
-mkdir -p "$PROJ/sqlite-testfixture" 
+echo "Building rustfixture (crust-tclsqlite)..."
+cargo build --release -q -p crust-tclsqlite --features crust-tclsqlite/test
 
+cp "$PROJ/target/release/rustfixture" "$SRC/rustfixture"
+chmod +x "$SRC/rustfixture"
 
-CARGO_TARGET_DIR="$PROJ/sqlite-testfixture" cargo build --release -q --features test
-
-bash testfixture_swap_optimized.sh
+echo "testfixture_build.sh complete: $SRC/rustfixture"

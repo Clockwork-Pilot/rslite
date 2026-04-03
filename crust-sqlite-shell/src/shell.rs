@@ -4336,7 +4336,7 @@ static mut aUWidth: [C2Rust_Unnamed_14; 305] = [
         iFirst: 0xe01f0 as ::core::ffi::c_int,
     },
 ];
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn cli_wcwidth(mut c_0: ::core::ffi::c_int) -> ::core::ffi::c_int {
     unsafe {
         let mut iFirst: ::core::ffi::c_int = 0;
@@ -5488,7 +5488,7 @@ static mut ersaztMethods: sqlite3_mem_methods = unsafe {
         pAppData: ::core::ptr::null::<::core::ffi::c_void>() as *mut ::core::ffi::c_void,
     }
 };
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn sqlite3MemTraceActivate(
     mut out: *mut FILE,
 ) -> ::core::ffi::c_int {
@@ -5504,7 +5504,7 @@ pub unsafe extern "C" fn sqlite3MemTraceActivate(
         return rc;
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn sqlite3MemTraceDeactivate() -> ::core::ffi::c_int {
     unsafe {
         let mut rc: ::core::ffi::c_int = SQLITE_OK;
@@ -5831,7 +5831,7 @@ static mut ersaztPcacheMethods: sqlite3_pcache_methods2 = unsafe {
         ),
     }
 };
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn sqlite3PcacheTraceActivate(
     mut out: *mut FILE,
 ) -> ::core::ffi::c_int {
@@ -5847,7 +5847,7 @@ pub unsafe extern "C" fn sqlite3PcacheTraceActivate(
         return rc;
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn sqlite3PcacheTraceDeactivate() -> ::core::ffi::c_int {
     unsafe {
         let mut rc: ::core::ffi::c_int = SQLITE_OK;
@@ -7006,7 +7006,7 @@ unsafe extern "C" fn sha3AggFinal(mut context: *mut sqlite3_context) {
         }
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn sqlite3_shathree_init(
     mut db: *mut sqlite3,
     mut pzErrMsg: *mut *mut ::core::ffi::c_char,
@@ -10801,7 +10801,7 @@ unsafe extern "C" fn sha1QueryFunc(
         );
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn sqlite3_sha_init(
     mut db: *mut sqlite3,
     mut pzErrMsg: *mut *mut ::core::ffi::c_char,
@@ -10966,7 +10966,7 @@ unsafe extern "C" fn uintCollFunc(
         return nKey1 - i - (nKey2 - j);
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn sqlite3_uint_init(
     mut db: *mut sqlite3,
     mut pzErrMsg: *mut *mut ::core::ffi::c_char,
@@ -12125,7 +12125,7 @@ unsafe extern "C" fn decimalPow2Func(
         }
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn sqlite3_decimal_init(
     mut db: *mut sqlite3,
     mut pzErrMsg: *mut *mut ::core::ffi::c_char,
@@ -12837,7 +12837,7 @@ unsafe extern "C" fn base64(
         };
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn sqlite3_base64_init(
     mut db: *mut sqlite3,
     mut pzErr: *mut *mut ::core::ffi::c_char,
@@ -13290,7 +13290,7 @@ unsafe extern "C" fn base85(
         };
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn sqlite3_base85_init(
     mut db: *mut sqlite3,
     mut pzErr: *mut *mut ::core::ffi::c_char,
@@ -13617,7 +13617,7 @@ unsafe extern "C" fn ieee754inc(
         sqlite3_result_double(context, r2);
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn sqlite3_ieee_init(
     mut db: *mut sqlite3,
     mut pzErrMsg: *mut *mut ::core::ffi::c_char,
@@ -14728,7 +14728,7 @@ static mut seriesModule: sqlite3_module = unsafe {
         xIntegrity: None,
     }
 };
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn sqlite3_series_init(
     mut db: *mut sqlite3,
     mut pzErrMsg: *mut *mut ::core::ffi::c_char,
@@ -15908,7 +15908,7 @@ unsafe extern "C" fn re_sql_func(
         }
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn sqlite3_regexp_init(
     mut db: *mut sqlite3,
     mut pzErrMsg: *mut *mut ::core::ffi::c_char,
@@ -17012,7 +17012,7 @@ unsafe extern "C" fn fsdirRegister(mut db: *mut sqlite3) -> ::core::ffi::c_int {
         return rc;
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn sqlite3_fileio_init(
     mut db: *mut sqlite3,
     mut pzErrMsg: *mut *mut ::core::ffi::c_char,
@@ -17628,7 +17628,7 @@ static mut completionModule: sqlite3_module = unsafe {
         xIntegrity: None,
     }
 };
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn sqlite3CompletionVtabInit(
     mut db: *mut sqlite3,
 ) -> ::core::ffi::c_int {
@@ -17643,7 +17643,7 @@ pub unsafe extern "C" fn sqlite3CompletionVtabInit(
         return rc;
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn sqlite3_completion_init(
     mut db: *mut sqlite3,
     mut pzErrMsg: *mut *mut ::core::ffi::c_char,
@@ -18648,7 +18648,7 @@ unsafe extern "C" fn apndNextSystemCall(
             )((*pVfs).pAppData as *mut sqlite3_vfs, zName);
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn sqlite3_appendvfs_init(
     mut db: *mut sqlite3,
     mut pzErrMsg: *mut *mut ::core::ffi::c_char,
@@ -21973,7 +21973,7 @@ unsafe extern "C" fn zipfileRegister(mut db: *mut sqlite3) -> ::core::ffi::c_int
         return rc;
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn sqlite3_zipfile_init(
     mut db: *mut sqlite3,
     mut pzErrMsg: *mut *mut ::core::ffi::c_char,
@@ -22113,7 +22113,7 @@ unsafe extern "C" fn sqlarUncompressFunc(
         };
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn sqlite3_sqlar_init(
     mut db: *mut sqlite3,
     mut pzErrMsg: *mut *mut ::core::ffi::c_char,
@@ -24946,7 +24946,7 @@ unsafe extern "C" fn idxPopulateStat1(
         return rc;
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn dummyCompare(
     mut up1: *mut ::core::ffi::c_void,
     mut up2: ::core::ffi::c_int,
@@ -24968,7 +24968,7 @@ pub unsafe extern "C" fn dummyCompare(
         return 0 as ::core::ffi::c_int;
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn useDummyCS(
     mut up1: *mut ::core::ffi::c_void,
     mut db: *mut sqlite3,
@@ -24995,7 +24995,7 @@ pub unsafe extern "C" fn useDummyCS(
         );
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn dummyUDF(
     mut up1: *mut sqlite3_context,
     mut up2: ::core::ffi::c_int,
@@ -25014,7 +25014,7 @@ pub unsafe extern "C" fn dummyUDF(
         };
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn dummyUDFvalue(mut up1: *mut sqlite3_context) {
     unsafe {
         '_c2rust_label: {
@@ -25029,7 +25029,7 @@ pub unsafe extern "C" fn dummyUDFvalue(mut up1: *mut sqlite3_context) {
         };
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn registerUDFs(
     mut dbSrc: *mut sqlite3,
     mut dbDst: *mut sqlite3,
@@ -25170,7 +25170,7 @@ pub unsafe extern "C" fn registerUDFs(
         return rc;
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn sqlite3_expert_new(
     mut db: *mut sqlite3,
     mut pzErrmsg: *mut *mut ::core::ffi::c_char,
@@ -25293,7 +25293,7 @@ pub unsafe extern "C" fn sqlite3_expert_new(
         return pNew;
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn sqlite3_expert_config(
     mut p: *mut sqlite3expert,
     mut op: ::core::ffi::c_int,
@@ -25320,7 +25320,7 @@ pub unsafe extern "C" fn sqlite3_expert_config(
         return rc;
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn sqlite3_expert_sql(
     mut p: *mut sqlite3expert,
     mut zSql: *const ::core::ffi::c_char,
@@ -25395,7 +25395,7 @@ pub unsafe extern "C" fn sqlite3_expert_sql(
         return rc;
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn sqlite3_expert_analyze(
     mut p: *mut sqlite3expert,
     mut pzErr: *mut *mut ::core::ffi::c_char,
@@ -25443,7 +25443,7 @@ pub unsafe extern "C" fn sqlite3_expert_analyze(
         return rc;
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn sqlite3_expert_count(
     mut p: *mut sqlite3expert,
 ) -> ::core::ffi::c_int {
@@ -25455,7 +25455,7 @@ pub unsafe extern "C" fn sqlite3_expert_count(
         return nRet;
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn sqlite3_expert_report(
     mut p: *mut sqlite3expert,
     mut iStmt: ::core::ffi::c_int,
@@ -25497,7 +25497,7 @@ pub unsafe extern "C" fn sqlite3_expert_report(
         return zRet;
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn sqlite3_expert_destroy(mut p: *mut sqlite3expert) {
     unsafe {
         if !p.is_null() {
@@ -26260,7 +26260,7 @@ unsafe extern "C" fn intckCheckObjectSql(
         return zRet;
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn sqlite3_intck_open(
     mut db: *mut sqlite3,
     mut zDbArg: *const ::core::ffi::c_char,
@@ -26323,7 +26323,7 @@ pub unsafe extern "C" fn sqlite3_intck_open(
         return rc;
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn sqlite3_intck_close(mut p: *mut sqlite3_intck) {
     unsafe {
         if !p.is_null() {
@@ -26347,7 +26347,7 @@ pub unsafe extern "C" fn sqlite3_intck_close(mut p: *mut sqlite3_intck) {
         }
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn sqlite3_intck_step(
     mut p: *mut sqlite3_intck,
 ) -> ::core::ffi::c_int {
@@ -26422,7 +26422,7 @@ pub unsafe extern "C" fn sqlite3_intck_step(
         return (*p).rc;
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn sqlite3_intck_message(
     mut p: *mut sqlite3_intck,
 ) -> *const ::core::ffi::c_char {
@@ -26450,7 +26450,7 @@ pub unsafe extern "C" fn sqlite3_intck_message(
         return ::core::ptr::null::<::core::ffi::c_char>();
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn sqlite3_intck_error(
     mut p: *mut sqlite3_intck,
     mut pzErr: *mut *const ::core::ffi::c_char,
@@ -26462,7 +26462,7 @@ pub unsafe extern "C" fn sqlite3_intck_error(
         return if (*p).rc == SQLITE_DONE { SQLITE_OK } else { (*p).rc };
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn sqlite3_intck_unlock(
     mut p: *mut sqlite3_intck,
 ) -> ::core::ffi::c_int {
@@ -26489,7 +26489,7 @@ pub unsafe extern "C" fn sqlite3_intck_unlock(
         return (*p).rc;
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn sqlite3_intck_test_sql(
     mut p: *mut sqlite3_intck,
     mut zObj: *const ::core::ffi::c_char,
@@ -26571,7 +26571,7 @@ unsafe extern "C" fn stmtrandFunc(
         );
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn sqlite3_stmtrand_init(
     mut db: *mut sqlite3,
     mut pzErrMsg: *mut *mut ::core::ffi::c_char,
@@ -28725,7 +28725,7 @@ unsafe extern "C" fn vfstraceNextSystemCall(
             .expect("non-null function pointer")(pRoot, zName);
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn vfstrace_register(
     mut zTraceName: *const ::core::ffi::c_char,
     mut zOldVfsName: *const ::core::ffi::c_char,
@@ -29061,7 +29061,7 @@ pub unsafe extern "C" fn vfstrace_register(
         return sqlite3_vfs_register(pNew, makeDefault);
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn vfstrace_unregister(
     mut zTraceName: *const ::core::ffi::c_char,
 ) {
@@ -30442,7 +30442,7 @@ unsafe extern "C" fn sqlite3DbdataRegister(mut db: *mut sqlite3) -> ::core::ffi:
         return rc;
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn sqlite3_dbdata_init(
     mut db: *mut sqlite3,
     mut pzErrMsg: *mut *mut ::core::ffi::c_char,
@@ -34086,7 +34086,7 @@ unsafe extern "C" fn recoverStep(mut p: *mut sqlite3_recover) {
         };
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn recoverInit(
     mut db: *mut sqlite3,
     mut zDb: *const ::core::ffi::c_char,
@@ -34145,7 +34145,7 @@ pub unsafe extern "C" fn recoverInit(
         return pRet;
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn sqlite3_recover_init(
     mut db: *mut sqlite3,
     mut zDb: *const ::core::ffi::c_char,
@@ -34161,7 +34161,7 @@ pub unsafe extern "C" fn sqlite3_recover_init(
         );
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn sqlite3_recover_init_sql(
     mut db: *mut sqlite3,
     mut zDb: *const ::core::ffi::c_char,
@@ -34183,7 +34183,7 @@ pub unsafe extern "C" fn sqlite3_recover_init_sql(
         );
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn sqlite3_recover_errmsg(
     mut p: *mut sqlite3_recover,
 ) -> *const ::core::ffi::c_char {
@@ -34195,7 +34195,7 @@ pub unsafe extern "C" fn sqlite3_recover_errmsg(
         };
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn sqlite3_recover_errcode(
     mut p: *mut sqlite3_recover,
 ) -> ::core::ffi::c_int {
@@ -34203,7 +34203,7 @@ pub unsafe extern "C" fn sqlite3_recover_errcode(
         return if !p.is_null() { (*p).errCode } else { SQLITE_NOMEM };
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn sqlite3_recover_config(
     mut p: *mut sqlite3_recover,
     mut op: ::core::ffi::c_int,
@@ -34258,7 +34258,7 @@ pub unsafe extern "C" fn sqlite3_recover_config(
         return rc;
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn sqlite3_recover_step(
     mut p: *mut sqlite3_recover,
 ) -> ::core::ffi::c_int {
@@ -34275,7 +34275,7 @@ pub unsafe extern "C" fn sqlite3_recover_step(
         return (*p).errCode;
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn sqlite3_recover_run(
     mut p: *mut sqlite3_recover,
 ) -> ::core::ffi::c_int {
@@ -34284,7 +34284,7 @@ pub unsafe extern "C" fn sqlite3_recover_run(
         return sqlite3_recover_errcode(p);
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn sqlite3_recover_finish(
     mut p: *mut sqlite3_recover,
 ) -> ::core::ffi::c_int {
@@ -34966,7 +34966,7 @@ unsafe extern "C" fn anyOfInStr(
         return pcFirst;
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn zSkipValidUtf8(
     mut z: *const ::core::ffi::c_char,
     mut nAccept: ::core::ffi::c_int,
@@ -41526,7 +41526,7 @@ unsafe extern "C" fn session_filter(
         return 1 as ::core::ffi::c_int;
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn deduceDatabaseType(
     mut zName: *const ::core::ffi::c_char,
     mut dfltZip: ::core::ffi::c_int,
@@ -42384,7 +42384,7 @@ unsafe extern "C" fn open_db(mut p: *mut ShellState, mut openFlags: ::core::ffi:
         }
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn close_db(mut db: *mut sqlite3) {
     unsafe {
         let mut rc: ::core::ffi::c_int = sqlite3_close(db);
@@ -44257,7 +44257,7 @@ unsafe extern "C" fn shellFilenameFromUri(
         return zOut;
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn shellDeleteFile(
     mut zFilename: *const ::core::ffi::c_char,
 ) -> ::core::ffi::c_int {
@@ -44752,7 +44752,7 @@ unsafe extern "C" fn shellFinalize(
         }
     }
 }
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub unsafe extern "C" fn shellReset(
     mut pRc: *mut ::core::ffi::c_int,
     mut pStmt: *mut sqlite3_stmt,

@@ -1,0 +1,10 @@
+[transpilation]
+emit_modules = true
+emit_extern_crates = true
+use_std = true
+output_dir = "src/"
+
+[c2rust.options]
+simplify_extern_crates = true
+preserve_comments = true
+emit_panic_on_fail = true
