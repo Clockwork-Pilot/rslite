@@ -6,6 +6,7 @@
 
 
 use sqlite_printf_macros::sqlite_snprintf;
+use crate::sqlite_printf;
 pub use crate::src::headers::stdlib::va_list;
 pub use crate::__stddef_size_t_h::size_t;
 pub use crate::internal::__builtin_va_list;pub use crate::internal::__va_list_tag;
@@ -2181,7 +2182,6 @@ unsafe extern "C" fn fts5StorageGetStmt(
     mut ppStmt: *mut *mut crate::src::headers::sqlite3_h::sqlite3_stmt,
     mut pzErrMsg: *mut *mut ::core::ffi::c_char,
 ) -> ::core::ffi::c_int {
-    use crate::sqlite_printf;
     let mut rc: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_OK;
     if (*p).aStmt[eStmt as usize].is_null() {
         let mut pC: *mut Fts5Config = (*p).pConfig;
@@ -25800,11 +25800,7 @@ unsafe extern "C" fn fts5ApiCallback(
     if pCsr.is_null()
         || ((*pCsr).ePlan == 0 as ::core::ffi::c_int || (*pCsr).ePlan == FTS5_PLAN_SPECIAL)
     {
-        fts5ResultError(
-            context,
-            b"no such cursor: %lld\0" as *const u8 as *const ::core::ffi::c_char,
-            iCsrId,
-        );
+        fts5ResultError(context, sqlite_printf!("no such cursor: %lld", iCsrId));
     } else {
         let mut pTab: *mut crate::src::headers::sqlite3_h::sqlite3_vtab = (*pCsr).base.pVtab;
         fts5ApiInvoke(
@@ -35022,4 +35018,10 @@ pub use crate::src::printf_c_variadic::fts5PrepareStatement;
 pub use crate::src::printf_c_variadic::sqlite3Fts5ConfigErrmsg;
 pub use crate::src::printf_c_variadic::fts5SetVtabError;
 pub use crate::src::printf_c_variadic::fts5PrintfAppend;
-pub use crate::src::printf_c_variadic::fts5ResultError;
+unsafe fn fts5ResultError(
+    pCtx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
+    zMsg: *mut ::core::ffi::c_char,
+) {
+    sqlite3_result_error(pCtx, zMsg, -(1 as ::core::ffi::c_int));
+    sqlite3_free(zMsg as *mut ::core::ffi::c_void);
+}

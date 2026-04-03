@@ -10,7 +10,8 @@ name = "rustfixture"
 path = "src/main.rs"
 
 [dependencies]
-sqlite_noamalgam = { path = "../" }
+# testfixture is compiled with -DSQLITE_ENABLE_FTS4 — require fts4 (which implies fts3)
+sqlite_noamalgam = { path = "../", features = ["fts4"] }
 libc = "0.2"
 c2rust-bitfields = "0.22.1"
 

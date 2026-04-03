@@ -35,6 +35,7 @@ pub use crate::src::headers::stdlib::intptr_t;
 
 
 
+use crate::sqlite_printf;
 pub use crate::src::headers::stdlib::int16_t;pub use crate::src::headers::stdlib::int8_t;pub use crate::src::headers::stdlib::uint16_t;pub use crate::src::headers::stdlib::uint32_t;pub use crate::src::headers::stdlib::uint8_t;pub use crate::src::headers::stdlib::__int16_t;pub use crate::src::headers::stdlib::__int8_t;pub use crate::src::headers::stdlib::__uint16_t;pub use crate::src::headers::stdlib::__uint32_t;pub use crate::src::headers::stdlib::__uint8_t;pub use crate::src::headers::vdbeInt_h::sqlite3_context;pub use crate::src::headers::vdbeInt_h::sqlite3_value;pub use crate::src::headers::vdbeInt_h::AuxData;pub use crate::src::headers::vdbeInt_h::Bool;pub use crate::src::headers::vdbeInt_h::MemValue;pub use crate::src::headers::vdbeInt_h::Op;pub use crate::src::headers::vdbeInt_h::PreUpdate;pub use crate::src::headers::vdbeInt_h::Vdbe;pub use crate::src::headers::vdbeInt_h::VdbeCursor;pub use crate::src::headers::vdbeInt_h::VdbeFrame;pub use crate::src::headers::vdbeInt_h::VdbeSorter;pub use crate::src::headers::vdbeInt_h::VdbeTxtBlbCache;pub use crate::src::headers::vdbeInt_h::__anon_struct_10;pub use crate::src::headers::vdbeInt_h::__anon_union_17;pub use crate::src::headers::vdbeInt_h::__anon_union_18;pub use crate::src::src::vdbemem::sqlite3VdbeMemCopy;pub use crate::src::src::vdbemem::sqlite3VdbeMemRelease;pub use crate::src::src::vdbe::p4union;pub use crate::src::src::vdbeaux::sqlite3MemCompare;pub use crate::src::src::vdbeaux::sqlite3VdbeFuncName;pub use crate::src::src::vdbe::Mem;pub use crate::src::src::vdbe::SubProgram;pub use crate::src::src::vdbe::SubrtnSig;pub use crate::src::src::vdbe::VdbeOp;
 #[derive(Copy, Clone)]
 #[repr(C)]
@@ -680,7 +681,7 @@ unsafe extern "C" fn roundFunc(
                     0.5f64
                 })) as crate::src::headers::sqlite3_h::sqlite_int64 as ::core::ffi::c_double;
         } else {
-            zBuf = crate::sqlite_printf!("%!.*f", n as ::core::ffi::c_int, r);
+            zBuf = sqlite_printf!("%!.*f", n as ::core::ffi::c_int, r);
             if zBuf.is_null() {
                 crate::src::src::vdbeapi::sqlite3_result_error_nomem(context as *mut crate::src::headers::vdbeInt_h::sqlite3_context);
                 return;
@@ -3329,12 +3330,8 @@ unsafe extern "C" fn percentStep(
         rPct = crate::src::src::vdbeapi::sqlite3_value_double(*argv.offset(1 as isize) as
     *mut crate::src::headers::vdbeInt_h::sqlite3_value) / mxFrac;
         if eType != crate::src::headers::sqlite3_h::SQLITE_INTEGER_1 && eType != crate::src::headers::sqlite3_h::SQLITE_FLOAT_1 || rPct < 0.0f64 || rPct > 1.0f64 {
-            percentError(
-                pCtx,
-                b"the fraction argument to %%s() is not between 0.0 and %.1f\0" as *const u8
-                    as *const ::core::ffi::c_char,
-                mxFrac,
-            );
+            let fname = crate::src::src::vdbeaux::sqlite3VdbeFuncName(pCtx as *const crate::src::headers::vdbeInt_h::sqlite3_context);
+            percentError(pCtx, sqlite_printf!("the fraction argument to %s() is not between 0.0 and %.1f", fname, mxFrac));
             return;
         }
     }
@@ -3350,11 +3347,8 @@ unsafe extern "C" fn percentStep(
         (*p).rPct = rPct;
         (*p).bPctValid = 1 as ::core::ffi::c_char;
     } else if percentSameValue((*p).rPct, rPct) == 0 {
-        percentError(
-            pCtx,
-            b"the fraction argument to %%s() is not the same for all input rows\0" as *const u8
-                as *const ::core::ffi::c_char,
-        );
+        let fname = crate::src::src::vdbeaux::sqlite3VdbeFuncName(pCtx as *const crate::src::headers::vdbeInt_h::sqlite3_context);
+        percentError(pCtx, sqlite_printf!("the fraction argument to %s() is not the same for all input rows", fname));
         return;
     }
     eType = crate::src::src::vdbeapi::sqlite3_value_type(*argv.offset(0 as isize) as
@@ -3363,19 +3357,15 @@ unsafe extern "C" fn percentStep(
         return;
     }
     if eType != crate::src::headers::sqlite3_h::SQLITE_INTEGER_1 && eType != crate::src::headers::sqlite3_h::SQLITE_FLOAT_1 {
-        percentError(
-            pCtx,
-            b"input to %%s() is not numeric\0" as *const u8 as *const ::core::ffi::c_char,
-        );
+        let fname = crate::src::src::vdbeaux::sqlite3VdbeFuncName(pCtx as *const crate::src::headers::vdbeInt_h::sqlite3_context);
+        percentError(pCtx, sqlite_printf!("input to %s() is not numeric", fname));
         return;
     }
     y = crate::src::src::vdbeapi::sqlite3_value_double(*argv.offset(0 as isize) as
     *mut crate::src::headers::vdbeInt_h::sqlite3_value);
     if percentIsInfinity(y) != 0 {
-        percentError(
-            pCtx,
-            b"Inf input to %%s()\0" as *const u8 as *const ::core::ffi::c_char,
-        );
+        let fname = crate::src::src::vdbeaux::sqlite3VdbeFuncName(pCtx as *const crate::src::headers::vdbeInt_h::sqlite3_context);
+        percentError(pCtx, sqlite_printf!("Inf input to %s()", fname));
         return;
     }
     if (*p).nUsed >= (*p).nAlloc {
@@ -6461,5 +6451,10 @@ pub unsafe extern "C" fn sqlite3RegisterBuiltinFunctions() {
     );
 }
 
-// Re-export variadic functions from printf_c_variadic module
-pub use crate::src::printf_c_variadic::percentError;
+unsafe fn percentError(
+    pCtx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
+    zMsg: *mut ::core::ffi::c_char,
+) {
+    crate::src::src::vdbeapi::sqlite3_result_error(pCtx, zMsg, -(1 as ::core::ffi::c_int));
+    crate::src::src::malloc::sqlite3_free(zMsg as *mut ::core::ffi::c_void);
+}

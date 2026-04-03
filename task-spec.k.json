@@ -722,6 +722,44 @@
           "fails_count": 1
         }
       }
+    },
+    "func_percentError_variadic_removal": {
+      "type": "Feature",
+      "model_version": 1,
+      "id": "func_percentError_variadic_removal",
+      "description": "Remove variadic percentError from printf_c_variadic; redefine non-variadic in func.rs using sqlite_printf!",
+      "goals": [
+        "percentError in src/printf_c_variadic.rs is a variadic C-ABI function that calls sqlite3_vmprintf then does a manual %s substitution for the function name.",
+        "All 4 call sites are in func.rs. Delete percentError from printf_c_variadic.rs and remove its pub use re-export from func.rs.",
+        "Define a private non-variadic helper unsafe fn percentError(pCtx, zMsg: *mut c_char) directly in func.rs.",
+        "Each call site builds zMsg via sqlite_printf! combining the function name (from sqlite3VdbeFuncName) and any extra args inline."
+      ],
+      "constraints": {
+        "percentError_not_in_printf_c_variadic": {
+          "id": "percentError_not_in_printf_c_variadic",
+          "cmd": "! grep -q \"fn percentError\" \"${CLAUDE_PROJECT_ROOT}/src/printf_c_variadic.rs\"",
+          "description": "Structural: percentError function must be removed from printf_c_variadic.rs",
+          "fails_count": 1
+        },
+        "percentError_no_reexport": {
+          "id": "percentError_no_reexport",
+          "cmd": "! grep -qE \"pub use.*percentError\" \"${CLAUDE_PROJECT_ROOT}/src/src/func.rs\"",
+          "description": "Structural: no pub use re-export of percentError from printf_c_variadic in func.rs",
+          "fails_count": 1
+        },
+        "percentError_defined_nonvariadic_in_func": {
+          "id": "percentError_defined_nonvariadic_in_func",
+          "cmd": "grep -q \"fn percentError\" \"${CLAUDE_PROJECT_ROOT}/src/src/func.rs\" && ! grep -qE \"fn percentError.*\\.\\.\\.\" \"${CLAUDE_PROJECT_ROOT}/src/src/func.rs\"",
+          "description": "Structural: percentError must be defined directly in func.rs with a non-variadic signature",
+          "fails_count": 1
+        },
+        "percentError_callsites_use_sqlite_printf": {
+          "id": "percentError_callsites_use_sqlite_printf",
+          "cmd": "[ $(grep -c \"sqlite_printf!\" \"${CLAUDE_PROJECT_ROOT}/src/src/func.rs\") -ge 5 ]",
+          "description": "Behavioral: func.rs must have >= 5 sqlite_printf! uses (1 existing + 4 new call sites replacing variadic percentError calls)",
+          "fails_count": 1
+        }
+      }
     }
   }
 }

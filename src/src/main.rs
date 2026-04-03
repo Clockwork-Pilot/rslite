@@ -79,21 +79,30 @@ unsafe extern "C" fn sqlite3TestExtInit(mut _db: *mut crate::src::headers::sqlit
     crate::src::src::util::sqlite3FaultSim(500 as ::core::ffi::c_int)
 }
 
-static mut sqlite3BuiltinExtensions: [Option<
-    unsafe extern "C" fn(*mut crate::src::headers::sqliteInt_h::sqlite3) -> ::core::ffi::c_int,
->; 8] = 
-    [
-        Some(crate::src::ext::fts3::fts3::sqlite3Fts3Init as unsafe extern "C" fn(*mut crate::src::headers::sqliteInt_h::sqlite3) -> ::core::ffi::c_int),
-        Some(sqlite3Fts5Init as unsafe extern "C" fn(*mut crate::src::headers::sqliteInt_h::sqlite3) -> ::core::ffi::c_int),
-        Some(crate::src::ext::rtree::rtree::sqlite3RtreeInit as unsafe extern "C" fn(*mut crate::src::headers::sqliteInt_h::sqlite3) -> ::core::ffi::c_int),
-        Some(crate::src::src::dbpage::sqlite3DbpageRegister as unsafe extern "C" fn(*mut crate::src::headers::sqliteInt_h::sqlite3) -> ::core::ffi::c_int),
-        Some(crate::src::src::dbstat::sqlite3DbstatRegister as unsafe extern "C" fn(*mut crate::src::headers::sqliteInt_h::sqlite3) -> ::core::ffi::c_int),
-        Some(sqlite3TestExtInit as unsafe extern "C" fn(*mut crate::src::headers::sqliteInt_h::sqlite3) -> ::core::ffi::c_int),
-        Some(sqlite3StmtVtabInit as unsafe extern "C" fn(*mut crate::src::headers::sqliteInt_h::sqlite3) -> ::core::ffi::c_int),
-        Some(
-            crate::src::src::vdbevtab::sqlite3VdbeBytecodeVtabInit as unsafe extern "C" fn(*mut crate::src::headers::sqliteInt_h::sqlite3) -> ::core::ffi::c_int,
-        ),
-    ];
+type BuiltinExtFn = unsafe extern "C" fn(*mut crate::src::headers::sqliteInt_h::sqlite3) -> ::core::ffi::c_int;
+
+#[cfg(feature = "fts3")]
+static mut sqlite3BuiltinExtensions: [Option<BuiltinExtFn>; 8] = [
+    Some(crate::src::ext::fts3::fts3::sqlite3Fts3Init as BuiltinExtFn),
+    Some(sqlite3Fts5Init as BuiltinExtFn),
+    Some(crate::src::ext::rtree::rtree::sqlite3RtreeInit as BuiltinExtFn),
+    Some(crate::src::src::dbpage::sqlite3DbpageRegister as BuiltinExtFn),
+    Some(crate::src::src::dbstat::sqlite3DbstatRegister as BuiltinExtFn),
+    Some(sqlite3TestExtInit as BuiltinExtFn),
+    Some(sqlite3StmtVtabInit as BuiltinExtFn),
+    Some(crate::src::src::vdbevtab::sqlite3VdbeBytecodeVtabInit as BuiltinExtFn),
+];
+
+#[cfg(not(feature = "fts3"))]
+static mut sqlite3BuiltinExtensions: [Option<BuiltinExtFn>; 7] = [
+    Some(sqlite3Fts5Init as BuiltinExtFn),
+    Some(crate::src::ext::rtree::rtree::sqlite3RtreeInit as BuiltinExtFn),
+    Some(crate::src::src::dbpage::sqlite3DbpageRegister as BuiltinExtFn),
+    Some(crate::src::src::dbstat::sqlite3DbstatRegister as BuiltinExtFn),
+    Some(sqlite3TestExtInit as BuiltinExtFn),
+    Some(sqlite3StmtVtabInit as BuiltinExtFn),
+    Some(crate::src::src::vdbevtab::sqlite3VdbeBytecodeVtabInit as BuiltinExtFn),
+];
     
 #[unsafe(no_mangle)]
 
@@ -3054,29 +3063,13 @@ unsafe extern "C" fn openDatabase(
                                 rc = sqlite3_errcode(db);
                                 i = 0 as ::core::ffi::c_int;
                                 while rc == crate::src::headers::sqlite3_h::SQLITE_OK
-                                    && i < (::core::mem::size_of::<
-                                        [Option<
-                                            unsafe extern "C" fn(
-                                                *mut crate::src::headers::sqliteInt_h::sqlite3,
-                                            )
-                                                -> ::core::ffi::c_int,
-                                        >; 8],
-                                    >() as usize)
-                                        .wrapping_div(::core::mem::size_of::<
-                                            Option<
-                                                unsafe extern "C" fn(
-                                                    *mut crate::src::headers::sqliteInt_h::sqlite3,
-                                                )
-                                                    -> ::core::ffi::c_int,
-                                            >,
-                                        >()
-                                            as usize)
+                                    && i < ::core::mem::size_of_val(&sqlite3BuiltinExtensions)
+                                        .wrapping_div(::core::mem::size_of::<Option<BuiltinExtFn>>())
                                         as ::core::ffi::c_int
                                 {
-                                    rc = sqlite3BuiltinExtensions[i as usize]
-                                        .expect("non-null function pointer")(
-                                        db
-                                    );
+                                    if let Some(f) = sqlite3BuiltinExtensions[i as usize] {
+                                        rc = f(db);
+                                    }
                                     i += 1;
                                 }
                                 if rc == crate::src::headers::sqlite3_h::SQLITE_OK {

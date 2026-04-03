@@ -207,33 +207,46 @@ pub mod __stddef_null_h {
     pub const NULL_0: *mut ::core::ffi::c_void = ::core::ptr::null_mut::<::core::ffi::c_void>();
 }
 pub mod fts3Int_h {
+    #[cfg(feature = "fts3")]
     #[cfg(feature = "test")]
     unsafe extern "C" {
         pub fn sqlite3Fts3InitTerm(
             db: *mut crate::src::headers::sqliteInt_h::sqlite3,
         ) -> ::core::ffi::c_int;
     }
+    #[cfg(feature = "fts3")]
     pub use crate::src::ext::fts3::fts3_snippet::MatchinfoBuffer;
+    #[cfg(feature = "fts3")]
     pub use crate::src::ext::fts3::fts3_write::Fts3DeferredToken;
+    #[cfg(feature = "fts3")]
     pub use crate::src::ext::fts3::fts3_write::Fts3SegReader;
 
+    #[cfg(feature = "fts3")]
     pub const SQLITE_FTS3_MAX_EXPR_DEPTH: ::core::ffi::c_int = 12 as ::core::ffi::c_int;
 
+    #[cfg(feature = "fts3")]
     pub const FTS3_MERGE_COUNT: ::core::ffi::c_int = 16 as ::core::ffi::c_int;
 
+    #[cfg(feature = "fts3")]
     pub const FTS3_MAX_PENDING_DATA: ::core::ffi::c_int =
         1 as ::core::ffi::c_int * 1024 as ::core::ffi::c_int * 1024 as ::core::ffi::c_int;
 
+    #[cfg(feature = "fts3")]
     pub const FTS3_VARINT_MAX: ::core::ffi::c_int = 10 as ::core::ffi::c_int;
 
+    #[cfg(feature = "fts3")]
     pub const FTS3_BUFFER_PADDING: ::core::ffi::c_int = 8 as ::core::ffi::c_int;
 
+    #[cfg(feature = "fts3")]
     pub const FTS3_SEGDIR_MAXLEVEL: ::core::ffi::c_int = 1024 as ::core::ffi::c_int;
 
+    #[cfg(feature = "fts3")]
     pub const POS_COLUMN: ::core::ffi::c_int = 1 as ::core::ffi::c_int;
 
+    #[cfg(feature = "fts3")]
     pub const POS_END: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
 
+    // LARGEST_INT64 / SMALLEST_INT64 are used throughout core SQLite (not FTS3-specific)
     pub const LARGEST_INT64: crate::src::ext::rtree::rtree::i64_0 = 0xffffffff
         as crate::src::ext::rtree::rtree::i64_0
         | (0x7fffffff as ::core::ffi::c_int as crate::src::ext::rtree::rtree::i64_0)
@@ -243,9 +256,11 @@ pub mod fts3Int_h {
         as crate::src::ext::rtree::rtree::i64_0
         - crate::fts3Int_h::LARGEST_INT64;
 
+    #[cfg(feature = "fts3")]
     pub const FTS_CORRUPT_VTAB: ::core::ffi::c_int =
         crate::src::headers::sqlite3_h::SQLITE_CORRUPT_VTAB;
 
+    #[cfg(feature = "fts3")]
     #[derive(Copy, Clone)]
     #[repr(C)]
 
@@ -291,6 +306,7 @@ pub mod fts3Int_h {
     #[derive(Copy, Clone)]
     #[repr(C)]
 
+    #[cfg(feature = "fts3")]
     pub struct Fts3Index {
         pub nPrefix: ::core::ffi::c_int,
         pub hPending: crate::src::ext::fts3::fts3_hash::Fts3Hash,
@@ -299,6 +315,7 @@ pub mod fts3Int_h {
     #[derive(Copy, Clone)]
     #[repr(C)]
 
+    #[cfg(feature = "fts3")]
     pub struct Fts3Cursor {
         pub base: crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
         pub eSearch: crate::src::fts5::i16_0,
@@ -324,21 +341,28 @@ pub mod fts3Int_h {
         pub pMIBuffer: *mut crate::fts3Int_h::MatchinfoBuffer,
     }
 
+    #[cfg(feature = "fts3")]
     pub const FTS3_FULLSCAN_SEARCH: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
 
+    #[cfg(feature = "fts3")]
     pub const FTS3_DOCID_SEARCH: ::core::ffi::c_int = 1 as ::core::ffi::c_int;
 
+    #[cfg(feature = "fts3")]
     pub const FTS3_FULLTEXT_SEARCH: ::core::ffi::c_int = 2 as ::core::ffi::c_int;
 
+    #[cfg(feature = "fts3")]
     pub const FTS3_HAVE_LANGID: ::core::ffi::c_int = 0x10000 as ::core::ffi::c_int;
 
+    #[cfg(feature = "fts3")]
     pub const FTS3_HAVE_DOCID_GE: ::core::ffi::c_int = 0x20000 as ::core::ffi::c_int;
 
+    #[cfg(feature = "fts3")]
     pub const FTS3_HAVE_DOCID_LE: ::core::ffi::c_int = 0x40000 as ::core::ffi::c_int;
 
     #[derive(Copy, Clone)]
     #[repr(C)]
 
+    #[cfg(feature = "fts3")]
     pub struct Fts3Doclist {
         pub aAll: *mut ::core::ffi::c_char,
         pub nAll: ::core::ffi::c_int,
@@ -352,6 +376,7 @@ pub mod fts3Int_h {
     #[derive(Copy, Clone)]
     #[repr(C)]
 
+    #[cfg(feature = "fts3")]
     pub struct Fts3PhraseToken {
         pub z: *mut ::core::ffi::c_char,
         pub n: ::core::ffi::c_int,
@@ -364,6 +389,7 @@ pub mod fts3Int_h {
     #[derive(Copy, Clone)]
     #[repr(C)]
 
+    #[cfg(feature = "fts3")]
     pub struct Fts3Phrase {
         pub doclist: crate::fts3Int_h::Fts3Doclist,
         pub bIncr: ::core::ffi::c_int,
@@ -378,6 +404,7 @@ pub mod fts3Int_h {
     #[derive(Copy, Clone)]
     #[repr(C)]
 
+    #[cfg(feature = "fts3")]
     pub struct Fts3Expr {
         pub eType: ::core::ffi::c_int,
         pub nNear: ::core::ffi::c_int,
@@ -393,41 +420,58 @@ pub mod fts3Int_h {
         pub aMI: *mut crate::src::ext::rtree::rtree::u32_0,
     }
 
+    #[cfg(feature = "fts3")]
     pub const FTSQUERY_NEAR: ::core::ffi::c_int = 1 as ::core::ffi::c_int;
 
+    #[cfg(feature = "fts3")]
     pub const FTSQUERY_NOT: ::core::ffi::c_int = 2;
 
+    #[cfg(feature = "fts3")]
     pub const FTSQUERY_NOT_1: ::core::ffi::c_int = 2 as ::core::ffi::c_int;
 
+    #[cfg(feature = "fts3")]
     pub const FTSQUERY_AND: ::core::ffi::c_int = 3;
 
+    #[cfg(feature = "fts3")]
     pub const FTSQUERY_AND_1: ::core::ffi::c_int = 3 as ::core::ffi::c_int;
 
+    #[cfg(feature = "fts3")]
     pub const FTSQUERY_OR: ::core::ffi::c_int = 4;
 
+    #[cfg(feature = "fts3")]
     pub const FTSQUERY_OR_1: ::core::ffi::c_int = 4 as ::core::ffi::c_int;
 
+    #[cfg(feature = "fts3")]
     pub const FTSQUERY_PHRASE: ::core::ffi::c_int = 5 as ::core::ffi::c_int;
 
+    #[cfg(feature = "fts3")]
     pub const FTS3_SEGCURSOR_PENDING: ::core::ffi::c_int = -(1 as ::core::ffi::c_int);
 
+    #[cfg(feature = "fts3")]
     pub const FTS3_SEGCURSOR_ALL: ::core::ffi::c_int = -(2 as ::core::ffi::c_int);
 
+    #[cfg(feature = "fts3")]
     pub const FTS3_SEGMENT_REQUIRE_POS: ::core::ffi::c_int = 0x1 as ::core::ffi::c_int;
 
+    #[cfg(feature = "fts3")]
     pub const FTS3_SEGMENT_IGNORE_EMPTY: ::core::ffi::c_int = 0x2 as ::core::ffi::c_int;
 
+    #[cfg(feature = "fts3")]
     pub const FTS3_SEGMENT_COLUMN_FILTER: ::core::ffi::c_int = 0x4 as ::core::ffi::c_int;
 
+    #[cfg(feature = "fts3")]
     pub const FTS3_SEGMENT_PREFIX: ::core::ffi::c_int = 0x8 as ::core::ffi::c_int;
 
+    #[cfg(feature = "fts3")]
     pub const FTS3_SEGMENT_SCAN: ::core::ffi::c_int = 0x10 as ::core::ffi::c_int;
 
+    #[cfg(feature = "fts3")]
     pub const FTS3_SEGMENT_FIRST: ::core::ffi::c_int = 0x20 as ::core::ffi::c_int;
 
     #[derive(Copy, Clone)]
     #[repr(C)]
 
+    #[cfg(feature = "fts3")]
     pub struct Fts3SegFilter {
         pub zTerm: *const ::core::ffi::c_char,
         pub nTerm: ::core::ffi::c_int,
@@ -438,6 +482,7 @@ pub mod fts3Int_h {
     #[derive(Copy, Clone)]
     #[repr(C)]
 
+    #[cfg(feature = "fts3")]
     pub struct Fts3MultiSegReader {
         pub apSegment: *mut *mut crate::fts3Int_h::Fts3SegReader,
         pub nSegment: ::core::ffi::c_int,
@@ -465,6 +510,7 @@ pub mod src {
     pub mod ctime;
     pub mod headers;
     pub mod ext {
+        #[cfg(feature = "fts3")]
         pub mod fts3 {
             pub mod fts3;
             pub mod fts3_aux;

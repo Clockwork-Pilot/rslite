@@ -676,15 +676,7 @@ static mut sqlite3Apis: crate::src::headers::sqlite3ext_h::sqlite3_api_routines 
                     Option<unsafe extern "C" fn(*mut ::core::ffi::c_void) -> ()>,
                 ) -> (),
         ),
-    xsnprintf:  Some(
-            crate::src::src::printf::sqlite3_snprintf
-                as unsafe extern "C" fn(
-                    ::core::ffi::c_int,
-                    *mut ::core::ffi::c_char,
-                    *const ::core::ffi::c_char,
-                    ...
-                ) -> *mut ::core::ffi::c_char,
-        ),
+    xsnprintf:  None,
     step:  Some(crate::src::src::vdbeapi::sqlite3_step as unsafe extern "C" fn(*mut crate::src::headers::sqlite3_h::sqlite3_stmt) -> ::core::ffi::c_int),
     table_column_metadata:  Some(
             crate::src::src::main::sqlite3_table_column_metadata

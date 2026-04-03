@@ -33,7 +33,7 @@ while true; do
 
     ./testfixture_build.sh
 
-    ( cd "$SQLITE_SRC" && ./rustfixture test/testrunner.tcl 2>&1 | tee /tmp/test_output.log )
+    ( cd "$SQLITE_SRC" && ./rustfixture test/testrunner.tcl --jobs "$(nproc)" 2>&1 | tee /tmp/test_output.log )
 
     # Check that tests passed (must have exactly "0 errors out of")
     if grep -E "^0 errors out of" /tmp/test_output.log > /dev/null 2>&1; then

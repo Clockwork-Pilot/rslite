@@ -4251,12 +4251,13 @@ pub unsafe extern "C" fn sqlite3Fts3Init(mut db: *mut crate::src::headers::sqlit
             pHash as *mut ::core::ffi::c_void,
             Some(hashDestroy as unsafe extern "C" fn(*mut ::core::ffi::c_void) -> ()),
         );
+        #[cfg(feature = "fts4")]
         if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
             (*pHash).nRef += 1;
             rc = crate::src::src::vtab::sqlite3_create_module_v2(
                 db,
                 b"fts4\0" as *const u8 as *const ::core::ffi::c_char,
-                
+
                 &raw const fts3Module as *const _ as *const crate::src::headers::sqlite3_h::sqlite3_module,
                 pHash as *mut ::core::ffi::c_void,
                 Some(hashDestroy as unsafe extern "C" fn(*mut ::core::ffi::c_void) -> ()),
