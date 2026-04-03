@@ -463,29 +463,29 @@ pub unsafe extern "C" fn sqlite3_str_vappendf(
             flag_long = 0 as etByte;
             precision = -(1 as ::core::ffi::c_int);
             loop {
-                match c {
-                    45 => {
+                match c as u8 {
+                    b'-' => {
                         flag_leftjustify = 1 as etByte;
                     }
-                    43 => {
+                    b'+' => {
                         flag_prefix = '+' as i32 as etByte;
                     }
-                    32 => {
+                    b' ' => {
                         flag_prefix = ' ' as i32 as etByte;
                     }
-                    35 => {
+                    b'#' => {
                         flag_alternateform = 1 as etByte;
                     }
-                    33 => {
+                    b'!' => {
                         flag_altform2 = 1 as etByte;
                     }
-                    48 => {
+                    b'0' => {
                         flag_zeropad = 1 as etByte;
                     }
-                    44 => {
+                    b',' => {
                         cThousand = ',' as i32 as etByte;
                     }
-                    108 => {
+                    b'l' => {
                         flag_long = 1 as etByte;
                         fmt = fmt.offset(1);
                         c = *fmt as ::core::ffi::c_int;
@@ -496,7 +496,7 @@ pub unsafe extern "C" fn sqlite3_str_vappendf(
                         }
                         done = 1 as etByte;
                     }
-                    49 | 50 | 51 | 52 | 53 | 54 | 55 | 56 | 57 => {
+                    b'1' | b'2' | b'3' | b'4' | b'5' | b'6' | b'7' | b'8' | b'9' => {
                         let mut wx: ::core::ffi::c_uint = (c - '0' as i32) as ::core::ffi::c_uint;
                         loop {
                             fmt = fmt.offset(1);
@@ -517,7 +517,7 @@ pub unsafe extern "C" fn sqlite3_str_vappendf(
                             fmt = fmt.offset(-1);
                         }
                     }
-                    42 => {
+                    b'*' => {
                         if bArgList != 0 {
                             width = getIntArg(pArgList) as ::core::ffi::c_int;
                         } else {
@@ -538,7 +538,7 @@ pub unsafe extern "C" fn sqlite3_str_vappendf(
                             done = 1 as etByte;
                         }
                     }
-                    46 => {
+                    b'.' => {
                         fmt = fmt.offset(1);
                         c = *fmt as ::core::ffi::c_int;
                         if c == '*' as i32 {
