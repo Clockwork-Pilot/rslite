@@ -52,6 +52,16 @@ Verify c_variadic feature isolation: only in printf_c_variadic.rs
       - [fts3_write_no_format_sql_1arg](#fts3_write_no_format_sql_1arg)
       - [fts3_write_no_format_sql_2args](#fts3_write_no_format_sql_2args)
       - [fts3_write_no_format_sql_3args](#fts3_write_no_format_sql_3args)
+    - [Feature: fts5_ConfigErrmsg_variadic_removal](#fts5_configerrmsg_variadic_removal)
+      - [ConfigErrmsg_callsites_use_sqlite_printf](#configerrmsg_callsites_use_sqlite_printf)
+      - [ConfigErrmsg_defined_nonvariadic_in_fts5](#configerrmsg_defined_nonvariadic_in_fts5)
+      - [ConfigErrmsg_no_reexport](#configerrmsg_no_reexport)
+      - [ConfigErrmsg_not_in_printf_c_variadic](#configerrmsg_not_in_printf_c_variadic)
+    - [Feature: fts5_PrepareStatement_variadic_removal](#fts5_preparestatement_variadic_removal)
+      - [PrepareStatement_callsites_use_sqlite_printf](#preparestatement_callsites_use_sqlite_printf)
+      - [PrepareStatement_defined_nonvariadic_in_fts5](#preparestatement_defined_nonvariadic_in_fts5)
+      - [PrepareStatement_no_reexport](#preparestatement_no_reexport)
+      - [PrepareStatement_not_in_printf_c_variadic](#preparestatement_not_in_printf_c_variadic)
     - [Feature: fts5_PrintfAppend_variadic_removal](#fts5_printfappend_variadic_removal)
       - [fts5PrintfAppend_callsites_use_sqlite_printf](#fts5printfappend_callsites_use_sqlite_printf)
       - [fts5PrintfAppend_defined_nonvariadic_in_fts5](#fts5printfappend_defined_nonvariadic_in_fts5)
@@ -333,6 +343,57 @@ Verify c_variadic feature isolation: only in printf_c_variadic.rs
 #### fts3_write_no_format_sql_3args
 **Description:** fts3_write.rs must not use format_sql_3args function
 **Command:** `grep -n "format_sql_3args" "$WORKSPACE_ROOT/src/ext/fts3/fts3_write.rs" 2>/dev/null && exit 1 || exit 0`
+
+### Feature: fts5_ConfigErrmsg_variadic_removal
+**Remove variadic sqlite3Fts5ConfigErrmsg from printf_c_variadic; redefine pub(crate) non-variadic in fts5.rs**
+
+**Goals:**
+- sqlite3Fts5ConfigErrmsg in printf_c_variadic.rs is variadic: formats message via sqlite3_vmprintf and stores in pConfig.pzErrmsg if non-null.
+- 9 call sites in fts5.rs, 1 call site inside fts5PrepareStatement in printf_c_variadic.rs. Remove from printf_c_variadic.rs and pub use re-export from fts5.rs.
+- Redefine as pub(crate) non-variadic unsafe fn sqlite3Fts5ConfigErrmsg(p: *mut Fts5Config, zMsg: *mut c_char) in fts5.rs.
+- Each fts5.rs call site passes sqlite_printf!(fmt, args...) as zMsg. The fts5PrepareStatement call in printf_c_variadic.rs calls crate::src::fts5::sqlite3Fts5ConfigErrmsg with sqlite_printf!.
+- One call site (21741) has a runtime-selected format string requiring two sqlite_printf! branches in an if/else.
+
+#### ConfigErrmsg_callsites_use_sqlite_printf
+**Description:** Behavioral: fts5.rs must have >= 99 sqlite_printf! uses (89 existing + 9 call sites + 1 extra for runtime-selected format branch)
+**Command:** `[ $(grep -c "sqlite_printf!" "${CLAUDE_PROJECT_ROOT}/src/fts5.rs") -ge 99 ]`
+
+#### ConfigErrmsg_defined_nonvariadic_in_fts5
+**Description:** Structural: sqlite3Fts5ConfigErrmsg must be defined in fts5.rs with non-variadic signature
+**Command:** `grep -q "fn sqlite3Fts5ConfigErrmsg" "${CLAUDE_PROJECT_ROOT}/src/fts5.rs" && ! grep -qE "fn sqlite3Fts5ConfigErrmsg.*\.\.\." "${CLAUDE_PROJECT_ROOT}/src/fts5.rs"`
+
+#### ConfigErrmsg_no_reexport
+**Description:** Structural: no pub use re-export of sqlite3Fts5ConfigErrmsg in fts5.rs
+**Command:** `! grep -qE "pub use.*sqlite3Fts5ConfigErrmsg" "${CLAUDE_PROJECT_ROOT}/src/fts5.rs"`
+
+#### ConfigErrmsg_not_in_printf_c_variadic
+**Description:** Structural: sqlite3Fts5ConfigErrmsg function must be removed from printf_c_variadic.rs
+**Command:** `! grep -q "fn sqlite3Fts5ConfigErrmsg" "${CLAUDE_PROJECT_ROOT}/src/printf_c_variadic.rs"`
+
+### Feature: fts5_PrepareStatement_variadic_removal
+**Remove variadic fts5PrepareStatement from printf_c_variadic; redefine non-variadic in fts5.rs using sqlite_printf!**
+
+**Goals:**
+- fts5PrepareStatement in printf_c_variadic.rs is variadic: formats SQL via sqlite3_vmprintf, prepares statement, reports error via sqlite3Fts5ConfigErrmsg.
+- Single call site in fts5.rs at line 17473 with format %Q.%Q ORDER BY %s("%w"%s%s) %s and 7 args.
+- Remove from printf_c_variadic.rs and pub use re-export from fts5.rs. Define private non-variadic unsafe fn fts5PrepareStatement(ppStmt, pConfig, zSql: *mut c_char) in fts5.rs.
+- Call site passes sqlite_printf!(fmt, ...) as zSql. sqlite3Fts5ConfigErrmsg can be downgraded from pub(crate) to private fn.
+
+#### PrepareStatement_callsites_use_sqlite_printf
+**Description:** Behavioral: fts5.rs must have >= 101 sqlite_printf! uses (99 existing + 1 call site SQL + 1 errmsg in function body)
+**Command:** `[ $(grep -c "sqlite_printf!" "${CLAUDE_PROJECT_ROOT}/src/fts5.rs") -ge 101 ]`
+
+#### PrepareStatement_defined_nonvariadic_in_fts5
+**Description:** Structural: fts5PrepareStatement must be defined in fts5.rs with non-variadic signature
+**Command:** `grep -q "fn fts5PrepareStatement" "${CLAUDE_PROJECT_ROOT}/src/fts5.rs" && ! grep -qE "fn fts5PrepareStatement.*\.\.\." "${CLAUDE_PROJECT_ROOT}/src/fts5.rs"`
+
+#### PrepareStatement_no_reexport
+**Description:** Structural: no pub use re-export of fts5PrepareStatement in fts5.rs
+**Command:** `! grep -qE "pub use.*fts5PrepareStatement" "${CLAUDE_PROJECT_ROOT}/src/fts5.rs"`
+
+#### PrepareStatement_not_in_printf_c_variadic
+**Description:** Structural: fts5PrepareStatement must be removed from printf_c_variadic.rs
+**Command:** `! grep -q "fn fts5PrepareStatement" "${CLAUDE_PROJECT_ROOT}/src/printf_c_variadic.rs"`
 
 ### Feature: fts5_PrintfAppend_variadic_removal
 **Remove variadic fts5PrintfAppend from printf_c_variadic; redefine non-variadic in fts5.rs using sqlite_printf!**

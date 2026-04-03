@@ -12438,13 +12438,7 @@ unsafe extern "C" fn fts5IndexCorruptRowid(
 ) -> ::core::ffi::c_int {
     let __pIdx_ref = { &mut *pIdx };
     __pIdx_ref.rc = FTS5_CORRUPT;
-    sqlite3Fts5ConfigErrmsg(
-        __pIdx_ref.pConfig,
-        b"fts5: corruption found reading blob %lld from table \"%s\"\0" as *const u8
-            as *const ::core::ffi::c_char,
-        iRowid,
-        (*__pIdx_ref.pConfig).zName,
-    );
+    sqlite3Fts5ConfigErrmsg(__pIdx_ref.pConfig, sqlite_printf!("fts5: corruption found reading blob %lld from table \"%s\"", iRowid, (*__pIdx_ref.pConfig).zName));
     crate::src::headers::sqlite3_h::SQLITE_CORRUPT_VTAB
 }
 
@@ -12661,14 +12655,7 @@ unsafe extern "C" fn fts5IndexCorruptIter(
 ) -> ::core::ffi::c_int {
     let __pIdx_ref = { &mut *pIdx };
     __pIdx_ref.rc = FTS5_CORRUPT;
-    sqlite3Fts5ConfigErrmsg(
-        __pIdx_ref.pConfig,
-        b"fts5: corruption on page %d, segment %d, table \"%s\"\0" as *const u8
-            as *const ::core::ffi::c_char,
-        (*pIter).iLeafPgno,
-        (*(*pIter).pSeg).iSegid,
-        (*__pIdx_ref.pConfig).zName,
-    );
+    sqlite3Fts5ConfigErrmsg(__pIdx_ref.pConfig, sqlite_printf!("fts5: corruption on page %d, segment %d, table \"%s\"", (*pIter).iLeafPgno, (*(*pIter).pSeg).iSegid, (*__pIdx_ref.pConfig).zName));
     crate::src::headers::sqlite3_h::SQLITE_CORRUPT_VTAB
 }
 
@@ -12771,11 +12758,7 @@ unsafe extern "C" fn fts5PorterCreate(
 unsafe extern "C" fn fts5IndexCorruptIdx(mut pIdx: *mut Fts5Index) -> ::core::ffi::c_int {
     let __pIdx_ref = { &mut *pIdx };
     __pIdx_ref.rc = FTS5_CORRUPT;
-    sqlite3Fts5ConfigErrmsg(
-        __pIdx_ref.pConfig,
-        b"fts5: corruption in table \"%s\"\0" as *const u8 as *const ::core::ffi::c_char,
-        (*__pIdx_ref.pConfig).zName,
-    );
+    sqlite3Fts5ConfigErrmsg(__pIdx_ref.pConfig, sqlite_printf!("fts5: corruption in table \"%s\"", (*__pIdx_ref.pConfig).zName));
     crate::src::headers::sqlite3_h::SQLITE_CORRUPT_VTAB
 }
 
@@ -17432,14 +17415,7 @@ unsafe extern "C" fn sqlite3Fts5ConfigLoad(
         && iVersion != FTS5_CURRENT_VERSION_SECUREDELETE
     {
         rc = crate::src::headers::sqlite3_h::SQLITE_ERROR;
-        sqlite3Fts5ConfigErrmsg(
-            pConfig,
-            b"invalid fts5 file format (found %d, expected %d or %d) - run 'rebuild'\0" as *const u8
-                as *const ::core::ffi::c_char,
-            iVersion,
-            FTS5_CURRENT_VERSION,
-            FTS5_CURRENT_VERSION_SECUREDELETE,
-        );
+        sqlite3Fts5ConfigErrmsg(pConfig, sqlite_printf!("invalid fts5 file format (found %d, expected %d or %d) - run 'rebuild'", iVersion, FTS5_CURRENT_VERSION, FTS5_CURRENT_VERSION_SECUREDELETE));
     } else {
         __pConfig_ref.iVersion = iVersion;
     }
@@ -17497,27 +17473,15 @@ unsafe extern "C" fn fts5CursorFirstSorted(
     rc = fts5PrepareStatement(
         &raw mut (*pSorter).pStmt,
         pConfig,
-        b"SELECT rowid, rank FROM %Q.%Q ORDER BY %s(\"%w\"%s%s) %s\0" as *const u8
-            as *const ::core::ffi::c_char,
-        __pConfig_ref.zDb,
-        __pConfig_ref.zName,
-        zRank,
-        __pConfig_ref.zName,
-        if !zRankArgs.is_null() {
-            b", \0" as *const u8 as *const ::core::ffi::c_char
-        } else {
-            b"\0" as *const u8 as *const ::core::ffi::c_char
-        },
-        if !zRankArgs.is_null() {
-            zRankArgs
-        } else {
-            b"\0" as *const u8 as *const ::core::ffi::c_char
-        },
-        if bDesc != 0 {
-            b"DESC\0" as *const u8 as *const ::core::ffi::c_char
-        } else {
-            b"ASC\0" as *const u8 as *const ::core::ffi::c_char
-        },
+        sqlite_printf!("SELECT rowid, rank FROM %Q.%Q ORDER BY %s(\"%w\"%s%s) %s",
+            __pConfig_ref.zDb,
+            __pConfig_ref.zName,
+            zRank,
+            __pConfig_ref.zName,
+            if !zRankArgs.is_null() { b", \0" as *const u8 as *const ::core::ffi::c_char } else { b"\0" as *const u8 as *const ::core::ffi::c_char },
+            if !zRankArgs.is_null() { zRankArgs } else { b"\0" as *const u8 as *const ::core::ffi::c_char },
+            if bDesc != 0 { b"DESC\0" as *const u8 as *const ::core::ffi::c_char } else { b"ASC\0" as *const u8 as *const ::core::ffi::c_char },
+        ),
     );
     __pCsr_ref.pSorter = pSorter;
     if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
@@ -18960,12 +18924,7 @@ unsafe extern "C" fn fts5StructureReadUncached(mut p: *mut Fts5Index) -> *mut Ft
                 __p_ref.rc = sqlite3Fts5ConfigLoad(pConfig, iCookie);
             }
         } else if __p_ref.rc == crate::src::headers::sqlite3_h::SQLITE_CORRUPT_VTAB {
-            sqlite3Fts5ConfigErrmsg(
-                __p_ref.pConfig,
-                b"fts5: corrupt structure record for table \"%s\"\0" as *const u8
-                    as *const ::core::ffi::c_char,
-                (*__p_ref.pConfig).zName,
-            );
+            sqlite3Fts5ConfigErrmsg(__p_ref.pConfig, sqlite_printf!("fts5: corrupt structure record for table \"%s\"", (*__p_ref.pConfig).zName));
         }
         fts5DataRelease(pData);
         if __p_ref.rc != crate::src::headers::sqlite3_h::SQLITE_OK {
@@ -21738,17 +21697,13 @@ unsafe extern "C" fn fts5ContentlessUpdate(
         *pbContent = 1 as ::core::ffi::c_int;
     } else if bSeenIndexNC != 0 || (*pConfig).bContentlessDelete == 0 as ::core::ffi::c_int {
         rc = crate::src::headers::sqlite3_h::SQLITE_ERROR;
-        sqlite3Fts5ConfigErrmsg(
-            pConfig,
-            if (*pConfig).bContentlessDelete != 0 {
-                b"%s a subset of columns on fts5 contentless-delete table: %s\0" as *const u8
-                    as *const ::core::ffi::c_char
-            } else {
-                b"%s contentless fts5 table: %s\0" as *const u8 as *const ::core::ffi::c_char
-            },
-            b"cannot UPDATE\0" as *const u8 as *const ::core::ffi::c_char,
-            (*pConfig).zName,
-        );
+        sqlite3Fts5ConfigErrmsg(pConfig, if (*pConfig).bContentlessDelete != 0 {
+            sqlite_printf!("%s a subset of columns on fts5 contentless-delete table: %s",
+                b"cannot UPDATE\0" as *const u8 as *const ::core::ffi::c_char, (*pConfig).zName)
+        } else {
+            sqlite_printf!("%s contentless fts5 table: %s",
+                b"cannot UPDATE\0" as *const u8 as *const ::core::ffi::c_char, (*pConfig).zName)
+        });
     }
     rc
 }
@@ -27426,11 +27381,7 @@ unsafe extern "C" fn sqlite3Fts5LoadTokenizer(mut pConfig: *mut Fts5Config) -> :
     );
     if pMod.is_null() {
         rc = crate::src::headers::sqlite3_h::SQLITE_ERROR;
-        sqlite3Fts5ConfigErrmsg(
-            pConfig,
-            b"no such tokenizer: %s\0" as *const u8 as *const ::core::ffi::c_char,
-            *azArg.offset(0 as isize),
-        );
+        sqlite3Fts5ConfigErrmsg(pConfig, sqlite_printf!("no such tokenizer: %s", *azArg.offset(0 as isize)));
     } else {
         let mut xCreate: Option<
             unsafe extern "C" fn(
@@ -27464,10 +27415,7 @@ unsafe extern "C" fn sqlite3Fts5LoadTokenizer(mut pConfig: *mut Fts5Config) -> :
         );
         if rc != crate::src::headers::sqlite3_h::SQLITE_OK {
             if rc != crate::src::headers::sqlite3_h::SQLITE_NOMEM {
-                sqlite3Fts5ConfigErrmsg(
-                    pConfig,
-                    b"error in tokenizer constructor\0" as *const u8 as *const ::core::ffi::c_char,
-                );
+                sqlite3Fts5ConfigErrmsg(pConfig, sqlite_printf!("error in tokenizer constructor"));
             }
         } else if __pMod_ref.bV2Native == 0 as ::core::ffi::c_int {
             __pConfig_ref.t.ePattern =
@@ -33784,12 +33732,7 @@ unsafe extern "C" fn sqlite3Fts5IndexIntegrityCheck(
     if (*p).rc == crate::src::headers::sqlite3_h::SQLITE_OK && bUseCksum != 0 && cksum != cksum2 {
         let __p_ref = { &mut *p };
         __p_ref.rc = FTS5_CORRUPT;
-        sqlite3Fts5ConfigErrmsg(
-            __p_ref.pConfig,
-            b"fts5: checksum mismatch for table \"%s\"\0" as *const u8
-                as *const ::core::ffi::c_char,
-            (*__p_ref.pConfig).zName,
-        );
+        sqlite3Fts5ConfigErrmsg(__p_ref.pConfig, sqlite_printf!("fts5: checksum mismatch for table \"%s\"", (*__p_ref.pConfig).zName));
     }
     fts5StructureRelease(pStruct);
     sqlite3Fts5BufferFree(&raw mut poslist);
@@ -34940,8 +34883,42 @@ pub use crate::src::printf_c_variadic::sqlite3Fts5BufferAppendPrintf;
 pub use crate::src::printf_c_variadic::sqlite3Fts5Mprintf;
 pub use crate::src::printf_c_variadic::sqlite3Fts5ParseError;
 pub use crate::src::printf_c_variadic::fts5ExecPrintf;
-pub use crate::src::printf_c_variadic::fts5PrepareStatement;
-pub use crate::src::printf_c_variadic::sqlite3Fts5ConfigErrmsg;
+unsafe fn fts5PrepareStatement(
+    ppStmt: *mut *mut crate::src::headers::sqlite3_h::sqlite3_stmt,
+    pConfig: *mut Fts5Config,
+    zSql: *mut ::core::ffi::c_char,
+) -> ::core::ffi::c_int {
+    let mut pRet: *mut crate::src::headers::sqlite3_h::sqlite3_stmt = ::core::ptr::null_mut();
+    let rc;
+    if zSql.is_null() {
+        rc = crate::src::headers::sqlite3_h::SQLITE_NOMEM;
+    } else {
+        rc = crate::src::src::prepare::sqlite3_prepare_v3(
+            (*pConfig).db,
+            zSql,
+            -(1 as ::core::ffi::c_int),
+            crate::src::headers::sqlite3_h::SQLITE_PREPARE_PERSISTENT as ::core::ffi::c_uint,
+            &raw mut pRet,
+            ::core::ptr::null_mut::<*const ::core::ffi::c_char>(),
+        );
+        if rc != crate::src::headers::sqlite3_h::SQLITE_OK {
+            sqlite3Fts5ConfigErrmsg(pConfig, sqlite_printf!("%s", crate::src::src::main::sqlite3_errmsg((*pConfig).db)));
+        }
+        sqlite3_free(zSql as *mut ::core::ffi::c_void);
+    }
+    *ppStmt = pRet;
+    rc
+}
+unsafe fn sqlite3Fts5ConfigErrmsg(
+    pConfig: *mut Fts5Config,
+    zMsg: *mut ::core::ffi::c_char,
+) {
+    if !(*pConfig).pzErrmsg.is_null() {
+        *(*pConfig).pzErrmsg = zMsg;
+    } else {
+        sqlite3_free(zMsg as *mut ::core::ffi::c_void);
+    }
+}
 unsafe fn fts5SetVtabError(
     p: *mut Fts5FullTable,
     zMsg: *mut ::core::ffi::c_char,
