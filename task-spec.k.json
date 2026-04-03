@@ -798,6 +798,44 @@
           "fails_count": 1
         }
       }
+    },
+    "fts5_SetVtabError_variadic_removal": {
+      "type": "Feature",
+      "model_version": 1,
+      "id": "fts5_SetVtabError_variadic_removal",
+      "description": "Remove variadic fts5SetVtabError from printf_c_variadic; redefine non-variadic in fts5.rs using sqlite_printf!",
+      "goals": [
+        "fts5SetVtabError in src/printf_c_variadic.rs is variadic: frees p.p.base.zErrMsg and sets it to sqlite3_vmprintf(zFormat, args).",
+        "There are 8 call sites in fts5.rs. Delete from printf_c_variadic.rs and remove pub use re-export from fts5.rs.",
+        "Redefine as private non-variadic unsafe fn fts5SetVtabError(p: *mut Fts5FullTable, zMsg: *mut c_char) in fts5.rs.",
+        "Each call site passes sqlite_printf!(fmt, args...) as zMsg."
+      ],
+      "constraints": {
+        "fts5SetVtabError_not_in_printf_c_variadic": {
+          "id": "fts5SetVtabError_not_in_printf_c_variadic",
+          "cmd": "! grep -q \"fn fts5SetVtabError\" \"${CLAUDE_PROJECT_ROOT}/src/printf_c_variadic.rs\"",
+          "description": "Structural: fts5SetVtabError must be removed from printf_c_variadic.rs",
+          "fails_count": 1
+        },
+        "fts5SetVtabError_no_reexport": {
+          "id": "fts5SetVtabError_no_reexport",
+          "cmd": "! grep -qE \"pub use.*fts5SetVtabError\" \"${CLAUDE_PROJECT_ROOT}/src/fts5.rs\"",
+          "description": "Structural: no pub use re-export of fts5SetVtabError in fts5.rs",
+          "fails_count": 1
+        },
+        "fts5SetVtabError_defined_nonvariadic_in_fts5": {
+          "id": "fts5SetVtabError_defined_nonvariadic_in_fts5",
+          "cmd": "grep -q \"fn fts5SetVtabError\" \"${CLAUDE_PROJECT_ROOT}/src/fts5.rs\" && ! grep -qE \"fn fts5SetVtabError.*\\.\\.\\.\" \"${CLAUDE_PROJECT_ROOT}/src/fts5.rs\"",
+          "description": "Structural: fts5SetVtabError must be defined in fts5.rs with non-variadic signature",
+          "fails_count": 1
+        },
+        "fts5SetVtabError_callsites_use_sqlite_printf": {
+          "id": "fts5SetVtabError_callsites_use_sqlite_printf",
+          "cmd": "[ $(grep -c \"sqlite_printf!\" \"${CLAUDE_PROJECT_ROOT}/src/fts5.rs\") -ge 89 ]",
+          "description": "Behavioral: fts5.rs must have >= 89 sqlite_printf! uses (81 existing + 8 call sites)",
+          "fails_count": 1
+        }
+      }
     }
   }
 }

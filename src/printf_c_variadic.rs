@@ -1130,14 +1130,6 @@ pub unsafe extern "C" fn sqlite3Fts5ConfigErrmsg(
 
 
 
-pub unsafe extern "C" fn fts5SetVtabError(
-    mut p: *mut Fts5FullTable,
-    mut zFormat: *const ::core::ffi::c_char,
-    mut args: ...
-) {
-    crate::src::src::malloc::sqlite3_free((*p).p.base.zErrMsg as *mut ::core::ffi::c_void);
-    (*p).p.base.zErrMsg = crate::src::src::printf::sqlite3_vmprintf(zFormat, args);
-}
 
 
 

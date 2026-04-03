@@ -20118,12 +20118,7 @@ unsafe extern "C" fn fts5FilterMethod(
                         }
                     }
                 } else if __pConfig_ref.zContent.is_null() {
-                    fts5SetVtabError(
-                        pTab,
-                        b"%s: table does not support scanning\0" as *const u8
-                            as *const ::core::ffi::c_char,
-                        __pConfig_ref.zName,
-                    );
+                    fts5SetVtabError(pTab, sqlite_printf!("%s: table does not support scanning", __pConfig_ref.zName));
                     rc = crate::src::headers::sqlite3_h::SQLITE_ERROR;
                 } else {
                     (*pCsr).ePlan = if !pRowidEq.is_null() {
@@ -21113,19 +21108,9 @@ unsafe extern "C" fn fts5SeekCursor(
             rc = crate::src::src::vdbeapi::sqlite3_reset(__pCsr_ref.pStmt);
             if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
                 rc = FTS5_CORRUPT;
-                fts5SetVtabError(
-                    pTab_0 as *mut Fts5FullTable,
-                    b"fts5: missing row %lld from content table %s\0" as *const u8
-                        as *const ::core::ffi::c_char,
-                    fts5CursorRowid(pCsr),
-                    __pConfig_ref.zContent,
-                );
+                fts5SetVtabError(pTab_0 as *mut Fts5FullTable, sqlite_printf!("fts5: missing row %lld from content table %s", fts5CursorRowid(pCsr), __pConfig_ref.zContent));
             } else if !__pConfig_ref.pzErrmsg.is_null() {
-                fts5SetVtabError(
-                    pTab_0 as *mut Fts5FullTable,
-                    b"%s\0" as *const u8 as *const ::core::ffi::c_char,
-                    crate::src::src::main::sqlite3_errmsg(__pConfig_ref.db),
-                );
+                fts5SetVtabError(pTab_0 as *mut Fts5FullTable, sqlite_printf!("%s", crate::src::src::main::sqlite3_errmsg(__pConfig_ref.db)));
             }
         }
     }
@@ -21335,11 +21320,7 @@ unsafe extern "C" fn fts5SpecialInsert(
         )
     {
         if (*pConfig).eContent == FTS5_CONTENT_NORMAL {
-            fts5SetVtabError(
-                pTab,
-                b"'delete-all' may only be used with a contentless or external content fts5 table\0"
-                    as *const u8 as *const ::core::ffi::c_char,
-            );
+            fts5SetVtabError(pTab, sqlite_printf!("'delete-all' may only be used with a contentless or external content fts5 table"));
             rc = crate::src::headers::sqlite3_h::SQLITE_ERROR;
         } else {
             rc = sqlite3Fts5StorageDeleteAll((*pTab).pStorage);
@@ -21352,11 +21333,7 @@ unsafe extern "C" fn fts5SpecialInsert(
         )
     {
         if fts5IsContentless(pTab, 1 as ::core::ffi::c_int) != 0 {
-            fts5SetVtabError(
-                pTab,
-                b"'rebuild' may not be used with a contentless fts5 table\0" as *const u8
-                    as *const ::core::ffi::c_char,
-            );
+            fts5SetVtabError(pTab, sqlite_printf!("'rebuild' may not be used with a contentless fts5 table"));
             rc = crate::src::headers::sqlite3_h::SQLITE_ERROR;
         } else {
             rc = sqlite3Fts5StorageRebuild((*pTab).pStorage);
@@ -22055,11 +22032,7 @@ unsafe extern "C" fn fts5UpdateMethod(
                 == crate::src::src::util::sqlite3_stricmp(b"delete\0" as *const u8 as *const ::core::ffi::c_char, z)
         {
             if (*pConfig).bContentlessDelete != 0 {
-                fts5SetVtabError(
-                    pTab,
-                    b"'delete' may not be used with a contentless_delete=1 table\0" as *const u8
-                        as *const ::core::ffi::c_char,
-                );
+                fts5SetVtabError(pTab, sqlite_printf!("'delete' may not be used with a contentless_delete=1 table"));
                 rc = crate::src::headers::sqlite3_h::SQLITE_ERROR;
             } else {
                 rc = fts5SpecialDelete(pTab, apVal);
@@ -22082,12 +22055,7 @@ unsafe extern "C" fn fts5UpdateMethod(
             if fts5IsContentless(pTab, 1 as ::core::ffi::c_int) != 0
                 && (*pConfig).bContentlessDelete == 0 as ::core::ffi::c_int
             {
-                fts5SetVtabError(
-                    pTab,
-                    b"cannot DELETE from contentless fts5 table: %s\0" as *const u8
-                        as *const ::core::ffi::c_char,
-                    (*pConfig).zName,
-                );
+                fts5SetVtabError(pTab, sqlite_printf!("cannot DELETE from contentless fts5 table: %s", (*pConfig).zName));
                 rc = crate::src::headers::sqlite3_h::SQLITE_ERROR;
             } else {
                 let mut iDel: i64_0 =
@@ -22113,11 +22081,7 @@ unsafe extern "C" fn fts5UpdateMethod(
                     let mut pVal: *mut crate::src::headers::vdbeInt_h::sqlite3_value =
                         *apVal.offset((ii + 2 as ::core::ffi::c_int) as isize);
                     if sqlite3Fts5IsLocaleValue(pConfig, pVal) != 0 {
-                        fts5SetVtabError(
-                            pTab,
-                            b"fts5_locale() requires locale=1\0" as *const u8
-                                as *const ::core::ffi::c_char,
-                        );
+                        fts5SetVtabError(pTab, sqlite_printf!("fts5_locale() requires locale=1"));
                         rc = crate::src::headers::sqlite3_h::SQLITE_MISMATCH;
                         current_block = 9072244841932645094;
                         break;
@@ -34978,7 +34942,13 @@ pub use crate::src::printf_c_variadic::sqlite3Fts5ParseError;
 pub use crate::src::printf_c_variadic::fts5ExecPrintf;
 pub use crate::src::printf_c_variadic::fts5PrepareStatement;
 pub use crate::src::printf_c_variadic::sqlite3Fts5ConfigErrmsg;
-pub use crate::src::printf_c_variadic::fts5SetVtabError;
+unsafe fn fts5SetVtabError(
+    p: *mut Fts5FullTable,
+    zMsg: *mut ::core::ffi::c_char,
+) {
+    sqlite3_free((*p).p.base.zErrMsg as *mut ::core::ffi::c_void);
+    (*p).p.base.zErrMsg = zMsg;
+}
 unsafe fn fts5PrintfAppend(
     zApp: *mut ::core::ffi::c_char,
     zNew: *mut ::core::ffi::c_char,

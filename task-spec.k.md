@@ -57,6 +57,11 @@ Verify c_variadic feature isolation: only in printf_c_variadic.rs
       - [fts5PrintfAppend_defined_nonvariadic_in_fts5](#fts5printfappend_defined_nonvariadic_in_fts5)
       - [fts5PrintfAppend_no_reexport](#fts5printfappend_no_reexport)
       - [fts5PrintfAppend_not_in_printf_c_variadic](#fts5printfappend_not_in_printf_c_variadic)
+    - [Feature: fts5_SetVtabError_variadic_removal](#fts5_setvtaberror_variadic_removal)
+      - [fts5SetVtabError_callsites_use_sqlite_printf](#fts5setvtaberror_callsites_use_sqlite_printf)
+      - [fts5SetVtabError_defined_nonvariadic_in_fts5](#fts5setvtaberror_defined_nonvariadic_in_fts5)
+      - [fts5SetVtabError_no_reexport](#fts5setvtaberror_no_reexport)
+      - [fts5SetVtabError_not_in_printf_c_variadic](#fts5setvtaberror_not_in_printf_c_variadic)
     - [Feature: fts5_c_variadic_migration](#fts5_c_variadic_migration)
       - [fts5_no_sqlite3_mprintf](#fts5_no_sqlite3_mprintf)
       - [fts5_no_sqlite3_snprintf](#fts5_no_sqlite3_snprintf)
@@ -353,6 +358,31 @@ Verify c_variadic feature isolation: only in printf_c_variadic.rs
 #### fts5PrintfAppend_not_in_printf_c_variadic
 **Description:** Structural: fts5PrintfAppend function must be removed from printf_c_variadic.rs
 **Command:** `! grep -q "fn fts5PrintfAppend" "${CLAUDE_PROJECT_ROOT}/src/printf_c_variadic.rs"`
+
+### Feature: fts5_SetVtabError_variadic_removal
+**Remove variadic fts5SetVtabError from printf_c_variadic; redefine non-variadic in fts5.rs using sqlite_printf!**
+
+**Goals:**
+- fts5SetVtabError in src/printf_c_variadic.rs is variadic: frees p.p.base.zErrMsg and sets it to sqlite3_vmprintf(zFormat, args).
+- There are 8 call sites in fts5.rs. Delete from printf_c_variadic.rs and remove pub use re-export from fts5.rs.
+- Redefine as private non-variadic unsafe fn fts5SetVtabError(p: *mut Fts5FullTable, zMsg: *mut c_char) in fts5.rs.
+- Each call site passes sqlite_printf!(fmt, args...) as zMsg.
+
+#### fts5SetVtabError_callsites_use_sqlite_printf
+**Description:** Behavioral: fts5.rs must have >= 89 sqlite_printf! uses (81 existing + 8 call sites)
+**Command:** `[ $(grep -c "sqlite_printf!" "${CLAUDE_PROJECT_ROOT}/src/fts5.rs") -ge 89 ]`
+
+#### fts5SetVtabError_defined_nonvariadic_in_fts5
+**Description:** Structural: fts5SetVtabError must be defined in fts5.rs with non-variadic signature
+**Command:** `grep -q "fn fts5SetVtabError" "${CLAUDE_PROJECT_ROOT}/src/fts5.rs" && ! grep -qE "fn fts5SetVtabError.*\.\.\." "${CLAUDE_PROJECT_ROOT}/src/fts5.rs"`
+
+#### fts5SetVtabError_no_reexport
+**Description:** Structural: no pub use re-export of fts5SetVtabError in fts5.rs
+**Command:** `! grep -qE "pub use.*fts5SetVtabError" "${CLAUDE_PROJECT_ROOT}/src/fts5.rs"`
+
+#### fts5SetVtabError_not_in_printf_c_variadic
+**Description:** Structural: fts5SetVtabError must be removed from printf_c_variadic.rs
+**Command:** `! grep -q "fn fts5SetVtabError" "${CLAUDE_PROJECT_ROOT}/src/printf_c_variadic.rs"`
 
 ### Feature: fts5_c_variadic_migration
 **Migrate src/fts5.rs away from sqlite3_mprintf/sqlite3_snprintf to sqlite_printf! proc macro**
