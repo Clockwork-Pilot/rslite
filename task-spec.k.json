@@ -868,6 +868,343 @@
           "fails_count": 1
         }
       }
+    },
+    "fts5_PrintfAppend_variadic_removal": {
+      "type": "Feature",
+      "model_version": 1,
+      "id": "fts5_PrintfAppend_variadic_removal",
+      "description": "Remove variadic fts5PrintfAppend from printf_c_variadic; redefine non-variadic in fts5.rs using sqlite_printf!",
+      "goals": [
+        "fts5PrintfAppend in src/printf_c_variadic.rs is a variadic C-ABI function: formats new piece via sqlite3_vmprintf, concatenates with existing zApp string, frees both intermediates, returns result.",
+        "There are 20 call sites in fts5.rs. Delete fts5PrintfAppend from printf_c_variadic.rs and remove its pub use re-export from fts5.rs.",
+        "Redefine as private non-variadic unsafe fn fts5PrintfAppend(zApp: *mut c_char, zNew: *mut c_char) -> *mut c_char directly in fts5.rs.",
+        "Each call site passes sqlite_printf!(fmt, args...) as the zNew argument instead of a raw format string with variadic args."
+      ],
+      "constraints": {
+        "fts5PrintfAppend_not_in_printf_c_variadic": {
+          "id": "fts5PrintfAppend_not_in_printf_c_variadic",
+          "cmd": "! grep -q \"fn fts5PrintfAppend\" \"${CLAUDE_PROJECT_ROOT}/src/printf_c_variadic.rs\"",
+          "description": "Structural: fts5PrintfAppend function must be removed from printf_c_variadic.rs",
+          "fails_count": 1
+        },
+        "fts5PrintfAppend_no_reexport": {
+          "id": "fts5PrintfAppend_no_reexport",
+          "cmd": "! grep -qE \"pub use.*fts5PrintfAppend\" \"${CLAUDE_PROJECT_ROOT}/src/fts5.rs\"",
+          "description": "Structural: no pub use re-export of fts5PrintfAppend from printf_c_variadic in fts5.rs",
+          "fails_count": 1
+        },
+        "fts5PrintfAppend_defined_nonvariadic_in_fts5": {
+          "id": "fts5PrintfAppend_defined_nonvariadic_in_fts5",
+          "cmd": "grep -q \"fn fts5PrintfAppend\" \"${CLAUDE_PROJECT_ROOT}/src/fts5.rs\" && ! grep -qE \"fn fts5PrintfAppend.*\\.\\.\\.\" \"${CLAUDE_PROJECT_ROOT}/src/fts5.rs\"",
+          "description": "Structural: fts5PrintfAppend must be defined in fts5.rs with a non-variadic signature",
+          "fails_count": 1
+        },
+        "fts5PrintfAppend_callsites_use_sqlite_printf": {
+          "id": "fts5PrintfAppend_callsites_use_sqlite_printf",
+          "cmd": "[ $(grep -c \"sqlite_printf!\" \"${CLAUDE_PROJECT_ROOT}/src/fts5.rs\") -ge 80 ]",
+          "description": "Behavioral: fts5.rs must have >= 80 sqlite_printf! uses (60 existing + 20 call sites replacing variadic fts5PrintfAppend calls)",
+          "fails_count": 1
+        }
+      }
+    },
+    "fts5_SetVtabError_variadic_removal": {
+      "type": "Feature",
+      "model_version": 1,
+      "id": "fts5_SetVtabError_variadic_removal",
+      "description": "Remove variadic fts5SetVtabError from printf_c_variadic; redefine non-variadic in fts5.rs using sqlite_printf!",
+      "goals": [
+        "fts5SetVtabError in src/printf_c_variadic.rs is variadic: frees p.p.base.zErrMsg and sets it to sqlite3_vmprintf(zFormat, args).",
+        "There are 8 call sites in fts5.rs. Delete from printf_c_variadic.rs and remove pub use re-export from fts5.rs.",
+        "Redefine as private non-variadic unsafe fn fts5SetVtabError(p: *mut Fts5FullTable, zMsg: *mut c_char) in fts5.rs.",
+        "Each call site passes sqlite_printf!(fmt, args...) as zMsg."
+      ],
+      "constraints": {
+        "fts5SetVtabError_not_in_printf_c_variadic": {
+          "id": "fts5SetVtabError_not_in_printf_c_variadic",
+          "cmd": "! grep -q \"fn fts5SetVtabError\" \"${CLAUDE_PROJECT_ROOT}/src/printf_c_variadic.rs\"",
+          "description": "Structural: fts5SetVtabError must be removed from printf_c_variadic.rs",
+          "fails_count": 1
+        },
+        "fts5SetVtabError_no_reexport": {
+          "id": "fts5SetVtabError_no_reexport",
+          "cmd": "! grep -qE \"pub use.*fts5SetVtabError\" \"${CLAUDE_PROJECT_ROOT}/src/fts5.rs\"",
+          "description": "Structural: no pub use re-export of fts5SetVtabError in fts5.rs",
+          "fails_count": 1
+        },
+        "fts5SetVtabError_defined_nonvariadic_in_fts5": {
+          "id": "fts5SetVtabError_defined_nonvariadic_in_fts5",
+          "cmd": "grep -q \"fn fts5SetVtabError\" \"${CLAUDE_PROJECT_ROOT}/src/fts5.rs\" && ! grep -qE \"fn fts5SetVtabError.*\\.\\.\\.\" \"${CLAUDE_PROJECT_ROOT}/src/fts5.rs\"",
+          "description": "Structural: fts5SetVtabError must be defined in fts5.rs with non-variadic signature",
+          "fails_count": 1
+        },
+        "fts5SetVtabError_callsites_use_sqlite_printf": {
+          "id": "fts5SetVtabError_callsites_use_sqlite_printf",
+          "cmd": "[ $(grep -c \"sqlite_printf!\" \"${CLAUDE_PROJECT_ROOT}/src/fts5.rs\") -ge 89 ]",
+          "description": "Behavioral: fts5.rs must have >= 89 sqlite_printf! uses (81 existing + 8 call sites)",
+          "fails_count": 1
+        }
+      }
+    },
+    "fts5_ConfigErrmsg_variadic_removal": {
+      "type": "Feature",
+      "model_version": 1,
+      "id": "fts5_ConfigErrmsg_variadic_removal",
+      "description": "Remove variadic sqlite3Fts5ConfigErrmsg from printf_c_variadic; redefine pub(crate) non-variadic in fts5.rs",
+      "goals": [
+        "sqlite3Fts5ConfigErrmsg in printf_c_variadic.rs is variadic: formats message via sqlite3_vmprintf and stores in pConfig.pzErrmsg if non-null.",
+        "9 call sites in fts5.rs, 1 call site inside fts5PrepareStatement in printf_c_variadic.rs. Remove from printf_c_variadic.rs and pub use re-export from fts5.rs.",
+        "Redefine as pub(crate) non-variadic unsafe fn sqlite3Fts5ConfigErrmsg(p: *mut Fts5Config, zMsg: *mut c_char) in fts5.rs.",
+        "Each fts5.rs call site passes sqlite_printf!(fmt, args...) as zMsg. The fts5PrepareStatement call in printf_c_variadic.rs calls crate::src::fts5::sqlite3Fts5ConfigErrmsg with sqlite_printf!.",
+        "One call site (21741) has a runtime-selected format string requiring two sqlite_printf! branches in an if/else."
+      ],
+      "constraints": {
+        "ConfigErrmsg_not_in_printf_c_variadic": {
+          "id": "ConfigErrmsg_not_in_printf_c_variadic",
+          "cmd": "! grep -q \"fn sqlite3Fts5ConfigErrmsg\" \"${CLAUDE_PROJECT_ROOT}/src/printf_c_variadic.rs\"",
+          "description": "Structural: sqlite3Fts5ConfigErrmsg function must be removed from printf_c_variadic.rs",
+          "fails_count": 1
+        },
+        "ConfigErrmsg_no_reexport": {
+          "id": "ConfigErrmsg_no_reexport",
+          "cmd": "! grep -qE \"pub use.*sqlite3Fts5ConfigErrmsg\" \"${CLAUDE_PROJECT_ROOT}/src/fts5.rs\"",
+          "description": "Structural: no pub use re-export of sqlite3Fts5ConfigErrmsg in fts5.rs",
+          "fails_count": 1
+        },
+        "ConfigErrmsg_defined_nonvariadic_in_fts5": {
+          "id": "ConfigErrmsg_defined_nonvariadic_in_fts5",
+          "cmd": "grep -q \"fn sqlite3Fts5ConfigErrmsg\" \"${CLAUDE_PROJECT_ROOT}/src/fts5.rs\" && ! grep -qE \"fn sqlite3Fts5ConfigErrmsg.*\\.\\.\\.\" \"${CLAUDE_PROJECT_ROOT}/src/fts5.rs\"",
+          "description": "Structural: sqlite3Fts5ConfigErrmsg must be defined in fts5.rs with non-variadic signature",
+          "fails_count": 1
+        },
+        "ConfigErrmsg_callsites_use_sqlite_printf": {
+          "id": "ConfigErrmsg_callsites_use_sqlite_printf",
+          "cmd": "[ $(grep -c \"sqlite_printf!\" \"${CLAUDE_PROJECT_ROOT}/src/fts5.rs\") -ge 99 ]",
+          "description": "Behavioral: fts5.rs must have >= 99 sqlite_printf! uses (89 existing + 9 call sites + 1 extra for runtime-selected format branch)",
+          "fails_count": 1
+        }
+      }
+    },
+    "fts5_PrepareStatement_variadic_removal": {
+      "type": "Feature",
+      "model_version": 1,
+      "id": "fts5_PrepareStatement_variadic_removal",
+      "description": "Remove variadic fts5PrepareStatement from printf_c_variadic; redefine non-variadic in fts5.rs using sqlite_printf!",
+      "goals": [
+        "fts5PrepareStatement in printf_c_variadic.rs is variadic: formats SQL via sqlite3_vmprintf, prepares statement, reports error via sqlite3Fts5ConfigErrmsg.",
+        "Single call site in fts5.rs at line 17473 with format %Q.%Q ORDER BY %s(\"%w\"%s%s) %s and 7 args.",
+        "Remove from printf_c_variadic.rs and pub use re-export from fts5.rs. Define private non-variadic unsafe fn fts5PrepareStatement(ppStmt, pConfig, zSql: *mut c_char) in fts5.rs.",
+        "Call site passes sqlite_printf!(fmt, ...) as zSql. sqlite3Fts5ConfigErrmsg can be downgraded from pub(crate) to private fn."
+      ],
+      "constraints": {
+        "PrepareStatement_not_in_printf_c_variadic": {
+          "id": "PrepareStatement_not_in_printf_c_variadic",
+          "cmd": "! grep -q \"fn fts5PrepareStatement\" \"${CLAUDE_PROJECT_ROOT}/src/printf_c_variadic.rs\"",
+          "description": "Structural: fts5PrepareStatement must be removed from printf_c_variadic.rs",
+          "fails_count": 1
+        },
+        "PrepareStatement_no_reexport": {
+          "id": "PrepareStatement_no_reexport",
+          "cmd": "! grep -qE \"pub use.*fts5PrepareStatement\" \"${CLAUDE_PROJECT_ROOT}/src/fts5.rs\"",
+          "description": "Structural: no pub use re-export of fts5PrepareStatement in fts5.rs",
+          "fails_count": 1
+        },
+        "PrepareStatement_defined_nonvariadic_in_fts5": {
+          "id": "PrepareStatement_defined_nonvariadic_in_fts5",
+          "cmd": "grep -q \"fn fts5PrepareStatement\" \"${CLAUDE_PROJECT_ROOT}/src/fts5.rs\" && ! grep -qE \"fn fts5PrepareStatement.*\\.\\.\\.\" \"${CLAUDE_PROJECT_ROOT}/src/fts5.rs\"",
+          "description": "Structural: fts5PrepareStatement must be defined in fts5.rs with non-variadic signature",
+          "fails_count": 1
+        },
+        "PrepareStatement_callsites_use_sqlite_printf": {
+          "id": "PrepareStatement_callsites_use_sqlite_printf",
+          "cmd": "[ $(grep -c \"sqlite_printf!\" \"${CLAUDE_PROJECT_ROOT}/src/fts5.rs\") -ge 101 ]",
+          "description": "Behavioral: fts5.rs must have >= 101 sqlite_printf! uses (99 existing + 1 call site SQL + 1 errmsg in function body)",
+          "fails_count": 1
+        }
+      }
+    },
+    "fts3_dead_code_removal": {
+      "type": "Feature",
+      "model_version": 1,
+      "id": "fts3_dead_code_removal",
+      "description": "Remove dead variadic fts3DbExec and fts3Appendf from printf_c_variadic.rs \u2014 zero callers",
+      "goals": [
+        "fts3DbExec and fts3Appendf in printf_c_variadic.rs have no callers and no re-exports anywhere in the codebase.",
+        "Simply delete both functions from printf_c_variadic.rs."
+      ],
+      "constraints": {
+        "fts3DbExec_removed": {
+          "id": "fts3DbExec_removed",
+          "cmd": "! grep -q \"fn fts3DbExec\" \"${CLAUDE_PROJECT_ROOT}/src/printf_c_variadic.rs\"",
+          "description": "Structural: fts3DbExec must be deleted from printf_c_variadic.rs (dead code, zero callers)",
+          "fails_count": 1
+        },
+        "fts3Appendf_removed": {
+          "id": "fts3Appendf_removed",
+          "cmd": "! grep -q \"fn fts3Appendf\" \"${CLAUDE_PROJECT_ROOT}/src/printf_c_variadic.rs\"",
+          "description": "Structural: fts3Appendf must be deleted from printf_c_variadic.rs (dead code, zero callers)",
+          "fails_count": 1
+        }
+      }
+    },
+    "fts5_ExecPrintf_variadic_removal": {
+      "type": "Feature",
+      "model_version": 1,
+      "id": "fts5_ExecPrintf_variadic_removal",
+      "description": "Remove variadic fts5ExecPrintf from printf_c_variadic; redefine non-variadic in fts5.rs using sqlite_printf!",
+      "goals": [
+        "fts5ExecPrintf in printf_c_variadic.rs: formats SQL via sqlite3_vmprintf, executes via sqlite3_exec, reports error in *pzErr. 8 call sites in fts5.rs.",
+        "Remove from printf_c_variadic.rs and pub use re-export. Define private non-variadic fn fts5ExecPrintf(db, pzErr, zSql: *mut c_char) in fts5.rs.",
+        "Each call site passes sqlite_printf!(fmt, args...) as zSql. Depends on fts3_dead_code_removal being complete."
+      ],
+      "constraints": {
+        "prev_fts3_dead_code_complete": {
+          "id": "prev_fts3_dead_code_complete",
+          "cmd": "! grep -qE \"fn fts3DbExec|fn fts3Appendf\" \"${CLAUDE_PROJECT_ROOT}/src/printf_c_variadic.rs\"",
+          "description": "Dependency: fts3_dead_code_removal must be complete first (fts3DbExec and fts3Appendf gone)",
+          "fails_count": 1
+        },
+        "fts5ExecPrintf_not_in_variadic": {
+          "id": "fts5ExecPrintf_not_in_variadic",
+          "cmd": "! grep -q \"fn fts5ExecPrintf\" \"${CLAUDE_PROJECT_ROOT}/src/printf_c_variadic.rs\"",
+          "description": "Structural: fts5ExecPrintf must be removed from printf_c_variadic.rs",
+          "fails_count": 1
+        },
+        "fts5ExecPrintf_defined_in_fts5": {
+          "id": "fts5ExecPrintf_defined_in_fts5",
+          "cmd": "grep -q \"fn fts5ExecPrintf\" \"${CLAUDE_PROJECT_ROOT}/src/fts5.rs\" && ! grep -qE \"fn fts5ExecPrintf.*\\.\\.\\.\" \"${CLAUDE_PROJECT_ROOT}/src/fts5.rs\"",
+          "description": "Structural: fts5ExecPrintf must be defined non-variadic in fts5.rs",
+          "fails_count": 1
+        },
+        "fts5ExecPrintf_callsites_use_sqlite_printf": {
+          "id": "fts5ExecPrintf_callsites_use_sqlite_printf",
+          "cmd": "[ $(grep -c \"sqlite_printf!\" \"${CLAUDE_PROJECT_ROOT}/src/fts5.rs\") -ge 109 ]",
+          "description": "Behavioral: fts5.rs must have at least 109 sqlite_printf! calls (101 existing + 8 fts5ExecPrintf call sites)",
+          "fails_count": 1
+        }
+      },
+      "depends_on": [
+        "fts3_dead_code_removal"
+      ]
+    },
+    "fts5_ParseError_variadic_removal": {
+      "type": "Feature",
+      "model_version": 1,
+      "id": "fts5_ParseError_variadic_removal",
+      "description": "Remove variadic sqlite3Fts5ParseError from printf_c_variadic; redefine non-variadic in fts5.rs using sqlite_printf!",
+      "goals": [
+        "sqlite3Fts5ParseError in printf_c_variadic.rs: if pParse.rc==OK, sets pParse.zErr=sqlite3_vmprintf(zFmt,args) and pParse.rc=SQLITE_ERROR. 10 call sites in fts5.rs.",
+        "Remove from printf_c_variadic.rs and pub use re-export. Define private non-variadic fn in fts5.rs taking *mut c_char.",
+        "Each call site passes sqlite_printf!(fmt, args...) as zErr. Depends on fts5_ExecPrintf_variadic_removal being complete."
+      ],
+      "constraints": {
+        "prev_fts5ExecPrintf_complete": {
+          "id": "prev_fts5ExecPrintf_complete",
+          "cmd": "! grep -q \"fn fts5ExecPrintf\" \"${CLAUDE_PROJECT_ROOT}/src/printf_c_variadic.rs\"",
+          "description": "Dependency: fts5_ExecPrintf_variadic_removal must be complete first",
+          "fails_count": 1
+        },
+        "sqlite3Fts5ParseError_not_in_variadic": {
+          "id": "sqlite3Fts5ParseError_not_in_variadic",
+          "cmd": "! grep -q \"fn sqlite3Fts5ParseError\" \"${CLAUDE_PROJECT_ROOT}/src/printf_c_variadic.rs\"",
+          "description": "Structural: sqlite3Fts5ParseError must be removed from printf_c_variadic.rs",
+          "fails_count": 1
+        },
+        "sqlite3Fts5ParseError_defined_in_fts5": {
+          "id": "sqlite3Fts5ParseError_defined_in_fts5",
+          "cmd": "grep -q \"fn sqlite3Fts5ParseError\" \"${CLAUDE_PROJECT_ROOT}/src/fts5.rs\" && ! grep -qE \"fn sqlite3Fts5ParseError.*\\.\\.\\.\" \"${CLAUDE_PROJECT_ROOT}/src/fts5.rs\"",
+          "description": "Structural: sqlite3Fts5ParseError must be defined non-variadic in fts5.rs",
+          "fails_count": 1
+        },
+        "sqlite3Fts5ParseError_callsites_use_sqlite_printf": {
+          "id": "sqlite3Fts5ParseError_callsites_use_sqlite_printf",
+          "cmd": "[ $(grep -c \"sqlite_printf!\" \"${CLAUDE_PROJECT_ROOT}/src/fts5.rs\") -ge 119 ]",
+          "description": "Behavioral: fts5.rs must have at least 119 sqlite_printf! calls (109 + 10 sqlite3Fts5ParseError call sites)",
+          "fails_count": 1
+        }
+      },
+      "depends_on": [
+        "fts5_ExecPrintf_variadic_removal"
+      ]
+    },
+    "fts5_Mprintf_variadic_removal": {
+      "type": "Feature",
+      "model_version": 1,
+      "id": "fts5_Mprintf_variadic_removal",
+      "description": "Remove variadic sqlite3Fts5Mprintf from printf_c_variadic; redefine non-variadic in fts5.rs using sqlite_printf!",
+      "goals": [
+        "sqlite3Fts5Mprintf in printf_c_variadic.rs: if *pRc==OK, returns sqlite3_vmprintf(zFmt,args) or sets *pRc=NOMEM. 14 call sites in fts5.rs.",
+        "Remove from printf_c_variadic.rs and pub use re-export. Define private non-variadic fn returning *mut c_char in fts5.rs.",
+        "Each call site passes sqlite_printf!(fmt, args...) directly. Depends on fts5_ParseError_variadic_removal being complete."
+      ],
+      "constraints": {
+        "prev_sqlite3Fts5ParseError_complete": {
+          "id": "prev_sqlite3Fts5ParseError_complete",
+          "cmd": "! grep -q \"fn sqlite3Fts5ParseError\" \"${CLAUDE_PROJECT_ROOT}/src/printf_c_variadic.rs\"",
+          "description": "Dependency: fts5_ParseError_variadic_removal must be complete first",
+          "fails_count": 1
+        },
+        "sqlite3Fts5Mprintf_not_in_variadic": {
+          "id": "sqlite3Fts5Mprintf_not_in_variadic",
+          "cmd": "! grep -q \"fn sqlite3Fts5Mprintf\" \"${CLAUDE_PROJECT_ROOT}/src/printf_c_variadic.rs\"",
+          "description": "Structural: sqlite3Fts5Mprintf must be removed from printf_c_variadic.rs",
+          "fails_count": 1
+        },
+        "sqlite3Fts5Mprintf_defined_in_fts5": {
+          "id": "sqlite3Fts5Mprintf_defined_in_fts5",
+          "cmd": "grep -q \"fn sqlite3Fts5Mprintf\" \"${CLAUDE_PROJECT_ROOT}/src/fts5.rs\" && ! grep -qE \"fn sqlite3Fts5Mprintf.*\\.\\.\\.\" \"${CLAUDE_PROJECT_ROOT}/src/fts5.rs\"",
+          "description": "Structural: sqlite3Fts5Mprintf must be defined non-variadic in fts5.rs",
+          "fails_count": 1
+        },
+        "sqlite3Fts5Mprintf_callsites_use_sqlite_printf": {
+          "id": "sqlite3Fts5Mprintf_callsites_use_sqlite_printf",
+          "cmd": "[ $(grep -c \"sqlite_printf!\" \"${CLAUDE_PROJECT_ROOT}/src/fts5.rs\") -ge 133 ]",
+          "description": "Behavioral: fts5.rs must have at least 133 sqlite_printf! calls (119 + 14 sqlite3Fts5Mprintf call sites)",
+          "fails_count": 1
+        }
+      },
+      "depends_on": [
+        "fts5_ParseError_variadic_removal"
+      ]
+    },
+    "fts5_BufferAppendPrintf_variadic_removal": {
+      "type": "Feature",
+      "model_version": 1,
+      "id": "fts5_BufferAppendPrintf_variadic_removal",
+      "description": "Remove variadic sqlite3Fts5BufferAppendPrintf from printf_c_variadic; redefine non-variadic in fts5.rs using sqlite_printf!",
+      "goals": [
+        "sqlite3Fts5BufferAppendPrintf in printf_c_variadic.rs: if *pRc==OK, formats via sqlite3_vmprintf then appends to Fts5Buffer. 26 call sites in fts5.rs.",
+        "Remove from printf_c_variadic.rs and pub use re-export. Define private non-variadic fn in fts5.rs taking pre-formatted *mut c_char.",
+        "Each call site passes sqlite_printf!(fmt, args...) as the string arg. Depends on fts5_Mprintf_variadic_removal being complete."
+      ],
+      "constraints": {
+        "prev_sqlite3Fts5Mprintf_complete": {
+          "id": "prev_sqlite3Fts5Mprintf_complete",
+          "cmd": "! grep -q \"fn sqlite3Fts5Mprintf\" \"${CLAUDE_PROJECT_ROOT}/src/printf_c_variadic.rs\"",
+          "description": "Dependency: fts5_Mprintf_variadic_removal must be complete first",
+          "fails_count": 1
+        },
+        "sqlite3Fts5BufferAppendPrintf_not_in_variadic": {
+          "id": "sqlite3Fts5BufferAppendPrintf_not_in_variadic",
+          "cmd": "! grep -q \"fn sqlite3Fts5BufferAppendPrintf\" \"${CLAUDE_PROJECT_ROOT}/src/printf_c_variadic.rs\"",
+          "description": "Structural: sqlite3Fts5BufferAppendPrintf must be removed from printf_c_variadic.rs",
+          "fails_count": 1
+        },
+        "sqlite3Fts5BufferAppendPrintf_defined_in_fts5": {
+          "id": "sqlite3Fts5BufferAppendPrintf_defined_in_fts5",
+          "cmd": "grep -q \"fn sqlite3Fts5BufferAppendPrintf\" \"${CLAUDE_PROJECT_ROOT}/src/fts5.rs\" && ! grep -qE \"fn sqlite3Fts5BufferAppendPrintf.*\\.\\.\\.\" \"${CLAUDE_PROJECT_ROOT}/src/fts5.rs\"",
+          "description": "Structural: sqlite3Fts5BufferAppendPrintf must be defined non-variadic in fts5.rs",
+          "fails_count": 1
+        },
+        "sqlite3Fts5BufferAppendPrintf_callsites_use_sqlite_printf": {
+          "id": "sqlite3Fts5BufferAppendPrintf_callsites_use_sqlite_printf",
+          "cmd": "[ $(grep -c \"sqlite_printf!\" \"${CLAUDE_PROJECT_ROOT}/src/fts5.rs\") -ge 159 ]",
+          "description": "Behavioral: fts5.rs must have at least 159 sqlite_printf! calls (133 + 26 sqlite3Fts5BufferAppendPrintf call sites)",
+          "fails_count": 1
+        }
+      },
+      "depends_on": [
+        "fts5_Mprintf_variadic_removal"
+      ]
     }
   }
 }

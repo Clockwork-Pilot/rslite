@@ -949,213 +949,35 @@ pub unsafe extern "C" fn checkAppendMsg(
 
 
 
-pub unsafe extern "C" fn fts3DbExec(
-    mut pRc: *mut ::core::ffi::c_int,
-    mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
-    mut zFormat: *const ::core::ffi::c_char,
-    mut args: ...
-) {
-    let mut zSql: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
-    if *pRc != 0 {
-        return;
-    }
-    zSql = crate::src::src::printf::sqlite3_vmprintf(zFormat, args);
-    if zSql.is_null() {
-        *pRc = crate::src::headers::sqlite3_h::SQLITE_NOMEM;
-    } else {
-        *pRc = crate::src::src::legacy::sqlite3_exec(
-            db,
-            zSql,
-            None,
-            ::core::ptr::null_mut::<::core::ffi::c_void>(),
-            ::core::ptr::null_mut::<*mut ::core::ffi::c_char>(),
-        );
-        crate::src::src::malloc::sqlite3_free(zSql as *mut ::core::ffi::c_void);
-    };
-}
-
-
-
-pub unsafe extern "C" fn fts3Appendf(
-    mut pRc: *mut ::core::ffi::c_int,
-    mut pz: *mut *mut ::core::ffi::c_char,
-    mut zFormat: *const ::core::ffi::c_char,
-    mut args: ...
-) {
-    if *pRc == crate::src::headers::sqlite3_h::SQLITE_OK {
-        let mut z: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
-                z = crate::src::src::printf::sqlite3_vmprintf(zFormat, args);
-        if !z.is_null() && !(*pz).is_null() {
-            let mut z2: *mut ::core::ffi::c_char = crate::sqlite_printf!("%s%s", *pz, z);
-            crate::src::src::malloc::sqlite3_free(z as *mut ::core::ffi::c_void);
-            z = z2;
-        }
-        if z.is_null() {
-            *pRc = crate::src::headers::sqlite3_h::SQLITE_NOMEM;
-        }
-        crate::src::src::malloc::sqlite3_free(*pz as *mut ::core::ffi::c_void);
-        *pz = z;
-    }
-}
 
 
 
 
 
-pub unsafe extern "C" fn sqlite3Fts5BufferAppendPrintf(
-    mut pRc: *mut ::core::ffi::c_int,
-    mut pBuf: *mut Fts5Buffer,
-    mut zFmt: *mut ::core::ffi::c_char,
-    mut args: ...
-) {
-    if *pRc == crate::src::headers::sqlite3_h::SQLITE_OK {
-        let mut zTmp: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
-                zTmp = crate::src::src::printf::sqlite3_vmprintf(zFmt, args);
-        if zTmp.is_null() {
-            *pRc = crate::src::headers::sqlite3_h::SQLITE_NOMEM;
-        } else {
-            sqlite3Fts5BufferAppendString(pRc, pBuf, zTmp);
-            crate::src::src::malloc::sqlite3_free(zTmp as *mut ::core::ffi::c_void);
-        }
-    }
-}
 
 
 
-pub unsafe extern "C" fn sqlite3Fts5Mprintf(
-    mut pRc: *mut ::core::ffi::c_int,
-    mut zFmt: *const ::core::ffi::c_char,
-    mut args: ...
-) -> *mut ::core::ffi::c_char {
-    let mut zRet: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
-    if *pRc == crate::src::headers::sqlite3_h::SQLITE_OK {
-                zRet = crate::src::src::printf::sqlite3_vmprintf(zFmt, args);
-        if zRet.is_null() {
-            *pRc = crate::src::headers::sqlite3_h::SQLITE_NOMEM;
-        }
-    }
-    zRet
-}
 
 
 
-pub unsafe extern "C" fn sqlite3Fts5ParseError(
-    mut pParse: *mut Fts5Parse,
-    mut zFmt: *const ::core::ffi::c_char,
-    mut args: ...
-) {
-    if (*pParse).rc == crate::src::headers::sqlite3_h::SQLITE_OK {
-                (*pParse).zErr = crate::src::src::printf::sqlite3_vmprintf(zFmt, args);
-        (*pParse).rc = crate::src::headers::sqlite3_h::SQLITE_ERROR;
-    }
-}
 
 
 
-pub unsafe extern "C" fn fts5ExecPrintf(
-    mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
-    mut pzErr: *mut *mut ::core::ffi::c_char,
-    mut zFormat: *const ::core::ffi::c_char,
-    mut args: ...
-) -> ::core::ffi::c_int {
-    let mut rc: ::core::ffi::c_int = 0;
-    let mut zSql: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
-    zSql = crate::src::src::printf::sqlite3_vmprintf(zFormat, args);
-    if zSql.is_null() {
-        rc = crate::src::headers::sqlite3_h::SQLITE_NOMEM;
-    } else {
-        rc = crate::src::src::legacy::sqlite3_exec(
-            db,
-            zSql,
-            None,
-            ::core::ptr::null_mut::<::core::ffi::c_void>(),
-            pzErr,
-        );
-        crate::src::src::malloc::sqlite3_free(zSql as *mut ::core::ffi::c_void);
-    }
-    rc
-}
 
 
 
-pub unsafe extern "C" fn fts5PrepareStatement(
-    mut ppStmt: *mut *mut crate::src::headers::sqlite3_h::sqlite3_stmt,
-    mut pConfig: *mut Fts5Config,
-    mut zFmt: *const ::core::ffi::c_char,
-    mut args: ...
-) -> ::core::ffi::c_int {
-    let mut pRet: *mut crate::src::headers::sqlite3_h::sqlite3_stmt = ::core::ptr::null_mut::<crate::src::headers::sqlite3_h::sqlite3_stmt>();
-    let mut rc: ::core::ffi::c_int = 0;
-    let mut zSql: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
-    zSql = crate::src::src::printf::sqlite3_vmprintf(zFmt, args);
-    if zSql.is_null() {
-        rc = crate::src::headers::sqlite3_h::SQLITE_NOMEM;
-    } else {
-        rc = crate::src::src::prepare::sqlite3_prepare_v3(
-            (*pConfig).db,
-            zSql,
-            -(1 as ::core::ffi::c_int),
-            crate::src::headers::sqlite3_h::SQLITE_PREPARE_PERSISTENT as ::core::ffi::c_uint,
-            &raw mut pRet,
-            ::core::ptr::null_mut::<*const ::core::ffi::c_char>(),
-        );
-        if rc != crate::src::headers::sqlite3_h::SQLITE_OK {
-            sqlite3Fts5ConfigErrmsg(
-                pConfig,
-                b"%s\0" as *const u8 as *const ::core::ffi::c_char,
-                crate::src::src::main::sqlite3_errmsg((*pConfig).db),
-            );
-        }
-        crate::src::src::malloc::sqlite3_free(zSql as *mut ::core::ffi::c_void);
-    }
-    *ppStmt = pRet;
-    rc
-}
 
 
 
-pub unsafe extern "C" fn sqlite3Fts5ConfigErrmsg(
-    mut pConfig: *mut Fts5Config,
-    mut zFmt: *const ::core::ffi::c_char,
-    mut args: ...
-) {
-    let mut zMsg: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
-    zMsg = crate::src::src::printf::sqlite3_vmprintf(zFmt, args);
-    if !(*pConfig).pzErrmsg.is_null() {
-        *(*pConfig).pzErrmsg = zMsg;
-    } else {
-        crate::src::src::malloc::sqlite3_free(zMsg as *mut ::core::ffi::c_void);
-    };
-}
 
 
 
-pub unsafe extern "C" fn fts5SetVtabError(
-    mut p: *mut Fts5FullTable,
-    mut zFormat: *const ::core::ffi::c_char,
-    mut args: ...
-) {
-    crate::src::src::malloc::sqlite3_free((*p).p.base.zErrMsg as *mut ::core::ffi::c_void);
-    (*p).p.base.zErrMsg = crate::src::src::printf::sqlite3_vmprintf(zFormat, args);
-}
 
 
 
-pub unsafe extern "C" fn fts5PrintfAppend(
-    mut zApp: *mut ::core::ffi::c_char,
-    mut zFmt: *const ::core::ffi::c_char,
-    mut args: ...
-) -> *mut ::core::ffi::c_char {
-    let mut zNew: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
-    zNew = crate::src::src::printf::sqlite3_vmprintf(zFmt, args);
-    if !zApp.is_null() && !zNew.is_null() {
-        let mut zNew2: *mut ::core::ffi::c_char = crate::sqlite_printf!("%s%s", zApp, zNew);
-        crate::src::src::malloc::sqlite3_free(zNew as *mut ::core::ffi::c_void);
-        zNew = zNew2;
-    }
-    crate::src::src::malloc::sqlite3_free(zApp as *mut ::core::ffi::c_void);
-    zNew
-}
+
+
+
 
 
 
