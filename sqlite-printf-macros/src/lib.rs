@@ -165,7 +165,7 @@ fn gen_arg_handler(arg: &Expr, spec: &FormatSpec) -> proc_macro2::TokenStream {
         FormatSpec::Unsigned | FormatSpec::ULong64 => quote! { #arg },
         FormatSpec::Hex => quote! { #arg },
         FormatSpec::Pointer => quote! { #arg },
-        FormatSpec::Float => quote! { #arg },
+        FormatSpec::Float | FormatSpec::FloatFixed(_) => quote! { #arg as f64 },
         FormatSpec::Char => quote! { #arg as u8 as char },
         FormatSpec::SqliteQuote => {
             // %q: escape single quotes, no wrapping

@@ -900,34 +900,6 @@ pub unsafe extern "C" fn getDigits(
 
 
 
-pub unsafe extern "C" fn percentError(
-    mut pCtx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
-    mut zFormat: *const ::core::ffi::c_char,
-    mut args: ...
-) {
-    let mut zMsg1: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
-    let mut zMsg2: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
-    zMsg1 = crate::src::src::printf::sqlite3_vmprintf(zFormat, args);
-    zMsg2 = if !zMsg1.is_null() {
-        // zMsg1 is a format string with %s for the function name (from %%s in the original)
-        let msg1 = ::std::ffi::CStr::from_ptr(zMsg1).to_str().unwrap_or("");
-        let fname_ptr = crate::src::src::vdbeaux::sqlite3VdbeFuncName(pCtx as *const crate::src::headers::vdbeInt_h::sqlite3_context);
-        let fname = if fname_ptr.is_null() { "" } else { ::std::ffi::CStr::from_ptr(fname_ptr).to_str().unwrap_or("") };
-        let msg2 = msg1.replacen("%s", fname, 1);
-        let bytes = msg2.as_bytes();
-        let ptr = crate::src::src::malloc::sqlite3_malloc64((bytes.len() + 1) as u64) as *mut u8;
-        if !ptr.is_null() {
-            ::core::ptr::copy_nonoverlapping(bytes.as_ptr(), ptr, bytes.len());
-            *ptr.add(bytes.len()) = 0;
-        }
-        ptr as *mut ::core::ffi::c_char
-    } else {
-        ::core::ptr::null_mut::<::core::ffi::c_char>()
-    };
-    crate::src::src::vdbeapi::sqlite3_result_error(pCtx as *mut crate::src::headers::vdbeInt_h::sqlite3_context, zMsg2, -(1 as ::core::ffi::c_int));
-    crate::src::src::malloc::sqlite3_free(zMsg1 as *mut ::core::ffi::c_void);
-    crate::src::src::malloc::sqlite3_free(zMsg2 as *mut ::core::ffi::c_void);
-}
 
 
 

@@ -25,6 +25,8 @@ pub enum FormatSpec {
     Ordinal,
     HexWidth { width: usize, zero_pad: bool, upper: bool },
     HexWidthLong { width: usize, zero_pad: bool, upper: bool },
+    /// %.Nf / %.Ne / %.Ng — float with fixed precision N
+    FloatFixed(usize),
 }
 
 impl FormatSpec {
@@ -56,6 +58,7 @@ impl FormatSpec {
                 let case = if *upper { "X" } else { "x" };
                 format!("{{:{}{}{}}}", pad, width, case)
             }
+            FormatSpec::FloatFixed(n) => format!("{{:.{}}}", n),
         }
     }
 
@@ -247,6 +250,10 @@ pub fn parse_format_specs(format: &str) -> Result<Vec<FormatSpec>, String> {
                                             chars.next();
                                             specs.push(FormatSpec::HexPrecision(prec));
                                         }
+                                        'f' | 'F' | 'e' | 'E' | 'g' | 'G' => {
+                                            chars.next();
+                                            specs.push(FormatSpec::FloatFixed(prec));
+                                        }
                                         _ => {
                                             return Err(format!("Unknown format specifier: %.{}{}", prec_str, type_ch));
                                         }
@@ -386,7 +393,7 @@ pub fn convert_format_string(format: &str, specs: &[FormatSpec]) -> String {
                                 if d.is_ascii_digit() { chars.next(); } else { break; }
                             }
                             if let Some(&type_ch) = chars.peek() {
-                                if matches!(type_ch, 'x' | 'X') { chars.next(); }
+                                if matches!(type_ch, 'x' | 'X' | 'f' | 'F' | 'e' | 'E' | 'g' | 'G') { chars.next(); }
                             }
                         }
                     }

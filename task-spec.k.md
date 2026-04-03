@@ -56,6 +56,11 @@ Verify c_variadic feature isolation: only in printf_c_variadic.rs
       - [fts5_no_sqlite3_mprintf](#fts5_no_sqlite3_mprintf)
       - [fts5_no_sqlite3_snprintf](#fts5_no_sqlite3_snprintf)
       - [fts5_uses_sqlite_printf_macro](#fts5_uses_sqlite_printf_macro)
+    - [Feature: func_percentError_variadic_removal](#func_percenterror_variadic_removal)
+      - [percentError_callsites_use_sqlite_printf](#percenterror_callsites_use_sqlite_printf)
+      - [percentError_defined_nonvariadic_in_func](#percenterror_defined_nonvariadic_in_func)
+      - [percentError_no_reexport](#percenterror_no_reexport)
+      - [percentError_not_in_printf_c_variadic](#percenterror_not_in_printf_c_variadic)
     - [Feature: json_c_variadic_migration](#json_c_variadic_migration)
       - [json_no_forbidden_functions](#json_no_forbidden_functions)
       - [json_no_jsonPrintf_call](#json_no_jsonprintf_call)
@@ -338,6 +343,31 @@ Verify c_variadic feature isolation: only in printf_c_variadic.rs
 #### fts5_uses_sqlite_printf_macro
 **Description:** fts5.rs must use sqlite_printf! macro for string formatting
 **Command:** `grep -c "sqlite_printf!" "$WORKSPACE_ROOT/src/fts5.rs" 2>/dev/null | grep -qE "^[1-9]" && exit 0 || exit 1`
+
+### Feature: func_percentError_variadic_removal
+**Remove variadic percentError from printf_c_variadic; redefine non-variadic in func.rs using sqlite_printf!**
+
+**Goals:**
+- percentError in src/printf_c_variadic.rs is a variadic C-ABI function that calls sqlite3_vmprintf then does a manual %s substitution for the function name.
+- All 4 call sites are in func.rs. Delete percentError from printf_c_variadic.rs and remove its pub use re-export from func.rs.
+- Define a private non-variadic helper unsafe fn percentError(pCtx, zMsg: *mut c_char) directly in func.rs.
+- Each call site builds zMsg via sqlite_printf! combining the function name (from sqlite3VdbeFuncName) and any extra args inline.
+
+#### percentError_callsites_use_sqlite_printf
+**Description:** Behavioral: func.rs must have >= 5 sqlite_printf! uses (1 existing + 4 new call sites replacing variadic percentError calls)
+**Command:** `[ $(grep -c "sqlite_printf!" "${CLAUDE_PROJECT_ROOT}/src/src/func.rs") -ge 5 ]`
+
+#### percentError_defined_nonvariadic_in_func
+**Description:** Structural: percentError must be defined directly in func.rs with a non-variadic signature
+**Command:** `grep -q "fn percentError" "${CLAUDE_PROJECT_ROOT}/src/src/func.rs" && ! grep -qE "fn percentError.*\.\.\." "${CLAUDE_PROJECT_ROOT}/src/src/func.rs"`
+
+#### percentError_no_reexport
+**Description:** Structural: no pub use re-export of percentError from printf_c_variadic in func.rs
+**Command:** `! grep -qE "pub use.*percentError" "${CLAUDE_PROJECT_ROOT}/src/src/func.rs"`
+
+#### percentError_not_in_printf_c_variadic
+**Description:** Structural: percentError function must be removed from printf_c_variadic.rs
+**Command:** `! grep -q "fn percentError" "${CLAUDE_PROJECT_ROOT}/src/printf_c_variadic.rs"`
 
 ### Feature: json_c_variadic_migration
 **Migrate src/src/json.rs away from c_variadic functions (jsonPrintf) and sqlite3_mprintf**
