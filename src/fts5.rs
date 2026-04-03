@@ -24521,7 +24521,7 @@ unsafe extern "C" fn fts5ExprPrintTcl(
             i += 1;
         }
     } else if __pExpr_ref.eType == 0 as ::core::ffi::c_int {
-        zRet = crate::sqlite_printf!("{{}}");
+        zRet = crate::sqlite_printf!("{}");
     } else {
         let mut zOp: *const ::core::ffi::c_char = ::core::ptr::null::<::core::ffi::c_char>();
         let mut i_0: ::core::ffi::c_int = 0;

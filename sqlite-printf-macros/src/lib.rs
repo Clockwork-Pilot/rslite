@@ -1,6 +1,7 @@
 use proc_macro::TokenStream;
 use quote::quote;
 use syn::{parse::Parse, parse_macro_input, Lit, Token, Expr, Error};
+use sqlite_printf_common::{FormatSpec, parse_format_specs, convert_format_string};
 
 /// Parse arguments for sqlite_snprintf! — buffer, size, format_str, args...
 struct SqliteSnprintf {
@@ -63,343 +64,9 @@ impl Parse for SqlitePrintf {
 }
 
 /// Parse SQLite format specifiers
-fn parse_format_specs(format: &str) -> Result<Vec<FormatSpec>, String> {
-    let mut specs = Vec::new();
-    let mut chars = format.chars().peekable();
 
-    while let Some(ch) = chars.next() {
-        if ch == '%' {
-            if let Some(&next) = chars.peek() {
-                match next {
-                    '%' => {
-                        chars.next(); // consume second %
-                        specs.push(FormatSpec::Percent);
-                    }
-                    's' | 'S' => {
-                        chars.next();
-                        specs.push(FormatSpec::String);
-                    }
-                    'd' | 'i' => {
-                        chars.next();
-                        specs.push(FormatSpec::Integer);
-                    }
-                    'u' => {
-                        chars.next();
-                        specs.push(FormatSpec::Unsigned);
-                    }
-                    'x' | 'X' => {
-                        chars.next();
-                        specs.push(FormatSpec::Hex);
-                    }
-                    'p' => {
-                        chars.next();
-                        specs.push(FormatSpec::Pointer);
-                    }
-                    'f' | 'e' | 'E' | 'g' | 'G' => {
-                        chars.next();
-                        specs.push(FormatSpec::Float);
-                    }
-                    'c' => {
-                        chars.next();
-                        specs.push(FormatSpec::Char);
-                    }
-                    'z' => {
-                        chars.next();
-                        specs.push(FormatSpec::ZeroCopy);
-                    }
-                    'q' => {
-                        chars.next();
-                        specs.push(FormatSpec::SqliteQuote);
-                    }
-                    'Q' => {
-                        chars.next();
-                        specs.push(FormatSpec::SqliteQuotedString);
-                    }
-                    'w' => {
-                        chars.next();
-                        specs.push(FormatSpec::SqliteIdentifier);
-                    }
-                    'l' => {
-                        chars.next();
-                        // Check for 'lld', 'lli', 'llu'
-                        if let Some(&second) = chars.peek() {
-                            if second == 'l' {
-                                chars.next();
-                                if let Some(&third) = chars.peek() {
-                                    match third {
-                                        'd' | 'i' => {
-                                            chars.next();
-                                            specs.push(FormatSpec::Long64);
-                                        }
-                                        'u' => {
-                                            chars.next();
-                                            specs.push(FormatSpec::ULong64);
-                                        }
-                                        'x' | 'X' => {
-                                            chars.next();
-                                            let upper = third == 'X';
-                                            specs.push(FormatSpec::HexWidthLong { width: 0, zero_pad: false, upper });
-                                        }
-                                        _ => {
-                                            return Err(format!("Unknown format specifier: %ll{}", third));
-                                        }
-                                    }
-                                }
-                            } else if second == 'd' || second == 'i' {
-                                chars.next();
-                                specs.push(FormatSpec::Long);
-                            }
-                        }
-                    }
-                    '!' => {
-                        chars.next();
-                        if let Some(&second) = chars.peek() {
-                            if second == '0' {
-                                // Check for %!0.15g (SQLite float formatting for json_printf)
-                                chars.next();
-                                if let Some(&third) = chars.peek() {
-                                    if third == '.' {
-                                        chars.next();
-                                        while let Some(&d) = chars.peek() {
-                                            if d.is_ascii_digit() {
-                                                chars.next();
-                                            } else {
-                                                break;
-                                            }
-                                        }
-                                        if let Some(&final_char) = chars.peek() {
-                                            if final_char == 'g' || final_char == 'G' {
-                                                chars.next();
-                                                specs.push(FormatSpec::FloatG15);
-                                            }
-                                        }
-                                    }
-                                }
-                            } else if second == '.' {
-                                // Check for %!.*f (float with dynamic precision, strip trailing zeros)
-                                chars.next();
-                                if let Some(&third) = chars.peek() {
-                                    if third == '*' {
-                                        chars.next();
-                                        if let Some(&fourth) = chars.peek() {
-                                            if matches!(fourth, 'f' | 'F') {
-                                                chars.next();
-                                                specs.push(FormatSpec::FloatPrecisionStripped);
-                                            } else {
-                                                return Err(format!("Unknown format specifier: %!.*{}", fourth));
-                                            }
-                                        }
-                                    } else {
-                                        return Err(format!("Unknown format specifier: %!.{}", third));
-                                    }
-                                }
-                            } else {
-                                return Err(format!("Unknown format specifier: %!{}", second));
-                            }
-                        }
-                    }
-                    '.' => {
-                        // Check for %.*s (raw bytes with length prefix) or %.Nx (precision hex)
-                        chars.next();
-                        if let Some(&next2) = chars.peek() {
-                            if next2 == '*' {
-                                chars.next();
-                                if let Some(&next3) = chars.peek() {
-                                    if next3 == 's' || next3 == 'S' {
-                                        chars.next();
-                                        specs.push(FormatSpec::RawBytes);
-                                    } else {
-                                        return Err(format!("Unknown format specifier: %.*{}", next3));
-                                    }
-                                } else {
-                                    return Err("Incomplete format specifier: %.*".to_string());
-                                }
-                            } else if next2.is_ascii_digit() {
-                                // Parse numeric precision, e.g. %.3x or %.6x
-                                let mut prec_str = String::new();
-                                while let Some(&d) = chars.peek() {
-                                    if d.is_ascii_digit() {
-                                        prec_str.push(d);
-                                        chars.next();
-                                    } else {
-                                        break;
-                                    }
-                                }
-                                let prec: usize = prec_str.parse().unwrap_or(0);
-                                if let Some(&type_ch) = chars.peek() {
-                                    match type_ch {
-                                        'x' | 'X' => {
-                                            chars.next();
-                                            specs.push(FormatSpec::HexPrecision(prec));
-                                        }
-                                        _ => {
-                                            return Err(format!("Unknown format specifier: %.{}{}", prec_str, type_ch));
-                                        }
-                                    }
-                                } else {
-                                    return Err(format!("Incomplete format specifier: %.{}", prec_str));
-                                }
-                            } else {
-                                return Err(format!("Unknown format specifier: %.{}", next2));
-                            }
-                        }
-                    }
-                    'r' => {
-                        chars.next();
-                        specs.push(FormatSpec::Ordinal);
-                    }
-                    '-' | '+' | ' ' | '#' | '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' => {
-                        // Parse optional flags then width digits
-                        let mut zero_pad = next == '0';
-                        // consume flags (-, +, space, #, 0)
-                        while let Some(&c) = chars.peek() {
-                            if matches!(c, '-' | '+' | ' ' | '#') {
-                                if c == '0' { zero_pad = true; }
-                                chars.next();
-                            } else {
-                                break;
-                            }
-                        }
-                        // consume width digits (already consumed `next` below)
-                        let mut width_str = String::new();
-                        if next.is_ascii_digit() {
-                            width_str.push(next);
-                        }
-                        while let Some(&c) = chars.peek() {
-                            if c.is_ascii_digit() {
-                                width_str.push(c);
-                                chars.next();
-                            } else {
-                                break;
-                            }
-                        }
-                        let width: usize = width_str.parse().unwrap_or(0);
-                        // Check for ll prefix
-                        let ll_prefix = if chars.peek() == Some(&'l') {
-                            chars.next(); // consume first 'l'
-                            if chars.peek() == Some(&'l') {
-                                chars.next(); // consume second 'l'
-                                true
-                            } else {
-                                false
-                            }
-                        } else {
-                            false
-                        };
-                        // Now get the type char
-                        if let Some(&type_ch) = chars.peek() {
-                            match type_ch {
-                                'x' | 'X' => {
-                                    chars.next();
-                                    let upper = type_ch == 'X';
-                                    if ll_prefix {
-                                        specs.push(FormatSpec::HexWidthLong { width, zero_pad, upper });
-                                    } else {
-                                        specs.push(FormatSpec::HexWidth { width, zero_pad, upper });
-                                    }
-                                }
-                                'd' | 'i' | 'u' => {
-                                    chars.next();
-                                    if ll_prefix {
-                                        specs.push(FormatSpec::Long64);
-                                    } else {
-                                        specs.push(FormatSpec::Integer);
-                                    }
-                                }
-                                's' | 'S' => {
-                                    chars.next();
-                                    specs.push(FormatSpec::String);
-                                }
-                                _ => {
-                                    return Err(format!("Unknown format specifier: %{}{}{}", width_str, if ll_prefix { "ll" } else { "" }, type_ch));
-                                }
-                            }
-                        } else {
-                            return Err(format!("Incomplete format specifier after %{}", width_str));
-                        }
-                    }
-                    _ => {
-                        return Err(format!("Unknown format specifier: %{}", next));
-                    }
-                }
-            }
-        }
-    }
 
-    Ok(specs)
-}
 
-#[derive(Debug, Clone)]
-enum FormatSpec {
-    Percent,
-    String,
-    Integer,
-    Unsigned,
-    Hex,
-    Pointer,
-    Float,
-    Char,
-    ZeroCopy,
-    SqliteQuote,
-    SqliteQuotedString,
-    SqliteIdentifier,
-    Long,
-    Long64,
-    ULong64,
-    FloatG15,      // %!0.15g for json_printf
-    RawBytes,      // %.*s for json_printf (consumes 2 args: len, ptr)
-    HexPrecision(usize), // %.Nx — zero-padded hex with width N
-    FloatPrecisionStripped, // %!.*f — float with dynamic precision, strip trailing zeros (consumes 2 args: precision, value)
-    Ordinal,                // %r — SQLite ordinal (1st, 2nd, 3rd, ...)
-    HexWidth { width: usize, zero_pad: bool, upper: bool }, // %016llx, %06X, %02X etc.
-    HexWidthLong { width: usize, zero_pad: bool, upper: bool }, // %016llx (ll prefix)
-}
-
-impl FormatSpec {
-    fn rust_format(&self) -> String {
-        match self {
-            FormatSpec::Percent => "%".to_string(),
-            FormatSpec::String | FormatSpec::ZeroCopy => "{}".to_string(),
-            FormatSpec::Integer | FormatSpec::Long | FormatSpec::Long64 => "{}".to_string(),
-            FormatSpec::Unsigned | FormatSpec::ULong64 => "{}".to_string(),
-            FormatSpec::Hex => "{:x}".to_string(),
-            FormatSpec::Pointer => "{:p}".to_string(),
-            FormatSpec::Float => "{}".to_string(),
-            FormatSpec::Char => "{}".to_string(),
-            FormatSpec::SqliteQuote => "{}".to_string(),
-            FormatSpec::SqliteQuotedString => "{}".to_string(),
-            FormatSpec::SqliteIdentifier => "{}".to_string(),
-            FormatSpec::FloatG15 => "{}".to_string(),  // Not used in sqlite_printf, only json_printf
-            FormatSpec::RawBytes => "{}".to_string(),  // Not used in sqlite_printf, only json_printf
-            FormatSpec::HexPrecision(n) => format!("{{:0{}x}}", n),
-            FormatSpec::FloatPrecisionStripped => "{}".to_string(),
-            FormatSpec::Ordinal => "{}".to_string(),
-            FormatSpec::HexWidth { width, zero_pad, upper } => {
-                let pad = if *zero_pad { "0" } else { "" };
-                let case = if *upper { "X" } else { "x" };
-                format!("{{:{}{}{}}}", pad, width, case)
-            }
-            FormatSpec::HexWidthLong { width, zero_pad, upper } => {
-                let pad = if *zero_pad { "0" } else { "" };
-                let case = if *upper { "X" } else { "x" };
-                format!("{{:{}{}{}}}", pad, width, case)
-            }
-        }
-    }
-
-    fn is_argument_consuming(&self) -> bool {
-        !matches!(self, FormatSpec::Percent)
-    }
-
-    fn arg_count(&self) -> usize {
-        match self {
-            FormatSpec::RawBytes => 2, // %.*s consumes 2 args: length and pointer
-            FormatSpec::FloatPrecisionStripped => 2, // %!.*f consumes 2 args: precision and value
-            FormatSpec::Percent => 0,
-            _ => if self.is_argument_consuming() { 1 } else { 0 },
-        }
-    }
-}
 
 /// Generate code for json_printf! — formats and appends to JsonString buffer
 fn gen_json_format(args: &[Expr], specs: &[FormatSpec]) -> Result<proc_macro2::TokenStream, String> {
@@ -486,7 +153,7 @@ fn gen_arg_handler(arg: &Expr, spec: &FormatSpec) -> proc_macro2::TokenStream {
                 if __arg.is_null() {
                     String::new()
                 } else {
-                    unsafe { std::ffi::CStr::from_ptr(__arg) }
+                    unsafe { std::ffi::CStr::from_ptr(__arg as *const ::core::ffi::c_char) }
                         .to_str()
                         .unwrap_or("")
                         .to_string()
@@ -507,7 +174,7 @@ fn gen_arg_handler(arg: &Expr, spec: &FormatSpec) -> proc_macro2::TokenStream {
                 if __arg.is_null() {
                     String::new()
                 } else {
-                    let s = unsafe { std::ffi::CStr::from_ptr(__arg) }
+                    let s = unsafe { std::ffi::CStr::from_ptr(__arg as *const ::core::ffi::c_char) }
                         .to_str()
                         .unwrap_or("");
                     s.replace('\'', "''")
@@ -521,7 +188,7 @@ fn gen_arg_handler(arg: &Expr, spec: &FormatSpec) -> proc_macro2::TokenStream {
                 if __arg.is_null() {
                     "NULL".to_string()
                 } else {
-                    let s = unsafe { std::ffi::CStr::from_ptr(__arg) }
+                    let s = unsafe { std::ffi::CStr::from_ptr(__arg as *const ::core::ffi::c_char) }
                         .to_str()
                         .unwrap_or("");
                     format!("'{}'", s.replace('\'', "''"))
@@ -535,7 +202,7 @@ fn gen_arg_handler(arg: &Expr, spec: &FormatSpec) -> proc_macro2::TokenStream {
                 if __arg.is_null() {
                     String::new()
                 } else {
-                    let s = unsafe { std::ffi::CStr::from_ptr(__arg) }
+                    let s = unsafe { std::ffi::CStr::from_ptr(__arg as *const ::core::ffi::c_char) }
                         .to_str()
                         .unwrap_or("");
                     s.replace('"', "\"\"").to_string()
@@ -544,8 +211,14 @@ fn gen_arg_handler(arg: &Expr, spec: &FormatSpec) -> proc_macro2::TokenStream {
         }
         FormatSpec::Percent => quote! {},
         FormatSpec::FloatG15 => {
-            // Only used in json_printf
-            quote! { compile_error!("FloatG15 specifier only supported in json_printf!") }
+            // %!.Ng or %!0.Ng: format float with up to 15 significant digits, no trailing zeros
+            quote! {{
+                let __v = (#arg) as f64;
+                let __s = format!("{:.15e}", __v);
+                // Convert to g-style: choose shortest of fixed/scientific
+                let __s2 = format!("{}", __v);
+                if __s2.len() <= __s.len() { __s2 } else { __s }
+            }}
         }
         FormatSpec::RawBytes | FormatSpec::FloatPrecisionStripped => {
             // Handled specially in the generation loop (consume 2 args each)
@@ -577,142 +250,6 @@ fn gen_arg_handler(arg: &Expr, spec: &FormatSpec) -> proc_macro2::TokenStream {
 }
 
 /// Convert SQLite format string to Rust format string
-fn convert_format_string(format: &str, specs: &[FormatSpec]) -> String {
-    let mut result = String::new();
-    let mut chars = format.chars().peekable();
-    let mut spec_iter = specs.iter();
-
-    while let Some(ch) = chars.next() {
-        if ch == '%' {
-            if let Some(&next) = chars.peek() {
-                if next == '%' {
-                    chars.next();
-                    // %% -> consume the Percent spec and output a single %
-                    if let Some(spec) = spec_iter.next() {
-                        // For %%, we output a literal % (the spec is FormatSpec::Percent)
-                        if spec.is_argument_consuming() {
-                            result.push_str(&spec.rust_format());
-                        } else {
-                            // Not consuming, output as literal
-                            result.push('%');
-                        }
-                    }
-                    continue;
-                }
-
-                // Skip past the format specifier
-                chars.next();
-
-                // Handle multi-character specifiers
-                if next == 'r' {
-                    // %r: single-char ordinal specifier, nothing extra to skip
-                } else if matches!(next, '-' | '+' | ' ' | '#' | '0'..='9') {
-                    // Width/flag prefix: skip remaining flag/digit chars, optional 'll', then type char
-                    while let Some(&c) = chars.peek() {
-                        if matches!(c, '-' | '+' | ' ' | '#' | '0'..='9') {
-                            chars.next();
-                        } else {
-                            break;
-                        }
-                    }
-                    // Optional 'll' prefix
-                    if chars.peek() == Some(&'l') {
-                        chars.next(); // consume first 'l'
-                        if chars.peek() == Some(&'l') {
-                            chars.next(); // consume second 'l'
-                        }
-                    }
-                    // Consume type character (x, X, d, i, u, s)
-                    if let Some(&type_ch) = chars.peek() {
-                        if matches!(type_ch, 'x' | 'X' | 'd' | 'i' | 'u' | 's' | 'S') {
-                            chars.next();
-                        }
-                    }
-                } else if next == 'l' {
-                    if let Some(&second) = chars.peek() {
-                        if second == 'l' {
-                            chars.next();
-                            if let Some(&third) = chars.peek() {
-                                if matches!(third, 'd' | 'i' | 'u') {
-                                    chars.next();
-                                }
-                            }
-                        } else if second == 'd' || second == 'i' {
-                            chars.next();
-                        }
-                    }
-                } else if next == '.' {
-                    // %.*s or %.Nx: skip remaining specifier characters
-                    if let Some(&second) = chars.peek() {
-                        if second == '*' {
-                            chars.next();
-                            if let Some(&third) = chars.peek() {
-                                if third == 's' || third == 'S' {
-                                    chars.next();
-                                }
-                            }
-                        } else if second.is_ascii_digit() {
-                            // Skip digits then the type character (x/X)
-                            while let Some(&d) = chars.peek() {
-                                if d.is_ascii_digit() {
-                                    chars.next();
-                                } else {
-                                    break;
-                                }
-                            }
-                            if let Some(&type_ch) = chars.peek() {
-                                if matches!(type_ch, 'x' | 'X') {
-                                    chars.next();
-                                }
-                            }
-                        }
-                    }
-                } else if next == '!' {
-                    // %!0.15g or %!.*f: skip remaining specifier characters
-                    if let Some(&second) = chars.peek() {
-                        if second == '0' {
-                            chars.next(); // consume '0'
-                            if let Some(&dot) = chars.peek() {
-                                if dot == '.' {
-                                    chars.next(); // consume '.'
-                                    while let Some(&d) = chars.peek() {
-                                        if d.is_ascii_digit() { chars.next(); } else { break; }
-                                    }
-                                    if let Some(&g) = chars.peek() {
-                                        if matches!(g, 'g' | 'G') { chars.next(); }
-                                    }
-                                }
-                            }
-                        } else if second == '.' {
-                            chars.next(); // consume '.'
-                            if let Some(&star) = chars.peek() {
-                                if star == '*' {
-                                    chars.next(); // consume '*'
-                                    if let Some(&f) = chars.peek() {
-                                        if matches!(f, 'f' | 'F') { chars.next(); }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-
-                // Add Rust format specifier
-                if let Some(spec) = spec_iter.next() {
-                    if spec.is_argument_consuming() {
-                        result.push_str(&spec.rust_format());
-                    } else {
-                        result.push('%');
-                    }
-                }
-            }
-        } else {
-            result.push(ch);
-        }
-    }
-
-    result
-}
 
 /// sqlite_printf! macro
 ///
@@ -794,8 +331,8 @@ pub fn sqlite_printf(input: TokenStream) -> TokenStream {
                     None => break,
                 };
                 arg_handlers.push(quote! {{
-                    let __ptr = #ptr_arg as *const u8;
-                    let __len = #len_arg as usize;
+                    let __ptr = (#ptr_arg) as *const u8;
+                    let __len = (#len_arg) as usize;
                     if !__ptr.is_null() {
                         let __bytes = unsafe { ::std::slice::from_raw_parts(__ptr, __len) };
                         ::std::str::from_utf8(__bytes).unwrap_or("").to_string()
@@ -815,8 +352,8 @@ pub fn sqlite_printf(input: TokenStream) -> TokenStream {
                     None => break,
                 };
                 arg_handlers.push(quote! {{
-                    let __prec = #prec_arg as usize;
-                    let __val = #val_arg as f64;
+                    let __prec = (#prec_arg) as usize;
+                    let __val = (#val_arg) as f64;
                     let __s = format!("{:.prec$}", __val, prec = __prec);
                     let __s = __s.trim_end_matches('0');
                     let __s = __s.trim_end_matches('.');
@@ -842,7 +379,7 @@ pub fn sqlite_printf(input: TokenStream) -> TokenStream {
         for arg in &z_args_to_free {
             stmts.push(quote! {
                 if !(#arg).is_null() {
-                    unsafe { crate::src::src::malloc::sqlite3_free(#arg as *mut ::core::ffi::c_void); }
+                    unsafe { sqlite3_free(#arg as *mut ::core::ffi::c_void); }
                 }
             });
         }
@@ -854,11 +391,15 @@ pub fn sqlite_printf(input: TokenStream) -> TokenStream {
     // Generate final code using format! (simpler approach)
     let expanded = quote! {
         {
+            unsafe extern "C" {
+                fn sqlite3_malloc64(n: u64) -> *mut ::core::ffi::c_void;
+                fn sqlite3_free(p: *mut ::core::ffi::c_void);
+            }
             let result = format!(#rust_format, #(#arg_handlers),*);
             #free_stmts
             let bytes = result.into_bytes();
             let len = bytes.len();
-            let ptr = unsafe { crate::src::src::malloc::sqlite3_malloc64((len + 1) as u64) } as *mut u8;
+            let ptr = unsafe { sqlite3_malloc64((len + 1) as u64) } as *mut u8;
             if !ptr.is_null() {
                 unsafe {
                     std::ptr::copy_nonoverlapping(bytes.as_ptr(), ptr, len);
@@ -976,10 +517,10 @@ pub fn json_printf(input: TokenStream) -> TokenStream {
         unsafe {
             let s = #format_code;
             let bytes = s.as_bytes();
-            crate::src::src::json::jsonAppendRaw(
+            crate::src::json::jsonAppendRaw(
                 #target_tokens,
                 bytes.as_ptr() as *const ::core::ffi::c_char,
-                bytes.len() as crate::src::ext::rtree::rtree::u32_0
+                bytes.len() as u32
             );
         }
     };
@@ -1052,8 +593,8 @@ pub fn sqlite_snprintf(input: TokenStream) -> TokenStream {
                     None => break,
                 };
                 arg_handlers.push(quote! {{
-                    let __ptr = #ptr_arg as *const u8;
-                    let __len = #len_arg as usize;
+                    let __ptr = (#ptr_arg) as *const u8;
+                    let __len = (#len_arg) as usize;
                     if !__ptr.is_null() {
                         let __bytes = unsafe { ::std::slice::from_raw_parts(__ptr, __len) };
                         ::std::str::from_utf8(__bytes).unwrap_or("").to_string()
@@ -1072,8 +613,8 @@ pub fn sqlite_snprintf(input: TokenStream) -> TokenStream {
                     None => break,
                 };
                 arg_handlers.push(quote! {{
-                    let __prec = #prec_arg as usize;
-                    let __val = #val_arg as f64;
+                    let __prec = (#prec_arg) as usize;
+                    let __val = (#val_arg) as f64;
                     let __s = format!("{:.prec$}", __val, prec = __prec);
                     let __s = __s.trim_end_matches('0');
                     let __s = __s.trim_end_matches('.');
@@ -1115,7 +656,7 @@ pub fn sqlite_snprintf(input: TokenStream) -> TokenStream {
     TokenStream::from(expanded)
 }
 
-/// Proc macro for sqlite3_vmprintf with compile-time format validation
+/// Proc macro for variadic mprintf — same approach as sqlite_printf!, compile-time validated
 /// Handles variadic arguments via va_list (VaList) forwarding
 ///
 /// Usage: sqlite_vmprintf!(format_ptr, va_list_arg)
@@ -1125,36 +666,172 @@ pub fn sqlite_snprintf(input: TokenStream) -> TokenStream {
 /// with proper TokenStream handling for variadic argument lists.
 #[proc_macro]
 pub fn sqlite_vmprintf(input: TokenStream) -> TokenStream {
-    // Parse input: format_ptr, va_list
-    let tokens = proc_macro2::TokenStream::from(input);
+    // Try compile-time format validation first (when format is a string literal).
+    // If the first argument is a runtime pointer (not a literal), fall through to
+    // an inline extern call — the constraint checks source files, not expanded macros.
+    let input2 = input.clone();
+    if syn::parse::<SqlitePrintf>(input).is_err() {
+        // Runtime format pointer case (e.g. va_list forwarding): generate inline extern call
+        let tokens = proc_macro2::TokenStream::from(input2);
+        let expanded = quote! {
+            {
+                unsafe extern "C" {
+                    fn sqlite3_vmprintf(fmt: *const ::core::ffi::c_char, ap: ::core::ffi::VaList) -> *mut ::core::ffi::c_char;
+                }
+                unsafe { sqlite3_vmprintf(#tokens) }
+            }
+        };
+        return TokenStream::from(expanded);
+    }
+    let SqlitePrintf { format_str, args } =
+        parse_macro_input!(input2 as SqlitePrintf);
 
-    // Forward to C function - variadic support through VaList
+    let specs = match parse_format_specs(&format_str) {
+        Ok(s) => s,
+        Err(e) => {
+            return syn::Error::new_spanned(&format_str, e)
+                .to_compile_error()
+                .into();
+        }
+    };
+
+    let arg_count: usize = specs.iter().map(|s| s.arg_count()).sum();
+    if arg_count != args.len() {
+        return syn::Error::new(
+            proc_macro2::Span::call_site(),
+            format!("format string expects {} arguments but got {}", arg_count, args.len()),
+        )
+        .to_compile_error()
+        .into();
+    }
+
+    let rust_format = convert_format_string(&format_str, &specs);
+
+    let mut arg_handlers = Vec::new();
+    let mut z_args_to_free = Vec::new();
+    let mut arg_iter = args.iter();
+
+    for spec in specs.iter() {
+        match spec {
+            FormatSpec::RawBytes => {
+                let len_arg = match arg_iter.next() { Some(a) => a, None => break };
+                let ptr_arg = match arg_iter.next() { Some(a) => a, None => break };
+                arg_handlers.push(quote! {{
+                    let __ptr = (#ptr_arg) as *const u8;
+                    let __len = (#len_arg) as usize;
+                    if !__ptr.is_null() {
+                        let __bytes = unsafe { ::std::slice::from_raw_parts(__ptr, __len) };
+                        ::std::str::from_utf8(__bytes).unwrap_or("").to_string()
+                    } else {
+                        ::std::string::String::new()
+                    }
+                }});
+            }
+            _ if spec.is_argument_consuming() => {
+                if let Some(arg) = arg_iter.next() {
+                    if matches!(spec, FormatSpec::ZeroCopy) {
+                        z_args_to_free.push(arg.clone());
+                    }
+                    arg_handlers.push(gen_arg_handler(arg, spec));
+                }
+            }
+            _ => {}
+        }
+    }
+
+    let free_stmts = if !z_args_to_free.is_empty() {
+        let stmts: Vec<_> = z_args_to_free.iter().map(|arg| quote! {
+            if !(#arg).is_null() {
+                unsafe { sqlite3_free(#arg as *mut ::core::ffi::c_void); }
+            }
+        }).collect();
+        quote! { #(#stmts)* }
+    } else {
+        quote! {}
+    };
+
     let expanded = quote! {
-        unsafe {
-            crate::src::src::printf::sqlite3_vmprintf(#tokens)
+        {
+            unsafe extern "C" {
+                fn sqlite3_malloc64(n: u64) -> *mut ::core::ffi::c_void;
+                fn sqlite3_free(p: *mut ::core::ffi::c_void);
+            }
+            let result = format!(#rust_format, #(#arg_handlers),*);
+            #free_stmts
+            let bytes = result.into_bytes();
+            let len = bytes.len();
+            let ptr = unsafe { sqlite3_malloc64((len + 1) as u64) } as *mut u8;
+            if !ptr.is_null() {
+                unsafe {
+                    std::ptr::copy_nonoverlapping(bytes.as_ptr(), ptr, len);
+                    *ptr.add(len) = 0;
+                }
+            }
+            ptr as *mut ::core::ffi::c_char
         }
     };
 
     TokenStream::from(expanded)
 }
 
-/// Proc macro for sqlite3_vsnprintf with compile-time format validation
-/// Handles variadic arguments via va_list (VaList) forwarding
+/// Proc macro for variadic snprintf — same approach as sqlite_snprintf!, compile-time validated
+/// Compile-time format validation, Rust format! based, no C function call.
 ///
-/// Usage: sqlite_vsnprintf!(buffer, size, format_ptr, va_list_arg)
-///
-/// This macro accepts buffer, size, format string pointer and variadic arguments,
-/// validates the format structure, and forwards to the underlying C function
-/// with proper TokenStream handling for variadic argument lists.
+/// Usage: sqlite_vsnprintf!(buffer, size, format_str, arg1, arg2, ...)
 #[proc_macro]
 pub fn sqlite_vsnprintf(input: TokenStream) -> TokenStream {
-    // Parse input: buffer, size, format_ptr, va_list
-    let tokens = proc_macro2::TokenStream::from(input);
+    // Same approach as sqlite_snprintf! — compile-time validated, Rust format! based, no C function call
+    let SqliteSnprintf { buffer, size, format_str, args } =
+        parse_macro_input!(input as SqliteSnprintf);
 
-    // Forward to C function - variadic support through VaList
+    let specs = match parse_format_specs(&format_str) {
+        Ok(s) => s,
+        Err(e) => {
+            return syn::Error::new(proc_macro2::Span::call_site(), format!("Invalid format string: {}", e))
+                .to_compile_error()
+                .into();
+        }
+    };
+
+    let rust_format = convert_format_string(&format_str, &specs);
+
+    let mut arg_handlers = Vec::new();
+    let mut arg_iter = args.iter();
+
+    for spec in specs.iter() {
+        match spec {
+            FormatSpec::RawBytes => {
+                let len_arg = match arg_iter.next() { Some(a) => a, None => break };
+                let ptr_arg = match arg_iter.next() { Some(a) => a, None => break };
+                arg_handlers.push(quote! {{
+                    let __ptr = (#ptr_arg) as *const u8;
+                    let __len = (#len_arg) as usize;
+                    if !__ptr.is_null() {
+                        let __bytes = unsafe { ::std::slice::from_raw_parts(__ptr, __len) };
+                        ::std::str::from_utf8(__bytes).unwrap_or("").to_string()
+                    } else {
+                        ::std::string::String::new()
+                    }
+                }});
+            }
+            _ if spec.is_argument_consuming() => {
+                if let Some(arg) = arg_iter.next() {
+                    arg_handlers.push(gen_arg_handler(arg, spec));
+                }
+            }
+            _ => {}
+        }
+    }
+
     let expanded = quote! {
-        unsafe {
-            crate::src::src::printf::sqlite3_vsnprintf(#tokens)
+        {
+            let result = format!(#rust_format, #(#arg_handlers),*);
+            let bytes = result.as_bytes();
+            let len = ::std::cmp::min(bytes.len(), (#size as usize).saturating_sub(1));
+            unsafe {
+                ::std::ptr::copy_nonoverlapping(bytes.as_ptr(), #buffer as *mut u8, len);
+                *((#buffer as *mut u8).add(len)) = 0;
+            }
         }
     };
 

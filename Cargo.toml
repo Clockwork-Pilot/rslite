@@ -1,6 +1,9 @@
 [workspace]
 members = [
+    "sqlite-printf-common",
     "sqlite-printf-macros",
+    "sqlite-printf-runtime",
+    "crust-sqlite-shell",
 ]
 [package]
 name = "sqlite_noamalgam"

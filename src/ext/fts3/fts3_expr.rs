@@ -1120,19 +1120,19 @@ unsafe extern "C" fn exprToString(
     _ =>  {}
 }
     if !zBuf.is_null() {
-        zBuf = crate::sqlite_printf!("%z{{", zBuf);
+        zBuf = crate::sqlite_printf!("%z{", zBuf);
     }
     if !zBuf.is_null() {
         zBuf = exprToString((*pExpr).pLeft, zBuf);
     }
     if !zBuf.is_null() {
-        zBuf = crate::sqlite_printf!("%z}} {{", zBuf);
+        zBuf = crate::sqlite_printf!("%z} {", zBuf);
     }
     if !zBuf.is_null() {
         zBuf = exprToString((*pExpr).pRight, zBuf);
     }
     if !zBuf.is_null() {
-        zBuf = crate::sqlite_printf!("%z}}", zBuf);
+        zBuf = crate::sqlite_printf!("%z}", zBuf);
     }
     zBuf
 }
