@@ -52,6 +52,11 @@ Verify c_variadic feature isolation: only in printf_c_variadic.rs
       - [fts3_write_no_format_sql_1arg](#fts3_write_no_format_sql_1arg)
       - [fts3_write_no_format_sql_2args](#fts3_write_no_format_sql_2args)
       - [fts3_write_no_format_sql_3args](#fts3_write_no_format_sql_3args)
+    - [Feature: fts5_PrintfAppend_variadic_removal](#fts5_printfappend_variadic_removal)
+      - [fts5PrintfAppend_callsites_use_sqlite_printf](#fts5printfappend_callsites_use_sqlite_printf)
+      - [fts5PrintfAppend_defined_nonvariadic_in_fts5](#fts5printfappend_defined_nonvariadic_in_fts5)
+      - [fts5PrintfAppend_no_reexport](#fts5printfappend_no_reexport)
+      - [fts5PrintfAppend_not_in_printf_c_variadic](#fts5printfappend_not_in_printf_c_variadic)
     - [Feature: fts5_c_variadic_migration](#fts5_c_variadic_migration)
       - [fts5_no_sqlite3_mprintf](#fts5_no_sqlite3_mprintf)
       - [fts5_no_sqlite3_snprintf](#fts5_no_sqlite3_snprintf)
@@ -323,6 +328,31 @@ Verify c_variadic feature isolation: only in printf_c_variadic.rs
 #### fts3_write_no_format_sql_3args
 **Description:** fts3_write.rs must not use format_sql_3args function
 **Command:** `grep -n "format_sql_3args" "$WORKSPACE_ROOT/src/ext/fts3/fts3_write.rs" 2>/dev/null && exit 1 || exit 0`
+
+### Feature: fts5_PrintfAppend_variadic_removal
+**Remove variadic fts5PrintfAppend from printf_c_variadic; redefine non-variadic in fts5.rs using sqlite_printf!**
+
+**Goals:**
+- fts5PrintfAppend in src/printf_c_variadic.rs is a variadic C-ABI function: formats new piece via sqlite3_vmprintf, concatenates with existing zApp string, frees both intermediates, returns result.
+- There are 20 call sites in fts5.rs. Delete fts5PrintfAppend from printf_c_variadic.rs and remove its pub use re-export from fts5.rs.
+- Redefine as private non-variadic unsafe fn fts5PrintfAppend(zApp: *mut c_char, zNew: *mut c_char) -> *mut c_char directly in fts5.rs.
+- Each call site passes sqlite_printf!(fmt, args...) as the zNew argument instead of a raw format string with variadic args.
+
+#### fts5PrintfAppend_callsites_use_sqlite_printf
+**Description:** Behavioral: fts5.rs must have >= 80 sqlite_printf! uses (60 existing + 20 call sites replacing variadic fts5PrintfAppend calls)
+**Command:** `[ $(grep -c "sqlite_printf!" "${CLAUDE_PROJECT_ROOT}/src/fts5.rs") -ge 80 ]`
+
+#### fts5PrintfAppend_defined_nonvariadic_in_fts5
+**Description:** Structural: fts5PrintfAppend must be defined in fts5.rs with a non-variadic signature
+**Command:** `grep -q "fn fts5PrintfAppend" "${CLAUDE_PROJECT_ROOT}/src/fts5.rs" && ! grep -qE "fn fts5PrintfAppend.*\.\.\." "${CLAUDE_PROJECT_ROOT}/src/fts5.rs"`
+
+#### fts5PrintfAppend_no_reexport
+**Description:** Structural: no pub use re-export of fts5PrintfAppend from printf_c_variadic in fts5.rs
+**Command:** `! grep -qE "pub use.*fts5PrintfAppend" "${CLAUDE_PROJECT_ROOT}/src/fts5.rs"`
+
+#### fts5PrintfAppend_not_in_printf_c_variadic
+**Description:** Structural: fts5PrintfAppend function must be removed from printf_c_variadic.rs
+**Command:** `! grep -q "fn fts5PrintfAppend" "${CLAUDE_PROJECT_ROOT}/src/printf_c_variadic.rs"`
 
 ### Feature: fts5_c_variadic_migration
 **Migrate src/fts5.rs away from sqlite3_mprintf/sqlite3_snprintf to sqlite_printf! proc macro**

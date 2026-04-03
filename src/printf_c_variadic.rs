@@ -1141,21 +1141,6 @@ pub unsafe extern "C" fn fts5SetVtabError(
 
 
 
-pub unsafe extern "C" fn fts5PrintfAppend(
-    mut zApp: *mut ::core::ffi::c_char,
-    mut zFmt: *const ::core::ffi::c_char,
-    mut args: ...
-) -> *mut ::core::ffi::c_char {
-    let mut zNew: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
-    zNew = crate::src::src::printf::sqlite3_vmprintf(zFmt, args);
-    if !zApp.is_null() && !zNew.is_null() {
-        let mut zNew2: *mut ::core::ffi::c_char = crate::sqlite_printf!("%s%s", zApp, zNew);
-        crate::src::src::malloc::sqlite3_free(zNew as *mut ::core::ffi::c_void);
-        zNew = zNew2;
-    }
-    crate::src::src::malloc::sqlite3_free(zApp as *mut ::core::ffi::c_void);
-    zNew
-}
 
 
 
