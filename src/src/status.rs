@@ -86,16 +86,18 @@ pub unsafe extern "C" fn sqlite3StatusUp(mut op: ::core::ffi::c_int, mut N: ::co
 pub unsafe extern "C" fn sqlite3StatusDown(mut op: ::core::ffi::c_int, mut N: ::core::ffi::c_int) {
     sqlite3Stat.nowValue[op as usize] -= N as sqlite3StatValueType;
 }
-#[unsafe(no_mangle)]
 
-pub unsafe extern "C" fn sqlite3StatusHighwater(
+#[unsafe(no_mangle)]
+pub extern "C" fn sqlite3StatusHighwater(
     mut op: ::core::ffi::c_int,
     mut X: ::core::ffi::c_int,
 ) {
     let mut newValue: sqlite3StatValueType = 0;
     newValue = X as sqlite3StatValueType;
-    if newValue > sqlite3Stat.mxValue[op as usize] {
-        sqlite3Stat.mxValue[op as usize] = newValue;
+    unsafe {
+        if newValue > sqlite3Stat.mxValue[op as usize] {
+            sqlite3Stat.mxValue[op as usize] = newValue;
+        }
     }
 }
 #[unsafe(no_mangle)]

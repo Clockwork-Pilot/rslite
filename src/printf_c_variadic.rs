@@ -8,7 +8,7 @@ pub use crate::src::src::printf;
 
 // Import required types and functions from their original modules
 use crate::src::src::main::{C2RustUnnamed, LOGFUNC_t, void_function, sqlite3MisuseError, setupLookaside};
-use crate::src::fts5::{Fts5Buffer, Fts5Config, Fts5FullTable, Fts5Parse, sqlite3Fts5BufferAppendString};
+use crate::src::fts5::{Fts5Config, Fts5FullTable};
 use crate::src::src::btree::{checkOom, checkProgress};
 
 

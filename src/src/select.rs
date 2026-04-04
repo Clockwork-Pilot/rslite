@@ -138,7 +138,7 @@ pub unsafe extern "C" fn sqlite3SelectDestInit(
     mut iParm: ::core::ffi::c_int,
 ) {
     let __pDest_ref = unsafe { &mut *pDest };
-    __pDest_ref.eDest = eDest as crate::src::ext::rtree::rtree::u8_0;
+    __pDest_ref.eDest = eDest as u8;
     __pDest_ref.iSDParm = iParm;
     __pDest_ref.iSDParm2 = 0 as ::core::ffi::c_int;
     __pDest_ref.zAffSdst = ::core::ptr::null_mut::<::core::ffi::c_char>();
@@ -187,7 +187,7 @@ pub unsafe extern "C" fn sqlite3SelectNew(
     *mut crate::src::headers::sqliteInt_h::ExprList;
     }
     (*pNew).pEList = pEList;
-    (*pNew).op = crate::src::parse::TK_SELECT_1 as crate::src::ext::rtree::rtree::u8_0;
+    (*pNew).op = crate::src::parse::TK_SELECT_1 as u8;
     (*pNew).selFlags = selFlags;
     (*pNew).iLimit = 0 as ::core::ffi::c_int;
     (*pNew).iOffset = 0 as ::core::ffi::c_int;
@@ -262,39 +262,39 @@ pub unsafe extern "C" fn sqlite3JoinType(
     };
     static mut aKeyword: [C2RustUnnamed; 7] = [
         C2RustUnnamed {
-            i: 0 as crate::src::ext::rtree::rtree::u8_0,
-            nChar: 7 as crate::src::ext::rtree::rtree::u8_0,
-            code: crate::src::headers::sqliteInt_h::JT_NATURAL as crate::src::ext::rtree::rtree::u8_0,
+            i: 0 as u8,
+            nChar: 7 as u8,
+            code: crate::src::headers::sqliteInt_h::JT_NATURAL as u8,
         },
         C2RustUnnamed {
-            i: 6 as crate::src::ext::rtree::rtree::u8_0,
-            nChar: 4 as crate::src::ext::rtree::rtree::u8_0,
-            code: (crate::src::headers::sqliteInt_h::JT_LEFT | crate::src::headers::sqliteInt_h::JT_OUTER) as crate::src::ext::rtree::rtree::u8_0,
+            i: 6 as u8,
+            nChar: 4 as u8,
+            code: (crate::src::headers::sqliteInt_h::JT_LEFT | crate::src::headers::sqliteInt_h::JT_OUTER) as u8,
         },
         C2RustUnnamed {
-            i: 10 as crate::src::ext::rtree::rtree::u8_0,
-            nChar: 5 as crate::src::ext::rtree::rtree::u8_0,
-            code: crate::src::headers::sqliteInt_h::JT_OUTER as crate::src::ext::rtree::rtree::u8_0,
+            i: 10 as u8,
+            nChar: 5 as u8,
+            code: crate::src::headers::sqliteInt_h::JT_OUTER as u8,
         },
         C2RustUnnamed {
-            i: 14 as crate::src::ext::rtree::rtree::u8_0,
-            nChar: 5 as crate::src::ext::rtree::rtree::u8_0,
-            code: (crate::src::headers::sqliteInt_h::JT_RIGHT | crate::src::headers::sqliteInt_h::JT_OUTER) as crate::src::ext::rtree::rtree::u8_0,
+            i: 14 as u8,
+            nChar: 5 as u8,
+            code: (crate::src::headers::sqliteInt_h::JT_RIGHT | crate::src::headers::sqliteInt_h::JT_OUTER) as u8,
         },
         C2RustUnnamed {
-            i: 19 as crate::src::ext::rtree::rtree::u8_0,
-            nChar: 4 as crate::src::ext::rtree::rtree::u8_0,
-            code: (crate::src::headers::sqliteInt_h::JT_LEFT | crate::src::headers::sqliteInt_h::JT_RIGHT | crate::src::headers::sqliteInt_h::JT_OUTER) as crate::src::ext::rtree::rtree::u8_0,
+            i: 19 as u8,
+            nChar: 4 as u8,
+            code: (crate::src::headers::sqliteInt_h::JT_LEFT | crate::src::headers::sqliteInt_h::JT_RIGHT | crate::src::headers::sqliteInt_h::JT_OUTER) as u8,
         },
         C2RustUnnamed {
-            i: 23 as crate::src::ext::rtree::rtree::u8_0,
-            nChar: 5 as crate::src::ext::rtree::rtree::u8_0,
-            code: crate::src::headers::sqliteInt_h::JT_INNER as crate::src::ext::rtree::rtree::u8_0,
+            i: 23 as u8,
+            nChar: 5 as u8,
+            code: crate::src::headers::sqliteInt_h::JT_INNER as u8,
         },
         C2RustUnnamed {
-            i: 28 as crate::src::ext::rtree::rtree::u8_0,
-            nChar: 5 as crate::src::ext::rtree::rtree::u8_0,
-            code: (crate::src::headers::sqliteInt_h::JT_INNER | crate::src::headers::sqliteInt_h::JT_CROSS) as crate::src::ext::rtree::rtree::u8_0,
+            i: 28 as u8,
+            nChar: 5 as u8,
+            code: (crate::src::headers::sqliteInt_h::JT_INNER | crate::src::headers::sqliteInt_h::JT_CROSS) as u8,
         },
     ];
     let mut i: ::core::ffi::c_int = 0;
@@ -855,7 +855,7 @@ unsafe extern "C" fn pushOntoSorter(
                 crate::src::headers::sqliteInt_h::SQLITE_ECEL_REF
             } else {
                 0 as ::core::ffi::c_int
-            })) as crate::src::ext::rtree::rtree::u8_0,
+            })) as u8,
     );
     if bSeq != 0 {
         crate::src::src::vdbeaux::sqlite3VdbeAddOp2(v, crate::src::headers::opcodes_h::OP_Sequence, __pSort_ref.iECursor, regBase + nExpr);
@@ -1073,7 +1073,7 @@ unsafe extern "C" fn fixDistinctOpenEph(
             let mut pOp: *mut crate::src::src::vdbe::VdbeOp =  crate::src::src::vdbeaux::sqlite3VdbeGetOp(v, iOpenEphAddr) as
     *mut crate::src::src::vdbe::VdbeOp;
             let __pOp_ref = unsafe { &mut *pOp };
-            __pOp_ref.opcode = crate::src::headers::opcodes_h::OP_Null as crate::src::ext::rtree::rtree::u8_0;
+            __pOp_ref.opcode = crate::src::headers::opcodes_h::OP_Null as u8;
             __pOp_ref.p1 = 1 as ::core::ffi::c_int;
             __pOp_ref.p2 = iVal;
         }
@@ -1139,9 +1139,9 @@ unsafe extern "C" fn selectInnerLoop(
         let mut ecelFlags: crate::src::ext::rtree::rtree::u8_0 = 0;
         let mut pEList: *mut crate::src::headers::sqliteInt_h::ExprList = ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::ExprList>();
         if eDest == crate::src::headers::sqliteInt_h::SRT_Mem_1 || eDest == crate::src::headers::sqliteInt_h::SRT_Output || eDest == crate::src::headers::sqliteInt_h::SRT_Coroutine {
-            ecelFlags = crate::src::headers::sqliteInt_h::SQLITE_ECEL_DUP as crate::src::ext::rtree::rtree::u8_0;
+            ecelFlags = crate::src::headers::sqliteInt_h::SQLITE_ECEL_DUP as u8;
         } else {
-            ecelFlags = 0 as crate::src::ext::rtree::rtree::u8_0;
+            ecelFlags = 0 as u8;
         }
         if !pSort.is_null()
             && hasDistinct == 0 as ::core::ffi::c_int
@@ -1149,7 +1149,7 @@ unsafe extern "C" fn selectInnerLoop(
             && eDest != crate::src::headers::sqliteInt_h::SRT_Table
         {
             ecelFlags =
-                (ecelFlags as ::core::ffi::c_int | (crate::src::headers::sqliteInt_h::SQLITE_ECEL_OMITREF | crate::src::headers::sqliteInt_h::SQLITE_ECEL_REF)) as crate::src::ext::rtree::rtree::u8_0;
+                (ecelFlags as ::core::ffi::c_int | (crate::src::headers::sqliteInt_h::SQLITE_ECEL_OMITREF | crate::src::headers::sqliteInt_h::SQLITE_ECEL_REF)) as u8;
             i = (*pSort).nOBSat;
             while i < (*(*pSort).pOrderBy).nExpr {
                 let mut j: ::core::ffi::c_int = 0;
@@ -1308,7 +1308,7 @@ unsafe extern "C" fn selectInnerLoop(
                     crate::src::src::vdbeaux::sqlite3VdbeExplain(
                         
                         pParse as *mut crate::src::headers::sqliteInt_h::Parse,
-                        0 as crate::src::ext::rtree::rtree::u8_0,
+                        0 as u8,
                         b"CREATE BLOOM FILTER\0" as *const u8 as *const ::core::ffi::c_char,
                     );
                 }
@@ -1529,7 +1529,7 @@ unsafe extern "C" fn explainTempTable(
     crate::src::src::vdbeaux::sqlite3VdbeExplain(
         
         pParse as *mut crate::src::headers::sqliteInt_h::Parse,
-        0 as crate::src::ext::rtree::rtree::u8_0,
+        0 as u8,
         b"USE TEMP B-TREE FOR %s\0" as *const u8 as *const ::core::ffi::c_char,
         zUsage,
     );
@@ -1566,7 +1566,7 @@ unsafe extern "C" fn generateSortTail(
         crate::src::src::vdbeaux::sqlite3VdbeExplain(
             
             pParse as *mut crate::src::headers::sqliteInt_h::Parse,
-            0 as crate::src::ext::rtree::rtree::u8_0,
+            0 as u8,
             b"USE TEMP B-TREE FOR %sORDER BY\0" as *const u8 as *const ::core::ffi::c_char,
             if __pSort_ref.nOBSat != 0 {
                 b"LAST TERM OF \0" as *const u8 as *const ::core::ffi::c_char
@@ -1578,7 +1578,7 @@ unsafe extern "C" fn generateSortTail(
         crate::src::src::vdbeaux::sqlite3VdbeExplain(
             
             pParse as *mut crate::src::headers::sqliteInt_h::Parse,
-            0 as crate::src::ext::rtree::rtree::u8_0,
+            0 as u8,
             b"USE TEMP B-TREE FOR LAST %d TERMS OF ORDER BY\0" as *const u8
                 as *const ::core::ffi::c_char,
             nKey,
@@ -2568,7 +2568,7 @@ unsafe extern "C" fn generateWithRecursiveQuery(
             current_block = 8834331691167872155;
             break;
         } else {
-            (*pFirstRec).op = crate::src::parse::TK_ALL as crate::src::ext::rtree::rtree::u8_0;
+            (*pFirstRec).op = crate::src::parse::TK_ALL as u8;
             if (*(*pFirstRec).pPrior).selFlags & crate::src::headers::sqliteInt_h::SF_Recursive as crate::src::ext::rtree::rtree::u32_0 == 0 as crate::src::ext::rtree::rtree::u32_0 {
                 current_block = 790185930182612747;
                 break;
@@ -2583,7 +2583,7 @@ unsafe extern "C" fn generateWithRecursiveQuery(
             crate::src::src::vdbeaux::sqlite3VdbeExplain(
                 
                 pParse as *mut crate::src::headers::sqliteInt_h::Parse,
-                1 as crate::src::ext::rtree::rtree::u8_0,
+                1 as u8,
                 b"SETUP\0" as *const u8 as *const ::core::ffi::c_char,
             );
             rc = sqlite3Select(pParse, pSetup, &raw mut destQueue);
@@ -2623,7 +2623,7 @@ unsafe extern "C" fn generateWithRecursiveQuery(
                 crate::src::src::vdbeaux::sqlite3VdbeExplain(
                     
                     pParse as *mut crate::src::headers::sqliteInt_h::Parse,
-                    1 as crate::src::ext::rtree::rtree::u8_0,
+                    1 as u8,
                     b"RECURSIVE STEP\0" as *const u8 as *const ::core::ffi::c_char,
                 );
                 sqlite3Select(pParse, p, &raw mut destQueue);
@@ -2661,7 +2661,7 @@ unsafe extern "C" fn multiSelectValues(
     crate::src::src::vdbeaux::sqlite3VdbeExplain(
         
         pParse as *mut crate::src::headers::sqliteInt_h::Parse,
-        0 as crate::src::ext::rtree::rtree::u8_0,
+        0 as u8,
         b"SCAN %d CONSTANT ROW%s\0" as *const u8 as *const ::core::ffi::c_char,
         nRow,
         if nRow == 1 as ::core::ffi::c_int {
@@ -2715,7 +2715,7 @@ unsafe extern "C" fn multiSelect(
     v = sqlite3GetVdbe(pParse);
     if dest.eDest as ::core::ffi::c_int == crate::src::headers::sqliteInt_h::SRT_EphemTab_1 {
         crate::src::src::vdbeaux::sqlite3VdbeAddOp2(v, crate::src::headers::opcodes_h::OP_OpenEphemeral, dest.iSDParm, (*(*p).pEList).nExpr);
-        dest.eDest = crate::src::headers::sqliteInt_h::SRT_Table as crate::src::ext::rtree::rtree::u8_0;
+        dest.eDest = crate::src::headers::sqliteInt_h::SRT_Table as u8;
     }
     if (*p).selFlags & crate::src::headers::sqliteInt_h::SF_MultiValue as crate::src::ext::rtree::rtree::u32_0 != 0 {
         rc = multiSelectValues(pParse, p, &raw mut dest);
@@ -2740,13 +2740,13 @@ unsafe extern "C" fn multiSelect(
                     crate::src::src::vdbeaux::sqlite3VdbeExplain(
                         
                         pParse as *mut crate::src::headers::sqliteInt_h::Parse,
-                        1 as crate::src::ext::rtree::rtree::u8_0,
+                        1 as u8,
                         b"COMPOUND QUERY\0" as *const u8 as *const ::core::ffi::c_char,
                     );
                     crate::src::src::vdbeaux::sqlite3VdbeExplain(
                         
                         pParse as *mut crate::src::headers::sqliteInt_h::Parse,
-                        1 as crate::src::ext::rtree::rtree::u8_0,
+                        1 as u8,
                         b"LEFT-MOST SUBQUERY\0" as *const u8 as *const ::core::ffi::c_char,
                     );
                 }
@@ -2782,7 +2782,7 @@ unsafe extern "C" fn multiSelect(
                             crate::src::src::vdbeaux::sqlite3VdbeExplain(
                                 
                                 pParse as *mut crate::src::headers::sqliteInt_h::Parse,
-                                1 as crate::src::ext::rtree::rtree::u8_0,
+                                1 as u8,
                                 b"UNION ALL\0" as *const u8 as *const ::core::ffi::c_char,
                             );
                             rc = sqlite3Select(pParse, p, &raw mut dest);
@@ -2812,7 +2812,7 @@ unsafe extern "C" fn multiSelect(
                     }
     crate::src::parse::TK_EXCEPT | crate::src::parse::TK_UNION =>  {
                         let mut unionTab: ::core::ffi::c_int = 0;
-                        let mut op: crate::src::ext::rtree::rtree::u8_0 = 0 as crate::src::ext::rtree::rtree::u8_0;
+                        let mut op: crate::src::ext::rtree::rtree::u8_0 = 0 as u8;
                         let mut priorOp: ::core::ffi::c_int = 0;
                         let mut pLimit: *mut crate::src::headers::sqliteInt_h::Expr = ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::Expr>();
                         let mut addr_0: ::core::ffi::c_int = 0;
@@ -2842,10 +2842,10 @@ unsafe extern "C" fn multiSelect(
                         } else {
                             let __p_ref = unsafe { &mut *p };
                             if __p_ref.op as ::core::ffi::c_int == crate::src::parse::TK_EXCEPT {
-                                op = crate::src::headers::sqliteInt_h::SRT_Except as crate::src::ext::rtree::rtree::u8_0;
+                                op = crate::src::headers::sqliteInt_h::SRT_Except as u8;
                                 emptyBypass = crate::src::src::vdbeaux::sqlite3VdbeAddOp1(v, crate::src::headers::opcodes_h::OP_IfEmpty, unionTab);
                             } else {
-                                op = crate::src::headers::sqliteInt_h::SRT_Union as crate::src::ext::rtree::rtree::u8_0;
+                                op = crate::src::headers::sqliteInt_h::SRT_Union as u8;
                             }
                             __p_ref.pPrior = ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::Select>();
                             pLimit = __p_ref.pLimit;
@@ -2854,7 +2854,7 @@ unsafe extern "C" fn multiSelect(
                             crate::src::src::vdbeaux::sqlite3VdbeExplain(
                                 
                                 pParse as *mut crate::src::headers::sqliteInt_h::Parse,
-                                1 as crate::src::ext::rtree::rtree::u8_0,
+                                1 as u8,
                                 b"%s USING TEMP B-TREE\0" as *const u8
                                     as *const ::core::ffi::c_char,
                                 sqlite3SelectOpName(__p_ref.op as ::core::ffi::c_int),
@@ -2955,7 +2955,7 @@ unsafe extern "C" fn multiSelect(
                             crate::src::src::vdbeaux::sqlite3VdbeExplain(
                                 
                                 pParse as *mut crate::src::headers::sqliteInt_h::Parse,
-                                1 as crate::src::ext::rtree::rtree::u8_0,
+                                1 as u8,
                                 b"%s USING TEMP B-TREE\0" as *const u8
                                     as *const ::core::ffi::c_char,
                                 sqlite3SelectOpName(__p_ref.op as ::core::ffi::c_int),
@@ -3215,7 +3215,7 @@ unsafe extern "C" fn generateOutputSubroutine(
                 crate::src::src::vdbeaux::sqlite3VdbeExplain(
                     
                     pParse as *mut crate::src::headers::sqliteInt_h::Parse,
-                    0 as crate::src::ext::rtree::rtree::u8_0,
+                    0 as u8,
                     b"CREATE BLOOM FILTER\0" as *const u8 as *const ::core::ffi::c_char,
                 );
             }
@@ -3371,7 +3371,7 @@ unsafe extern "C" fn multiSelectOrderBy(
                 let ref mut fresh28 =
                     *(&raw mut (*pKeyDup).aColl as *mut *mut crate::src::headers::sqliteInt_h::CollSeq).offset(i as isize);
                 *fresh28 = multiSelectCollSeq(pParse, p, i);
-                *(*pKeyDup).aSortFlags.offset(i as isize) = 0 as crate::src::ext::rtree::rtree::u8_0;
+                *(*pKeyDup).aSortFlags.offset(i as isize) = 0 as u8;
                 i += 1;
             }
         }
@@ -3452,7 +3452,7 @@ unsafe extern "C" fn multiSelectOrderBy(
     crate::src::src::vdbeaux::sqlite3VdbeExplain(
         
         pParse as *mut crate::src::headers::sqliteInt_h::Parse,
-        1 as crate::src::ext::rtree::rtree::u8_0,
+        1 as u8,
         b"MERGE (%s)\0" as *const u8 as *const ::core::ffi::c_char,
         sqlite3SelectOpName(__p_ref.op as ::core::ffi::c_int),
     );
@@ -3468,7 +3468,7 @@ unsafe extern "C" fn multiSelectOrderBy(
     crate::src::src::vdbeaux::sqlite3VdbeExplain(
         
         pParse as *mut crate::src::headers::sqliteInt_h::Parse,
-        1 as crate::src::ext::rtree::rtree::u8_0,
+        1 as u8,
         b"LEFT\0" as *const u8 as *const ::core::ffi::c_char,
     );
     sqlite3Select(pParse, pPrior, &raw mut destA);
@@ -3489,7 +3489,7 @@ unsafe extern "C" fn multiSelectOrderBy(
     crate::src::src::vdbeaux::sqlite3VdbeExplain(
         
         pParse as *mut crate::src::headers::sqliteInt_h::Parse,
-        1 as crate::src::ext::rtree::rtree::u8_0,
+        1 as u8,
         b"RIGHT\0" as *const u8 as *const ::core::ffi::c_char,
     );
     sqlite3Select(pParse, p, &raw mut destB);
@@ -3633,7 +3633,7 @@ unsafe extern "C" fn substExpr(mut pSubst: *mut SubstContext, mut pExpr: *mut cr
                 && ((*pCopy).op as ::core::ffi::c_int != crate::src::parse::TK_COLUMN_1
                     || (*pCopy).iTable != __pSubst_ref.iNewTable)
             {
-                ifNullRow.op = crate::src::parse::TK_IF_NULL_ROW_1 as crate::src::ext::rtree::rtree::u8_0;
+                ifNullRow.op = crate::src::parse::TK_IF_NULL_ROW_1 as u8;
                 ifNullRow.pLeft = pCopy;
                 ifNullRow.iTable = __pSubst_ref.iNewTable;
                 ifNullRow.iColumn = -(99 as ::core::ffi::c_int) as crate::src::headers::sqliteInt_h::ynVar;
@@ -3651,7 +3651,7 @@ unsafe extern "C" fn substExpr(mut pSubst: *mut SubstContext, mut pExpr: *mut cr
             }
             if (*pNew).op as ::core::ffi::c_int == crate::src::parse::TK_TRUEFALSE {
                 (*pNew).u.iValue = crate::src::src::expr::sqlite3ExprTruthValue(pNew as *const crate::src::headers::sqliteInt_h::Expr);
-                (*pNew).op = crate::src::parse::TK_INTEGER as crate::src::ext::rtree::rtree::u8_0;
+                (*pNew).op = crate::src::parse::TK_INTEGER as u8;
                 (*pNew).flags |= 0x800 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::u32_0;
             }
             let mut pNat: *mut crate::src::headers::sqliteInt_h::CollSeq =  crate::src::src::expr::sqlite3ExprCollSeq(__pSubst_ref.pParse as *mut crate::src::headers::sqliteInt_h::Parse,  pNew as *const crate::src::headers::sqliteInt_h::Expr) as
@@ -4151,7 +4151,7 @@ unsafe extern "C" fn flattenSubquery(
     *mut crate::src::headers::sqliteInt_h::Select;
         __p_ref.pLimit = pLimit;
         __p_ref.pOrderBy = pOrderBy;
-        __p_ref.op = crate::src::parse::TK_ALL as crate::src::ext::rtree::rtree::u8_0;
+        __p_ref.op = crate::src::parse::TK_ALL as u8;
         __pSubitem_ref.pSTab = pItemTab;
         if pNew.is_null() {
             __p_ref.pPrior = pPrior;
@@ -4240,7 +4240,7 @@ unsafe extern "C" fn flattenSubquery(
             *pItem = *(&raw mut (*pSubSrc).a as *mut crate::src::headers::sqliteInt_h::SrcItem).offset(i as isize);
             __pItem_ref.fg.jointype = (__pItem_ref.fg.jointype as ::core::ffi::c_int
                 | jointype as ::core::ffi::c_int & crate::src::headers::sqliteInt_h::JT_LTORJ)
-                as crate::src::ext::rtree::rtree::u8_0;
+                as u8;
             ::libc::memset(
                 (&raw mut (*pSubSrc).a as *mut crate::src::headers::sqliteInt_h::SrcItem).offset(i as isize) as *mut crate::src::headers::sqliteInt_h::SrcItem
                     as *mut ::core::ffi::c_void,
@@ -4250,7 +4250,7 @@ unsafe extern "C" fn flattenSubquery(
             i += 1;
         }
         (*pSubitem).fg.jointype = ((*pSubitem).fg.jointype as ::core::ffi::c_int
-            | jointype as ::core::ffi::c_int) as crate::src::ext::rtree::rtree::u8_0;
+            | jointype as ::core::ffi::c_int) as u8;
         if !(*pSub).pOrderBy.is_null()
             && (*pParent).selFlags & crate::src::headers::sqliteInt_h::SF_NoopOrderBy as crate::src::ext::rtree::rtree::u32_0 == 0 as crate::src::ext::rtree::rtree::u32_0
         {
@@ -4712,7 +4712,7 @@ unsafe extern "C" fn disableUnusedSubqueryResultColumns(
                 let mut pY: *mut crate::src::headers::sqliteInt_h::Expr =
                     (*(&raw mut (*(*pX).pEList).a as *mut crate::src::headers::sqliteInt_h::ExprList_item).offset(j as isize)).pExpr;
                 if !((*pY).op as ::core::ffi::c_int == crate::src::parse::TK_NULL) {
-                    (*pY).op = crate::src::parse::TK_NULL as crate::src::ext::rtree::rtree::u8_0;
+                    (*pY).op = crate::src::parse::TK_NULL as u8;
                     (*pY).flags &=
                         !((0x2000 as ::core::ffi::c_int | 0x80000 as ::core::ffi::c_int) as crate::src::ext::rtree::rtree::u32_0);
                     (*pX).selFlags |= crate::src::headers::sqliteInt_h::SF_PushDown as crate::src::ext::rtree::rtree::u32_0;
@@ -4735,7 +4735,7 @@ unsafe extern "C" fn minMaxQuery(
     let mut pEList: *mut crate::src::headers::sqliteInt_h::ExprList = ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::ExprList>();
     let mut zFunc: *const ::core::ffi::c_char = ::core::ptr::null::<::core::ffi::c_char>();
     let mut pOrderBy: *mut crate::src::headers::sqliteInt_h::ExprList = ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::ExprList>();
-    let mut sortFlags: crate::src::ext::rtree::rtree::u8_0 = 0 as crate::src::ext::rtree::rtree::u8_0;
+    let mut sortFlags: crate::src::ext::rtree::rtree::u8_0 = 0 as u8;
     let __pFunc_ref = unsafe { &*pFunc };
     pEList = __pFunc_ref.x.pList;
     if pEList.is_null()
@@ -4743,7 +4743,7 @@ unsafe extern "C" fn minMaxQuery(
         || __pFunc_ref.flags & 0x1000000 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::u32_0 != 0 as crate::src::ext::rtree::rtree::u32_0
         || (*db).dbOptFlags & 0x10000 as crate::src::ext::rtree::rtree::u32_0 != 0 as crate::src::ext::rtree::rtree::u32_0
     {
-        return eRet as crate::src::ext::rtree::rtree::u8_0;
+        return eRet as u8;
     }
     zFunc = __pFunc_ref.u.zToken;
     if crate::src::src::util::sqlite3StrICmp(zFunc, b"min\0" as *const u8 as *const ::core::ffi::c_char)
@@ -4758,15 +4758,15 @@ unsafe extern "C" fn minMaxQuery(
     *const crate::src::headers::sqliteInt_h::Expr,
         ) != 0
         {
-            sortFlags = crate::src::headers::sqliteInt_h::KEYINFO_ORDER_BIGNULL as crate::src::ext::rtree::rtree::u8_0;
+            sortFlags = crate::src::headers::sqliteInt_h::KEYINFO_ORDER_BIGNULL as u8;
         }
     } else if crate::src::src::util::sqlite3StrICmp(zFunc, b"max\0" as *const u8 as *const ::core::ffi::c_char)
         == 0 as ::core::ffi::c_int
     {
         eRet = crate::src::headers::sqliteInt_h::WHERE_ORDERBY_MAX;
-        sortFlags = crate::src::headers::sqliteInt_h::KEYINFO_ORDER_DESC as crate::src::ext::rtree::rtree::u8_0;
+        sortFlags = crate::src::headers::sqliteInt_h::KEYINFO_ORDER_DESC as u8;
     } else {
-        return eRet as crate::src::ext::rtree::rtree::u8_0;
+        return eRet as u8;
     }
     pOrderBy =  crate::src::src::expr::sqlite3ExprListDup(db as *mut crate::src::headers::sqliteInt_h::sqlite3,  pEList as *const crate::src::headers::sqliteInt_h::ExprList, 0 as ::core::ffi::c_int) as *mut crate::src::headers::sqliteInt_h::ExprList;
     *ppMinMax = pOrderBy;
@@ -4776,7 +4776,7 @@ unsafe extern "C" fn minMaxQuery(
         .fg
         .sortFlags = sortFlags;
     }
-    eRet as crate::src::ext::rtree::rtree::u8_0
+    eRet as u8
 }
 
 unsafe extern "C" fn isSimpleCount(mut p: *mut crate::src::headers::sqliteInt_h::Select, mut pAggInfo: *mut crate::src::headers::sqliteInt_h::AggInfo) -> *mut crate::src::headers::sqliteInt_h::Table {
@@ -4942,7 +4942,7 @@ unsafe extern "C" fn convertCompoundSelectToSubquery(
         *mut crate::src::headers::sqliteInt_h::Expr as *mut crate::src::headers::sqliteInt_h::Expr,
     ) as
     *mut crate::src::headers::sqliteInt_h::ExprList;
-    __p_ref.op = crate::src::parse::TK_SELECT_1 as crate::src::ext::rtree::rtree::u8_0;
+    __p_ref.op = crate::src::parse::TK_SELECT_1 as u8;
     __p_ref.pWhere = ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::Expr>();
     (*pNew).pGroupBy = ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::ExprList>();
     (*pNew).pHaving = ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::Expr>();
@@ -5288,7 +5288,7 @@ pub unsafe extern "C" fn sqlite3ExpandSubquery(
         &raw mut (*pTab).aCol,
     );
     (*pTab).iPKey = -(1 as ::core::ffi::c_int) as crate::src::fts5::i16_0;
-    (*pTab).eTabType = crate::src::headers::sqliteInt_h::TABTYP_VIEW as crate::src::ext::rtree::rtree::u8_0;
+    (*pTab).eTabType = crate::src::headers::sqliteInt_h::TABTYP_VIEW as u8;
     (*pTab).nRowLogEst = 200 as crate::src::headers::sqliteInt_h::LogEst;
     (*pTab).tabFlags |= (crate::src::headers::sqliteInt_h::TF_Ephemeral | crate::src::headers::sqliteInt_h::TF_NoVisibleRowid) as crate::src::ext::rtree::rtree::u32_0;
     if (*pParse).nErr != 0 {
@@ -5367,7 +5367,7 @@ unsafe extern "C" fn selectExpander(
         }
         (*__p_ref.pWith).bView = 1 as ::core::ffi::c_int;
     }
-    sqlite3WithPush(pParse, __p_ref.pWith, 0 as crate::src::ext::rtree::rtree::u8_0);
+    sqlite3WithPush(pParse, __p_ref.pWith, 0 as u8);
     crate::src::src::build::sqlite3SrcListAssignCursors(pParse as *mut crate::src::headers::sqliteInt_h::Parse,  pTabList as *mut crate::src::headers::sqliteInt_h::SrcList);
     i = 0 as ::core::ffi::c_int;
     pFrom = &raw mut (*pTabList).a as *mut crate::src::headers::sqliteInt_h::SrcItem;
@@ -5417,7 +5417,7 @@ unsafe extern "C" fn selectExpander(
                     if !((*pTab).eTabType as ::core::ffi::c_int == crate::src::headers::sqliteInt_h::TABTYP_NORM) {
                         let mut nCol: crate::src::fts5::i16_0 = 0;
                         let __pWalker_ref = unsafe { &mut *pWalker };
-                        let mut eCodeOrig: crate::src::ext::rtree::rtree::u8_0 = __pWalker_ref.eCode as crate::src::ext::rtree::rtree::u8_0;
+                        let mut eCodeOrig: crate::src::ext::rtree::rtree::u8_0 = __pWalker_ref.eCode as u8;
                         if crate::src::src::build::sqlite3ViewGetColumnNames(pParse as *mut crate::src::headers::sqliteInt_h::Parse,  pTab as *mut crate::src::headers::sqliteInt_h::Table) != 0 {
                             return crate::src::headers::sqliteInt_h::WRC_Abort;
                         }
@@ -6101,7 +6101,7 @@ unsafe extern "C" fn aggregateIdxEprRefToColCallback(
         return crate::src::headers::sqliteInt_h::WRC_Continue;
     }
     pCol = (*pAggInfo).aCol.offset(__pExpr_ref.iAgg as isize) as *mut crate::src::headers::sqliteInt_h::AggInfo_col as *mut crate::src::headers::sqliteInt_h::AggInfo_col;
-    __pExpr_ref.op = crate::src::parse::TK_AGG_COLUMN as crate::src::ext::rtree::rtree::u8_0;
+    __pExpr_ref.op = crate::src::parse::TK_AGG_COLUMN as u8;
     __pExpr_ref.iTable = (*pCol).iTable;
     __pExpr_ref.iColumn = (*pCol).iColumn as crate::src::headers::sqliteInt_h::ynVar;
     __pExpr_ref.flags &= !((0x2000 as ::core::ffi::c_int
@@ -6184,7 +6184,7 @@ unsafe extern "C" fn resetAccumulator(mut pParse: *mut crate::src::headers::sqli
                 crate::src::src::vdbeaux::sqlite3VdbeExplain(
                     
                     pParse as *mut crate::src::headers::sqliteInt_h::Parse,
-                    0 as crate::src::ext::rtree::rtree::u8_0,
+                    0 as u8,
                     b"USE TEMP B-TREE FOR %s(DISTINCT)\0" as *const u8
                         as *const ::core::ffi::c_char,
                     (*__pFunc_ref.pFunc).zName,
@@ -6223,7 +6223,7 @@ unsafe extern "C" fn resetAccumulator(mut pParse: *mut crate::src::headers::sqli
             crate::src::src::vdbeaux::sqlite3VdbeExplain(
                 
                 pParse as *mut crate::src::headers::sqliteInt_h::Parse,
-                0 as crate::src::ext::rtree::rtree::u8_0,
+                0 as u8,
                 b"USE TEMP B-TREE FOR %s(ORDER BY)\0" as *const u8 as *const ::core::ffi::c_char,
                 (*__pFunc_ref.pFunc).zName,
             );
@@ -6328,7 +6328,7 @@ unsafe extern "C" fn updateAccumulator(
         return;
     }
     let __pAggInfo_ref = unsafe { &mut *pAggInfo };
-    __pAggInfo_ref.directMode = 1 as crate::src::ext::rtree::rtree::u8_0;
+    __pAggInfo_ref.directMode = 1 as u8;
     i = 0 as ::core::ffi::c_int;
     pF = __pAggInfo_ref.aFunc as *mut crate::src::headers::sqliteInt_h::AggInfo_func;
     while i < __pAggInfo_ref.nFunc {
@@ -6380,7 +6380,7 @@ unsafe extern "C" fn updateAccumulator(
                 pOBList as *mut crate::src::headers::sqliteInt_h::ExprList,
                 regAgg,
                 0 as ::core::ffi::c_int,
-                crate::src::headers::sqliteInt_h::SQLITE_ECEL_DUP as crate::src::ext::rtree::rtree::u8_0,
+                crate::src::headers::sqliteInt_h::SQLITE_ECEL_DUP as u8,
             );
             jj = (*pOBList).nExpr;
             if __pF_ref.bOBUnique == 0 {
@@ -6396,7 +6396,7 @@ unsafe extern "C" fn updateAccumulator(
                     pList as *mut crate::src::headers::sqliteInt_h::ExprList,
                     regDistinct,
                     0 as ::core::ffi::c_int,
-                    crate::src::headers::sqliteInt_h::SQLITE_ECEL_DUP as crate::src::ext::rtree::rtree::u8_0,
+                    crate::src::headers::sqliteInt_h::SQLITE_ECEL_DUP as u8,
                 );
                 jj += nArg;
             }
@@ -6426,7 +6426,7 @@ unsafe extern "C" fn updateAccumulator(
                 pList as *mut crate::src::headers::sqliteInt_h::ExprList,
                 regAgg,
                 0 as ::core::ffi::c_int,
-                crate::src::headers::sqliteInt_h::SQLITE_ECEL_DUP as crate::src::ext::rtree::rtree::u8_0,
+                crate::src::headers::sqliteInt_h::SQLITE_ECEL_DUP as u8,
             );
         } else {
             nArg = 0 as ::core::ffi::c_int;
@@ -6528,7 +6528,7 @@ unsafe extern "C" fn updateAccumulator(
         i += 1;
         pC = pC.offset(1);
     }
-    __pAggInfo_ref.directMode = 0 as crate::src::ext::rtree::rtree::u8_0;
+    __pAggInfo_ref.directMode = 0 as u8;
     if addrHitTest != 0 {
         crate::src::src::vdbeaux::sqlite3VdbeJumpHereOrPopInst(v, addrHitTest);
     }
@@ -6547,7 +6547,7 @@ unsafe extern "C" fn explainSimpleCount(
         crate::src::src::vdbeaux::sqlite3VdbeExplain(
             
             pParse as *mut crate::src::headers::sqliteInt_h::Parse,
-            0 as crate::src::ext::rtree::rtree::u8_0,
+            0 as u8,
             b"SCAN %s%s%s\0" as *const u8 as *const ::core::ffi::c_char,
             (*pTab).zName,
             if bCover != 0 {
@@ -6968,7 +6968,7 @@ unsafe extern "C" fn existsToJoin(
                     ::core::mem::size_of::<crate::src::headers::sqliteInt_h::Expr>() as crate::__stddef_size_t_h::size_t,
                 );
                 let __pWhere_ref = unsafe { &mut *pWhere };
-                __pWhere_ref.op = crate::src::parse::TK_INTEGER as crate::src::ext::rtree::rtree::u8_0;
+                __pWhere_ref.op = crate::src::parse::TK_INTEGER as u8;
                 __pWhere_ref.u.iValue = 1 as ::core::ffi::c_int;
                 __pWhere_ref.flags |= 0x800 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::u32_0;
                 let ref mut fresh21 = (*(&raw mut (*__pSub_ref.pSrc).a as *mut crate::src::headers::sqliteInt_h::SrcItem)
@@ -6979,7 +6979,7 @@ unsafe extern "C" fn existsToJoin(
                     .offset(0 as isize))
                 .fg
                 .jointype;
-                *fresh22 = (*fresh22 as ::core::ffi::c_int | crate::src::headers::sqliteInt_h::JT_CROSS) as crate::src::ext::rtree::rtree::u8_0;
+                *fresh22 = (*fresh22 as ::core::ffi::c_int | crate::src::headers::sqliteInt_h::JT_CROSS) as u8;
                 (*p).pSrc =  crate::src::src::build::sqlite3SrcListAppendList(pParse as *mut crate::src::headers::sqliteInt_h::Parse,  (*p).pSrc as *mut crate::src::headers::sqliteInt_h::SrcList,  __pSub_ref.pSrc as *mut crate::src::headers::sqliteInt_h::SrcList) as
     *mut crate::src::headers::sqliteInt_h::SrcList;
                 if !pSubWhere.is_null() {
@@ -7249,12 +7249,12 @@ pub unsafe extern "C" fn sqlite3Select(
                                             __pItem_ref.fg.jointype = (__pItem_ref.fg.jointype
                                                 as ::core::ffi::c_int
                                                 & !crate::src::headers::sqliteInt_h::JT_LEFT)
-                                                as crate::src::ext::rtree::rtree::u8_0;
+                                                as u8;
                                         } else {
                                             __pItem_ref.fg.jointype = (__pItem_ref.fg.jointype
                                                 as ::core::ffi::c_int
                                                 & !(crate::src::headers::sqliteInt_h::JT_LEFT | crate::src::headers::sqliteInt_h::JT_OUTER))
-                                                as crate::src::ext::rtree::rtree::u8_0;
+                                                as u8;
                                             unsetJoinExpr(
                                                 __p_ref.pWhere,
                                                 __pItem_ref.iCursor,
@@ -7279,13 +7279,13 @@ pub unsafe extern "C" fn sqlite3Select(
                                                     (*pI2).fg.jointype = ((*pI2).fg.jointype
                                                         as ::core::ffi::c_int
                                                         & !crate::src::headers::sqliteInt_h::JT_RIGHT)
-                                                        as crate::src::ext::rtree::rtree::u8_0;
+                                                        as u8;
                                                 } else {
                                                     let __pI2_ref = unsafe { &mut *pI2 };
                                                     __pI2_ref.fg.jointype = (__pI2_ref.fg.jointype
                                                         as ::core::ffi::c_int
                                                         & !(crate::src::headers::sqliteInt_h::JT_RIGHT | crate::src::headers::sqliteInt_h::JT_OUTER))
-                                                        as crate::src::ext::rtree::rtree::u8_0;
+                                                        as u8;
                                                     unsetJoinExpr(
                                                         __p_ref.pWhere,
                                                         __pI2_ref.iCursor,
@@ -7303,7 +7303,7 @@ pub unsafe extern "C" fn sqlite3Select(
                                             .fg
                                             .jointype;
                                             *fresh7 =
-                                                (*fresh7 as ::core::ffi::c_int & !crate::src::headers::sqliteInt_h::JT_LTORJ) as crate::src::ext::rtree::rtree::u8_0;
+                                                (*fresh7 as ::core::ffi::c_int & !crate::src::headers::sqliteInt_h::JT_LTORJ) as u8;
                                             if (*(&raw mut (*pTabList).a as *mut crate::src::headers::sqliteInt_h::SrcItem)
                                                 .offset(j as isize))
                                             .fg
@@ -7564,7 +7564,7 @@ pub unsafe extern "C" fn sqlite3Select(
                                                             crate::src::src::vdbeaux::sqlite3VdbeExplain(
                                                                 
                                                                 pParse as *mut crate::src::headers::sqliteInt_h::Parse,
-                                                                1 as crate::src::ext::rtree::rtree::u8_0,
+                                                                1 as u8,
                                                                 b"CO-ROUTINE %!S\0" as *const u8
                                                                     as *const ::core::ffi::c_char,
                                                                 pItem_0,
@@ -7676,7 +7676,7 @@ pub unsafe extern "C" fn sqlite3Select(
                                                                 crate::src::src::vdbeaux::sqlite3VdbeExplain(
                                                                     
                                                                     pParse as *mut crate::src::headers::sqliteInt_h::Parse,
-                                                                    1 as crate::src::ext::rtree::rtree::u8_0,
+                                                                    1 as u8,
                                                                     b"MATERIALIZE %!S\0" as *const u8
                                                                         as *const ::core::ffi::c_char,
                                                                     pItem_0,
@@ -7745,7 +7745,7 @@ pub unsafe extern "C" fn sqlite3Select(
                                                         & crate::src::headers::sqliteInt_h::SF_Distinct as crate::src::ext::rtree::rtree::u32_0
                                                         != 0 as crate::src::ext::rtree::rtree::u32_0)
                                                         as ::core::ffi::c_int
-                                                        as crate::src::ext::rtree::rtree::u8_0;
+                                                        as u8;
                                                     if __p_ref.selFlags
                                                         & (crate::src::headers::sqliteInt_h::SF_Distinct | crate::src::headers::sqliteInt_h::SF_Aggregate) as crate::src::ext::rtree::rtree::u32_0
                                                         == crate::src::headers::sqliteInt_h::SF_Distinct as crate::src::ext::rtree::rtree::u32_0
@@ -7784,7 +7784,7 @@ pub unsafe extern "C" fn sqlite3Select(
                                                             }
                                                         }
                                                         __p_ref.selFlags |= crate::src::headers::sqliteInt_h::SF_Aggregate as crate::src::ext::rtree::rtree::u32_0;
-                                                        sDistinct.isTnct = 2 as crate::src::ext::rtree::rtree::u8_0;
+                                                        sDistinct.isTnct = 2 as u8;
                                                     }
                                                     if !sSort.pOrderBy.is_null() {
                                                         let mut pKeyInfo: *mut crate::src::headers::sqliteInt_h::KeyInfo =
@@ -7873,7 +7873,7 @@ pub unsafe extern "C" fn sqlite3Select(
                                                                         as *mut crate::src::headers::sqliteInt_h::ExprList_item)
                                                                         .offset(ii as isize))
                                                                     .pExpr)
-                                                                        .op = crate::src::parse::TK_NULL as crate::src::ext::rtree::rtree::u8_0;
+                                                                        .op = crate::src::parse::TK_NULL as u8;
                                                                 }
                                                                 ii += 1;
                                                             }
@@ -7895,12 +7895,12 @@ pub unsafe extern "C" fn sqlite3Select(
                                                         crate::src::src::vdbeaux::sqlite3VdbeChangeOpcode(
                                                             v,
                                                             sSort.addrSortIndex,
-                                                            crate::src::headers::opcodes_h::OP_SorterOpen as crate::src::ext::rtree::rtree::u8_0,
+                                                            crate::src::headers::opcodes_h::OP_SorterOpen as u8,
                                                         );
                                                         sSort.sortFlags = (sSort.sortFlags
                                                             as ::core::ffi::c_int
                                                             | SORTFLAG_UseSorter)
-                                                            as crate::src::ext::rtree::rtree::u8_0;
+                                                            as u8;
                                                     }
                                                     if __p_ref.selFlags & crate::src::headers::sqliteInt_h::SF_Distinct as crate::src::ext::rtree::rtree::u32_0 != 0 {
                                                         let fresh9 = __pParse_ref.nTab;
@@ -7926,10 +7926,10 @@ pub unsafe extern "C" fn sqlite3Select(
                                                             crate::src::src::btree::BTREE_UNORDERED as crate::src::fts5::u16_0,
                                                         );
                                                         sDistinct.eTnctType =
-                                                            crate::src::headers::sqliteInt_h::WHERE_DISTINCT_UNORDERED as crate::src::ext::rtree::rtree::u8_0;
+                                                            crate::src::headers::sqliteInt_h::WHERE_DISTINCT_UNORDERED as u8;
                                                     } else {
                                                         sDistinct.eTnctType =
-                                                            crate::src::headers::sqliteInt_h::WHERE_DISTINCT_NOOP as crate::src::ext::rtree::rtree::u8_0;
+                                                            crate::src::headers::sqliteInt_h::WHERE_DISTINCT_NOOP as u8;
                                                     }
                                                     if isAgg == 0 && pGroupBy.is_null() {
                                                         let mut wctrlFlags: crate::src::fts5::u16_0 = ((if sDistinct
@@ -7999,7 +7999,7 @@ pub unsafe extern "C" fn sqlite3Select(
                                                             {
                                                                 sDistinct.eTnctType =
                                                                     crate::src::src::r#where::sqlite3WhereIsDistinct(pWInfo)
-                                                                        as crate::src::ext::rtree::rtree::u8_0;
+                                                                        as u8;
                                                             }
                                                             if !sSort.pOrderBy.is_null() {
                                                                 sSort.nOBSat =
@@ -8149,7 +8149,7 @@ pub unsafe extern "C" fn sqlite3Select(
                                                                         .sortFlags
                                                                             as ::core::ffi::c_int
                                                                             & crate::src::headers::sqliteInt_h::KEYINFO_ORDER_DESC)
-                                                                            as crate::src::ext::rtree::rtree::u8_0;
+                                                                            as u8;
                                                                     (*(&raw mut __pGroupBy_ref.a
                                                                         as *mut crate::src::headers::sqliteInt_h::ExprList_item)
                                                                         .offset(ii_0 as isize))
@@ -8257,7 +8257,7 @@ pub unsafe extern "C" fn sqlite3Select(
                                                                 );
                                                             } else {
                                                                 minMaxFlag =
-                                                                    crate::src::headers::sqliteInt_h::WHERE_ORDERBY_NORMAL as crate::src::ext::rtree::rtree::u8_0;
+                                                                    crate::src::headers::sqliteInt_h::WHERE_ORDERBY_NORMAL as u8;
                                                             }
                                                             analyzeAggFuncArgs(
                                                                 pAggInfo,
@@ -8470,7 +8470,7 @@ pub unsafe extern "C" fn sqlite3Select(
                                                                             crate::src::src::vdbeaux::sqlite3VdbeExplain(
                                                                                 
                                                                                 pParse as *mut crate::src::headers::sqliteInt_h::Parse,
-                                                                                0 as crate::src::ext::rtree::rtree::u8_0,
+                                                                                0 as u8,
                                                                                 b"USE TEMP B-TREE FOR %s\0" as *const u8
                                                                                     as *const ::core::ffi::c_char,
                                                                                 if sDistinct.isTnct as ::core::ffi::c_int != 0
@@ -8516,12 +8516,12 @@ pub unsafe extern "C" fn sqlite3Select(
                                                                                 pGroupBy as *mut crate::src::headers::sqliteInt_h::ExprList,
                                                                                 regBase,
                                                                                 0 as ::core::ffi::c_int,
-                                                                                0 as crate::src::ext::rtree::rtree::u8_0,
+                                                                                0 as u8,
                                                                             );
                                                                             j = nGroupBy;
                                                                             (*pAggInfo)
                                                                                 .directMode =
-                                                                                1 as crate::src::ext::rtree::rtree::u8_0;
+                                                                                1 as u8;
                                                                             i = 0 as ::core::ffi::c_int;
                                                                             while i
                                                                                 < (*pAggInfo)
@@ -8548,7 +8548,7 @@ pub unsafe extern "C" fn sqlite3Select(
                                                                             }
                                                                             (*pAggInfo)
                                                                                 .directMode =
-                                                                                0 as crate::src::ext::rtree::rtree::u8_0;
+                                                                                0 as u8;
                                                                             regRecord =
                                                                                 crate::src::src::expr::sqlite3GetTempReg(
                                                                                     
@@ -8606,7 +8606,7 @@ pub unsafe extern "C" fn sqlite3Select(
                                                                             );
                                                                             (*pAggInfo)
                                                                                 .useSortingIdx =
-                                                                                1 as crate::src::ext::rtree::rtree::u8_0;
+                                                                                1 as u8;
                                                                         }
                                                                         if !(*pParse)
                                                                             .pIdxEpr
@@ -8655,7 +8655,7 @@ pub unsafe extern "C" fn sqlite3Select(
                                                                             } else {
                                                                                 (*pAggInfo)
                                                                                     .directMode =
-                                                                                    1 as crate::src::ext::rtree::rtree::u8_0;
+                                                                                    1 as u8;
                                                                                 crate::src::src::expr::sqlite3ExprCode(
                                                                                     
                                                                                     pParse as *mut crate::src::headers::sqliteInt_h::Parse,
@@ -8906,7 +8906,7 @@ pub unsafe extern "C" fn sqlite3Select(
                                                                             pParse as *mut crate::src::headers::sqliteInt_h::Parse,
                                                                             iDb_0,
                                                                             __pTab_0_ref.tnum,
-                                                                            0 as crate::src::ext::rtree::rtree::u8_0,
+                                                                            0 as u8,
                                                                             __pTab_0_ref.zName,
                                                                         );
                                                                         if !(__pTab_0_ref.tabFlags

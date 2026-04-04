@@ -55,6 +55,16 @@ Verify c_variadic feature isolation: only in printf_c_variadic.rs
       - [fts3_write_no_format_sql_1arg](#fts3_write_no_format_sql_1arg)
       - [fts3_write_no_format_sql_2args](#fts3_write_no_format_sql_2args)
       - [fts3_write_no_format_sql_3args](#fts3_write_no_format_sql_3args)
+    - [Feature: fts5IndexPrepareStmt_safety](#fts5indexpreparestmt_safety)
+      - [fts5IndexPrepareStmt_no_unsafe_extern_c](#fts5indexpreparestmt_no_unsafe_extern_c)
+      - [fts5IndexPrepareStmt_no_unsafe_keyword](#fts5indexpreparestmt_no_unsafe_keyword)
+      - [fts5IndexPrepareStmt_safe_wrapper_no_unsafe_keyword](#fts5indexpreparestmt_safe_wrapper_no_unsafe_keyword)
+    - [Feature: fts5WriteDlidxGrow_safety](#fts5writedlidxgrow_safety)
+      - [fts5WriteDlidxGrow_safe_wrapper_no_unsafe_keyword](#fts5writedlidxgrow_safe_wrapper_no_unsafe_keyword)
+    - [Feature: fts5WriteInit_safety](#fts5writeinit_safety)
+      - [fts5WriteInit_no_libc](#fts5writeinit_no_libc)
+      - [fts5WriteInit_no_unsafe_extern_c](#fts5writeinit_no_unsafe_extern_c)
+      - [fts5WriteInit_no_unsafe_wrapping](#fts5writeinit_no_unsafe_wrapping)
     - [Feature: fts5_BufferAppendPrintf_variadic_removal](#fts5_bufferappendprintf_variadic_removal)
       - [prev_sqlite3Fts5Mprintf_complete](#prev_sqlite3fts5mprintf_complete)
       - [sqlite3Fts5BufferAppendPrintf_callsites_use_sqlite_printf](#sqlite3fts5bufferappendprintf_callsites_use_sqlite_printf)
@@ -99,6 +109,8 @@ Verify c_variadic feature isolation: only in printf_c_variadic.rs
       - [fts5_no_sqlite3_mprintf](#fts5_no_sqlite3_mprintf)
       - [fts5_no_sqlite3_snprintf](#fts5_no_sqlite3_snprintf)
       - [fts5_uses_sqlite_printf_macro](#fts5_uses_sqlite_printf_macro)
+    - [Feature: fts5_no_libc_global](#fts5_no_libc_global)
+      - [fts5_no_libc_calls](#fts5_no_libc_calls)
     - [Feature: func_percentError_variadic_removal](#func_percenterror_variadic_removal)
       - [percentError_callsites_use_sqlite_printf](#percenterror_callsites_use_sqlite_printf)
       - [percentError_defined_nonvariadic_in_func](#percenterror_defined_nonvariadic_in_func)
@@ -119,6 +131,13 @@ Verify c_variadic feature isolation: only in printf_c_variadic.rs
     - [Feature: rtree_c_variadic_migration](#rtree_c_variadic_migration)
       - [rtree_no_sqlite3_mprintf](#rtree_no_sqlite3_mprintf)
       - [rtree_uses_sqlite_printf_macro](#rtree_uses_sqlite_printf_macro)
+<<<<<<< HEAD
+=======
+    - [Feature: sqlite3Fts5BufferSize_safety](#sqlite3fts5buffersize_safety)
+      - [sqlite3Fts5BufferSize_no_unsafe_extern_c](#sqlite3fts5buffersize_no_unsafe_extern_c)
+      - [sqlite3Fts5BufferSize_no_unsafe_keyword](#sqlite3fts5buffersize_no_unsafe_keyword)
+      - [sqlite3Fts5BufferSize_safe_wrapper_no_unsafe_keyword](#sqlite3fts5buffersize_safe_wrapper_no_unsafe_keyword)
+>>>>>>> origin/master-no-abi
     - [Feature: sqlite3session_and_snprintf_migration](#sqlite3session_and_snprintf_migration)
       - [sqlite3session_no_printf_c_variadic](#sqlite3session_no_printf_c_variadic)
       - [sqlite3session_no_sqlite3_mprintf](#sqlite3session_no_sqlite3_mprintf)
@@ -382,6 +401,55 @@ Verify c_variadic feature isolation: only in printf_c_variadic.rs
 **Description:** fts3_write.rs must not use format_sql_3args function
 **Command:** `grep -n "format_sql_3args" "$WORKSPACE_ROOT/src/ext/fts3/fts3_write.rs" 2>/dev/null && exit 1 || exit 0`
 
+### Feature: fts5IndexPrepareStmt_safety
+**Refactor fts5IndexPrepareStmt to safe references**
+
+**Goals:**
+- Remove unsafe extern C from fts5IndexPrepareStmt
+- Replace raw pointer parameters with safe mutable references
+
+#### fts5IndexPrepareStmt_no_unsafe_extern_c
+**Description:** fts5IndexPrepareStmt must not have unsafe extern C signature
+**Command:** `awk '/^[^/]*fn fts5IndexPrepareStmt/,/^}/' "$PROJECT_ROOT/src/fts5.rs" 2>/dev/null | grep -E 'unsafe\s+extern' && exit 1 || exit 0`
+
+#### fts5IndexPrepareStmt_no_unsafe_keyword
+**Description:** fts5IndexPrepareStmt must be completely safe - no unsafe keyword anywhere
+**Command:** `awk '/^[^/]*fn fts5IndexPrepareStmt/,/^}/' "$PROJECT_ROOT/src/fts5.rs" 2>/dev/null | grep -E '\bunsafe\b' && exit 1 || exit 0`
+
+#### fts5IndexPrepareStmt_safe_wrapper_no_unsafe_keyword
+**Description:** _fts5IndexPrepareStmt_safe_wrapper must not have unsafe keyword in signature
+**Command:** `awk '/^fn _fts5IndexPrepareStmt_safe_wrapper/,/^}/' "$PROJECT_ROOT/src/fts5.rs" 2>/dev/null | grep -E '^fn ' | grep -E 'unsafe' && exit 1 || exit 0`
+
+### Feature: fts5WriteDlidxGrow_safety
+**Refactor fts5WriteDlidxGrow core logic to safe function via wrapper**
+
+**Goals:**
+- Create _fts5WriteDlidxGrow_safe_wrapper function with no unsafe keyword
+- Ensure all unsafe operations are wrapped in minimal unsafe blocks
+
+#### fts5WriteDlidxGrow_safe_wrapper_no_unsafe_keyword
+**Description:** _fts5WriteDlidxGrow_safe_wrapper must not have unsafe keyword in signature
+**Command:** `awk '/^fn _fts5WriteDlidxGrow_safe_wrapper/,/^}/' "$PROJECT_ROOT/src/fts5.rs" 2>/dev/null | grep -E '^fn ' | grep -E 'unsafe' && exit 1 || exit 0`
+
+### Feature: fts5WriteInit_safety
+**Ensure fts5WriteInit contains no unsafe extern "C" or unsafe blocks**
+
+**Goals:**
+- Remove all unsafe extern "C" declarations from fts5WriteInit
+- Remove all unsafe {} blocks from fts5WriteInit
+
+#### fts5WriteInit_no_libc
+**Description:** fts5WriteInit must not use libc functions
+**Command:** `awk '/^[^/]*fn fts5WriteInit/,/^}/' "$PROJECT_ROOT/src/fts5.rs" 2>/dev/null | grep -E 'libc::' && exit 1 || exit 0`
+
+#### fts5WriteInit_no_unsafe_extern_c
+**Description:** fts5WriteInit must not contain unsafe extern "C"
+**Command:** `awk '/^[^/]*fn fts5WriteInit/,/^}/' "$PROJECT_ROOT/src/fts5.rs" 2>/dev/null | grep -E 'unsafe\s+extern\s+"C"' && exit 1 || exit 0`
+
+#### fts5WriteInit_no_unsafe_wrapping
+**Description:** fts5WriteInit body must not be wrapped in unsafe block - entire body must be safe
+**Command:** `awk '/^[^/]*fn fts5WriteInit/,/^}/' "$PROJECT_ROOT/src/fts5.rs" 2>/dev/null | grep -E '^\s*unsafe\s*$' && exit 1 || exit 0`
+
 ### Feature: fts5_BufferAppendPrintf_variadic_removal
 **Remove variadic sqlite3Fts5BufferAppendPrintf from printf_c_variadic; redefine non-variadic in fts5.rs using sqlite_printf!**
 
@@ -599,6 +667,17 @@ Verify c_variadic feature isolation: only in printf_c_variadic.rs
 **Description:** fts5.rs must use sqlite_printf! macro for string formatting
 **Command:** `grep -c "sqlite_printf!" "$WORKSPACE_ROOT/src/fts5.rs" 2>/dev/null | grep -qE "^[1-9]" && exit 0 || exit 1`
 
+### Feature: fts5_no_libc_global
+**Ensure fts5.rs contains no libc:: calls (only external C FFI allowed)**
+
+**Goals:**
+- fts5.rs must not contain libc:: direct calls
+- All C interop must go through safe wrappers or external C FFI only
+
+#### fts5_no_libc_calls
+**Description:** fts5.rs must not contain libc:: calls - use safe wrappers or external C FFI instead
+**Command:** `grep -q "libc::" "$PROJECT_ROOT/src/fts5.rs" && exit 1 || exit 0`
+
 ### Feature: func_percentError_variadic_removal
 **Remove variadic percentError from printf_c_variadic; redefine non-variadic in func.rs using sqlite_printf!**
 
@@ -698,6 +777,28 @@ Verify c_variadic feature isolation: only in printf_c_variadic.rs
 **Description:** rtree.rs must use sqlite_printf! macro for string formatting
 **Command:** `grep -c "sqlite_printf!" "$WORKSPACE_ROOT/src/ext/rtree/rtree.rs" 2>/dev/null | grep -qE "^[1-9]" && exit 0 || exit 1`
 
+<<<<<<< HEAD
+=======
+### Feature: sqlite3Fts5BufferSize_safety
+**Refactor sqlite3Fts5BufferSize to safe references**
+
+**Goals:**
+- Remove unsafe extern C from sqlite3Fts5BufferSize
+- Replace raw pointer parameters with safe mutable references
+
+#### sqlite3Fts5BufferSize_no_unsafe_extern_c
+**Description:** sqlite3Fts5BufferSize must not have unsafe extern C signature
+**Command:** `awk '/^[^/]*fn sqlite3Fts5BufferSize/,/^}/' "$PROJECT_ROOT/src/fts5.rs" 2>/dev/null | grep -E 'unsafe\s+extern' && exit 1 || exit 0`
+
+#### sqlite3Fts5BufferSize_no_unsafe_keyword
+**Description:** sqlite3Fts5BufferSize must be completely safe - no unsafe keyword anywhere
+**Command:** `awk '/^[^/]*fn sqlite3Fts5BufferSize/,/^}/' "$PROJECT_ROOT/src/fts5.rs" 2>/dev/null | grep -E '\bunsafe\b' && exit 1 || exit 0`
+
+#### sqlite3Fts5BufferSize_safe_wrapper_no_unsafe_keyword
+**Description:** _sqlite3Fts5BufferSize_safe_wrapper must not have unsafe keyword in signature
+**Command:** `awk '/^fn _sqlite3Fts5BufferSize_safe_wrapper/,/^}/' "$PROJECT_ROOT/src/fts5.rs" 2>/dev/null | grep -E '^fn ' | grep -E 'unsafe' && exit 1 || exit 0`
+
+>>>>>>> origin/master-no-abi
 ### Feature: sqlite3session_and_snprintf_migration
 **Combined migration of src/ext/session/sqlite3session.rs away from c_variadic functions and implementation of sqlite_snprintf! proc macro**
 

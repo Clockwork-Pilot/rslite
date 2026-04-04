@@ -761,6 +761,114 @@
         }
       }
     },
+    "fts5WriteInit_safety": {
+      "type": "Feature",
+      "model_version": 1,
+      "id": "fts5WriteInit_safety",
+      "description": "Ensure fts5WriteInit contains no unsafe extern \"C\" or unsafe blocks",
+      "goals": [
+        "Remove all unsafe extern \"C\" declarations from fts5WriteInit",
+        "Remove all unsafe {} blocks from fts5WriteInit"
+      ],
+      "constraints": {
+        "fts5WriteInit_no_unsafe_extern_c": {
+          "id": "fts5WriteInit_no_unsafe_extern_c",
+          "cmd": "awk '/^[^/]*fn fts5WriteInit/,/^}/' \"$PROJECT_ROOT/src/fts5.rs\" 2>/dev/null | grep -E 'unsafe\\s+extern\\s+\"C\"' && exit 1 || exit 0",
+          "description": "fts5WriteInit must not contain unsafe extern \"C\"",
+          "fails_count": 1
+        },
+        "fts5WriteInit_no_libc": {
+          "id": "fts5WriteInit_no_libc",
+          "cmd": "awk '/^[^/]*fn fts5WriteInit/,/^}/' \"$PROJECT_ROOT/src/fts5.rs\" 2>/dev/null | grep -E 'libc::' && exit 1 || exit 0",
+          "description": "fts5WriteInit must not use libc functions",
+          "fails_count": 1
+        },
+        "fts5WriteInit_no_unsafe_wrapping": {
+          "id": "fts5WriteInit_no_unsafe_wrapping",
+          "cmd": "awk '/^[^/]*fn fts5WriteInit/,/^}/' \"$PROJECT_ROOT/src/fts5.rs\" 2>/dev/null | grep -E '^\\s*unsafe\\s*$' && exit 1 || exit 0",
+          "description": "fts5WriteInit body must not be wrapped in unsafe block - entire body must be safe",
+          "fails_count": 1
+        }
+      }
+    },
+    "sqlite3Fts5BufferSize_safety": {
+      "type": "Feature",
+      "model_version": 1,
+      "id": "sqlite3Fts5BufferSize_safety",
+      "description": "Refactor sqlite3Fts5BufferSize to safe references",
+      "goals": [
+        "Remove unsafe extern C from sqlite3Fts5BufferSize",
+        "Replace raw pointer parameters with safe mutable references"
+      ],
+      "constraints": {
+        "sqlite3Fts5BufferSize_no_unsafe_extern_c": {
+          "id": "sqlite3Fts5BufferSize_no_unsafe_extern_c",
+          "cmd": "awk '/^[^/]*fn sqlite3Fts5BufferSize/,/^}/' \"$PROJECT_ROOT/src/fts5.rs\" 2>/dev/null | grep -E 'unsafe\\s+extern' && exit 1 || exit 0",
+          "description": "sqlite3Fts5BufferSize must not have unsafe extern C signature",
+          "fails_count": 1
+        },
+        "sqlite3Fts5BufferSize_no_unsafe_keyword": {
+          "id": "sqlite3Fts5BufferSize_no_unsafe_keyword",
+          "cmd": "awk '/^[^/]*fn sqlite3Fts5BufferSize/,/^}/' \"$PROJECT_ROOT/src/fts5.rs\" 2>/dev/null | grep -E '\\bunsafe\\b' && exit 1 || exit 0",
+          "description": "sqlite3Fts5BufferSize must be completely safe - no unsafe keyword anywhere",
+          "fails_count": 1
+        },
+        "sqlite3Fts5BufferSize_safe_wrapper_no_unsafe_keyword": {
+          "id": "sqlite3Fts5BufferSize_safe_wrapper_no_unsafe_keyword",
+          "cmd": "awk '/^fn _sqlite3Fts5BufferSize_safe_wrapper/,/^}/' \"$PROJECT_ROOT/src/fts5.rs\" 2>/dev/null | grep -E '^fn ' | grep -E 'unsafe' && exit 1 || exit 0",
+          "description": "_sqlite3Fts5BufferSize_safe_wrapper must not have unsafe keyword in signature",
+          "fails_count": 1
+        }
+      }
+    },
+    "fts5IndexPrepareStmt_safety": {
+      "type": "Feature",
+      "model_version": 1,
+      "id": "fts5IndexPrepareStmt_safety",
+      "description": "Refactor fts5IndexPrepareStmt to safe references",
+      "goals": [
+        "Remove unsafe extern C from fts5IndexPrepareStmt",
+        "Replace raw pointer parameters with safe mutable references"
+      ],
+      "constraints": {
+        "fts5IndexPrepareStmt_no_unsafe_extern_c": {
+          "id": "fts5IndexPrepareStmt_no_unsafe_extern_c",
+          "cmd": "awk '/^[^/]*fn fts5IndexPrepareStmt/,/^}/' \"$PROJECT_ROOT/src/fts5.rs\" 2>/dev/null | grep -E 'unsafe\\s+extern' && exit 1 || exit 0",
+          "description": "fts5IndexPrepareStmt must not have unsafe extern C signature",
+          "fails_count": 1
+        },
+        "fts5IndexPrepareStmt_no_unsafe_keyword": {
+          "id": "fts5IndexPrepareStmt_no_unsafe_keyword",
+          "cmd": "awk '/^[^/]*fn fts5IndexPrepareStmt/,/^}/' \"$PROJECT_ROOT/src/fts5.rs\" 2>/dev/null | grep -E '\\bunsafe\\b' && exit 1 || exit 0",
+          "description": "fts5IndexPrepareStmt must be completely safe - no unsafe keyword anywhere",
+          "fails_count": 1
+        },
+        "fts5IndexPrepareStmt_safe_wrapper_no_unsafe_keyword": {
+          "id": "fts5IndexPrepareStmt_safe_wrapper_no_unsafe_keyword",
+          "cmd": "awk '/^fn _fts5IndexPrepareStmt_safe_wrapper/,/^}/' \"$PROJECT_ROOT/src/fts5.rs\" 2>/dev/null | grep -E '^fn ' | grep -E 'unsafe' && exit 1 || exit 0",
+          "description": "_fts5IndexPrepareStmt_safe_wrapper must not have unsafe keyword in signature",
+          "fails_count": 1
+        }
+      }
+    },
+    "fts5WriteDlidxGrow_safety": {
+      "type": "Feature",
+      "model_version": 1,
+      "id": "fts5WriteDlidxGrow_safety",
+      "description": "Refactor fts5WriteDlidxGrow core logic to safe function via wrapper",
+      "goals": [
+        "Create _fts5WriteDlidxGrow_safe_wrapper function with no unsafe keyword",
+        "Ensure all unsafe operations are wrapped in minimal unsafe blocks"
+      ],
+      "constraints": {
+        "fts5WriteDlidxGrow_safe_wrapper_no_unsafe_keyword": {
+          "id": "fts5WriteDlidxGrow_safe_wrapper_no_unsafe_keyword",
+          "cmd": "awk '/^fn _fts5WriteDlidxGrow_safe_wrapper/,/^}/' \"$PROJECT_ROOT/src/fts5.rs\" 2>/dev/null | grep -E '^fn ' | grep -E 'unsafe' && exit 1 || exit 0",
+          "description": "_fts5WriteDlidxGrow_safe_wrapper must not have unsafe keyword in signature",
+          "fails_count": 1
+        }
+      }
+    },
     "fts5_PrintfAppend_variadic_removal": {
       "type": "Feature",
       "model_version": 1,
@@ -948,9 +1056,6 @@
         "Remove from printf_c_variadic.rs and pub use re-export. Define private non-variadic fn fts5ExecPrintf(db, pzErr, zSql: *mut c_char) in fts5.rs.",
         "Each call site passes sqlite_printf!(fmt, args...) as zSql. Depends on fts3_dead_code_removal being complete."
       ],
-      "depends_on": [
-        "fts3_dead_code_removal"
-      ],
       "constraints": {
         "prev_fts3_dead_code_complete": {
           "id": "prev_fts3_dead_code_complete",
@@ -987,9 +1092,6 @@
         "sqlite3Fts5ParseError in printf_c_variadic.rs: if pParse.rc==OK, sets pParse.zErr=sqlite3_vmprintf(zFmt,args) and pParse.rc=SQLITE_ERROR. 10 call sites in fts5.rs.",
         "Remove from printf_c_variadic.rs and pub use re-export. Define private non-variadic fn in fts5.rs taking *mut c_char.",
         "Each call site passes sqlite_printf!(fmt, args...) as zErr. Depends on fts5_ExecPrintf_variadic_removal being complete."
-      ],
-      "depends_on": [
-        "fts5_ExecPrintf_variadic_removal"
       ],
       "constraints": {
         "prev_fts5ExecPrintf_complete": {
@@ -1028,9 +1130,6 @@
         "Remove from printf_c_variadic.rs and pub use re-export. Define private non-variadic fn returning *mut c_char in fts5.rs.",
         "Each call site passes sqlite_printf!(fmt, args...) directly. Depends on fts5_ParseError_variadic_removal being complete."
       ],
-      "depends_on": [
-        "fts5_ParseError_variadic_removal"
-      ],
       "constraints": {
         "prev_sqlite3Fts5ParseError_complete": {
           "id": "prev_sqlite3Fts5ParseError_complete",
@@ -1068,9 +1167,6 @@
         "Remove from printf_c_variadic.rs and pub use re-export. Define private non-variadic fn in fts5.rs taking pre-formatted *mut c_char.",
         "Each call site passes sqlite_printf!(fmt, args...) as the string arg. Depends on fts5_Mprintf_variadic_removal being complete."
       ],
-      "depends_on": [
-        "fts5_Mprintf_variadic_removal"
-      ],
       "constraints": {
         "prev_sqlite3Fts5Mprintf_complete": {
           "id": "prev_sqlite3Fts5Mprintf_complete",
@@ -1094,6 +1190,24 @@
           "id": "sqlite3Fts5BufferAppendPrintf_callsites_use_sqlite_printf",
           "cmd": "[ $(grep -c \"sqlite_printf!\" \"${CLAUDE_PROJECT_ROOT}/src/fts5.rs\") -ge 159 ]",
           "description": "Behavioral: fts5.rs must have at least 159 sqlite_printf! calls (133 + 26 sqlite3Fts5BufferAppendPrintf call sites)",
+          "fails_count": 1
+        }
+      }
+    },
+    "fts5_no_libc_global": {
+      "type": "Feature",
+      "model_version": 1,
+      "id": "fts5_no_libc_global",
+      "description": "Ensure fts5.rs contains no libc:: calls (only external C FFI allowed)",
+      "goals": [
+        "fts5.rs must not contain libc:: direct calls",
+        "All C interop must go through safe wrappers or external C FFI only"
+      ],
+      "constraints": {
+        "fts5_no_libc_calls": {
+          "id": "fts5_no_libc_calls",
+          "cmd": "grep -q \"libc::\" \"$PROJECT_ROOT/src/fts5.rs\" && exit 1 || exit 0",
+          "description": "fts5.rs must not contain libc:: calls - use safe wrappers or external C FFI instead",
           "fails_count": 1
         }
       }
