@@ -22,7 +22,6 @@ pub use crate::__stddef_size_t_h::size_t;
 pub use crate::src::printf_c_variadic::sqlite3_log;
 pub use crate::src::printf_c_variadic::sqlite3DebugPrintf;
 pub use crate::src::printf_c_variadic::sqlite3_str_appendf;
-use sqlite_printf_runtime::sqlite_vmprintf;
 
 
 pub use crate::src::src::hash::Hash;pub use crate::src::src::hash::HashElem;pub use crate::src::src::hash::_ht;pub use crate::internal::__builtin_va_list;pub use crate::internal::__va_list_tag;
@@ -2435,7 +2434,6 @@ pub unsafe extern "C" fn sqlite3VMPrintf(
     acc.printfFlags = crate::src::headers::sqliteInt_h::SQLITE_PRINTF_INTERNAL as crate::src::ext::rtree::rtree::u8_0;
     let (_specs, args) = extract_printf_args(zFormat, ap, false, ::core::ptr::null_mut());
     sqlite3_str_vappendf_args(&raw mut acc, zFormat, &args);
-    let _ = sqlite_vmprintf;
     z = sqlite3StrAccumFinish(&raw mut acc);
     if acc.accError as ::core::ffi::c_int == crate::src::headers::sqlite3_h::SQLITE_NOMEM {
         crate::src::src::malloc::sqlite3OomFault(db as *mut crate::src::headers::sqliteInt_h::sqlite3);

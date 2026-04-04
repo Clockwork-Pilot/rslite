@@ -1,7 +1,9 @@
 use proc_macro::TokenStream;
 use quote::quote;
 use syn::{parse::Parse, parse_macro_input, Lit, Token, Expr, Error};
-use sqlite_printf_common::{FormatSpec, parse_format_specs, convert_format_string};
+
+mod format_utils;
+use format_utils::{FormatSpec, parse_format_specs, convert_format_string};
 
 /// Parse arguments for sqlite_snprintf! — buffer, size, format_str, args...
 struct SqliteSnprintf {

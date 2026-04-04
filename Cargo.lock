@@ -419,24 +419,12 @@ dependencies = [
 ]
 
 [[package]]
-name = "sqlite-printf-common"
-version = "0.0.0"
-
-[[package]]
 name = "sqlite-printf-macros"
 version = "0.0.0"
 dependencies = [
  "proc-macro2",
  "quote",
- "sqlite-printf-common",
  "syn 2.0.106",
-]
-
-[[package]]
-name = "sqlite-printf-runtime"
-version = "0.0.0"
-dependencies = [
- "sqlite-printf-common",
 ]
 
 [[package]]
@@ -448,7 +436,6 @@ dependencies = [
  "parking_lot 0.10.2",
  "snafu",
  "sqlite-printf-macros",
- "sqlite-printf-runtime",
  "strum_macros",
 ]
 

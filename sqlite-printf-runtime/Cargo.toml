@@ -1,8 +1,0 @@
-[package]
-name = "sqlite-printf-runtime"
-version = "0.0.0"
-edition = "2024"
-publish = false
-
-[dependencies]
-sqlite-printf-common = { path = "../sqlite-printf-common" }

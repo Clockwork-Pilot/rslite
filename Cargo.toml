@@ -1,9 +1,7 @@
 [workspace]
 members = [
     "crust-tclsqlite",
-    "sqlite-printf-common",
     "sqlite-printf-macros",
-    "sqlite-printf-runtime",
     "crust-sqlite-shell",
 ]
 [package]
@@ -27,7 +25,6 @@ libc = "0.2"
 parking_lot = "0.10.2"
 snafu = "0.7"
 sqlite-printf-macros = { path = "sqlite-printf-macros" }
-sqlite-printf-runtime = { path = "sqlite-printf-runtime" }
 strum_macros = "0.27"
 
 [features]
