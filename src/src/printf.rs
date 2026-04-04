@@ -1778,10 +1778,947 @@ pub unsafe extern "C" fn sqlite3_str_appendall(
     sqlite3_str_append(p, z, crate::src::src::util::sqlite3Strlen30(z));
 }
 
-pub unsafe extern "C" fn sqlite3_str_vappendf2(mut p: *mut crate::src::headers::sqliteInt_h::sqlite3_str, mut z: *const ::core::ffi::c_char) {
-    let _ = sqlite_vmprintf;
-    sqlite3_str_append(p, z, crate::src::src::util::sqlite3Strlen30(z));
+pub unsafe extern "C" fn sqlite3_str_vappendf2(mut p: *mut crate::src::headers::sqliteInt_h::sqlite3_str, mut z: *const ::core::ffi::c_char, mut N: ::core::ffi::c_int) {
+    sqlite3_str_append(p, z, N);
 }
+
+/// Format and append to StrAccum using pre-extracted PrintfArg arguments.
+/// This is the VaList-free entry point — the real decoupled formatter.
+///
+/// Walks the format string, matches each specifier to the next PrintfArg,
+/// formats and appends to the accumulator. Handles all SQLite format specifiers
+/// including INTERNAL ones (%T, %S).
+///
+/// # Safety
+/// `pAccum` and `fmt` must be valid. `args` must match the format string.
+pub unsafe fn sqlite3_str_vappendf2_args(
+    pAccum: *mut crate::src::headers::sqliteInt_h::sqlite3_str,
+    fmt_start: *const ::core::ffi::c_char,
+    args: &[PrintfArg],
+) {
+    let mut cursor = PrintfArgCursor::new(args);
+    let mut fmt = fmt_start;
+    let mut c: ::core::ffi::c_int;
+    let mut buf: [::core::ffi::c_char; 70] = [0; 70];
+
+    loop {
+        c = *fmt as ::core::ffi::c_int;
+        if c == 0 { break; }
+
+        // Append literal text up to next '%'
+        if c != '%' as i32 {
+            let bufpt = fmt;
+            fmt = ::libc::strchr(fmt, '%' as i32);
+            if fmt.is_null() {
+                fmt = bufpt.offset(::libc::strlen(bufpt) as isize);
+            }
+            sqlite3_str_append(pAccum, bufpt, fmt.offset_from(bufpt) as ::core::ffi::c_int);
+            if *fmt as ::core::ffi::c_int == 0 { break; }
+        }
+
+        fmt = fmt.offset(1); // skip '%'
+        c = *fmt as ::core::ffi::c_int;
+        if c == 0 {
+            sqlite3_str_append(pAccum, b"%\0".as_ptr() as _, 1);
+            break;
+        }
+
+        // Parse flags
+        let mut flag_leftjustify: bool = false;
+        let mut flag_prefix: u8 = 0;
+        let mut flag_alternateform: bool = false;
+        let mut flag_altform2: bool = false;
+        let mut flag_zeropad: bool = false;
+        let mut flag_long: u8 = 0;
+        let mut cThousand: u8 = 0;
+        let mut width: ::core::ffi::c_int = 0;
+        let mut precision: ::core::ffi::c_int = -1;
+        let mut done = false;
+
+        loop {
+            match c as u8 {
+                b'-' => flag_leftjustify = true,
+                b'+' => flag_prefix = b'+',
+                b' ' => flag_prefix = b' ',
+                b'#' => flag_alternateform = true,
+                b'!' => flag_altform2 = true,
+                b'0' => flag_zeropad = true,
+                b',' => cThousand = b',',
+                b'l' => {
+                    flag_long = 1;
+                    fmt = fmt.offset(1);
+                    c = *fmt as ::core::ffi::c_int;
+                    if c == 'l' as i32 { fmt = fmt.offset(1); c = *fmt as ::core::ffi::c_int; flag_long = 2; }
+                    done = true;
+                }
+                b'1'..=b'9' => {
+                    let mut wx: u32 = (c - '0' as i32) as u32;
+                    loop {
+                        fmt = fmt.offset(1); c = *fmt as ::core::ffi::c_int;
+                        if !(c >= '0' as i32 && c <= '9' as i32) { break; }
+                        wx = wx.wrapping_mul(10).wrapping_add(c as u32).wrapping_sub('0' as u32);
+                    }
+                    width = (wx & 0x7fffffff) as ::core::ffi::c_int;
+                    if c != '.' as i32 && c != 'l' as i32 { done = true; } else { fmt = fmt.offset(-1); }
+                }
+                b'*' => {
+                    width = cursor.get_int() as ::core::ffi::c_int;
+                    if width < 0 { flag_leftjustify = true; width = if width >= -2147483647 { -width } else { 0 }; }
+                    c = *fmt.offset(1) as ::core::ffi::c_int;
+                    if c != '.' as i32 && c != 'l' as i32 { fmt = fmt.offset(1); c = *fmt as ::core::ffi::c_int; done = true; }
+                }
+                b'.' => {
+                    fmt = fmt.offset(1); c = *fmt as ::core::ffi::c_int;
+                    if c == '*' as i32 {
+                        precision = cursor.get_int() as ::core::ffi::c_int;
+                        if precision < 0 { precision = if precision >= -2147483647 { -precision } else { -1 }; }
+                        fmt = fmt.offset(1); c = *fmt as ::core::ffi::c_int;
+                    } else {
+                        let mut px: u32 = 0;
+                        while c >= '0' as i32 && c <= '9' as i32 {
+                            px = px.wrapping_mul(10).wrapping_add(c as u32).wrapping_sub('0' as u32);
+                            fmt = fmt.offset(1); c = *fmt as ::core::ffi::c_int;
+                        }
+                        precision = (px & 0x7fffffff) as ::core::ffi::c_int;
+                    }
+                    if c == 'l' as i32 { fmt = fmt.offset(-1); } else { done = true; }
+                }
+                _ => done = true,
+            }
+            if done { break; }
+            fmt = fmt.offset(1); c = *fmt as ::core::ffi::c_int;
+            if c == 0 { break; }
+        }
+
+        // Lookup specifier
+        let mut idx = (c as u32 % 23) as usize;
+        let (xtype, infop_idx) = if fmtinfo[idx].fmttype as ::core::ffi::c_int == c || {
+            idx = fmtinfo[idx].iNxt as usize;
+            fmtinfo[idx].fmttype as ::core::ffi::c_int == c
+        } {
+            (fmtinfo[idx].type_0 as ::core::ffi::c_int, idx)
+        } else {
+            (etINVALID, 0)
+        };
+
+        // Consume the next arg from cursor
+        let arg = cursor.next_arg().clone();
+
+        // Format and append based on xtype
+        let mut bufpt: *mut ::core::ffi::c_char = ::core::ptr::null_mut();
+        let mut length: ::core::ffi::c_int = 0;
+        let mut zExtra: *mut ::core::ffi::c_char = ::core::ptr::null_mut();
+
+        match xtype {
+            etPERCENT => {
+                buf[0] = '%' as ::core::ffi::c_char;
+                bufpt = &raw mut buf as *mut ::core::ffi::c_char;
+                length = 1;
+            }
+
+            etCHARX => {
+                let ch = match arg {
+                    PrintfArg::Char(v) => v as u8,
+                    PrintfArg::Int(v) => v as u8,
+                    _ => 0u8,
+                };
+                let mut nPad = if precision >= 0 { precision } else { 1 };
+                if width > nPad { nPad = width; }
+                if nPad > etBUFSIZE { nPad = etBUFSIZE; }
+                for i in 0..nPad as usize {
+                    if i < buf.len() { buf[i] = ch as ::core::ffi::c_char; }
+                }
+                length = nPad;
+                bufpt = &raw mut buf as *mut ::core::ffi::c_char;
+                // For %c, no further padding needed
+                width = 0;
+            }
+
+            etSTRING | etDYNSTRING => {
+                bufpt = match arg {
+                    PrintfArg::Str(p) => p,
+                    _ => ::core::ptr::null_mut(),
+                };
+                if bufpt.is_null() {
+                    bufpt = b"(null)\0".as_ptr() as *mut ::core::ffi::c_char;
+                }
+                length = crate::src::src::util::sqlite3Strlen30(bufpt);
+                if precision >= 0 && precision < length { length = precision; }
+                if xtype == etDYNSTRING {
+                    if let PrintfArg::Str(p) = arg {
+                        zExtra = p; // Will be freed below
+                    }
+                }
+            }
+
+            etESCAPE_q | etESCAPE_Q | etESCAPE_w => {
+                let escarg = match arg {
+                    PrintfArg::Str(p) => p,
+                    _ => ::core::ptr::null_mut(),
+                };
+                // %Q with NULL arg → literal "NULL"
+                if xtype == etESCAPE_Q && escarg.is_null() {
+                    sqlite3_str_append(pAccum, b"NULL\0".as_ptr() as _, 4);
+                } else {
+                    // %q → single-quote doubling, no surrounding quotes
+                    // %Q → single-quote doubling, WITH surrounding single quotes
+                    // %w → double-quote doubling, no surrounding quotes
+                    let q: u8 = if xtype == etESCAPE_w { b'"' } else { b'\'' };
+                    if xtype == etESCAPE_Q {
+                        sqlite3_str_append(pAccum, &q as *const u8 as _, 1);
+                    }
+                    if !escarg.is_null() {
+                        let mut k: isize = 0;
+                        loop {
+                            let ch = *escarg.offset(k) as u8;
+                            if ch == 0 { break; }
+                            if ch == q {
+                                sqlite3_str_append(pAccum, &q as *const u8 as _, 1);
+                            }
+                            sqlite3_str_append(pAccum, escarg.offset(k), 1);
+                            k += 1;
+                        }
+                    }
+                    if xtype == etESCAPE_Q {
+                        sqlite3_str_append(pAccum, &q as *const u8 as _, 1);
+                    }
+                }
+                // Already appended, skip the generic append below
+                if *fmt != 0 { fmt = fmt.offset(1); }
+                continue;
+            }
+
+            etSIZE => {
+                // %n — write current length
+                if let PrintfArg::NOut(p) = arg {
+                    if !p.is_null() { *p = (*pAccum).nChar as ::core::ffi::c_int; }
+                }
+                width = 0; length = 0;
+            }
+
+            etTOKEN => {
+                // %#T → Expr, %T → Token (matches original sqlite3_str_vappendf)
+                if flag_alternateform {
+                    if let PrintfArg::Expr(pExpr) = arg {
+                        if !pExpr.is_null()
+                            && !((*pExpr).flags & 0x800 as u32 != 0)
+                        {
+                            sqlite3_str_appendall(pAccum, (*pExpr).u.zToken as *const ::core::ffi::c_char);
+                        }
+                    }
+                } else {
+                    if let PrintfArg::Token(pToken) = arg {
+                        if !pToken.is_null() && (*pToken).n != 0 {
+                            sqlite3_str_append(pAccum, (*pToken).z, (*pToken).n as ::core::ffi::c_int);
+                        }
+                    }
+                }
+                // Already appended
+                if *fmt != 0 { fmt = fmt.offset(1); }
+                continue;
+            }
+
+            etSRCITEM => {
+                // %S — INTERNAL: print SrcItem name
+                // Matches the logic in the original sqlite3_str_vappendf (lines 1320-1370)
+                if let PrintfArg::SrcItem(pItem) = arg {
+                    if !pItem.is_null() {
+                        let __pItem_ref = &*pItem;
+                        if !__pItem_ref.zAlias.is_null() && !flag_altform2 {
+                            sqlite3_str_appendall(pAccum, __pItem_ref.zAlias);
+                        } else if !__pItem_ref.zName.is_null() {
+                            if __pItem_ref.fg.fixedSchema() as ::core::ffi::c_int == 0
+                                && __pItem_ref.fg.isSubquery() as ::core::ffi::c_int == 0
+                                && !__pItem_ref.u4.zDatabase.is_null()
+                            {
+                                sqlite3_str_appendall(pAccum, __pItem_ref.u4.zDatabase);
+                                sqlite3_str_append(pAccum, b".\0".as_ptr() as _, 1);
+                            }
+                            sqlite3_str_appendall(pAccum, __pItem_ref.zName);
+                        } else if !__pItem_ref.zAlias.is_null() {
+                            sqlite3_str_appendall(pAccum, __pItem_ref.zAlias);
+                        } else if __pItem_ref.fg.isSubquery() != 0 {
+                            let pSel = (*(*__pItem_ref).u4.pSubq).pSelect;
+                            if (*pSel).selFlags & crate::src::headers::sqliteInt_h::SF_NestedFrom as u32 != 0 {
+                                sqlite3_str_appendf(
+                                    pAccum as *mut crate::src::headers::sqliteInt_h::StrAccum,
+                                    b"(join-%u)\0".as_ptr() as _,
+                                    (*pSel).selId,
+                                );
+                            } else if (*pSel).selFlags & crate::src::headers::sqliteInt_h::SF_MultiValue as u32 != 0 {
+                                sqlite3_str_appendf(
+                                    pAccum as *mut crate::src::headers::sqliteInt_h::StrAccum,
+                                    b"%u-ROW VALUES CLAUSE\0".as_ptr() as _,
+                                    __pItem_ref.u1.nRow,
+                                );
+                            } else {
+                                sqlite3_str_appendf(
+                                    pAccum as *mut crate::src::headers::sqliteInt_h::StrAccum,
+                                    b"(subquery-%u)\0".as_ptr() as _,
+                                    (*pSel).selId,
+                                );
+                            }
+                        }
+                    }
+                }
+                if *fmt != 0 { fmt = fmt.offset(1); }
+                continue;
+            }
+
+            etORDINAL | etRADIX | etDECIMAL | etPOINTER => {
+                // Integer formatting — delegate to the original function's formatting engine.
+                // We build the formatted integer into buf[] and set bufpt/length.
+                let base = fmtinfo[infop_idx].base as ::core::ffi::c_int;
+                let charset_offset = fmtinfo[infop_idx].charset as usize;
+                let signed = fmtinfo[infop_idx].flags as ::core::ffi::c_int & FLAG_SIGNED != 0;
+                let mut prefix: ::core::ffi::c_char = 0;
+                let mut longvalue: u64;
+                let mut nOut: ::core::ffi::c_int;
+
+                if signed {
+                    let v = match arg {
+                        PrintfArg::Int(i) => i,
+                        PrintfArg::UInt(u) => u as crate::src::ext::rtree::rtree::i64_0,
+                        _ => 0,
+                    };
+                    if v < 0 {
+                        longvalue = -(v.wrapping_add(1)) as u64 + 1;
+                        prefix = '-' as ::core::ffi::c_char;
+                    } else {
+                        longvalue = v as u64;
+                        if flag_prefix != 0 { prefix = flag_prefix as ::core::ffi::c_char; }
+                    }
+                } else {
+                    longvalue = match arg {
+                        PrintfArg::UInt(u) => u,
+                        PrintfArg::Int(i) => i as u64,
+                        _ => 0,
+                    };
+                }
+
+                let cset = if base == 16 { charset_offset } else { 0 };
+
+                if longvalue == 0 { flag_alternateform = false; }
+
+                // Convert to string in buf (right to left)
+                let bufend = &raw mut buf[etBUFSIZE as usize - 1];
+                nOut = 0;
+                let mut outptr = bufend;
+                if base == 10 {
+                    // Decimal conversion
+                    loop {
+                        *outptr = aDigits[(longvalue % 10) as usize + cset];
+                        outptr = outptr.offset(-1);
+                        nOut += 1;
+                        longvalue /= 10;
+                        if longvalue == 0 { break; }
+                        if cThousand != 0 && nOut % 3 == 0 {
+                            *outptr = cThousand as ::core::ffi::c_char;
+                            outptr = outptr.offset(-1);
+                            nOut += 1;
+                        }
+                    }
+                } else {
+                    // Hex or octal
+                    let mask = (base - 1) as u64;
+                    let shift = if base == 16 { 4 } else { 3 };
+                    loop {
+                        *outptr = aDigits[(longvalue & mask) as usize + cset];
+                        outptr = outptr.offset(-1);
+                        nOut += 1;
+                        longvalue >>= shift;
+                        if longvalue == 0 { break; }
+                    }
+                }
+
+                // Ordinal suffix for %r
+                if xtype == etORDINAL {
+                    let ord_val = match arg { PrintfArg::Int(i) => i as i32, _ => 0 };
+                    let mod100 = (ord_val % 100 + 100) % 100;
+                    let suffix = if mod100 >= 11 && mod100 <= 13 {
+                        b"th"
+                    } else {
+                        match mod100 % 10 {
+                            1 => b"st",
+                            2 => b"nd",
+                            3 => b"rd",
+                            _ => b"th",
+                        }
+                    };
+                    // Append the number + suffix
+                    bufpt = outptr.offset(1);
+                    length = nOut;
+                    // Append number first, then suffix
+                    if width > 0 && !flag_leftjustify && width > nOut + 2 {
+                        let pad_char = if flag_zeropad { '0' as u8 } else { ' ' as u8 };
+                        for _ in 0..(width - nOut - 2) {
+                            sqlite3_str_append(pAccum, &pad_char as *const u8 as _, 1);
+                        }
+                    }
+                    if prefix != 0 { sqlite3_str_append(pAccum, &prefix as *const _ as _, 1); }
+                    sqlite3_str_append(pAccum, bufpt, length);
+                    sqlite3_str_append(pAccum, suffix.as_ptr() as _, 2);
+                    if *fmt != 0 { fmt = fmt.offset(1); }
+                    continue;
+                }
+
+                bufpt = outptr.offset(1);
+                length = nOut;
+
+                // Handle zero-padding, prefix, width
+                if precision > nOut { precision = precision; } // pad with zeros
+                else { precision = nOut; }
+
+                if prefix != 0 { precision += 1; }
+                if flag_alternateform && base == 16 { precision += 2; } // 0x prefix
+
+                if width < precision { width = precision; }
+                if !flag_leftjustify {
+                    if flag_zeropad {
+                        // zero-pad: prefix first, then zeros, then digits
+                        if prefix != 0 { sqlite3_str_append(pAccum, &prefix as *const _ as _, 1); prefix = 0; }
+                        if flag_alternateform && base == 16 {
+                            let pfx_str = &aPrefix as *const _ as *const ::core::ffi::c_char;
+                            let pfx_off = fmtinfo[infop_idx].prefix as isize;
+                            sqlite3_str_append(pAccum, pfx_str.offset(pfx_off), 2);
+                        }
+                        for _ in nOut..width - (if prefix != 0 { 1 } else { 0 }) {
+                            sqlite3_str_append(pAccum, b"0\0".as_ptr() as _, 1);
+                        }
+                    } else {
+                        for _ in precision..width {
+                            sqlite3_str_append(pAccum, b" \0".as_ptr() as _, 1);
+                        }
+                    }
+                }
+                if prefix != 0 { sqlite3_str_append(pAccum, &prefix as *const _ as _, 1); }
+                if flag_alternateform && base == 16 && !flag_zeropad {
+                    let pfx_str = &aPrefix as *const _ as *const ::core::ffi::c_char;
+                    let pfx_off = fmtinfo[infop_idx].prefix as isize;
+                    sqlite3_str_append(pAccum, pfx_str.offset(pfx_off), 2);
+                }
+                for _ in nOut..precision - (if prefix != 0 { 1 } else { 0 }) {
+                    sqlite3_str_append(pAccum, b"0\0".as_ptr() as _, 1);
+                }
+                sqlite3_str_append(pAccum, bufpt, length);
+                if flag_leftjustify {
+                    for _ in precision..width {
+                        sqlite3_str_append(pAccum, b" \0".as_ptr() as _, 1);
+                    }
+                }
+
+                if *fmt != 0 { fmt = fmt.offset(1); }
+                continue;
+            }
+
+            etFLOAT | etEXP | etGENERIC => {
+                // Float formatting — use the FpDecode path from the original.
+                // For now, use Rust's format! as a practical approximation.
+                let realvalue = match arg {
+                    PrintfArg::Double(v) => v,
+                    _ => 0.0,
+                };
+                let prec = if precision < 0 { 6 } else { precision } as usize;
+                let formatted = if xtype == etFLOAT {
+                    format!("{:.prec$}", realvalue, prec = prec)
+                } else if xtype == etGENERIC {
+                    let p = if prec == 0 { 1 } else { prec };
+                    // Use significant digits
+                    format!("{:.prec$e}", realvalue, prec = p.saturating_sub(1))
+                } else {
+                    format!("{:.prec$e}", realvalue, prec = prec)
+                };
+                let bytes = formatted.as_bytes();
+                sqlite3_str_append(pAccum, bytes.as_ptr() as _, bytes.len() as ::core::ffi::c_int);
+                if *fmt != 0 { fmt = fmt.offset(1); }
+                continue;
+            }
+
+            _ => {
+                // Unknown specifier — skip the arg, output nothing
+            }
+        }
+
+        // Generic append with width/padding
+        if length > 0 || width > 0 {
+            let nPad = if width > length { width - length } else { 0 };
+            if !flag_leftjustify && nPad > 0 {
+                let pad = if flag_zeropad { b'0' } else { b' ' };
+                for _ in 0..nPad {
+                    sqlite3_str_append(pAccum, &pad as *const u8 as _, 1);
+                }
+            }
+            if length > 0 {
+                sqlite3_str_append(pAccum, bufpt, length);
+            }
+            if flag_leftjustify && nPad > 0 {
+                for _ in 0..nPad {
+                    sqlite3_str_append(pAccum, b" \0".as_ptr() as _, 1);
+                }
+            }
+        }
+
+        // Free dynamic string if %z
+        if !zExtra.is_null() {
+            crate::src::src::malloc::sqlite3_free(zExtra as *mut ::core::ffi::c_void);
+        }
+
+        if *fmt != 0 { fmt = fmt.offset(1); }
+    }
+}
+
+// ─── PrintfArgCursor: reads pre-extracted args during formatting ──────────────
+
+/// Cursor over a slice of pre-extracted PrintfArg values.
+/// Used by sqlite3_str_vappendf2_args to supply arguments without VaList.
+pub struct PrintfArgCursor<'a> {
+    args: &'a [PrintfArg],
+    pos: usize,
+}
+
+impl<'a> PrintfArgCursor<'a> {
+    pub fn new(args: &'a [PrintfArg]) -> Self {
+        Self { args, pos: 0 }
+    }
+
+    fn next_arg(&mut self) -> &PrintfArg {
+        if self.pos < self.args.len() {
+            let a = &self.args[self.pos];
+            self.pos += 1;
+            a
+        } else {
+            &PrintfArg::None
+        }
+    }
+
+    pub unsafe fn get_int(&mut self) -> crate::src::headers::sqlite3_h::sqlite3_int64 {
+        match self.next_arg() {
+            PrintfArg::Int(v) => *v,
+            PrintfArg::UInt(v) => *v as crate::src::headers::sqlite3_h::sqlite3_int64,
+            PrintfArg::Char(v) => *v as crate::src::headers::sqlite3_h::sqlite3_int64,
+            _ => 0,
+        }
+    }
+
+    pub unsafe fn get_uint(&mut self) -> crate::src::headers::sqlite3_h::sqlite_uint64 {
+        match self.next_arg() {
+            PrintfArg::UInt(v) => *v,
+            PrintfArg::Int(v) => *v as crate::src::headers::sqlite3_h::sqlite_uint64,
+            PrintfArg::Char(v) => *v as crate::src::headers::sqlite3_h::sqlite_uint64,
+            _ => 0,
+        }
+    }
+
+    pub unsafe fn get_double(&mut self) -> ::core::ffi::c_double {
+        match self.next_arg() {
+            PrintfArg::Double(v) => *v,
+            PrintfArg::Int(v) => *v as ::core::ffi::c_double,
+            _ => 0.0,
+        }
+    }
+
+    pub unsafe fn get_str(&mut self) -> *mut ::core::ffi::c_char {
+        match self.next_arg() {
+            PrintfArg::Str(p) => *p,
+            _ => ::core::ptr::null_mut(),
+        }
+    }
+
+    pub unsafe fn get_char(&mut self) -> ::core::ffi::c_uint {
+        match self.next_arg() {
+            PrintfArg::Char(v) => *v,
+            PrintfArg::Int(v) => *v as ::core::ffi::c_uint,
+            _ => 0,
+        }
+    }
+
+    pub unsafe fn get_token(&mut self) -> *mut crate::src::headers::sqliteInt_h::Token {
+        match self.next_arg() {
+            PrintfArg::Token(p) => *p,
+            _ => ::core::ptr::null_mut(),
+        }
+    }
+
+    pub unsafe fn get_expr(&mut self) -> *mut crate::src::headers::sqliteInt_h::Expr {
+        match self.next_arg() {
+            PrintfArg::Expr(p) => *p,
+            _ => ::core::ptr::null_mut(),
+        }
+    }
+
+    pub unsafe fn get_srcitem(&mut self) -> *mut crate::src::headers::sqliteInt_h::SrcItem {
+        match self.next_arg() {
+            PrintfArg::SrcItem(p) => *p,
+            _ => ::core::ptr::null_mut(),
+        }
+    }
+
+    pub unsafe fn get_nout_ptr(&mut self) -> *mut ::core::ffi::c_int {
+        match self.next_arg() {
+            PrintfArg::NOut(p) => *p,
+            _ => ::core::ptr::null_mut(),
+        }
+    }
+}
+
+// ─── PrintfArg: typed intermediate representation for extracted VaList args ───
+//
+// sqlite3_str_vappendf interleaves two concerns:
+//   1. Extracting typed args from VaList (or PrintfArguments for SQLFUNC)
+//   2. Formatting those args and appending to StrAccum
+//
+// PrintfArg decouples concern #1 from #2. The extraction phase walks the format
+// string and consumes VaList into a Vec<PrintfArg>. The formatting phase
+// (sqlite3_str_vappendf2_args) reads from the Vec — no VaList needed.
+
+/// A single extracted printf argument, typed to match what the format specifier expects.
+#[derive(Clone)]
+pub enum PrintfArg {
+    /// Signed 64-bit integer (covers %d, %i, %r with flag_long=2 or i64 args)
+    Int(crate::src::ext::rtree::rtree::i64_0),
+    /// Unsigned 64-bit integer (covers %u, %x, %X, %o, %p with flag_long=2 or u64 args)
+    UInt(crate::src::headers::sqlite3_h::sqlite_uint64),
+    /// Double-precision float (covers %f, %e, %g, %G)
+    Double(::core::ffi::c_double),
+    /// C string pointer (covers %s, %z, %q, %Q, %w). Caller keeps ownership unless %z.
+    Str(*mut ::core::ffi::c_char),
+    /// Character value (covers %c)
+    Char(::core::ffi::c_uint),
+    /// Token pointer (covers %T with INTERNAL flag, #T variant)
+    Token(*mut crate::src::headers::sqliteInt_h::Token),
+    /// Expr pointer (covers %T with INTERNAL flag, non-#T variant)
+    Expr(*mut crate::src::headers::sqliteInt_h::Expr),
+    /// SrcItem pointer (covers %S with INTERNAL flag)
+    SrcItem(*mut crate::src::headers::sqliteInt_h::SrcItem),
+    /// Write-back pointer for %n (stores characters written so far)
+    NOut(*mut ::core::ffi::c_int),
+    /// No argument consumed (covers %%)
+    None,
+}
+
+/// Parsed format specifier — carries all flag/width/precision/type info needed
+/// to both extract the right VaList arg and format it later.
+#[derive(Clone)]
+pub struct PrintfSpec {
+    pub xtype: ::core::ffi::c_int,
+    pub infop_idx: ::core::ffi::c_int,
+    pub flag_leftjustify: bool,
+    pub flag_prefix: ::core::ffi::c_char,
+    pub flag_alternateform: bool,
+    pub flag_altform2: bool,
+    pub flag_zeropad: bool,
+    pub flag_long: u8,
+    pub cThousand: u8,
+    pub width: ::core::ffi::c_int,
+    pub precision: ::core::ffi::c_int,
+    /// Byte offset into the format string where the literal text before this spec starts
+    pub literal_start: usize,
+    /// Byte offset where the literal text ends (== where '%' is)
+    pub literal_end: usize,
+}
+
+/// Walk a printf format string, parse each specifier, and extract the corresponding
+/// argument from `ap` (VaList). Returns specs + args in order.
+///
+/// If `bArgList` is true, arguments come from a PrintfArguments* (SQLFUNC path);
+/// otherwise from the VaList.
+///
+/// # Safety
+/// `fmt` must be a valid NUL-terminated C string. `ap` must contain the right types.
+pub unsafe fn extract_printf_args(
+    fmt_start: *const ::core::ffi::c_char,
+    mut ap: ::core::ffi::VaList,
+    bArgList: bool,
+    pArgList: *mut crate::src::headers::sqliteInt_h::PrintfArguments,
+) -> (Vec<PrintfSpec>, Vec<PrintfArg>) {
+    let mut specs: Vec<PrintfSpec> = Vec::new();
+    let mut args: Vec<PrintfArg> = Vec::new();
+    let mut fmt = fmt_start;
+    let base_ptr = fmt_start as usize;
+
+    loop {
+        let c = *fmt as ::core::ffi::c_int;
+        if c == 0 {
+            break;
+        }
+        if c != '%' as i32 {
+            // Skip to next '%' or end
+            let start = fmt;
+            fmt = ::libc::strchr(fmt, '%' as i32);
+            if fmt.is_null() {
+                // Record trailing literal — no more specs
+                break;
+            }
+            // fall through to parse the '%'
+        }
+
+        // Record where literal text before this '%' ends
+        let literal_end = (fmt as usize) - base_ptr;
+
+        fmt = fmt.offset(1); // skip '%'
+        let mut c = *fmt as ::core::ffi::c_int;
+        if c == 0 {
+            break;
+        }
+
+        // Parse flags, width, precision, length modifier
+        let mut flag_leftjustify = false;
+        let mut flag_prefix: ::core::ffi::c_char = 0;
+        let mut flag_alternateform = false;
+        let mut flag_altform2 = false;
+        let mut flag_zeropad = false;
+        let mut flag_long: u8 = 0;
+        let mut cThousand: u8 = 0;
+        let mut width: ::core::ffi::c_int = 0;
+        let mut precision: ::core::ffi::c_int = -1;
+        let mut done = false;
+
+        // width/precision might consume args — we push those as separate Int args
+        loop {
+            match c as u8 {
+                b'-' => flag_leftjustify = true,
+                b'+' => flag_prefix = '+' as ::core::ffi::c_char,
+                b' ' => flag_prefix = ' ' as ::core::ffi::c_char,
+                b'#' => flag_alternateform = true,
+                b'!' => flag_altform2 = true,
+                b'0' => flag_zeropad = true,
+                b',' => cThousand = b',',
+                b'l' => {
+                    flag_long = 1;
+                    fmt = fmt.offset(1);
+                    c = *fmt as ::core::ffi::c_int;
+                    if c == 'l' as i32 {
+                        fmt = fmt.offset(1);
+                        c = *fmt as ::core::ffi::c_int;
+                        flag_long = 2;
+                    }
+                    done = true;
+                }
+                b'1'..=b'9' => {
+                    let mut wx: u32 = (c - '0' as i32) as u32;
+                    loop {
+                        fmt = fmt.offset(1);
+                        c = *fmt as ::core::ffi::c_int;
+                        if !(c >= '0' as i32 && c <= '9' as i32) { break; }
+                        wx = wx.wrapping_mul(10).wrapping_add(c as u32).wrapping_sub('0' as u32);
+                    }
+                    width = (wx & 0x7fffffff) as ::core::ffi::c_int;
+                    if c != '.' as i32 && c != 'l' as i32 {
+                        done = true;
+                    } else {
+                        fmt = fmt.offset(-1);
+                    }
+                }
+                b'*' => {
+                    if bArgList {
+                        width = getIntArg(pArgList) as ::core::ffi::c_int;
+                    } else {
+                        width = ap.arg::<::core::ffi::c_int>();
+                    }
+                    if width < 0 {
+                        flag_leftjustify = true;
+                        width = if width >= -2147483647 { -width } else { 0 };
+                    }
+                    c = *fmt.offset(1) as ::core::ffi::c_int;
+                    if c != '.' as i32 && c != 'l' as i32 {
+                        fmt = fmt.offset(1);
+                        c = *fmt as ::core::ffi::c_int;
+                        done = true;
+                    }
+                }
+                b'.' => {
+                    fmt = fmt.offset(1);
+                    c = *fmt as ::core::ffi::c_int;
+                    if c == '*' as i32 {
+                        if bArgList {
+                            precision = getIntArg(pArgList) as ::core::ffi::c_int;
+                        } else {
+                            precision = ap.arg::<::core::ffi::c_int>();
+                        }
+                        if precision < 0 {
+                            precision = if precision >= -2147483647 { -precision } else { -1 };
+                        }
+                        fmt = fmt.offset(1);
+                        c = *fmt as ::core::ffi::c_int;
+                    } else {
+                        let mut px: u32 = 0;
+                        while c >= '0' as i32 && c <= '9' as i32 {
+                            px = px.wrapping_mul(10).wrapping_add(c as u32).wrapping_sub('0' as u32);
+                            fmt = fmt.offset(1);
+                            c = *fmt as ::core::ffi::c_int;
+                        }
+                        precision = (px & 0x7fffffff) as ::core::ffi::c_int;
+                    }
+                    if c == 'l' as i32 {
+                        fmt = fmt.offset(-1);
+                    } else {
+                        done = true;
+                    }
+                }
+                _ => {
+                    done = true;
+                }
+            }
+            if done {
+                break;
+            }
+            fmt = fmt.offset(1);
+            c = *fmt as ::core::ffi::c_int;
+            if c == 0 { break; }
+        }
+
+        // Lookup specifier in fmtinfo table
+        let mut idx = (c as u32 % 23) as ::core::ffi::c_int;
+        let (xtype, infop_idx) = if fmtinfo[idx as usize].fmttype as ::core::ffi::c_int == c || {
+            idx = fmtinfo[idx as usize].iNxt as ::core::ffi::c_int;
+            fmtinfo[idx as usize].fmttype as ::core::ffi::c_int == c
+        } {
+            (fmtinfo[idx as usize].type_0 as ::core::ffi::c_int, idx)
+        } else {
+            (etINVALID, 0)
+        };
+
+        // Extract argument based on xtype
+        let arg = match xtype {
+            etFLOAT | etEXP | etGENERIC => {
+                if bArgList {
+                    PrintfArg::Double(getDoubleArg(pArgList))
+                } else {
+                    PrintfArg::Double(ap.arg::<::core::ffi::c_double>())
+                }
+            }
+            etCHARX => {
+                if bArgList {
+                    PrintfArg::Char(getIntArg(pArgList) as ::core::ffi::c_uint)
+                } else {
+                    PrintfArg::Char(ap.arg::<::core::ffi::c_uint>())
+                }
+            }
+            etSTRING | etDYNSTRING => {
+                if bArgList {
+                    PrintfArg::Str(getTextArg(pArgList))
+                } else {
+                    PrintfArg::Str(ap.arg::<*mut ::core::ffi::c_char>())
+                }
+            }
+            etESCAPE_q | etESCAPE_Q | etESCAPE_w => {
+                if bArgList {
+                    PrintfArg::Str(getTextArg(pArgList))
+                } else {
+                    PrintfArg::Str(ap.arg::<*mut ::core::ffi::c_char>())
+                }
+            }
+            etTOKEN => {
+                // %#T = Expr (flag_alternateform), %T = Token
+                if flag_alternateform {
+                    PrintfArg::Expr(ap.arg::<*mut crate::src::headers::sqliteInt_h::Expr>())
+                } else {
+                    PrintfArg::Token(ap.arg::<*mut crate::src::headers::sqliteInt_h::Token>())
+                }
+            }
+            etSRCITEM => {
+                PrintfArg::SrcItem(ap.arg::<*mut crate::src::headers::sqliteInt_h::SrcItem>())
+            }
+            etSIZE => {
+                // %n — write-back current count
+                if !bArgList {
+                    PrintfArg::NOut(ap.arg::<*mut ::core::ffi::c_int>())
+                } else {
+                    PrintfArg::None
+                }
+            }
+            etPERCENT => {
+                PrintfArg::None
+            }
+            etPOINTER => {
+                // Pointer: treat as unsigned integer with appropriate flag_long
+                let fl = if ::core::mem::size_of::<*mut ::core::ffi::c_char>()
+                    == ::core::mem::size_of::<crate::src::ext::rtree::rtree::i64_0>()
+                { 2u8 } else if ::core::mem::size_of::<*mut ::core::ffi::c_char>()
+                    == ::core::mem::size_of::<::core::ffi::c_long>()
+                { 1u8 } else { 0u8 };
+                let v = if bArgList {
+                    getIntArg(pArgList) as u64
+                } else if fl == 2 {
+                    ap.arg::<crate::src::ext::rtree::rtree::u64_0>() as u64
+                } else if fl == 1 {
+                    ap.arg::<::core::ffi::c_ulong>() as u64
+                } else {
+                    ap.arg::<::core::ffi::c_uint>() as u64
+                };
+                PrintfArg::UInt(v)
+            }
+            etORDINAL | etRADIX | etDECIMAL => {
+                let signed = fmtinfo[infop_idx as usize].flags as ::core::ffi::c_int & FLAG_SIGNED != 0;
+                if signed {
+                    let v = if bArgList {
+                        getIntArg(pArgList) as crate::src::ext::rtree::rtree::i64_0
+                    } else if flag_long == 2 {
+                        ap.arg::<crate::src::ext::rtree::rtree::i64_0>()
+                    } else if flag_long == 1 {
+                        ap.arg::<::core::ffi::c_long>() as crate::src::ext::rtree::rtree::i64_0
+                    } else {
+                        ap.arg::<::core::ffi::c_int>() as crate::src::ext::rtree::rtree::i64_0
+                    };
+                    PrintfArg::Int(v)
+                } else {
+                    let v = if bArgList {
+                        getIntArg(pArgList) as u64
+                    } else if flag_long == 2 {
+                        ap.arg::<crate::src::ext::rtree::rtree::u64_0>() as u64
+                    } else if flag_long == 1 {
+                        ap.arg::<::core::ffi::c_ulong>() as u64
+                    } else {
+                        ap.arg::<::core::ffi::c_uint>() as u64
+                    };
+                    PrintfArg::UInt(v)
+                }
+            }
+            _ => {
+                // etINVALID — skip
+                PrintfArg::None
+            }
+        };
+
+        let literal_start = if specs.is_empty() {
+            0
+        } else {
+            // The literal starts right after the previous specifier's format char
+            // We'll compute this from the previous spec's end. For now use literal_end.
+            literal_end
+        };
+
+        specs.push(PrintfSpec {
+            xtype,
+            infop_idx,
+            flag_leftjustify,
+            flag_prefix,
+            flag_alternateform,
+            flag_altform2,
+            flag_zeropad,
+            flag_long,
+            cThousand,
+            width,
+            precision,
+            literal_start,
+            literal_end,
+        });
+        args.push(arg);
+
+        // Advance past the specifier character
+        if *fmt != 0 {
+            fmt = fmt.offset(1);
+        }
+    }
+
+    // Record trailing literal if any
+    // (handled by the formatter which reads from literal_end of last spec to end of string)
+
+    (specs, args)
+}
+
+// Signed/unsigned integer extraction is inlined in extract_printf_args
+// to avoid VaList borrow issues with helper functions.
 #[inline(never)]
 
 unsafe extern "C" fn strAccumFinishRealloc(mut p: *mut crate::src::headers::sqliteInt_h::StrAccum) -> *mut ::core::ffi::c_char {
@@ -1964,9 +2901,17 @@ pub unsafe extern "C" fn sqlite3VMPrintf(
         (*db).aLimit[crate::src::headers::sqlite3_h::SQLITE_LIMIT_LENGTH as usize],
     );
     acc.printfFlags = crate::src::headers::sqliteInt_h::SQLITE_PRINTF_INTERNAL as crate::src::ext::rtree::rtree::u8_0;
-    let formatted = crate::sqlite_vmprintf!(zFormat, ap);
-    sqlite3_str_vappendf2(&raw mut acc, formatted);
-    crate::src::src::malloc::sqlite3_free(formatted as *mut ::core::ffi::c_void);
+    // Use the temp-accumulator bridge for now (correct but not fully decoupled).
+    // The real decoupled path (extract_printf_args + sqlite3_str_vappendf2_args) is
+    // implemented below but needs more formatting work to handle all edge cases.
+    let (formatted, fmtLen) = sqlite3_vmprintf_internal(db, zFormat, ap);
+    if !formatted.is_null() {
+        sqlite3_str_vappendf2(&raw mut acc, formatted, fmtLen);
+        crate::src::src::malloc::sqlite3DbFree(db, formatted as *mut ::core::ffi::c_void);
+    } else {
+        sqlite3StrAccumSetError(&raw mut acc, crate::src::headers::sqlite3_h::SQLITE_NOMEM as crate::src::ext::rtree::rtree::u8_0);
+    }
+    let _ = sqlite_vmprintf;
     z = sqlite3StrAccumFinish(&raw mut acc);
     if acc.accError as ::core::ffi::c_int == crate::src::headers::sqlite3_h::SQLITE_NOMEM {
         crate::src::src::malloc::sqlite3OomFault(db as *mut crate::src::headers::sqliteInt_h::sqlite3);
@@ -2017,6 +2962,31 @@ pub unsafe extern "C" fn sqlite3_snprintf(
     sqlite3_str_vappendf(&raw mut acc as *mut crate::src::headers::sqliteInt_h::sqlite3_str, zFormat, args);
     sqlite3StrAccumFinish(&raw mut acc);
     zBuf
+}
+
+/// Internal version of sqlite3_vmprintf that sets SQLITE_PRINTF_INTERNAL flag,
+/// uses the db allocator and db length limit. Used by sqlite3VMPrintf to format
+/// with internal specifiers (%T, %r, etc.) into a malloc'd string.
+/// Returns (pointer, length) to support binary output with embedded NUL bytes.
+unsafe fn sqlite3_vmprintf_internal(
+    mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
+    mut zFormat: *const ::core::ffi::c_char,
+    mut ap: ::core::ffi::VaList,
+) -> (*mut ::core::ffi::c_char, ::core::ffi::c_int) {
+    let mut zBase: [::core::ffi::c_char; 70] = [0; 70];
+    let mut acc: crate::src::headers::sqliteInt_h::StrAccum = ::core::mem::zeroed();
+    sqlite3StrAccumInit(
+        &raw mut acc,
+        db,
+        &raw mut zBase as *mut ::core::ffi::c_char,
+        ::core::mem::size_of::<[::core::ffi::c_char; 70]>() as ::core::ffi::c_int,
+        (*db).aLimit[crate::src::headers::sqlite3_h::SQLITE_LIMIT_LENGTH as usize],
+    );
+    acc.printfFlags = crate::src::headers::sqliteInt_h::SQLITE_PRINTF_INTERNAL as crate::src::ext::rtree::rtree::u8_0;
+    sqlite3_str_vappendf(&raw mut acc, zFormat, ap);
+    let nChar = acc.nChar as ::core::ffi::c_int;
+    let z = sqlite3StrAccumFinish(&raw mut acc);
+    (z, nChar)
 }
 
 #[unsafe(no_mangle)]
