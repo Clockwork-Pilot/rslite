@@ -649,23 +649,233 @@ fn cmp_s_width() {
     }
 }
 
-// ═══ Corner cases: float edge values ═══════════════════════════════════
+// ═══ Float edge values ═════════════════════════════════════════════════
+// Tests marked #[ignore] fail due to Rust format!() vs SQLite FpDecode differences.
+// They document the exact gaps. Un-ignore as we switch to FpDecode.
 
 #[test]
-fn cmp_f_edge_values() {
-    // Known issue: Rust format! outputs "-0.0" for negative zero,
-    // but SQLite's FpDecode outputs "0.0". Will be fixed when we
-    // switch to sqlite3FpDecode in the formatter.
+fn cmp_f_small() {
     unsafe {
-        // Very small
         let new = fmt2(b"%.6f\0", &[PrintfArg::Double(0.000001)]);
         let old = mprintf_ref(sqlite3_mprintf(b"%.6f\0".as_ptr() as _, 0.000001f64));
         assert_eq!(new, old, "%.6f(0.000001)");
+    }
+}
 
-        // Negative zero: known difference — Rust format! outputs "-0.0",
-        // SQLite's FpDecode outputs "0.0". Skip until we use FpDecode.
-        // let new = fmt2(b"%.1f\0", &[PrintfArg::Double(-0.0)]);
-        // let old = mprintf_ref(sqlite3_mprintf(b"%.1f\0".as_ptr() as _, -0.0f64));
-        // assert_eq!(new, old, "%.1f(-0.0)");
+#[test]
+fn cmp_f_negative_zero() {
+    unsafe {
+        let new = fmt2(b"%.1f\0", &[PrintfArg::Double(-0.0)]);
+        let old = mprintf_ref(sqlite3_mprintf(b"%.1f\0".as_ptr() as _, -0.0f64));
+        assert_eq!(new, old, "%.1f(-0.0)");
+    }
+}
+
+// ═══ %g — significant digits (SQLite canonical float format) ═══════════
+
+#[test]
+
+fn cmp_g_015() {
+    // "%!0.15g" — SQLite's canonical float serialization
+    unsafe {
+        for &v in &[
+            0.0f64, 1.0, -1.0, 0.5, 1.0/3.0,
+            3.14159265358979323846,
+            1.23456789012345678,
+            1e10, 1e-10, 1e100, 1e-100,
+            f64::MAX, f64::MIN_POSITIVE,
+        ] {
+            let new = fmt2(b"%!0.15g\0", &[PrintfArg::Double(v)]);
+            let old = mprintf_ref(sqlite3_mprintf(b"%!0.15g\0".as_ptr() as _, v));
+            assert_eq!(new, old, "%!0.15g({v})");
+        }
+    }
+}
+
+#[test]
+
+fn cmp_g_15_variant() {
+    unsafe {
+        for &v in &[1.0f64, 3.14159265358979, 1.0/3.0] {
+            let new = fmt2(b"%!.15g\0", &[PrintfArg::Double(v)]);
+            let old = mprintf_ref(sqlite3_mprintf(b"%!.15g\0".as_ptr() as _, v));
+            assert_eq!(new, old, "%!.15g({v})");
+        }
+    }
+}
+
+#[test]
+
+fn cmp_g_16() {
+    unsafe {
+        for &v in &[1.0f64, 3.14159265358979, 0.1 + 0.2, 1e15, 1e-15] {
+            let new = fmt2(b"%.16g\0", &[PrintfArg::Double(v)]);
+            let old = mprintf_ref(sqlite3_mprintf(b"%.16g\0".as_ptr() as _, v));
+            assert_eq!(new, old, "%.16g({v})");
+        }
+    }
+}
+
+// ═══ %e — scientific notation ══════════════════════════════════════════
+
+#[test]
+
+fn cmp_e_basic() {
+    unsafe {
+        for &v in &[0.0f64, 1.0, -1.0, 3.14, 1e10, 1e-10, 1e100] {
+            let new = fmt2(b"%.6e\0", &[PrintfArg::Double(v)]);
+            let old = mprintf_ref(sqlite3_mprintf(b"%.6e\0".as_ptr() as _, v));
+            assert_eq!(new, old, "%.6e({v})");
+        }
+    }
+}
+
+#[test]
+
+fn cmp_e_020() {
+    unsafe {
+        for &v in &[1.0f64, 3.14159265358979, f64::MAX] {
+            let new = fmt2(b"%!0.20e\0", &[PrintfArg::Double(v)]);
+            let old = mprintf_ref(sqlite3_mprintf(b"%!0.20e\0".as_ptr() as _, v));
+            assert_eq!(new, old, "%!0.20e({v})");
+        }
+    }
+}
+
+// ═══ %!.*f — dynamic precision with trailing-zero stripping ════════════
+
+#[test]
+
+fn cmp_f_dynamic_prec_strip() {
+    unsafe {
+        for &(prec, val) in &[
+            (0i32, 3.14159f64),
+            (3, 3.14159),
+            (6, 1.0),
+            (2, 0.0),
+            (3, -1.5),
+            (10, 1.0/3.0),
+        ] {
+            let new = fmt2(
+                b"%!.*f\0",
+                &[PrintfArg::Int(prec as i64), PrintfArg::Double(val)],
+            );
+            let old = mprintf_ref(sqlite3_mprintf(b"%!.*f\0".as_ptr() as _, prec, val));
+            assert_eq!(new, old, "%!.*f(prec={prec}, val={val})");
+        }
+    }
+}
+
+// ═══ %.3f — fixed precision (common in codebase) ═══════════════════════
+
+#[test]
+fn cmp_f_fixed_3() {
+    unsafe {
+        for &v in &[0.0f64, 3.14159, -1.5, 1000.0, 0.001, 0.9999] {
+            let new = fmt2(b"%.3f\0", &[PrintfArg::Double(v)]);
+            let old = mprintf_ref(sqlite3_mprintf(b"%.3f\0".as_ptr() as _, v));
+            assert_eq!(new, old, "%.3f({v})");
+        }
+    }
+}
+
+// ═══ %06.3f — zero-padded fixed float ══════════════════════════════════
+
+#[test]
+
+fn cmp_f_zeropad() {
+    unsafe {
+        for &v in &[3.14159f64, 0.0, -1.5, 99.999] {
+            let new = fmt2(b"%06.3f\0", &[PrintfArg::Double(v)]);
+            let old = mprintf_ref(sqlite3_mprintf(b"%06.3f\0".as_ptr() as _, v));
+            assert_eq!(new, old, "%06.3f({v})");
+        }
+    }
+}
+
+// ═══ %g — plain g format ═══════════════════════════════════════════════
+
+#[test]
+
+fn cmp_g_plain() {
+    unsafe {
+        for &v in &[0.0f64, 1.0, 0.5, 100.0, 0.00001, 1e10] {
+            let new = fmt2(b"%g\0", &[PrintfArg::Double(v)]);
+            let old = mprintf_ref(sqlite3_mprintf(b"%g\0".as_ptr() as _, v));
+            assert_eq!(new, old, "%g({v})");
+        }
+    }
+}
+
+// ═══ %c%g,%g — geopolygon coord pattern ═══════════════════════════════
+
+#[test]
+
+fn cmp_geopolygon_pattern() {
+    unsafe {
+        let new = fmt2(
+            b"%c%g,%g\0",
+            &[PrintfArg::Char(b'[' as u32), PrintfArg::Double(1.5), PrintfArg::Double(2.5)],
+        );
+        let old = mprintf_ref(sqlite3_mprintf(
+            b"%c%g,%g\0".as_ptr() as _, b'[' as i32, 1.5f64, 2.5f64,
+        ));
+        assert_eq!(new, old, "%c%g,%g");
+    }
+}
+
+// ═══ datetime pattern with float seconds ═══════════════════════════════
+
+#[test]
+
+fn cmp_datetime_full() {
+    unsafe {
+        let new = fmt2(
+            b"%c%04d-%02d-%02d %02d:%02d:%06.3f\0",
+            &[
+                PrintfArg::Char(b'+' as u32),
+                PrintfArg::Int(2024), PrintfArg::Int(3), PrintfArg::Int(15),
+                PrintfArg::Int(10), PrintfArg::Int(30),
+                PrintfArg::Double(5.123),
+            ],
+        );
+        let old = mprintf_ref(sqlite3_mprintf(
+            b"%c%04d-%02d-%02d %02d:%02d:%06.3f\0".as_ptr() as _,
+            b'+' as i32, 2024i32, 3i32, 15i32, 10i32, 30i32, 5.123f64,
+        ));
+        assert_eq!(new, old, "datetime full");
+    }
+}
+
+// ═══ Infinity and NaN ══════════════════════════════════════════════════
+
+#[test]
+
+fn cmp_f_infinity_nan() {
+    unsafe {
+        let new = fmt2(b"%.2f\0", &[PrintfArg::Double(f64::INFINITY)]);
+        let old = mprintf_ref(sqlite3_mprintf(b"%.2f\0".as_ptr() as _, f64::INFINITY));
+        assert_eq!(new, old, "%.2f(Inf)");
+
+        let new = fmt2(b"%.2f\0", &[PrintfArg::Double(f64::NEG_INFINITY)]);
+        let old = mprintf_ref(sqlite3_mprintf(b"%.2f\0".as_ptr() as _, f64::NEG_INFINITY));
+        assert_eq!(new, old, "%.2f(-Inf)");
+
+        let new = fmt2(b"%.2f\0", &[PrintfArg::Double(f64::NAN)]);
+        let old = mprintf_ref(sqlite3_mprintf(b"%.2f\0".as_ptr() as _, f64::NAN));
+        assert_eq!(new, old, "%.2f(NaN)");
+    }
+}
+
+// ═══ %f default precision (6 decimal places) ═══════════════════════════
+
+#[test]
+fn cmp_f_default_precision() {
+    unsafe {
+        for &v in &[0.0f64, 1.0, 3.14159265, -42.1] {
+            let new = fmt2(b"%f\0", &[PrintfArg::Double(v)]);
+            let old = mprintf_ref(sqlite3_mprintf(b"%f\0".as_ptr() as _, v));
+            assert_eq!(new, old, "%f({v})");
+        }
     }
 }

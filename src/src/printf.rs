@@ -2229,24 +2229,292 @@ pub unsafe fn sqlite3_str_vappendf2_args(
             }
 
             etFLOAT | etEXP | etGENERIC => {
-                // Float formatting — use the FpDecode path from the original.
-                // For now, use Rust's format! as a practical approximation.
-                let realvalue = match arg {
+                // Float formatting lifted from sqlite3_str_vappendf (lines 628-917).
+                // Uses sqlite3FpDecode for exact compatibility with SQLite's output.
+                let realvalue: ::core::ffi::c_double = match arg {
                     PrintfArg::Double(v) => v,
                     _ => 0.0,
                 };
-                let prec = if precision < 0 { 6 } else { precision } as usize;
-                let formatted = if xtype == etFLOAT {
-                    format!("{:.prec$}", realvalue, prec = prec)
-                } else if xtype == etGENERIC {
-                    let p = if prec == 0 { 1 } else { prec };
-                    // Use significant digits
-                    format!("{:.prec$e}", realvalue, prec = p.saturating_sub(1))
+                let mut s: crate::src::headers::sqliteInt_h::FpDecode = ::core::mem::zeroed();
+                let mut iRound: ::core::ffi::c_int;
+                let mut j: ::core::ffi::c_int;
+                let mut xtype_local = xtype;
+                let mut prefix_f: ::core::ffi::c_char = 0;
+                let mut flag_rtz: u8 = 0;
+                let mut flag_dp: u8;
+                let mut exp: ::core::ffi::c_int;
+                let mut e2: ::core::ffi::c_int;
+
+                if precision < 0 { precision = 6; }
+                if precision > SQLITE_FP_PRECISION_LIMIT { precision = SQLITE_FP_PRECISION_LIMIT; }
+
+                if xtype_local == etFLOAT {
+                    iRound = -precision;
+                } else if xtype_local == etGENERIC {
+                    if precision == 0 { precision = 1; }
+                    iRound = precision;
                 } else {
-                    format!("{:.prec$e}", realvalue, prec = prec)
-                };
-                let bytes = formatted.as_bytes();
-                sqlite3_str_append(pAccum, bytes.as_ptr() as _, bytes.len() as ::core::ffi::c_int);
+                    iRound = precision + 1;
+                }
+
+                crate::src::src::util::sqlite3FpDecode(
+                    &raw mut s as *mut _ as *mut crate::src::headers::sqliteInt_h::FpDecode,
+                    realvalue,
+                    iRound,
+                    if flag_altform2 { 26 } else { 16 },
+                );
+
+                if s.isSpecial != 0 {
+                    if s.isSpecial as ::core::ffi::c_int == 2 {
+                        // NaN
+                        bufpt = if flag_zeropad { b"null\0".as_ptr() } else { b"NaN\0\0".as_ptr() } as *mut _;
+                        length = crate::src::src::util::sqlite3Strlen30(bufpt);
+                    } else if flag_zeropad {
+                        // Infinity with zeropad → treat as large number
+                        *s.z.offset(0) = '9' as ::core::ffi::c_char;
+                        s.iDP = 1000;
+                        s.n = 1;
+                        // Fall through to normal formatting
+                        bufpt = ::core::ptr::null_mut(); // signal to continue
+                    } else {
+                        // Infinity
+                        ::core::ptr::copy_nonoverlapping(
+                            b"-Inf\0".as_ptr() as *const ::core::ffi::c_char,
+                            &raw mut buf as *mut ::core::ffi::c_char,
+                            5,
+                        );
+                        bufpt = &raw mut buf as *mut ::core::ffi::c_char;
+                        if !(s.sign as ::core::ffi::c_int == '-' as i32) {
+                            if flag_prefix != 0 {
+                                buf[0] = flag_prefix as ::core::ffi::c_char;
+                            } else {
+                                bufpt = bufpt.offset(1);
+                            }
+                        }
+                        length = crate::src::src::util::sqlite3Strlen30(bufpt);
+                    }
+                    // If bufpt is set (NaN or Inf), append and continue
+                    if !bufpt.is_null() {
+                        // Apply width padding
+                        let nPad_f = if width > length { width - length } else { 0 };
+                        if !flag_leftjustify && nPad_f > 0 {
+                            for _ in 0..nPad_f { sqlite3_str_append(pAccum, b" \0".as_ptr() as _, 1); }
+                        }
+                        sqlite3_str_append(pAccum, bufpt, length);
+                        if flag_leftjustify && nPad_f > 0 {
+                            for _ in 0..nPad_f { sqlite3_str_append(pAccum, b" \0".as_ptr() as _, 1); }
+                        }
+                        if *fmt != 0 { fmt = fmt.offset(1); }
+                        continue;
+                    }
+                    // bufpt was null → Infinity with zeropad, fall through
+                }
+
+                // Normal float formatting
+                if s.sign as ::core::ffi::c_int == '-' as i32 {
+                    if flag_alternateform && flag_prefix == 0
+                        && xtype_local == etFLOAT && s.iDP <= iRound
+                    {
+                        prefix_f = 0;
+                    } else {
+                        prefix_f = '-' as ::core::ffi::c_char;
+                    }
+                } else {
+                    prefix_f = flag_prefix as ::core::ffi::c_char;
+                }
+
+                exp = s.iDP - 1;
+                if xtype_local == etGENERIC {
+                    precision -= 1;
+                    flag_rtz = (!flag_alternateform) as u8;
+                    if exp < -4 || exp > precision {
+                        xtype_local = etEXP;
+                    } else {
+                        precision -= exp;
+                        xtype_local = etFLOAT;
+                    }
+                } else {
+                    flag_rtz = flag_altform2 as u8;
+                }
+
+                if xtype_local == etEXP {
+                    e2 = 0;
+                } else {
+                    e2 = s.iDP - 1;
+                }
+
+                // Calculate needed buffer size
+                let szBufNeeded: crate::src::ext::rtree::rtree::i64_0 =
+                    (if e2 > 0 { e2 } else { 0 }) as crate::src::ext::rtree::rtree::i64_0
+                    + precision as crate::src::ext::rtree::rtree::i64_0
+                    + width as crate::src::ext::rtree::rtree::i64_0
+                    + 15;
+
+                let mut zOut_f: *mut ::core::ffi::c_char;
+                if szBufNeeded > etBUFSIZE as crate::src::ext::rtree::rtree::i64_0 {
+                    zExtra = printfTempBuf(pAccum, szBufNeeded);
+                    bufpt = zExtra;
+                    if bufpt.is_null() {
+                        if *fmt != 0 { fmt = fmt.offset(1); }
+                        continue;
+                    }
+                } else {
+                    bufpt = &raw mut buf as *mut ::core::ffi::c_char;
+                }
+                zOut_f = bufpt;
+
+                flag_dp = ((if precision > 0 { 1 } else { 0 })
+                    | flag_alternateform as ::core::ffi::c_int
+                    | flag_altform2 as ::core::ffi::c_int) as u8;
+
+                if prefix_f != 0 {
+                    let fresh0 = bufpt;
+                    bufpt = bufpt.offset(1);
+                    *fresh0 = prefix_f;
+                }
+
+                j = 0;
+                if e2 < 0 {
+                    let fresh1 = bufpt;
+                    bufpt = bufpt.offset(1);
+                    *fresh1 = '0' as ::core::ffi::c_char;
+                } else {
+                    while e2 >= 0 {
+                        let fresh3 = bufpt;
+                        bufpt = bufpt.offset(1);
+                        *fresh3 = if j < s.n {
+                            let fresh2 = j; j += 1;
+                            *s.z.offset(fresh2 as isize) as ::core::ffi::c_char
+                        } else {
+                            '0' as ::core::ffi::c_char
+                        };
+                        if cThousand != 0 && e2 % 3 == 0 && e2 > 1 {
+                            let fresh4 = bufpt;
+                            bufpt = bufpt.offset(1);
+                            *fresh4 = ',' as ::core::ffi::c_char;
+                        }
+                        e2 -= 1;
+                    }
+                }
+
+                if flag_dp != 0 {
+                    let fresh5 = bufpt;
+                    bufpt = bufpt.offset(1);
+                    *fresh5 = '.' as ::core::ffi::c_char;
+                }
+
+                e2 += 1;
+                while e2 < 0 && precision > 0 {
+                    let fresh6 = bufpt;
+                    bufpt = bufpt.offset(1);
+                    *fresh6 = '0' as ::core::ffi::c_char;
+                    precision -= 1;
+                    e2 += 1;
+                }
+
+                loop {
+                    let fresh7 = precision;
+                    precision -= 1;
+                    if !(fresh7 > 0) { break; }
+                    let fresh9 = bufpt;
+                    bufpt = bufpt.offset(1);
+                    *fresh9 = if j < s.n {
+                        let fresh8 = j; j += 1;
+                        *s.z.offset(fresh8 as isize) as ::core::ffi::c_char
+                    } else {
+                        '0' as ::core::ffi::c_char
+                    };
+                }
+
+                // Remove trailing zeros if flag_rtz
+                if flag_rtz != 0 && flag_dp != 0 {
+                    while *bufpt.offset(-1) as ::core::ffi::c_int == '0' as i32 {
+                        bufpt = bufpt.offset(-1);
+                        *bufpt = 0;
+                    }
+                    if *bufpt.offset(-1) as ::core::ffi::c_int == '.' as i32 {
+                        if flag_altform2 {
+                            let fresh10 = bufpt;
+                            bufpt = bufpt.offset(1);
+                            *fresh10 = '0' as ::core::ffi::c_char;
+                        } else {
+                            bufpt = bufpt.offset(-1);
+                            *bufpt = 0;
+                        }
+                    }
+                }
+
+                // Exponent
+                if xtype_local == etEXP {
+                    exp = s.iDP - 1;
+                    let fresh11 = bufpt;
+                    bufpt = bufpt.offset(1);
+                    *fresh11 = aDigits[fmtinfo[infop_idx].charset as usize];
+                    if exp < 0 {
+                        let fresh12 = bufpt;
+                        bufpt = bufpt.offset(1);
+                        *fresh12 = '-' as ::core::ffi::c_char;
+                        exp = -exp;
+                    } else {
+                        let fresh13 = bufpt;
+                        bufpt = bufpt.offset(1);
+                        *fresh13 = '+' as ::core::ffi::c_char;
+                    }
+                    if exp >= 100 {
+                        let fresh14 = bufpt;
+                        bufpt = bufpt.offset(1);
+                        *fresh14 = (exp / 100 + '0' as i32) as ::core::ffi::c_char;
+                        exp %= 100;
+                    }
+                    let fresh15 = bufpt;
+                    bufpt = bufpt.offset(1);
+                    *fresh15 = (exp / 10 + '0' as i32) as ::core::ffi::c_char;
+                    let fresh16 = bufpt;
+                    bufpt = bufpt.offset(1);
+                    *fresh16 = (exp % 10 + '0' as i32) as ::core::ffi::c_char;
+                }
+
+                *bufpt = 0;
+                length = bufpt.offset_from(zOut_f) as ::core::ffi::c_int;
+                bufpt = zOut_f;
+
+                // Zero-pad to width
+                if flag_zeropad && !flag_leftjustify && length < width {
+                    let nPad_z: ::core::ffi::c_int = width - length;
+                    let mut i_z: ::core::ffi::c_int = width;
+                    while i_z >= nPad_z {
+                        *bufpt.offset(i_z as isize) = *bufpt.offset((i_z - nPad_z) as isize);
+                        i_z -= 1;
+                    }
+                    i_z = (prefix_f as ::core::ffi::c_int != 0) as ::core::ffi::c_int;
+                    let mut nPad_remaining = nPad_z;
+                    while nPad_remaining > 0 {
+                        *bufpt.offset(i_z as isize) = '0' as ::core::ffi::c_char;
+                        i_z += 1;
+                        nPad_remaining -= 1;
+                    }
+                    length = width;
+                }
+
+                // Append with width padding
+                let nPad_f = if width > length { width - length } else { 0 };
+                if !flag_leftjustify && nPad_f > 0 {
+                    for _ in 0..nPad_f { sqlite3_str_append(pAccum, b" \0".as_ptr() as _, 1); }
+                }
+                sqlite3_str_append(pAccum, bufpt, length);
+                if flag_leftjustify && nPad_f > 0 {
+                    for _ in 0..nPad_f { sqlite3_str_append(pAccum, b" \0".as_ptr() as _, 1); }
+                }
+
+                // Free temp buffer if allocated
+                if !zExtra.is_null() {
+                    crate::src::src::malloc::sqlite3DbFree(
+                        (*pAccum).db as *mut crate::src::headers::sqliteInt_h::sqlite3,
+                        zExtra as *mut ::core::ffi::c_void,
+                    );
+                    zExtra = ::core::ptr::null_mut();
+                }
+
                 if *fmt != 0 { fmt = fmt.offset(1); }
                 continue;
             }
@@ -2926,10 +3194,10 @@ pub unsafe extern "C" fn sqlite3VMPrintf(
         (*db).aLimit[crate::src::headers::sqlite3_h::SQLITE_LIMIT_LENGTH as usize],
     );
     acc.printfFlags = crate::src::headers::sqliteInt_h::SQLITE_PRINTF_INTERNAL as crate::src::ext::rtree::rtree::u8_0;
-    // Bridge path: format via original sqlite3_str_vappendf, then append result.
-    // The fully decoupled path (extract_printf_args + sqlite3_str_vappendf2_args) is
-    // implemented and passes 25 comparison tests, but still has ~130 edge cases in
-    // the full 396K test suite (mainly float formatting and some integer edge cases).
+    // Bridge path (working, passes all 396K tests). The fully decoupled path
+    // (extract_printf_args + sqlite3_str_vappendf2_args) passes all 56 comparison
+    // tests but has a memory corruption in multi-statement db operations that needs
+    // investigation with AddressSanitizer.
     let (formatted, fmtLen) = sqlite3_vmprintf_internal(db, zFormat, ap);
     if !formatted.is_null() {
         sqlite3_str_vappendf2(&raw mut acc, formatted, fmtLen);

@@ -122,7 +122,6 @@ fn vmprintf_error_messages() {
         let db = open_memdb();
         exec(db, "CREATE TABLE t1(a INTEGER PRIMARY KEY)").unwrap();
         exec(db, "INSERT INTO t1 VALUES(1)").unwrap();
-
         // Duplicate key
         let err = exec(db, "INSERT INTO t1 VALUES(1)");
         assert!(err.is_err());
