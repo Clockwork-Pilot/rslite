@@ -939,13 +939,15 @@ pub unsafe extern "C" fn checkAppendMsg(
         );
     }
     if !__pCheck_ref.zPfx.is_null() {
-        crate::src::src::printf::sqlite3_str_appendf(
-            
+        let args = vec![
+            crate::src::src::printf::PrintfArg::from(__pCheck_ref.v0 as ::core::ffi::c_int),
+            crate::src::src::printf::PrintfArg::from(__pCheck_ref.v1 as ::core::ffi::c_int),
+            crate::src::src::printf::PrintfArg::from(__pCheck_ref.v2 as ::core::ffi::c_int),
+        ];
+        crate::src::src::printf::sqlite3_str_vappendf_args(
             &raw mut __pCheck_ref.errMsg as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
             __pCheck_ref.zPfx,
-            __pCheck_ref.v0,
-            __pCheck_ref.v1,
-            __pCheck_ref.v2,
+            &args,
         );
     }
     let (_s, a) = crate::src::src::printf::extract_printf_args(zFormat, args, false, ::core::ptr::null_mut());

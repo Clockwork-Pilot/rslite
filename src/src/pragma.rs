@@ -11,6 +11,9 @@
 
 
 
+use crate::printf_args;
+use crate::src::src::printf::sqlite3_str_vappendf2;
+
 // =============== BEGIN pragma_h ================
 pub const PragTyp_ANALYSIS_LIMIT:  ::core::ffi::c_int =  1;
     
@@ -4914,23 +4917,20 @@ unsafe extern "C" fn pragmaVtabConnect(
     let __pPragma_ref = { &*pPragma };
     j = __pPragma_ref.iPragCName as ::core::ffi::c_int;
     while i < __pPragma_ref.nPragCName as ::core::ffi::c_int {
-        crate::src::src::printf::sqlite3_str_appendf(
-            
-            &raw mut acc as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
-            b"%c\"%s\"\0" as *const u8 as *const ::core::ffi::c_char,
-            cSep as ::core::ffi::c_int,
-            pragCName[j as usize],
+        sqlite3_str_vappendf2(
+            &raw mut acc as *mut _ as *mut sqlite3_str,
+            "%c\"%s\"",
+            printf_args!(crate::src::src::printf::PrintfArg::Char(cSep as ::core::ffi::c_uint), pragCName[j as usize]),
         );
         cSep = ',' as i32 as ::core::ffi::c_char;
         i += 1;
         j += 1;
     }
     if i == 0 as ::core::ffi::c_int {
-        crate::src::src::printf::sqlite3_str_appendf(
-            
-            &raw mut acc as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
-            b"(\"%s\"\0" as *const u8 as *const ::core::ffi::c_char,
-            __pPragma_ref.zName,
+        sqlite3_str_vappendf2(
+            &raw mut acc as *mut _ as *mut sqlite3_str,
+            "(\"%s\"",
+            printf_args!(__pPragma_ref.zName),
         );
         i += 1;
     }
@@ -5172,20 +5172,18 @@ unsafe extern "C" fn pragmaVtabFilter(
         b"PRAGMA \0" as *const u8 as *const ::core::ffi::c_char,
     );
     if !__pCsr_ref.azArg[1 as ::core::ffi::c_int as usize].is_null() {
-        crate::src::src::printf::sqlite3_str_appendf(
-            
-            &raw mut acc as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
-            b"%Q.\0" as *const u8 as *const ::core::ffi::c_char,
-            __pCsr_ref.azArg[1 as ::core::ffi::c_int as usize],
+        sqlite3_str_vappendf2(
+            &raw mut acc as *mut _ as *mut sqlite3_str,
+            "%Q.",
+            printf_args!(__pCsr_ref.azArg[1 as ::core::ffi::c_int as usize]),
         );
     }
     crate::src::src::printf::sqlite3_str_appendall(&raw mut acc as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str, (*__pTab_ref.pName).zName);
     if !__pCsr_ref.azArg[0 as ::core::ffi::c_int as usize].is_null() {
-        crate::src::src::printf::sqlite3_str_appendf(
-            
-            &raw mut acc as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
-            b"=%Q\0" as *const u8 as *const ::core::ffi::c_char,
-            __pCsr_ref.azArg[0 as ::core::ffi::c_int as usize],
+        sqlite3_str_vappendf2(
+            &raw mut acc as *mut _ as *mut sqlite3_str,
+            "=%Q",
+            printf_args!(__pCsr_ref.azArg[0 as ::core::ffi::c_int as usize]),
         );
     }
     zSql = crate::src::src::printf::sqlite3StrAccumFinish(&raw mut acc as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str);

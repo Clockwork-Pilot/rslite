@@ -25,6 +25,9 @@ pub use crate::src::headers::sqlite3_h::sqlite3_destructor_type;pub use crate::s
 
 
 pub use crate::src::headers::stdlib::__int16_t;pub use crate::src::headers::stdlib::__int8_t;pub use crate::src::headers::stdlib::__uint16_t;pub use crate::src::headers::stdlib::__uint32_t;pub use crate::src::headers::stdlib::__uint8_t;pub use crate::src::headers::vdbeInt_h::sqlite3_context;pub use crate::src::headers::vdbeInt_h::sqlite3_value;pub use crate::src::headers::vdbeInt_h::AuxData;pub use crate::src::headers::vdbeInt_h::Bool;pub use crate::src::headers::vdbeInt_h::MEM_Int;pub use crate::src::headers::vdbeInt_h::MEM_IntReal;pub use crate::src::headers::vdbeInt_h::MEM_Null;pub use crate::src::headers::vdbeInt_h::MEM_Real;pub use crate::src::headers::vdbeInt_h::MEM_Str;pub use crate::src::headers::vdbeInt_h::MEM_Zero;pub use crate::src::headers::vdbeInt_h::MemValue;pub use crate::src::headers::vdbeInt_h::Op;pub use crate::src::headers::vdbeInt_h::PreUpdate;pub use crate::src::headers::vdbeInt_h::Vdbe;pub use crate::src::headers::vdbeInt_h::VdbeCursor;pub use crate::src::headers::vdbeInt_h::VdbeFrame;pub use crate::src::headers::vdbeInt_h::VdbeSorter;pub use crate::src::headers::vdbeInt_h::VdbeTxtBlbCache;pub use crate::src::headers::vdbeInt_h::__anon_struct_10;pub use crate::src::headers::vdbeInt_h::__anon_union_17;pub use crate::src::headers::vdbeInt_h::__anon_union_18;pub use crate::src::src::vdbemem::sqlite3VdbeChangeEncoding;pub use crate::src::src::vdbemem::sqlite3VdbeMemRelease;pub use crate::src::src::vdbemem::sqlite3VdbeMemSetStr;pub use crate::src::src::vdbe::p4union;pub use crate::src::src::vdbe::Mem;pub use crate::src::src::vdbe::SubProgram;pub use crate::src::src::vdbe::SubrtnSig;pub use crate::src::src::vdbe::VdbeOp;
+pub use crate::src::src::printf::sqlite3_str_vappendf2;
+
+use crate::printf_args;
 
 unsafe extern "C" fn findNextHostParameter(
     mut zSql: *const ::core::ffi::c_char,
@@ -144,18 +147,16 @@ pub unsafe extern "C" fn sqlite3VdbeExpandSql(
                     4 as ::core::ffi::c_int,
                 );
             } else if (*pVar).flags as ::core::ffi::c_int & (crate::src::headers::vdbeInt_h::MEM_Int | crate::src::headers::vdbeInt_h::MEM_IntReal) != 0 {
-                crate::src::src::printf::sqlite3_str_appendf(
-                    
+                sqlite3_str_vappendf2(
                     &raw mut out as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
-                    b"%lld\0" as *const u8 as *const ::core::ffi::c_char,
-                    (*pVar).u.i,
+                    "%lld",
+                    printf_args!((*pVar).u.i),
                 );
             } else if (*pVar).flags as ::core::ffi::c_int & crate::src::headers::vdbeInt_h::MEM_Real != 0 {
-                crate::src::src::printf::sqlite3_str_appendf(
-                    
+                sqlite3_str_vappendf2(
                     &raw mut out as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
-                    b"%!.15g\0" as *const u8 as *const ::core::ffi::c_char,
-                    (*pVar).u.r,
+                    "%!.15g",
+                    printf_args!((*pVar).u.r),
                 );
             } else if (*pVar).flags as ::core::ffi::c_int & crate::src::headers::vdbeInt_h::MEM_Str != 0 {
                 let mut nOut: ::core::ffi::c_int = 0;
@@ -177,22 +178,19 @@ pub unsafe extern "C" fn sqlite3VdbeExpandSql(
                     pVar = &raw mut utf8;
                 }
                 nOut = (*pVar).n;
-                crate::src::src::printf::sqlite3_str_appendf(
-                    
+                sqlite3_str_vappendf2(
                     &raw mut out as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
-                    b"'%.*q'\0" as *const u8 as *const ::core::ffi::c_char,
-                    nOut,
-                    (*pVar).z,
+                    "'%.*q'",
+                    printf_args!(nOut, (*pVar).z),
                 );
                 if enc as ::core::ffi::c_int != crate::src::headers::sqlite3_h::SQLITE_UTF8 {
                     crate::src::src::vdbemem::sqlite3VdbeMemRelease(&raw mut utf8 as *mut _ as *mut crate::src::headers::vdbeInt_h::sqlite3_value);
                 }
             } else if (*pVar).flags as ::core::ffi::c_int & crate::src::headers::vdbeInt_h::MEM_Zero != 0 {
-                crate::src::src::printf::sqlite3_str_appendf(
-                    
+                sqlite3_str_vappendf2(
                     &raw mut out as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
-                    b"zeroblob(%d)\0" as *const u8 as *const ::core::ffi::c_char,
-                    (*pVar).u.nZero,
+                    "zeroblob(%d)",
+                    printf_args!((*pVar).u.nZero as i32),
                 );
             } else {
                 let mut nOut_0: ::core::ffi::c_int = 0;
@@ -205,12 +203,10 @@ pub unsafe extern "C" fn sqlite3VdbeExpandSql(
                 nOut_0 = (*pVar).n;
                 i = 0 as ::core::ffi::c_int;
                 while i < nOut_0 {
-                    crate::src::src::printf::sqlite3_str_appendf(
-                        
+                    sqlite3_str_vappendf2(
                         &raw mut out as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
-                        b"%02x\0" as *const u8 as *const ::core::ffi::c_char,
-                        *(*pVar).z.offset(i as isize) as ::core::ffi::c_int
-                            & 0xff as ::core::ffi::c_int,
+                        "%02x",
+                        printf_args!((*(*pVar).z.offset(i as isize) as ::core::ffi::c_int) & 0xff),
                     );
                     i += 1;
                 }

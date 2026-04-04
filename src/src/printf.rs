@@ -585,8 +585,9 @@ pub unsafe fn sqlite3_str_vappendf_sqlfunc(
     if !pArgList.is_null() {
         (*pArgList).nUsed = 0;
     }
-    let mut src = DirectArgs::new(pArgList);
-    sqlite3_str_vappendf2(pAccum, fmt_start, &mut src);
+    let src = DirectArgs::new(pArgList);
+    let fmt = ::core::ffi::CStr::from_ptr(fmt_start).to_str().unwrap_or("");
+    sqlite3_str_vappendf2(pAccum, fmt, src);
 }
 
 /// Format and append to StrAccum using pre-extracted PrintfArg arguments.
@@ -599,8 +600,9 @@ pub unsafe fn sqlite3_str_vappendf_args(
     fmt_start: *const ::core::ffi::c_char,
     args: &[PrintfArg],
 ) {
-    let mut src = ExtractedArgs::new(args);
-    sqlite3_str_vappendf2(pAccum, fmt_start, &mut src);
+    let src = ExtractedArgs::new(args);
+    let fmt = ::core::ffi::CStr::from_ptr(fmt_start).to_str().unwrap_or("");
+    sqlite3_str_vappendf2(pAccum, fmt, src);
 }
 
 // ─── PrintfArgs trait: abstract argument source for the formatter ─────────
@@ -652,6 +654,50 @@ impl<'a> ExtractedArgs<'a> {
             &PrintfArg::None
         }
     }
+}
+
+impl From<crate::src::ext::rtree::rtree::u64_0> for PrintfArg {
+    fn from(v: crate::src::ext::rtree::rtree::u64_0) -> Self { PrintfArg::UInt(v) }
+}
+
+impl From<crate::src::ext::rtree::rtree::i64_0> for PrintfArg {
+    fn from(v: crate::src::ext::rtree::rtree::i64_0) -> Self { PrintfArg::Int(v) }
+}
+
+impl From<::core::ffi::c_double> for PrintfArg {
+    fn from(v: ::core::ffi::c_double) -> Self { PrintfArg::Double(v) }
+}
+
+impl From<*mut ::core::ffi::c_char> for PrintfArg {
+    fn from(v: *mut ::core::ffi::c_char) -> Self { PrintfArg::Str(v) }
+}
+
+impl From<*const ::core::ffi::c_char> for PrintfArg {
+    fn from(v: *const ::core::ffi::c_char) -> Self { PrintfArg::Str(v as *mut ::core::ffi::c_char) }
+}
+
+impl From<*const ::core::ffi::c_uchar> for PrintfArg {
+    fn from(v: *const ::core::ffi::c_uchar) -> Self { PrintfArg::Str(v as *mut ::core::ffi::c_char) }
+}
+
+impl From<::core::ffi::c_int> for PrintfArg {
+    fn from(v: ::core::ffi::c_int) -> Self { PrintfArg::Int(v as crate::src::ext::rtree::rtree::i64_0) }
+}
+
+impl From<*mut crate::src::headers::sqliteInt_h::SrcItem> for PrintfArg {
+    fn from(v: *mut crate::src::headers::sqliteInt_h::SrcItem) -> Self { PrintfArg::SrcItem(v) }
+}
+
+/// Create an ExtractedArgs cursor from inline values.
+/// Usage: `printf_args!(val)` — auto-converts via From trait
+#[macro_export]
+#[macro_export]
+macro_rules! printf_args {
+    ($($arg:expr),* $(,)?) => {
+        $crate::src::src::printf::ExtractedArgs::new(
+            &[$($crate::src::src::printf::PrintfArg::from($arg)),*]
+        )
+    };
 }
 
 impl<'a> PrintfArgs for ExtractedArgs<'a> {
@@ -1537,10 +1583,10 @@ pub unsafe extern "C" fn sqlite3RCStrResize(
 }
 
 
-pub unsafe fn sqlite3_str_vappendf2(
+pub unsafe fn sqlite3_str_vappendf2<T: PrintfArgs>(
     mut pAccum: *mut crate::src::headers::sqliteInt_h::sqlite3_str,
-    mut fmt: *const ::core::ffi::c_char,
-    cursor: &mut dyn PrintfArgs,
+    fmt: &str,
+    mut cursor: T,
 ) {
     let mut current_block: u64;
     let mut c: ::core::ffi::c_int = 0;
@@ -1572,28 +1618,35 @@ pub unsafe fn sqlite3_str_vappendf2(
     let bArgList: bool = cursor.is_direct();
     let mut buf: [::core::ffi::c_char; 70] = [0; 70];
     bufpt = ::core::ptr::null_mut::<::core::ffi::c_char>();
+    let mut fi: usize = 0;
     loop {
-        c = *fmt as ::core::ffi::c_int;
-        if !(c != 0 as ::core::ffi::c_int) {
-            break;
-        }
-        if c != '%' as i32 {
-            bufpt = fmt as *mut ::core::ffi::c_char;
-            fmt = ::libc::strchr(fmt, '%' as i32);
-            if fmt.is_null() {
-                fmt = bufpt.offset(::libc::strlen(bufpt) as isize);
-            }
+        let remaining = &fmt[fi..];
+        if remaining.is_empty() { break; }
+        let ch = remaining.chars().next().unwrap();
+        if ch != '%' {
+            // Find next '%' or end of string
+            let literal_len = remaining.find('%').unwrap_or(remaining.len());
             sqlite3_str_append(
                 pAccum,
-                bufpt,
-                fmt.offset_from(bufpt) as ::core::ffi::c_long as ::core::ffi::c_int,
+                remaining.as_ptr() as *const ::core::ffi::c_char,
+                literal_len as ::core::ffi::c_int,
             );
-            if *fmt as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
+            fi += literal_len;
+            if fi >= fmt.len() {
                 break;
             }
+            continue;
         }
-        fmt = fmt.offset(1);
-        c = *fmt as ::core::ffi::c_int;
+        fi += 1;
+        if fi >= fmt.len() {
+            sqlite3_str_append(
+                pAccum,
+                b"%\0" as *const u8 as *const ::core::ffi::c_char,
+                1 as ::core::ffi::c_int,
+            );
+            break;
+        }
+        c = fmt[fi..].chars().next().unwrap_or('\0') as ::core::ffi::c_int;
         if c == 0 as ::core::ffi::c_int {
             sqlite3_str_append(
                 pAccum,
@@ -1637,11 +1690,11 @@ pub unsafe fn sqlite3_str_vappendf2(
                     }
                     b'l' => {
                         _flag_long = 1 as etByte;
-                        fmt = fmt.offset(1);
-                        c = *fmt as ::core::ffi::c_int;
+                        fi += 1;
+                        c = fmt[fi..].chars().next().unwrap_or('\0') as ::core::ffi::c_int;
                         if c == 'l' as i32 {
-                            fmt = fmt.offset(1);
-                            c = *fmt as ::core::ffi::c_int;
+                            fi += 1;
+                            c = fmt[fi..].chars().next().unwrap_or('\0') as ::core::ffi::c_int;
                             _flag_long = 2 as etByte;
                         }
                         done = 1 as etByte;
@@ -1649,8 +1702,8 @@ pub unsafe fn sqlite3_str_vappendf2(
                     b'1' | b'2' | b'3' | b'4' | b'5' | b'6' | b'7' | b'8' | b'9' => {
                         let mut wx: ::core::ffi::c_uint = (c - '0' as i32) as ::core::ffi::c_uint;
                         loop {
-                            fmt = fmt.offset(1);
-                            c = *fmt as ::core::ffi::c_int;
+                            fi += 1;
+                            c = fmt[fi..].chars().next().unwrap_or('\0') as ::core::ffi::c_int;
                             if !(c >= '0' as i32 && c <= '9' as i32) {
                                 break;
                             }
@@ -1664,7 +1717,7 @@ pub unsafe fn sqlite3_str_vappendf2(
                         if c != '.' as i32 && c != 'l' as i32 {
                             done = 1 as etByte;
                         } else {
-                            fmt = fmt.offset(-1);
+                            fi -= 1;
                         }
                     }
                     b'*' => {
@@ -1677,16 +1730,16 @@ pub unsafe fn sqlite3_str_vappendf2(
                                 0 as ::core::ffi::c_int
                             };
                         }
-                        c = *fmt.offset(1 as isize) as ::core::ffi::c_int;
+                        c = fmt[fi + 1..].chars().next().unwrap_or('\0') as ::core::ffi::c_int;
                         if c != '.' as i32 && c != 'l' as i32 {
-                            fmt = fmt.offset(1);
-                            c = *fmt as ::core::ffi::c_int;
+                            fi += 1;
+                            c = fmt[fi..].chars().next().unwrap_or('\0') as ::core::ffi::c_int;
                             done = 1 as etByte;
                         }
                     }
                     b'.' => {
-                        fmt = fmt.offset(1);
-                        c = *fmt as ::core::ffi::c_int;
+                        fi += 1;
+                        c = fmt[fi..].chars().next().unwrap_or('\0') as ::core::ffi::c_int;
                         if c == '*' as i32 {
                             precision = cursor.get_int() as ::core::ffi::c_int;
                             if precision < 0 as ::core::ffi::c_int {
@@ -1696,8 +1749,8 @@ pub unsafe fn sqlite3_str_vappendf2(
                                     -(1 as ::core::ffi::c_int)
                                 };
                             }
-                            fmt = fmt.offset(1);
-                            c = *fmt as ::core::ffi::c_int;
+                            fi += 1;
+                            c = fmt[fi..].chars().next().unwrap_or('\0') as ::core::ffi::c_int;
                         } else {
                             let mut px: ::core::ffi::c_uint = 0 as ::core::ffi::c_uint;
                             while c >= '0' as i32 && c <= '9' as i32 {
@@ -1705,15 +1758,15 @@ pub unsafe fn sqlite3_str_vappendf2(
                                     .wrapping_mul(10 as ::core::ffi::c_uint)
                                     .wrapping_add(c as ::core::ffi::c_uint)
                                     .wrapping_sub('0' as i32 as ::core::ffi::c_uint);
-                                fmt = fmt.offset(1);
-                                c = *fmt as ::core::ffi::c_int;
+                                fi += 1;
+                                c = fmt[fi..].chars().next().unwrap_or('\0') as ::core::ffi::c_int;
                             }
                             precision = (px
                                 & 0x7fffffff as ::core::ffi::c_int as ::core::ffi::c_uint)
                                 as ::core::ffi::c_int;
                         }
                         if c == 'l' as i32 {
-                            fmt = fmt.offset(-1);
+                            fi -= 1;
                         } else {
                             done = 1 as etByte;
                         }
@@ -1723,8 +1776,8 @@ pub unsafe fn sqlite3_str_vappendf2(
                     }
                 }
                 if !(done == 0 && {
-                    fmt = fmt.offset(1);
-                    c = *fmt as ::core::ffi::c_int;
+                    fi += 1;
+                    c = fmt[fi..].chars().next().unwrap_or('\0') as ::core::ffi::c_int;
                     c != 0 as ::core::ffi::c_int
                 }) {
                     break;
@@ -2477,23 +2530,22 @@ pub unsafe fn sqlite3_str_vappendf2(
                     } else if (*pItem).fg.isSubquery() != 0 {
                         let mut pSel: *mut crate::src::headers::sqliteInt_h::Select = (*(*pItem).u4.pSubq).pSelect;
                         if (*pSel).selFlags & crate::src::headers::sqliteInt_h::SF_NestedFrom as crate::src::ext::rtree::rtree::u32_0 != 0 {
-                            sqlite3_str_appendf(
-                                pAccum as *mut crate::src::headers::sqliteInt_h::StrAccum,
-                                b"(join-%u)\0" as *const u8 as *const ::core::ffi::c_char,
-                                (*pSel).selId,
+                            sqlite3_str_vappendf2(
+                                pAccum as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
+                                "(join-%u)",
+                                printf_args!((*pSel).selId as u64),
                             );
                         } else if (*pSel).selFlags & crate::src::headers::sqliteInt_h::SF_MultiValue as crate::src::ext::rtree::rtree::u32_0 != 0 {
-                            sqlite3_str_appendf(
-                                pAccum as *mut crate::src::headers::sqliteInt_h::StrAccum,
-                                b"%u-ROW VALUES CLAUSE\0" as *const u8
-                                    as *const ::core::ffi::c_char,
-                                (*pItem).u1.nRow,
+                            sqlite3_str_vappendf2(
+                                pAccum as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
+                                "%u-ROW VALUES CLAUSE",
+                                printf_args!((*pItem).u1.nRow as u64),
                             );
                         } else {
-                            sqlite3_str_appendf(
-                                pAccum as *mut crate::src::headers::sqliteInt_h::StrAccum,
-                                b"(subquery-%u)\0" as *const u8 as *const ::core::ffi::c_char,
-                                (*pSel).selId,
+                            sqlite3_str_vappendf2(
+                                pAccum as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
+                                "(subquery-%u)",
+                                printf_args!((*pSel).selId as u64),
                             );
                         }
                     }
@@ -2687,7 +2739,7 @@ pub unsafe fn sqlite3_str_vappendf2(
                 crate::src::src::malloc::sqlite3DbFree((*pAccum).db as *mut crate::src::headers::sqliteInt_h::sqlite3, zExtra as *mut ::core::ffi::c_void);
                 zExtra = ::core::ptr::null_mut::<::core::ffi::c_char>();
             }
-            fmt = fmt.offset(1);
+            fi += 1;
         }
     }
 }

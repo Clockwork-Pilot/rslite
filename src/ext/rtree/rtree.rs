@@ -6,13 +6,14 @@
 
 
 pub mod geopoly_c {
-    
-    
-    
-    
-    
-    
-    
+    use crate::src::src::printf::sqlite3_str_vappendf2;
+
+
+
+
+
+
+
     
     
     
@@ -667,28 +668,32 @@ pub mod geopoly_c {
             i = 0 as ::core::ffi::c_int;
             let __p_ref = { &mut *p };
             while i < __p_ref.nVertex {
-                crate::src::src::printf::sqlite3_str_appendf(
+                sqlite3_str_vappendf2(
                     x,
-                    b"[%!g,%!g],\0" as *const u8 as *const ::core::ffi::c_char,
-                    *(&raw mut __p_ref.a as *mut crate::geopoly_c::GeoCoord)
-                        .offset((i * 2 as ::core::ffi::c_int) as isize)
-                        as ::core::ffi::c_double,
-                    *(&raw mut __p_ref.a as *mut crate::geopoly_c::GeoCoord)
-                        .offset((i * 2 as ::core::ffi::c_int + 1 as ::core::ffi::c_int) as isize)
-                        as ::core::ffi::c_double,
+                    "[%!g,%!g],",
+                    crate::printf_args!(
+                        *(&raw mut __p_ref.a as *mut crate::geopoly_c::GeoCoord)
+                            .offset((i * 2 as ::core::ffi::c_int) as isize)
+                            as ::core::ffi::c_double,
+                        *(&raw mut __p_ref.a as *mut crate::geopoly_c::GeoCoord)
+                            .offset((i * 2 as ::core::ffi::c_int + 1 as ::core::ffi::c_int) as isize)
+                            as ::core::ffi::c_double,
+                    ),
                 );
                 i += 1;
             }
-            crate::src::src::printf::sqlite3_str_appendf(
+            sqlite3_str_vappendf2(
                 x,
-                b"[%!g,%!g]]\0" as *const u8 as *const ::core::ffi::c_char,
-                *(&raw mut __p_ref.a as *mut crate::geopoly_c::GeoCoord)
-                    .offset((0 as ::core::ffi::c_int * 2 as ::core::ffi::c_int) as isize)
-                    as ::core::ffi::c_double,
-                *(&raw mut __p_ref.a as *mut crate::geopoly_c::GeoCoord).offset(
-                    (0 as ::core::ffi::c_int * 2 as ::core::ffi::c_int + 1 as ::core::ffi::c_int)
-                        as isize,
-                ) as ::core::ffi::c_double,
+                "[%!g,%!g]]",
+                crate::printf_args!(
+                    *(&raw mut __p_ref.a as *mut crate::geopoly_c::GeoCoord)
+                        .offset((0 as ::core::ffi::c_int * 2 as ::core::ffi::c_int) as isize)
+                        as ::core::ffi::c_double,
+                    *(&raw mut __p_ref.a as *mut crate::geopoly_c::GeoCoord).offset(
+                        (0 as ::core::ffi::c_int * 2 as ::core::ffi::c_int + 1 as ::core::ffi::c_int)
+                            as isize,
+                    ) as ::core::ffi::c_double,
+                ),
             );
             crate::src::src::vdbeapi::sqlite3_result_text(
                 context,
@@ -719,37 +724,42 @@ pub mod geopoly_c {
             let mut x: *mut crate::src::headers::sqliteInt_h::sqlite3_str = crate::src::src::printf::sqlite3_str_new(db);
             let mut i: ::core::ffi::c_int = 0;
             let mut cSep: ::core::ffi::c_char = '\'' as i32 as ::core::ffi::c_char;
-            crate::src::src::printf::sqlite3_str_appendf(
+            sqlite3_str_vappendf2(
                 x,
-                b"<polyline points=\0" as *const u8 as *const ::core::ffi::c_char,
+                "<polyline points=",
+                crate::printf_args!(),
             );
             i = 0 as ::core::ffi::c_int;
             let __p_ref = { &mut *p };
             while i < __p_ref.nVertex {
-                crate::src::src::printf::sqlite3_str_appendf(
+                sqlite3_str_vappendf2(
                     x,
-                    b"%c%g,%g\0" as *const u8 as *const ::core::ffi::c_char,
-                    cSep as ::core::ffi::c_int,
-                    *(&raw mut __p_ref.a as *mut crate::geopoly_c::GeoCoord)
-                        .offset((i * 2 as ::core::ffi::c_int) as isize)
-                        as ::core::ffi::c_double,
-                    *(&raw mut __p_ref.a as *mut crate::geopoly_c::GeoCoord)
-                        .offset((i * 2 as ::core::ffi::c_int + 1 as ::core::ffi::c_int) as isize)
-                        as ::core::ffi::c_double,
+                    "%c%g,%g",
+                    crate::printf_args!(
+                        cSep as ::core::ffi::c_int,
+                        *(&raw mut __p_ref.a as *mut crate::geopoly_c::GeoCoord)
+                            .offset((i * 2 as ::core::ffi::c_int) as isize)
+                            as ::core::ffi::c_double,
+                        *(&raw mut __p_ref.a as *mut crate::geopoly_c::GeoCoord)
+                            .offset((i * 2 as ::core::ffi::c_int + 1 as ::core::ffi::c_int) as isize)
+                            as ::core::ffi::c_double,
+                    ),
                 );
                 cSep = ' ' as i32 as ::core::ffi::c_char;
                 i += 1;
             }
-            crate::src::src::printf::sqlite3_str_appendf(
+            sqlite3_str_vappendf2(
                 x,
-                b" %g,%g'\0" as *const u8 as *const ::core::ffi::c_char,
-                *(&raw mut __p_ref.a as *mut crate::geopoly_c::GeoCoord)
-                    .offset((0 as ::core::ffi::c_int * 2 as ::core::ffi::c_int) as isize)
-                    as ::core::ffi::c_double,
-                *(&raw mut __p_ref.a as *mut crate::geopoly_c::GeoCoord).offset(
-                    (0 as ::core::ffi::c_int * 2 as ::core::ffi::c_int + 1 as ::core::ffi::c_int)
-                        as isize,
-                ) as ::core::ffi::c_double,
+                " %g,%g'",
+                crate::printf_args!(
+                    *(&raw mut __p_ref.a as *mut crate::geopoly_c::GeoCoord)
+                        .offset((0 as ::core::ffi::c_int * 2 as ::core::ffi::c_int) as isize)
+                        as ::core::ffi::c_double,
+                    *(&raw mut __p_ref.a as *mut crate::geopoly_c::GeoCoord).offset(
+                        (0 as ::core::ffi::c_int * 2 as ::core::ffi::c_int + 1 as ::core::ffi::c_int)
+                            as isize,
+                    ) as ::core::ffi::c_double,
+                ),
             );
             i = 1 as ::core::ffi::c_int;
             while i < argc {
@@ -758,13 +768,14 @@ pub mod geopoly_c {
                 if !z.is_null()
                     && *z.offset(0 as isize) as ::core::ffi::c_int != 0
                 {
-                    crate::src::src::printf::sqlite3_str_appendf(x, b" %s\0" as *const u8 as *const ::core::ffi::c_char, z);
+                    sqlite3_str_vappendf2(x, " %s", crate::printf_args!(z));
                 }
                 i += 1;
             }
-            crate::src::src::printf::sqlite3_str_appendf(
+            sqlite3_str_vappendf2(
                 x,
-                b"></polyline>\0" as *const u8 as *const ::core::ffi::c_char,
+                "></polyline>",
+                crate::printf_args!(),
             );
             crate::src::src::vdbeapi::sqlite3_result_text(
                 context,
@@ -1882,23 +1893,24 @@ pub mod geopoly_c {
                     6 as usize,
                 );
         pSql = crate::src::src::printf::sqlite3_str_new(db);
-        crate::src::src::printf::sqlite3_str_appendf(
+        sqlite3_str_vappendf2(
             pSql,
-            b"CREATE TABLE x(_shape\0" as *const u8 as *const ::core::ffi::c_char,
+            "CREATE TABLE x(_shape",
+            crate::printf_args!(),
         );
         (*pRtree).nAux = 1 as u8_0;
         (*pRtree).nAuxNotNull = 1 as u8_0;
         ii = 3 as ::core::ffi::c_int;
         while ii < argc {
             (*pRtree).nAux = (*pRtree).nAux.wrapping_add(1);
-            crate::src::src::printf::sqlite3_str_appendf(
+            sqlite3_str_vappendf2(
                 pSql,
-                b",%s\0" as *const u8 as *const ::core::ffi::c_char,
-                *argv.offset(ii as isize),
+                ",%s",
+                crate::printf_args!(*argv.offset(ii as isize)),
             );
             ii += 1;
         }
-        crate::src::src::printf::sqlite3_str_appendf(pSql, b");\0" as *const u8 as *const ::core::ffi::c_char);
+        sqlite3_str_vappendf2(pSql, ");", crate::printf_args!());
         zSql = crate::src::src::printf::sqlite3_str_finish(pSql);
         if zSql.is_null() {
             rc = crate::src::headers::sqlite3_h::SQLITE_NOMEM;
@@ -2874,6 +2886,7 @@ pub mod stdlib_float_h {
     
 }
 
+use crate::src::src::printf::sqlite3_str_vappendf2;
 
 pub use crate::src::headers::stdlib::va_list;
 pub use crate::__stddef_null_h::NULL;
@@ -6787,39 +6800,30 @@ unsafe extern "C" fn rtreeSqlInit(
         let mut zCreate: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
         let mut p: *mut crate::src::headers::sqliteInt_h::sqlite3_str = crate::src::src::printf::sqlite3_str_new(db);
         let mut ii: ::core::ffi::c_int = 0;
-        crate::src::src::printf::sqlite3_str_appendf(
+        sqlite3_str_vappendf2(
             p,
-            b"CREATE TABLE \"%w\".\"%w_rowid\"(rowid INTEGER PRIMARY KEY,nodeno\0" as *const u8
-                as *const ::core::ffi::c_char,
-            zDb,
-            zPrefix,
+            "CREATE TABLE \"%w\".\"%w_rowid\"(rowid INTEGER PRIMARY KEY,nodeno",
+            crate::printf_args!(zDb, zPrefix),
         );
         ii = 0 as ::core::ffi::c_int;
         while ii < __pRtree_ref.nAux as ::core::ffi::c_int {
-            crate::src::src::printf::sqlite3_str_appendf(p, b",a%d\0" as *const u8 as *const ::core::ffi::c_char, ii);
+            sqlite3_str_vappendf2(p, ",a%d", crate::printf_args!(ii));
             ii += 1;
         }
-        crate::src::src::printf::sqlite3_str_appendf(
+        sqlite3_str_vappendf2(
             p,
-            b");CREATE TABLE \"%w\".\"%w_node\"(nodeno INTEGER PRIMARY KEY,data);\0" as *const u8
-                as *const ::core::ffi::c_char,
-            zDb,
-            zPrefix,
+            ");CREATE TABLE \"%w\".\"%w_node\"(nodeno INTEGER PRIMARY KEY,data);",
+            crate::printf_args!(zDb, zPrefix),
         );
-        crate::src::src::printf::sqlite3_str_appendf(
+        sqlite3_str_vappendf2(
             p,
-            b"CREATE TABLE \"%w\".\"%w_parent\"(nodeno INTEGER PRIMARY KEY,parentnode);\0"
-                as *const u8 as *const ::core::ffi::c_char,
-            zDb,
-            zPrefix,
+            "CREATE TABLE \"%w\".\"%w_parent\"(nodeno INTEGER PRIMARY KEY,parentnode);",
+            crate::printf_args!(zDb, zPrefix),
         );
-        crate::src::src::printf::sqlite3_str_appendf(
+        sqlite3_str_vappendf2(
             p,
-            b"INSERT INTO \"%w\".\"%w_node\"VALUES(1,zeroblob(%d))\0" as *const u8
-                as *const ::core::ffi::c_char,
-            zDb,
-            zPrefix,
-            __pRtree_ref.iNodeSize,
+            "INSERT INTO \"%w\".\"%w_node\"VALUES(1,zeroblob(%d))",
+            crate::printf_args!(zDb, zPrefix, __pRtree_ref.iNodeSize),
         );
         zCreate = crate::src::src::printf::sqlite3_str_finish(p);
         if zCreate.is_null() {
@@ -6891,11 +6895,10 @@ unsafe extern "C" fn rtreeSqlInit(
             let mut ii_0: ::core::ffi::c_int = 0;
             let mut zSql_0: *mut ::core::ffi::c_char =
                 ::core::ptr::null_mut::<::core::ffi::c_char>();
-            crate::src::src::printf::sqlite3_str_appendf(
+            sqlite3_str_vappendf2(
                 p_0,
-                b"UPDATE \"%w\".\"%w_rowid\"SET \0" as *const u8 as *const ::core::ffi::c_char,
-                zDb,
-                zPrefix,
+                "UPDATE \"%w\".\"%w_rowid\"SET ",
+                crate::printf_args!(zDb, zPrefix),
             );
             ii_0 = 0 as ::core::ffi::c_int;
             while ii_0 < __pRtree_ref.nAux as ::core::ffi::c_int {
@@ -6907,26 +6910,24 @@ unsafe extern "C" fn rtreeSqlInit(
                     );
                 }
                 if ii_0 < __pRtree_ref.nAuxNotNull as ::core::ffi::c_int {
-                    crate::src::src::printf::sqlite3_str_appendf(
+                    sqlite3_str_vappendf2(
                         p_0,
-                        b"a%d=coalesce(?%d,a%d)\0" as *const u8 as *const ::core::ffi::c_char,
-                        ii_0,
-                        ii_0 + 2 as ::core::ffi::c_int,
-                        ii_0,
+                        "a%d=coalesce(?%d,a%d)",
+                        crate::printf_args!(ii_0, ii_0 + 2 as ::core::ffi::c_int, ii_0),
                     );
                 } else {
-                    crate::src::src::printf::sqlite3_str_appendf(
+                    sqlite3_str_vappendf2(
                         p_0,
-                        b"a%d=?%d\0" as *const u8 as *const ::core::ffi::c_char,
-                        ii_0,
-                        ii_0 + 2 as ::core::ffi::c_int,
+                        "a%d=?%d",
+                        crate::printf_args!(ii_0, ii_0 + 2 as ::core::ffi::c_int),
                     );
                 }
                 ii_0 += 1;
             }
-            crate::src::src::printf::sqlite3_str_appendf(
+            sqlite3_str_vappendf2(
                 p_0,
-                b" WHERE rowid=?1\0" as *const u8 as *const ::core::ffi::c_char,
+                " WHERE rowid=?1",
+                crate::printf_args!(),
             );
             zSql_0 = crate::src::src::printf::sqlite3_str_finish(p_0);
             if zSql_0.is_null() {
@@ -7107,43 +7108,44 @@ unsafe extern "C" fn rtreeInit(
                     6 as usize,
                 );
     pSql = crate::src::src::printf::sqlite3_str_new(db);
-    crate::src::src::printf::sqlite3_str_appendf(
+    sqlite3_str_vappendf2(
         pSql,
-        b"CREATE TABLE x(%.*s INT\0" as *const u8 as *const ::core::ffi::c_char,
-        rtreeTokenLength(*argv.offset(3 as isize)),
-        *argv.offset(3 as isize),
+        "CREATE TABLE x(%.*s INT",
+        crate::printf_args!(rtreeTokenLength(*argv.offset(3 as isize)), *argv.offset(3 as isize)),
     );
     ii = 4 as ::core::ffi::c_int;
     while ii < argc {
         let mut zArg: *const ::core::ffi::c_char = *argv.offset(ii as isize);
         if *zArg.offset(0 as isize) as ::core::ffi::c_int == '+' as i32 {
             (*pRtree).nAux = (*pRtree).nAux.wrapping_add(1);
-            crate::src::src::printf::sqlite3_str_appendf(
+            sqlite3_str_vappendf2(
                 pSql,
-                b",%.*s\0" as *const u8 as *const ::core::ffi::c_char,
-                rtreeTokenLength(zArg.offset(1 as isize)),
-                zArg.offset(1 as isize),
+                ",%.*s",
+                crate::printf_args!(rtreeTokenLength(zArg.offset(1 as isize)), zArg.offset(1 as isize)),
             );
         } else {
             let __pRtree_ref = { &mut *pRtree };
             if __pRtree_ref.nAux as ::core::ffi::c_int > 0 as ::core::ffi::c_int {
                 break;
             }
-            static mut azFormat: [*const ::core::ffi::c_char; 2] = [
-                b",%.*s REAL\0" as *const u8 as *const ::core::ffi::c_char,
-                b",%.*s INT\0" as *const u8 as *const ::core::ffi::c_char,
-            ];
             __pRtree_ref.nDim2 = __pRtree_ref.nDim2.wrapping_add(1);
-            crate::src::src::printf::sqlite3_str_appendf(
-                pSql,
-                azFormat[eCoordType as usize],
-                rtreeTokenLength(zArg),
-                zArg,
-            );
+            if eCoordType as usize == 0 {
+                sqlite3_str_vappendf2(
+                    pSql,
+                    ",%.*s REAL",
+                    crate::printf_args!(rtreeTokenLength(zArg), zArg),
+                );
+            } else {
+                sqlite3_str_vappendf2(
+                    pSql,
+                    ",%.*s INT",
+                    crate::printf_args!(rtreeTokenLength(zArg), zArg),
+                );
+            }
         }
         ii += 1;
     }
-    crate::src::src::printf::sqlite3_str_appendf(pSql, b");\0" as *const u8 as *const ::core::ffi::c_char);
+    sqlite3_str_vappendf2(pSql, ");", crate::printf_args!());
     zSql = crate::src::src::printf::sqlite3_str_finish(pSql);
     if zSql.is_null() {
         rc = crate::src::headers::sqlite3_h::SQLITE_NOMEM;
@@ -7254,17 +7256,17 @@ unsafe extern "C" fn rtreenode(
                 1 as ::core::ffi::c_int,
             );
         }
-        crate::src::src::printf::sqlite3_str_appendf(
+        sqlite3_str_vappendf2(
             pOut,
-            b"{%lld\0" as *const u8 as *const ::core::ffi::c_char,
-            cell.iRowid,
+            "{%lld",
+            crate::printf_args!(cell.iRowid),
         );
         jj = 0 as ::core::ffi::c_int;
         while jj < tree.nDim2 as ::core::ffi::c_int {
-            crate::src::src::printf::sqlite3_str_appendf(
+            sqlite3_str_vappendf2(
                 pOut,
-                b" %g\0" as *const u8 as *const ::core::ffi::c_char,
-                cell.aCoord[jj as usize].f as ::core::ffi::c_double,
+                " %g",
+                crate::printf_args!(cell.aCoord[jj as usize].f as ::core::ffi::c_double),
             );
             jj += 1;
         }

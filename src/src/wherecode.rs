@@ -28,6 +28,9 @@ pub use crate::src::headers::stdlib::int16_t;pub use crate::src::headers::stdlib
 
 
 
+use crate::printf_args;
+use crate::src::src::printf::sqlite3_str_vappendf2;
+
 pub use crate::src::headers::stdlib::__int16_t;pub use crate::src::headers::stdlib::__int8_t;pub use crate::src::headers::stdlib::__uint16_t;pub use crate::src::headers::stdlib::__uint32_t;pub use crate::src::headers::stdlib::__uint8_t;pub use crate::src::src::vdbe::p4union;pub use crate::src::src::vdbeaux::sqlite3VdbeAddOp0;pub use crate::src::src::vdbeaux::sqlite3VdbeAddOp1;pub use crate::src::src::vdbeaux::sqlite3VdbeAddOp2;pub use crate::src::src::vdbeaux::sqlite3VdbeAddOp3;pub use crate::src::src::vdbeaux::sqlite3VdbeAddOp4;pub use crate::src::src::vdbeaux::sqlite3VdbeAddOp4Int;pub use crate::src::src::vdbeaux::sqlite3VdbeChangeP1;pub use crate::src::src::vdbeaux::sqlite3VdbeChangeP2;pub use crate::src::src::vdbeaux::sqlite3VdbeChangeP4;pub use crate::src::src::vdbeaux::sqlite3VdbeChangeP5;pub use crate::src::src::vdbeaux::sqlite3VdbeCurrentAddr;pub use crate::src::src::vdbeaux::sqlite3VdbeExplain;pub use crate::src::src::vdbeaux::sqlite3VdbeExplainPop;pub use crate::src::src::vdbeaux::sqlite3VdbeGetLastOp;pub use crate::src::src::vdbeaux::sqlite3VdbeGetOp;pub use crate::src::src::vdbeaux::sqlite3VdbeGoto;pub use crate::src::src::vdbeaux::sqlite3VdbeJumpHere;pub use crate::src::src::vdbeaux::sqlite3VdbeMakeLabel;pub use crate::src::src::vdbeaux::sqlite3VdbeResolveLabel;pub use crate::src::src::vdbeaux::sqlite3VdbeSetP4KeyInfo;pub use crate::src::src::vdbe::Mem;pub use crate::src::src::vdbe::SubProgram;pub use crate::src::src::vdbe::SubrtnSig;pub use crate::src::headers::vdbeInt_h::Vdbe;pub use crate::src::src::vdbe::VdbeOp;pub use crate::src::src::vdbe::P4_DYNAMIC;pub use crate::src::src::vdbe::P4_INTARRAY;pub use crate::src::src::vdbe::P4_STATIC;pub use crate::src::headers::whereInt_h::InLoop;pub use crate::src::headers::whereInt_h::WhereAndInfo;pub use crate::src::headers::whereInt_h::WhereClause;pub use crate::src::headers::whereInt_h::WhereInfo;pub use crate::src::headers::whereInt_h::WhereLevel;pub use crate::src::headers::whereInt_h::WhereLoop;pub use crate::src::headers::whereInt_h::WhereMaskSet;pub use crate::src::headers::whereInt_h::WhereMemBlock;pub use crate::src::headers::whereInt_h::WhereOrInfo;pub use crate::src::headers::whereInt_h::WhereRightJoin;pub use crate::src::headers::whereInt_h::WhereTerm;pub use crate::src::headers::whereInt_h::__anon_struct_11;pub use crate::src::headers::whereInt_h::__anon_struct_12;pub use crate::src::headers::whereInt_h::__anon_struct_13;pub use crate::src::headers::whereInt_h::__anon_struct_14;pub use crate::src::headers::whereInt_h::__anon_union_19;pub use crate::src::headers::whereInt_h::__anon_union_20;pub use crate::src::headers::whereInt_h::__anon_union_21;pub use crate::src::src::r#where::sqlite3WhereFindTerm;pub use crate::src::src::r#where::sqlite3WhereGetMask;pub use crate::src::src::r#where::sqlite3WhereRealloc;pub use crate::src::headers::whereInt_h::TERM_CODED;pub use crate::src::headers::whereInt_h::TERM_IS;pub use crate::src::headers::whereInt_h::TERM_LIKE;pub use crate::src::headers::whereInt_h::TERM_LIKECOND;pub use crate::src::headers::whereInt_h::TERM_LIKEOPT;pub use crate::src::headers::whereInt_h::TERM_SLICE;pub use crate::src::headers::whereInt_h::TERM_VARSELECT;pub use crate::src::headers::whereInt_h::TERM_VIRTUAL;pub use crate::src::headers::whereInt_h::TERM_VNULL;pub use crate::src::headers::whereInt_h::WHERE_AUTO_INDEX;pub use crate::src::headers::whereInt_h::WHERE_BIGNULL_SORT;pub use crate::src::headers::whereInt_h::WHERE_BOTH_LIMIT;pub use crate::src::headers::whereInt_h::WHERE_BTM_LIMIT;pub use crate::src::headers::whereInt_h::WHERE_COLUMN_EQ;pub use crate::src::headers::whereInt_h::WHERE_COLUMN_IN;pub use crate::src::headers::whereInt_h::WHERE_COLUMN_RANGE;pub use crate::src::headers::whereInt_h::WHERE_CONSTRAINT;pub use crate::src::headers::whereInt_h::WHERE_EXPRIDX;pub use crate::src::headers::whereInt_h::WHERE_IDX_ONLY;pub use crate::src::headers::whereInt_h::WHERE_INDEXED;pub use crate::src::headers::whereInt_h::WHERE_IN_ABLE;pub use crate::src::headers::whereInt_h::WHERE_IN_EARLYOUT;pub use crate::src::headers::whereInt_h::WHERE_IN_SEEKSCAN;pub use crate::src::headers::whereInt_h::WHERE_IPK;pub use crate::src::headers::whereInt_h::WHERE_MULTI_OR;pub use crate::src::headers::whereInt_h::WHERE_ONEROW;pub use crate::src::headers::whereInt_h::WHERE_PARTIALIDX;pub use crate::src::headers::whereInt_h::WHERE_TOP_LIMIT;pub use crate::src::headers::whereInt_h::WHERE_TRANSCONS;pub use crate::src::headers::whereInt_h::WHERE_UNQ_WANTED;pub use crate::src::headers::whereInt_h::WHERE_VIRTUALTABLE;pub use crate::src::headers::whereInt_h::WO_ALL;pub use crate::src::headers::whereInt_h::WO_AND;pub use crate::src::headers::whereInt_h::WO_EQ;pub use crate::src::headers::whereInt_h::WO_EQUIV;pub use crate::src::headers::whereInt_h::WO_GE;pub use crate::src::headers::whereInt_h::WO_IN;pub use crate::src::headers::whereInt_h::WO_IS;pub use crate::src::headers::whereInt_h::WO_ISNULL;pub use crate::src::headers::whereInt_h::WO_LE;pub use crate::src::headers::whereInt_h::WO_ROWVAL;
 #[derive(Copy, Clone)]
 #[repr(C)]
@@ -167,15 +170,10 @@ unsafe extern "C" fn explainIndexRange(mut pStr: *mut crate::src::headers::sqlit
                 5 as ::core::ffi::c_int,
             );
         }
-        crate::src::src::printf::sqlite3_str_appendf(
-            
-            pStr as *mut crate::src::headers::sqliteInt_h::sqlite3_str as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
-            if i >= nSkip as ::core::ffi::c_int {
-                b"%s=?\0" as *const u8 as *const ::core::ffi::c_char
-            } else {
-                b"ANY(%s)\0" as *const u8 as *const ::core::ffi::c_char
-            },
-            z,
+        sqlite3_str_vappendf2(
+            pStr as *mut sqlite3_str,
+            if i >= nSkip as ::core::ffi::c_int { "%s=?" } else { "ANY(%s)" },
+            printf_args!(z),
         );
         i += 1;
     }
@@ -256,21 +254,14 @@ pub unsafe extern "C" fn sqlite3WhereAddExplainText(
             crate::sqliteLimit_h::SQLITE_MAX_LENGTH,
         );
         str.printfFlags = crate::src::headers::sqliteInt_h::SQLITE_PRINTF_INTERNAL as crate::src::ext::rtree::rtree::u8_0;
-        crate::src::src::printf::sqlite3_str_appendf(
-            
-            &raw mut str as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
-            b"%s %S%s\0" as *const u8 as *const ::core::ffi::c_char,
-            if isSearch != 0 {
-                b"SEARCH\0" as *const u8 as *const ::core::ffi::c_char
-            } else {
-                b"SCAN\0" as *const u8 as *const ::core::ffi::c_char
-            },
-            pItem,
-            if (*pItem).fg.fromExists() as ::core::ffi::c_int != 0 {
-                b" EXISTS\0" as *const u8 as *const ::core::ffi::c_char
-            } else {
-                b"\0" as *const u8 as *const ::core::ffi::c_char
-            },
+        sqlite3_str_vappendf2(
+            &raw mut str as *mut _ as *mut sqlite3_str,
+            "%s %S%s",
+            printf_args!(
+                if isSearch != 0 { b"SEARCH\0".as_ptr() as *const ::core::ffi::c_char } else { b"SCAN\0".as_ptr() as *const ::core::ffi::c_char },
+                pItem,
+                if (*pItem).fg.fromExists() as ::core::ffi::c_int != 0 { b" EXISTS\0".as_ptr() as *const ::core::ffi::c_char } else { b"\0".as_ptr() as *const ::core::ffi::c_char }
+            ),
         );
         if flags & (crate::src::headers::whereInt_h::WHERE_IPK | crate::src::headers::whereInt_h::WHERE_VIRTUALTABLE) as crate::src::ext::rtree::rtree::u32_0 == 0 as crate::src::ext::rtree::rtree::u32_0 {
             let mut zFmt: *const ::core::ffi::c_char = ::core::ptr::null::<::core::ffi::c_char>();
@@ -299,7 +290,7 @@ pub unsafe extern "C" fn sqlite3WhereAddExplainText(
                     b" USING \0" as *const u8 as *const ::core::ffi::c_char,
                     7 as ::core::ffi::c_int,
                 );
-                crate::src::src::printf::sqlite3_str_appendf(&raw mut str as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str, zFmt, (*pIdx).zName);
+                sqlite3_str_vappendf2(&raw mut str as *mut _ as *mut sqlite3_str, ::core::ffi::CStr::from_ptr(zFmt).to_str().unwrap_or(""), printf_args!((*pIdx).zName));
                 explainIndexRange(&raw mut str, pLoop);
             }
         } else if flags & crate::src::headers::whereInt_h::WHERE_IPK as crate::src::ext::rtree::rtree::u32_0 != 0 as crate::src::ext::rtree::rtree::u32_0
@@ -308,20 +299,18 @@ pub unsafe extern "C" fn sqlite3WhereAddExplainText(
             let mut cRangeOp: ::core::ffi::c_char = 0;
             let mut zRowid: *const ::core::ffi::c_char =
                 b"rowid\0" as *const u8 as *const ::core::ffi::c_char;
-            crate::src::src::printf::sqlite3_str_appendf(
-                
-                &raw mut str as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
-                b" USING INTEGER PRIMARY KEY (%s\0" as *const u8 as *const ::core::ffi::c_char,
-                zRowid,
+            sqlite3_str_vappendf2(
+                &raw mut str as *mut _ as *mut sqlite3_str,
+                " USING INTEGER PRIMARY KEY (%s",
+                printf_args!(zRowid),
             );
             if flags & (crate::src::headers::whereInt_h::WHERE_COLUMN_EQ | crate::src::headers::whereInt_h::WHERE_COLUMN_IN) as crate::src::ext::rtree::rtree::u32_0 != 0 {
                 cRangeOp = '=' as i32 as ::core::ffi::c_char;
             } else if flags & crate::src::headers::whereInt_h::WHERE_BOTH_LIMIT as crate::src::ext::rtree::rtree::u32_0 == crate::src::headers::whereInt_h::WHERE_BOTH_LIMIT as crate::src::ext::rtree::rtree::u32_0 {
-                crate::src::src::printf::sqlite3_str_appendf(
-                    
-                    &raw mut str as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
-                    b">? AND %s\0" as *const u8 as *const ::core::ffi::c_char,
-                    zRowid,
+                sqlite3_str_vappendf2(
+                    &raw mut str as *mut _ as *mut sqlite3_str,
+                    ">? AND %s",
+                    printf_args!(zRowid),
                 );
                 cRangeOp = '<' as i32 as ::core::ffi::c_char;
             } else if flags & crate::src::headers::whereInt_h::WHERE_BTM_LIMIT as crate::src::ext::rtree::rtree::u32_0 != 0 {
@@ -329,11 +318,10 @@ pub unsafe extern "C" fn sqlite3WhereAddExplainText(
             } else {
                 cRangeOp = '<' as i32 as ::core::ffi::c_char;
             }
-            crate::src::src::printf::sqlite3_str_appendf(
-                
-                &raw mut str as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
-                b"%c?)\0" as *const u8 as *const ::core::ffi::c_char,
-                cRangeOp as ::core::ffi::c_int,
+            sqlite3_str_vappendf2(
+                &raw mut str as *mut _ as *mut sqlite3_str,
+                "%c?)",
+                printf_args!(crate::src::src::printf::PrintfArg::Char(cRangeOp as ::core::ffi::c_uint)),
             );
         } else if flags & crate::src::headers::whereInt_h::WHERE_VIRTUALTABLE as crate::src::ext::rtree::rtree::u32_0 != 0 as crate::src::ext::rtree::rtree::u32_0 {
             crate::src::src::printf::sqlite3_str_appendall(
@@ -342,23 +330,17 @@ pub unsafe extern "C" fn sqlite3WhereAddExplainText(
                 b" VIRTUAL TABLE INDEX \0" as *const u8 as *const ::core::ffi::c_char,
             );
             let __pLoop_ref = unsafe { &mut *pLoop };
-            crate::src::src::printf::sqlite3_str_appendf(
-                
-                &raw mut str as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
-                if __pLoop_ref.u.vtab.bIdxNumHex() as ::core::ffi::c_int != 0 {
-                    b"0x%x:%s\0" as *const u8 as *const ::core::ffi::c_char
-                } else {
-                    b"%d:%s\0" as *const u8 as *const ::core::ffi::c_char
-                },
-                __pLoop_ref.u.vtab.idxNum,
-                __pLoop_ref.u.vtab.idxStr,
+            sqlite3_str_vappendf2(
+                &raw mut str as *mut _ as *mut sqlite3_str,
+                if __pLoop_ref.u.vtab.bIdxNumHex() as ::core::ffi::c_int != 0 { "0x%x:%s" } else { "%d:%s" },
+                printf_args!(__pLoop_ref.u.vtab.idxNum, __pLoop_ref.u.vtab.idxStr),
             );
         }
         if (*pItem).fg.jointype as ::core::ffi::c_int & crate::src::headers::sqliteInt_h::JT_LEFT != 0 {
-            crate::src::src::printf::sqlite3_str_appendf(
-                
-                &raw mut str as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
-                b" LEFT-JOIN\0" as *const u8 as *const ::core::ffi::c_char,
+            sqlite3_str_vappendf2(
+                &raw mut str as *mut _ as *mut sqlite3_str,
+                " LEFT-JOIN",
+                printf_args!(),
             );
         }
         let __pOp_ref = unsafe { &mut *pOp };
@@ -430,27 +412,25 @@ pub unsafe extern "C" fn sqlite3WhereExplainBloomFilter(
         crate::sqliteLimit_h::SQLITE_MAX_LENGTH,
     );
     str.printfFlags = crate::src::headers::sqliteInt_h::SQLITE_PRINTF_INTERNAL as crate::src::ext::rtree::rtree::u8_0;
-    crate::src::src::printf::sqlite3_str_appendf(
-        
-        &raw mut str as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
-        b"BLOOM FILTER ON %S (\0" as *const u8 as *const ::core::ffi::c_char,
-        pItem,
+    sqlite3_str_vappendf2(
+        &raw mut str as *mut _ as *mut sqlite3_str,
+        "BLOOM FILTER ON %S (",
+        printf_args!(pItem),
     );
     pLoop = (*pLevel).pWLoop as *mut crate::src::headers::whereInt_h::WhereLoop;
     if (*pLoop).wsFlags & crate::src::headers::whereInt_h::WHERE_IPK as crate::src::ext::rtree::rtree::u32_0 != 0 {
         let mut pTab: *const crate::src::headers::sqliteInt_h::Table = (*pItem).pSTab;
         if (*pTab).iPKey as ::core::ffi::c_int >= 0 as ::core::ffi::c_int {
-            crate::src::src::printf::sqlite3_str_appendf(
-                
-                &raw mut str as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
-                b"%s=?\0" as *const u8 as *const ::core::ffi::c_char,
-                (*(*pTab).aCol.offset((*pTab).iPKey as isize)).zCnName,
+            sqlite3_str_vappendf2(
+                &raw mut str as *mut _ as *mut sqlite3_str,
+                "%s=?",
+                printf_args!((*(*pTab).aCol.offset((*pTab).iPKey as isize)).zCnName),
             );
         } else {
-            crate::src::src::printf::sqlite3_str_appendf(
-                
-                &raw mut str as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
-                b"rowid=?\0" as *const u8 as *const ::core::ffi::c_char,
+            sqlite3_str_vappendf2(
+                &raw mut str as *mut _ as *mut sqlite3_str,
+                "rowid=?",
+                printf_args!(),
             );
         }
     } else {
@@ -466,11 +446,10 @@ pub unsafe extern "C" fn sqlite3WhereExplainBloomFilter(
                     5 as ::core::ffi::c_int,
                 );
             }
-            crate::src::src::printf::sqlite3_str_appendf(
-                
-                &raw mut str as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
-                b"%s=?\0" as *const u8 as *const ::core::ffi::c_char,
-                z,
+            sqlite3_str_vappendf2(
+                &raw mut str as *mut _ as *mut sqlite3_str,
+                "%s=?",
+                printf_args!(z),
             );
             i += 1;
         }

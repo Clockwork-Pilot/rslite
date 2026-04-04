@@ -25,6 +25,9 @@ pub use crate::src::parse::TK_BLOB_1;pub use crate::src::parse::TK_CAST;pub use 
 pub use crate::sqliteLimit_h::SQLITE_MAX_LENGTH;
 pub use crate::src::headers::stdlib::intptr_t;
 
+pub use crate::src::src::printf::sqlite3_str_vappendf2;
+use crate::printf_args;
+
 
 
 
@@ -67,15 +70,16 @@ unsafe extern "C" fn vdbeMemRenderNum(
             sz,
             0 as ::core::ffi::c_int,
         );
-        crate::src::src::printf::sqlite3_str_appendf(
-            
+        sqlite3_str_vappendf2(
             &raw mut acc as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
-            b"%!.15g\0" as *const u8 as *const ::core::ffi::c_char,
-            if (*p).flags as ::core::ffi::c_int & crate::src::headers::vdbeInt_h::MEM_IntReal != 0 as ::core::ffi::c_int {
-                (*p).u.i as ::core::ffi::c_double
-            } else {
-                (*p).u.r
-            },
+            "%!.15g",
+            printf_args!(
+                if (*p).flags as ::core::ffi::c_int & crate::src::headers::vdbeInt_h::MEM_IntReal != 0 as ::core::ffi::c_int {
+                    (*p).u.i as ::core::ffi::c_double
+                } else {
+                    (*p).u.r
+                }
+            ),
         );
         *zBuf.offset(acc.nChar as isize) = 0 as ::core::ffi::c_char;
         (*p).n = acc.nChar as ::core::ffi::c_int;

@@ -1,4 +1,5 @@
 use ::c2rust_bitfields;
+use crate::printf_args;
 
 
 
@@ -1628,37 +1629,36 @@ unsafe extern "C" fn strftimeFunc(
             cf = *zFmt.offset(i as isize);
             match cf as ::core::ffi::c_int {
                 100 | 101 => {
-                    crate::src::src::printf::sqlite3_str_appendf(
-                        
-                        &raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
-                        if cf as ::core::ffi::c_int == 'd' as i32 {
-                            b"%02d\0" as *const u8 as *const ::core::ffi::c_char
-                        } else {
-                            b"%2d\0" as *const u8 as *const ::core::ffi::c_char
-                        },
-                        x.D,
-                    );
+                    if cf as ::core::ffi::c_int == 'd' as i32 {
+                        crate::src::src::printf::sqlite3_str_vappendf2(
+                            &raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
+                            "%02d",
+                            printf_args!(x.D),
+                        );
+                    } else {
+                        crate::src::src::printf::sqlite3_str_vappendf2(
+                            &raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
+                            "%2d",
+                            printf_args!(x.D),
+                        );
+                    }
                 }
                 102 => {
                     let mut s: ::core::ffi::c_double = x.s;
                     if s > 59.999f64 {
                         s = 59.999f64;
                     }
-                    crate::src::src::printf::sqlite3_str_appendf(
-                        
+                    crate::src::src::printf::sqlite3_str_vappendf2(
                         &raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
-                        b"%06.3f\0" as *const u8 as *const ::core::ffi::c_char,
-                        s,
+                        "%06.3f",
+                        printf_args!(s),
                     );
                 }
                 70 => {
-                    crate::src::src::printf::sqlite3_str_appendf(
-                        
+                    crate::src::src::printf::sqlite3_str_vappendf2(
                         &raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
-                        b"%04d-%02d-%02d\0" as *const u8 as *const ::core::ffi::c_char,
-                        x.Y,
-                        x.M,
-                        x.D,
+                        "%04d-%02d-%02d",
+                        printf_args!(x.Y, x.M, x.D),
                     );
                 }
                 71 | 103 => {
@@ -1669,32 +1669,33 @@ unsafe extern "C" fn strftimeFunc(
                     y.validYMD = 0 as ::core::ffi::c_char;
                     computeYMD(&raw mut y);
                     if cf as ::core::ffi::c_int == 'g' as i32 {
-                        crate::src::src::printf::sqlite3_str_appendf(
-                            
+                        crate::src::src::printf::sqlite3_str_vappendf2(
                             &raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
-                            b"%02d\0" as *const u8 as *const ::core::ffi::c_char,
-                            y.Y % 100 as ::core::ffi::c_int,
+                            "%02d",
+                            printf_args!(y.Y % 100 as ::core::ffi::c_int),
                         );
                     } else {
-                        crate::src::src::printf::sqlite3_str_appendf(
-                            
+                        crate::src::src::printf::sqlite3_str_vappendf2(
                             &raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
-                            b"%04d\0" as *const u8 as *const ::core::ffi::c_char,
-                            y.Y,
+                            "%04d",
+                            printf_args!(y.Y),
                         );
                     }
                 }
                 72 | 107 => {
-                    crate::src::src::printf::sqlite3_str_appendf(
-                        
-                        &raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
-                        if cf as ::core::ffi::c_int == 'H' as i32 {
-                            b"%02d\0" as *const u8 as *const ::core::ffi::c_char
-                        } else {
-                            b"%2d\0" as *const u8 as *const ::core::ffi::c_char
-                        },
-                        x.h,
-                    );
+                    if cf as ::core::ffi::c_int == 'H' as i32 {
+                        crate::src::src::printf::sqlite3_str_vappendf2(
+                            &raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
+                            "%02d",
+                            printf_args!(x.h),
+                        );
+                    } else {
+                        crate::src::src::printf::sqlite3_str_vappendf2(
+                            &raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
+                            "%2d",
+                            printf_args!(x.h),
+                        );
+                    }
                 }
                 73 | 108 => {
                     let mut h: ::core::ffi::c_int = x.h;
@@ -1704,47 +1705,46 @@ unsafe extern "C" fn strftimeFunc(
                     if h == 0 as ::core::ffi::c_int {
                         h = 12 as ::core::ffi::c_int;
                     }
-                    crate::src::src::printf::sqlite3_str_appendf(
-                        
-                        &raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
-                        if cf as ::core::ffi::c_int == 'I' as i32 {
-                            b"%02d\0" as *const u8 as *const ::core::ffi::c_char
-                        } else {
-                            b"%2d\0" as *const u8 as *const ::core::ffi::c_char
-                        },
-                        h,
-                    );
+                    if cf as ::core::ffi::c_int == 'I' as i32 {
+                        crate::src::src::printf::sqlite3_str_vappendf2(
+                            &raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
+                            "%02d",
+                            printf_args!(h),
+                        );
+                    } else {
+                        crate::src::src::printf::sqlite3_str_vappendf2(
+                            &raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
+                            "%2d",
+                            printf_args!(h),
+                        );
+                    }
                 }
                 106 => {
-                    crate::src::src::printf::sqlite3_str_appendf(
-                        
+                    crate::src::src::printf::sqlite3_str_vappendf2(
                         &raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
-                        b"%03d\0" as *const u8 as *const ::core::ffi::c_char,
-                        daysAfterJan01(&raw mut x) + 1 as ::core::ffi::c_int,
+                        "%03d",
+                        printf_args!(daysAfterJan01(&raw mut x) + 1 as ::core::ffi::c_int),
                     );
                 }
                 74 => {
-                    crate::src::src::printf::sqlite3_str_appendf(
-                        
+                    crate::src::src::printf::sqlite3_str_vappendf2(
                         &raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
-                        b"%.16g\0" as *const u8 as *const ::core::ffi::c_char,
-                        x.iJD as ::core::ffi::c_double / 86400000.0f64,
+                        "%.16g",
+                        printf_args!(x.iJD as ::core::ffi::c_double / 86400000.0f64),
                     );
                 }
                 109 => {
-                    crate::src::src::printf::sqlite3_str_appendf(
-                        
+                    crate::src::src::printf::sqlite3_str_vappendf2(
                         &raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
-                        b"%02d\0" as *const u8 as *const ::core::ffi::c_char,
-                        x.M,
+                        "%02d",
+                        printf_args!(x.M),
                     );
                 }
                 77 => {
-                    crate::src::src::printf::sqlite3_str_appendf(
-                        
+                    crate::src::src::printf::sqlite3_str_vappendf2(
                         &raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
-                        b"%02d\0" as *const u8 as *const ::core::ffi::c_char,
-                        x.m,
+                        "%02d",
+                        printf_args!(x.m),
                     );
                 }
                 112 | 80 => {
@@ -1773,52 +1773,46 @@ unsafe extern "C" fn strftimeFunc(
                     }
                 }
                 82 => {
-                    crate::src::src::printf::sqlite3_str_appendf(
-                        
+                    crate::src::src::printf::sqlite3_str_vappendf2(
                         &raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
-                        b"%02d:%02d\0" as *const u8 as *const ::core::ffi::c_char,
-                        x.h,
-                        x.m,
+                        "%02d:%02d",
+                        printf_args!(x.h, x.m),
                     );
                 }
                 115 => {
                     if x.useSubsec() != 0 {
-                        crate::src::src::printf::sqlite3_str_appendf(
-                            
+                        crate::src::src::printf::sqlite3_str_vappendf2(
                             &raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
-                            b"%.3f\0" as *const u8 as *const ::core::ffi::c_char,
-                            (x.iJD as crate::src::ext::rtree::rtree::i64_0
-                                - 21086676 as crate::src::ext::rtree::rtree::i64_0 * 10000000 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::i64_0)
-                                as ::core::ffi::c_double
-                                / 1000.0f64,
+                            "%.3f",
+                            printf_args!(
+                                (x.iJD as crate::src::ext::rtree::rtree::i64_0
+                                    - 21086676 as crate::src::ext::rtree::rtree::i64_0 * 10000000 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::i64_0)
+                                    as ::core::ffi::c_double
+                                    / 1000.0f64
+                            ),
                         );
                     } else {
                         let mut iS: crate::src::ext::rtree::rtree::i64_0 = x.iJD as crate::src::ext::rtree::rtree::i64_0 / 1000 as crate::src::ext::rtree::rtree::i64_0
                             - 21086676 as crate::src::ext::rtree::rtree::i64_0 * 10000 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::i64_0;
-                        crate::src::src::printf::sqlite3_str_appendf(
-                            
+                        crate::src::src::printf::sqlite3_str_vappendf2(
                             &raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
-                            b"%lld\0" as *const u8 as *const ::core::ffi::c_char,
-                            iS,
+                            "%lld",
+                            printf_args!(iS),
                         );
                     }
                 }
                 83 => {
-                    crate::src::src::printf::sqlite3_str_appendf(
-                        
+                    crate::src::src::printf::sqlite3_str_vappendf2(
                         &raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
-                        b"%02d\0" as *const u8 as *const ::core::ffi::c_char,
-                        x.s as ::core::ffi::c_int,
+                        "%02d",
+                        printf_args!(x.s as ::core::ffi::c_int),
                     );
                 }
                 84 => {
-                    crate::src::src::printf::sqlite3_str_appendf(
-                        
+                    crate::src::src::printf::sqlite3_str_vappendf2(
                         &raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
-                        b"%02d:%02d:%02d\0" as *const u8 as *const ::core::ffi::c_char,
-                        x.h,
-                        x.m,
-                        x.s as ::core::ffi::c_int,
+                        "%02d:%02d:%02d",
+                        printf_args!(x.h, x.m, x.s as ::core::ffi::c_int),
                     );
                 }
                 117 | 119 => {
@@ -1833,13 +1827,14 @@ unsafe extern "C" fn strftimeFunc(
                     crate::src::src::printf::sqlite3_str_appendchar(&raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str, 1 as ::core::ffi::c_int, c);
                 }
                 85 => {
-                    crate::src::src::printf::sqlite3_str_appendf(
-                        
+                    crate::src::src::printf::sqlite3_str_vappendf2(
                         &raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
-                        b"%02d\0" as *const u8 as *const ::core::ffi::c_char,
-                        (daysAfterJan01(&raw mut x) - daysAfterSunday(&raw mut x)
-                            + 7 as ::core::ffi::c_int)
-                            / 7 as ::core::ffi::c_int,
+                        "%02d",
+                        printf_args!(
+                            (daysAfterJan01(&raw mut x) - daysAfterSunday(&raw mut x)
+                                + 7 as ::core::ffi::c_int)
+                                / 7 as ::core::ffi::c_int
+                        ),
                     );
                 }
                 86 => {
@@ -1849,30 +1844,31 @@ unsafe extern "C" fn strftimeFunc(
                         as crate::src::headers::sqlite3_h::sqlite3_int64;
                     y_0.validYMD = 0 as ::core::ffi::c_char;
                     computeYMD(&raw mut y_0);
-                    crate::src::src::printf::sqlite3_str_appendf(
-                        
+                    crate::src::src::printf::sqlite3_str_vappendf2(
                         &raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
-                        b"%02d\0" as *const u8 as *const ::core::ffi::c_char,
-                        daysAfterJan01(&raw mut y_0) / 7 as ::core::ffi::c_int
-                            + 1 as ::core::ffi::c_int,
+                        "%02d",
+                        printf_args!(
+                            daysAfterJan01(&raw mut y_0) / 7 as ::core::ffi::c_int
+                                + 1 as ::core::ffi::c_int
+                        ),
                     );
                 }
                 87 => {
-                    crate::src::src::printf::sqlite3_str_appendf(
-                        
+                    crate::src::src::printf::sqlite3_str_vappendf2(
                         &raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
-                        b"%02d\0" as *const u8 as *const ::core::ffi::c_char,
-                        (daysAfterJan01(&raw mut x) - daysAfterMonday(&raw mut x)
-                            + 7 as ::core::ffi::c_int)
-                            / 7 as ::core::ffi::c_int,
+                        "%02d",
+                        printf_args!(
+                            (daysAfterJan01(&raw mut x) - daysAfterMonday(&raw mut x)
+                                + 7 as ::core::ffi::c_int)
+                                / 7 as ::core::ffi::c_int
+                        ),
                     );
                 }
                 89 => {
-                    crate::src::src::printf::sqlite3_str_appendf(
-                        
+                    crate::src::src::printf::sqlite3_str_vappendf2(
                         &raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
-                        b"%04d\0" as *const u8 as *const ::core::ffi::c_char,
-                        x.Y,
+                        "%04d",
+                        printf_args!(x.Y),
                     );
                 }
                 37 => {
@@ -2082,17 +2078,18 @@ unsafe extern "C" fn timediffFunc(
         0 as ::core::ffi::c_int,
         100 as ::core::ffi::c_int,
     );
-    crate::src::src::printf::sqlite3_str_appendf(
-        
+    crate::src::src::printf::sqlite3_str_vappendf2(
         &raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
-        b"%c%04d-%02d-%02d %02d:%02d:%06.3f\0" as *const u8 as *const ::core::ffi::c_char,
-        sign as ::core::ffi::c_int,
-        Y,
-        M,
-        d1.D - 1 as ::core::ffi::c_int,
-        d1.h,
-        d1.m,
-        d1.s,
+        "%c%04d-%02d-%02d %02d:%02d:%06.3f",
+        printf_args!(
+            sign as ::core::ffi::c_int,
+            Y,
+            M,
+            d1.D - 1 as ::core::ffi::c_int,
+            d1.h,
+            d1.m,
+            d1.s
+        ),
     );
     crate::src::src::printf::sqlite3ResultStrAccum(context,  &raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str);
 }
