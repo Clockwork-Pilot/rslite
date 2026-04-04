@@ -1913,21 +1913,45 @@ pub unsafe fn sqlite3_str_vappendf2_args(
             }
 
             etCHARX => {
-                let ch = match arg {
-                    PrintfArg::Char(v) => v as u8,
-                    PrintfArg::Int(v) => v as u8,
-                    _ => 0u8,
-                };
-                let mut nPad = if precision >= 0 { precision } else { 1 };
-                if width > nPad { nPad = width; }
-                if nPad > etBUFSIZE { nPad = etBUFSIZE; }
-                for i in 0..nPad as usize {
-                    if i < buf.len() { buf[i] = ch as ::core::ffi::c_char; }
+                if let PrintfArg::Str(text_ptr) = arg {
+                    // SQLFUNC path: text arg → take first (possibly UTF-8) character
+                    length = 1;
+                    if !text_ptr.is_null() {
+                        let first_byte = *text_ptr;
+                        buf[0] = first_byte;
+                        if first_byte as ::core::ffi::c_int & 0xc0 == 0xc0 {
+                            // Multi-byte UTF-8: copy continuation bytes
+                            while length < 4
+                                && *text_ptr.offset(length as isize) as ::core::ffi::c_int & 0xc0 == 0x80
+                            {
+                                buf[length as usize] = *text_ptr.offset(length as isize);
+                                length += 1;
+                            }
+                        }
+                    } else {
+                        buf[0] = 0;
+                    }
+                    bufpt = &raw mut buf as *mut ::core::ffi::c_char;
+                    // Precision controls repeat count for SQLFUNC too
+                    if precision >= 1 && precision < length { length = precision; }
+                    width = 0;
+                } else {
+                    // VaList path: integer char code
+                    let ch = match arg {
+                        PrintfArg::Char(v) => v as u8,
+                        PrintfArg::Int(v) => v as u8,
+                        _ => 0u8,
+                    };
+                    let mut nPad = if precision >= 0 { precision } else { 1 };
+                    if width > nPad { nPad = width; }
+                    if nPad > etBUFSIZE { nPad = etBUFSIZE; }
+                    for i in 0..nPad as usize {
+                        if i < buf.len() { buf[i] = ch as ::core::ffi::c_char; }
+                    }
+                    length = nPad;
+                    bufpt = &raw mut buf as *mut ::core::ffi::c_char;
+                    width = 0;
                 }
-                length = nPad;
-                bufpt = &raw mut buf as *mut ::core::ffi::c_char;
-                // For %c, no further padding needed
-                width = 0;
             }
 
             etSTRING | etDYNSTRING => {
@@ -1948,38 +1972,178 @@ pub unsafe fn sqlite3_str_vappendf2_args(
             }
 
             etESCAPE_q | etESCAPE_Q | etESCAPE_w => {
-                let escarg = match arg {
+                // Full escape handling lifted from original sqlite3_str_vappendf.
+                // Supports precision truncation, %#Q JSON escaping, UTF-8 char counting.
+                let mut i_0: i64 = 0;
+                let mut j_0: i64 = 0;
+                let mut k_e: i64;
+                let mut n_0: i64 = 0;
+                let mut needQuote: ::core::ffi::c_int = 0;
+                let mut ch_0: ::core::ffi::c_char;
+                let mut escarg: *mut ::core::ffi::c_char = match arg {
                     PrintfArg::Str(p) => p,
                     _ => ::core::ptr::null_mut(),
                 };
-                // %Q with NULL arg → literal "NULL"
-                if xtype == etESCAPE_Q && escarg.is_null() {
-                    sqlite3_str_append(pAccum, b"NULL\0".as_ptr() as _, 4);
+                let q_e: ::core::ffi::c_char;
+
+                if escarg.is_null() {
+                    escarg = (if xtype == etESCAPE_Q {
+                        b"NULL\0".as_ptr()
+                    } else {
+                        b"(NULL)\0".as_ptr()
+                    }) as *mut ::core::ffi::c_char;
+                } else if xtype == etESCAPE_Q {
+                    needQuote = 1;
+                }
+
+                if xtype == etESCAPE_w {
+                    q_e = '"' as ::core::ffi::c_char;
+                    flag_alternateform = false;
                 } else {
-                    // %q → single-quote doubling, no surrounding quotes
-                    // %Q → single-quote doubling, WITH surrounding single quotes
-                    // %w → double-quote doubling, no surrounding quotes
-                    let q: u8 = if xtype == etESCAPE_w { b'"' } else { b'\'' };
-                    if xtype == etESCAPE_Q {
-                        sqlite3_str_append(pAccum, &q as *const u8 as _, 1);
+                    q_e = '\'' as ::core::ffi::c_char;
+                }
+
+                // Count output length, respecting precision
+                k_e = precision as i64;
+                i_0 = 0;
+                while k_e != 0 && {
+                    ch_0 = *escarg.offset(i_0 as isize);
+                    ch_0 as ::core::ffi::c_int != 0
+                } {
+                    if ch_0 as ::core::ffi::c_int == q_e as ::core::ffi::c_int {
+                        n_0 += 1;
                     }
-                    if !escarg.is_null() {
-                        let mut k: isize = 0;
-                        loop {
-                            let ch = *escarg.offset(k) as u8;
-                            if ch == 0 { break; }
-                            if ch == q {
-                                sqlite3_str_append(pAccum, &q as *const u8 as _, 1);
-                            }
-                            sqlite3_str_append(pAccum, escarg.offset(k), 1);
-                            k += 1;
+                    // UTF-8 multi-byte: count as one character for precision
+                    if flag_altform2
+                        && ch_0 as ::core::ffi::c_int & 0xc0 == 0xc0
+                    {
+                        while *escarg.offset((i_0 + 1) as isize) as ::core::ffi::c_int & 0xc0 == 0x80 {
+                            i_0 += 1;
                         }
                     }
-                    if xtype == etESCAPE_Q {
-                        sqlite3_str_append(pAccum, &q as *const u8 as _, 1);
+                    i_0 += 1;
+                    k_e -= 1;
+                }
+
+                // JSON escaping (%#q / %#Q)
+                if flag_alternateform {
+                    let mut nBack: u32 = 0;
+                    let mut nCtrl: u32 = 0;
+                    k_e = 0;
+                    while k_e < i_0 {
+                        if *escarg.offset(k_e as isize) as ::core::ffi::c_int == '\\' as i32 {
+                            nBack += 1;
+                        } else if *(escarg as *mut u8).offset(k_e as isize) as ::core::ffi::c_int <= 0x1f {
+                            nCtrl += 1;
+                        }
+                        k_e += 1;
+                    }
+                    if nCtrl != 0 || xtype == etESCAPE_q {
+                        n_0 += (nBack + 5 * nCtrl) as i64;
+                        if xtype == etESCAPE_Q {
+                            n_0 += 10;
+                            needQuote = 2;
+                        }
+                    } else {
+                        flag_alternateform = false;
                     }
                 }
-                // Already appended, skip the generic append below
+
+                n_0 += i_0 + 3;
+                if n_0 > etBUFSIZE as i64 {
+                    zExtra = printfTempBuf(pAccum, n_0);
+                    bufpt = zExtra;
+                    if bufpt.is_null() {
+                        if *fmt != 0 { fmt = fmt.offset(1); }
+                        continue;
+                    }
+                } else {
+                    bufpt = &raw mut buf as *mut ::core::ffi::c_char;
+                }
+
+                j_0 = 0;
+                if needQuote != 0 {
+                    if needQuote == 2 {
+                        ::core::ptr::copy_nonoverlapping(
+                            b"unistr('\0".as_ptr() as *const ::core::ffi::c_char,
+                            bufpt.offset(j_0 as isize),
+                            8,
+                        );
+                        j_0 += 8;
+                    } else {
+                        *bufpt.offset(j_0 as isize) = '\'' as ::core::ffi::c_char;
+                        j_0 += 1;
+                    }
+                }
+
+                k_e = i_0;
+                if flag_alternateform {
+                    // JSON escaping: double quotes, escape backslashes, \u00XX for control chars
+                    i_0 = 0;
+                    while i_0 < k_e {
+                        ch_0 = *escarg.offset(i_0 as isize);
+                        *bufpt.offset(j_0 as isize) = ch_0;
+                        j_0 += 1;
+                        if ch_0 as ::core::ffi::c_int == q_e as ::core::ffi::c_int {
+                            *bufpt.offset(j_0 as isize) = ch_0;
+                            j_0 += 1;
+                        } else if ch_0 as ::core::ffi::c_int == '\\' as i32 {
+                            *bufpt.offset(j_0 as isize) = '\\' as ::core::ffi::c_char;
+                            j_0 += 1;
+                        } else if (ch_0 as u8) <= 0x1f {
+                            *bufpt.offset((j_0 - 1) as isize) = '\\' as ::core::ffi::c_char;
+                            *bufpt.offset(j_0 as isize) = 'u' as ::core::ffi::c_char; j_0 += 1;
+                            *bufpt.offset(j_0 as isize) = '0' as ::core::ffi::c_char; j_0 += 1;
+                            *bufpt.offset(j_0 as isize) = '0' as ::core::ffi::c_char; j_0 += 1;
+                            *bufpt.offset(j_0 as isize) = (if ch_0 as ::core::ffi::c_int >= 0x10 { '1' as i32 } else { '0' as i32 }) as ::core::ffi::c_char; j_0 += 1;
+                            static HEX: [u8; 17] = *b"0123456789abcdef\0";
+                            *bufpt.offset(j_0 as isize) = HEX[(ch_0 as ::core::ffi::c_int & 0xf) as usize] as ::core::ffi::c_char;
+                            j_0 += 1;
+                        }
+                        i_0 += 1;
+                    }
+                } else {
+                    // Normal escaping: just double the quote character
+                    i_0 = 0;
+                    while i_0 < k_e {
+                        ch_0 = *escarg.offset(i_0 as isize);
+                        *bufpt.offset(j_0 as isize) = ch_0;
+                        j_0 += 1;
+                        if ch_0 as ::core::ffi::c_int == q_e as ::core::ffi::c_int {
+                            *bufpt.offset(j_0 as isize) = ch_0;
+                            j_0 += 1;
+                        }
+                        i_0 += 1;
+                    }
+                }
+
+                if needQuote != 0 {
+                    *bufpt.offset(j_0 as isize) = '\'' as ::core::ffi::c_char;
+                    j_0 += 1;
+                    if needQuote == 2 {
+                        *bufpt.offset(j_0 as isize) = ')' as ::core::ffi::c_char;
+                        j_0 += 1;
+                    }
+                }
+                *bufpt.offset(j_0 as isize) = 0;
+                length = j_0 as ::core::ffi::c_int;
+
+                // Use width-padding path (no flag_zeropad for strings)
+                let nPad_e = if width > length { width - length } else { 0 };
+                if !flag_leftjustify && nPad_e > 0 {
+                    for _ in 0..nPad_e { sqlite3_str_append(pAccum, b" \0".as_ptr() as _, 1); }
+                }
+                sqlite3_str_append(pAccum, bufpt, length);
+                if flag_leftjustify && nPad_e > 0 {
+                    for _ in 0..nPad_e { sqlite3_str_append(pAccum, b" \0".as_ptr() as _, 1); }
+                }
+                if !zExtra.is_null() {
+                    crate::src::src::malloc::sqlite3DbFree(
+                        (*pAccum).db as *mut crate::src::headers::sqliteInt_h::sqlite3,
+                        zExtra as *mut ::core::ffi::c_void,
+                    );
+                    zExtra = ::core::ptr::null_mut();
+                }
                 if *fmt != 0 { fmt = fmt.offset(1); }
                 continue;
             }
@@ -2881,7 +3045,8 @@ pub unsafe fn extract_printf_args(
             }
             etCHARX => {
                 if bArgList {
-                    PrintfArg::Char(getIntArg(pArgList) as ::core::ffi::c_uint)
+                    // SQLFUNC path: %c reads a text arg, takes first char
+                    PrintfArg::Str(getTextArg(pArgList))
                 } else {
                     PrintfArg::Char(ap.arg::<::core::ffi::c_uint>())
                 }
@@ -3228,8 +3393,6 @@ pub unsafe extern "C" fn sqlite3_mprintf(
         ::core::mem::size_of::<[::core::ffi::c_char; 70]>() as ::core::ffi::c_int,
         crate::sqliteLimit_h::SQLITE_MAX_LENGTH,
     );
-    // Public C API — use old sqlite3_str_vappendf for full compatibility
-    // (handles %q/%Q precision, JSON escaping, SQLFUNC path, etc.)
     sqlite3_str_vappendf(&raw mut acc as *mut crate::src::headers::sqliteInt_h::sqlite3_str, zFormat, args);
     z = sqlite3StrAccumFinish(&raw mut acc);
     z

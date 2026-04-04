@@ -67,9 +67,6 @@ pub unsafe extern "C" fn sqlite3_str_appendf(
     mut zFormat: *const ::core::ffi::c_char,
     mut args: ...
 ) {
-    // sqlite3_str_appendf may be called with SQLITE_PRINTF_SQLFUNC flag set,
-    // where the first VaList arg is a *mut PrintfArguments. This SQLFUNC path
-    // is not yet handled by extract_printf_args, so use the original formatter.
     crate::src::src::printf::sqlite3_str_vappendf(p as *mut crate::src::headers::sqliteInt_h::sqlite3_str, zFormat, args);
 }
 
