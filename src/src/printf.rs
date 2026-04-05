@@ -710,12 +710,19 @@ impl From<*mut crate::src::headers::sqliteInt_h::SrcItem> for PrintfArg {
 /// Create an ExtractedArgs cursor from inline values.
 /// Usage: `printf_args!(val)` — auto-converts via From trait
 #[macro_export]
-#[macro_export]
 macro_rules! printf_args {
     ($($arg:expr),* $(,)?) => {
         $crate::src::src::printf::ExtractedArgs::new(
             &[$($crate::src::src::printf::PrintfArg::from($arg)),*]
         )
+    };
+}
+
+/// Like printf_args! but returns &[PrintfArg] slice directly.
+#[macro_export]
+macro_rules! printf_args_slice {
+    ($($arg:expr),* $(,)?) => {
+        &[$($crate::src::src::printf::PrintfArg::from($arg)),*] as &[$crate::src::src::printf::PrintfArg]
     };
 }
 

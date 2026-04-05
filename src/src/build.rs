@@ -3240,17 +3240,16 @@ pub unsafe extern "C" fn sqlite3EndTable(
                 __pParse_ref.sNameToken.z,
             );
         }
-        sqlite3NestedParse(
+        sqlite3NestedParse_args(
             pParse,
-            b"UPDATE %Q.sqlite_master SET type='%s', name=%Q, tbl_name=%Q, rootpage=#%d, sql=%Q WHERE rowid=#%d\0"
-                as *const u8 as *const ::core::ffi::c_char,
-            (*__db_ref.aDb.offset(iDb as isize)).zDbSName,
+            "UPDATE %Q.sqlite_master SET type='%s', name=%Q, tbl_name=%Q, rootpage=#%d, sql=%Q WHERE rowid=#%d",
+            crate::printf_args_slice!((*__db_ref.aDb.offset(iDb as isize)).zDbSName,
             zType,
             __p_ref.zName,
             __p_ref.zName,
             __pParse_ref.u1.cr.regRoot,
             zStmt,
-            __pParse_ref.u1.cr.regRowid,
+            __pParse_ref.u1.cr.regRowid),
         );
         crate::src::src::malloc::sqlite3DbFree(db as *mut crate::src::headers::sqliteInt_h::sqlite3, zStmt as *mut ::core::ffi::c_void);
         sqlite3ChangeCookie(pParse, iDb);
@@ -3259,11 +3258,10 @@ pub unsafe extern "C" fn sqlite3EndTable(
         {
             let mut pDb: *mut crate::src::headers::sqliteInt_h::Db = __db_ref.aDb.offset(iDb as isize) as *mut crate::src::headers::sqliteInt_h::Db;
             if (*(*pDb).pSchema).pSeqTab.is_null() {
-                sqlite3NestedParse(
+                sqlite3NestedParse_args(
                     pParse,
-                    b"CREATE TABLE %Q.sqlite_sequence(name,seq)\0" as *const u8
-                        as *const ::core::ffi::c_char,
-                    (*pDb).zDbSName,
+                    "CREATE TABLE %Q.sqlite_sequence(name,seq)",
+                    crate::printf_args_slice!((*pDb).zDbSName),
                 );
             }
         }
@@ -3636,14 +3634,13 @@ unsafe extern "C" fn destroyRootPage(
     }
     crate::src::src::vdbeaux::sqlite3VdbeAddOp3(v, crate::src::headers::opcodes_h::OP_Destroy, iTable, r1, iDb);
     sqlite3MayAbort(pParse);
-    sqlite3NestedParse(
+    sqlite3NestedParse_args(
         pParse,
-        b"UPDATE %Q.sqlite_master SET rootpage=%d WHERE #%d AND rootpage=#%d\0" as *const u8
-            as *const ::core::ffi::c_char,
-        (*(*(*pParse).db).aDb.offset(iDb as isize)).zDbSName,
+        "UPDATE %Q.sqlite_master SET rootpage=%d WHERE #%d AND rootpage=#%d",
+        crate::printf_args_slice!((*(*(*pParse).db).aDb.offset(iDb as isize)).zDbSName,
         iTable,
         r1,
-        r1,
+        r1),
     );
     crate::src::src::expr::sqlite3ReleaseTempReg(pParse as *mut crate::src::headers::sqliteInt_h::Parse, r1);
 }
@@ -3695,13 +3692,13 @@ unsafe extern "C" fn sqlite3ClearStatTables(
         )
         .is_null()
         {
-            sqlite3NestedParse(
+            sqlite3NestedParse_args(
                 pParse,
-                b"DELETE FROM %Q.%s WHERE %s=%Q\0" as *const u8 as *const ::core::ffi::c_char,
-                zDbName,
+                "DELETE FROM %Q.%s WHERE %s=%Q",
+                crate::printf_args_slice!(zDbName,
                 &raw mut zTab as *mut ::core::ffi::c_char,
                 zType,
-                zName,
+                zName),
             );
         }
         i += 1;
@@ -3732,20 +3729,16 @@ pub unsafe extern "C" fn sqlite3CodeDropTable(
         pTrigger = (*pTrigger).pNext;
     }
     if __pTab_ref.tabFlags & crate::src::headers::sqliteInt_h::TF_Autoincrement as crate::src::ext::rtree::rtree::u32_0 != 0 {
-        sqlite3NestedParse(
+        sqlite3NestedParse_args(
             pParse,
-            b"DELETE FROM %Q.sqlite_sequence WHERE name=%Q\0" as *const u8
-                as *const ::core::ffi::c_char,
-            (*pDb).zDbSName,
-            __pTab_ref.zName,
+            "DELETE FROM %Q.sqlite_sequence WHERE name=%Q",
+            crate::printf_args_slice!((*pDb).zDbSName, __pTab_ref.zName),
         );
     }
-    sqlite3NestedParse(
+    sqlite3NestedParse_args(
         pParse,
-        b"DELETE FROM %Q.sqlite_master WHERE tbl_name=%Q and type!='trigger'\0" as *const u8
-            as *const ::core::ffi::c_char,
-        (*pDb).zDbSName,
-        __pTab_ref.zName,
+        "DELETE FROM %Q.sqlite_master WHERE tbl_name=%Q and type!='trigger'",
+        crate::printf_args_slice!((*pDb).zDbSName, __pTab_ref.zName),
     );
     if isView == 0 && !(__pTab_ref.eTabType as ::core::ffi::c_int == crate::src::headers::sqliteInt_h::TABTYP_VTAB) {
         destroyTable(pParse, pTab);
@@ -5354,15 +5347,14 @@ pub unsafe extern "C" fn sqlite3CreateIndex(
                                                                                         } else {
                                                                                             zStmt = ::core::ptr::null_mut::<::core::ffi::c_char>();
                                                                                         }
-                                                                                        sqlite3NestedParse(
+                                                                                        sqlite3NestedParse_args(
                                                                                             pParse,
-                                                                                            b"INSERT INTO %Q.sqlite_master VALUES('index',%Q,%Q,#%d,%Q);\0"
-                                                                                                as *const u8 as *const ::core::ffi::c_char,
-                                                                                            (*(*db).aDb.offset(iDb as isize)).zDbSName,
+                                                                                            "INSERT INTO %Q.sqlite_master VALUES('index',%Q,%Q,#%d,%Q);",
+                                                                                            crate::printf_args_slice!((*(*db).aDb.offset(iDb as isize)).zDbSName,
                                                                                             __pIndex_ref.zName,
                                                                                             __pTab_ref.zName,
                                                                                             iMem,
-                                                                                            zStmt,
+                                                                                            zStmt),
                                                                                         );
                                                                                         crate::src::src::malloc::sqlite3DbFree(db as *mut crate::src::headers::sqliteInt_h::sqlite3, zStmt as *mut ::core::ffi::c_void);
                                                                                         if !pTblName.is_null() {
@@ -5593,13 +5585,11 @@ pub unsafe extern "C" fn sqlite3DropIndex(
                         if !v.is_null() {
                             sqlite3BeginWriteOperation(pParse, 1 as ::core::ffi::c_int, iDb);
                             let __pIndex_ref = unsafe { &*pIndex };
-                            sqlite3NestedParse(
+                            sqlite3NestedParse_args(
                                 pParse,
-                                b"DELETE FROM %Q.sqlite_master WHERE name=%Q AND type='index'\0"
-                                    as *const u8
-                                    as *const ::core::ffi::c_char,
-                                (*(*db).aDb.offset(iDb as isize)).zDbSName,
-                                __pIndex_ref.zName,
+                                "DELETE FROM %Q.sqlite_master WHERE name=%Q AND type='index'",
+                                crate::printf_args_slice!((*(*db).aDb.offset(iDb as isize)).zDbSName,
+                                __pIndex_ref.zName),
                             );
                             sqlite3ClearStatTables(
                                 pParse,
@@ -6906,5 +6896,52 @@ pub unsafe extern "C" fn sqlite3WithDeleteGeneric(
     sqlite3WithDelete(db, pWith as *mut crate::src::headers::sqliteInt_h::With);
 }
 
-// Re-export variadic functions from printf_c_variadic module
-pub use crate::src::printf_c_variadic::sqlite3NestedParse;
+pub unsafe fn sqlite3NestedParse_args(
+    mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
+    zFormat: &str,
+    args: &[crate::src::src::printf::PrintfArg],
+) {
+    let mut zSql: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
+    let __pParse_ref = unsafe { &mut *pParse };
+    let mut db: *mut crate::src::headers::sqliteInt_h::sqlite3 = __pParse_ref.db;
+    let __db_ref = unsafe { &mut *db };
+    let mut savedDbFlags: crate::src::ext::rtree::rtree::u32_0 = __db_ref.mDbFlags;
+    let mut saveBuf: [::core::ffi::c_char; 136] = [0; 136];
+    if __pParse_ref.nErr != 0 {
+        return;
+    }
+    if __pParse_ref.eParseMode != 0 {
+        return;
+    }
+    let zFormat_c = ::std::ffi::CString::new(zFormat).unwrap();
+    zSql = crate::src::src::printf::sqlite3VMPrintf_args(db, zFormat_c.as_ptr(), args);
+    if zSql.is_null() {
+        if __db_ref.mallocFailed == 0 {
+            __pParse_ref.rc = crate::src::headers::sqlite3_h::SQLITE_TOOBIG;
+        }
+        __pParse_ref.nErr += 1;
+        return;
+    }
+    __pParse_ref.nested = __pParse_ref.nested.wrapping_add(1);
+    ::core::ptr::copy_nonoverlapping(
+                    (pParse as *mut ::core::ffi::c_char).offset(crate::src::headers::sqliteInt_h::PARSE_RECURSE_SZ as isize) as *const u8,
+                    &raw mut saveBuf as *mut ::core::ffi::c_char as *mut u8,
+                    (crate::src::headers::sqliteInt_h::PARSE_TAIL_SZ) as usize,
+                );
+    ::libc::memset(
+        (pParse as *mut ::core::ffi::c_char).offset(crate::src::headers::sqliteInt_h::PARSE_RECURSE_SZ as isize)
+            as *mut ::core::ffi::c_void,
+        0 as ::core::ffi::c_int,
+        crate::src::headers::sqliteInt_h::PARSE_TAIL_SZ,
+    );
+    __db_ref.mDbFlags |= crate::src::headers::sqliteInt_h::DBFLAG_PreferBuiltin as crate::src::ext::rtree::rtree::u32_0;
+    crate::src::src::tokenize::sqlite3RunParser(pParse as *mut crate::src::headers::sqliteInt_h::Parse, zSql);
+    __db_ref.mDbFlags = savedDbFlags;
+    crate::src::src::malloc::sqlite3DbFree(db as *mut crate::src::headers::sqliteInt_h::sqlite3, zSql as *mut ::core::ffi::c_void);
+    ::core::ptr::copy_nonoverlapping(
+                    &raw mut saveBuf as *mut ::core::ffi::c_char as *const u8,
+                    (pParse as *mut ::core::ffi::c_char).offset(crate::src::headers::sqliteInt_h::PARSE_RECURSE_SZ as isize) as *mut u8,
+                    (crate::src::headers::sqliteInt_h::PARSE_TAIL_SZ) as usize,
+                );
+    __pParse_ref.nested = __pParse_ref.nested.wrapping_sub(1);
+}
