@@ -1164,6 +1164,92 @@ pub struct Fts5Bm25Data {
     pub aIDF: *mut ::core::ffi::c_double,
     pub aFreq: *mut ::core::ffi::c_double,
 }
+
+pub struct Fts5Bm25DataRef<'a> {
+    pub nPhrase: usize,
+    pub avgdl: f64,
+    pub aIDF: &'a mut [f64],
+    pub aFreq: &'a mut [f64],
+}
+
+pub struct Fts5Bm25Owned {
+    ptr: *mut Fts5Bm25Data,
+    owns: bool,  // true if we own it and should free on drop
+}
+
+impl Fts5Bm25Owned {
+    fn as_ref(&self) -> &Fts5Bm25Data {
+        unsafe { &*self.ptr }
+    }
+
+    fn as_mut(&mut self) -> &mut Fts5Bm25Data {
+        unsafe { &mut *self.ptr }
+    }
+
+    fn as_safe_ref_mut<'a>(&'a mut self) -> Fts5Bm25DataRef<'a> {
+        let data = self.as_mut();
+        let nPhrase_usize = data.nPhrase as usize;
+        Fts5Bm25DataRef {
+            nPhrase: nPhrase_usize,
+            avgdl: data.avgdl as f64,
+            aIDF: unsafe { std::slice::from_raw_parts_mut(data.aIDF, nPhrase_usize) },
+            aFreq: unsafe { std::slice::from_raw_parts_mut(data.aFreq, nPhrase_usize) },
+        }
+    }
+}
+
+impl Drop for Fts5Bm25Owned {
+    fn drop(&mut self) {
+        if self.owns && !self.ptr.is_null() {
+            unsafe {
+                crate::src::src::malloc::sqlite3_free(self.ptr as *mut ::core::ffi::c_void);
+            }
+        }
+    }
+}
+
+impl<'a> Fts5Bm25DataRef<'a> {
+    unsafe fn populate_idf(
+        &mut self,
+        pApi: *const Fts5ExtensionApi,
+        pFts: *mut Fts5Context,
+        nRow: crate::src::headers::sqlite3_h::sqlite3_int64,
+        nToken: crate::src::headers::sqlite3_h::sqlite3_int64,
+    ) -> ::core::ffi::c_int {
+        let mut rc: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_OK;
+
+        self.avgdl = nToken as f64 / nRow as f64;
+
+        for i in 0..self.nPhrase {
+            let mut nHit: crate::src::headers::sqlite3_h::sqlite3_int64 = 0;
+            rc = (*pApi).xQueryPhrase.expect("non-null function pointer")(
+                pFts,
+                i as ::core::ffi::c_int,
+                &raw mut nHit as *mut ::core::ffi::c_void,
+                Some(
+                    fts5CountCb
+                        as unsafe extern "C" fn(
+                            *const Fts5ExtensionApi,
+                            *mut Fts5Context,
+                            *mut ::core::ffi::c_void,
+                        ) -> ::core::ffi::c_int,
+                ),
+            );
+            if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
+                let mut idf: f64 = crate::src::headers::stdlib::log(((nRow - nHit) as f64 + 0.5f64)
+                    / (nHit as f64 + 0.5f64));
+                if idf <= 0.0f64 {
+                    idf = 1e-6f64;
+                }
+                self.aIDF[i] = idf;
+            } else {
+                break;
+            }
+        }
+        rc
+    }
+}
+
 #[derive(Copy, Clone)]
 #[repr(C)]
 
@@ -13111,93 +13197,74 @@ unsafe extern "C" fn sqlite3Fts5StorageReleaseDeleteRow(mut pStorage: *mut Fts5S
     (*pStorage).pSavedRow = std::ptr::null_mut::<crate::src::headers::sqlite3_h::sqlite3_stmt>();
 }
 
-unsafe extern "C" fn fts5Bm25GetData(
-    mut pApi: *const Fts5ExtensionApi,
-    mut pFts: *mut Fts5Context,
-    mut ppData: *mut *mut Fts5Bm25Data,
-) -> ::core::ffi::c_int {
-    let mut rc: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_OK;
-    let mut p: *mut Fts5Bm25Data = std::ptr::null_mut::<Fts5Bm25Data>();
-    p = (*pApi).xGetAuxdata.expect("non-null function pointer")(pFts, 0 as ::core::ffi::c_int)
+unsafe fn fts5Bm25GetData(
+    pApi: *const Fts5ExtensionApi,
+    pFts: *mut Fts5Context,
+) -> Result<*mut Fts5Bm25Data, ::core::ffi::c_int> {
+    let existing = (*pApi).xGetAuxdata.expect("non-null function pointer")(pFts, 0 as ::core::ffi::c_int)
         as *mut Fts5Bm25Data;
-    if p.is_null() {
-        let mut nPhrase: ::core::ffi::c_int = 0;
-        let mut nRow: crate::src::headers::sqlite3_h::sqlite3_int64 = 0 as crate::src::headers::sqlite3_h::sqlite3_int64;
-        let mut nToken: crate::src::headers::sqlite3_h::sqlite3_int64 = 0 as crate::src::headers::sqlite3_h::sqlite3_int64;
-        let mut nByte: crate::src::headers::sqlite3_h::sqlite3_int64 = 0;
-        let mut i: ::core::ffi::c_int = 0;
-        nPhrase = (*pApi).xPhraseCount.expect("non-null function pointer")(pFts);
-        nByte = (std::mem::size_of::<Fts5Bm25Data>() as usize).wrapping_add(
-            ((nPhrase * 2 as ::core::ffi::c_int) as usize)
-                .wrapping_mul(std::mem::size_of::<::core::ffi::c_double>() as usize),
-        ) as crate::src::headers::sqlite3_h::sqlite3_int64;
-        p = crate::src::src::malloc::sqlite3_malloc64(nByte as crate::src::headers::sqlite3_h::sqlite3_uint64) as *mut Fts5Bm25Data;
-        if p.is_null() {
-            rc = crate::src::headers::sqlite3_h::SQLITE_NOMEM;
-        } else {
-            std::ptr::write_bytes(p as *mut ::core::ffi::c_void as *mut u8, 0, nByte as usize,
-            );
-            let __p_ref = { &mut *p };
-            __p_ref.nPhrase = nPhrase;
-            __p_ref.aIDF = p.offset(1 as isize) as *mut Fts5Bm25Data
-                as *mut ::core::ffi::c_double;
-            __p_ref.aFreq = __p_ref.aIDF.offset(nPhrase as isize) as *mut ::core::ffi::c_double;
-        }
-        if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
-            rc = (*pApi).xRowCount.expect("non-null function pointer")(pFts, &raw mut nRow);
-        }
-        if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
-            rc = (*pApi).xColumnTotalSize.expect("non-null function pointer")(
-                pFts,
-                -(1 as ::core::ffi::c_int),
-                &raw mut nToken,
-            );
-        }
-        if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
-            (*p).avgdl = nToken as ::core::ffi::c_double / nRow as ::core::ffi::c_double;
-        }
-        i = 0 as ::core::ffi::c_int;
-        while rc == crate::src::headers::sqlite3_h::SQLITE_OK && i < nPhrase {
-            let mut nHit: crate::src::headers::sqlite3_h::sqlite3_int64 = 0 as crate::src::headers::sqlite3_h::sqlite3_int64;
-            rc = (*pApi).xQueryPhrase.expect("non-null function pointer")(
-                pFts,
-                i,
-                &raw mut nHit as *mut ::core::ffi::c_void,
-                Some(
-                    fts5CountCb
-                        as unsafe extern "C" fn(
-                            *const Fts5ExtensionApi,
-                            *mut Fts5Context,
-                            *mut ::core::ffi::c_void,
-                        ) -> ::core::ffi::c_int,
-                ),
-            );
-            if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
-                let mut idf: ::core::ffi::c_double = crate::src::headers::stdlib::log(((nRow - nHit) as ::core::ffi::c_double
-                    + 0.5f64)
-                    / (nHit as ::core::ffi::c_double + 0.5f64));
-                if idf <= 0.0f64 {
-                    idf = 1e-6f64;
-                }
-                *(*p).aIDF.offset(i as isize) = idf;
-            }
-            i += 1;
-        }
-        if rc != crate::src::headers::sqlite3_h::SQLITE_OK {
-            crate::src::src::malloc::sqlite3_free(p as *mut ::core::ffi::c_void);
-        } else {
-            rc = (*pApi).xSetAuxdata.expect("non-null function pointer")(
-                pFts,
-                p as *mut ::core::ffi::c_void,
-                Some(crate::src::src::malloc::sqlite3_free as unsafe extern "C" fn(*mut ::core::ffi::c_void) -> ()),
-            );
-        }
-        if rc != crate::src::headers::sqlite3_h::SQLITE_OK {
-            p = std::ptr::null_mut::<Fts5Bm25Data>();
-        }
+
+    if !existing.is_null() {
+        return Ok(existing);
     }
-    *ppData = p;
-    rc
+
+    let nPhrase: ::core::ffi::c_int = (*pApi).xPhraseCount.expect("non-null function pointer")(pFts);
+    let nByte = (std::mem::size_of::<Fts5Bm25Data>() as usize).wrapping_add(
+        ((nPhrase * 2 as ::core::ffi::c_int) as usize)
+            .wrapping_mul(std::mem::size_of::<::core::ffi::c_double>() as usize),
+    ) as crate::src::headers::sqlite3_h::sqlite3_int64;
+
+    let p = crate::src::src::malloc::sqlite3_malloc64(nByte as crate::src::headers::sqlite3_h::sqlite3_uint64) as *mut Fts5Bm25Data;
+    if p.is_null() {
+        return Err(crate::src::headers::sqlite3_h::SQLITE_NOMEM);
+    }
+
+    let mut nRow: crate::src::headers::sqlite3_h::sqlite3_int64 = 0;
+    let mut nToken: crate::src::headers::sqlite3_h::sqlite3_int64 = 0;
+
+    std::ptr::write_bytes(p as *mut ::core::ffi::c_void as *mut u8, 0, nByte as usize);
+    (*p).nPhrase = nPhrase;
+    (*p).aIDF = p.offset(1 as isize) as *mut Fts5Bm25Data as *mut ::core::ffi::c_double;
+    (*p).aFreq = (*p).aIDF.offset(nPhrase as isize) as *mut ::core::ffi::c_double;
+
+    let mut rc: ::core::ffi::c_int = (*pApi).xRowCount.expect("non-null function pointer")(pFts, &raw mut nRow);
+
+    if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
+        rc = (*pApi).xColumnTotalSize.expect("non-null function pointer")(
+            pFts,
+            -(1 as ::core::ffi::c_int),
+            &raw mut nToken,
+        );
+    }
+
+    if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
+        let nPhrase_usize = nPhrase as usize;
+        let mut data = Fts5Bm25DataRef {
+            nPhrase: nPhrase_usize,
+            avgdl: 0.0f64,
+            aIDF: std::slice::from_raw_parts_mut((*p).aIDF, nPhrase_usize),
+            aFreq: std::slice::from_raw_parts_mut((*p).aFreq, nPhrase_usize),
+        };
+        rc = data.populate_idf(pApi, pFts, nRow, nToken);
+        (*p).avgdl = data.avgdl as ::core::ffi::c_double;
+    }
+
+    if rc != crate::src::headers::sqlite3_h::SQLITE_OK {
+        crate::src::src::malloc::sqlite3_free(p as *mut ::core::ffi::c_void);
+        return Err(rc);
+    }
+
+    rc = (*pApi).xSetAuxdata.expect("non-null function pointer")(
+        pFts,
+        p as *mut ::core::ffi::c_void,
+        Some(crate::src::src::malloc::sqlite3_free as unsafe extern "C" fn(*mut ::core::ffi::c_void) -> ()),
+    );
+
+    if rc != crate::src::headers::sqlite3_h::SQLITE_OK {
+        Err(rc)
+    } else {
+        Ok(p)
+    }
 }
 
 unsafe extern "C" fn fts5VocabFilterMethod(
@@ -13456,68 +13523,79 @@ unsafe extern "C" fn fts5Bm25Function(
     mut nVal: ::core::ffi::c_int,
     mut apVal: *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
 ) {
-    let k1: ::core::ffi::c_double = 1.2f64;
-    let b: ::core::ffi::c_double = 0.75f64;
-    let mut rc: ::core::ffi::c_int = 0;
-    let mut score: ::core::ffi::c_double = 0.0f64;
-    let mut pData: *mut Fts5Bm25Data = std::ptr::null_mut::<Fts5Bm25Data>();
-    let mut i: ::core::ffi::c_int = 0;
-    let mut nInst: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
-    let mut D: ::core::ffi::c_double = 0.0f64;
-    let mut aFreq: *mut ::core::ffi::c_double = std::ptr::null_mut::<::core::ffi::c_double>();
-    rc = fts5Bm25GetData(pApi, pFts, &raw mut pData);
-    if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
-        aFreq = (*pData).aFreq;
-        std::ptr::write_bytes(aFreq as *mut ::core::ffi::c_void as *mut u8, 0, (std::mem::size_of::<::core::ffi::c_double>() as crate::__stddef_size_t_h::size_t)
-                .wrapping_mul((*pData).nPhrase as crate::__stddef_size_t_h::size_t),
-        );
-        rc = (*pApi).xInstCount.expect("non-null function pointer")(pFts, &raw mut nInst);
-    }
-    i = 0 as ::core::ffi::c_int;
-    while rc == crate::src::headers::sqlite3_h::SQLITE_OK && i < nInst {
-        let mut ip: ::core::ffi::c_int = 0;
-        let mut ic: ::core::ffi::c_int = 0;
-        let mut io: ::core::ffi::c_int = 0;
-        rc = (*pApi).xInst.expect("non-null function pointer")(
-            pFts,
-            i,
-            &raw mut ip,
-            &raw mut ic,
-            &raw mut io,
-        );
-        if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
-            let mut w: ::core::ffi::c_double = if nVal > ic {
-                crate::src::src::vdbeapi::sqlite3_value_double(*apVal.offset(ic as isize))
+    let k1: f64 = 1.2f64;
+    let b: f64 = 0.75f64;
+    let mut score: f64 = 0.0f64;
+
+    match fts5Bm25GetData(pApi, pFts) {
+        Ok(p) => {
+            // Wrap pointer for safe access (doesn't own - SQLite manages it)
+            let mut owned = Fts5Bm25Owned { ptr: p, owns: false };
+            let mut data = owned.as_safe_ref_mut();
+
+            for freq in data.aFreq.iter_mut() {
+                *freq = 0.0f64;
+            }
+
+            let mut nInst: ::core::ffi::c_int = 0;
+            let mut rc = (*pApi).xInstCount.expect("non-null function pointer")(pFts, &raw mut nInst);
+
+            let mut i = 0 as ::core::ffi::c_int;
+            while rc == crate::src::headers::sqlite3_h::SQLITE_OK && i < nInst {
+                let mut ip: ::core::ffi::c_int = 0;
+                let mut ic: ::core::ffi::c_int = 0;
+                let mut io: ::core::ffi::c_int = 0;
+                rc = (*pApi).xInst.expect("non-null function pointer")(
+                    pFts,
+                    i,
+                    &raw mut ip,
+                    &raw mut ic,
+                    &raw mut io,
+                );
+                if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
+                    let mut w: f64 = if nVal > ic {
+                        crate::src::src::vdbeapi::sqlite3_value_double(*apVal.offset(ic as isize))
+                    } else {
+                        1.0f64
+                    };
+                    if ip >= 0 && (ip as usize) < data.nPhrase {
+                        data.aFreq[ip as usize] += w;
+                    }
+                }
+                i += 1;
+            }
+
+            if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
+                let mut nTok: ::core::ffi::c_int = 0;
+                rc = (*pApi).xColumnSize.expect("non-null function pointer")(
+                    pFts,
+                    -(1 as ::core::ffi::c_int),
+                    &raw mut nTok,
+                );
+                let D = nTok as f64;
+
+                if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
+                    let mut i = 0usize;
+                    while i < data.nPhrase {
+                        score += data.aIDF[i]
+                            * (data.aFreq[i] * (k1 + 1.0f64)
+                                / (data.aFreq[i]
+                                    + k1 * (1 as ::core::ffi::c_int as f64 - b
+                                        + b * D / data.avgdl)));
+                        i += 1;
+                    }
+                    crate::src::src::vdbeapi::sqlite3_result_double(pCtx, -1.0f64 * score);
+                } else {
+                    crate::src::src::vdbeapi::sqlite3_result_error_code(pCtx, rc);
+                }
             } else {
-                1.0f64
-            };
-            *aFreq.offset(ip as isize) += w;
+                crate::src::src::vdbeapi::sqlite3_result_error_code(pCtx, rc);
+            }
         }
-        i += 1;
-    }
-    if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
-        let mut nTok: ::core::ffi::c_int = 0;
-        rc = (*pApi).xColumnSize.expect("non-null function pointer")(
-            pFts,
-            -(1 as ::core::ffi::c_int),
-            &raw mut nTok,
-        );
-        D = nTok as ::core::ffi::c_double;
-    }
-    if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
-        i = 0 as ::core::ffi::c_int;
-        while i < (*pData).nPhrase {
-            score += *(*pData).aIDF.offset(i as isize)
-                * (*aFreq.offset(i as isize) * (k1 + 1.0f64)
-                    / (*aFreq.offset(i as isize)
-                        + k1 * (1 as ::core::ffi::c_int as ::core::ffi::c_double - b
-                            + b * D / (*pData).avgdl)));
-            i += 1;
+        Err(rc) => {
+            crate::src::src::vdbeapi::sqlite3_result_error_code(pCtx, rc);
         }
-        crate::src::src::vdbeapi::sqlite3_result_double(pCtx, -1.0f64 * score);
-    } else {
-        crate::src::src::vdbeapi::sqlite3_result_error_code(pCtx, rc);
-    };
+    }
 }
 
 unsafe extern "C" fn fts5Porter_MEq1(
