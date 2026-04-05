@@ -7,10 +7,16 @@ fn main() {
         println!("cargo:rustc-env=RUSTFLAGS=-Z unstable-options -Zcrate-attr=feature(c_variadic)");
     }
 
-    // Compile C code: sqlite3_str_appendf variadic entry point
+    // Compile C code: variadic entry points (one file per function)
     cc::Build::new()
         .file("c_code/printf_c.c")
+        .file("c_code/snprintf.c")
         .compile("printf_c");
+
+    // Force the linker to pull in C symbols that are only called by external
+    // clients (not by Rust code).  Without this, the linker drops unreferenced
+    // objects from the static lib.
+    println!("cargo:rustc-link-arg-cdylib=-Wl,--undefined=sqlite3_snprintf");
 
     // Export C symbols from the cdylib (.so) — Rust's linker only auto-exports
     // #[no_mangle] Rust symbols, so C functions need explicit export directives.

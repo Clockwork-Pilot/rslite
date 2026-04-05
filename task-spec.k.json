@@ -55,47 +55,88 @@
         }
       }
     },
-    "libs": {
+    "libs_appendf": {
       "type": "Feature",
       "model_version": 1,
-      "id": "libs",
-      "description": "sqlite3_str_appendf correctly exported in rlib and cdylib (.so)",
+      "id": "libs_appendf",
+      "description": "sqlite3_str_appendf C wrapper correctly exported in rlib and cdylib",
       "goals": [
-        "sqlite3_str_appendf (C FFI in c_code/printf_c.c) must be global symbol (T) in shell binary (rlib)",
+        "sqlite3_str_appendf (C FFI in c_code/printf_c.c) must be global symbol (T) in shell and rustfixture binaries",
         "sqlite3_str_appendf must appear in dynamic symbol table (T) of libsqlite_noamalgam.so (cdylib)",
-        "sqlite3_str_appendf must be global symbol (T) in rustfixture binary (rlib)",
-        "sqlite3_str_appendf must NOT be a Rust variadic function \u2014 only in C",
-        "Depends on build_all \u2014 assumes release artifacts already built"
+        "sqlite3_str_appendf must NOT be a Rust variadic function \u2014 only in C"
+      ],
+      "depends_on": [
+        "build_all"
       ],
       "constraints": {
-        "constraint_appendf_shell_rlib": {
-          "id": "constraint_appendf_shell_rlib",
+        "appendf_shell_rlib": {
+          "id": "appendf_shell_rlib",
           "cmd": "nm $PROJECT_ROOT/target/release/sqlite3 | grep -q \"T sqlite3_str_appendf$\"",
-          "description": "Behavioral: sqlite3_str_appendf must be a global (T) symbol in the shell binary (rlib linkage)",
+          "description": "sqlite3_str_appendf must be a global (T) symbol in the shell binary",
           "fails_count": 1
         },
-        "constraint_appendf_tclsqlite_rlib": {
-          "id": "constraint_appendf_tclsqlite_rlib",
+        "appendf_tclsqlite_rlib": {
+          "id": "appendf_tclsqlite_rlib",
           "cmd": "nm $PROJECT_ROOT/target/release/rustfixture | grep -q \"T sqlite3_str_appendf$\"",
-          "description": "Behavioral: sqlite3_str_appendf must be a global (T) symbol in the tclsqlite rustfixture binary (rlib linkage)",
+          "description": "sqlite3_str_appendf must be a global (T) symbol in the rustfixture binary",
           "fails_count": 1
         },
-        "constraint_appendf_not_in_rust_variadic": {
-          "id": "constraint_appendf_not_in_rust_variadic",
-          "cmd": "grep -q \"void sqlite3_str_appendf\" $PROJECT_ROOT/c_code/printf_c.c && ! grep -q \"pub unsafe extern.*fn sqlite3_str_appendf\" $PROJECT_ROOT/src/printf_c_variadic.rs",
-          "description": "Structural: sqlite3_str_appendf must NOT be defined as a Rust variadic function \u2014 it lives in c_code/printf_c.c",
-          "fails_count": 1
-        },
-        "constraint_appendf_c_source_exists": {
-          "id": "constraint_appendf_c_source_exists",
-          "cmd": "grep -q \"void sqlite3_str_appendf\" $PROJECT_ROOT/c_code/printf_c.c",
-          "description": "Structural: the C implementation of sqlite3_str_appendf must exist in c_code/printf_c.c",
-          "fails_count": 1
-        },
-        "constraint_appendf_cdylib_export": {
-          "id": "constraint_appendf_cdylib_export",
+        "appendf_cdylib_export": {
+          "id": "appendf_cdylib_export",
           "cmd": "cd $PROJECT_ROOT && cargo build --release --lib 2>/dev/null && nm -D target/release/libsqlite_noamalgam.so | grep -q \"T sqlite3_str_appendf$\"",
-          "description": "Behavioral: sqlite3_str_appendf must appear in the dynamic symbol table (T) of libsqlite_noamalgam.so for external C clients",
+          "description": "sqlite3_str_appendf must appear in dynamic symbol table (T) of the cdylib",
+          "fails_count": 1
+        },
+        "appendf_c_source": {
+          "id": "appendf_c_source",
+          "cmd": "grep -q \"void sqlite3_str_appendf\" $PROJECT_ROOT/c_code/printf_c.c",
+          "description": "C implementation of sqlite3_str_appendf must exist in c_code/printf_c.c",
+          "fails_count": 1
+        },
+        "appendf_not_in_rust_variadic": {
+          "id": "appendf_not_in_rust_variadic",
+          "cmd": "grep -q \"void sqlite3_str_appendf\" $PROJECT_ROOT/c_code/printf_c.c && ! grep -q \"pub unsafe extern.*fn sqlite3_str_appendf\" $PROJECT_ROOT/src/printf_c_variadic.rs",
+          "description": "sqlite3_str_appendf must NOT be a Rust variadic \u2014 it lives in c_code/printf_c.c",
+          "fails_count": 1
+        }
+      }
+    },
+    "libs_snprintf": {
+      "type": "Feature",
+      "model_version": 1,
+      "id": "libs_snprintf",
+      "description": "sqlite3_snprintf C wrapper correctly exported in rlib and cdylib",
+      "goals": [
+        "sqlite3_snprintf (C FFI in c_code/snprintf.c) must be global symbol (T) in shell and rustfixture binaries",
+        "sqlite3_snprintf must appear in dynamic symbol table (T) of libsqlite_noamalgam.so (cdylib)",
+        "sqlite3_snprintf C wrapper must exist in its own file c_code/snprintf.c"
+      ],
+      "depends_on": [
+        "build_all"
+      ],
+      "constraints": {
+        "snprintf_shell_rlib": {
+          "id": "snprintf_shell_rlib",
+          "cmd": "test -f $PROJECT_ROOT/c_code/snprintf.c && nm $PROJECT_ROOT/target/release/sqlite3 | grep -q \"T sqlite3_snprintf$\"",
+          "description": "sqlite3_snprintf must be a global (T) symbol in the shell binary",
+          "fails_count": 1
+        },
+        "snprintf_tclsqlite_rlib": {
+          "id": "snprintf_tclsqlite_rlib",
+          "cmd": "test -f $PROJECT_ROOT/c_code/snprintf.c && nm $PROJECT_ROOT/target/release/rustfixture | grep -q \"T sqlite3_snprintf$\"",
+          "description": "sqlite3_snprintf must be a global (T) symbol in the rustfixture binary",
+          "fails_count": 1
+        },
+        "snprintf_cdylib_export": {
+          "id": "snprintf_cdylib_export",
+          "cmd": "cd $PROJECT_ROOT && cargo build --release --lib 2>/dev/null && nm -D target/release/libsqlite_noamalgam.so | grep -q \"T sqlite3_snprintf$\"",
+          "description": "sqlite3_snprintf must appear in dynamic symbol table (T) of the cdylib",
+          "fails_count": 1
+        },
+        "snprintf_c_source": {
+          "id": "snprintf_c_source",
+          "cmd": "grep -q \"sqlite3_snprintf\" $PROJECT_ROOT/c_code/snprintf.c",
+          "description": "sqlite3_snprintf C wrapper must exist in c_code/snprintf.c",
           "fails_count": 1
         }
       }

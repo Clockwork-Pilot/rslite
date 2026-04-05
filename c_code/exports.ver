@@ -1,4 +1,5 @@
 {
     global:
         sqlite3_str_appendf;
+        sqlite3_snprintf;
 };
