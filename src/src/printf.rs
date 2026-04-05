@@ -701,6 +701,10 @@ impl From<::core::ffi::c_int> for PrintfArg {
     fn from(v: ::core::ffi::c_int) -> Self { PrintfArg::Int(v as crate::src::ext::rtree::rtree::i64_0) }
 }
 
+impl From<::core::ffi::c_uint> for PrintfArg {
+    fn from(v: ::core::ffi::c_uint) -> Self { PrintfArg::UInt(v as crate::src::headers::sqlite3_h::sqlite_uint64) }
+}
+
 impl From<*mut crate::src::headers::sqliteInt_h::SrcItem> for PrintfArg {
     fn from(v: *mut crate::src::headers::sqliteInt_h::SrcItem) -> Self { PrintfArg::SrcItem(v) }
 }

@@ -9586,20 +9586,59 @@ unsafe extern "C" fn setPageReferenced(mut pCheck: *mut crate::src::headers::btr
         (*fresh33 as ::core::ffi::c_int | (1 as ::core::ffi::c_int) << (iPg & 0x7 as crate::src::src::pager::Pgno)) as crate::src::ext::rtree::rtree::u8_0;
 }
 
+/// Non-variadic version of checkAppendMsg — takes pre-extracted PrintfArg slice.
+/// Avoids c_variadic dependency for callers that can build args directly.
+unsafe fn checkAppendMsg_args(
+    pCheck: *mut crate::src::headers::btreeInt_h::IntegrityCk,
+    zFormat: *const ::core::ffi::c_char,
+    args: &[crate::src::src::printf::PrintfArg],
+) {
+    checkProgress(pCheck);
+    let pck = unsafe { &mut *pCheck };
+    if pck.mxErr == 0 {
+        return;
+    }
+    pck.mxErr -= 1;
+    pck.nErr += 1;
+    if pck.errMsg.nChar != 0 {
+        crate::src::src::printf::sqlite3_str_append(
+            &raw mut pck.errMsg as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
+            b"\n\0" as *const u8 as *const ::core::ffi::c_char,
+            1 as ::core::ffi::c_int,
+        );
+    }
+    if !pck.zPfx.is_null() {
+        let pfx_args = vec![
+            crate::src::src::printf::PrintfArg::from(pck.v0 as ::core::ffi::c_int),
+            crate::src::src::printf::PrintfArg::from(pck.v1 as ::core::ffi::c_int),
+            crate::src::src::printf::PrintfArg::from(pck.v2 as ::core::ffi::c_int),
+        ];
+        crate::src::src::printf::sqlite3_str_vappendf_args(
+            &raw mut pck.errMsg as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
+            pck.zPfx,
+            &pfx_args,
+        );
+    }
+    crate::src::src::printf::sqlite3_str_vappendf_args(&raw mut pck.errMsg, zFormat, args);
+    if pck.errMsg.accError as ::core::ffi::c_int == crate::src::headers::sqlite3_h::SQLITE_NOMEM {
+        checkOom(pCheck);
+    }
+}
+
 unsafe extern "C" fn checkRef(mut pCheck: *mut crate::src::headers::btreeInt_h::IntegrityCk, mut iPage: crate::src::src::pager::Pgno) -> ::core::ffi::c_int {
     if iPage > (*pCheck).nCkPage || iPage == 0 as crate::src::src::pager::Pgno {
-        checkAppendMsg(
+        checkAppendMsg_args(
             pCheck,
             b"invalid page number %u\0" as *const u8 as *const ::core::ffi::c_char,
-            iPage,
+            &[crate::src::src::printf::PrintfArg::from(iPage)],
         );
         return 1 as ::core::ffi::c_int;
     }
     if getPageReferenced(pCheck, iPage) != 0 {
-        checkAppendMsg(
+        checkAppendMsg_args(
             pCheck,
             b"2nd reference to page %u\0" as *const u8 as *const ::core::ffi::c_char,
-            iPage,
+            &[crate::src::src::printf::PrintfArg::from(iPage)],
         );
         return 1 as ::core::ffi::c_int;
     }
@@ -9626,24 +9665,26 @@ unsafe extern "C" fn checkPtrmap(
         if rc == crate::src::headers::sqlite3_h::SQLITE_NOMEM || rc == crate::src::headers::sqlite3_h::SQLITE_IOERR_NOMEM {
             checkOom(pCheck);
         }
-        checkAppendMsg(
+        checkAppendMsg_args(
             pCheck,
             b"Failed to read ptrmap key=%u\0" as *const u8 as *const ::core::ffi::c_char,
-            iChild,
+            &[crate::src::src::printf::PrintfArg::from(iChild)],
         );
         return;
     }
     if ePtrmapType as ::core::ffi::c_int != eType as ::core::ffi::c_int || iPtrmapParent != iParent
     {
-        checkAppendMsg(
+        checkAppendMsg_args(
             pCheck,
             b"Bad ptr map entry key=%u expected=(%u,%u) got=(%u,%u)\0" as *const u8
                 as *const ::core::ffi::c_char,
-            iChild,
-            eType as ::core::ffi::c_int,
-            iParent,
-            ePtrmapType as ::core::ffi::c_int,
-            iPtrmapParent,
+            &[
+                crate::src::src::printf::PrintfArg::from(iChild),
+                crate::src::src::printf::PrintfArg::from(eType as ::core::ffi::c_uint),
+                crate::src::src::printf::PrintfArg::from(iParent),
+                crate::src::src::printf::PrintfArg::from(ePtrmapType as ::core::ffi::c_uint),
+                crate::src::src::printf::PrintfArg::from(iPtrmapParent),
+            ],
         );
     }
 }
@@ -9674,10 +9715,10 @@ unsafe extern "C" fn checkList(
             0 as ::core::ffi::c_int,
         ) != 0
         {
-            checkAppendMsg(
+            checkAppendMsg_args(
                 pCheck,
                 b"failed to get page %u\0" as *const u8 as *const ::core::ffi::c_char,
-                iPage,
+                &[crate::src::src::printf::PrintfArg::from(iPage)],
             );
             break;
         } else {
@@ -9694,11 +9735,11 @@ unsafe extern "C" fn checkList(
                     .wrapping_div(4 as crate::src::ext::rtree::rtree::u32_0)
                     .wrapping_sub(2 as crate::src::ext::rtree::rtree::u32_0)
                 {
-                    checkAppendMsg(
+                    checkAppendMsg_args(
                         pCheck,
                         b"freelist leaf count too big on page %u\0" as *const u8
                             as *const ::core::ffi::c_char,
-                        iPage,
+                        &[crate::src::src::printf::PrintfArg::from(iPage)],
                     );
                     N = N.wrapping_sub(1);
                 } else {
@@ -9726,16 +9767,18 @@ unsafe extern "C" fn checkList(
         }
     }
     if N != 0 && nErrAtStart == __pCheck_ref.nErr {
-        checkAppendMsg(
+        checkAppendMsg_args(
             pCheck,
             b"%s is %u but should be %u\0" as *const u8 as *const ::core::ffi::c_char,
-            if isFreeList != 0 {
-                b"size\0" as *const u8 as *const ::core::ffi::c_char
-            } else {
-                b"overflow list length\0" as *const u8 as *const ::core::ffi::c_char
-            },
-            expected.wrapping_sub(N),
-            expected,
+            &[
+                crate::src::src::printf::PrintfArg::from(if isFreeList != 0 {
+                    b"size\0" as *const u8 as *const ::core::ffi::c_char
+                } else {
+                    b"overflow list length\0" as *const u8 as *const ::core::ffi::c_char
+                }),
+                crate::src::src::printf::PrintfArg::from(expected.wrapping_sub(N)),
+                crate::src::src::printf::PrintfArg::from(expected),
+            ],
         );
     }
 }
@@ -9842,11 +9885,11 @@ unsafe extern "C" fn checkTreePage(
         __pCheck_ref.v1 = iPage;
         rc = btreeGetPage(pBt, iPage, &raw mut pPage, 0 as ::core::ffi::c_int);
         if rc != 0 as ::core::ffi::c_int {
-            checkAppendMsg(
+            checkAppendMsg_args(
                 pCheck,
                 b"unable to get the page. error code=%d\0" as *const u8
                     as *const ::core::ffi::c_char,
-                rc,
+                &[crate::src::src::printf::PrintfArg::from(rc)],
             );
             if rc == crate::src::headers::sqlite3_h::SQLITE_IOERR_NOMEM {
                 __pCheck_ref.rc = crate::src::headers::sqlite3_h::SQLITE_NOMEM;
@@ -9856,19 +9899,19 @@ unsafe extern "C" fn checkTreePage(
             (*pPage).isInit = 0 as crate::src::ext::rtree::rtree::u8_0;
             rc = btreeInitPage(pPage);
             if rc != 0 as ::core::ffi::c_int {
-                checkAppendMsg(
+                checkAppendMsg_args(
                     pCheck,
                     b"btreeInitPage() returns error code %d\0" as *const u8
                         as *const ::core::ffi::c_char,
-                    rc,
+                    &[crate::src::src::printf::PrintfArg::from(rc)],
                 );
             } else {
                 rc = btreeComputeFreeSpace(pPage);
                 if rc != 0 as ::core::ffi::c_int {
-                    checkAppendMsg(
+                    checkAppendMsg_args(
                         pCheck,
                         b"free space corruption\0" as *const u8 as *const ::core::ffi::c_char,
-                        rc,
+                        &[],
                     );
                 } else {
                     let __pPage_ref = unsafe { &mut *pPage };
@@ -9931,13 +9974,15 @@ unsafe extern "C" fn checkTreePage(
                                 as ::core::ffi::c_int) as crate::src::ext::rtree::rtree::u32_0;
                         pCellIdx = pCellIdx.offset(-(2 as ::core::ffi::c_int as isize));
                         if pc < contentOffset || pc > usableSize.wrapping_sub(4 as crate::src::ext::rtree::rtree::u32_0) {
-                            checkAppendMsg(
+                            checkAppendMsg_args(
                                 pCheck,
                                 b"Offset %u out of range %u..%u\0" as *const u8
                                     as *const ::core::ffi::c_char,
-                                pc,
-                                contentOffset,
-                                usableSize.wrapping_sub(4 as crate::src::ext::rtree::rtree::u32_0),
+                                &[
+                                    crate::src::src::printf::PrintfArg::from(pc),
+                                    crate::src::src::printf::PrintfArg::from(contentOffset),
+                                    crate::src::src::printf::PrintfArg::from(usableSize.wrapping_sub(4 as crate::src::ext::rtree::rtree::u32_0)),
+                                ],
                             );
                             doCoverageCheck = 0 as ::core::ffi::c_int;
                         } else {
@@ -9948,10 +9993,11 @@ unsafe extern "C" fn checkTreePage(
                                 &raw mut info,
                             );
                             if pc.wrapping_add(info.nSize as crate::src::ext::rtree::rtree::u32_0) > usableSize {
-                                checkAppendMsg(
+                                checkAppendMsg_args(
                                     pCheck,
                                     b"Extends off end of page\0" as *const u8
                                         as *const ::core::ffi::c_char,
+                                    &[],
                                 );
                                 doCoverageCheck = 0 as ::core::ffi::c_int;
                             } else {
@@ -9962,11 +10008,11 @@ unsafe extern "C" fn checkTreePage(
                                         (info.nKey >= maxKey) as ::core::ffi::c_int
                                     } != 0
                                     {
-                                        checkAppendMsg(
+                                        checkAppendMsg_args(
                                             pCheck,
                                             b"Rowid %lld out of order\0" as *const u8
                                                 as *const ::core::ffi::c_char,
-                                            info.nKey,
+                                            &[crate::src::src::printf::PrintfArg::Int(info.nKey)],
                                         );
                                     }
                                     maxKey = info.nKey;
@@ -10015,10 +10061,11 @@ unsafe extern "C" fn checkTreePage(
                                     );
                                     keyCanBeEqual = 0 as ::core::ffi::c_int;
                                     if d2 != depth {
-                                        checkAppendMsg(
+                                        checkAppendMsg_args(
                                             pCheck,
                                             b"Child page depth differs\0" as *const u8
                                                 as *const ::core::ffi::c_char,
+                                            &[],
                                         );
                                         depth = d2;
                                     }
@@ -10104,12 +10151,14 @@ unsafe extern "C" fn checkTreePage(
                         prev = contentOffset.wrapping_sub(1 as crate::src::ext::rtree::rtree::u32_0);
                         while btreeHeapPull(heap, &raw mut x) != 0 {
                             if prev & 0xffff as crate::src::ext::rtree::rtree::u32_0 >= x >> 16 as ::core::ffi::c_int {
-                                checkAppendMsg(
+                                checkAppendMsg_args(
                                     pCheck,
                                     b"Multiple uses for byte %u of page %u\0" as *const u8
                                         as *const ::core::ffi::c_char,
-                                    x >> 16 as ::core::ffi::c_int,
-                                    iPage,
+                                    &[
+                                        crate::src::src::printf::PrintfArg::from(x >> 16 as ::core::ffi::c_int),
+                                        crate::src::src::printf::PrintfArg::from(iPage),
+                                    ],
                                 );
                                 break;
                             } else {
@@ -10133,15 +10182,16 @@ unsafe extern "C" fn checkTreePage(
                                 != *data.offset((hdr + 7 as ::core::ffi::c_int) as isize)
                                     as ::core::ffi::c_int
                         {
-                            checkAppendMsg(
+                            checkAppendMsg_args(
                                 pCheck,
                                 b"Fragmentation of %u bytes reported as %u on page %u\0"
                                     as *const u8
                                     as *const ::core::ffi::c_char,
-                                nFrag,
-                                *data.offset((hdr + 7 as ::core::ffi::c_int) as isize)
-                                    as ::core::ffi::c_int,
-                                iPage,
+                                &[
+                                    crate::src::src::printf::PrintfArg::from(nFrag as ::core::ffi::c_uint),
+                                    crate::src::src::printf::PrintfArg::from(*data.offset((hdr + 7 as ::core::ffi::c_int) as isize) as ::core::ffi::c_uint),
+                                    crate::src::src::printf::PrintfArg::from(iPage),
+                                ],
                             );
                         }
                     }
@@ -10259,12 +10309,14 @@ pub unsafe extern "C" fn sqlite3BtreeIntegrityCheck(
                                 as *mut crate::src::ext::rtree::rtree::u8_0,
                         ) as crate::src::src::pager::Pgno;
                         if mx != mxInHdr {
-                            checkAppendMsg(
+                            checkAppendMsg_args(
                                 &raw mut sCheck,
                                 b"max rootpage (%u) disagrees with header (%u)\0" as *const u8
                                     as *const ::core::ffi::c_char,
-                                mx,
-                                mxInHdr,
+                                &[
+                                    crate::src::src::printf::PrintfArg::from(mx),
+                                    crate::src::src::printf::PrintfArg::from(mxInHdr),
+                                ],
                             );
                         }
                     } else if crate::src::src::util::sqlite3Get4byte(
@@ -10274,10 +10326,11 @@ pub unsafe extern "C" fn sqlite3BtreeIntegrityCheck(
                             as *mut crate::src::ext::rtree::rtree::u8_0,
                     ) != 0 as crate::src::ext::rtree::rtree::u32_0
                     {
-                        checkAppendMsg(
+                        checkAppendMsg_args(
                             &raw mut sCheck,
                             b"incremental_vacuum enabled with a max rootpage of zero\0" as *const u8
                                 as *const ::core::ffi::c_char,
+                            &[],
                         );
                     }
                 }
@@ -10320,21 +10373,21 @@ pub unsafe extern "C" fn sqlite3BtreeIntegrityCheck(
                         if getPageReferenced(&raw mut sCheck, i) == 0 as ::core::ffi::c_int
                             && (ptrmapPageno(pBt, i) != i || __pBt_ref.autoVacuum == 0)
                         {
-                            checkAppendMsg(
+                            checkAppendMsg_args(
                                 &raw mut sCheck,
                                 b"Page %u: never used\0" as *const u8 as *const ::core::ffi::c_char,
-                                i,
+                                &[crate::src::src::printf::PrintfArg::from(i)],
                             );
                         }
                         if getPageReferenced(&raw mut sCheck, i) != 0 as ::core::ffi::c_int
                             && (ptrmapPageno(pBt, i) == i
                                 && __pBt_ref.autoVacuum as ::core::ffi::c_int != 0)
                         {
-                            checkAppendMsg(
+                            checkAppendMsg_args(
                                 &raw mut sCheck,
                                 b"Page %u: pointer map referenced\0" as *const u8
                                     as *const ::core::ffi::c_char,
-                                i,
+                                &[crate::src::src::printf::PrintfArg::from(i)],
                             );
                         }
                         i = i.wrapping_add(1);
@@ -10569,5 +10622,3 @@ pub unsafe extern "C" fn sqlite3BtreeConnectionCount(mut p: *mut crate::src::hea
     (*(*p).pBt).nRef
 }
 
-// Re-export variadic functions from printf_c_variadic module
-pub use crate::src::printf_c_variadic::checkAppendMsg;
