@@ -1,0 +1,12 @@
+[package]
+name = "y2lite"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+y2lite-sys = { path = "../y2lite-sys" }
+sqlite_noamalgam = { path = "../../", features = ["fts4"] }
+
+[[example]]
+name = "demo"
+path = "examples/demo.rs"

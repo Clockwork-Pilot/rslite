@@ -205,27 +205,31 @@ unsafe fn bind_params(stmt: *mut sqlite3_stmt, params: &[Value]) -> Result<()> {
     for (idx, param) in params.iter().enumerate() {
         let param_idx = (idx + 1) as c_int;
         let rc = match param {
-            Value::Integer(i) => sqlite3_bind_int64(stmt, param_idx, *i),
-            Value::Real(f) => sqlite3_bind_double(stmt, param_idx, *f),
+            Value::Integer(i) => unsafe { sqlite3_bind_int64(stmt, param_idx, *i) },
+            Value::Real(f) => unsafe { sqlite3_bind_double(stmt, param_idx, *f) },
             Value::Text(s) => {
                 let c_str = CString::new(s.as_str())
                     .map_err(|_| Error::Database("invalid parameter".to_string()))?;
-                sqlite3_bind_text(
+                unsafe {
+                    sqlite3_bind_text(
+                        stmt,
+                        param_idx,
+                        c_str.as_ptr(),
+                        -1,
+                        std::mem::transmute(-1isize),
+                    )
+                }
+            }
+            Value::Blob(b) => unsafe {
+                sqlite3_bind_blob(
                     stmt,
                     param_idx,
-                    c_str.as_ptr(),
-                    -1,
+                    b.as_ptr() as *const std::ffi::c_void,
+                    b.len() as i32,
                     std::mem::transmute(-1isize),
                 )
-            }
-            Value::Blob(b) => sqlite3_bind_blob(
-                stmt,
-                param_idx,
-                b.as_ptr() as *const std::ffi::c_void,
-                b.len() as i32,
-                std::mem::transmute(-1isize),
-            ),
-            Value::Null => sqlite3_bind_null(stmt, param_idx),
+            },
+            Value::Null => unsafe { sqlite3_bind_null(stmt, param_idx) },
         };
 
         if rc != SQLITE_OK {
@@ -237,31 +241,31 @@ unsafe fn bind_params(stmt: *mut sqlite3_stmt, params: &[Value]) -> Result<()> {
 
 /// Extract a column value from a statement (unsafe - caller owns safety).
 unsafe fn extract_column(stmt: *mut sqlite3_stmt, col: c_int) -> Value {
-    let col_type = sqlite3_column_type(stmt, col);
+    let col_type = unsafe { sqlite3_column_type(stmt, col) };
 
     match col_type {
         SQLITE_INTEGER => {
-            Value::Integer(sqlite3_column_int64(stmt, col))
+            Value::Integer(unsafe { sqlite3_column_int64(stmt, col) })
         }
         SQLITE_FLOAT => {
-            Value::Real(sqlite3_column_double(stmt, col))
+            Value::Real(unsafe { sqlite3_column_double(stmt, col) })
         }
         SQLITE_TEXT => {
-            let ptr = sqlite3_column_text(stmt, col);
+            let ptr = unsafe { sqlite3_column_text(stmt, col) };
             if ptr.is_null() {
                 Value::Null
             } else {
-                let len = sqlite3_column_bytes(stmt, col) as usize;
+                let len = unsafe { sqlite3_column_bytes(stmt, col) } as usize;
                 let slice = std::slice::from_raw_parts(ptr as *const u8, len);
                 Value::Text(String::from_utf8_lossy(slice).to_string())
             }
         }
         SQLITE_BLOB => {
-            let ptr = sqlite3_column_blob(stmt, col);
+            let ptr = unsafe { sqlite3_column_blob(stmt, col) };
             if ptr.is_null() {
                 Value::Null
             } else {
-                let len = sqlite3_column_bytes(stmt, col) as usize;
+                let len = unsafe { sqlite3_column_bytes(stmt, col) } as usize;
                 let slice = std::slice::from_raw_parts(ptr as *const u8, len);
                 Value::Blob(slice.to_vec())
             }

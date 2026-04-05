@@ -2,8 +2,11 @@
 members = [
     "crust-tclsqlite",
     "sqlite-printf-macros",
-    "crust-sqlite-shell", "pub-interface",
+    "crust-sqlite-shell",
 ]
+
+[workspace.dependencies]
+# Common dependencies shared across workspace
 [package]
 name = "sqlite_noamalgam"
 authors = ["C2Rust"]

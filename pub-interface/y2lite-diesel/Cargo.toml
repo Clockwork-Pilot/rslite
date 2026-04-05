@@ -1,0 +1,8 @@
+[package]
+name = "y2lite-diesel"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+y2lite = { path = "../y2lite" }
+diesel = { version = "2.0", features = ["sqlite"] }

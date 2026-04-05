@@ -1,7 +1,5 @@
-[package]
-name = "pub-interface"
-version = "0.1.0"
-edition = "2021"
+[workspace]
+members = ["y2lite-sys", "y2lite", "y2lite-diesel"]
+resolver = "2"
 
-[dependencies]
-sqlite_noamalgam = { path = "../", features = ["fts4"] }
+# Virtual manifest - no package defined

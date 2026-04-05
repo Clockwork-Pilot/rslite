@@ -1,6 +1,6 @@
-use pub_interface::{Connection, Value};
+use y2lite::{Connection, Value};
 
-fn main() -> pub_interface::Result<()> {
+fn main() -> y2lite::Result<()> {
     // Open an in-memory database (statically linked C API).
     let mut db = Connection::open(":memory:")?;
 
@@ -41,14 +41,14 @@ fn main() -> pub_interface::Result<()> {
 
     // Transaction with rollback demo
     println!("\n=== Rollback Demo ===");
-    let result: pub_interface::Result<()> = db.transaction(|conn| {
+    let result: y2lite::Result<()> = db.transaction(|conn| {
         println!("  Attempting insert in transaction");
         conn.execute_with_params(
             "INSERT INTO users VALUES (?, ?, ?)",
             &[Value::Integer(4), Value::Text("Dave".to_string()), Value::Integer(40)],
         )?;
         println!("  Dave inserted, but will rollback");
-        Err(pub_interface::Error::Database("simulated error".to_string()))
+        Err(y2lite::Error::Database("simulated error".to_string()))
     });
     match result {
         Ok(()) => println!("  Transaction succeeded"),
@@ -56,10 +56,31 @@ fn main() -> pub_interface::Result<()> {
     }
 
     // Query all users
-    println!("\n=== All Users ===");
+    println!("\n=== All Users (Raw Values) ===");
     let rows = db.query("SELECT id, name, age FROM users ORDER BY id")?;
     for row in rows.iter() {
         println!("  {:?}", row);
+    }
+
+    // Query with ergonomic FromValue trait
+    println!("\n=== All Users (Ergonomic Access) ===");
+    let rows = db.query("SELECT id, name, age FROM users ORDER BY id")?;
+    for row in rows.iter() {
+        // Using FromValue trait for type-safe extraction
+        let id: i64 = row.get(0)?;
+        let name: String = row.get(1)?;
+        let age: i64 = row.get(2)?;
+        println!("  id={}, name={}, age={}", id, name, age);
+    }
+
+    // Query with optional values
+    println!("\n=== Users with Optional Fields ===");
+    let rows = db.query("SELECT id, name, age FROM users LIMIT 1")?;
+    if let Some(row) = rows.iter().next() {
+        let id: Option<i64> = row.get(0)?;
+        let name: Option<String> = row.get(1)?;
+        let age: Option<i64> = row.get(2)?;
+        println!("  Optional: id={:?}, name={:?}, age={:?}", id, name, age);
     }
 
     Ok(())
