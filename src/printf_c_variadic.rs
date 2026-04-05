@@ -826,69 +826,7 @@ pub unsafe extern "C" fn sqlite3NestedParse(
 
 
 
-pub unsafe extern "C" fn getDigits(
-    mut zDate: *const ::core::ffi::c_char,
-    mut zFormat: *const ::core::ffi::c_char,
-    mut args: ...
-) -> ::core::ffi::c_int {
-    static mut aMx: [crate::src::fts5::u16_0; 6] = [
-        12 as ::core::ffi::c_int as crate::src::fts5::u16_0,
-        14 as ::core::ffi::c_int as crate::src::fts5::u16_0,
-        24 as ::core::ffi::c_int as crate::src::fts5::u16_0,
-        31 as ::core::ffi::c_int as crate::src::fts5::u16_0,
-        59 as ::core::ffi::c_int as crate::src::fts5::u16_0,
-        14712 as ::core::ffi::c_int as crate::src::fts5::u16_0,
-    ];
-    // VaListImpl type handling - using args directly
-    let mut cnt: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
-    let mut nextC: ::core::ffi::c_char = 0;
-    's_15: loop {
-        let mut N: ::core::ffi::c_char = (*zFormat.offset(0 as isize)
-            as ::core::ffi::c_int
-            - '0' as i32) as ::core::ffi::c_char;
-        let mut min: ::core::ffi::c_char = (*zFormat.offset(1 as isize)
-            as ::core::ffi::c_int
-            - '0' as i32) as ::core::ffi::c_char;
-        let mut val: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
-        let mut max: crate::src::fts5::u16_0 = 0;
-        max = aMx[(*zFormat.offset(2 as isize) as ::core::ffi::c_int
-            - 'a' as i32) as usize];
-        nextC = *zFormat.offset(3 as isize);
-        val = 0 as ::core::ffi::c_int;
-        loop {
-            let fresh1 = N;
-            N -= 1;
-            if !(fresh1 != 0) {
-                break;
-            }
-            if *(&raw const crate::src::src::global::sqlite3CtypeMap as *const ::core::ffi::c_uchar)
-                .offset(*zDate as ::core::ffi::c_uchar as isize)
-                as ::core::ffi::c_int
-                & 0x4 as ::core::ffi::c_int
-                == 0
-            {
-                break 's_15;
-            }
-            val = val * 10 as ::core::ffi::c_int + *zDate as ::core::ffi::c_int - '0' as i32;
-            zDate = zDate.offset(1);
-        }
-        if val < min as ::core::ffi::c_int
-            || val > max as ::core::ffi::c_int
-            || nextC as ::core::ffi::c_int != 0 as ::core::ffi::c_int
-                && nextC as ::core::ffi::c_int != *zDate as ::core::ffi::c_int
-        {
-            break;
-        }
-        *args.arg::<*mut ::core::ffi::c_int>() = val;
-        zDate = zDate.offset(1);
-        cnt += 1;
-        zFormat = zFormat.offset(4 as isize);
-        if !(nextC != 0) {
-            break;
-        }
-    }
-    cnt
-}
+// getDigits removed — replaced by getDigits_args in date.rs
 
 
 // checkAppendMsg removed — replaced by checkAppendMsg_args in btree.rs

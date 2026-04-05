@@ -68,6 +68,51 @@ pub struct C2RustUnnamed {
     pub rXform: ::core::ffi::c_float,
 }
 
+/// Non-variadic version of getDigits — takes a slice of output pointers.
+/// Each 4-char group in zFormat consumes one `*mut c_int` from `outs`.
+unsafe fn getDigits_args(
+    mut zDate: *const ::core::ffi::c_char,
+    mut zFormat: *const ::core::ffi::c_char,
+    outs: &[*mut ::core::ffi::c_int],
+) -> ::core::ffi::c_int {
+    static aMx: [crate::src::fts5::u16_0; 6] = [12, 14, 24, 31, 59, 14712];
+    let mut cnt: ::core::ffi::c_int = 0;
+    let mut nextC: ::core::ffi::c_char;
+    let mut out_idx: usize = 0;
+    's_15: loop {
+        let mut N: ::core::ffi::c_char = (*zFormat.offset(0) as ::core::ffi::c_int - '0' as i32) as ::core::ffi::c_char;
+        let min: ::core::ffi::c_char = (*zFormat.offset(1) as ::core::ffi::c_int - '0' as i32) as ::core::ffi::c_char;
+        let mut val: ::core::ffi::c_int = 0;
+        let max: crate::src::fts5::u16_0 = aMx[(*zFormat.offset(2) as ::core::ffi::c_int - 'a' as i32) as usize];
+        nextC = *zFormat.offset(3);
+        loop {
+            let fresh = N;
+            N -= 1;
+            if fresh == 0 { break; }
+            if *(&raw const crate::src::src::global::sqlite3CtypeMap as *const ::core::ffi::c_uchar)
+                .offset(*zDate as ::core::ffi::c_uchar as isize) as ::core::ffi::c_int & 0x4 == 0
+            {
+                break 's_15;
+            }
+            val = val * 10 + *zDate as ::core::ffi::c_int - '0' as i32;
+            zDate = zDate.offset(1);
+        }
+        if val < min as ::core::ffi::c_int
+            || val > max as ::core::ffi::c_int
+            || nextC as ::core::ffi::c_int != 0 && nextC as ::core::ffi::c_int != *zDate as ::core::ffi::c_int
+        {
+            break;
+        }
+        *outs[out_idx] = val;
+        out_idx += 1;
+        zDate = zDate.offset(1);
+        cnt += 1;
+        zFormat = zFormat.offset(4);
+        if nextC == 0 { break; }
+    }
+    cnt
+}
+
 unsafe extern "C" fn parseTimezone(
     mut zDate: *const ::core::ffi::c_char,
     mut p: *mut DateTime,
@@ -105,11 +150,10 @@ unsafe extern "C" fn parseTimezone(
     match current_block {
         3512920355445576850 => {
             zDate = zDate.offset(1);
-            if getDigits(
+            if getDigits_args(
                 zDate,
                 b"20b:20e\0" as *const u8 as *const ::core::ffi::c_char,
-                &raw mut nHr,
-                &raw mut nMn,
+                &[&raw mut nHr, &raw mut nMn],
             ) != 2 as ::core::ffi::c_int
             {
                 return 1 as ::core::ffi::c_int;
@@ -141,11 +185,10 @@ unsafe extern "C" fn parseHhMmSs(
     let mut m: ::core::ffi::c_int = 0;
     let mut s: ::core::ffi::c_int = 0;
     let mut ms: ::core::ffi::c_double = 0.0f64;
-    if getDigits(
+    if getDigits_args(
         zDate,
         b"20c:20e\0" as *const u8 as *const ::core::ffi::c_char,
-        &raw mut h,
-        &raw mut m,
+        &[&raw mut h, &raw mut m],
     ) != 2 as ::core::ffi::c_int
     {
         return 1 as ::core::ffi::c_int;
@@ -153,10 +196,10 @@ unsafe extern "C" fn parseHhMmSs(
     zDate = zDate.offset(5 as isize);
     if *zDate as ::core::ffi::c_int == ':' as i32 {
         zDate = zDate.offset(1);
-        if getDigits(
+        if getDigits_args(
             zDate,
             b"20e\0" as *const u8 as *const ::core::ffi::c_char,
-            &raw mut s,
+            &[&raw mut s],
         ) != 1 as ::core::ffi::c_int
         {
             return 1 as ::core::ffi::c_int;
@@ -300,12 +343,10 @@ unsafe extern "C" fn parseYyyyMmDd(
     } else {
         neg = 0 as ::core::ffi::c_int;
     }
-    if getDigits(
+    if getDigits_args(
         zDate,
         b"40f-21a-21d\0" as *const u8 as *const ::core::ffi::c_char,
-        &raw mut Y,
-        &raw mut M,
-        &raw mut D,
+        &[&raw mut Y, &raw mut M, &raw mut D],
     ) != 3 as ::core::ffi::c_int
     {
         return 1 as ::core::ffi::c_int;
@@ -863,21 +904,21 @@ unsafe extern "C" fn parseModifier(
                 }
                 if *z.offset(n as isize) as ::core::ffi::c_int == '-' as i32 {
                     if n == 5 as ::core::ffi::c_int
-                        && getDigits(
+                        && getDigits_args(
                             z.offset(1 as isize)
                                 as *const ::core::ffi::c_char,
                             b"40f\0" as *const u8 as *const ::core::ffi::c_char,
-                            &raw mut Y,
+                            &[&raw mut Y],
                         ) == 1 as ::core::ffi::c_int
                     {
                         break;
                     }
                     if n == 6 as ::core::ffi::c_int
-                        && getDigits(
+                        && getDigits_args(
                             z.offset(1 as isize)
                                 as *const ::core::ffi::c_char,
                             b"50f\0" as *const u8 as *const ::core::ffi::c_char,
-                            &raw mut Y,
+                            &[&raw mut Y],
                         ) == 1 as ::core::ffi::c_int
                     {
                         break;
@@ -893,26 +934,22 @@ unsafe extern "C" fn parseModifier(
                         current_block_175 = 2413388577390654262;
                     } else {
                         if n == 5 as ::core::ffi::c_int {
-                            if getDigits(
+                            if getDigits_args(
                                 z.offset(1 as isize)
                                     as *const ::core::ffi::c_char,
                                 b"40f-20a-20d\0" as *const u8 as *const ::core::ffi::c_char,
-                                &raw mut Y,
-                                &raw mut M,
-                                &raw mut D,
+                                &[&raw mut Y, &raw mut M, &raw mut D],
                             ) != 3 as ::core::ffi::c_int
                             {
                                 current_block_175 = 2413388577390654262;
                             } else {
                                 current_block_175 = 3024367268842933116;
                             }
-                        } else if getDigits(
+                        } else if getDigits_args(
                             z.offset(1 as isize)
                                 as *const ::core::ffi::c_char,
                             b"50f-20a-20d\0" as *const u8 as *const ::core::ffi::c_char,
-                            &raw mut Y,
-                            &raw mut M,
-                            &raw mut D,
+                            &[&raw mut Y, &raw mut M, &raw mut D],
                         ) != 3 as ::core::ffi::c_int
                         {
                             current_block_175 = 2413388577390654262;
@@ -967,12 +1004,11 @@ unsafe extern "C" fn parseModifier(
                                         as ::core::ffi::c_int
                                         & 0x1 as ::core::ffi::c_int
                                         != 0
-                                        && getDigits(
+                                        && getDigits_args(
                                             z.offset(12 as isize)
                                                 as *const ::core::ffi::c_char,
                                             b"20c:20e\0" as *const u8 as *const ::core::ffi::c_char,
-                                            &raw mut h,
-                                            &raw mut m,
+                                            &[&raw mut h, &raw mut m],
                                         ) == 2 as ::core::ffi::c_int
                                     {
                                         z2 = z.offset(12 as isize)
@@ -2359,4 +2395,3 @@ pub unsafe extern "C" fn sqlite3RegisterDateTimeFunctions() {
 }
 
 // Re-export variadic functions from printf_c_variadic module
-pub use crate::src::printf_c_variadic::getDigits;
