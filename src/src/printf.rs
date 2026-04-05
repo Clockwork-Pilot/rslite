@@ -1398,32 +1398,6 @@ pub unsafe extern "C" fn sqlite3_str_new(mut db: *mut crate::src::headers::sqlit
     }
     p
 }
-#[unsafe(no_mangle)]
-
-pub unsafe extern "C" fn sqlite3VMPrintf(
-    mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
-    mut zFormat: *const ::core::ffi::c_char,
-    mut ap: ::core::ffi::VaList,
-) -> *mut ::core::ffi::c_char {
-    let mut z: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
-    let mut zBase: [::core::ffi::c_char; 70] = [0; 70];
-    let mut acc: crate::src::headers::sqliteInt_h::StrAccum = unsafe { ::core::mem::zeroed() };
-    sqlite3StrAccumInit(
-        &raw mut acc,
-        db,
-        &raw mut zBase as *mut ::core::ffi::c_char,
-        ::core::mem::size_of::<[::core::ffi::c_char; 70]>() as ::core::ffi::c_int,
-        (*db).aLimit[crate::src::headers::sqlite3_h::SQLITE_LIMIT_LENGTH as usize],
-    );
-    acc.printfFlags = crate::src::headers::sqliteInt_h::SQLITE_PRINTF_INTERNAL as crate::src::ext::rtree::rtree::u8_0;
-    let (_specs, args) = extract_printf_args(zFormat, ap, false, ::core::ptr::null_mut());
-    sqlite3_str_vappendf_args(&raw mut acc, zFormat, &args);
-    z = sqlite3StrAccumFinish(&raw mut acc);
-    if acc.accError as ::core::ffi::c_int == crate::src::headers::sqlite3_h::SQLITE_NOMEM {
-        crate::src::src::malloc::sqlite3OomFault(db as *mut crate::src::headers::sqliteInt_h::sqlite3);
-    }
-    z
-}
 /// Non-variadic sqlite3VMPrintf — takes pre-extracted PrintfArg slice.
 pub unsafe fn sqlite3VMPrintf_args(
     db: *mut crate::src::headers::sqliteInt_h::sqlite3,

@@ -20,7 +20,7 @@ pub unsafe extern "C" fn sqlite3MPrintf(
     mut args: ...
 ) -> *mut ::core::ffi::c_char {
     let mut z: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
-    z = crate::src::src::printf::sqlite3VMPrintf(db, zFormat, args);
+    z = { let (_s, _a) = crate::src::src::printf::extract_printf_args(zFormat, args, false, ::core::ptr::null_mut()); crate::src::src::printf::sqlite3VMPrintf_args(db, zFormat, &_a) };
     z
 }
 
@@ -67,7 +67,7 @@ pub unsafe extern "C" fn sqlite3DebugPrintf(
 
 // VaList functions below are defined in printf.rs - we re-export them here
 // (they don't use VaListImpl, just VaList which is already available)
-pub use crate::src::src::printf::{sqlite3VMPrintf, renderLogMsg};
+pub use crate::src::src::printf::renderLogMsg;
 
 // Variadic functions that use VaListImpl - must be defined here to use c_variadic feature
 #[unsafe(no_mangle)]
@@ -78,7 +78,8 @@ pub unsafe extern "C" fn sqlite3VdbeError(
 ) {
     let __p_ref = unsafe { &mut *p };
     crate::src::src::malloc::sqlite3DbFree(__p_ref.db as *mut crate::src::headers::sqliteInt_h::sqlite3, __p_ref.zErrMsg as *mut ::core::ffi::c_void);
-    __p_ref.zErrMsg = crate::src::src::printf::sqlite3VMPrintf(__p_ref.db, zFormat, args);
+    let (_s, _a) = crate::src::src::printf::extract_printf_args(zFormat, args, false, ::core::ptr::null_mut());
+    __p_ref.zErrMsg = crate::src::src::printf::sqlite3VMPrintf_args(__p_ref.db, zFormat, &_a);
 }
 
 #[unsafe(no_mangle)]
@@ -142,7 +143,8 @@ pub unsafe extern "C" fn sqlite3VdbeExplain(
         let mut v: *mut crate::src::headers::vdbeInt_h::Vdbe = ::core::ptr::null_mut::<crate::src::headers::vdbeInt_h::Vdbe>();
         let mut iThis: ::core::ffi::c_int = 0;
         let __pParse_ref = unsafe { &mut *pParse };
-                zMsg = crate::src::src::printf::sqlite3VMPrintf(__pParse_ref.db, zFmt, args);
+                let (_s, _a) = crate::src::src::printf::extract_printf_args(zFmt, args, false, ::core::ptr::null_mut());
+                zMsg = crate::src::src::printf::sqlite3VMPrintf_args(__pParse_ref.db, zFmt, &_a);
         v = __pParse_ref.pVdbe;
         iThis = (*v).nOp;
         addr = crate::src::src::vdbeaux::sqlite3VdbeAddOp4(
@@ -219,7 +221,7 @@ pub unsafe extern "C" fn sqlite3ErrorWithMsg(
         !(*db).pErr.is_null()
     } {
         let mut z: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
-                z = crate::src::src::printf::sqlite3VMPrintf(db, zFormat, args);
+                z = { let (_s, _a) = crate::src::src::printf::extract_printf_args(zFormat, args, false, ::core::ptr::null_mut()); crate::src::src::printf::sqlite3VMPrintf_args(db, zFormat, &_a) };
         crate::src::src::vdbemem::sqlite3ValueSetStr(
             (*db).pErr,
             -(1 as ::core::ffi::c_int),
@@ -240,7 +242,7 @@ pub unsafe extern "C" fn sqlite3ErrorMsg(
     let mut db: *mut crate::src::headers::sqliteInt_h::sqlite3 = (*pParse).db;
     let __db_ref = unsafe { &mut *db };
     __db_ref.errByteOffset = -(2 as ::core::ffi::c_int);
-    zMsg = crate::src::src::printf::sqlite3VMPrintf(db, zFormat, args);
+    zMsg = { let (_s, _a) = crate::src::src::printf::extract_printf_args(zFormat, args, false, ::core::ptr::null_mut()); crate::src::src::printf::sqlite3VMPrintf_args(db, zFormat, &_a) };
     if __db_ref.errByteOffset < -(1 as ::core::ffi::c_int) {
         __db_ref.errByteOffset = -(1 as ::core::ffi::c_int);
     }
@@ -268,7 +270,7 @@ pub unsafe extern "C" fn execSqlF(
 ) -> ::core::ffi::c_int {
     let mut z: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
     let mut rc: ::core::ffi::c_int = 0;
-    z = crate::src::src::printf::sqlite3VMPrintf(db, zSql, args);
+    z = { let (_s, _a) = crate::src::src::printf::extract_printf_args(zSql, args, false, ::core::ptr::null_mut()); crate::src::src::printf::sqlite3VMPrintf_args(db, zSql, &_a) };
     if z.is_null() {
         return crate::src::headers::sqlite3_h::SQLITE_NOMEM;
     }
@@ -789,7 +791,7 @@ pub unsafe extern "C" fn sqlite3NestedParse(
     if __pParse_ref.eParseMode != 0 {
         return;
     }
-    zSql = crate::src::src::printf::sqlite3VMPrintf(db, zFormat, args);
+    zSql = { let (_s, _a) = crate::src::src::printf::extract_printf_args(zFormat, args, false, ::core::ptr::null_mut()); crate::src::src::printf::sqlite3VMPrintf_args(db, zFormat, &_a) };
     if zSql.is_null() {
         if __db_ref.mallocFailed == 0 {
             __pParse_ref.rc = crate::src::headers::sqlite3_h::SQLITE_TOOBIG;
