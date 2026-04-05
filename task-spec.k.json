@@ -186,6 +186,52 @@
           "fails_count": 1
         }
       }
+    },
+    "libs_vmprintf": {
+      "type": "Feature",
+      "model_version": 1,
+      "id": "libs_vmprintf",
+      "description": "sqlite3_vmprintf C wrapper correctly exported in rlib and cdylib",
+      "goals": [
+        "sqlite3_vmprintf (C FFI in c_code/vmprintf.c) must be global symbol (T) in shell and rustfixture binaries",
+        "sqlite3_vmprintf must appear in dynamic symbol table (T) of libsqlite_noamalgam.so (cdylib)",
+        "sqlite3_vmprintf must NOT be defined as a Rust extern fn in printf.rs"
+      ],
+      "depends_on": [
+        "build_all"
+      ],
+      "constraints": {
+        "vmprintf_c_source": {
+          "id": "vmprintf_c_source",
+          "cmd": "grep -q \"sqlite3_vmprintf\" $PROJECT_ROOT/c_code/vmprintf.c",
+          "description": "C implementation of sqlite3_vmprintf must exist in c_code/vmprintf.c",
+          "fails_count": 1
+        },
+        "vmprintf_cdylib_export": {
+          "id": "vmprintf_cdylib_export",
+          "cmd": "test -f $PROJECT_ROOT/c_code/vmprintf.c && cd $PROJECT_ROOT && cargo build --release --lib 2>/dev/null && nm -D target/release/libsqlite_noamalgam.so | grep -q \"T sqlite3_vmprintf$\"",
+          "description": "sqlite3_vmprintf must appear in dynamic symbol table (T) of the cdylib",
+          "fails_count": 1
+        },
+        "vmprintf_not_in_rust_printf": {
+          "id": "vmprintf_not_in_rust_printf",
+          "cmd": "! grep -q \"pub unsafe extern.*fn sqlite3_vmprintf\" $PROJECT_ROOT/src/src/printf.rs",
+          "description": "sqlite3_vmprintf must NOT be defined as a Rust extern fn in printf.rs",
+          "fails_count": 1
+        },
+        "vmprintf_shell_rlib": {
+          "id": "vmprintf_shell_rlib",
+          "cmd": "test -f $PROJECT_ROOT/c_code/vmprintf.c && nm $PROJECT_ROOT/target/release/sqlite3 | grep -q \"T sqlite3_vmprintf$\"",
+          "description": "sqlite3_vmprintf must be a global (T) symbol in the shell binary",
+          "fails_count": 1
+        },
+        "vmprintf_tclsqlite_rlib": {
+          "id": "vmprintf_tclsqlite_rlib",
+          "cmd": "test -f $PROJECT_ROOT/c_code/vmprintf.c && nm $PROJECT_ROOT/target/release/rustfixture | grep -q \"T sqlite3_vmprintf$\"",
+          "description": "sqlite3_vmprintf must be a global (T) symbol in the rustfixture binary",
+          "fails_count": 1
+        }
+      }
     }
   }
 }

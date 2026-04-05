@@ -23,6 +23,12 @@ Verify c_variadic feature isolation: only in printf_c_variadic.rs
       - [snprintf_cdylib_export](#snprintf_cdylib_export)
       - [snprintf_shell_rlib](#snprintf_shell_rlib)
       - [snprintf_tclsqlite_rlib](#snprintf_tclsqlite_rlib)
+    - [Feature: libs_vmprintf](#libs_vmprintf)
+      - [vmprintf_c_source](#vmprintf_c_source)
+      - [vmprintf_cdylib_export](#vmprintf_cdylib_export)
+      - [vmprintf_not_in_rust_printf](#vmprintf_not_in_rust_printf)
+      - [vmprintf_shell_rlib](#vmprintf_shell_rlib)
+      - [vmprintf_tclsqlite_rlib](#vmprintf_tclsqlite_rlib)
     - [Feature: libs_vsnprintf](#libs_vsnprintf)
       - [vsnprintf_c_source](#vsnprintf_c_source)
       - [vsnprintf_cdylib_export](#vsnprintf_cdylib_export)
@@ -103,6 +109,34 @@ Verify c_variadic feature isolation: only in printf_c_variadic.rs
 #### snprintf_tclsqlite_rlib
 **Description:** sqlite3_snprintf must be a global (T) symbol in the rustfixture binary
 **Command:** `test -f $PROJECT_ROOT/c_code/snprintf.c && nm $PROJECT_ROOT/target/release/rustfixture | grep -q "T sqlite3_snprintf$"`
+
+### Feature: libs_vmprintf
+**sqlite3_vmprintf C wrapper correctly exported in rlib and cdylib**
+
+**Goals:**
+- sqlite3_vmprintf (C FFI in c_code/vmprintf.c) must be global symbol (T) in shell and rustfixture binaries
+- sqlite3_vmprintf must appear in dynamic symbol table (T) of libsqlite_noamalgam.so (cdylib)
+- sqlite3_vmprintf must NOT be defined as a Rust extern fn in printf.rs
+
+#### vmprintf_c_source
+**Description:** C implementation of sqlite3_vmprintf must exist in c_code/vmprintf.c
+**Command:** `grep -q "sqlite3_vmprintf" $PROJECT_ROOT/c_code/vmprintf.c`
+
+#### vmprintf_cdylib_export
+**Description:** sqlite3_vmprintf must appear in dynamic symbol table (T) of the cdylib
+**Command:** `test -f $PROJECT_ROOT/c_code/vmprintf.c && cd $PROJECT_ROOT && cargo build --release --lib 2>/dev/null && nm -D target/release/libsqlite_noamalgam.so | grep -q "T sqlite3_vmprintf$"`
+
+#### vmprintf_not_in_rust_printf
+**Description:** sqlite3_vmprintf must NOT be defined as a Rust extern fn in printf.rs
+**Command:** `! grep -q "pub unsafe extern.*fn sqlite3_vmprintf" $PROJECT_ROOT/src/src/printf.rs`
+
+#### vmprintf_shell_rlib
+**Description:** sqlite3_vmprintf must be a global (T) symbol in the shell binary
+**Command:** `test -f $PROJECT_ROOT/c_code/vmprintf.c && nm $PROJECT_ROOT/target/release/sqlite3 | grep -q "T sqlite3_vmprintf$"`
+
+#### vmprintf_tclsqlite_rlib
+**Description:** sqlite3_vmprintf must be a global (T) symbol in the rustfixture binary
+**Command:** `test -f $PROJECT_ROOT/c_code/vmprintf.c && nm $PROJECT_ROOT/target/release/rustfixture | grep -q "T sqlite3_vmprintf$"`
 
 ### Feature: libs_vsnprintf
 **sqlite3_vsnprintf C wrapper correctly exported in rlib and cdylib**

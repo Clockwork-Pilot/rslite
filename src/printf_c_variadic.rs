@@ -67,7 +67,7 @@ pub unsafe extern "C" fn sqlite3DebugPrintf(
 
 // VaList functions below are defined in printf.rs - we re-export them here
 // (they don't use VaListImpl, just VaList which is already available)
-pub use crate::src::src::printf::{sqlite3VMPrintf, sqlite3_vmprintf, renderLogMsg};
+pub use crate::src::src::printf::{sqlite3VMPrintf, renderLogMsg};
 
 // Variadic functions that use VaListImpl - must be defined here to use c_variadic feature
 #[unsafe(no_mangle)]

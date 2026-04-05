@@ -13,6 +13,7 @@ fn main() {
         .file("c_code/snprintf.c")
         .file("c_code/mprintf.c")
         .file("c_code/vsnprintf.c")
+        .file("c_code/vmprintf.c")
         .compile("printf_c");
 
     // Force the linker to pull in C symbols that are only called by external
@@ -21,6 +22,7 @@ fn main() {
     println!("cargo:rustc-link-arg-cdylib=-Wl,--undefined=sqlite3_snprintf");
     println!("cargo:rustc-link-arg-cdylib=-Wl,--undefined=sqlite3_mprintf");
     println!("cargo:rustc-link-arg-cdylib=-Wl,--undefined=sqlite3_vsnprintf");
+    println!("cargo:rustc-link-arg-cdylib=-Wl,--undefined=sqlite3_vmprintf");
 
     // Export C symbols from the cdylib (.so) — Rust's linker only auto-exports
     // #[no_mangle] Rust symbols, so C functions need explicit export directives.
