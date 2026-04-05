@@ -23,6 +23,12 @@ Verify c_variadic feature isolation: only in printf_c_variadic.rs
       - [snprintf_cdylib_export](#snprintf_cdylib_export)
       - [snprintf_shell_rlib](#snprintf_shell_rlib)
       - [snprintf_tclsqlite_rlib](#snprintf_tclsqlite_rlib)
+    - [Feature: libs_vsnprintf](#libs_vsnprintf)
+      - [vsnprintf_c_source](#vsnprintf_c_source)
+      - [vsnprintf_cdylib_export](#vsnprintf_cdylib_export)
+      - [vsnprintf_not_in_rust_printf](#vsnprintf_not_in_rust_printf)
+      - [vsnprintf_shell_rlib](#vsnprintf_shell_rlib)
+      - [vsnprintf_tclsqlite_rlib](#vsnprintf_tclsqlite_rlib)
     - [Feature: toolchain_version](#toolchain_version)
       - [c6](#c6)
 
@@ -97,6 +103,34 @@ Verify c_variadic feature isolation: only in printf_c_variadic.rs
 #### snprintf_tclsqlite_rlib
 **Description:** sqlite3_snprintf must be a global (T) symbol in the rustfixture binary
 **Command:** `test -f $PROJECT_ROOT/c_code/snprintf.c && nm $PROJECT_ROOT/target/release/rustfixture | grep -q "T sqlite3_snprintf$"`
+
+### Feature: libs_vsnprintf
+**sqlite3_vsnprintf C wrapper correctly exported in rlib and cdylib**
+
+**Goals:**
+- sqlite3_vsnprintf (C FFI in c_code/vsnprintf.c) must be global symbol (T) in shell and rustfixture binaries
+- sqlite3_vsnprintf must appear in dynamic symbol table (T) of libsqlite_noamalgam.so (cdylib)
+- sqlite3_vsnprintf must NOT be defined as a Rust extern fn in printf.rs
+
+#### vsnprintf_c_source
+**Description:** C implementation of sqlite3_vsnprintf must exist in c_code/vsnprintf.c
+**Command:** `grep -q "sqlite3_vsnprintf" $PROJECT_ROOT/c_code/vsnprintf.c`
+
+#### vsnprintf_cdylib_export
+**Description:** sqlite3_vsnprintf must appear in dynamic symbol table (T) of the cdylib
+**Command:** `cd $PROJECT_ROOT && cargo build --release --lib 2>/dev/null && nm -D target/release/libsqlite_noamalgam.so | grep -q "T sqlite3_vsnprintf$" && test -f $PROJECT_ROOT/c_code/vsnprintf.c`
+
+#### vsnprintf_not_in_rust_printf
+**Description:** sqlite3_vsnprintf must NOT be defined as a Rust extern fn in printf.rs
+**Command:** `! grep -q "pub unsafe extern.*fn sqlite3_vsnprintf" $PROJECT_ROOT/src/src/printf.rs`
+
+#### vsnprintf_shell_rlib
+**Description:** sqlite3_vsnprintf must be a global (T) symbol in the shell binary
+**Command:** `test -f $PROJECT_ROOT/c_code/vsnprintf.c && nm $PROJECT_ROOT/target/release/sqlite3 | grep -q "T sqlite3_vsnprintf$"`
+
+#### vsnprintf_tclsqlite_rlib
+**Description:** sqlite3_vsnprintf must be a global (T) symbol in the rustfixture binary
+**Command:** `test -f $PROJECT_ROOT/c_code/vsnprintf.c && nm $PROJECT_ROOT/target/release/rustfixture | grep -q "T sqlite3_vsnprintf$"`
 
 ### Feature: toolchain_version
 **Enforce Rust toolchain version nightly-2026-03-26**

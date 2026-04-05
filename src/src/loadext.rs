@@ -27,6 +27,16 @@ pub use crate::src::headers::stdlib::int16_t;
 pub use crate::src::headers::stdlib::uint16_t;pub use crate::src::headers::stdlib::uint32_t;pub use crate::src::headers::stdlib::uint8_t;
 pub use crate::src::headers::stdlib::FILENAME_MAX;
 
+// C wrapper function pointers for the extension API table (sqlite3Apis).
+// These functions are implemented in c_code/ and linked as C symbols.
+unsafe extern "C" {
+    #[link_name = "sqlite3_vmprintf"]
+    fn sqlite3_vmprintf_c(zFormat: *const ::core::ffi::c_char, ap: ::core::ffi::VaList) -> *mut ::core::ffi::c_char;
+    #[link_name = "sqlite3_vsnprintf"]
+    fn sqlite3_vsnprintf_c(n: ::core::ffi::c_int, zBuf: *mut ::core::ffi::c_char, zFormat: *const ::core::ffi::c_char, ap: ::core::ffi::VaList) -> *mut ::core::ffi::c_char;
+    #[link_name = "sqlite3_str_appendf"]
+    fn sqlite3_str_appendf_c(p: *mut crate::src::headers::sqliteInt_h::sqlite3_str, zFormat: *const ::core::ffi::c_char, ...);
+}
 
 pub use crate::src::headers::stdlib::__int16_t;pub use crate::src::headers::stdlib::__uint16_t;pub use crate::src::headers::stdlib::__uint32_t;pub use crate::src::headers::stdlib::__uint8_t;pub use crate::src::src::vdbe::p4union;pub use crate::src::src::vdbe::Mem;pub use crate::src::src::vdbe::SubProgram;pub use crate::src::src::vdbe::SubrtnSig;pub use crate::src::headers::vdbeInt_h::Vdbe;pub use crate::src::src::vdbe::VdbeOp;
 #[derive(Copy, Clone)]
@@ -777,7 +787,7 @@ static mut sqlite3Apis: crate::src::headers::sqlite3ext_h::sqlite3_api_routines 
             crate::src::src::vdbeapi::sqlite3_value_type as unsafe extern "C" fn(*mut crate::src::headers::vdbeInt_h::sqlite3_value) -> ::core::ffi::c_int,
         ),
     vmprintf:  Some(
-            crate::src::src::printf::sqlite3_vmprintf
+            sqlite3_vmprintf_c
                 as unsafe extern "C" fn(
                     *const ::core::ffi::c_char,
                     ::core::ffi::VaList,
@@ -1206,7 +1216,7 @@ static mut sqlite3Apis: crate::src::headers::sqlite3ext_h::sqlite3_api_routines 
                 ) -> *const ::core::ffi::c_char,
         ),
     xvsnprintf:  Some(
-            crate::src::src::printf::sqlite3_vsnprintf
+            sqlite3_vsnprintf_c
                 as unsafe extern "C" fn(
                     ::core::ffi::c_int,
                     *mut ::core::ffi::c_char,
@@ -1458,7 +1468,7 @@ static mut sqlite3Apis: crate::src::headers::sqlite3ext_h::sqlite3_api_routines 
                 as unsafe extern "C" fn(*mut crate::src::headers::sqliteInt_h::sqlite3_str) -> *mut ::core::ffi::c_char,
         ),
     str_appendf:  Some(
-            crate::src::src::printf::sqlite3_str_appendf
+            sqlite3_str_appendf_c
                 as unsafe extern "C" fn(*mut crate::src::headers::sqliteInt_h::sqlite3_str, *const ::core::ffi::c_char, ...) -> (),
         ),
     str_vappendf: None,

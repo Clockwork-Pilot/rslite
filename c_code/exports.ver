@@ -3,4 +3,5 @@
         sqlite3_str_appendf;
         sqlite3_snprintf;
         sqlite3_mprintf;
+        sqlite3_vsnprintf;
 };

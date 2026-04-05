@@ -21,8 +21,6 @@ pub use crate::src::headers::stdlib::va_list;
 pub use crate::__stddef_size_t_h::size_t;
 pub use crate::src::printf_c_variadic::sqlite3_log;
 pub use crate::src::printf_c_variadic::sqlite3DebugPrintf;
-// sqlite3_str_appendf is now provided by c_code/printf_c.c
-unsafe extern "C" { pub safe fn sqlite3_str_appendf(p: *mut sqlite3_str, zFormat: *const ::core::ffi::c_char, ...); }
 
 
 pub use crate::src::src::hash::Hash;pub use crate::src::src::hash::HashElem;pub use crate::src::src::hash::_ht;pub use crate::internal::__builtin_va_list;pub use crate::internal::__va_list_tag;
@@ -1496,29 +1494,6 @@ pub unsafe extern "C" fn sqlite3_vmprintf(
     z
 }
 
-#[unsafe(no_mangle)]
-pub unsafe extern "C" fn sqlite3_vsnprintf(
-    mut n: ::core::ffi::c_int,
-    mut zBuf: *mut ::core::ffi::c_char,
-    mut zFormat: *const ::core::ffi::c_char,
-    mut ap: ::core::ffi::VaList,
-) -> *mut ::core::ffi::c_char {
-    let mut acc: crate::src::headers::sqliteInt_h::StrAccum = unsafe { ::core::mem::zeroed() };
-    if n <= 0 as ::core::ffi::c_int {
-        return zBuf;
-    }
-    sqlite3StrAccumInit(
-        &raw mut acc,
-        ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::sqlite3>(),
-        zBuf,
-        n,
-        0 as ::core::ffi::c_int,
-    );
-    let (_s, a) = extract_printf_args(zFormat, ap, false, ::core::ptr::null_mut());
-    sqlite3_str_vappendf_args(&raw mut acc, zFormat, &a);
-    *zBuf.offset(acc.nChar as isize) = 0 as ::core::ffi::c_char;
-    zBuf
-}
 
 pub unsafe extern "C" fn renderLogMsg(
     mut iErrCode: ::core::ffi::c_int,
