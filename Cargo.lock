@@ -319,6 +319,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "pub-interface"
+version = "0.1.0"
+dependencies = [
+ "sqlite_noamalgam",
+]
+
+[[package]]
 name = "quote"
 version = "1.0.40"
 source = "registry+https://github.com/rust-lang/crates.io-index"

@@ -17,16 +17,6 @@ pub use sqlite_printf_macros::json_printf;
 pub use sqlite_printf_macros::sqlite_vmprintf;
 pub use sqlite_printf_macros::sqlite_vsnprintf;
 
-#[path = "src/vdbe/mod.rs"]
-pub mod vdbe;
-#[path = "src/sql/mod.rs"]
-pub mod sql;
-#[path = "src/schema.rs"]
-pub mod schema;
-#[path = "src/wip_db.rs"]
-pub mod wip_db;
-#[path = "src/db.rs"]
-pub mod db;
 pub mod pcache_h {
     pub use crate::src::src::pcache::PCache;
 }

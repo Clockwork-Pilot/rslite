@@ -2,7 +2,7 @@
 members = [
     "crust-tclsqlite",
     "sqlite-printf-macros",
-    "crust-sqlite-shell",
+    "crust-sqlite-shell", "pub-interface",
 ]
 [package]
 name = "sqlite_noamalgam"
