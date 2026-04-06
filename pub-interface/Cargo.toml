@@ -1,5 +1,0 @@
-[workspace]
-members = ["y2lite-sys", "y2lite", "y2lite-diesel"]
-resolver = "2"
-
-# Virtual manifest - no package defined

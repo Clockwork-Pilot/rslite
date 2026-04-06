@@ -5,9 +5,9 @@ PROJ=$(pwd)
 SRC="${SQLITE_SRC:-/sqlite}"
 
 echo "Building rustfixture (crust-tclsqlite)..."
-cd "$PROJ/crust-tclsqlite" && cargo build --release -q --features test
+cargo +nightly build --release -q -p crust-tclsqlite --features crust-tclsqlite/test
 
-cp "$PROJ/crust-tclsqlite/target/release/rustfixture" "$SRC/rustfixture"
+cp "$PROJ/target/release/rustfixture" "$SRC/rustfixture"
 chmod +x "$SRC/rustfixture"
 
 echo "testfixture_build.sh complete: $SRC/rustfixture"

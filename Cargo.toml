@@ -1,43 +1,47 @@
 [workspace]
+resolver = "2"
 members = [
-    "sqlite-printf-macros",
+    "crates/source",
+    "crates/sqlite-printf-macros",
+    "crates/crust-sqlite-shell",
+    "crates/crust-tclsqlite",
+    "crates/y2lite/y2lite-sys",
+    "crates/y2lite/y2lite",
+    "crates/y2lite/y2lite-orm",
+]
+default-members = [
+    "crates/source",
+    "crates/sqlite-printf-macros",
 ]
 exclude = [
-    "crust-sqlite-shell",
-    "crust-tclsqlite",
     "pub-interface",
 ]
 
-[workspace.dependencies]
-# Common dependencies shared across workspace
-[package]
-name = "sqlite_noamalgam"
-authors = ["C2Rust"]
+[workspace.package]
 version = "0.0.0"
-publish = false
 edition = "2024"
-autobins = false
+publish = false
 
-[lib]
-name = "sqlite_noamalgam"
-path = "lib.rs"
-# cdylib — libsqlite_noamalgam.so (for external C consumers)
-# rlib   — statically linked into crust-sqlite-shell and crust-tclsqlite
-crate-type = ["cdylib", "rlib"]
+[profile.release]
+lto = true
+codegen-units = 1
+opt-level = 3
 
-[dependencies]
+[workspace.dependencies]
+# Internal crates
+sqlite_noamalgam = { path = "crates/source" }
+sqlite-printf-macros = { path = "crates/sqlite-printf-macros" }
+y2lite-sys = { path = "crates/y2lite/y2lite-sys" }
+y2lite = { path = "crates/y2lite/y2lite" }
+y2lite-orm = { path = "crates/y2lite/y2lite-orm" }
+
+# External dependencies
 c2rust-bitfields = "0.22.1"
-libc = "0.2"
-parking_lot = "0.10.2"
-snafu = "0.7"
-sqlite-printf-macros = { path = "sqlite-printf-macros" }
-strum_macros = "0.27"
-
-[build-dependencies]
 cc = "1"
-
-[features]
-default = []
-test = ["default"]
-fts3 = []
-fts4 = ["fts3"]
+libc = "0.2"
+parking_lot = "0.12"
+snafu = "0.7"
+strum_macros = "0.27"
+proc-macro2 = "1.0"
+quote = "1.0"
+syn = { version = "2.0", features = ["full"] }

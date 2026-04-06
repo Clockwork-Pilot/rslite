@@ -1,7 +1,7 @@
 [package]
 name = "crust-tclsqlite"
-version = "0.1.0"
-edition = "2024"
+version.workspace = true
+edition.workspace = true
 authors = ["C2Rust Automated Migration"]
 build = "build.rs"
 
@@ -11,9 +11,9 @@ path = "src/main.rs"
 
 [dependencies]
 # testfixture is compiled with -DSQLITE_ENABLE_FTS4 — require fts4 (which implies fts3)
-sqlite_noamalgam = { path = "../", features = ["fts4"] }
-libc = "0.2"
-c2rust-bitfields = "0.22.1"
+sqlite_noamalgam = { workspace = true, features = ["fts4"] }
+libc = { workspace = true }
+c2rust-bitfields = { workspace = true }
 
 [build-dependencies]
 pkg-config = "0.3"
@@ -21,8 +21,3 @@ pkg-config = "0.3"
 [features]
 default = []
 test = ["sqlite_noamalgam/test"]
-
-[profile.release]
-lto = true
-codegen-units = 1
-opt-level = 3

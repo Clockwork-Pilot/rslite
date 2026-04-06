@@ -1,7 +1,7 @@
 [package]
 name = "crust-sqlite-shell"
-version = "0.1.0"
-edition = "2024"
+version.workspace = true
+edition.workspace = true
 authors = ["C2Rust Automated Migration"]
 build = "build.rs"
 
@@ -11,20 +11,12 @@ path = "src/main.rs"
 
 [dependencies]
 # shell.c compiled with -DSQLITE_ENABLE_FTS4 — require fts4 (which implies fts3)
-sqlite_noamalgam = { path = "../", features = ["fts4"] }
-sqlite-printf-macros = { path = "../sqlite-printf-macros" }
-libc = "0.2"
+sqlite_noamalgam = { workspace = true, features = ["fts4"] }
+sqlite-printf-macros = { workspace = true }
+libc = { workspace = true }
 lazy_static = "1.4"
-parking_lot = "0.12"
-
-[build-dependencies]
-# None needed currently
+parking_lot = { workspace = true }
 
 [dev-dependencies]
 assert_cmd = "2.0"
 predicates = "3.0"
-
-[profile.release]
-lto = true
-codegen-units = 1
-opt-level = 3

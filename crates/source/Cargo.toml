@@ -1,0 +1,31 @@
+[package]
+name = "sqlite_noamalgam"
+authors = ["C2Rust"]
+version = "0.0.0"
+publish = false
+edition = "2024"
+autobins = false
+
+[lib]
+name = "sqlite_noamalgam"
+path = "lib.rs"
+# cdylib — libsqlite_noamalgam.so (for external C consumers)
+# rlib   — statically linked into crust-sqlite-shell and crust-tclsqlite
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+c2rust-bitfields = { workspace = true }
+libc = { workspace = true }
+parking_lot = { workspace = true }
+snafu = { workspace = true }
+sqlite-printf-macros = { workspace = true }
+strum_macros = { workspace = true }
+
+[build-dependencies]
+cc = { workspace = true }
+
+[features]
+default = []
+test = ["default"]
+fts3 = []
+fts4 = ["fts3"]

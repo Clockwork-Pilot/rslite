@@ -1,0 +1,17 @@
+[package]
+name = "y2lite"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[features]
+default = ["y2lite"]
+y2lite = []
+
+[dependencies]
+y2lite-sys = { workspace = true }
+sqlite_noamalgam = { workspace = true, features = ["fts4"] }
+
+[[example]]
+name = "demo"
+path = "examples/demo.rs"
