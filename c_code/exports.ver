@@ -7,4 +7,5 @@
         sqlite3_vmprintf;
         sqlite3_test_control;
         sqlite3_db_config;
+        sqlite3_config;
 };

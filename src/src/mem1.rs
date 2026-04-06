@@ -3,7 +3,7 @@
 
 pub use crate::__stddef_size_t_h::size_t;
 
-pub use crate::src::src::main::sqlite3_config;pub use crate::src::headers::sqlite3_h::sqlite3_int64;pub use crate::src::src::printf::sqlite3_log;pub use crate::src::headers::sqlite3_h::sqlite3_mem_methods;pub use crate::src::headers::sqlite3_h::sqlite_int64;pub use crate::src::headers::sqlite3_h::SQLITE_CONFIG_MALLOC_1;pub use crate::src::headers::sqlite3_h::SQLITE_NOMEM;pub use crate::src::headers::sqlite3_h::SQLITE_OK;
+pub use crate::src::headers::sqlite3_h::sqlite3_int64;pub use crate::src::src::printf::sqlite3_log;pub use crate::src::headers::sqlite3_h::sqlite3_mem_methods;pub use crate::src::headers::sqlite3_h::sqlite_int64;pub use crate::src::headers::sqlite3_h::SQLITE_CONFIG_MALLOC_1;pub use crate::src::headers::sqlite3_h::SQLITE_NOMEM;pub use crate::src::headers::sqlite3_h::SQLITE_OK;
 
 unsafe extern "C" fn sqlite3MemMalloc(mut nByte: ::core::ffi::c_int) -> *mut ::core::ffi::c_void {
     let mut p: *mut crate::src::headers::sqlite3_h::sqlite3_int64 = ::core::ptr::null_mut::<crate::src::headers::sqlite3_h::sqlite3_int64>();
@@ -101,5 +101,12 @@ pub unsafe extern "C" fn sqlite3MemSetDefault() {
     pAppData:  ::core::ptr::null::<::core::ffi::c_void>() as *mut ::core::ffi::c_void,
 }
     };
-    crate::src::src::main::sqlite3_config(crate::src::headers::sqlite3_h::SQLITE_CONFIG_MALLOC_1, &raw const defaultMethods);
+    let args: [u64; 4] = [
+        (&raw const defaultMethods) as usize as u64,
+        0, 0, 0,
+    ];
+    crate::src::src::main::sqlite3_config_args(
+        crate::src::headers::sqlite3_h::SQLITE_CONFIG_MALLOC_1,
+        args.as_ptr(),
+    );
 }

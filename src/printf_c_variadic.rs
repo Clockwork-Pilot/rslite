@@ -280,13 +280,89 @@ pub unsafe extern "C" fn execSqlF(
 }
 
 
-#[unsafe(no_mangle)]
+// sqlite3_config — C wrapper is in c_code/config.c
+// C wrapper packs va_args into u64 slots, Rust parses into ConfigOp enum and dispatches.
 
-pub unsafe extern "C" fn sqlite3_config(
-    mut op: ::core::ffi::c_int,
-    mut args: ...
+use crate::src::headers::sqlite3_h::SqliteConfig;
+
+pub enum ConfigOp {
+    Singlethread,
+    Multithread,
+    Serialized,
+    Mutex(*mut crate::src::headers::sqlite3_h::sqlite3_mutex_methods),
+    GetMutex(*mut crate::src::headers::sqlite3_h::sqlite3_mutex_methods),
+    Malloc(*mut crate::src::headers::sqlite3_h::sqlite3_mem_methods),
+    GetMalloc(*mut crate::src::headers::sqlite3_h::sqlite3_mem_methods),
+    Memstatus(::core::ffi::c_int),
+    SmallMalloc(::core::ffi::c_int),
+    Pagecache(*mut ::core::ffi::c_void, ::core::ffi::c_int, ::core::ffi::c_int),
+    PcacheHdrsz(*mut ::core::ffi::c_int),
+    Pcache,
+    GetPcache,
+    Pcache2(*mut crate::src::headers::sqlite3_h::sqlite3_pcache_methods2),
+    GetPcache2(*mut crate::src::headers::sqlite3_h::sqlite3_pcache_methods2),
+    Lookaside(::core::ffi::c_int, ::core::ffi::c_int),
+    Log(LOGFUNC_t, *mut ::core::ffi::c_void),
+    Uri(::core::ffi::c_int),
+    CoveringIndexScan(::core::ffi::c_int),
+    MmapSize(crate::src::headers::sqlite3_h::sqlite3_int64, crate::src::headers::sqlite3_h::sqlite3_int64),
+    Pmasz(::core::ffi::c_uint),
+    StmtjrnlSpill(::core::ffi::c_int),
+    MemdbMaxsize(crate::src::headers::sqlite3_h::sqlite3_int64),
+    RowidInView(*mut ::core::ffi::c_int),
+    Noop,
+}
+
+impl ConfigOp {
+    unsafe fn from_raw(op: ::core::ffi::c_int, args: *const u64) -> Self {
+        let Some(cfg) = SqliteConfig::from_repr(op) else { return Self::Noop };
+        match cfg {
+            SqliteConfig::SINGLETHREAD => Self::Singlethread,
+            SqliteConfig::MULTITHREAD => Self::Multithread,
+            SqliteConfig::SERIALIZED => Self::Serialized,
+            SqliteConfig::MUTEX => Self::Mutex(*args.offset(0) as usize as *mut _),
+            SqliteConfig::GETMUTEX => Self::GetMutex(*args.offset(0) as usize as *mut _),
+            SqliteConfig::MALLOC => Self::Malloc(*args.offset(0) as usize as *mut _),
+            SqliteConfig::GETMALLOC => Self::GetMalloc(*args.offset(0) as usize as *mut _),
+            SqliteConfig::MEMSTATUS => Self::Memstatus(*args.offset(0) as ::core::ffi::c_int),
+            SqliteConfig::SMALL_MALLOC => Self::SmallMalloc(*args.offset(0) as ::core::ffi::c_int),
+            SqliteConfig::PAGECACHE => Self::Pagecache(
+                *args.offset(0) as usize as *mut _,
+                *args.offset(1) as ::core::ffi::c_int,
+                *args.offset(2) as ::core::ffi::c_int,
+            ),
+            SqliteConfig::PCACHE_HDRSZ => Self::PcacheHdrsz(*args.offset(0) as usize as *mut _),
+            SqliteConfig::PCACHE => Self::Pcache,
+            SqliteConfig::GETPCACHE => Self::GetPcache,
+            SqliteConfig::PCACHE2 => Self::Pcache2(*args.offset(0) as usize as *mut _),
+            SqliteConfig::GETPCACHE2 => Self::GetPcache2(*args.offset(0) as usize as *mut _),
+            SqliteConfig::LOOKASIDE => Self::Lookaside(
+                *args.offset(0) as ::core::ffi::c_int,
+                *args.offset(1) as ::core::ffi::c_int,
+            ),
+            SqliteConfig::LOG => Self::Log(
+                ::core::mem::transmute(*args.offset(0) as usize),
+                *args.offset(1) as usize as *mut _,
+            ),
+            SqliteConfig::URI => Self::Uri(*args.offset(0) as ::core::ffi::c_int),
+            SqliteConfig::COVERING_INDEX_SCAN => Self::CoveringIndexScan(*args.offset(0) as ::core::ffi::c_int),
+            SqliteConfig::MMAP_SIZE => Self::MmapSize(
+                *args.offset(0) as crate::src::headers::sqlite3_h::sqlite3_int64,
+                *args.offset(1) as crate::src::headers::sqlite3_h::sqlite3_int64,
+            ),
+            SqliteConfig::PMASZ => Self::Pmasz(*args.offset(0) as ::core::ffi::c_uint),
+            SqliteConfig::STMTJRNL_SPILL => Self::StmtjrnlSpill(*args.offset(0) as ::core::ffi::c_int),
+            SqliteConfig::MEMDB_MAXSIZE => Self::MemdbMaxsize(*args.offset(0) as crate::src::headers::sqlite3_h::sqlite3_int64),
+            SqliteConfig::ROWID_IN_VIEW => Self::RowidInView(*args.offset(0) as usize as *mut _),
+        }
+    }
+}
+
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn sqlite3_config_args(
+    op: ::core::ffi::c_int,
+    args: *const u64,
 ) -> ::core::ffi::c_int {
-    // VaListImpl type handling - using args directly
     let mut rc: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_OK;
     if crate::src::src::global::sqlite3Config.isInit != 0 {
         static mut mAnytimeConfigOption: crate::src::ext::rtree::rtree::u64_0 = 0 as crate::src::ext::rtree::rtree::u64_0
@@ -299,92 +375,76 @@ pub unsafe extern "C" fn sqlite3_config(
             return sqlite3MisuseError(440 as ::core::ffi::c_int);
         }
     }
-    use crate::src::headers::sqlite3_h::SqliteConfig;
-    let Some(cfg) = SqliteConfig::from_repr(op) else {
-        rc = crate::src::headers::sqlite3_h::SQLITE_ERROR;
-        return rc;
-    };
-    match cfg {
-    SqliteConfig::SINGLETHREAD =>  {
+    match ConfigOp::from_raw(op, args) {
+    ConfigOp::Singlethread =>  {
             crate::src::src::global::sqlite3Config.bCoreMutex = 0 as crate::src::ext::rtree::rtree::u8_0;
             crate::src::src::global::sqlite3Config.bFullMutex = 0 as crate::src::ext::rtree::rtree::u8_0;
         }
-    SqliteConfig::MULTITHREAD =>  {
+    ConfigOp::Multithread =>  {
             crate::src::src::global::sqlite3Config.bCoreMutex = 1 as crate::src::ext::rtree::rtree::u8_0;
             crate::src::src::global::sqlite3Config.bFullMutex = 0 as crate::src::ext::rtree::rtree::u8_0;
         }
-    SqliteConfig::SERIALIZED =>  {
+    ConfigOp::Serialized =>  {
             crate::src::src::global::sqlite3Config.bCoreMutex = 1 as crate::src::ext::rtree::rtree::u8_0;
             crate::src::src::global::sqlite3Config.bFullMutex = 1 as crate::src::ext::rtree::rtree::u8_0;
         }
-    SqliteConfig::MUTEX =>  {
-            crate::src::src::global::sqlite3Config.mutex = *args.arg::<*mut crate::src::headers::sqlite3_h::sqlite3_mutex_methods>();
+    ConfigOp::Mutex(p) =>  {
+            crate::src::src::global::sqlite3Config.mutex = *p;
         }
-    SqliteConfig::GETMUTEX =>  {
-            *args.arg::<*mut crate::src::headers::sqlite3_h::sqlite3_mutex_methods>() = crate::src::src::global::sqlite3Config.mutex;
+    ConfigOp::GetMutex(p) =>  {
+            *p = crate::src::src::global::sqlite3Config.mutex;
         }
-    SqliteConfig::MALLOC =>  {
-            crate::src::src::global::sqlite3Config.m = *args.arg::<*mut crate::src::headers::sqlite3_h::sqlite3_mem_methods>();
+    ConfigOp::Malloc(p) =>  {
+            crate::src::src::global::sqlite3Config.m = *p;
         }
-    SqliteConfig::GETMALLOC =>  {
+    ConfigOp::GetMalloc(p) =>  {
             if crate::src::src::global::sqlite3Config.m.xMalloc.is_none() {
                 crate::src::src::mem1::sqlite3MemSetDefault();
             }
-            *args.arg::<*mut crate::src::headers::sqlite3_h::sqlite3_mem_methods>() = crate::src::src::global::sqlite3Config.m;
+            *p = crate::src::src::global::sqlite3Config.m;
         }
-    SqliteConfig::MEMSTATUS =>  {
-            crate::src::src::global::sqlite3Config.bMemstat = args.arg::<::core::ffi::c_int>();
+    ConfigOp::Memstatus(val) =>  {
+            crate::src::src::global::sqlite3Config.bMemstat = val;
         }
-    SqliteConfig::SMALL_MALLOC =>  {
-            crate::src::src::global::sqlite3Config.bSmallMalloc = args.arg::<::core::ffi::c_int>() as crate::src::ext::rtree::rtree::u8_0;
+    ConfigOp::SmallMalloc(val) =>  {
+            crate::src::src::global::sqlite3Config.bSmallMalloc = val as crate::src::ext::rtree::rtree::u8_0;
         }
-    SqliteConfig::PAGECACHE =>  {
-            crate::src::src::global::sqlite3Config.pPage = args.arg::<*mut ::core::ffi::c_void>();
-            crate::src::src::global::sqlite3Config.szPage = args.arg::<::core::ffi::c_int>();
-            crate::src::src::global::sqlite3Config.nPage = args.arg::<::core::ffi::c_int>();
+    ConfigOp::Pagecache(pPage, szPage, nPage) =>  {
+            crate::src::src::global::sqlite3Config.pPage = pPage;
+            crate::src::src::global::sqlite3Config.szPage = szPage;
+            crate::src::src::global::sqlite3Config.nPage = nPage;
         }
-    SqliteConfig::PCACHE_HDRSZ =>  {
-            *args.arg::<*mut ::core::ffi::c_int>() =
-                crate::src::src::btree::sqlite3HeaderSizeBtree() + crate::src::src::pcache::sqlite3HeaderSizePcache() + crate::src::src::pcache1::sqlite3HeaderSizePcache1();
+    ConfigOp::PcacheHdrsz(p) =>  {
+            *p = crate::src::src::btree::sqlite3HeaderSizeBtree() + crate::src::src::pcache::sqlite3HeaderSizePcache() + crate::src::src::pcache1::sqlite3HeaderSizePcache1();
         }
-    SqliteConfig::PCACHE =>  {}
-    SqliteConfig::GETPCACHE =>  {
+    ConfigOp::Pcache =>  {}
+    ConfigOp::GetPcache =>  {
             rc = crate::src::headers::sqlite3_h::SQLITE_ERROR;
         }
-    SqliteConfig::PCACHE2 =>  {
-            crate::src::src::global::sqlite3Config.pcache2 = *args.arg::<*mut crate::src::headers::sqlite3_h::sqlite3_pcache_methods2>();
+    ConfigOp::Pcache2(p) =>  {
+            crate::src::src::global::sqlite3Config.pcache2 = *p;
         }
-    SqliteConfig::GETPCACHE2 =>  {
+    ConfigOp::GetPcache2(p) =>  {
             if crate::src::src::global::sqlite3Config.pcache2.xInit.is_none() {
                 crate::src::src::pcache1::sqlite3PCacheSetDefault();
             }
-            *args.arg::<*mut crate::src::headers::sqlite3_h::sqlite3_pcache_methods2>() = crate::src::src::global::sqlite3Config.pcache2;
+            *p = crate::src::src::global::sqlite3Config.pcache2;
         }
-    SqliteConfig::LOOKASIDE =>  {
-            crate::src::src::global::sqlite3Config.szLookaside = args.arg::<::core::ffi::c_int>();
-            crate::src::src::global::sqlite3Config.nLookaside = args.arg::<::core::ffi::c_int>();
+    ConfigOp::Lookaside(szLookaside, nLookaside) =>  {
+            crate::src::src::global::sqlite3Config.szLookaside = szLookaside;
+            crate::src::src::global::sqlite3Config.nLookaside = nLookaside;
         }
-    SqliteConfig::LOG =>  {
-            let mut xLog: LOGFUNC_t = ::core::mem::transmute(args.arg::<*mut unsafe extern "C" fn(
-                *mut ::core::ffi::c_void,
-                ::core::ffi::c_int,
-                *const ::core::ffi::c_char,
-            )
-                -> ()>());
-            let mut pLogArg: *mut ::core::ffi::c_void = args.arg::<*mut ::core::ffi::c_void>();
+    ConfigOp::Log(xLog, pLogArg) =>  {
             (*(&raw mut crate::src::src::global::sqlite3Config.xLog as *mut LOGFUNC_t as *mut std::sync::atomic::AtomicUsize)).store(::core::mem::transmute::<LOGFUNC_t, usize>(xLog), std::sync::atomic::Ordering::Relaxed);
             (*(&raw mut crate::src::src::global::sqlite3Config.pLogArg as *mut *mut ::core::ffi::c_void as *mut std::sync::atomic::AtomicUsize)).store(pLogArg as usize, std::sync::atomic::Ordering::Relaxed);
         }
-    SqliteConfig::URI =>  {
-            let mut bOpenUri: ::core::ffi::c_int = args.arg::<::core::ffi::c_int>();
+    ConfigOp::Uri(bOpenUri) =>  {
             (*((&raw mut crate::src::src::global::sqlite3Config.bOpenUri) as *mut std::sync::atomic::AtomicU8)).store(bOpenUri as crate::src::ext::rtree::rtree::u8_0, std::sync::atomic::Ordering::Relaxed);
         }
-    SqliteConfig::COVERING_INDEX_SCAN =>  {
-            crate::src::src::global::sqlite3Config.bUseCis = args.arg::<::core::ffi::c_int>() as crate::src::ext::rtree::rtree::u8_0;
+    ConfigOp::CoveringIndexScan(val) =>  {
+            crate::src::src::global::sqlite3Config.bUseCis = val as crate::src::ext::rtree::rtree::u8_0;
         }
-    SqliteConfig::MMAP_SIZE =>  {
-            let mut szMmap: crate::src::headers::sqlite3_h::sqlite3_int64 = args.arg::<crate::src::headers::sqlite3_h::sqlite3_int64>();
-            let mut mxMmap: crate::src::headers::sqlite3_h::sqlite3_int64 = args.arg::<crate::src::headers::sqlite3_h::sqlite3_int64>();
+    ConfigOp::MmapSize(mut szMmap, mut mxMmap) =>  {
             if mxMmap < 0 as crate::src::headers::sqlite3_h::sqlite3_int64 || mxMmap > crate::src::headers::sqliteInt_h::SQLITE_MAX_MMAP_SIZE as crate::src::headers::sqlite3_h::sqlite3_int64 {
                 mxMmap = crate::src::headers::sqliteInt_h::SQLITE_MAX_MMAP_SIZE as crate::src::headers::sqlite3_h::sqlite3_int64;
             }
@@ -397,18 +457,20 @@ pub unsafe extern "C" fn sqlite3_config(
             crate::src::src::global::sqlite3Config.mxMmap = mxMmap;
             crate::src::src::global::sqlite3Config.szMmap = szMmap;
         }
-    SqliteConfig::PMASZ =>  {
-            crate::src::src::global::sqlite3Config.szPma = args.arg::<::core::ffi::c_uint>() as crate::src::ext::rtree::rtree::u32_0;
+    ConfigOp::Pmasz(val) =>  {
+            crate::src::src::global::sqlite3Config.szPma = val as crate::src::ext::rtree::rtree::u32_0;
         }
-    SqliteConfig::STMTJRNL_SPILL =>  {
-            crate::src::src::global::sqlite3Config.nStmtSpill = args.arg::<::core::ffi::c_int>();
+    ConfigOp::StmtjrnlSpill(val) =>  {
+            crate::src::src::global::sqlite3Config.nStmtSpill = val;
         }
-    SqliteConfig::MEMDB_MAXSIZE =>  {
-            crate::src::src::global::sqlite3Config.mxMemdbSize = args.arg::<crate::src::headers::sqlite3_h::sqlite3_int64>();
+    ConfigOp::MemdbMaxsize(val) =>  {
+            crate::src::src::global::sqlite3Config.mxMemdbSize = val;
         }
-    SqliteConfig::ROWID_IN_VIEW =>  {
-            let mut pVal: *mut ::core::ffi::c_int = args.arg::<*mut ::core::ffi::c_int>();
+    ConfigOp::RowidInView(pVal) =>  {
             *pVal = 0 as ::core::ffi::c_int;
+        }
+    ConfigOp::Noop =>  {
+            rc = crate::src::headers::sqlite3_h::SQLITE_ERROR;
         }
 }
     rc
