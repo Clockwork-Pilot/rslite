@@ -1381,6 +1381,7 @@ pub mod stdlib {
         pub __elision: ::core::ffi::c_short,
         pub __list: crate::stdlib::__pthread_list_t,
     }
+    #[cfg(not(target_os = "macos"))]
     #[derive(Copy, Clone)]
     #[repr(C)]
     pub struct stat {
@@ -1399,6 +1400,30 @@ pub mod stdlib {
         pub st_mtim: ::libc::timespec,
         pub st_ctim: ::libc::timespec,
         pub __glibc_reserved: [crate::stdlib::__syscall_slong_t; 3],
+    }
+    // macOS struct stat has a completely different layout from Linux/glibc.
+    #[cfg(target_os = "macos")]
+    #[derive(Copy, Clone)]
+    #[repr(C)]
+    pub struct stat {
+        pub st_dev: crate::stdlib::__dev_t,
+        pub st_mode: crate::stdlib::__mode_t,
+        pub st_nlink: crate::stdlib::__nlink_t,
+        pub st_ino: crate::stdlib::__ino_t,
+        pub st_uid: crate::stdlib::__uid_t,
+        pub st_gid: crate::stdlib::__gid_t,
+        pub st_rdev: crate::stdlib::__dev_t,
+        pub st_atim: ::libc::timespec,
+        pub st_mtim: ::libc::timespec,
+        pub st_ctim: ::libc::timespec,
+        pub st_birthtimespec: ::libc::timespec,
+        pub st_size: crate::stdlib::__off_t,
+        pub st_blocks: crate::stdlib::__blkcnt_t,
+        pub st_blksize: crate::stdlib::__blksize_t,
+        pub st_flags: u32,
+        pub st_gen: u32,
+        pub st_lspare: i32,
+        pub st_qspare: [i64; 2],
     }
     pub type dev_t = crate::stdlib::__dev_t;
 
@@ -1577,17 +1602,31 @@ pub mod stdlib {
 
     pub type __uint32_t = u32;
 
+    // Platform-specific type aliases. On Linux these match glibc; on macOS they
+    // match the Darwin kernel types so struct stat has the correct ABI layout.
+    #[cfg(not(target_os = "macos"))]
     pub type __dev_t = ::core::ffi::c_ulong;
+    #[cfg(target_os = "macos")]
+    pub type __dev_t = i32;
 
     pub type __uid_t = ::core::ffi::c_uint;
 
     pub type __gid_t = ::core::ffi::c_uint;
 
+    #[cfg(not(target_os = "macos"))]
     pub type __ino_t = ::core::ffi::c_ulong;
+    #[cfg(target_os = "macos")]
+    pub type __ino_t = u64;
 
+    #[cfg(not(target_os = "macos"))]
     pub type __mode_t = ::core::ffi::c_uint;
+    #[cfg(target_os = "macos")]
+    pub type __mode_t = u16;
 
+    #[cfg(not(target_os = "macos"))]
     pub type __nlink_t = ::core::ffi::c_ulong;
+    #[cfg(target_os = "macos")]
+    pub type __nlink_t = u16;
 
     pub type __off_t = ::core::ffi::c_long;
 
@@ -1597,9 +1636,15 @@ pub mod stdlib {
 
     pub type __time_t = ::core::ffi::c_long;
 
+    #[cfg(not(target_os = "macos"))]
     pub type __suseconds_t = ::core::ffi::c_long;
+    #[cfg(target_os = "macos")]
+    pub type __suseconds_t = i32;
 
+    #[cfg(not(target_os = "macos"))]
     pub type __blksize_t = ::core::ffi::c_long;
+    #[cfg(target_os = "macos")]
+    pub type __blksize_t = i32;
 
     pub type __blkcnt_t = ::core::ffi::c_long;
 
