@@ -1,3 +1,5 @@
+use crate::src::ext::rtree::rtree::u64_0;
+
 pub type sqlite3_stmt = crate::src::headers::vdbeInt_h::Vdbe;
 
 pub type sqlite3_blob = *mut std::ffi::c_void;
@@ -794,103 +796,95 @@ pub struct sqlite3_mem_methods {
     pub pAppData: *mut ::core::ffi::c_void,
 }
 
-pub const SQLITE_CONFIG_SINGLETHREAD: ::core::ffi::c_int = 1;
+#[derive(Debug, Clone, Copy, PartialEq, Eq, strum_macros::FromRepr)]
+#[repr(i32)]
+pub enum SqliteConfig {
+    SINGLETHREAD = 1,
+    MULTITHREAD = 2,
+    SERIALIZED = 3,
+    MALLOC = 4,
+    GETMALLOC = 5,
+    PAGECACHE = 7,
+    MEMSTATUS = 9,
+    MUTEX = 10,
+    GETMUTEX = 11,
+    LOOKASIDE = 13,
+    PCACHE = 14,
+    GETPCACHE = 15,
+    LOG = 16,
+    URI = 17,
+    PCACHE2 = 18,
+    GETPCACHE2 = 19,
+    COVERING_INDEX_SCAN = 20,
+    MMAP_SIZE = 22,
+    PCACHE_HDRSZ = 24,
+    PMASZ = 25,
+    STMTJRNL_SPILL = 26,
+    SMALL_MALLOC = 27,
+    MEMDB_MAXSIZE = 29,
+    ROWID_IN_VIEW = 30,
+}
 
-pub const SQLITE_CONFIG_MULTITHREAD: ::core::ffi::c_int = 2;
+pub const SQLITE_CONFIG_MALLOC_1: ::core::ffi::c_int = SqliteConfig::MALLOC as ::core::ffi::c_int;
+pub const SQLITE_CONFIG_PCACHE2_1: ::core::ffi::c_int = SqliteConfig::PCACHE2 as ::core::ffi::c_int;
 
-pub const SQLITE_CONFIG_SERIALIZED: ::core::ffi::c_int = 3;
+#[derive(Debug, Clone, Copy, PartialEq, Eq, strum_macros::FromRepr)]
+#[repr(i32)]
+pub enum SqliteDbConfig {
+    MAINDBNAME = 1000,
+    LOOKASIDE = 1001,
+    ENABLE_FKEY = 1002,
+    ENABLE_TRIGGER = 1003,
+    ENABLE_FTS3_TOKENIZER = 1004,
+    ENABLE_LOAD_EXTENSION = 1005,
+    NO_CKPT_ON_CLOSE = 1006,
+    ENABLE_QPSG = 1007,
+    TRIGGER_EQP = 1008,
+    RESET_DATABASE = 1009,
+    DEFENSIVE = 1010,
+    WRITABLE_SCHEMA = 1011,
+    LEGACY_ALTER_TABLE = 1012,
+    DQS_DML = 1013,
+    DQS_DDL = 1014,
+    ENABLE_VIEW = 1015,
+    LEGACY_FILE_FORMAT = 1016,
+    TRUSTED_SCHEMA = 1017,
+    STMT_SCANSTATUS = 1018,
+    REVERSE_SCANORDER = 1019,
+    ENABLE_ATTACH_CREATE = 1020,
+    ENABLE_ATTACH_WRITE = 1021,
+    ENABLE_COMMENTS = 1022,
+}
 
-pub const SQLITE_CONFIG_MALLOC: ::core::ffi::c_int = 4;
-
-pub const SQLITE_CONFIG_MALLOC_1: ::core::ffi::c_int = 4 as ::core::ffi::c_int;
-
-pub const SQLITE_CONFIG_GETMALLOC: ::core::ffi::c_int = 5;
-
-pub const SQLITE_CONFIG_PAGECACHE: ::core::ffi::c_int = 7;
-
-pub const SQLITE_CONFIG_MEMSTATUS: ::core::ffi::c_int = 9;
-
-pub const SQLITE_CONFIG_MUTEX: ::core::ffi::c_int = 10;
-
-pub const SQLITE_CONFIG_GETMUTEX: ::core::ffi::c_int = 11;
-
-pub const SQLITE_CONFIG_LOOKASIDE: ::core::ffi::c_int = 13;
-
-pub const SQLITE_CONFIG_PCACHE: ::core::ffi::c_int = 14;
-
-pub const SQLITE_CONFIG_GETPCACHE: ::core::ffi::c_int = 15;
-
-pub const SQLITE_CONFIG_LOG: ::core::ffi::c_int = 16;
-
-pub const SQLITE_CONFIG_URI: ::core::ffi::c_int = 17;
-
-pub const SQLITE_CONFIG_PCACHE2: ::core::ffi::c_int = 18;
-
-pub const SQLITE_CONFIG_PCACHE2_1: ::core::ffi::c_int = 18 as ::core::ffi::c_int;
-
-pub const SQLITE_CONFIG_GETPCACHE2: ::core::ffi::c_int = 19;
-
-pub const SQLITE_CONFIG_COVERING_INDEX_SCAN: ::core::ffi::c_int = 20;
-
-pub const SQLITE_CONFIG_MMAP_SIZE: ::core::ffi::c_int = 22;
-
-pub const SQLITE_CONFIG_PCACHE_HDRSZ: ::core::ffi::c_int = 24;
-
-pub const SQLITE_CONFIG_PMASZ: ::core::ffi::c_int = 25;
-
-pub const SQLITE_CONFIG_STMTJRNL_SPILL: ::core::ffi::c_int = 26;
-
-pub const SQLITE_CONFIG_SMALL_MALLOC: ::core::ffi::c_int = 27;
-
-pub const SQLITE_CONFIG_MEMDB_MAXSIZE: ::core::ffi::c_int = 29;
-
-pub const SQLITE_CONFIG_ROWID_IN_VIEW: ::core::ffi::c_int = 30;
-
-pub const SQLITE_DBCONFIG_MAINDBNAME: ::core::ffi::c_int = 1000;
-
-pub const SQLITE_DBCONFIG_LOOKASIDE: ::core::ffi::c_int = 1001;
-
-pub const SQLITE_DBCONFIG_ENABLE_FKEY: ::core::ffi::c_int = 1002 as ::core::ffi::c_int;
-
-pub const SQLITE_DBCONFIG_ENABLE_TRIGGER: ::core::ffi::c_int = 1003 as ::core::ffi::c_int;
-
-pub const SQLITE_DBCONFIG_ENABLE_FTS3_TOKENIZER: ::core::ffi::c_int = 1004 as ::core::ffi::c_int;
-
-pub const SQLITE_DBCONFIG_ENABLE_LOAD_EXTENSION: ::core::ffi::c_int = 1005 as ::core::ffi::c_int;
-
-pub const SQLITE_DBCONFIG_NO_CKPT_ON_CLOSE: ::core::ffi::c_int = 1006 as ::core::ffi::c_int;
-
-pub const SQLITE_DBCONFIG_ENABLE_QPSG: ::core::ffi::c_int = 1007 as ::core::ffi::c_int;
-
-pub const SQLITE_DBCONFIG_TRIGGER_EQP: ::core::ffi::c_int = 1008 as ::core::ffi::c_int;
-
-pub const SQLITE_DBCONFIG_RESET_DATABASE: ::core::ffi::c_int = 1009 as ::core::ffi::c_int;
-
-pub const SQLITE_DBCONFIG_DEFENSIVE: ::core::ffi::c_int = 1010 as ::core::ffi::c_int;
-
-pub const SQLITE_DBCONFIG_WRITABLE_SCHEMA: ::core::ffi::c_int = 1011 as ::core::ffi::c_int;
-
-pub const SQLITE_DBCONFIG_LEGACY_ALTER_TABLE: ::core::ffi::c_int = 1012 as ::core::ffi::c_int;
-
-pub const SQLITE_DBCONFIG_DQS_DML: ::core::ffi::c_int = 1013 as ::core::ffi::c_int;
-
-pub const SQLITE_DBCONFIG_DQS_DDL: ::core::ffi::c_int = 1014 as ::core::ffi::c_int;
-
-pub const SQLITE_DBCONFIG_ENABLE_VIEW: ::core::ffi::c_int = 1015 as ::core::ffi::c_int;
-
-pub const SQLITE_DBCONFIG_LEGACY_FILE_FORMAT: ::core::ffi::c_int = 1016 as ::core::ffi::c_int;
-
-pub const SQLITE_DBCONFIG_TRUSTED_SCHEMA: ::core::ffi::c_int = 1017 as ::core::ffi::c_int;
-
-pub const SQLITE_DBCONFIG_STMT_SCANSTATUS: ::core::ffi::c_int = 1018 as ::core::ffi::c_int;
-
-pub const SQLITE_DBCONFIG_REVERSE_SCANORDER: ::core::ffi::c_int = 1019 as ::core::ffi::c_int;
-
-pub const SQLITE_DBCONFIG_ENABLE_ATTACH_CREATE: ::core::ffi::c_int = 1020 as ::core::ffi::c_int;
-
-pub const SQLITE_DBCONFIG_ENABLE_ATTACH_WRITE: ::core::ffi::c_int = 1021 as ::core::ffi::c_int;
-
-pub const SQLITE_DBCONFIG_ENABLE_COMMENTS: ::core::ffi::c_int = 1022 as ::core::ffi::c_int;
+impl SqliteDbConfig {
+    pub fn flag_mask(&self) -> Option<u64_0> {
+        use crate::src::headers::sqliteInt_h::*;
+        match self {
+            Self::ENABLE_FKEY => Some(SQLITE_ForeignKeys as u64_0),
+            Self::ENABLE_TRIGGER => Some(SQLITE_EnableTrigger as u64_0),
+            Self::ENABLE_VIEW => Some(SQLITE_EnableView as u64_0),
+            Self::ENABLE_FTS3_TOKENIZER => Some(SQLITE_Fts3Tokenizer as u64_0),
+            Self::ENABLE_LOAD_EXTENSION => Some(SQLITE_LoadExtension as u64_0),
+            Self::NO_CKPT_ON_CLOSE => Some(SQLITE_NoCkptOnClose as u64_0),
+            Self::ENABLE_QPSG => Some(SQLITE_EnableQPSG as u64_0),
+            Self::TRIGGER_EQP => Some(SQLITE_TriggerEQP as u64_0),
+            Self::RESET_DATABASE => Some(SQLITE_ResetDatabase as u64_0),
+            Self::DEFENSIVE => Some(SQLITE_Defensive as u64_0),
+            Self::WRITABLE_SCHEMA => Some((SQLITE_WriteSchema | SQLITE_NoSchemaError) as u64_0),
+            Self::LEGACY_ALTER_TABLE => Some(SQLITE_LegacyAlter as u64_0),
+            Self::DQS_DDL => Some(SQLITE_DqsDDL as u64_0),
+            Self::DQS_DML => Some(SQLITE_DqsDML as u64_0),
+            Self::LEGACY_FILE_FORMAT => Some(SQLITE_LegacyFileFmt as u64_0),
+            Self::TRUSTED_SCHEMA => Some(SQLITE_TrustedSchema as u64_0),
+            Self::STMT_SCANSTATUS => Some(SQLITE_StmtScanStatus as u64_0),
+            Self::REVERSE_SCANORDER => Some(SQLITE_ReverseOrder as u64_0),
+            Self::ENABLE_ATTACH_CREATE => Some(SQLITE_AttachCreate),
+            Self::ENABLE_ATTACH_WRITE => Some(SQLITE_AttachWrite),
+            Self::ENABLE_COMMENTS => Some(SQLITE_Comments),
+            _ => None,
+        }
+    }
+}
 
 pub const SQLITE_DENY: ::core::ffi::c_int = 1 as ::core::ffi::c_int;
 

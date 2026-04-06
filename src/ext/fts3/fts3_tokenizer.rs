@@ -77,7 +77,7 @@ pub use crate::src::headers::sqliteInt_h::sqlite3;pub use crate::src::src::vdbea
 pub use crate::src::src::vdbeapi::sqlite3_bind_text;pub use crate::src::src::vdbeapi::sqlite3_column_blob;
 pub use crate::src::src::vdbeapi::sqlite3_column_bytes;pub use crate::src::src::vdbeapi::sqlite3_column_type;
 pub use crate::src::headers::vdbeInt_h::sqlite3_context;pub use crate::src::src::vdbeapi::sqlite3_context_db_handle;
-pub use crate::src::src::main::sqlite3_create_function;pub use crate::src::src::main::sqlite3_db_config;pub use crate::src::headers::sqlite3_h::sqlite3_destructor_type;
+pub use crate::src::src::main::sqlite3_create_function;pub use crate::src::headers::sqlite3_h::sqlite3_destructor_type;
 pub use crate::src::src::vdbeapi::sqlite3_finalize;pub use crate::src::src::malloc::sqlite3_free;pub use crate::src::headers::sqlite3_h::sqlite3_int64;
 pub use crate::src::src::prepare::sqlite3_prepare_v2;pub use crate::src::src::malloc::sqlite3_realloc64;
 pub use crate::src::src::vdbeapi::sqlite3_result_blob;pub use crate::src::src::vdbeapi::sqlite3_result_error;pub use crate::src::src::vdbeapi::sqlite3_result_text;
@@ -85,7 +85,7 @@ pub use crate::src::src::vdbeapi::sqlite3_step;pub use crate::src::headers::sqli
 pub use crate::src::src::vdbeapi::sqlite3_user_data;pub use crate::src::headers::vdbeInt_h::sqlite3_value;pub use crate::src::src::vdbeapi::sqlite3_value_blob;
 pub use crate::src::src::vdbeapi::sqlite3_value_bytes;pub use crate::src::src::vdbeapi::sqlite3_value_frombind;
 pub use crate::src::src::vdbeapi::sqlite3_value_text;pub use crate::src::headers::sqlite3_h::sqlite_int64;pub use crate::src::headers::sqlite3_h::sqlite_uint64;
-pub use crate::src::headers::sqlite3_h::SQLITE_BLOB;pub use crate::src::headers::sqlite3_h::SQLITE_DBCONFIG_ENABLE_FTS3_TOKENIZER;pub use crate::src::headers::sqlite3_h::SQLITE_DIRECTONLY;
+pub use crate::src::headers::sqlite3_h::SQLITE_BLOB;pub use crate::src::headers::sqlite3_h::SQLITE_DIRECTONLY;
 pub use crate::src::headers::sqlite3_h::SQLITE_ERROR;pub use crate::src::headers::sqlite3_h::SQLITE_NOMEM;pub use crate::src::headers::sqlite3_h::SQLITE_OK;pub use crate::src::headers::sqlite3_h::SQLITE_ROW;
 pub use crate::src::headers::sqlite3_h::SQLITE_STATIC;pub use crate::src::headers::sqlite3_h::SQLITE_UTF8;pub use crate::src::headers::stdlib::C2RustUnnamed;pub use crate::src::headers::stdlib::C2RustUnnamed_0;
 
@@ -133,11 +133,15 @@ unsafe extern "C" {
 unsafe extern "C" fn fts3TokenizerEnabled(mut context: *mut crate::src::headers::vdbeInt_h::sqlite3_context) -> ::core::ffi::c_int {
     let mut db: *mut crate::src::headers::sqliteInt_h::sqlite3 = crate::src::src::vdbeapi::sqlite3_context_db_handle(context);
     let mut isEnabled: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
-    crate::src::src::main::sqlite3_db_config(
+    let args: [u64; 3] = [
+        -(1 as ::core::ffi::c_int) as u64,
+        (&raw mut isEnabled) as usize as u64,
+        0,
+    ];
+    crate::src::src::main::sqlite3_db_config_args(
         db,
-        crate::src::headers::sqlite3_h::SQLITE_DBCONFIG_ENABLE_FTS3_TOKENIZER,
-        -(1 as ::core::ffi::c_int),
-        &raw mut isEnabled,
+        crate::src::headers::sqlite3_h::SqliteDbConfig::ENABLE_FTS3_TOKENIZER as ::core::ffi::c_int,
+        args.as_ptr(),
     );
     isEnabled
 }
