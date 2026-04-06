@@ -13,6 +13,141 @@
 #![feature(let_chains)]
 #![feature(result_option_inspect)]
 
+/// Platform compatibility shims for macOS (the C2Rust output targets Linux).
+pub mod compat {
+    /// Equivalent of `__errno_location` (Linux) / `__error` (macOS).
+    /// Returns a pointer to the thread-local errno value.
+    #[cfg(target_os = "macos")]
+    #[inline(always)]
+    pub unsafe fn errno_location() -> *mut ::core::ffi::c_int {
+        extern "C" { fn __error() -> *mut ::core::ffi::c_int; }
+        __error()
+    }
+    #[cfg(not(target_os = "macos"))]
+    #[inline(always)]
+    pub unsafe fn errno_location() -> *mut ::core::ffi::c_int {
+        ::libc::__errno_location()
+    }
+
+    // O_LARGEFILE is 0 on modern Linux and doesn't exist on macOS.
+    #[cfg(target_os = "macos")]
+    pub const O_LARGEFILE: ::core::ffi::c_int = 0;
+    #[cfg(not(target_os = "macos"))]
+    pub use ::libc::O_LARGEFILE;
+
+    // MREMAP_MAYMOVE and mremap only exist on Linux.
+    #[cfg(target_os = "macos")]
+    pub const MREMAP_MAYMOVE: ::core::ffi::c_int = 1;
+    #[cfg(not(target_os = "macos"))]
+    pub use ::libc::MREMAP_MAYMOVE;
+
+    // On macOS, mremap doesn't exist. Provide a shim that falls back to mmap+munmap.
+    #[cfg(target_os = "macos")]
+    pub unsafe extern "C" fn mremap(
+        old_address: *mut ::core::ffi::c_void,
+        old_size: usize,
+        new_size: usize,
+        _flags: ::core::ffi::c_int,
+    ) -> *mut ::core::ffi::c_void {
+        let new_ptr = ::libc::mmap(
+            ::core::ptr::null_mut(),
+            new_size,
+            ::libc::PROT_READ | ::libc::PROT_WRITE,
+            ::libc::MAP_SHARED,
+            -1,
+            0,
+        );
+        if new_ptr == ::libc::MAP_FAILED {
+            return ::libc::MAP_FAILED;
+        }
+        let copy_size = if old_size < new_size { old_size } else { new_size };
+        ::core::ptr::copy_nonoverlapping(old_address as *const u8, new_ptr as *mut u8, copy_size);
+        ::libc::munmap(old_address, old_size);
+        new_ptr
+    }
+
+    // macOS pread/pwrite are already 64-bit; Linux has separate pread64/pwrite64.
+    #[cfg(target_os = "macos")]
+    #[no_mangle]
+    pub unsafe extern "C" fn pread64(
+        fd: ::core::ffi::c_int,
+        buf: *mut ::core::ffi::c_void,
+        count: usize,
+        offset: i64,
+    ) -> isize {
+        ::libc::pread(fd, buf, count, offset as ::libc::off_t)
+    }
+    #[cfg(target_os = "macos")]
+    #[no_mangle]
+    pub unsafe extern "C" fn pwrite64(
+        fd: ::core::ffi::c_int,
+        buf: *const ::core::ffi::c_void,
+        count: usize,
+        offset: i64,
+    ) -> isize {
+        ::libc::pwrite(fd, buf, count, offset as ::libc::off_t)
+    }
+
+    // __ctype_b_loc is glibc-specific. On macOS, build a compatible lookup table.
+    // The glibc table maps char values (-128..255) to bitmask flags. We only need
+    // the flags actually used by the transpiled code (_ISdigit = 2048).
+    #[cfg(target_os = "macos")]
+    mod ctype_compat {
+        use core::sync::atomic::{AtomicBool, Ordering};
+        const TABLE_SIZE: usize = 384; // covers -128..255
+        const OFFSET: usize = 128;
+        static mut TABLE: [::core::ffi::c_ushort; TABLE_SIZE] = [0u16; TABLE_SIZE];
+        static mut TABLE_PTR: *const ::core::ffi::c_ushort = ::core::ptr::null();
+        static INIT: AtomicBool = AtomicBool::new(false);
+
+        // glibc _IS* bit flags used by the transpiled code
+        const _ISUPPER: u16  = 256;
+        const _ISLOWER: u16  = 512;
+        const _ISALPHA: u16  = 1024;
+        const _ISDIGIT: u16  = 2048;
+        const _ISXDIGIT: u16 = 4096;
+        const _ISSPACE: u16  = 8192;
+        const _ISPRINT: u16  = 16384;
+        const _ISALNUM: u16  = _ISALPHA | _ISDIGIT;
+
+        unsafe fn init_table() {
+            for i in 0..TABLE_SIZE {
+                let c = (i as isize - OFFSET as isize) as ::core::ffi::c_int;
+                if c >= 0 && c <= 127 {
+                    let mut flags: u16 = 0;
+                    if ::libc::isupper(c) != 0 { flags |= _ISUPPER; }
+                    if ::libc::islower(c) != 0 { flags |= _ISLOWER; }
+                    if ::libc::isalpha(c) != 0 { flags |= _ISALPHA; }
+                    if ::libc::isdigit(c) != 0 { flags |= _ISDIGIT; }
+                    if ::libc::isxdigit(c) != 0 { flags |= _ISXDIGIT; }
+                    if ::libc::isspace(c) != 0 { flags |= _ISSPACE; }
+                    if ::libc::isprint(c) != 0 { flags |= _ISPRINT; }
+                    if ::libc::isalnum(c) != 0 { flags |= _ISALNUM; }
+                    TABLE[i] = flags;
+                }
+            }
+            TABLE_PTR = TABLE.as_ptr().add(OFFSET);
+        }
+
+        #[no_mangle]
+        pub unsafe extern "C" fn __ctype_b_loc() -> *mut *const ::core::ffi::c_ushort {
+            if !INIT.swap(true, Ordering::SeqCst) {
+                init_table();
+            }
+            &raw mut TABLE_PTR
+        }
+    }
+
+    // stdout: on macOS the symbol is __stdoutp
+    #[cfg(target_os = "macos")]
+    pub mod stdout_compat {
+        extern "C" {
+            #[link_name = "__stdoutp"]
+            pub static mut stdout: *mut ::libc::FILE;
+        }
+    }
+}
+
 #[path = "src/vdbe/mod.rs"]
 pub mod vdbe;
 #[path = "src/sql/mod.rs"]
@@ -565,6 +700,7 @@ pub mod stdlib {
             __file: *const ::core::ffi::c_char,
             __buf: *mut crate::stdlib::stat,
         ) -> ::core::ffi::c_int;
+        #[cfg_attr(target_os = "macos", link_name = "__stdoutp")]
         pub static mut stdout: *mut crate::stdlib::FILE;
 
         pub fn fflush(__stream: *mut crate::stdlib::FILE) -> ::core::ffi::c_int;

@@ -41,8 +41,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 
-RUN curl -fsSL https://github.com/tmux/tmux-builds/releases/download/v3.6a/tmux-3.6a-linux-x86_64.tar.gz \
-  | tar -xz -C /usr/local/bin tmux
+RUN ARCH=$(uname -m) && \
+  if [ "$ARCH" = "x86_64" ]; then \
+    curl -fsSL https://github.com/tmux/tmux-builds/releases/download/v3.6a/tmux-3.6a-linux-x86_64.tar.gz \
+      | tar -xz -C /usr/local/bin tmux; \
+  else \
+    apt-get update && apt-get install -y --no-install-recommends tmux && apt-get clean && rm -rf /var/lib/apt/lists/*; \
+  fi
 
 
 ARG USERNAME=node
@@ -97,6 +102,7 @@ RUN ln -s /usr/include/tcl/tcl.h /usr/include/tcl.h \
 	&& ln -s /usr/include/tcl/tclDecls.h /usr/include/tclDecls.h \
 	&& ln -s /usr/include/tcl/tclTomMath.h /usr/include/tclTomMath.h \
 	&& ln -s /usr/include/tcl/tclTomMathDecls.h /usr/include/tclTomMathDecls.h \
+	&& mkdir -p /usr/lib64 \
 	&& ln -s /usr/lib/tclConfig.sh /usr/lib64/tclConfig.sh
 
 RUN usermod -aG tty $USERNAME
@@ -104,6 +110,11 @@ RUN usermod -aG tty $USERNAME
 WORKDIR /workspace
 USER node
 
-RUN rustup install nightly-2023-04-15-x86_64-unknown-linux-gnu
+RUN ARCH=$(uname -m) && \
+  if [ "$ARCH" = "x86_64" ]; then \
+    rustup install nightly-2023-04-15-x86_64-unknown-linux-gnu; \
+  else \
+    rustup install nightly-2023-04-15-aarch64-unknown-linux-gnu; \
+  fi
 
 ENTRYPOINT ["/bin/bash"]
