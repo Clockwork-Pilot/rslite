@@ -14,6 +14,122 @@ pub use sqlite_printf_macros::json_printf;
 pub use sqlite_printf_macros::sqlite_vmprintf;
 pub use sqlite_printf_macros::sqlite_vsnprintf;
 
+/// Platform compatibility shims for macOS (the C2Rust output targets Linux).
+pub mod compat {
+    #[cfg(target_os = "macos")]
+    #[inline(always)]
+    pub unsafe fn errno_location() -> *mut ::core::ffi::c_int {
+        unsafe extern "C" { fn __error() -> *mut ::core::ffi::c_int; }
+        __error()
+    }
+    #[cfg(not(target_os = "macos"))]
+    #[inline(always)]
+    pub unsafe fn errno_location() -> *mut ::core::ffi::c_int {
+        ::libc::__errno_location()
+    }
+
+    #[cfg(target_os = "macos")]
+    pub const O_LARGEFILE: ::core::ffi::c_int = 0;
+    #[cfg(not(target_os = "macos"))]
+    pub use ::libc::O_LARGEFILE;
+
+    #[cfg(target_os = "macos")]
+    pub const MREMAP_MAYMOVE: ::core::ffi::c_int = 1;
+    #[cfg(not(target_os = "macos"))]
+    pub use ::libc::MREMAP_MAYMOVE;
+
+    #[cfg(target_os = "macos")]
+    pub unsafe extern "C" fn mremap(
+        old_address: *mut ::core::ffi::c_void,
+        old_size: usize,
+        new_size: usize,
+        _flags: ::core::ffi::c_int,
+    ) -> *mut ::core::ffi::c_void {
+        let new_ptr = ::libc::mmap(
+            ::core::ptr::null_mut(),
+            new_size,
+            ::libc::PROT_READ | ::libc::PROT_WRITE,
+            ::libc::MAP_SHARED,
+            -1,
+            0,
+        );
+        if new_ptr == ::libc::MAP_FAILED {
+            return ::libc::MAP_FAILED;
+        }
+        let copy_size = if old_size < new_size { old_size } else { new_size };
+        ::core::ptr::copy_nonoverlapping(old_address as *const u8, new_ptr as *mut u8, copy_size);
+        ::libc::munmap(old_address, old_size);
+        new_ptr
+    }
+
+    #[cfg(target_os = "macos")]
+    #[unsafe(no_mangle)]
+    pub unsafe extern "C" fn pread64(
+        fd: ::core::ffi::c_int,
+        buf: *mut ::core::ffi::c_void,
+        count: usize,
+        offset: i64,
+    ) -> isize {
+        ::libc::pread(fd, buf, count, offset as ::libc::off_t)
+    }
+    #[cfg(target_os = "macos")]
+    #[unsafe(no_mangle)]
+    pub unsafe extern "C" fn pwrite64(
+        fd: ::core::ffi::c_int,
+        buf: *const ::core::ffi::c_void,
+        count: usize,
+        offset: i64,
+    ) -> isize {
+        ::libc::pwrite(fd, buf, count, offset as ::libc::off_t)
+    }
+
+    #[cfg(target_os = "macos")]
+    mod ctype_compat {
+        use core::sync::atomic::{AtomicBool, Ordering};
+        const TABLE_SIZE: usize = 384;
+        const OFFSET: usize = 128;
+        static mut TABLE: [::core::ffi::c_ushort; TABLE_SIZE] = [0u16; TABLE_SIZE];
+        static mut TABLE_PTR: *const ::core::ffi::c_ushort = ::core::ptr::null();
+        static INIT: AtomicBool = AtomicBool::new(false);
+
+        const _ISUPPER: u16  = 256;
+        const _ISLOWER: u16  = 512;
+        const _ISALPHA: u16  = 1024;
+        const _ISDIGIT: u16  = 2048;
+        const _ISXDIGIT: u16 = 4096;
+        const _ISSPACE: u16  = 8192;
+        const _ISPRINT: u16  = 16384;
+        const _ISALNUM: u16  = _ISALPHA | _ISDIGIT;
+
+        unsafe fn init_table() {
+            for i in 0..TABLE_SIZE {
+                let c = (i as isize - OFFSET as isize) as ::core::ffi::c_int;
+                if c >= 0 && c <= 127 {
+                    let mut flags: u16 = 0;
+                    if ::libc::isupper(c) != 0 { flags |= _ISUPPER; }
+                    if ::libc::islower(c) != 0 { flags |= _ISLOWER; }
+                    if ::libc::isalpha(c) != 0 { flags |= _ISALPHA; }
+                    if ::libc::isdigit(c) != 0 { flags |= _ISDIGIT; }
+                    if ::libc::isxdigit(c) != 0 { flags |= _ISXDIGIT; }
+                    if ::libc::isspace(c) != 0 { flags |= _ISSPACE; }
+                    if ::libc::isprint(c) != 0 { flags |= _ISPRINT; }
+                    if ::libc::isalnum(c) != 0 { flags |= _ISALNUM; }
+                    TABLE[i] = flags;
+                }
+            }
+            TABLE_PTR = TABLE.as_ptr().add(OFFSET);
+        }
+
+        #[unsafe(no_mangle)]
+        pub unsafe extern "C" fn __ctype_b_loc() -> *mut *const ::core::ffi::c_ushort {
+            if !INIT.swap(true, Ordering::SeqCst) {
+                init_table();
+            }
+            &raw mut TABLE_PTR
+        }
+    }
+}
+
 pub mod pcache_h {
     pub use crate::src::src::pcache::PCache;
 }

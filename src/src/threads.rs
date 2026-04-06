@@ -72,7 +72,7 @@ pub unsafe extern "C" fn sqlite3ThreadJoin(
         *ppOut = (*p).pOut;
         rc = crate::src::headers::sqlite3_h::SQLITE_OK;
     } else {
-        rc = if ::libc::pthread_join((*p).tid, ppOut) != 0 {
+        rc = if ::libc::pthread_join((*p).tid as ::libc::pthread_t, ppOut) != 0 {
             crate::src::headers::sqlite3_h::SQLITE_ERROR
         } else {
             crate::src::headers::sqlite3_h::SQLITE_OK

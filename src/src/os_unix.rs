@@ -52,13 +52,13 @@ pub use crate::src::headers::stdlib::__S_IFMT;
 
 
 
-pub use crate::src::headers::stdlib::C2RustUnnamed_1;pub use crate::src::headers::stdlib::_SC_2_CHAR_TERM;pub use crate::src::headers::stdlib::_SC_2_C_BIND;pub use crate::src::headers::stdlib::_SC_2_C_DEV;pub use crate::src::headers::stdlib::_SC_2_C_VERSION;pub use crate::src::headers::stdlib::_SC_2_FORT_DEV;pub use crate::src::headers::stdlib::_SC_2_FORT_RUN;pub use crate::src::headers::stdlib::_SC_2_LOCALEDEF;pub use crate::src::headers::stdlib::_SC_2_PBS;pub use crate::src::headers::stdlib::_SC_2_PBS_ACCOUNTING;pub use crate::src::headers::stdlib::_SC_2_PBS_CHECKPOINT;pub use crate::src::headers::stdlib::_SC_2_PBS_LOCATE;pub use crate::src::headers::stdlib::_SC_2_PBS_MESSAGE;pub use crate::src::headers::stdlib::_SC_2_PBS_TRACK;pub use crate::src::headers::stdlib::_SC_2_SW_DEV;pub use crate::src::headers::stdlib::_SC_2_UPE;pub use crate::src::headers::stdlib::_SC_2_VERSION;pub use crate::src::headers::stdlib::_SC_ADVISORY_INFO;pub use crate::src::headers::stdlib::_SC_AIO_LISTIO_MAX;pub use crate::src::headers::stdlib::_SC_AIO_MAX;pub use crate::src::headers::stdlib::_SC_AIO_PRIO_DELTA_MAX;pub use crate::src::headers::stdlib::_SC_ARG_MAX;pub use crate::src::headers::stdlib::_SC_ASYNCHRONOUS_IO;pub use crate::src::headers::stdlib::_SC_ATEXIT_MAX;pub use crate::src::headers::stdlib::_SC_AVPHYS_PAGES;pub use crate::src::headers::stdlib::_SC_BARRIERS;pub use crate::src::headers::stdlib::_SC_BASE;pub use crate::src::headers::stdlib::_SC_BC_BASE_MAX;pub use crate::src::headers::stdlib::_SC_BC_DIM_MAX;pub use crate::src::headers::stdlib::_SC_BC_SCALE_MAX;pub use crate::src::headers::stdlib::_SC_BC_STRING_MAX;pub use crate::src::headers::stdlib::_SC_CHARCLASS_NAME_MAX;pub use crate::src::headers::stdlib::_SC_CHAR_BIT;pub use crate::src::headers::stdlib::_SC_CHAR_MAX;pub use crate::src::headers::stdlib::_SC_CHAR_MIN;pub use crate::src::headers::stdlib::_SC_CHILD_MAX;pub use crate::src::headers::stdlib::_SC_CLK_TCK;pub use crate::src::headers::stdlib::_SC_CLOCK_SELECTION;pub use crate::src::headers::stdlib::_SC_COLL_WEIGHTS_MAX;pub use crate::src::headers::stdlib::_SC_CPUTIME;pub use crate::src::headers::stdlib::_SC_C_LANG_SUPPORT;pub use crate::src::headers::stdlib::_SC_C_LANG_SUPPORT_R;pub use crate::src::headers::stdlib::_SC_DELAYTIMER_MAX;pub use crate::src::headers::stdlib::_SC_DEVICE_IO;pub use crate::src::headers::stdlib::_SC_DEVICE_SPECIFIC;pub use crate::src::headers::stdlib::_SC_DEVICE_SPECIFIC_R;pub use crate::src::headers::stdlib::_SC_EQUIV_CLASS_MAX;pub use crate::src::headers::stdlib::_SC_EXPR_NEST_MAX;pub use crate::src::headers::stdlib::_SC_FD_MGMT;pub use crate::src::headers::stdlib::_SC_FIFO;pub use crate::src::headers::stdlib::_SC_FILE_ATTRIBUTES;pub use crate::src::headers::stdlib::_SC_FILE_LOCKING;pub use crate::src::headers::stdlib::_SC_FILE_SYSTEM;pub use crate::src::headers::stdlib::_SC_FSYNC;pub use crate::src::headers::stdlib::_SC_GETGR_R_SIZE_MAX;pub use crate::src::headers::stdlib::_SC_GETPW_R_SIZE_MAX;pub use crate::src::headers::stdlib::_SC_HOST_NAME_MAX;pub use crate::src::headers::stdlib::_SC_INT_MAX;pub use crate::src::headers::stdlib::_SC_INT_MIN;pub use crate::src::headers::stdlib::_SC_IOV_MAX;pub use crate::src::headers::stdlib::_SC_IPV6;pub use crate::src::headers::stdlib::_SC_JOB_CONTROL;pub use crate::src::headers::stdlib::_SC_LEVEL1_DCACHE_ASSOC;pub use crate::src::headers::stdlib::_SC_LEVEL1_DCACHE_LINESIZE;pub use crate::src::headers::stdlib::_SC_LEVEL1_DCACHE_SIZE;pub use crate::src::headers::stdlib::_SC_LEVEL1_ICACHE_ASSOC;pub use crate::src::headers::stdlib::_SC_LEVEL1_ICACHE_LINESIZE;pub use crate::src::headers::stdlib::_SC_LEVEL1_ICACHE_SIZE;pub use crate::src::headers::stdlib::_SC_LEVEL2_CACHE_ASSOC;pub use crate::src::headers::stdlib::_SC_LEVEL2_CACHE_LINESIZE;pub use crate::src::headers::stdlib::_SC_LEVEL2_CACHE_SIZE;pub use crate::src::headers::stdlib::_SC_LEVEL3_CACHE_ASSOC;pub use crate::src::headers::stdlib::_SC_LEVEL3_CACHE_LINESIZE;pub use crate::src::headers::stdlib::_SC_LEVEL3_CACHE_SIZE;pub use crate::src::headers::stdlib::_SC_LEVEL4_CACHE_ASSOC;pub use crate::src::headers::stdlib::_SC_LEVEL4_CACHE_LINESIZE;pub use crate::src::headers::stdlib::_SC_LEVEL4_CACHE_SIZE;pub use crate::src::headers::stdlib::_SC_LINE_MAX;pub use crate::src::headers::stdlib::_SC_LOGIN_NAME_MAX;pub use crate::src::headers::stdlib::_SC_LONG_BIT;pub use crate::src::headers::stdlib::_SC_MAPPED_FILES;pub use crate::src::headers::stdlib::_SC_MB_LEN_MAX;pub use crate::src::headers::stdlib::_SC_MEMLOCK;pub use crate::src::headers::stdlib::_SC_MEMLOCK_RANGE;pub use crate::src::headers::stdlib::_SC_MEMORY_PROTECTION;pub use crate::src::headers::stdlib::_SC_MESSAGE_PASSING;pub use crate::src::headers::stdlib::_SC_MINSIGSTKSZ;pub use crate::src::headers::stdlib::_SC_MONOTONIC_CLOCK;pub use crate::src::headers::stdlib::_SC_MQ_OPEN_MAX;pub use crate::src::headers::stdlib::_SC_MQ_PRIO_MAX;pub use crate::src::headers::stdlib::_SC_MULTI_PROCESS;pub use crate::src::headers::stdlib::_SC_NETWORKING;pub use crate::src::headers::stdlib::_SC_NGROUPS_MAX;pub use crate::src::headers::stdlib::_SC_NL_ARGMAX;pub use crate::src::headers::stdlib::_SC_NL_LANGMAX;pub use crate::src::headers::stdlib::_SC_NL_MSGMAX;pub use crate::src::headers::stdlib::_SC_NL_NMAX;pub use crate::src::headers::stdlib::_SC_NL_SETMAX;pub use crate::src::headers::stdlib::_SC_NL_TEXTMAX;pub use crate::src::headers::stdlib::_SC_NPROCESSORS_CONF;pub use crate::src::headers::stdlib::_SC_NPROCESSORS_ONLN;pub use crate::src::headers::stdlib::_SC_NZERO;pub use crate::src::headers::stdlib::_SC_OPEN_MAX;pub use crate::src::headers::stdlib::_SC_PAGESIZE;pub use crate::src::headers::stdlib::_SC_PASS_MAX;pub use crate::src::headers::stdlib::_SC_PHYS_PAGES;pub use crate::src::headers::stdlib::_SC_PII;pub use crate::src::headers::stdlib::_SC_PII_INTERNET;pub use crate::src::headers::stdlib::_SC_PII_INTERNET_DGRAM;pub use crate::src::headers::stdlib::_SC_PII_INTERNET_STREAM;pub use crate::src::headers::stdlib::_SC_PII_OSI;pub use crate::src::headers::stdlib::_SC_PII_OSI_CLTS;pub use crate::src::headers::stdlib::_SC_PII_OSI_COTS;pub use crate::src::headers::stdlib::_SC_PII_OSI_M;pub use crate::src::headers::stdlib::_SC_PII_SOCKET;pub use crate::src::headers::stdlib::_SC_PII_XTI;pub use crate::src::headers::stdlib::_SC_PIPE;pub use crate::src::headers::stdlib::_SC_POLL;pub use crate::src::headers::stdlib::_SC_PRIORITIZED_IO;pub use crate::src::headers::stdlib::_SC_PRIORITY_SCHEDULING;pub use crate::src::headers::stdlib::_SC_RAW_SOCKETS;pub use crate::src::headers::stdlib::_SC_READER_WRITER_LOCKS;pub use crate::src::headers::stdlib::_SC_REALTIME_SIGNALS;pub use crate::src::headers::stdlib::_SC_REGEXP;pub use crate::src::headers::stdlib::_SC_REGEX_VERSION;pub use crate::src::headers::stdlib::_SC_RE_DUP_MAX;pub use crate::src::headers::stdlib::_SC_RTSIG_MAX;pub use crate::src::headers::stdlib::_SC_SAVED_IDS;pub use crate::src::headers::stdlib::_SC_SCHAR_MAX;pub use crate::src::headers::stdlib::_SC_SCHAR_MIN;pub use crate::src::headers::stdlib::_SC_SELECT;pub use crate::src::headers::stdlib::_SC_SEMAPHORES;pub use crate::src::headers::stdlib::_SC_SEM_NSEMS_MAX;pub use crate::src::headers::stdlib::_SC_SEM_VALUE_MAX;pub use crate::src::headers::stdlib::_SC_SHARED_MEMORY_OBJECTS;pub use crate::src::headers::stdlib::_SC_SHELL;pub use crate::src::headers::stdlib::_SC_SHRT_MAX;pub use crate::src::headers::stdlib::_SC_SHRT_MIN;pub use crate::src::headers::stdlib::_SC_SIGNALS;pub use crate::src::headers::stdlib::_SC_SIGQUEUE_MAX;pub use crate::src::headers::stdlib::_SC_SIGSTKSZ;pub use crate::src::headers::stdlib::_SC_SINGLE_PROCESS;pub use crate::src::headers::stdlib::_SC_SPAWN;pub use crate::src::headers::stdlib::_SC_SPIN_LOCKS;pub use crate::src::headers::stdlib::_SC_SPORADIC_SERVER;pub use crate::src::headers::stdlib::_SC_SSIZE_MAX;pub use crate::src::headers::stdlib::_SC_SS_REPL_MAX;pub use crate::src::headers::stdlib::_SC_STREAMS;pub use crate::src::headers::stdlib::_SC_STREAM_MAX;pub use crate::src::headers::stdlib::_SC_SYMLOOP_MAX;pub use crate::src::headers::stdlib::_SC_SYNCHRONIZED_IO;pub use crate::src::headers::stdlib::_SC_SYSTEM_DATABASE;pub use crate::src::headers::stdlib::_SC_SYSTEM_DATABASE_R;pub use crate::src::headers::stdlib::_SC_THREADS;pub use crate::src::headers::stdlib::_SC_THREAD_ATTR_STACKADDR;pub use crate::src::headers::stdlib::_SC_THREAD_ATTR_STACKSIZE;pub use crate::src::headers::stdlib::_SC_THREAD_CPUTIME;pub use crate::src::headers::stdlib::_SC_THREAD_DESTRUCTOR_ITERATIONS;pub use crate::src::headers::stdlib::_SC_THREAD_KEYS_MAX;pub use crate::src::headers::stdlib::_SC_THREAD_PRIORITY_SCHEDULING;pub use crate::src::headers::stdlib::_SC_THREAD_PRIO_INHERIT;pub use crate::src::headers::stdlib::_SC_THREAD_PRIO_PROTECT;pub use crate::src::headers::stdlib::_SC_THREAD_PROCESS_SHARED;pub use crate::src::headers::stdlib::_SC_THREAD_ROBUST_PRIO_INHERIT;pub use crate::src::headers::stdlib::_SC_THREAD_ROBUST_PRIO_PROTECT;pub use crate::src::headers::stdlib::_SC_THREAD_SAFE_FUNCTIONS;pub use crate::src::headers::stdlib::_SC_THREAD_SPORADIC_SERVER;pub use crate::src::headers::stdlib::_SC_THREAD_STACK_MIN;pub use crate::src::headers::stdlib::_SC_THREAD_THREADS_MAX;pub use crate::src::headers::stdlib::_SC_TIMEOUTS;pub use crate::src::headers::stdlib::_SC_TIMERS;pub use crate::src::headers::stdlib::_SC_TIMER_MAX;pub use crate::src::headers::stdlib::_SC_TRACE;pub use crate::src::headers::stdlib::_SC_TRACE_EVENT_FILTER;pub use crate::src::headers::stdlib::_SC_TRACE_EVENT_NAME_MAX;pub use crate::src::headers::stdlib::_SC_TRACE_INHERIT;pub use crate::src::headers::stdlib::_SC_TRACE_LOG;pub use crate::src::headers::stdlib::_SC_TRACE_NAME_MAX;pub use crate::src::headers::stdlib::_SC_TRACE_SYS_MAX;pub use crate::src::headers::stdlib::_SC_TRACE_USER_EVENT_MAX;pub use crate::src::headers::stdlib::_SC_TTY_NAME_MAX;pub use crate::src::headers::stdlib::_SC_TYPED_MEMORY_OBJECTS;pub use crate::src::headers::stdlib::_SC_TZNAME_MAX;pub use crate::src::headers::stdlib::_SC_T_IOV_MAX;pub use crate::src::headers::stdlib::_SC_UCHAR_MAX;pub use crate::src::headers::stdlib::_SC_UINT_MAX;pub use crate::src::headers::stdlib::_SC_UIO_MAXIOV;pub use crate::src::headers::stdlib::_SC_ULONG_MAX;pub use crate::src::headers::stdlib::_SC_USER_GROUPS;pub use crate::src::headers::stdlib::_SC_USER_GROUPS_R;pub use crate::src::headers::stdlib::_SC_USHRT_MAX;pub use crate::src::headers::stdlib::_SC_V6_ILP32_OFF32;pub use crate::src::headers::stdlib::_SC_V6_ILP32_OFFBIG;pub use crate::src::headers::stdlib::_SC_V6_LP64_OFF64;pub use crate::src::headers::stdlib::_SC_V6_LPBIG_OFFBIG;pub use crate::src::headers::stdlib::_SC_V7_ILP32_OFF32;pub use crate::src::headers::stdlib::_SC_V7_ILP32_OFFBIG;pub use crate::src::headers::stdlib::_SC_V7_LP64_OFF64;pub use crate::src::headers::stdlib::_SC_V7_LPBIG_OFFBIG;pub use crate::src::headers::stdlib::_SC_VERSION;pub use crate::src::headers::stdlib::_SC_WORD_BIT;pub use crate::src::headers::stdlib::_SC_XBS5_ILP32_OFF32;pub use crate::src::headers::stdlib::_SC_XBS5_ILP32_OFFBIG;pub use crate::src::headers::stdlib::_SC_XBS5_LP64_OFF64;pub use crate::src::headers::stdlib::_SC_XBS5_LPBIG_OFFBIG;pub use crate::src::headers::stdlib::_SC_XOPEN_CRYPT;pub use crate::src::headers::stdlib::_SC_XOPEN_ENH_I18N;pub use crate::src::headers::stdlib::_SC_XOPEN_LEGACY;pub use crate::src::headers::stdlib::_SC_XOPEN_REALTIME;pub use crate::src::headers::stdlib::_SC_XOPEN_REALTIME_THREADS;pub use crate::src::headers::stdlib::_SC_XOPEN_SHM;pub use crate::src::headers::stdlib::_SC_XOPEN_STREAMS;pub use crate::src::headers::stdlib::_SC_XOPEN_UNIX;pub use crate::src::headers::stdlib::_SC_XOPEN_VERSION;pub use crate::src::headers::stdlib::_SC_XOPEN_XCU_VERSION;pub use crate::src::headers::stdlib::_SC_XOPEN_XPG2;pub use crate::src::headers::stdlib::_SC_XOPEN_XPG3;pub use crate::src::headers::stdlib::_SC_XOPEN_XPG4;pub use ::libc::RTLD_GLOBAL;pub use ::libc::RTLD_NOW;pub use ::libc::EACCES;pub use ::libc::EAGAIN;pub use ::libc::EBUSY;pub use ::libc::EEXIST;pub use ::libc::EINTR;pub use ::libc::EIO;pub use ::libc::EISDIR;pub use ::libc::ENOENT;pub use ::libc::ENOSPC;pub use ::libc::ENXIO;pub use ::libc::EPERM;pub use ::libc::ERANGE;pub use ::libc::ENOLCK;pub use ::libc::ETIMEDOUT;pub use ::libc::flock;pub use crate::src::headers::stdlib::F_GETLK64;pub use crate::src::headers::stdlib::F_SETLK64;pub use crate::src::headers::stdlib::__O_LARGEFILE;pub use ::libc::F_GETLK;pub use ::libc::F_RDLCK;pub use ::libc::F_SETLK;pub use ::libc::F_UNLCK;pub use ::libc::F_WRLCK;pub use ::libc::O_CLOEXEC;pub use ::libc::O_CREAT;pub use ::libc::O_EXCL;pub use ::libc::O_LARGEFILE;pub use ::libc::O_NOFOLLOW;pub use ::libc::O_RDONLY;pub use ::libc::O_RDWR;pub use crate::src::headers::stdlib::__O_CLOEXEC;pub use crate::src::headers::stdlib::__O_NOFOLLOW;
+pub use crate::src::headers::stdlib::C2RustUnnamed_1;pub use crate::src::headers::stdlib::_SC_2_CHAR_TERM;pub use crate::src::headers::stdlib::_SC_2_C_BIND;pub use crate::src::headers::stdlib::_SC_2_C_DEV;pub use crate::src::headers::stdlib::_SC_2_C_VERSION;pub use crate::src::headers::stdlib::_SC_2_FORT_DEV;pub use crate::src::headers::stdlib::_SC_2_FORT_RUN;pub use crate::src::headers::stdlib::_SC_2_LOCALEDEF;pub use crate::src::headers::stdlib::_SC_2_PBS;pub use crate::src::headers::stdlib::_SC_2_PBS_ACCOUNTING;pub use crate::src::headers::stdlib::_SC_2_PBS_CHECKPOINT;pub use crate::src::headers::stdlib::_SC_2_PBS_LOCATE;pub use crate::src::headers::stdlib::_SC_2_PBS_MESSAGE;pub use crate::src::headers::stdlib::_SC_2_PBS_TRACK;pub use crate::src::headers::stdlib::_SC_2_SW_DEV;pub use crate::src::headers::stdlib::_SC_2_UPE;pub use crate::src::headers::stdlib::_SC_2_VERSION;pub use crate::src::headers::stdlib::_SC_ADVISORY_INFO;pub use crate::src::headers::stdlib::_SC_AIO_LISTIO_MAX;pub use crate::src::headers::stdlib::_SC_AIO_MAX;pub use crate::src::headers::stdlib::_SC_AIO_PRIO_DELTA_MAX;pub use crate::src::headers::stdlib::_SC_ARG_MAX;pub use crate::src::headers::stdlib::_SC_ASYNCHRONOUS_IO;pub use crate::src::headers::stdlib::_SC_ATEXIT_MAX;pub use crate::src::headers::stdlib::_SC_AVPHYS_PAGES;pub use crate::src::headers::stdlib::_SC_BARRIERS;pub use crate::src::headers::stdlib::_SC_BASE;pub use crate::src::headers::stdlib::_SC_BC_BASE_MAX;pub use crate::src::headers::stdlib::_SC_BC_DIM_MAX;pub use crate::src::headers::stdlib::_SC_BC_SCALE_MAX;pub use crate::src::headers::stdlib::_SC_BC_STRING_MAX;pub use crate::src::headers::stdlib::_SC_CHARCLASS_NAME_MAX;pub use crate::src::headers::stdlib::_SC_CHAR_BIT;pub use crate::src::headers::stdlib::_SC_CHAR_MAX;pub use crate::src::headers::stdlib::_SC_CHAR_MIN;pub use crate::src::headers::stdlib::_SC_CHILD_MAX;pub use crate::src::headers::stdlib::_SC_CLK_TCK;pub use crate::src::headers::stdlib::_SC_CLOCK_SELECTION;pub use crate::src::headers::stdlib::_SC_COLL_WEIGHTS_MAX;pub use crate::src::headers::stdlib::_SC_CPUTIME;pub use crate::src::headers::stdlib::_SC_C_LANG_SUPPORT;pub use crate::src::headers::stdlib::_SC_C_LANG_SUPPORT_R;pub use crate::src::headers::stdlib::_SC_DELAYTIMER_MAX;pub use crate::src::headers::stdlib::_SC_DEVICE_IO;pub use crate::src::headers::stdlib::_SC_DEVICE_SPECIFIC;pub use crate::src::headers::stdlib::_SC_DEVICE_SPECIFIC_R;pub use crate::src::headers::stdlib::_SC_EQUIV_CLASS_MAX;pub use crate::src::headers::stdlib::_SC_EXPR_NEST_MAX;pub use crate::src::headers::stdlib::_SC_FD_MGMT;pub use crate::src::headers::stdlib::_SC_FIFO;pub use crate::src::headers::stdlib::_SC_FILE_ATTRIBUTES;pub use crate::src::headers::stdlib::_SC_FILE_LOCKING;pub use crate::src::headers::stdlib::_SC_FILE_SYSTEM;pub use crate::src::headers::stdlib::_SC_FSYNC;pub use crate::src::headers::stdlib::_SC_GETGR_R_SIZE_MAX;pub use crate::src::headers::stdlib::_SC_GETPW_R_SIZE_MAX;pub use crate::src::headers::stdlib::_SC_HOST_NAME_MAX;pub use crate::src::headers::stdlib::_SC_INT_MAX;pub use crate::src::headers::stdlib::_SC_INT_MIN;pub use crate::src::headers::stdlib::_SC_IOV_MAX;pub use crate::src::headers::stdlib::_SC_IPV6;pub use crate::src::headers::stdlib::_SC_JOB_CONTROL;pub use crate::src::headers::stdlib::_SC_LEVEL1_DCACHE_ASSOC;pub use crate::src::headers::stdlib::_SC_LEVEL1_DCACHE_LINESIZE;pub use crate::src::headers::stdlib::_SC_LEVEL1_DCACHE_SIZE;pub use crate::src::headers::stdlib::_SC_LEVEL1_ICACHE_ASSOC;pub use crate::src::headers::stdlib::_SC_LEVEL1_ICACHE_LINESIZE;pub use crate::src::headers::stdlib::_SC_LEVEL1_ICACHE_SIZE;pub use crate::src::headers::stdlib::_SC_LEVEL2_CACHE_ASSOC;pub use crate::src::headers::stdlib::_SC_LEVEL2_CACHE_LINESIZE;pub use crate::src::headers::stdlib::_SC_LEVEL2_CACHE_SIZE;pub use crate::src::headers::stdlib::_SC_LEVEL3_CACHE_ASSOC;pub use crate::src::headers::stdlib::_SC_LEVEL3_CACHE_LINESIZE;pub use crate::src::headers::stdlib::_SC_LEVEL3_CACHE_SIZE;pub use crate::src::headers::stdlib::_SC_LEVEL4_CACHE_ASSOC;pub use crate::src::headers::stdlib::_SC_LEVEL4_CACHE_LINESIZE;pub use crate::src::headers::stdlib::_SC_LEVEL4_CACHE_SIZE;pub use crate::src::headers::stdlib::_SC_LINE_MAX;pub use crate::src::headers::stdlib::_SC_LOGIN_NAME_MAX;pub use crate::src::headers::stdlib::_SC_LONG_BIT;pub use crate::src::headers::stdlib::_SC_MAPPED_FILES;pub use crate::src::headers::stdlib::_SC_MB_LEN_MAX;pub use crate::src::headers::stdlib::_SC_MEMLOCK;pub use crate::src::headers::stdlib::_SC_MEMLOCK_RANGE;pub use crate::src::headers::stdlib::_SC_MEMORY_PROTECTION;pub use crate::src::headers::stdlib::_SC_MESSAGE_PASSING;pub use crate::src::headers::stdlib::_SC_MINSIGSTKSZ;pub use crate::src::headers::stdlib::_SC_MONOTONIC_CLOCK;pub use crate::src::headers::stdlib::_SC_MQ_OPEN_MAX;pub use crate::src::headers::stdlib::_SC_MQ_PRIO_MAX;pub use crate::src::headers::stdlib::_SC_MULTI_PROCESS;pub use crate::src::headers::stdlib::_SC_NETWORKING;pub use crate::src::headers::stdlib::_SC_NGROUPS_MAX;pub use crate::src::headers::stdlib::_SC_NL_ARGMAX;pub use crate::src::headers::stdlib::_SC_NL_LANGMAX;pub use crate::src::headers::stdlib::_SC_NL_MSGMAX;pub use crate::src::headers::stdlib::_SC_NL_NMAX;pub use crate::src::headers::stdlib::_SC_NL_SETMAX;pub use crate::src::headers::stdlib::_SC_NL_TEXTMAX;pub use crate::src::headers::stdlib::_SC_NPROCESSORS_CONF;pub use crate::src::headers::stdlib::_SC_NPROCESSORS_ONLN;pub use crate::src::headers::stdlib::_SC_NZERO;pub use crate::src::headers::stdlib::_SC_OPEN_MAX;pub use crate::src::headers::stdlib::_SC_PAGESIZE;pub use crate::src::headers::stdlib::_SC_PASS_MAX;pub use crate::src::headers::stdlib::_SC_PHYS_PAGES;pub use crate::src::headers::stdlib::_SC_PII;pub use crate::src::headers::stdlib::_SC_PII_INTERNET;pub use crate::src::headers::stdlib::_SC_PII_INTERNET_DGRAM;pub use crate::src::headers::stdlib::_SC_PII_INTERNET_STREAM;pub use crate::src::headers::stdlib::_SC_PII_OSI;pub use crate::src::headers::stdlib::_SC_PII_OSI_CLTS;pub use crate::src::headers::stdlib::_SC_PII_OSI_COTS;pub use crate::src::headers::stdlib::_SC_PII_OSI_M;pub use crate::src::headers::stdlib::_SC_PII_SOCKET;pub use crate::src::headers::stdlib::_SC_PII_XTI;pub use crate::src::headers::stdlib::_SC_PIPE;pub use crate::src::headers::stdlib::_SC_POLL;pub use crate::src::headers::stdlib::_SC_PRIORITIZED_IO;pub use crate::src::headers::stdlib::_SC_PRIORITY_SCHEDULING;pub use crate::src::headers::stdlib::_SC_RAW_SOCKETS;pub use crate::src::headers::stdlib::_SC_READER_WRITER_LOCKS;pub use crate::src::headers::stdlib::_SC_REALTIME_SIGNALS;pub use crate::src::headers::stdlib::_SC_REGEXP;pub use crate::src::headers::stdlib::_SC_REGEX_VERSION;pub use crate::src::headers::stdlib::_SC_RE_DUP_MAX;pub use crate::src::headers::stdlib::_SC_RTSIG_MAX;pub use crate::src::headers::stdlib::_SC_SAVED_IDS;pub use crate::src::headers::stdlib::_SC_SCHAR_MAX;pub use crate::src::headers::stdlib::_SC_SCHAR_MIN;pub use crate::src::headers::stdlib::_SC_SELECT;pub use crate::src::headers::stdlib::_SC_SEMAPHORES;pub use crate::src::headers::stdlib::_SC_SEM_NSEMS_MAX;pub use crate::src::headers::stdlib::_SC_SEM_VALUE_MAX;pub use crate::src::headers::stdlib::_SC_SHARED_MEMORY_OBJECTS;pub use crate::src::headers::stdlib::_SC_SHELL;pub use crate::src::headers::stdlib::_SC_SHRT_MAX;pub use crate::src::headers::stdlib::_SC_SHRT_MIN;pub use crate::src::headers::stdlib::_SC_SIGNALS;pub use crate::src::headers::stdlib::_SC_SIGQUEUE_MAX;pub use crate::src::headers::stdlib::_SC_SIGSTKSZ;pub use crate::src::headers::stdlib::_SC_SINGLE_PROCESS;pub use crate::src::headers::stdlib::_SC_SPAWN;pub use crate::src::headers::stdlib::_SC_SPIN_LOCKS;pub use crate::src::headers::stdlib::_SC_SPORADIC_SERVER;pub use crate::src::headers::stdlib::_SC_SSIZE_MAX;pub use crate::src::headers::stdlib::_SC_SS_REPL_MAX;pub use crate::src::headers::stdlib::_SC_STREAMS;pub use crate::src::headers::stdlib::_SC_STREAM_MAX;pub use crate::src::headers::stdlib::_SC_SYMLOOP_MAX;pub use crate::src::headers::stdlib::_SC_SYNCHRONIZED_IO;pub use crate::src::headers::stdlib::_SC_SYSTEM_DATABASE;pub use crate::src::headers::stdlib::_SC_SYSTEM_DATABASE_R;pub use crate::src::headers::stdlib::_SC_THREADS;pub use crate::src::headers::stdlib::_SC_THREAD_ATTR_STACKADDR;pub use crate::src::headers::stdlib::_SC_THREAD_ATTR_STACKSIZE;pub use crate::src::headers::stdlib::_SC_THREAD_CPUTIME;pub use crate::src::headers::stdlib::_SC_THREAD_DESTRUCTOR_ITERATIONS;pub use crate::src::headers::stdlib::_SC_THREAD_KEYS_MAX;pub use crate::src::headers::stdlib::_SC_THREAD_PRIORITY_SCHEDULING;pub use crate::src::headers::stdlib::_SC_THREAD_PRIO_INHERIT;pub use crate::src::headers::stdlib::_SC_THREAD_PRIO_PROTECT;pub use crate::src::headers::stdlib::_SC_THREAD_PROCESS_SHARED;pub use crate::src::headers::stdlib::_SC_THREAD_ROBUST_PRIO_INHERIT;pub use crate::src::headers::stdlib::_SC_THREAD_ROBUST_PRIO_PROTECT;pub use crate::src::headers::stdlib::_SC_THREAD_SAFE_FUNCTIONS;pub use crate::src::headers::stdlib::_SC_THREAD_SPORADIC_SERVER;pub use crate::src::headers::stdlib::_SC_THREAD_STACK_MIN;pub use crate::src::headers::stdlib::_SC_THREAD_THREADS_MAX;pub use crate::src::headers::stdlib::_SC_TIMEOUTS;pub use crate::src::headers::stdlib::_SC_TIMERS;pub use crate::src::headers::stdlib::_SC_TIMER_MAX;pub use crate::src::headers::stdlib::_SC_TRACE;pub use crate::src::headers::stdlib::_SC_TRACE_EVENT_FILTER;pub use crate::src::headers::stdlib::_SC_TRACE_EVENT_NAME_MAX;pub use crate::src::headers::stdlib::_SC_TRACE_INHERIT;pub use crate::src::headers::stdlib::_SC_TRACE_LOG;pub use crate::src::headers::stdlib::_SC_TRACE_NAME_MAX;pub use crate::src::headers::stdlib::_SC_TRACE_SYS_MAX;pub use crate::src::headers::stdlib::_SC_TRACE_USER_EVENT_MAX;pub use crate::src::headers::stdlib::_SC_TTY_NAME_MAX;pub use crate::src::headers::stdlib::_SC_TYPED_MEMORY_OBJECTS;pub use crate::src::headers::stdlib::_SC_TZNAME_MAX;pub use crate::src::headers::stdlib::_SC_T_IOV_MAX;pub use crate::src::headers::stdlib::_SC_UCHAR_MAX;pub use crate::src::headers::stdlib::_SC_UINT_MAX;pub use crate::src::headers::stdlib::_SC_UIO_MAXIOV;pub use crate::src::headers::stdlib::_SC_ULONG_MAX;pub use crate::src::headers::stdlib::_SC_USER_GROUPS;pub use crate::src::headers::stdlib::_SC_USER_GROUPS_R;pub use crate::src::headers::stdlib::_SC_USHRT_MAX;pub use crate::src::headers::stdlib::_SC_V6_ILP32_OFF32;pub use crate::src::headers::stdlib::_SC_V6_ILP32_OFFBIG;pub use crate::src::headers::stdlib::_SC_V6_LP64_OFF64;pub use crate::src::headers::stdlib::_SC_V6_LPBIG_OFFBIG;pub use crate::src::headers::stdlib::_SC_V7_ILP32_OFF32;pub use crate::src::headers::stdlib::_SC_V7_ILP32_OFFBIG;pub use crate::src::headers::stdlib::_SC_V7_LP64_OFF64;pub use crate::src::headers::stdlib::_SC_V7_LPBIG_OFFBIG;pub use crate::src::headers::stdlib::_SC_VERSION;pub use crate::src::headers::stdlib::_SC_WORD_BIT;pub use crate::src::headers::stdlib::_SC_XBS5_ILP32_OFF32;pub use crate::src::headers::stdlib::_SC_XBS5_ILP32_OFFBIG;pub use crate::src::headers::stdlib::_SC_XBS5_LP64_OFF64;pub use crate::src::headers::stdlib::_SC_XBS5_LPBIG_OFFBIG;pub use crate::src::headers::stdlib::_SC_XOPEN_CRYPT;pub use crate::src::headers::stdlib::_SC_XOPEN_ENH_I18N;pub use crate::src::headers::stdlib::_SC_XOPEN_LEGACY;pub use crate::src::headers::stdlib::_SC_XOPEN_REALTIME;pub use crate::src::headers::stdlib::_SC_XOPEN_REALTIME_THREADS;pub use crate::src::headers::stdlib::_SC_XOPEN_SHM;pub use crate::src::headers::stdlib::_SC_XOPEN_STREAMS;pub use crate::src::headers::stdlib::_SC_XOPEN_UNIX;pub use crate::src::headers::stdlib::_SC_XOPEN_VERSION;pub use crate::src::headers::stdlib::_SC_XOPEN_XCU_VERSION;pub use crate::src::headers::stdlib::_SC_XOPEN_XPG2;pub use crate::src::headers::stdlib::_SC_XOPEN_XPG3;pub use crate::src::headers::stdlib::_SC_XOPEN_XPG4;pub use ::libc::RTLD_GLOBAL;pub use ::libc::RTLD_NOW;pub use ::libc::EACCES;pub use ::libc::EAGAIN;pub use ::libc::EBUSY;pub use ::libc::EEXIST;pub use ::libc::EINTR;pub use ::libc::EIO;pub use ::libc::EISDIR;pub use ::libc::ENOENT;pub use ::libc::ENOSPC;pub use ::libc::ENXIO;pub use ::libc::EPERM;pub use ::libc::ERANGE;pub use ::libc::ENOLCK;pub use ::libc::ETIMEDOUT;pub use ::libc::flock;pub use crate::src::headers::stdlib::F_GETLK64;pub use crate::src::headers::stdlib::F_SETLK64;pub use crate::src::headers::stdlib::__O_LARGEFILE;pub use ::libc::F_GETLK;pub use ::libc::F_RDLCK;pub use ::libc::F_SETLK;pub use ::libc::F_UNLCK;pub use ::libc::F_WRLCK;pub use ::libc::O_CLOEXEC;pub use ::libc::O_CREAT;pub use ::libc::O_EXCL;pub use crate::compat::O_LARGEFILE;pub use ::libc::O_NOFOLLOW;pub use ::libc::O_RDONLY;pub use ::libc::O_RDWR;pub use crate::src::headers::stdlib::__O_CLOEXEC;pub use crate::src::headers::stdlib::__O_NOFOLLOW;
 
 pub use ::libc::fcntl;pub use ::libc::open;pub use ::libc::SEEK_SET;
 
 
-pub use ::libc::mmap;pub use ::libc::mremap;pub use ::libc::munmap;pub use ::libc::MAP_FAILED;pub use ::libc::MAP_SHARED;pub use ::libc::PROT_READ;pub use ::libc::PROT_WRITE;
-pub use ::libc::MREMAP_MAYMOVE;
+pub use ::libc::mmap;pub use ::libc::munmap;pub use ::libc::MAP_FAILED;pub use ::libc::MAP_SHARED;pub use ::libc::PROT_READ;pub use ::libc::PROT_WRITE;
+pub use crate::compat::MREMAP_MAYMOVE;
 
 
 
@@ -447,10 +447,10 @@ static mut aSyscall: [unix_syscall; 29] = {
         unix_syscall {
             zName: b"fchmod\0" as *const u8 as *const ::core::ffi::c_char,
             pCurrent: unsafe { ::core::mem::transmute::<
-                Option<unsafe extern "C" fn(::core::ffi::c_int, crate::src::headers::stdlib::__mode_t) -> ::core::ffi::c_int>,
+                Option<unsafe extern "C" fn(::core::ffi::c_int, ::libc::mode_t) -> ::core::ffi::c_int>,
                 crate::src::headers::sqlite3_h::sqlite3_syscall_ptr,
             >(Some(
-                ::libc::fchmod as unsafe extern "C" fn(::core::ffi::c_int, crate::src::headers::stdlib::__mode_t) -> ::core::ffi::c_int,
+                ::libc::fchmod as unsafe extern "C" fn(::core::ffi::c_int, ::libc::mode_t) -> ::core::ffi::c_int,
             )) },
             pDefault: None,
         },
@@ -494,7 +494,7 @@ static mut aSyscall: [unix_syscall; 29] = {
                 Option<
                     unsafe extern "C" fn(
                         *const ::core::ffi::c_char,
-                        crate::src::headers::stdlib::__mode_t,
+                        ::libc::mode_t,
                     ) -> ::core::ffi::c_int,
                 >,
                 crate::src::headers::sqlite3_h::sqlite3_syscall_ptr,
@@ -502,7 +502,7 @@ static mut aSyscall: [unix_syscall; 29] = {
                 ::libc::mkdir
                     as unsafe extern "C" fn(
                         *const ::core::ffi::c_char,
-                        crate::src::headers::stdlib::__mode_t,
+                        ::libc::mode_t,
                     ) -> ::core::ffi::c_int,
             )) },
             pDefault: None,
@@ -587,6 +587,7 @@ static mut aSyscall: [unix_syscall; 29] = {
         },
         unix_syscall {
             zName: b"mremap\0" as *const u8 as *const ::core::ffi::c_char,
+            #[cfg(not(target_os = "macos"))]
             pCurrent: unsafe { ::core::mem::transmute::<
                 Option<
                     unsafe extern "C" fn(
@@ -606,6 +607,26 @@ static mut aSyscall: [unix_syscall; 29] = {
                         crate::__stddef_size_t_h::size_t,
                         ::core::ffi::c_int,
                         ...
+                    ) -> *mut ::core::ffi::c_void,
+            )) },
+            #[cfg(target_os = "macos")]
+            pCurrent: unsafe { ::core::mem::transmute::<
+                Option<
+                    unsafe extern "C" fn(
+                        *mut ::core::ffi::c_void,
+                        crate::__stddef_size_t_h::size_t,
+                        crate::__stddef_size_t_h::size_t,
+                        ::core::ffi::c_int,
+                    ) -> *mut ::core::ffi::c_void,
+                >,
+                crate::src::headers::sqlite3_h::sqlite3_syscall_ptr,
+            >(Some(
+                crate::compat::mremap
+                    as unsafe extern "C" fn(
+                        *mut ::core::ffi::c_void,
+                        crate::__stddef_size_t_h::size_t,
+                        crate::__stddef_size_t_h::size_t,
+                        ::core::ffi::c_int,
                     ) -> *mut ::core::ffi::c_void,
             )) },
             pDefault: None,
@@ -817,7 +838,7 @@ unsafe extern "C" fn robust_open(
             z, f | ::libc::O_CLOEXEC, m2 as ::core::ffi::c_int
         );
         if fd < 0 as ::core::ffi::c_int {
-            if !(*::libc::__errno_location() == ::libc::EINTR) {
+            if !(*crate::compat::errno_location() == ::libc::EINTR) {
                 break;
             }
         } else {
@@ -929,7 +950,7 @@ unsafe extern "C" fn robust_ftruncate(
             Option<unsafe extern "C" fn(::core::ffi::c_int, crate::src::headers::stdlib::off_t) -> ::core::ffi::c_int>,
         >(aSyscall[6 as ::core::ffi::c_int as usize].pCurrent)
         .expect("non-null function pointer")(h, sz as crate::src::headers::stdlib::off_t);
-        if !(rc < 0 as ::core::ffi::c_int && *::libc::__errno_location() == ::libc::EINTR) {
+        if !(rc < 0 as ::core::ffi::c_int && *crate::compat::errno_location() == ::libc::EINTR) {
             break;
         }
     }
@@ -959,7 +980,7 @@ unsafe extern "C" fn unixLogErrorAtLine(
     mut iLine: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
     let mut zErr: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
-    let mut iErrno: ::core::ffi::c_int = *::libc::__errno_location();
+    let mut iErrno: ::core::ffi::c_int = *crate::compat::errno_location();
     zErr = b"\0" as *const u8 as *const ::core::ffi::c_char as *mut ::core::ffi::c_char;
     if zPath.is_null() {
         zPath = b"\0" as *const u8 as *const ::core::ffi::c_char;
@@ -1060,7 +1081,7 @@ unsafe extern "C" fn findInodeInfo(
     >(aSyscall[5 as ::core::ffi::c_int as usize].pCurrent)
     .expect("non-null function pointer")(fd, &raw mut statbuf);
     if rc != 0 as ::core::ffi::c_int {
-        storeLastErrno(pFile, *::libc::__errno_location());
+        storeLastErrno(pFile, *crate::compat::errno_location());
         return crate::src::headers::sqlite3_h::SQLITE_IOERR;
     }
     fileId.dev = statbuf.st_dev as crate::src::headers::stdlib::dev_t;
@@ -1213,8 +1234,8 @@ unsafe extern "C" fn unixCheckReservedLock(
             != 0
         {
             rc = crate::src::headers::sqlite3_h::SQLITE_IOERR_CHECKRESERVEDLOCK_1;
-            storeLastErrno(pFile, *::libc::__errno_location());
-        } else if lock.l_type as ::core::ffi::c_int != ::libc::F_UNLCK {
+            storeLastErrno(pFile, *crate::compat::errno_location());
+        } else if lock.l_type as ::core::ffi::c_int != ::libc::F_UNLCK as ::core::ffi::c_int {
             reserved = 1 as ::core::ffi::c_int;
         }
     }
@@ -1349,7 +1370,7 @@ unsafe extern "C" fn unixLock(
             }) as ::core::ffi::c_short;
             lock.l_start = crate::src::src::global::sqlite3PendingByte as crate::src::headers::stdlib::__off64_t;
             if unixFileLock(pFile, &raw mut lock) != 0 {
-                tErrno = *::libc::__errno_location();
+                tErrno = *crate::compat::errno_location();
                 rc = sqliteErrorFromPosixError(tErrno, crate::src::headers::sqlite3_h::SQLITE_IOERR_LOCK_1);
                 if rc != crate::src::headers::sqlite3_h::SQLITE_BUSY {
                     storeLastErrno(pFile, tErrno);
@@ -1372,14 +1393,14 @@ unsafe extern "C" fn unixLock(
                     lock.l_start = (crate::src::src::global::sqlite3PendingByte + 2 as ::core::ffi::c_int) as crate::src::headers::stdlib::__off64_t;
                     lock.l_len = crate::src::src::os::SHARED_SIZE as crate::src::headers::stdlib::__off64_t;
                     if unixFileLock(pFile, &raw mut lock) != 0 {
-                        tErrno = *::libc::__errno_location();
+                        tErrno = *crate::compat::errno_location();
                         rc = sqliteErrorFromPosixError(tErrno, crate::src::headers::sqlite3_h::SQLITE_IOERR_LOCK_1);
                     }
                     lock.l_start = crate::src::src::global::sqlite3PendingByte as crate::src::headers::stdlib::__off64_t;
                     lock.l_len = 1 as ::core::ffi::c_long as crate::src::headers::stdlib::__off64_t;
                     lock.l_type = ::libc::F_UNLCK as ::core::ffi::c_short;
                     if unixFileLock(pFile, &raw mut lock) != 0 && rc == crate::src::headers::sqlite3_h::SQLITE_OK {
-                        tErrno = *::libc::__errno_location();
+                        tErrno = *crate::compat::errno_location();
                         rc = crate::src::headers::sqlite3_h::SQLITE_IOERR_UNLOCK_1;
                     }
                     if rc != 0 {
@@ -1410,7 +1431,7 @@ unsafe extern "C" fn unixLock(
                             lock.l_len = crate::src::src::os::SHARED_SIZE as crate::src::headers::stdlib::__off64_t;
                         }
                         if unixFileLock(pFile, &raw mut lock) != 0 {
-                            tErrno = *::libc::__errno_location();
+                            tErrno = *crate::compat::errno_location();
                             rc = sqliteErrorFromPosixError(tErrno, crate::src::headers::sqlite3_h::SQLITE_IOERR_LOCK_1);
                             if rc != crate::src::headers::sqlite3_h::SQLITE_BUSY {
                                 storeLastErrno(pFile, tErrno);
@@ -1499,7 +1520,7 @@ unsafe extern "C" fn posixUnlock(
             lock.l_len = crate::src::src::os::SHARED_SIZE as crate::src::headers::stdlib::__off64_t;
             if unixFileLock(pFile, &raw mut lock) != 0 {
                 rc = crate::src::headers::sqlite3_h::SQLITE_IOERR_RDLOCK_1;
-                storeLastErrno(pFile, *::libc::__errno_location());
+                storeLastErrno(pFile, *crate::compat::errno_location());
                 current_block = 7847358768392935724;
             } else {
                 current_block = 15652330335145281839;
@@ -1519,7 +1540,7 @@ unsafe extern "C" fn posixUnlock(
                     current_block = 16203760046146113240;
                 } else {
                     rc = crate::src::headers::sqlite3_h::SQLITE_IOERR_UNLOCK_1;
-                    storeLastErrno(pFile, *::libc::__errno_location());
+                    storeLastErrno(pFile, *crate::compat::errno_location());
                     current_block = 7847358768392935724;
                 }
             }
@@ -1541,7 +1562,7 @@ unsafe extern "C" fn posixUnlock(
                         __pInode_ref.eFileLock = crate::src::src::os::NO_LOCK as ::core::ffi::c_uchar;
                     } else {
                         rc = crate::src::headers::sqlite3_h::SQLITE_IOERR_UNLOCK_1;
-                        storeLastErrno(pFile, *::libc::__errno_location());
+                        storeLastErrno(pFile, *crate::compat::errno_location());
                         __pInode_ref.eFileLock = crate::src::src::os::NO_LOCK as ::core::ffi::c_uchar;
                         __pFile_ref.eFileLock = crate::src::src::os::NO_LOCK as ::core::ffi::c_uchar;
                     }
@@ -1699,7 +1720,7 @@ unsafe extern "C" fn dotlockLock(
     >(aSyscall[18 as ::core::ffi::c_int as usize].pCurrent)
     .expect("non-null function pointer")(zLockFile, 0o777 as crate::src::headers::stdlib::mode_t);
     if rc < 0 as ::core::ffi::c_int {
-        let mut tErrno: ::core::ffi::c_int = *::libc::__errno_location();
+        let mut tErrno: ::core::ffi::c_int = *crate::compat::errno_location();
         if ::libc::EEXIST == tErrno {
             rc = crate::src::headers::sqlite3_h::SQLITE_BUSY;
         } else {
@@ -1747,7 +1768,7 @@ unsafe extern "C" fn dotlockUnlock(
     >(aSyscall[19 as ::core::ffi::c_int as usize].pCurrent)
     .expect("non-null function pointer")(zLockFile);
     if rc < 0 as ::core::ffi::c_int {
-        let mut tErrno: ::core::ffi::c_int = *::libc::__errno_location();
+        let mut tErrno: ::core::ffi::c_int = *crate::compat::errno_location();
         if tErrno == ::libc::ENOENT {
             rc = crate::src::headers::sqlite3_h::SQLITE_OK;
         } else {
@@ -1802,11 +1823,11 @@ unsafe extern "C" fn seekAndRead(
             break;
         }
         if got < 0 as ::core::ffi::c_int {
-            if *::libc::__errno_location() == ::libc::EINTR {
+            if *crate::compat::errno_location() == ::libc::EINTR {
                 got = 1 as ::core::ffi::c_int;
             } else {
                 prior = 0 as ::core::ffi::c_int;
-                storeLastErrno(id, *::libc::__errno_location());
+                storeLastErrno(id, *crate::compat::errno_location());
                 break;
             }
         } else if got > 0 as ::core::ffi::c_int {
@@ -1910,7 +1931,7 @@ unsafe extern "C" fn seekAndWriteFd(
         >(aSyscall[13 as ::core::ffi::c_int as usize].pCurrent)
         .expect("non-null function pointer")(fd, pBuf, nBuf as crate::__stddef_size_t_h::size_t, iOff as crate::src::headers::stdlib::off64_t)
             as ::core::ffi::c_int;
-        if !(rc < 0 as ::core::ffi::c_int && *::libc::__errno_location() == ::libc::EINTR) {
+        if !(rc < 0 as ::core::ffi::c_int && *crate::compat::errno_location() == ::libc::EINTR) {
             break;
         }
     }
@@ -1926,7 +1947,7 @@ unsafe extern "C" fn seekAndWriteFd(
         );
     }
     if rc < 0 as ::core::ffi::c_int {
-        *piErrno = *::libc::__errno_location();
+        *piErrno = *crate::compat::errno_location();
     }
     rc
 }
@@ -2101,7 +2122,7 @@ unsafe extern "C" fn unixSync(
         rc = 1 as ::core::ffi::c_int;
     }
     if rc != 0 {
-        storeLastErrno(pFile, *::libc::__errno_location());
+        storeLastErrno(pFile, *crate::compat::errno_location());
         return unixLogErrorAtLine(
             10 as ::core::ffi::c_int | (4 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int,
             b"full_fsync\0" as *const u8 as *const ::core::ffi::c_char,
@@ -2166,7 +2187,7 @@ unsafe extern "C" fn unixTruncate(
     }
     rc = robust_ftruncate((*pFile).h, nByte as crate::src::headers::sqlite3_h::sqlite3_int64);
     if rc != 0 {
-        storeLastErrno(pFile, *::libc::__errno_location());
+        storeLastErrno(pFile, *crate::compat::errno_location());
         return unixLogErrorAtLine(
             10 as ::core::ffi::c_int | (6 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int,
             b"ftruncate\0" as *const u8 as *const ::core::ffi::c_char,
@@ -2201,7 +2222,7 @@ unsafe extern "C" fn unixFileSize(
         rc = 1 as ::core::ffi::c_int;
     }
     if rc != 0 as ::core::ffi::c_int {
-        storeLastErrno(id as *mut unixFile, *::libc::__errno_location());
+        storeLastErrno(id as *mut unixFile, *crate::compat::errno_location());
         return crate::src::headers::sqlite3_h::SQLITE_IOERR_FSTAT_1;
     }
     *pSize = buf.st_size as crate::src::ext::rtree::rtree::i64_0;
@@ -2257,7 +2278,7 @@ unsafe extern "C" fn fcntlSizeHint(
         let mut rc: ::core::ffi::c_int = 0;
         if __pFile_ref.szChunk <= 0 as ::core::ffi::c_int {
             if robust_ftruncate(__pFile_ref.h, nByte as crate::src::headers::sqlite3_h::sqlite3_int64) != 0 {
-                storeLastErrno(pFile, *::libc::__errno_location());
+                storeLastErrno(pFile, *crate::compat::errno_location());
                 return unixLogErrorAtLine(
                     10 as ::core::ffi::c_int | (6 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int,
                     b"ftruncate\0" as *const u8 as *const ::core::ffi::c_char,
@@ -2456,7 +2477,7 @@ unsafe extern "C" fn unixFcntlExternalReader(
         {
             rc = crate::src::headers::sqlite3_h::SQLITE_IOERR_LOCK_1;
         } else {
-            *piOut = (f.l_type as ::core::ffi::c_int != ::libc::F_UNLCK) as ::core::ffi::c_int;
+            *piOut = (f.l_type as ::core::ffi::c_int != ::libc::F_UNLCK as ::core::ffi::c_int) as ::core::ffi::c_int;
         }
         crate::src::src::mutex::sqlite3_mutex_leave(__pShmNode_ref.pShmMutex);
     }
@@ -2485,7 +2506,7 @@ unsafe extern "C" fn unixIsSharingShmNode(mut pFile: *mut unixFile) -> ::core::f
         >,
     >(aSyscall[7 as ::core::ffi::c_int as usize].pCurrent)
     .expect("non-null function pointer")((*pShmNode).hShm, ::libc::F_GETLK, &raw mut lock);
-    (lock.l_type as ::core::ffi::c_int != ::libc::F_UNLCK) as ::core::ffi::c_int
+    (lock.l_type as ::core::ffi::c_int != ::libc::F_UNLCK as ::core::ffi::c_int) as ::core::ffi::c_int
 }
 
 unsafe extern "C" fn unixShmSystemLock(
@@ -2594,12 +2615,12 @@ unsafe extern "C" fn unixLockSharedMemory(
         != 0 as ::core::ffi::c_int
     {
         rc = crate::src::headers::sqlite3_h::SQLITE_IOERR_LOCK_1;
-    } else if lock.l_type as ::core::ffi::c_int == ::libc::F_UNLCK {
+    } else if lock.l_type as ::core::ffi::c_int == ::libc::F_UNLCK as ::core::ffi::c_int {
         if (*pShmNode).isReadonly != 0 {
             (*pShmNode).isUnlocked = 1 as crate::src::ext::rtree::rtree::u8_0;
             rc = crate::src::headers::sqlite3_h::SQLITE_READONLY_CANTINIT_1;
         } else {
-            rc = unixShmSystemLock(pDbFd, ::libc::F_WRLCK, UNIX_SHM_DMS, 1 as ::core::ffi::c_int);
+            rc = unixShmSystemLock(pDbFd, ::libc::F_WRLCK as ::core::ffi::c_int, UNIX_SHM_DMS, 1 as ::core::ffi::c_int);
             if rc == crate::src::headers::sqlite3_h::SQLITE_OK && robust_ftruncate((*pShmNode).hShm, 3 as crate::src::headers::sqlite3_h::sqlite3_int64) != 0 {
                 rc = unixLogErrorAtLine(
                     10 as ::core::ffi::c_int
@@ -2610,11 +2631,11 @@ unsafe extern "C" fn unixLockSharedMemory(
                 );
             }
         }
-    } else if lock.l_type as ::core::ffi::c_int == ::libc::F_WRLCK {
+    } else if lock.l_type as ::core::ffi::c_int == ::libc::F_WRLCK as ::core::ffi::c_int {
         rc = crate::src::headers::sqlite3_h::SQLITE_BUSY;
     }
     if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
-        rc = unixShmSystemLock(pDbFd, ::libc::F_RDLCK, UNIX_SHM_DMS, 1 as ::core::ffi::c_int);
+        rc = unixShmSystemLock(pDbFd, ::libc::F_RDLCK as ::core::ffi::c_int, UNIX_SHM_DMS, 1 as ::core::ffi::c_int);
     }
     rc
 }
@@ -3020,7 +3041,7 @@ unsafe extern "C" fn unixShmLock(
                     }
                 }
                 if bUnlock != 0 {
-                    rc = unixShmSystemLock(pDbFd, ::libc::F_UNLCK, ofst + UNIX_SHM_BASE, n);
+                    rc = unixShmSystemLock(pDbFd, ::libc::F_UNLCK as ::core::ffi::c_int, ofst + UNIX_SHM_BASE, n);
                     if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
                         ::libc::memset(
                             aLock.offset(ofst as isize) as *mut ::core::ffi::c_int
@@ -3042,7 +3063,7 @@ unsafe extern "C" fn unixShmLock(
                 if *aLock.offset(ofst as isize) < 0 as ::core::ffi::c_int {
                     rc = crate::src::headers::sqlite3_h::SQLITE_BUSY;
                 } else if *aLock.offset(ofst as isize) == 0 as ::core::ffi::c_int {
-                    rc = unixShmSystemLock(pDbFd, ::libc::F_RDLCK, ofst + UNIX_SHM_BASE, n);
+                    rc = unixShmSystemLock(pDbFd, ::libc::F_RDLCK as ::core::ffi::c_int, ofst + UNIX_SHM_BASE, n);
                 }
                 if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
                     (*p).sharedMask = ((*p).sharedMask as ::core::ffi::c_int
@@ -3063,7 +3084,7 @@ unsafe extern "C" fn unixShmLock(
                     }
                 }
                 if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
-                    rc = unixShmSystemLock(pDbFd, ::libc::F_WRLCK, ofst + UNIX_SHM_BASE, n);
+                    rc = unixShmSystemLock(pDbFd, ::libc::F_WRLCK as ::core::ffi::c_int, ofst + UNIX_SHM_BASE, n);
                     if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
                         (*p).exclMask = ((*p).exclMask as ::core::ffi::c_int
                             | mask as ::core::ffi::c_int)
@@ -3179,6 +3200,8 @@ unsafe extern "C" fn unixRemapfile(mut pFd: *mut unixFile, mut nNew: crate::src:
                 (nOrig - nReuse) as crate::__stddef_size_t_h::size_t,
             );
         }
+        #[cfg(not(target_os = "macos"))]
+        {
         pNew = ::core::mem::transmute::<
             crate::src::headers::sqlite3_h::sqlite3_syscall_ptr,
             Option<
@@ -3195,8 +3218,29 @@ unsafe extern "C" fn unixRemapfile(mut pFd: *mut unixFile, mut nNew: crate::src:
             pOrig as *mut ::core::ffi::c_void,
             nReuse as crate::__stddef_size_t_h::size_t,
             nNew as crate::__stddef_size_t_h::size_t,
-            ::libc::MREMAP_MAYMOVE,
+            crate::compat::MREMAP_MAYMOVE,
         ) as *mut crate::src::ext::rtree::rtree::u8_0;
+        }
+        #[cfg(target_os = "macos")]
+        {
+        pNew = ::core::mem::transmute::<
+            crate::src::headers::sqlite3_h::sqlite3_syscall_ptr,
+            Option<
+                unsafe extern "C" fn(
+                    *mut ::core::ffi::c_void,
+                    crate::__stddef_size_t_h::size_t,
+                    crate::__stddef_size_t_h::size_t,
+                    ::core::ffi::c_int,
+                ) -> *mut ::core::ffi::c_void,
+            >,
+        >(aSyscall[24 as ::core::ffi::c_int as usize].pCurrent)
+        .expect("non-null function pointer")(
+            pOrig as *mut ::core::ffi::c_void,
+            nReuse as crate::__stddef_size_t_h::size_t,
+            nNew as crate::__stddef_size_t_h::size_t,
+            crate::compat::MREMAP_MAYMOVE,
+        ) as *mut crate::src::ext::rtree::rtree::u8_0;
+        }
         zErr = b"mremap\0" as *const u8 as *const ::core::ffi::c_char;
         if pNew == ::libc::MAP_FAILED as *mut crate::src::ext::rtree::rtree::u8_0 || pNew.is_null() {
             ::core::mem::transmute::<
@@ -4113,7 +4157,7 @@ unsafe extern "C" fn unixOpen(
     if isExclusive != 0 {
         openFlags |= ::libc::O_EXCL | ::libc::O_NOFOLLOW;
     }
-    openFlags |= ::libc::O_LARGEFILE | O_BINARY | ::libc::O_NOFOLLOW;
+    openFlags |= crate::compat::O_LARGEFILE | O_BINARY | ::libc::O_NOFOLLOW;
     if fd < 0 as ::core::ffi::c_int {
         let mut openMode: crate::src::headers::stdlib::mode_t = 0;
         let mut uid: crate::src::headers::stdlib::uid_t = 0;
@@ -4135,7 +4179,7 @@ unsafe extern "C" fn unixOpen(
         }
         if fd < 0 as ::core::ffi::c_int {
             if isNewJrnl != 0
-                && *::libc::__errno_location() == ::libc::EACCES
+                && *crate::compat::errno_location() == ::libc::EACCES
                 && ::core::mem::transmute::<
                     crate::src::headers::sqlite3_h::sqlite3_syscall_ptr,
                     Option<
@@ -4149,7 +4193,7 @@ unsafe extern "C" fn unixOpen(
                     != 0
             {
                 rc = crate::src::headers::sqlite3_h::SQLITE_READONLY_DIRECTORY_1;
-            } else if *::libc::__errno_location() != ::libc::EISDIR && isReadWrite != 0 {
+            } else if *crate::compat::errno_location() != ::libc::EISDIR && isReadWrite != 0 {
                 let mut pReadonly: *mut UnixUnusedFd = ::core::ptr::null_mut::<UnixUnusedFd>();
                 flags &= !(crate::src::headers::sqlite3_h::SQLITE_OPEN_READWRITE | crate::src::headers::sqlite3_h::SQLITE_OPEN_CREATE);
                 openFlags &= !(::libc::O_RDWR | ::libc::O_CREAT);
@@ -4252,7 +4296,7 @@ unsafe extern "C" fn unixDelete(
     .expect("non-null function pointer")(zPath)
         == -(1 as ::core::ffi::c_int)
     {
-        if *::libc::__errno_location() == ::libc::ENOENT {
+        if *crate::compat::errno_location() == ::libc::ENOENT {
             rc = crate::src::headers::sqlite3_h::SQLITE_IOERR_DELETE_NOENT_1;
         } else {
             rc = unixLogErrorAtLine(
@@ -4395,7 +4439,7 @@ unsafe extern "C" fn appendOnePathElement(
         .expect("non-null function pointer")(zIn, &raw mut buf)
             != 0 as ::core::ffi::c_int
         {
-            if *::libc::__errno_location() != ::libc::ENOENT {
+            if *crate::compat::errno_location() != ::libc::ENOENT {
                 __pPath_ref.rc = unixLogErrorAtLine(
                     crate::src::src::main::sqlite3CantopenError(6955 as ::core::ffi::c_int),
                     b"lstat\0" as *const u8 as *const ::core::ffi::c_char,
@@ -4634,7 +4678,7 @@ unsafe extern "C" fn unixCurrentTimeInt64(
     );
     *piNow = unixEpoch
         + 1000 as crate::src::headers::sqlite3_h::sqlite3_int64 * sNow.tv_sec as crate::src::headers::sqlite3_h::sqlite3_int64
-        + (sNow.tv_usec / 1000 as crate::src::headers::stdlib::__suseconds_t) as crate::src::headers::sqlite3_h::sqlite3_int64;
+        + (sNow.tv_usec as crate::src::headers::stdlib::__suseconds_t / 1000 as crate::src::headers::stdlib::__suseconds_t) as crate::src::headers::sqlite3_h::sqlite3_int64;
     if sqlite3_current_time != 0 {
         *piNow = 1000 as crate::src::headers::sqlite3_h::sqlite3_int64 * sqlite3_current_time as crate::src::headers::sqlite3_h::sqlite3_int64 + unixEpoch;
     }
@@ -4657,7 +4701,7 @@ unsafe extern "C" fn unixGetLastError(
     mut _NotUsed2: ::core::ffi::c_int,
     mut _NotUsed3: *mut ::core::ffi::c_char,
 ) -> ::core::ffi::c_int {
-    *::libc::__errno_location()
+    *crate::compat::errno_location()
 }
 #[unsafe(no_mangle)]
 

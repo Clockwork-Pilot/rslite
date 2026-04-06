@@ -1,11 +1,11 @@
 [workspace]
 members = [
     "sqlite-printf-macros",
-    "pub-interface",
 ]
 exclude = [
     "crust-sqlite-shell",
     "crust-tclsqlite",
+    "pub-interface",
 ]
 
 [workspace.dependencies]

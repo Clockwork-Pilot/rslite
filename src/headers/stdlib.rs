@@ -132,6 +132,7 @@
     pub type Tcl_Interp = *mut std::ffi::c_void;
 
     unsafe extern "C" {
+        #[cfg_attr(target_os = "macos", link_name = "__stdoutp")]
         pub static mut stdout: *mut FILE;
         pub fn __ctype_b_loc() -> *mut *const ::core::ffi::c_ushort;
         pub fn pthread_create(
@@ -815,6 +816,7 @@
         pub __elision: ::core::ffi::c_short,
         pub __list: crate::src::headers::stdlib::__pthread_list_t,
     }
+    #[cfg(not(target_os = "macos"))]
     #[derive(Copy, Clone)]
     #[repr(C)]
     pub struct stat {
@@ -833,6 +835,29 @@
         pub st_mtim: ::libc::timespec,
         pub st_ctim: ::libc::timespec,
         pub __glibc_reserved: [crate::src::headers::stdlib::__syscall_slong_t; 3],
+    }
+    #[cfg(target_os = "macos")]
+    #[derive(Copy, Clone)]
+    #[repr(C)]
+    pub struct stat {
+        pub st_dev: crate::src::headers::stdlib::__dev_t,
+        pub st_mode: crate::src::headers::stdlib::__mode_t,
+        pub st_nlink: crate::src::headers::stdlib::__nlink_t,
+        pub st_ino: crate::src::headers::stdlib::__ino_t,
+        pub st_uid: crate::src::headers::stdlib::__uid_t,
+        pub st_gid: crate::src::headers::stdlib::__gid_t,
+        pub st_rdev: crate::src::headers::stdlib::__dev_t,
+        pub st_atim: ::libc::timespec,
+        pub st_mtim: ::libc::timespec,
+        pub st_ctim: ::libc::timespec,
+        pub st_birthtimespec: ::libc::timespec,
+        pub st_size: crate::src::headers::stdlib::__off_t,
+        pub st_blocks: crate::src::headers::stdlib::__blkcnt_t,
+        pub st_blksize: crate::src::headers::stdlib::__blksize_t,
+        pub st_flags: u32,
+        pub st_gen: u32,
+        pub st_lspare: i32,
+        pub st_qspare: [i64; 2],
     }
     pub type dev_t = crate::src::headers::stdlib::__dev_t;
 
@@ -1011,17 +1036,29 @@
 
     pub type __uint32_t = u32;
 
+    #[cfg(not(target_os = "macos"))]
     pub type __dev_t = ::core::ffi::c_ulong;
+    #[cfg(target_os = "macos")]
+    pub type __dev_t = i32;
 
     pub type __uid_t = ::core::ffi::c_uint;
 
     pub type __gid_t = ::core::ffi::c_uint;
 
+    #[cfg(not(target_os = "macos"))]
     pub type __ino_t = ::core::ffi::c_ulong;
+    #[cfg(target_os = "macos")]
+    pub type __ino_t = u64;
 
+    #[cfg(not(target_os = "macos"))]
     pub type __mode_t = ::core::ffi::c_uint;
+    #[cfg(target_os = "macos")]
+    pub type __mode_t = u16;
 
+    #[cfg(not(target_os = "macos"))]
     pub type __nlink_t = ::core::ffi::c_ulong;
+    #[cfg(target_os = "macos")]
+    pub type __nlink_t = u16;
 
     pub type __off_t = ::core::ffi::c_long;
 
@@ -1031,9 +1068,15 @@
 
     pub type __time_t = ::core::ffi::c_long;
 
+    #[cfg(not(target_os = "macos"))]
     pub type __suseconds_t = ::core::ffi::c_long;
+    #[cfg(target_os = "macos")]
+    pub type __suseconds_t = i32;
 
+    #[cfg(not(target_os = "macos"))]
     pub type __blksize_t = ::core::ffi::c_long;
+    #[cfg(target_os = "macos")]
+    pub type __blksize_t = i32;
 
     pub type __blkcnt_t = ::core::ffi::c_long;
 
