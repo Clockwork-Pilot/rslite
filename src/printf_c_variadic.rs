@@ -12,156 +12,8 @@ use crate::src::fts5::{Fts5Config, Fts5FullTable};
 use crate::src::src::btree::{checkOom, checkProgress};
 
 
-// Variadic function implementations - these require c_variadic feature
-#[unsafe(no_mangle)]
-pub unsafe extern "C" fn sqlite3MPrintf(
-    mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
-    mut zFormat: *const ::core::ffi::c_char,
-    mut args: ...
-) -> *mut ::core::ffi::c_char {
-    let mut z: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
-    z = { let (_s, _a) = crate::src::src::printf::extract_printf_args(zFormat, args, false, ::core::ptr::null_mut()); crate::src::src::printf::sqlite3VMPrintf_args(db, zFormat, &_a) };
-    z
-}
-
-#[unsafe(no_mangle)]
-pub unsafe extern "C" fn sqlite3_log(
-    mut iErrCode: ::core::ffi::c_int,
-    mut zFormat: *const ::core::ffi::c_char,
-    mut args: ...
-) {
-    // VaListImpl type handling - using args directly
-    if crate::src::src::global::sqlite3Config.xLog.is_some() {
-        renderLogMsg(iErrCode, zFormat, args);
-    }
-}
-
-#[unsafe(no_mangle)]
-pub unsafe extern "C" fn sqlite3DebugPrintf(
-    mut zFormat: *const ::core::ffi::c_char,
-    mut args: ...
-) {
-    // VaListImpl type handling - using args directly
-    let mut acc: crate::src::headers::sqliteInt_h::StrAccum = unsafe { ::core::mem::zeroed() };
-    let mut zBuf: [::core::ffi::c_char; 700] = [0; 700];
-    crate::src::src::printf::sqlite3StrAccumInit(
-        &raw mut acc,
-        ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::sqlite3>(),
-        &raw mut zBuf as *mut ::core::ffi::c_char,
-        ::core::mem::size_of::<[::core::ffi::c_char; 700]>() as ::core::ffi::c_int,
-        0 as ::core::ffi::c_int,
-    );
-    let (_s, a) = crate::src::src::printf::extract_printf_args(zFormat, args, false, ::core::ptr::null_mut());
-    crate::src::src::printf::sqlite3_str_vappendf_args(&raw mut acc, zFormat, &a);
-    crate::src::src::printf::sqlite3StrAccumFinish(&raw mut acc);
-    crate::src::headers::stdlib::fprintf(
-        crate::src::headers::stdlib::stdout,
-        b"%s\0" as *const u8 as *const ::core::ffi::c_char,
-        &raw mut zBuf as *mut ::core::ffi::c_char,
-    );
-    crate::src::headers::stdlib::fflush(crate::src::headers::stdlib::stdout);
-}
-
-// sqlite3_str_appendf is now implemented in c_code/printf_c.c
-// It calls sqlite3_str_vappendf_sqlfunc and sqlite3_str_vappendf_va from printf.rs
-
-// VaList functions below are defined in printf.rs - we re-export them here
-// (they don't use VaListImpl, just VaList which is already available)
-pub use crate::src::src::printf::renderLogMsg;
-
-// Variadic functions that use VaListImpl - must be defined here to use c_variadic feature
-#[unsafe(no_mangle)]
-pub unsafe extern "C" fn sqlite3VdbeError(
-    mut p: *mut crate::src::headers::vdbeInt_h::Vdbe,
-    mut zFormat: *const ::core::ffi::c_char,
-    mut args: ...
-) {
-    let __p_ref = unsafe { &mut *p };
-    crate::src::src::malloc::sqlite3DbFree(__p_ref.db as *mut crate::src::headers::sqliteInt_h::sqlite3, __p_ref.zErrMsg as *mut ::core::ffi::c_void);
-    let (_s, _a) = crate::src::src::printf::extract_printf_args(zFormat, args, false, ::core::ptr::null_mut());
-    __p_ref.zErrMsg = crate::src::src::printf::sqlite3VMPrintf_args(__p_ref.db, zFormat, &_a);
-}
-
-#[unsafe(no_mangle)]
-pub unsafe extern "C" fn sqlite3VdbeMultiLoad(
-    mut p: *mut crate::src::headers::vdbeInt_h::Vdbe,
-    mut iDest: ::core::ffi::c_int,
-    mut zTypes: *const ::core::ffi::c_char,
-    mut args: ...
-) {
-    let mut current_block: u64;
-    // VaListImpl type handling - using args directly
-    let mut i: ::core::ffi::c_int = 0;
-    let mut c: ::core::ffi::c_char = 0;
-    i = 0 as ::core::ffi::c_int;
-    loop {
-        c = *zTypes.offset(i as isize);
-        if !(c as ::core::ffi::c_int != 0 as ::core::ffi::c_int) {
-            current_block = 11812396948646013369;
-            break;
-        }
-        if c as ::core::ffi::c_int == 's' as i32 {
-            let mut z: *const ::core::ffi::c_char = args.arg::<*const ::core::ffi::c_char>();
-            crate::src::src::vdbeaux::sqlite3VdbeAddOp4(
-                p,
-                if z.is_null() { crate::src::headers::opcodes_h::OP_Null } else { crate::src::headers::opcodes_h::OP_String8 },
-                0 as ::core::ffi::c_int,
-                iDest + i,
-                0 as ::core::ffi::c_int,
-                z,
-                0 as ::core::ffi::c_int,
-            );
-        } else {
-            if !(c as ::core::ffi::c_int == 'i' as i32) {
-                current_block = 2968425633554183086;
-                break;
-            }
-            crate::src::src::vdbeaux::sqlite3VdbeAddOp2(p, crate::src::headers::opcodes_h::OP_Integer, args.arg::<::core::ffi::c_int>(), iDest + i);
-        }
-        i += 1;
-    }
-    match current_block {
-        11812396948646013369 => {
-            crate::src::src::vdbeaux::sqlite3VdbeAddOp2(p, crate::src::headers::opcodes_h::OP_ResultRow, iDest, i);
-        }
-        _ => {}
-    };
-}
-
-#[unsafe(no_mangle)]
-pub unsafe extern "C" fn sqlite3VdbeExplain(
-    mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
-    mut bPush: crate::src::ext::rtree::rtree::u8_0,
-    mut zFmt: *const ::core::ffi::c_char,
-    mut args: ...
-) -> ::core::ffi::c_int {
-    let mut addr: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
-    if (*pParse).explain as ::core::ffi::c_int == 2 as ::core::ffi::c_int
-        || 0 as ::core::ffi::c_int != 0
-    {
-        let mut zMsg: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
-        let mut v: *mut crate::src::headers::vdbeInt_h::Vdbe = ::core::ptr::null_mut::<crate::src::headers::vdbeInt_h::Vdbe>();
-        let mut iThis: ::core::ffi::c_int = 0;
-        let __pParse_ref = unsafe { &mut *pParse };
-                let (_s, _a) = crate::src::src::printf::extract_printf_args(zFmt, args, false, ::core::ptr::null_mut());
-                zMsg = crate::src::src::printf::sqlite3VMPrintf_args(__pParse_ref.db, zFmt, &_a);
-        v = __pParse_ref.pVdbe;
-        iThis = (*v).nOp;
-        addr = crate::src::src::vdbeaux::sqlite3VdbeAddOp4(
-            v,
-            crate::src::headers::opcodes_h::OP_Explain,
-            iThis,
-            __pParse_ref.addrExplain,
-            0 as ::core::ffi::c_int,
-            zMsg,
-            crate::src::src::vdbe::P4_DYNAMIC,
-        );
-        if bPush != 0 {
-            __pParse_ref.addrExplain = iThis;
-        }
-    }
-    addr
-}
+// Old variadic functions removed — all callers now use _args versions.
+// sqlite3_log uses C wrapper in c_code/log.c → sqlite3_log_formatted in Rust.
 
 // sqlite3_vtab_config — C wrapper is in c_code/vtab_config.c
 // C wrapper packs va_args into u64 slots, Rust parses into VtabConfigOp enum and dispatches.
@@ -227,45 +79,49 @@ pub unsafe extern "C" fn sqlite3_vtab_config_args(
     rc
 }
 
-// Variadic functions from util.rs and vacuum.rs - must be defined here to use c_variadic feature
-#[unsafe(no_mangle)]
-pub unsafe extern "C" fn sqlite3ErrorWithMsg(
-    mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
-    mut err_code: ::core::ffi::c_int,
-    mut zFormat: *const ::core::ffi::c_char,
-    mut args: ...
-) {
-    (*db).errCode = err_code;
-    crate::src::src::util::sqlite3SystemError(db, err_code);
-    if zFormat.is_null() {
-        crate::src::src::util::sqlite3Error(db, err_code);
-    } else if !(*db).pErr.is_null() || {
-        (*db).pErr = crate::src::src::vdbemem::sqlite3ValueNew(db as *mut crate::src::headers::sqliteInt_h::sqlite3);
-        !(*db).pErr.is_null()
-    } {
-        let mut z: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
-                z = { let (_s, _a) = crate::src::src::printf::extract_printf_args(zFormat, args, false, ::core::ptr::null_mut()); crate::src::src::printf::sqlite3VMPrintf_args(db, zFormat, &_a) };
-        crate::src::src::vdbemem::sqlite3ValueSetStr(
-            (*db).pErr,
-            -(1 as ::core::ffi::c_int),
-            z as *const ::core::ffi::c_void,
-            crate::src::headers::sqlite3_h::SQLITE_UTF8 as crate::src::ext::rtree::rtree::u8_0,
-            Some(crate::src::src::rowset::sqlite3RowSetClear as unsafe extern "C" fn(*mut ::core::ffi::c_void) -> ()),
-        );
-    }
+// Non-variadic _args versions of printf-pattern functions
+
+pub unsafe fn sqlite3MPrintf_args(
+    db: *mut crate::src::headers::sqliteInt_h::sqlite3,
+    zFormat: *const ::core::ffi::c_char,
+    args: &[crate::src::src::printf::PrintfArg],
+) -> *mut ::core::ffi::c_char {
+    crate::src::src::printf::sqlite3VMPrintf_args(db, zFormat, args)
 }
 
-#[unsafe(no_mangle)]
-pub unsafe extern "C" fn sqlite3ErrorMsg(
-    mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
-    mut zFormat: *const ::core::ffi::c_char,
-    mut args: ...
+pub unsafe fn sqlite3DebugPrintf_args(
+    zFormat: *const ::core::ffi::c_char,
+    args: &[crate::src::src::printf::PrintfArg],
+) {
+    let mut acc: crate::src::headers::sqliteInt_h::StrAccum = ::core::mem::zeroed();
+    let mut zBuf: [::core::ffi::c_char; 700] = [0; 700];
+    crate::src::src::printf::sqlite3StrAccumInit(
+        &raw mut acc,
+        ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::sqlite3>(),
+        &raw mut zBuf as *mut ::core::ffi::c_char,
+        ::core::mem::size_of::<[::core::ffi::c_char; 700]>() as ::core::ffi::c_int,
+        0 as ::core::ffi::c_int,
+    );
+    crate::src::src::printf::sqlite3_str_vappendf_args(&raw mut acc, zFormat, args);
+    crate::src::src::printf::sqlite3StrAccumFinish(&raw mut acc);
+    crate::src::headers::stdlib::fprintf(
+        crate::src::headers::stdlib::stdout,
+        b"%s\0" as *const u8 as *const ::core::ffi::c_char,
+        &raw mut zBuf as *mut ::core::ffi::c_char,
+    );
+    crate::src::headers::stdlib::fflush(crate::src::headers::stdlib::stdout);
+}
+
+pub unsafe fn sqlite3ErrorMsg_args(
+    pParse: *mut crate::src::headers::sqliteInt_h::Parse,
+    zFormat: *const ::core::ffi::c_char,
+    args: &[crate::src::src::printf::PrintfArg],
 ) {
     let mut zMsg: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
-    let mut db: *mut crate::src::headers::sqliteInt_h::sqlite3 = (*pParse).db;
-    let __db_ref = unsafe { &mut *db };
+    let db: *mut crate::src::headers::sqliteInt_h::sqlite3 = (*pParse).db;
+    let __db_ref = &mut *db;
     __db_ref.errByteOffset = -(2 as ::core::ffi::c_int);
-    zMsg = { let (_s, _a) = crate::src::src::printf::extract_printf_args(zFormat, args, false, ::core::ptr::null_mut()); crate::src::src::printf::sqlite3VMPrintf_args(db, zFormat, &_a) };
+    zMsg = crate::src::src::printf::sqlite3VMPrintf_args(db, zFormat, args);
     if __db_ref.errByteOffset < -(1 as ::core::ffi::c_int) {
         __db_ref.errByteOffset = -(1 as ::core::ffi::c_int);
     }
@@ -276,7 +132,7 @@ pub unsafe extern "C" fn sqlite3ErrorMsg(
             (*pParse).rc = crate::src::headers::sqlite3_h::SQLITE_NOMEM;
         }
     } else {
-        let __pParse_ref = unsafe { &mut *pParse };
+        let __pParse_ref = &mut *pParse;
         __pParse_ref.nErr += 1;
         crate::src::src::malloc::sqlite3DbFree(db as *mut crate::src::headers::sqliteInt_h::sqlite3, __pParse_ref.zErrMsg as *mut ::core::ffi::c_void);
         __pParse_ref.zErrMsg = zMsg;
@@ -285,23 +141,67 @@ pub unsafe extern "C" fn sqlite3ErrorMsg(
     };
 }
 
-pub unsafe extern "C" fn execSqlF(
-    mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
-    mut pzErrMsg: *mut *mut ::core::ffi::c_char,
-    mut zSql: *const ::core::ffi::c_char,
-    mut args: ...
+pub unsafe fn sqlite3ErrorWithMsg_args(
+    db: *mut crate::src::headers::sqliteInt_h::sqlite3,
+    err_code: ::core::ffi::c_int,
+    zFormat: *const ::core::ffi::c_char,
+    args: &[crate::src::src::printf::PrintfArg],
+) {
+    (*db).errCode = err_code;
+    crate::src::src::util::sqlite3SystemError(db, err_code);
+    if zFormat.is_null() {
+        crate::src::src::util::sqlite3Error(db, err_code);
+    } else if !(*db).pErr.is_null() || {
+        (*db).pErr = crate::src::src::vdbemem::sqlite3ValueNew(db as *mut crate::src::headers::sqliteInt_h::sqlite3);
+        !(*db).pErr.is_null()
+    } {
+        let z = crate::src::src::printf::sqlite3VMPrintf_args(db, zFormat, args);
+        crate::src::src::vdbemem::sqlite3ValueSetStr(
+            (*db).pErr,
+            -(1 as ::core::ffi::c_int),
+            z as *const ::core::ffi::c_void,
+            crate::src::headers::sqlite3_h::SQLITE_UTF8 as crate::src::ext::rtree::rtree::u8_0,
+            Some(crate::src::src::rowset::sqlite3RowSetClear as unsafe extern "C" fn(*mut ::core::ffi::c_void) -> ()),
+        );
+    }
+}
+
+pub unsafe fn execSqlF_args(
+    db: *mut crate::src::headers::sqliteInt_h::sqlite3,
+    pzErrMsg: *mut *mut ::core::ffi::c_char,
+    zSql: *const ::core::ffi::c_char,
+    args: &[crate::src::src::printf::PrintfArg],
 ) -> ::core::ffi::c_int {
-    let mut z: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
-    let mut rc: ::core::ffi::c_int = 0;
-    z = { let (_s, _a) = crate::src::src::printf::extract_printf_args(zSql, args, false, ::core::ptr::null_mut()); crate::src::src::printf::sqlite3VMPrintf_args(db, zSql, &_a) };
+    let z = crate::src::src::printf::sqlite3VMPrintf_args(db, zSql, args);
     if z.is_null() {
         return crate::src::headers::sqlite3_h::SQLITE_NOMEM;
     }
-    rc = crate::src::src::vacuum::execSql(db, pzErrMsg, z);
+    let rc = crate::src::src::vacuum::execSql(db, pzErrMsg, z);
     crate::src::src::malloc::sqlite3DbFree(db as *mut crate::src::headers::sqliteInt_h::sqlite3, z as *mut ::core::ffi::c_void);
     rc
 }
 
+pub unsafe fn sqlite3_log_args(
+    iErrCode: ::core::ffi::c_int,
+    zFormat: *const ::core::ffi::c_char,
+    args: &[crate::src::src::printf::PrintfArg],
+) {
+    if crate::src::src::global::sqlite3Config.xLog.is_some() {
+        crate::src::src::printf::renderLogMsg_args(iErrCode, zFormat, args);
+    }
+}
+
+// sqlite3_log — C wrapper is in c_code/log.c
+// C wrapper formats the message with sqlite3_vsnprintf, then calls sqlite3_log_formatted.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn sqlite3_log_formatted(
+    iErrCode: ::core::ffi::c_int,
+    zMsg: *const ::core::ffi::c_char,
+) {
+    if let Some(xLog) = crate::src::src::global::sqlite3Config.xLog {
+        xLog(crate::src::src::global::sqlite3Config.pLogArg, iErrCode, zMsg);
+    }
+}
 
 // sqlite3_config — C wrapper is in c_code/config.c
 // C wrapper packs va_args into u64 slots, Rust parses into ConfigOp enum and dispatches.

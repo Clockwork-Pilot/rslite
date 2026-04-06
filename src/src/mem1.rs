@@ -3,7 +3,7 @@
 
 pub use crate::__stddef_size_t_h::size_t;
 
-pub use crate::src::headers::sqlite3_h::sqlite3_int64;pub use crate::src::src::printf::sqlite3_log;pub use crate::src::headers::sqlite3_h::sqlite3_mem_methods;pub use crate::src::headers::sqlite3_h::sqlite_int64;pub use crate::src::headers::sqlite3_h::SQLITE_CONFIG_MALLOC_1;pub use crate::src::headers::sqlite3_h::SQLITE_NOMEM;pub use crate::src::headers::sqlite3_h::SQLITE_OK;
+pub use crate::src::headers::sqlite3_h::sqlite3_int64;pub use crate::src::headers::sqlite3_h::sqlite3_mem_methods;pub use crate::src::headers::sqlite3_h::sqlite_int64;pub use crate::src::headers::sqlite3_h::SQLITE_CONFIG_MALLOC_1;pub use crate::src::headers::sqlite3_h::SQLITE_NOMEM;pub use crate::src::headers::sqlite3_h::SQLITE_OK;
 
 unsafe extern "C" fn sqlite3MemMalloc(mut nByte: ::core::ffi::c_int) -> *mut ::core::ffi::c_void {
     let mut p: *mut crate::src::headers::sqlite3_h::sqlite3_int64 = ::core::ptr::null_mut::<crate::src::headers::sqlite3_h::sqlite3_int64>();
@@ -12,10 +12,10 @@ unsafe extern "C" fn sqlite3MemMalloc(mut nByte: ::core::ffi::c_int) -> *mut ::c
         *p.offset(0 as isize) = nByte as crate::src::headers::sqlite3_h::sqlite3_int64;
         p = p.offset(1);
     } else {
-        crate::src::src::printf::sqlite3_log(
+        crate::src::printf_c_variadic::sqlite3_log_args(
             crate::src::headers::sqlite3_h::SQLITE_NOMEM,
             b"failed to allocate %u bytes of memory\0" as *const u8 as *const ::core::ffi::c_char,
-            nByte,
+            &[crate::src::src::printf::PrintfArg::UInt(nByte as u64)],
         );
     }
     p as *mut ::core::ffi::c_void
@@ -48,11 +48,13 @@ unsafe extern "C" fn sqlite3MemRealloc(
         *p.offset(0 as isize) = nByte as crate::src::headers::sqlite3_h::sqlite3_int64;
         p = p.offset(1);
     } else {
-        crate::src::src::printf::sqlite3_log(
+        crate::src::printf_c_variadic::sqlite3_log_args(
             crate::src::headers::sqlite3_h::SQLITE_NOMEM,
             b"failed memory resize %u to %u bytes\0" as *const u8 as *const ::core::ffi::c_char,
-            sqlite3MemSize(pPrior),
-            nByte,
+            &[
+                crate::src::src::printf::PrintfArg::UInt(sqlite3MemSize(pPrior) as u64),
+                crate::src::src::printf::PrintfArg::UInt(nByte as u64),
+            ],
         );
     }
     p as *mut ::core::ffi::c_void

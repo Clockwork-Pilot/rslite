@@ -17,7 +17,7 @@
 
 pub use crate::src::headers::stdlib::va_list;
 pub use crate::__stddef_size_t_h::size_t;
-pub use crate::src::printf_c_variadic::execSqlF;
+pub use crate::src::printf_c_variadic::execSqlF_args;
 
 
 pub use crate::src::src::btree::sqlite3BtreeBeginTrans;pub use crate::src::src::btree::sqlite3BtreeClose;pub use crate::src::src::btree::sqlite3BtreeCommit;pub use crate::src::src::backup::sqlite3BtreeCopyFile;pub use crate::src::src::btree::sqlite3BtreeGetAutoVacuum;pub use crate::src::src::btree::sqlite3BtreeGetMeta;pub use crate::src::src::btree::sqlite3BtreeGetPageSize;pub use crate::src::src::btree::sqlite3BtreeGetRequestedReserve;pub use crate::src::src::btree::sqlite3BtreePager;pub use crate::src::src::btree::sqlite3BtreeSetAutoVacuum;pub use crate::src::src::btree::sqlite3BtreeSetCacheSize;pub use crate::src::src::btree::sqlite3BtreeSetPageSize;pub use crate::src::src::btree::sqlite3BtreeSetPagerFlags;pub use crate::src::src::btree::sqlite3BtreeSetSpillSize;pub use crate::src::src::btree::sqlite3BtreeUpdateMeta;pub use crate::src::headers::btreeInt_h::BtCursor;pub use crate::src::headers::btreeInt_h::Btree;pub use crate::src::src::btree::BTREE_APPLICATION_ID;pub use crate::src::src::btree::BTREE_DEFAULT_CACHE_SIZE;pub use crate::src::src::btree::BTREE_SCHEMA_VERSION;pub use crate::src::src::btree::BTREE_TEXT_ENCODING;pub use crate::src::src::btree::BTREE_USER_VERSION;pub use crate::src::src::hash::Hash;pub use crate::src::src::hash::HashElem;pub use crate::src::src::hash::_ht;pub use crate::internal::__builtin_va_list;pub use crate::internal::__va_list_tag;
@@ -234,12 +234,14 @@ pub unsafe extern "C" fn sqlite3RunVacuum(
         iRandom,
     );
     nDb = __db_ref.nDb;
-    rc = execSqlF(
+    rc = execSqlF_args(
         db,
         pzErrMsg,
         b"ATTACH %Q AS %s\0" as *const u8 as *const ::core::ffi::c_char,
-        zOut,
-        &raw mut zDbVacuum as *mut ::core::ffi::c_char,
+        &[
+            crate::src::src::printf::PrintfArg::Str(zOut as *mut ::core::ffi::c_char),
+            crate::src::src::printf::PrintfArg::Str(&raw mut zDbVacuum as *mut ::core::ffi::c_char),
+        ],
     );
     __db_ref.openFlags = saved_openFlags as ::core::ffi::c_uint;
     if !(rc != crate::src::headers::sqlite3_h::SQLITE_OK) {
@@ -337,42 +339,46 @@ pub unsafe extern "C" fn sqlite3RunVacuum(
                                 },
                             );
                             __db_ref.init.iDb = nDb as crate::src::ext::rtree::rtree::u8_0;
-                            rc = execSqlF(
+                            rc = execSqlF_args(
                                 db,
                                 pzErrMsg,
                                 b"SELECT sql FROM \"%w\".sqlite_schema WHERE type='table'AND name<>'sqlite_sequence' AND coalesce(rootpage,1)>0\0"
                                     as *const u8 as *const ::core::ffi::c_char,
-                                zDbMain,
+                                &[crate::src::src::printf::PrintfArg::Str(zDbMain as *mut ::core::ffi::c_char)],
                             );
                             if !(rc != crate::src::headers::sqlite3_h::SQLITE_OK) {
-                                rc = execSqlF(
+                                rc = execSqlF_args(
                                     db,
                                     pzErrMsg,
                                     b"SELECT sql FROM \"%w\".sqlite_schema WHERE type='index'\0"
                                         as *const u8
                                         as *const ::core::ffi::c_char,
-                                    zDbMain,
+                                    &[crate::src::src::printf::PrintfArg::Str(zDbMain as *mut ::core::ffi::c_char)],
                                 );
                                 if !(rc != crate::src::headers::sqlite3_h::SQLITE_OK) {
                                     __db_ref.init.iDb = 0 as crate::src::ext::rtree::rtree::u8_0;
-                                    rc = execSqlF(
+                                    rc = execSqlF_args(
                                         db,
                                         pzErrMsg,
                                         b"SELECT'INSERT INTO %s.'||quote(name)||' SELECT*FROM\"%w\".'||quote(name)FROM %s.sqlite_schema WHERE type='table'AND coalesce(rootpage,1)>0\0"
                                             as *const u8 as *const ::core::ffi::c_char,
-                                        &raw mut zDbVacuum as *mut ::core::ffi::c_char,
-                                        zDbMain,
-                                        &raw mut zDbVacuum as *mut ::core::ffi::c_char,
+                                        &[
+                                            crate::src::src::printf::PrintfArg::Str(&raw mut zDbVacuum as *mut ::core::ffi::c_char),
+                                            crate::src::src::printf::PrintfArg::Str(zDbMain as *mut ::core::ffi::c_char),
+                                            crate::src::src::printf::PrintfArg::Str(&raw mut zDbVacuum as *mut ::core::ffi::c_char),
+                                        ],
                                     );
                                     __db_ref.mDbFlags &= !crate::src::headers::sqliteInt_h::DBFLAG_Vacuum as crate::src::ext::rtree::rtree::u32_0;
                                     if !(rc != crate::src::headers::sqlite3_h::SQLITE_OK) {
-                                        rc = execSqlF(
+                                        rc = execSqlF_args(
                                             db,
                                             pzErrMsg,
                                             b"INSERT INTO %s.sqlite_schema SELECT*FROM \"%w\".sqlite_schema WHERE type IN('view','trigger') OR(type='table'AND rootpage=0)\0"
                                                 as *const u8 as *const ::core::ffi::c_char,
-                                            &raw mut zDbVacuum as *mut ::core::ffi::c_char,
-                                            zDbMain,
+                                            &[
+                                                crate::src::src::printf::PrintfArg::Str(&raw mut zDbVacuum as *mut ::core::ffi::c_char),
+                                                crate::src::src::printf::PrintfArg::Str(zDbMain as *mut ::core::ffi::c_char),
+                                            ],
                                         );
                                         if !(rc != 0) {
                                             let mut meta: crate::src::ext::rtree::rtree::u32_0 = 0;

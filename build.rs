@@ -18,6 +18,7 @@ fn main() {
         .file("c_code/db_config.c")
         .file("c_code/config.c")
         .file("c_code/vtab_config.c")
+        .file("c_code/log.c")
         .compile("printf_c");
 
     // Force the linker to pull in C symbols that are only called by external
@@ -31,6 +32,7 @@ fn main() {
     println!("cargo:rustc-link-arg-cdylib=-Wl,--undefined=sqlite3_db_config");
     println!("cargo:rustc-link-arg-cdylib=-Wl,--undefined=sqlite3_config");
     println!("cargo:rustc-link-arg-cdylib=-Wl,--undefined=sqlite3_vtab_config");
+    println!("cargo:rustc-link-arg-cdylib=-Wl,--undefined=sqlite3_log");
 
     // Export C symbols from the cdylib (.so) — Rust's linker only auto-exports
     // #[no_mangle] Rust symbols, so C functions need explicit export directives.

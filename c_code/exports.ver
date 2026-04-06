@@ -9,4 +9,5 @@
         sqlite3_db_config;
         sqlite3_config;
         sqlite3_vtab_config;
+        sqlite3_log;
 };

@@ -19,8 +19,8 @@
 
 pub use crate::src::headers::stdlib::va_list;
 pub use crate::__stddef_size_t_h::size_t;
-pub use crate::src::printf_c_variadic::sqlite3_log;
-pub use crate::src::printf_c_variadic::sqlite3DebugPrintf;
+pub use crate::src::printf_c_variadic::sqlite3_log_args;
+pub use crate::src::printf_c_variadic::sqlite3DebugPrintf_args;
 
 
 pub use crate::src::src::hash::Hash;pub use crate::src::src::hash::HashElem;pub use crate::src::src::hash::_ht;pub use crate::internal::__builtin_va_list;pub use crate::internal::__va_list_tag;
@@ -1447,7 +1447,7 @@ pub unsafe fn sqlite3_snprintf_args(
 }
 
 // sqlite3MPrintf moved to printf_c_variadic.rs
-pub use crate::src::printf_c_variadic::sqlite3MPrintf;
+pub use crate::src::printf_c_variadic::sqlite3MPrintf_args;
 
 
 
@@ -1489,6 +1489,28 @@ pub unsafe extern "C" fn renderLogMsg(
     );
     let (_s, a) = extract_printf_args(zFormat, ap, false, ::core::ptr::null_mut());
     sqlite3_str_vappendf_args(&raw mut acc, zFormat, &a);
+    crate::src::src::global::sqlite3Config.xLog.expect("non-null function pointer")(
+        crate::src::src::global::sqlite3Config.pLogArg,
+        iErrCode,
+        sqlite3StrAccumFinish(&raw mut acc),
+    );
+}
+
+pub unsafe fn renderLogMsg_args(
+    iErrCode: ::core::ffi::c_int,
+    zFormat: *const ::core::ffi::c_char,
+    args: &[PrintfArg],
+) {
+    let mut acc: crate::src::headers::sqliteInt_h::StrAccum = ::core::mem::zeroed();
+    let mut zMsg: [::core::ffi::c_char; 700] = [0; 700];
+    sqlite3StrAccumInit(
+        &raw mut acc,
+        ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::sqlite3>(),
+        &raw mut zMsg as *mut ::core::ffi::c_char,
+        ::core::mem::size_of::<[::core::ffi::c_char; 700]>() as ::core::ffi::c_int,
+        0 as ::core::ffi::c_int,
+    );
+    sqlite3_str_vappendf_args(&raw mut acc, zFormat, args);
     crate::src::src::global::sqlite3Config.xLog.expect("non-null function pointer")(
         crate::src::src::global::sqlite3Config.pLogArg,
         iErrCode,
