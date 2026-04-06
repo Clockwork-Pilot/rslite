@@ -1,17 +1,22 @@
 fn main() {
+    // CARGO_MANIFEST_DIR = <root>/crates/source; c_code lives two levels up at <root>/c_code.
+    let manifest_dir = std::env::var("CARGO_MANIFEST_DIR").unwrap();
+    let root = std::path::Path::new(&manifest_dir).join("../..").canonicalize().unwrap();
+    let c_code = root.join("c_code");
+
     // Compile C code: variadic entry points (one file per function)
     cc::Build::new()
-        .file("c_code/printf_c.c")
-        .file("c_code/snprintf.c")
-        .file("c_code/mprintf.c")
-        .file("c_code/vsnprintf.c")
-        .file("c_code/vmprintf.c")
-        .file("c_code/test_control.c")
-        .file("c_code/db_config.c")
-        .file("c_code/config.c")
-        .file("c_code/vtab_config.c")
-        .file("c_code/log.c")
-        .file("c_code/fts3_errmsg.c")
+        .file(c_code.join("printf_c.c"))
+        .file(c_code.join("snprintf.c"))
+        .file(c_code.join("mprintf.c"))
+        .file(c_code.join("vsnprintf.c"))
+        .file(c_code.join("vmprintf.c"))
+        .file(c_code.join("test_control.c"))
+        .file(c_code.join("db_config.c"))
+        .file(c_code.join("config.c"))
+        .file(c_code.join("vtab_config.c"))
+        .file(c_code.join("log.c"))
+        .file(c_code.join("fts3_errmsg.c"))
         .compile("printf_c");
 
     // Force the linker to pull in C symbols that are only called by external
@@ -31,9 +36,8 @@ fn main() {
 
         // Export C symbols from the cdylib (.so) — Rust's linker only auto-exports
         // #[no_mangle] Rust symbols, so C functions need explicit export directives.
-        let manifest_dir = std::env::var("CARGO_MANIFEST_DIR").unwrap();
-        let ver_script = format!("{}/c_code/exports.ver", manifest_dir);
-        println!("cargo:rustc-cdylib-link-arg=-Wl,--version-script={}", ver_script);
+        let ver_script = c_code.join("exports.ver");
+        println!("cargo:rustc-cdylib-link-arg=-Wl,--version-script={}", ver_script.display());
     }
     #[cfg(target_os = "macos")]
     {

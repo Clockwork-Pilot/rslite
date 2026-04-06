@@ -3,8 +3,6 @@ resolver = "2"
 members = [
     "crates/source",
     "crates/sqlite-printf-macros",
-    "crates/crust-sqlite-shell",
-    "crates/crust-tclsqlite",
     "crates/y2lite/y2lite-sys",
     "crates/y2lite/y2lite",
     "crates/y2lite/y2lite-orm",
