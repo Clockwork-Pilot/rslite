@@ -3,5 +3,7 @@ target/
 sqlite-shell/
 sqlite-testfixture/
 sqlite-shell-src/
-crust-sqlite-shell/target-testfixture/release/
+c2rust/crust-sqlite-shell/target-testfixture/release/
 .claude/
+Cargo.lock
+hooks_log/
