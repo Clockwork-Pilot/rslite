@@ -129,7 +129,7 @@ unsafe fn fts3_appendf_raw(
     crate::src::src::malloc::sqlite3_free(*pz as *mut ::core::ffi::c_void);
     *pz = z;
 }
-
+#[unsafe(no_mangle)]
 pub unsafe fn sqlite3Fts3ErrMsg(
     mut pzErr: *mut *mut ::core::ffi::c_char,
     mut zFormat: *const ::core::ffi::c_char,

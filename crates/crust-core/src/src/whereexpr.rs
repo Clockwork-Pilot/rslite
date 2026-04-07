@@ -1396,14 +1396,13 @@ unsafe extern "C" fn exprAnalyze(
             markTermAsChild(pWC, idxNew2, idxTerm);
         }
     }
-    let __pLeft_ref = &*(*pExpr).pLeft;
     if ((*pExpr).op as ::core::ffi::c_int == crate::src::parse::TK_EQ || (*pExpr).op as ::core::ffi::c_int == crate::src::parse::TK_IS)
         && {
             nLeft = crate::src::src::expr::sqlite3ExprVectorSize((*pExpr).pLeft as *const crate::src::headers::sqliteInt_h::Expr);
             nLeft > 1 as ::core::ffi::c_int
         }
         && crate::src::src::expr::sqlite3ExprVectorSize((*pExpr).pRight as *const crate::src::headers::sqliteInt_h::Expr) == nLeft
-        && (__pLeft_ref.flags & crate::src::headers::sqliteInt_h::EP_xIsSelect as crate::src::ext::rtree::rtree::u32_0 == 0 as crate::src::ext::rtree::rtree::u32_0
+        && ((*(*pExpr).pLeft).flags & crate::src::headers::sqliteInt_h::EP_xIsSelect as crate::src::ext::rtree::rtree::u32_0 == 0 as crate::src::ext::rtree::rtree::u32_0
             || (*(*pExpr).pRight).flags & crate::src::headers::sqliteInt_h::EP_xIsSelect as crate::src::ext::rtree::rtree::u32_0 == 0 as crate::src::ext::rtree::rtree::u32_0)
         && __pWC_ref.op as ::core::ffi::c_int == crate::src::parse::TK_AND
     {
@@ -1434,7 +1433,7 @@ unsafe extern "C" fn exprAnalyze(
         (*pTerm).eOperator = crate::src::headers::whereInt_h::WO_ROWVAL as crate::src::fts5::u16_0;
     } else if (*pExpr).op as ::core::ffi::c_int == crate::src::parse::TK_IN
         && (*pTerm).u.x.iField == 0 as ::core::ffi::c_int
-        && __pLeft_ref.op as ::core::ffi::c_int == crate::src::parse::TK_VECTOR
+        && !(*pExpr).pLeft.is_null() && (*(*pExpr).pLeft).op as ::core::ffi::c_int == crate::src::parse::TK_VECTOR
         && (*pExpr).flags & 0x1000 as crate::src::ext::rtree::rtree::u32_0 != 0 as crate::src::ext::rtree::rtree::u32_0
         && ((*(*pExpr).x.pSelect).pPrior.is_null()
             || (*(*pExpr).x.pSelect).selFlags & crate::src::headers::sqliteInt_h::SF_Values as crate::src::ext::rtree::rtree::u32_0 != 0)

@@ -431,11 +431,10 @@ unsafe extern "C" fn autoIncBegin(
         let mut pInfo: *mut crate::src::headers::sqliteInt_h::AutoincInfo = ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::AutoincInfo>();
         let mut pSeqTab: *mut crate::src::headers::sqliteInt_h::Table =
             (*(*(*(*pParse).db).aDb.offset(iDb as isize)).pSchema).pSeqTab;
-        let __pSeqTab_ref = unsafe { &*pSeqTab };
         if pSeqTab.is_null()
-            || !(__pSeqTab_ref.tabFlags & crate::src::headers::sqliteInt_h::TF_WithoutRowid as crate::src::ext::rtree::rtree::u32_0 == 0 as crate::src::ext::rtree::rtree::u32_0)
-            || __pSeqTab_ref.eTabType as ::core::ffi::c_int == 1 as ::core::ffi::c_int
-            || __pSeqTab_ref.nCol as ::core::ffi::c_int != 2 as ::core::ffi::c_int
+            || !((*pSeqTab).tabFlags & crate::src::headers::sqliteInt_h::TF_WithoutRowid as crate::src::ext::rtree::rtree::u32_0 == 0 as crate::src::ext::rtree::rtree::u32_0)
+            || (*pSeqTab).eTabType as ::core::ffi::c_int == 1 as ::core::ffi::c_int
+            || (*pSeqTab).nCol as ::core::ffi::c_int != 2 as ::core::ffi::c_int
         {
             (*pParse).nErr += 1;
             (*pParse).rc = crate::src::headers::sqlite3_h::SQLITE_CORRUPT_SEQUENCE;

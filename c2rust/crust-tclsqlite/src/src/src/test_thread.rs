@@ -1863,7 +1863,11 @@ unsafe extern "C" fn tclScriptThread(mut pSqlThread: ClientData) {
         }
         Tcl_DeleteInterp(interp);
         while Tcl_DoOneEvent(TCL_ALL_EVENTS | TCL_DONT_WAIT) != 0 {}
-        Tcl_ExitThread(0 as ::core::ffi::c_int);
+        // Avoid calling Tcl_ExitThread (which calls pthread_exit) from Rust code:
+        // pthread_exit triggers glibc TLS destructors that interact badly with
+        // Rust's TLS cleanup, causing abort(). Returning here is equivalent for
+        // thread termination since the OS cleans up the thread on function return.
+        return;
     }
 }
 unsafe extern "C" fn sqlthread_spawn(
