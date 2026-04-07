@@ -2247,10 +2247,10 @@ pub unsafe extern "C" fn sqlite3_errcode(mut db: *mut crate::src::headers::sqlit
     if !db.is_null() && crate::src::src::util::sqlite3SafetyCheckSickOrOk(db as *mut crate::src::headers::sqliteInt_h::sqlite3) == 0 {
         return sqlite3MisuseError(2802 as ::core::ffi::c_int);
     }
-    let __db_ref = unsafe { &*db };
-    if db.is_null() || __db_ref.mallocFailed as ::core::ffi::c_int != 0 {
+    if db.is_null() || unsafe { (*db).mallocFailed } as ::core::ffi::c_int != 0 {
         return crate::src::headers::sqliteInt_h::SQLITE_NOMEM_BKPT;
     }
+    let __db_ref = unsafe { &*db };
     __db_ref.errCode & __db_ref.errMask
 }
 #[unsafe(no_mangle)]

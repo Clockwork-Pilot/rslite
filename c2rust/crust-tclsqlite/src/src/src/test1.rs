@@ -11078,8 +11078,10 @@ unsafe extern "C" fn test_prepare_v3(
             &raw mut pStmt,
             pzTail,
         );
-        zTail = zSql.offset(zTail.offset_from(zCopy) as ::core::ffi::c_long as isize)
-            as *const ::core::ffi::c_char;
+        if !pzTail.is_null() {
+            zTail = zSql.offset(zTail.offset_from(zCopy) as ::core::ffi::c_long as isize)
+                as *const ::core::ffi::c_char;
+        }
         free(zCopy as *mut ::core::ffi::c_void);
         Tcl_ResetResult(interp);
         if sqlite3TestErrCode(interp, db, rc) != 0 {

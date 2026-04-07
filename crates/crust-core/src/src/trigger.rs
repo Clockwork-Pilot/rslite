@@ -829,15 +829,14 @@ pub unsafe extern "C" fn sqlite3TriggerDeleteStep(
 #[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3DeleteTrigger(mut db: *mut crate::src::headers::sqliteInt_h::sqlite3, mut pTrigger: *mut crate::src::headers::sqliteInt_h::Trigger) {
-    let __pTrigger_ref = unsafe { &*pTrigger };
-    if pTrigger.is_null() || __pTrigger_ref.bReturning as ::core::ffi::c_int != 0 {
+    if pTrigger.is_null() || (*pTrigger).bReturning as ::core::ffi::c_int != 0 {
         return;
     }
-    sqlite3DeleteTriggerStep(db, __pTrigger_ref.step_list);
-    crate::src::src::malloc::sqlite3DbFree(db as *mut crate::src::headers::sqliteInt_h::sqlite3, __pTrigger_ref.zName as *mut ::core::ffi::c_void);
-    crate::src::src::malloc::sqlite3DbFree(db as *mut crate::src::headers::sqliteInt_h::sqlite3, __pTrigger_ref.table as *mut ::core::ffi::c_void);
-    crate::src::src::expr::sqlite3ExprDelete(db as *mut crate::src::headers::sqliteInt_h::sqlite3,  __pTrigger_ref.pWhen as *mut crate::src::headers::sqliteInt_h::Expr);
-    crate::src::src::build::sqlite3IdListDelete(db as *mut crate::src::headers::sqliteInt_h::sqlite3,  __pTrigger_ref.pColumns as *mut crate::src::headers::sqliteInt_h::IdList);
+    sqlite3DeleteTriggerStep(db, (*pTrigger).step_list);
+    crate::src::src::malloc::sqlite3DbFree(db as *mut crate::src::headers::sqliteInt_h::sqlite3, (*pTrigger).zName as *mut ::core::ffi::c_void);
+    crate::src::src::malloc::sqlite3DbFree(db as *mut crate::src::headers::sqliteInt_h::sqlite3, (*pTrigger).table as *mut ::core::ffi::c_void);
+    crate::src::src::expr::sqlite3ExprDelete(db as *mut crate::src::headers::sqliteInt_h::sqlite3,  (*pTrigger).pWhen as *mut crate::src::headers::sqliteInt_h::Expr);
+    crate::src::src::build::sqlite3IdListDelete(db as *mut crate::src::headers::sqliteInt_h::sqlite3,  (*pTrigger).pColumns as *mut crate::src::headers::sqliteInt_h::IdList);
     crate::src::src::malloc::sqlite3DbFree(db as *mut crate::src::headers::sqliteInt_h::sqlite3, pTrigger as *mut ::core::ffi::c_void);
 }
 #[unsafe(no_mangle)]

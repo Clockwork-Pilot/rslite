@@ -1,5 +1,11 @@
 /workspace/checks_results.k.json
 /workspace/checks_results.k.md
+/workspace/debug-build-task-iterations.k.json
+/workspace/debug-build-task-iterations.k.md
+/workspace/debug-build-task-spec.k.json
+/workspace/debug-build-task-spec.k.md
+/workspace/task-iterations.k.json
+/workspace/task-iterations.k.md
 /workspace/task-results.k.json
 /workspace/task-results.k.md
 /workspace/task-spec.k.json
