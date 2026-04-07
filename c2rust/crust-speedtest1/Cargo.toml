@@ -1,0 +1,15 @@
+[package]
+name = "crust-speedtest1"
+version.workspace = true
+edition.workspace = true
+authors = ["C2Rust Automated Migration"]
+build = "build.rs"
+
+[[bin]]
+name = "speedtest1"
+path = "src/main.rs"
+
+[dependencies]
+crust-core = { workspace = true }
+libc = { workspace = true }
+c2rust-bitfields = { workspace = true }

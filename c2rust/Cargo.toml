@@ -3,6 +3,7 @@ resolver = "2"
 members = [
     "crust-sqlite-shell",
     "crust-tclsqlite",
+    "crust-speedtest1",
 ]
 
 [workspace.package]
