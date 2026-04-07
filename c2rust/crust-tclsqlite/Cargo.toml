@@ -1,0 +1,23 @@
+[package]
+name = "crust-tclsqlite"
+version.workspace = true
+edition.workspace = true
+authors = ["C2Rust Automated Migration"]
+build = "build.rs"
+
+[[bin]]
+name = "rustfixture"
+path = "src/main.rs"
+
+[dependencies]
+# testfixture is compiled with -DSQLITE_ENABLE_FTS4 — require fts4 (which implies fts3)
+crust-core = { workspace = true, features = ["fts4"] }
+libc = { workspace = true }
+c2rust-bitfields = { workspace = true }
+
+[build-dependencies]
+pkg-config = "0.3"
+
+[features]
+default = []
+test = ["crust-core/test"]

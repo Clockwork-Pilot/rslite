@@ -1,22 +1,17 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-PROJ=$(pwd)
+PROJ=$(cd "$(dirname "$0")" && pwd)
 # get from env var or use default
 SRC="${SQLITE_SRC:-/sqlite}"
 
-mkdir -p "$PROJ/target"
-mkdir -p "$PROJ/sqlite-shell"
+echo "Building crust-sqlite-shell (C2Rust transpiled shell)..."
+cargo +nightly build -q --release --manifest-path "$PROJ/c2rust/Cargo.toml" -p crust-sqlite-shell
 
-CARGO_TARGET_DIR="$PROJ/sqlite-shell" cargo build -q --release
+# TODO: testrunner.tcl hardcodes /sqlite/sqlite3 as the shell path, so we copy
+# the binary there for now. Ideally testrunner.tcl should be updated to use the
+# binary directly from $PROJ/c2rust/target/release/sqlite3 and this copy removed.
+cp "$PROJ/c2rust/target/release/sqlite3" "$SRC/sqlite3"
+chmod +x "$SRC/sqlite3"
 
-mapfile -t FLAGS < <(sed 's/\r//' "$PROJ/defines_shell.txt" | grep -v '^$')
-
-cc -o "$SRC/sqlite3" \
-    "$SRC/shell.c" \
-    "${FLAGS[@]}" \
-    -DSQLITE_API= \
-    -I"$(readlink -f "$SRC")" \
-    -L"$PROJ/sqlite-shell/release" -lsqlite_noamalgam \
-    -Wl,-rpath,"$PROJ/sqlite-shell/release" \
-    -lm -lpthread -ldl -lz
+echo "shell_build.sh complete: $SRC/sqlite3"

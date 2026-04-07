@@ -1,25 +1,45 @@
 [workspace]
+resolver = "2"
 members = [
+    "crates/crust-core",
+    "crates/sqlite-printf-macros",
+    "crates/y2lite/y2lite-sys",
+    "crates/y2lite/y2lite",
+    "crates/y2lite/y2lite-orm",
 ]
-[package]
-name = "sqlite_noamalgam"
-authors = ["C2Rust"]
+default-members = [
+    "crates/crust-core",
+    "crates/sqlite-printf-macros",
+]
+exclude = [
+    "pub-interface",
+]
+
+[workspace.package]
 version = "0.0.0"
+edition = "2024"
 publish = false
-edition = "2021"
-autobins = false
 
-[lib]
-name = "sqlite_noamalgam"
-path = "lib.rs"
-crate-type = ["cdylib"]
+[profile.release]
+lto = true
+codegen-units = 1
+opt-level = 3
 
-[dependencies]
+[workspace.dependencies]
+# Internal crates
+crust-core = { path = "crates/crust-core" }
+sqlite-printf-macros = { path = "crates/sqlite-printf-macros" }
+y2lite-sys = { path = "crates/y2lite/y2lite-sys" }
+y2lite = { path = "crates/y2lite/y2lite" }
+y2lite-orm = { path = "crates/y2lite/y2lite-orm" }
+
+# External dependencies
 c2rust-bitfields = "0.22.1"
+cc = "1"
 libc = "0.2"
-parking_lot = "0.10.2"
+parking_lot = "0.12"
 snafu = "0.7"
-
-[features]
-default = []
-test = ["default"]
+strum_macros = "0.27"
+proc-macro2 = "1.0"
+quote = "1.0"
+syn = { version = "2.0", features = ["full"] }

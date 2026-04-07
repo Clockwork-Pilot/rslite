@@ -33,9 +33,10 @@ while true; do
 
     ./testfixture_build.sh
 
-    ( cd "$SQLITE_SRC" && ./rustfixture test/testrunner.tcl 2>&1 | tee /tmp/test_output.log )
+    ( cd "$SQLITE_SRC" && ./rustfixture test/testrunner.tcl --jobs "$(nproc)" 2>&1 | tee /tmp/test_output.log )
 
-    if grep -q "0 errors out of" /tmp/test_output.log; then
+    # Check that tests passed (must have exactly "0 errors out of")
+    if grep -E "^0 errors out of" /tmp/test_output.log > /dev/null 2>&1; then
         _POST_HASH=$(_calc_hash)
         if [ "$_POST_HASH" != "$_SRC_HASH" ]; then
             echo "build_all: src/ changed during build (${_SRC_HASH:0:8} → ${_POST_HASH:0:8}), restarting..."
@@ -45,7 +46,7 @@ while true; do
         echo "Tests passed"
         exit 0
     else
-        echo "FAILURE: Tests failed or regex '0 errors out of' not found."
+        echo "FAILURE: Tests failed"
         exit 1
     fi
 done
