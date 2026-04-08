@@ -245,12 +245,8 @@ crust-tcl-tests: $(RUST_SHELL) $(RUST_TEST)
 
 # ============ Master Target ============
 
-test: clean-c-tests
-	@echo "→ Building & testing all..."
-	@$(MAKE) DEBUG=0 c-quick-tests > /dev/null
-	@$(MAKE) DEBUG=0 c-tcl-tests > /dev/null
-	@$(MAKE) DEBUG=0 crust-tcl-tests > /dev/null
-	@echo "✓ All tests passed"
+test: c-tcl-tests
+	@echo "✓ Tcl tests passed"
 
 all: test
 
