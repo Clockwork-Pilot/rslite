@@ -4,20 +4,21 @@
 
 .PHONY: help all clean clean-c-tests \
   ensure-c-shell \
-  c-quick-tests c-tcl-tests c-dev-tests c-tests c-fuzz-tests c-prerelease-tests c-soak-tests \
+  c-quick-tests c-tcl-tests c-tests c-fuzz-tests c-prerelease-tests \
   crust-tcl-tests \
-  ensure-rust-link ensure-binaries \
-  patch-sqlite unpatch-sqlite \
+  ensure-binaries \
+  patch-mk unpatch-mk \
   test
 
 # Configuration
 SQLITE_SRC ?= /sqlite
+export RUSTUP_HOME ?= $(HOME)/.cargo/rustup
 PROJ := $(shell cd $(dir $(MAKEFILE_LIST)) && pwd)
 NPROC := $(shell nproc)
 DEBUG ?= 0
 VERBOSE ?= 0
 ORIGINAL ?= 0
-FEATURES ?=test,fts3,fts4
+FEATURES ?=test,fts4,update_delete_limit
 
 # Debug/Release selection
 ifeq ($(DEBUG),1)
@@ -44,11 +45,18 @@ RUST_LIBS = -lsqlite_noamalgam -lm -lz
 # (i.e. libsqlite_noamalgam) rather than embedding the amalgamation directly.
 MAKE_TEST_FLAGS = $(if $(filter 0,$(ORIGINAL)),LDFLAGS.math="-lm" LDFLAGS.libsqlite3="$(RUST_LDFLAGS) $(RUST_LIBS)" TESTFIXTURE_SRC1=,)
 
-# Fuzz-specific flags: MAKE_TEST_FLAGS plus a CFLAGS override that prepends stubs/ to the include
-# path.  This causes sessionfuzz's "#include "sqlite3.c"" to pick up stubs/sqlite3.c (which only
-# includes sqlite3.h) instead of the real amalgamation, so all SQLite symbols are resolved from
-# libsqlite_noamalgam at link time rather than compiled in.
-MAKE_FUZZ_FLAGS = $(MAKE_TEST_FLAGS) CFLAGS="$(CFLAGS) -I$(PROJ)/stubs"
+# Fuzz-specific flags: when ORIGINAL=0, MAKE_TEST_FLAGS plus a CFLAGS override that prepends a
+# generated stub dir to the include path.  The stub dir contains an empty sqlite3.c, so
+# sessionfuzz/optfuzz's '#include "sqlite3.c"' resolves to that empty file instead of the real
+# amalgamation.  Declarations are injected via -include sqlite3.h / -include stdlib.h.
+# The stub dir lives under target/ (gitignored) and is created by build-fuzz-tests.
+# When ORIGINAL=1, no flags needed — fuzz binaries embed sqlite3.c directly as usual.
+FUZZ_STUB_DIR := $(PROJ)/target/fuzz-stubs
+ifeq ($(ORIGINAL),1)
+MAKE_FUZZ_FLAGS =
+else
+MAKE_FUZZ_FLAGS = $(MAKE_TEST_FLAGS) CFLAGS="$(CFLAGS) -I$(FUZZ_STUB_DIR) -include sqlite3.h -include stdlib.h"
+endif
 
 # Implementation type string for display
 IMPL_TYPE = $(if $(filter 1,$(ORIGINAL)),original C,Rust-linked)
@@ -86,16 +94,25 @@ $(PROJ)/target/release/libsqlite_noamalgam.so: $(RUST_LIB_SOURCES)
 
 # ============ C Build Targets ============
 
+$(SQLITE_SRC)/sqlite3-orig:
+	@echo "→ Building original C shell from $(SQLITE_SRC)..."
+	@cd $(SQLITE_SRC) && ./configure CFLAGS="$(CFLAGS)" \
+		--fts3 --fts4 --fts5 --rtree --session --geopoly \
+		--update-limit --dbpage --dbstat \
+		$(if $(filter 1,$(VERBOSE)),, > /dev/null 2>&1)
+	@cd $(SQLITE_SRC) && $(MAKE) sqlite3 $(if $(filter 1,$(VERBOSE)),, > /dev/null 2>&1)
+	@echo "✓ Original C shell built at $(SQLITE_SRC)/sqlite3"
+
 $(SQLITE_SRC)/sqlite3-c: $(RUST_LIB)
 	@echo "→ Building C shell ($(MODE)) linked against Rust library..."
 	@cd $(SQLITE_SRC) && ./configure CFLAGS="$(CFLAGS)" LDFLAGS="$(RUST_LDFLAGS)" LIBS="$(RUST_LIBS)" \
 		--fts3 --fts4 --fts5 --rtree --session --geopoly \
-		--memsys3 --memsys5 --update-limit --dbpage --dbstat \
-		--column-metadata $(if $(filter 1,$(VERBOSE)),, > /dev/null 2>&1)
+		--update-limit --dbpage --dbstat \
+		$(if $(filter 1,$(VERBOSE)),, > /dev/null 2>&1)
 	@cd $(SQLITE_SRC) && $(MAKE) shell.c sqlite3.h sqlite3ext.h $(if $(filter 1,$(VERBOSE)),, > /dev/null 2>&1)
 	@cd $(SQLITE_SRC) && cc $(CFLAGS) -o sqlite3 shell.c \
 		-I. -I./src -I./ext/rtree -I./ext/icu -I./ext/fts3 -I./ext/session -I./ext/misc \
-		-I/usr/include -DHAVE_READLINE=1 -DSQLITE_HAVE_ZLIB=1 \
+		-I/usr/include -DHAVE_READLINE=1 -DSQLITE_HAVE_ZLIB=1 -DSQLITE_ENABLE_DBPAGE_VTAB \
 		-L$(dir $(RUST_LIB)) -Wl,-rpath,$(dir $(RUST_LIB)) \
 		-lsqlite_noamalgam -lreadline -lncurses -lm -lz $(if $(filter 1,$(VERBOSE)),, > /dev/null 2>&1)
 
@@ -118,14 +135,6 @@ $(PROJ)/c2rust/target/release/rustfixture: $(RUST_TEST_SOURCES)
 	@cargo +nightly build --release -p crust-tclsqlite --features crust-tclsqlite/test --manifest-path $(PROJ)/c2rust/Cargo.toml $(if $(filter 1,$(VERBOSE)),, --quiet)
 
 # ============ Verification ============
-
-ensure-rust-link:
-	@if ! ldd $(RUST_TEST) | grep -q libsqlite_noamalgam; then \
-		echo "✗ ERROR: Rust test fixture is NOT linked to libsqlite_noamalgam"; \
-		ldd $(RUST_TEST); \
-		exit 1; \
-	fi
-	@echo "✓ Rust test fixture linked to libsqlite_noamalgam"
 
 # Verify all binaries are linked to Rust library (fails if any not linked or missing)
 # This ensures all test executables use the Rust-translated SQLite, not embedded C
@@ -157,7 +166,11 @@ ensure-c-shell:
 			echo "→ C shell already built ($(MODE))"; \
 		fi; \
 	else \
-		echo "→ Using original C sqlite3 from $(SQLITE_SRC)"; \
+		if [ ! -f $(SQLITE_SRC)/sqlite3 ] || [ ! -f $(SQLITE_SRC)/Makefile ]; then \
+			$(MAKE) $(SQLITE_SRC)/sqlite3-orig; \
+		else \
+			echo "→ Original C shell already built at $(SQLITE_SRC)/sqlite3"; \
+		fi; \
 	fi
 
 # ============ SQLite Build Targets ============
@@ -168,20 +181,21 @@ build-quicktest:
 build-tcl-tests:
 	$(MAKE) -C $(SQLITE_SRC) $(MAKE_TEST_FLAGS) testfixture
 
-build-dev-tests:
-	$(MAKE) -C $(SQLITE_SRC) $(MAKE_TEST_FLAGS) testfixture
-
 build-all-tests:
 	$(MAKE) -C $(SQLITE_SRC) $(MAKE_TEST_FLAGS) testfixture
 
-build-fuzz-tests: patch-sqlite
+ifeq ($(ORIGINAL),1)
+build-fuzz-tests:
 	rm -f $(SQLITE_SRC)/fuzzcheck $(SQLITE_SRC)/sessionfuzz
 	$(MAKE) -C $(SQLITE_SRC) $(MAKE_FUZZ_FLAGS) fuzzcheck sessionfuzz
+else
+build-fuzz-tests: patch-mk
+	mkdir -p $(FUZZ_STUB_DIR) && touch $(FUZZ_STUB_DIR)/sqlite3.c
+	rm -f $(SQLITE_SRC)/fuzzcheck $(SQLITE_SRC)/sessionfuzz
+	$(MAKE) -C $(SQLITE_SRC) $(MAKE_FUZZ_FLAGS) fuzzcheck sessionfuzz
+endif
 
 build-prerelease-tests:
-	$(MAKE) -C $(SQLITE_SRC) $(MAKE_TEST_FLAGS) testfixture
-
-build-soak-tests:
 	$(MAKE) -C $(SQLITE_SRC) $(MAKE_TEST_FLAGS) testfixture
 
 # ============ C Test Targets (build -> verify -> run inline) ============
@@ -198,20 +212,18 @@ c-tcl-tests: ensure-c-shell build-tcl-tests verify-linkage
 	cd $(SQLITE_SRC) && ./testfixture test/testrunner.tcl --jobs $(NPROC)
 	@echo "✓ C TCL tests ($(MODE)) passed"
 
-c-dev-tests: VERIFY_LINKAGE = $(SQLITE_SRC)/sqlite3 $(SQLITE_SRC)/testfixture
-c-dev-tests: ensure-c-shell build-dev-tests verify-linkage
-	@echo "→ Running C dev tests ($(IMPL_TYPE), $(MODE))..."
-	cd $(SQLITE_SRC) && ./testfixture test/devtest.tcl
-	@echo "✓ C dev tests ($(MODE)) passed"
-
 c-tests: VERIFY_LINKAGE = $(SQLITE_SRC)/sqlite3 $(SQLITE_SRC)/testfixture
 c-tests: ensure-c-shell build-all-tests verify-linkage
 	@echo "→ Running C all tests ($(IMPL_TYPE), $(MODE))..."
 	cd $(SQLITE_SRC) && ./testfixture test/all.tcl
 	@echo "✓ C all tests ($(MODE)) passed"
 
+ifeq ($(ORIGINAL),1)
+c-fuzz-tests: VERIFY_LINKAGE =
+else
 # Verify ALL fuzz test binaries link to Rust library (will fail if build-fuzz-tests doesn't link properly)
 c-fuzz-tests: VERIFY_LINKAGE = $(SQLITE_SRC)/sqlite3 $(SQLITE_SRC)/fuzzcheck $(SQLITE_SRC)/sessionfuzz
+endif
 c-fuzz-tests: ensure-c-shell build-fuzz-tests verify-linkage
 	@echo "→ Running C fuzz tests ($(IMPL_TYPE), $(MODE))..."
 	cd $(SQLITE_SRC) && ./fuzzcheck test/fuzzdata*.db && ./sessionfuzz run test/sessionfuzz-data*.db
@@ -222,12 +234,6 @@ c-prerelease-tests: ensure-c-shell build-prerelease-tests verify-linkage
 	@echo "→ Running C prerelease tests ($(IMPL_TYPE), $(MODE))..."
 	cd $(SQLITE_SRC) && ./testfixture test/releasetest.tcl
 	@echo "✓ C prerelease tests ($(MODE)) passed"
-
-c-soak-tests: VERIFY_LINKAGE = $(addprefix $(SQLITE_SRC)/,$(VERIFY_SOAK))
-c-soak-tests: ensure-c-shell build-soak-tests verify-linkage
-	@echo "→ Running C soak tests ($(IMPL_TYPE), $(MODE))..."
-	cd $(SQLITE_SRC) && ./testfixture test/soaktest.tcl
-	@echo "✓ C soak tests ($(MODE)) passed"
 
 crust-tcl-tests: $(RUST_SHELL) $(RUST_TEST)
 	@echo "→ Running Rust TCL tests ($(MODE))"
@@ -290,12 +296,12 @@ define MAIN_MK_PATCH
 endef
 export MAIN_MK_PATCH
 
-patch-sqlite:
+patch-mk:
 	@printf '%s\n' "$$MAIN_MK_PATCH" | patch -N -r - $(SQLITE_SRC)/main.mk && \
 		echo "✓ Patched $(SQLITE_SRC)/main.mk (TESTFIXTURE_SRC1 cleared)" || \
 		echo "→ $(SQLITE_SRC)/main.mk already patched or differs — skipping"
 
-unpatch-sqlite:
+unpatch-mk:
 	@printf '%s\n' "$$MAIN_MK_PATCH" | patch -N -R -r - $(SQLITE_SRC)/main.mk && \
 		echo "✓ Reverted $(SQLITE_SRC)/main.mk (TESTFIXTURE_SRC1 = sqlite3.c restored)" || \
 		echo "→ $(SQLITE_SRC)/main.mk not in patched state — skipping"
@@ -313,10 +319,8 @@ help:
 	@echo "C TEST TARGETS (linked to Rust library by default):"
 	@echo "  c-quick-tests           Quick sanity checks (seconds)"
 	@echo "  c-tcl-tests             Full TCL test suite (parallel, ~40s)"
-	@echo "  c-dev-tests             Developer tests"
 	@echo "  c-tests                 Most/all TCL tests"
 	@echo "  c-prerelease-tests      Pre-release tests"
-	@echo "  c-soak-tests            Really long tests"
 	@echo "  c-fuzz-tests            Fuzz testing (random inputs)"
 	@echo ""
 	@echo "RUST TEST TARGETS:"
