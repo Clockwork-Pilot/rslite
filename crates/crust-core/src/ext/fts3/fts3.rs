@@ -165,11 +165,11 @@ pub unsafe extern "C" fn sqlite3Fts3PutVarint(
 #[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3Fts3GetVarintU(
-    mut pBuf: *const ::core::ffi::c_char,
-    mut v: *mut crate::src::headers::sqlite3_h::sqlite_uint64,
+    pBuf: *const ::core::ffi::c_char,
+    v: *mut crate::src::headers::sqlite3_h::sqlite_uint64,
 ) -> ::core::ffi::c_int {
     let mut p: *const ::core::ffi::c_uchar = pBuf as *const ::core::ffi::c_uchar;
-    let mut pStart: *const ::core::ffi::c_uchar = p;
+    let pStart: *const ::core::ffi::c_uchar = p;
     let mut a: crate::src::ext::rtree::rtree::u32_0 = 0;
     let mut b: crate::src::ext::rtree::rtree::u64_0 = 0;
     let mut shift: ::core::ffi::c_int = 0;
