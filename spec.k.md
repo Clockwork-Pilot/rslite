@@ -18,9 +18,8 @@ Verify c_variadic feature isolation: only in printf_c_variadic.rs
       - [rustfixture_symbols](#rustfixture_symbols)
       - [shell_symbols](#shell_symbols)
     - [Feature: toolchain_version](#feature-toolchain_version)
-      - [shell_nightly](#shell_nightly)
+      - [c2rust_nightly](#c2rust_nightly)
       - [stable_toolchain](#stable_toolchain)
-      - [tclsqlite_nightly](#tclsqlite_nightly)
 
 ## Features
 
@@ -67,11 +66,8 @@ Verify c_variadic feature isolation: only in printf_c_variadic.rs
 - rust-toolchain.toml must use stable channel
 - c2rust rust-toolchain.toml must specify channel nightly
 
-#### shell_nightly
-**Description:** crust-sqlite-shell must use nightly toolchain (needs c_variadic, extern_types)
+#### c2rust_nightly
+**Description:** c2rust must use nightly toolchain (needs c_variadic, extern_types)
 
 #### stable_toolchain
 **Description:** rust-toolchain.toml must use stable channel (c_variadic removed from lib crate)
-
-#### tclsqlite_nightly
-**Description:** crust-tclsqlite must use nightly toolchain (needs c_variadic, extern_types)

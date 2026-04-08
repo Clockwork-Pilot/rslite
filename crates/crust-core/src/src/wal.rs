@@ -2903,7 +2903,7 @@ pub unsafe extern "C" fn sqlite3WalCheckpoint(
     if (*pWal).readOnly != 0 {
         return crate::src::headers::sqlite3_h::SQLITE_READONLY;
     }
-    xBusy2.is_some();
+    let _ = xBusy2.is_some();
     if eMode != crate::src::headers::sqlite3_h::SQLITE_CHECKPOINT_NOOP {
         rc = walLockExclusive(pWal, WAL_CKPT_LOCK, 1 as ::core::ffi::c_int);
         if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
@@ -2930,7 +2930,7 @@ pub unsafe extern "C" fn sqlite3WalCheckpoint(
     }
     if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
         rc = walIndexReadHdr(pWal, &raw mut isChanged);
-        eMode2 > crate::src::headers::sqlite3_h::SQLITE_CHECKPOINT_PASSIVE;
+        let _ = eMode2 > crate::src::headers::sqlite3_h::SQLITE_CHECKPOINT_PASSIVE;
         if isChanged != 0 && (*(*(*pWal).pDbFd).pMethods).iVersion >= 3 as ::core::ffi::c_int {
             crate::src::src::os::sqlite3OsUnfetch(
                 

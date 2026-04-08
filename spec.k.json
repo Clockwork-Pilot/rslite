@@ -36,16 +36,10 @@
           "description": "rust-toolchain.toml must use stable channel (c_variadic removed from lib crate)",
           "fails_count": 1
         },
-        "shell_nightly": {
-          "id": "shell_nightly",
-          "cmd": "grep -q \"^channel.*=.*\\\"nightly\" \"$PROJECT_ROOT/c2rust/crust-sqlite-shell/rust-toolchain.toml\" && exit 0 || exit 1",
-          "description": "crust-sqlite-shell must use nightly toolchain (needs c_variadic, extern_types)",
-          "fails_count": 1
-        },
-        "tclsqlite_nightly": {
-          "id": "tclsqlite_nightly",
-          "cmd": "grep -q \"^channel.*=.*\\\"nightly\" \"$PROJECT_ROOT/c2rust/crust-tclsqlite/rust-toolchain.toml\" && exit 0 || exit 1",
-          "description": "crust-tclsqlite must use nightly toolchain (needs c_variadic, extern_types)",
+        "c2rust_nightly": {
+          "id": "c2rust_nightly",
+          "cmd": "grep -q \"^channel.*=.*\\\"nightly\" \"$PROJECT_ROOT/c2rust/rust-toolchain.toml\" && exit 0 || exit 1",
+          "description": "c2rust must use nightly toolchain (needs c_variadic, extern_types)",
           "fails_count": 1
         }
       }

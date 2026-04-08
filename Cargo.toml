@@ -25,6 +25,9 @@ lto = true
 codegen-units = 1
 opt-level = 3
 
+[profile.dev]
+codegen-units = 1
+
 [workspace.dependencies]
 # Internal crates
 crust-core = { path = "crates/crust-core" }
