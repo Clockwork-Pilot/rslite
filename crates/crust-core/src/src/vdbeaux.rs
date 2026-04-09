@@ -2639,9 +2639,7 @@ pub unsafe extern "C" fn sqlite3VdbeDelete(mut p: *mut crate::src::headers::vdbe
 pub unsafe extern "C" fn sqlite3VdbeFinishMoveto(mut p: *mut crate::src::headers::vdbeInt_h::VdbeCursor) -> ::core::ffi::c_int {
     let mut res: ::core::ffi::c_int = 0;
     let mut rc: ::core::ffi::c_int = 0;
-    unsafe extern "C" {
-        pub static mut sqlite3_search_count: ::core::ffi::c_int;
-    }
+    use crate::src::src::vdbe::sqlite3_search_count;
     let __p_ref = unsafe { &mut *p };
     rc = crate::src::src::btree::sqlite3BtreeTableMoveto(
         __p_ref.uc.pCursor,

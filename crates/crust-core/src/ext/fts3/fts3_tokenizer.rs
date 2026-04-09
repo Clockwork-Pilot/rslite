@@ -125,10 +125,7 @@ pub use crate::src::headers::stdlib::Tcl_Size;
 pub use crate::src::headers::stdlib::Tcl_UpdateStringProc;
 #[cfg(feature = "test")]
 pub use crate::src::headers::stdlib::Tcl_WideInt;
-unsafe extern "C" {
-    
-    pub fn sqlite3Fts3SimpleTokenizerModule(ppModule: *mut *const crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_module);
-}
+pub use crate::src::ext::fts3::fts3_tokenizer1::sqlite3Fts3SimpleTokenizerModule;
 
 unsafe extern "C" fn fts3TokenizerEnabled(mut context: *mut crate::src::headers::vdbeInt_h::sqlite3_context) -> ::core::ffi::c_int {
     let mut db: *mut crate::src::headers::sqliteInt_h::sqlite3 = crate::src::src::vdbeapi::sqlite3_context_db_handle(context);

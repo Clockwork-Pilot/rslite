@@ -84,10 +84,7 @@ pub use crate::src::headers::stdlib::int16_t;
 
 
 pub use crate::src::headers::stdlib::uint16_t;pub use crate::src::headers::stdlib::uint32_t;pub use crate::src::headers::stdlib::uint8_t;pub use crate::src::headers::stdlib::__int16_t;pub use crate::src::headers::stdlib::__uint16_t;pub use crate::src::headers::stdlib::__uint32_t;pub use crate::src::headers::stdlib::__uint8_t;pub use crate::src::src::vdbe::p4union;pub use crate::src::src::vdbe::Mem;pub use crate::src::src::vdbe::SubProgram;pub use crate::src::src::vdbe::SubrtnSig;pub use crate::src::headers::vdbeInt_h::Vdbe;pub use crate::src::src::vdbe::VdbeOp;
-unsafe extern "C" {
-    
-    pub static mut sqlite3_io_error_pending: ::core::ffi::c_int;
-}
+pub use crate::src::src::os::sqlite3_io_error_pending;
 #[derive(Copy, Clone)]
 #[repr(C)]
 
