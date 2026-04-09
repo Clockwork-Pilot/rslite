@@ -234,7 +234,7 @@ build-prerelease-tests:
 # ============ C Test Targets (build -> verify -> run inline) ============
 
 c-quick-tests: VERIFY_LINKAGE = $(SQLITE_SRC)/sqlite3 $(SQLITE_SRC)/testfixture
-c-quick-tests: ensure-c-shell build-quicktest verify-c-linkage
+c-quick-tests: $(RUST_LIB) ensure-c-shell build-quicktest verify-c-linkage
 	@echo "→ Running C quick tests ($(IMPL_TYPE), $(MODE))..."
 	@echo "  Shell: $(SQLITE_SRC)/sqlite3"
 	@echo "  Test Fixture: $(SQLITE_SRC)/testfixture"
@@ -242,7 +242,7 @@ c-quick-tests: ensure-c-shell build-quicktest verify-c-linkage
 	@echo "✓ C quick tests ($(MODE)) passed"
 
 c-tcl-tests: VERIFY_LINKAGE = $(SQLITE_SRC)/sqlite3 $(SQLITE_SRC)/testfixture
-c-tcl-tests: ensure-c-shell build-tcl-tests verify-c-linkage
+c-tcl-tests: $(RUST_LIB) ensure-c-shell build-tcl-tests verify-c-linkage
 	@echo "→ Running C TCL tests ($(IMPL_TYPE), $(MODE))..."
 	@echo "  Shell: $(SQLITE_SRC)/sqlite3"
 	@echo "  Test Fixture: $(SQLITE_SRC)/testfixture"
@@ -250,7 +250,7 @@ c-tcl-tests: ensure-c-shell build-tcl-tests verify-c-linkage
 	@echo "✓ C TCL tests ($(MODE)) passed"
 
 c-tests: VERIFY_LINKAGE = $(SQLITE_SRC)/sqlite3 $(SQLITE_SRC)/testfixture
-c-tests: ensure-c-shell build-all-tests verify-c-linkage
+c-tests: $(RUST_LIB) ensure-c-shell build-all-tests verify-c-linkage
 	@echo "→ Running C all tests ($(IMPL_TYPE), $(MODE))..."
 	@echo "  Shell: $(SQLITE_SRC)/sqlite3"
 	@echo "  Test Fixture: $(SQLITE_SRC)/testfixture"
@@ -263,7 +263,7 @@ else
 # Verify ALL fuzz test binaries link to Rust library (will fail if build-fuzz-tests doesn't link properly)
 c-fuzz-tests: VERIFY_LINKAGE = $(SQLITE_SRC)/sqlite3 $(SQLITE_SRC)/fuzzcheck $(SQLITE_SRC)/sessionfuzz
 endif
-c-fuzz-tests: ensure-c-shell build-fuzz-tests verify-c-linkage
+c-fuzz-tests: $(RUST_LIB) ensure-c-shell build-fuzz-tests verify-c-linkage
 	@echo "→ Running C fuzz tests ($(IMPL_TYPE), $(MODE))..."
 	@echo "  Shell: $(SQLITE_SRC)/sqlite3"
 	@echo "  Fuzz Binaries: $(SQLITE_SRC)/fuzzcheck $(SQLITE_SRC)/sessionfuzz"
@@ -271,7 +271,7 @@ c-fuzz-tests: ensure-c-shell build-fuzz-tests verify-c-linkage
 	@echo "✓ C fuzz tests ($(MODE)) passed"
 
 c-prerelease-tests: VERIFY_LINKAGE = $(addprefix $(SQLITE_SRC)/,$(VERIFY_PRERELEASE))
-c-prerelease-tests: ensure-c-shell build-prerelease-tests verify-c-linkage
+c-prerelease-tests: $(RUST_LIB) ensure-c-shell build-prerelease-tests verify-c-linkage
 	@echo "→ Running C prerelease tests ($(IMPL_TYPE), $(MODE))..."
 	@echo "  Shell: $(SQLITE_SRC)/sqlite3"
 	@echo "  Test Fixture: $(SQLITE_SRC)/testfixture"
