@@ -69,15 +69,24 @@ pub use crate::src::src::mutex::sqlite3_mutex_leave;
 pub use crate::src::src::mutex::sqlite3MutexAlloc;
 pub use crate::src::src::mutex_unix::sqlite3_mutex;
 pub use crate::src::src::os_unix::sqlite3_os_init;
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 pub static mut sqlite3_io_error_hit: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 pub static mut sqlite3_io_error_hardhit: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 pub static mut sqlite3_io_error_pending: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 pub static mut sqlite3_io_error_persist: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
 pub static mut sqlite3_io_error_benign: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 pub static mut sqlite3_diskfull_pending: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 pub static mut sqlite3_diskfull: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 pub static mut sqlite3_open_file_count: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 pub static mut sqlite3_memdebug_vfs_oom_test: ::core::ffi::c_int = 1 as ::core::ffi::c_int;
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 pub unsafe extern "C" fn sqlite3OsClose(
     mut pId: *mut crate::src::headers::sqlite3_h::sqlite3_file,
 ) {

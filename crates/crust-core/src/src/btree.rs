@@ -407,6 +407,7 @@ pub const BTALLOC_LE: ::core::ffi::c_int = 2 as ::core::ffi::c_int;
 pub static mut sqlite3SharedCacheList: *mut crate::src::headers::btreeInt_h::BtShared =
     ::core::ptr::null::<crate::src::headers::btreeInt_h::BtShared>()
         as *mut crate::src::headers::btreeInt_h::BtShared;
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 pub unsafe extern "C" fn sqlite3_enable_shared_cache(
     mut enable: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {

@@ -321,6 +321,7 @@ pub static mut sqlite3aEQb: *const ::core::ffi::c_uchar =
     ::core::ptr::null::<::core::ffi::c_uchar>();
 pub static mut sqlite3aGTb: *const ::core::ffi::c_uchar =
     ::core::ptr::null::<::core::ffi::c_uchar>();
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 pub static mut sqlite3CtypeMap: [::core::ffi::c_uchar; 256] = [
     0 as ::core::ffi::c_int as ::core::ffi::c_uchar,
     0 as ::core::ffi::c_int as ::core::ffi::c_uchar,
@@ -681,6 +682,7 @@ pub static mut sqlite3BuiltinFunctions: crate::src::headers::sqliteInt_h::FuncDe
         a: [::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>()
             as *mut crate::src::headers::sqliteInt_h::FuncDef; 23],
     };
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 pub static mut sqlite3PendingByte: ::core::ffi::c_int = 0x40000000 as ::core::ffi::c_int;
 pub static mut sqlite3TreeTrace: crate::src::ext::rtree::rtree::u32_0 =
     0 as crate::src::ext::rtree::rtree::u32_0;

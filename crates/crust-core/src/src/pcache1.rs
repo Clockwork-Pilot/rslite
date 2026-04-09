@@ -949,6 +949,7 @@ pub unsafe extern "C" fn sqlite3HeaderSizePcache1() -> ::core::ffi::c_int {
 pub unsafe extern "C" fn sqlite3Pcache1Mutex() -> *mut crate::src::src::mutex_unix::sqlite3_mutex {
     pcache1_g.mutex
 }
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 pub unsafe extern "C" fn sqlite3PcacheStats(
     mut pnCurrent: *mut ::core::ffi::c_int,
     mut pnMax: *mut ::core::ffi::c_int,

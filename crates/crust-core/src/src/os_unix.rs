@@ -2686,6 +2686,7 @@ unsafe extern "C" fn unixWrite(
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub static mut sqlite3_sync_count: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 pub static mut sqlite3_fullsync_count: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
 
 unsafe extern "C" fn full_fsync(

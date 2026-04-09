@@ -541,8 +541,10 @@ pub const SQLITE_DEBUG_OS_TRACE: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub static mut sqlite3OSTrace: ::core::ffi::c_int = SQLITE_DEBUG_OS_TRACE;
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 pub static mut sqlite3_temp_directory: *mut ::core::ffi::c_char =
     ::core::ptr::null::<::core::ffi::c_char>() as *mut ::core::ffi::c_char;
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 pub static mut sqlite3_data_directory: *mut ::core::ffi::c_char =
     ::core::ptr::null::<::core::ffi::c_char>() as *mut ::core::ffi::c_char;
 #[unsafe(no_mangle)]

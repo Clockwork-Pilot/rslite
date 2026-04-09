@@ -334,10 +334,7 @@ pub use crate::src::src::vdbe::SubProgram;
 pub use crate::src::src::vdbe::SubrtnSig;
 pub use crate::src::src::vdbe::VdbeOp;
 pub use crate::src::src::vdbe::p4union;
-unsafe extern "C" {
-
-    pub static mut sqlite3_io_error_pending: ::core::ffi::c_int;
-}
+pub use crate::src::src::os::sqlite3_io_error_pending;
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct Pager {
@@ -460,7 +457,9 @@ pub const PAGER_STAT_SPILL: ::core::ffi::c_int = 3 as ::core::ffi::c_int;
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub static mut sqlite3_pager_readdb_count: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 pub static mut sqlite3_pager_writedb_count: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 pub static mut sqlite3_pager_writej_count: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
 
 static mut aJournalMagic: [::core::ffi::c_uchar; 8] = [
@@ -4813,6 +4812,7 @@ pub unsafe extern "C" fn sqlite3PagerPageRefcount(
         pPage as *mut crate::src::src::pcache::PgHdr as *mut crate::src::src::pcache::PgHdr,
     ) as ::core::ffi::c_int
 }
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 pub unsafe extern "C" fn sqlite3PagerStats(mut pPager: *mut Pager) -> *mut ::core::ffi::c_int {
     static mut a: [::core::ffi::c_int; 11] = [0; 11];
     let __pPager_ref = unsafe { &*pPager };
@@ -5027,6 +5027,7 @@ pub unsafe extern "C" fn sqlite3PagerVfs(
 ) -> *mut crate::src::headers::sqlite3_h::sqlite3_vfs {
     (*pPager).pVfs
 }
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 pub unsafe extern "C" fn sqlite3PagerFile(
     mut pPager: *mut Pager,
 ) -> *mut crate::src::headers::sqlite3_h::sqlite3_file {

@@ -176,6 +176,7 @@ pub const BITVEC_MXHASH: usize = BITVEC_NINT.wrapping_div(2 as usize);
 pub const BITVEC_NPTR: crate::src::ext::rtree::rtree::u32_0 = BITVEC_USIZE
     .wrapping_div(::core::mem::size_of::<*mut Bitvec>() as usize)
     as crate::src::ext::rtree::rtree::u32_0;
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 pub unsafe extern "C" fn sqlite3BitvecCreate(
     mut iSize: crate::src::ext::rtree::rtree::u32_0,
 ) -> *mut Bitvec {
@@ -239,6 +240,7 @@ pub unsafe extern "C" fn sqlite3BitvecTest(
 ) -> ::core::ffi::c_int {
     (!p.is_null() && sqlite3BitvecTestNotNull(p, i) != 0) as ::core::ffi::c_int
 }
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 pub unsafe extern "C" fn sqlite3BitvecSet(
     mut p: *mut Bitvec,
     mut i: crate::src::ext::rtree::rtree::u32_0,

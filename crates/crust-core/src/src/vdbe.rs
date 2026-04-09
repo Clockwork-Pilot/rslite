@@ -806,9 +806,13 @@ pub use crate::src::src::vtab::sqlite3VtabCallDestroy;
 pub use crate::src::src::vtab::sqlite3VtabLock;
 pub use crate::src::src::vtab::sqlite3VtabSavepoint;
 pub use crate::src::src::vtab::sqlite3VtabUnlock;
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 pub static mut sqlite3_search_count: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 pub static mut sqlite3_interrupt_count: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 pub static mut sqlite3_sort_count: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 pub static mut sqlite3_max_blobsize: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
 
 unsafe extern "C" fn updateMaxBlobsize(mut p: *mut crate::src::src::vdbe::Mem) {
