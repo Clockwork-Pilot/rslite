@@ -10,7 +10,7 @@ rslite = []
 
 [dependencies]
 rslite-raw = { workspace = true }
+bitflags = "2"
 
-[[example]]
-name = "demo"
-path = "examples/demo.rs"
+[dev-dependencies]
+tempfile = "3"

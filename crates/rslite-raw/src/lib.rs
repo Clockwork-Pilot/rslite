@@ -207,6 +207,12 @@ pub use core::src::headers::sqlite3_h::{
     SQLITE_FCNTL_RESERVE_BYTES,
     SQLITE_FCNTL_RESET_CACHE,
     SQLITE_FCNTL_VFS_POINTER,
+    // Column/value types
+    SQLITE_INTEGER,
+    SQLITE_FLOAT,
+    SQLITE_TEXT,
+    SQLITE_BLOB,
+    SQLITE_NULL,
     // Misc
     SQLITE_VERSION,
     SQLITE_VERSION_NUMBER,
