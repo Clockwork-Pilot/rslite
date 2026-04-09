@@ -32,12 +32,19 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GHCR_TOKEN }}
 
+      - name: Get image digest
+        id: image-digest
+        run: |
+          digest=$(docker manifest inspect ghcr.io/clockwork-pilot/rslite-ws:latest \
+            | python3 -c "import sys,json; m=json.load(sys.stdin); print(m.get('config',{}).get('digest','') or m['manifests'][0]['digest'])")
+          echo "digest=$digest" >> $GITHUB_OUTPUT
+
       - name: Cache Docker image
         id: cache-image
         uses: actions/cache@v4
         with:
           path: /tmp/rslite-ws.tar
-          key: docker-rslite-ws-${{ hashFiles('.github/workflows/check-constraints.yml') }}
+          key: docker-rslite-ws-${{ steps.image-digest.outputs.digest }}
 
       - name: Load cached image
         if: steps.cache-image.outputs.cache-hit == 'true'
@@ -67,7 +74,9 @@ jobs:
             -e DISABLE_STOP_HOOK=1 \
             --user root \
             ghcr.io/clockwork-pilot/rslite-ws:latest \
-            bash -c '~/create-venv-docker.sh && python /plugin/constraints_tool/constraints_tool/check_spec_constraints.py'
+            bash -c "source /docker-scripts/work-on-sqlite/user-entrypoint.sh; \
+              ~/create-venv-docker.sh && \
+              python /plugin/constraints_tool/constraints_tool/check_spec_constraints.py"
 
       - name: Show full results on failure
         if: failure() && steps.constraints.outcome == 'failure'
