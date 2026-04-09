@@ -1,6 +1,6 @@
 # RSLITE is a port of Sqlite3 on rust.
 
-Our goal is seamless integration of SQLite into Rust applications, keeping it as close to the original SQLite as possible and ensuring it passes our tests.
+Our goal is seamless integration of SQLite into Rust applications, keeping it as close to the original SQLite architecture as possible and ensuring it passes existing sqlite tests.
 
 We’re iteratively porting SQLite to Rust by first generating an unsafe Rust equivalent. Then we link the existing SQLite tests and make changes in small steps, verifying the tests at each iteration. This way, each modification is checked and validated through a continuous development loop.
 
