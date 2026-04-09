@@ -1,7 +1,10 @@
 fn main() {
     // CARGO_MANIFEST_DIR = <root>/crates/source; c_code lives two levels up at <root>/c_code.
     let manifest_dir = std::env::var("CARGO_MANIFEST_DIR").unwrap();
-    let root = std::path::Path::new(&manifest_dir).join("../..").canonicalize().unwrap();
+    let root = std::path::Path::new(&manifest_dir)
+        .join("../..")
+        .canonicalize()
+        .unwrap();
     let c_code = root.join("c_code");
 
     // Compile C code: variadic entry points (one file per function)
@@ -37,15 +40,24 @@ fn main() {
         // Export C symbols from the cdylib (.so) — Rust's linker only auto-exports
         // #[no_mangle] Rust symbols, so C functions need explicit export directives.
         let ver_script = c_code.join("exports.ver");
-        println!("cargo:rustc-cdylib-link-arg=-Wl,--version-script={}", ver_script.display());
+        println!(
+            "cargo:rustc-cdylib-link-arg=-Wl,--version-script={}",
+            ver_script.display()
+        );
     }
     #[cfg(target_os = "macos")]
     {
         // Force-export C wrapper symbols that the linker would otherwise drop
         for sym in &[
-            "sqlite3_snprintf", "sqlite3_mprintf", "sqlite3_vsnprintf",
-            "sqlite3_vmprintf", "sqlite3_test_control", "sqlite3_db_config",
-            "sqlite3_config", "sqlite3_vtab_config", "sqlite3_log",
+            "sqlite3_snprintf",
+            "sqlite3_mprintf",
+            "sqlite3_vsnprintf",
+            "sqlite3_vmprintf",
+            "sqlite3_test_control",
+            "sqlite3_db_config",
+            "sqlite3_config",
+            "sqlite3_vtab_config",
+            "sqlite3_log",
         ] {
             println!("cargo:rustc-link-arg-cdylib=-Wl,-exported_symbol,_{}", sym);
         }

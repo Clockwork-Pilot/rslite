@@ -1,13 +1,12 @@
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct TableEntry {
     pub iCode: ::core::ffi::c_ushort,
     pub flags: ::core::ffi::c_uchar,
     pub nRange: ::core::ffi::c_uchar,
 }
-#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 pub unsafe extern "C" fn sqlite3FtsUnicodeIsalnum(mut c: ::core::ffi::c_int) -> ::core::ffi::c_int {
     static mut aEntry: [::core::ffi::c_uint; 406] = [
         0x30 as ::core::ffi::c_int as ::core::ffi::c_uint,
@@ -737,9 +736,8 @@ unsafe extern "C" fn remove_diacritic(
     {
         return c;
     }
-    if c
-        > (aDia[iRes as usize] as ::core::ffi::c_int >> 3 as ::core::ffi::c_int)
-            + (aDia[iRes as usize] as ::core::ffi::c_int & 0x7 as ::core::ffi::c_int)
+    if c > (aDia[iRes as usize] as ::core::ffi::c_int >> 3 as ::core::ffi::c_int)
+        + (aDia[iRes as usize] as ::core::ffi::c_int & 0x7 as ::core::ffi::c_int)
     {
         c
     } else {
@@ -748,8 +746,8 @@ unsafe extern "C" fn remove_diacritic(
 }
 
 pub const HIBIT: ::core::ffi::c_uchar = 0x80 as ::core::ffi::c_int as ::core::ffi::c_uchar;
-#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 pub unsafe extern "C" fn sqlite3FtsUnicodeIsdiacritic(
     mut c: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
@@ -766,8 +764,8 @@ pub unsafe extern "C" fn sqlite3FtsUnicodeIsdiacritic(
                 << c - 768 as ::core::ffi::c_int - 32 as ::core::ffi::c_int
     }) as ::core::ffi::c_int
 }
-#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 pub unsafe extern "C" fn sqlite3FtsUnicodeFold(
     mut c: ::core::ffi::c_int,
     mut eRemoveDiacritic: ::core::ffi::c_int,

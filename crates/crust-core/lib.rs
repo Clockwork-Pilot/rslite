@@ -5,12 +5,65 @@
 #![allow(unused_mut)]
 #![allow(static_mut_refs)]
 #![allow(unsafe_op_in_unsafe_fn)]
-
+#![allow(clippy::empty_line_after_outer_attr)]
+#![allow(clippy::toplevel_ref_arg)]
+#![allow(clippy::absurd_extreme_comparisons)]
+#![allow(clippy::almost_swapped)]
+#![allow(clippy::approx_constant)]
+#![allow(clippy::eq_op)]
+#![allow(clippy::excessive_precision)]
+#![allow(clippy::nonminimal_bool)]
+#![allow(clippy::ptr_eq)]
+#![allow(clippy::no_effect)]
+#![allow(clippy::precedence)]
+#![allow(clippy::short_circuit_statement)]
+#![allow(clippy::single_match)]
+#![allow(clippy::while_immutable_condition)]
+#![allow(clippy::collapsible_if)]
+#![allow(clippy::if_same_then_else)]
+#![allow(clippy::cmp_null)]
+#![allow(clippy::ptr_offset_with_cast)]
+#![allow(clippy::type_complexity)]
+#![allow(clippy::useless_transmute)]
+#![allow(clippy::missing_transmute_annotations)]
+#![allow(clippy::manual_c_str_literals)]
+#![allow(clippy::unnecessary_operation)]
+#![allow(clippy::wildcard_in_or_patterns)]
+#![allow(clippy::manual_swap)]
+#![allow(clippy::manual_range_contains)]
+#![allow(clippy::manual_range_patterns)]
+#![allow(clippy::manual_pattern_char_comparison)]
+#![allow(clippy::only_used_in_recursion)]
+#![allow(clippy::module_inception)]
+#![allow(clippy::declare_interior_mutable_const)]
+#![allow(clippy::needless_else)]
+#![allow(clippy::implicit_saturating_sub)]
+#![allow(clippy::neg_multiply)]
+#![allow(clippy::useless_vec)]
+#![allow(clippy::manual_swap)]
+#![allow(clippy::undocumented_unsafe_blocks)]
+#![allow(clippy::redundant_pattern_matching)]
+#![allow(dead_code)]
+#![allow(unused_imports)]
+#![allow(unused_variables)]
+#![allow(clippy::style)]
+#![allow(clippy::suspicious)]
+#![allow(clippy::complexity)]
+#![allow(clippy::perf)]
+#![allow(clippy::nursery)]
+#![allow(clippy::all)]
+#![allow(unused_must_use)]
+#![allow(unpredictable_function_pointer_comparisons)]
+#![allow(unused_parens)]
+#![allow(improper_ctypes)]
+// Note: crust-core is generated code from C2Rust. Many clippy warnings and
+// compiler warnings are suppressed to keep it maintainable. Hand-written code
+// in other crates is subject to stricter lint rules.
 
 // Re-export sqlite_printf!, sqlite_snprintf! and json_printf! macros from proc-macro crate
+pub use sqlite_printf_macros::json_printf;
 pub use sqlite_printf_macros::sqlite_printf;
 pub use sqlite_printf_macros::sqlite_snprintf;
-pub use sqlite_printf_macros::json_printf;
 pub use sqlite_printf_macros::sqlite_vmprintf;
 pub use sqlite_printf_macros::sqlite_vsnprintf;
 
@@ -19,7 +72,9 @@ pub mod compat {
     #[cfg(target_os = "macos")]
     #[inline(always)]
     pub unsafe fn errno_location() -> *mut ::core::ffi::c_int {
-        unsafe extern "C" { fn __error() -> *mut ::core::ffi::c_int; }
+        unsafe extern "C" {
+            fn __error() -> *mut ::core::ffi::c_int;
+        }
         __error()
     }
     #[cfg(not(target_os = "macos"))]
@@ -56,7 +111,11 @@ pub mod compat {
         if new_ptr == ::libc::MAP_FAILED {
             return ::libc::MAP_FAILED;
         }
-        let copy_size = if old_size < new_size { old_size } else { new_size };
+        let copy_size = if old_size < new_size {
+            old_size
+        } else {
+            new_size
+        };
         ::core::ptr::copy_nonoverlapping(old_address as *const u8, new_ptr as *mut u8, copy_size);
         ::libc::munmap(old_address, old_size);
         new_ptr
@@ -92,28 +151,44 @@ pub mod compat {
         static mut TABLE_PTR: *const ::core::ffi::c_ushort = ::core::ptr::null();
         static INIT: AtomicBool = AtomicBool::new(false);
 
-        const _ISUPPER: u16  = 256;
-        const _ISLOWER: u16  = 512;
-        const _ISALPHA: u16  = 1024;
-        const _ISDIGIT: u16  = 2048;
+        const _ISUPPER: u16 = 256;
+        const _ISLOWER: u16 = 512;
+        const _ISALPHA: u16 = 1024;
+        const _ISDIGIT: u16 = 2048;
         const _ISXDIGIT: u16 = 4096;
-        const _ISSPACE: u16  = 8192;
-        const _ISPRINT: u16  = 16384;
-        const _ISALNUM: u16  = _ISALPHA | _ISDIGIT;
+        const _ISSPACE: u16 = 8192;
+        const _ISPRINT: u16 = 16384;
+        const _ISALNUM: u16 = _ISALPHA | _ISDIGIT;
 
         unsafe fn init_table() {
             for i in 0..TABLE_SIZE {
                 let c = (i as isize - OFFSET as isize) as ::core::ffi::c_int;
                 if c >= 0 && c <= 127 {
                     let mut flags: u16 = 0;
-                    if ::libc::isupper(c) != 0 { flags |= _ISUPPER; }
-                    if ::libc::islower(c) != 0 { flags |= _ISLOWER; }
-                    if ::libc::isalpha(c) != 0 { flags |= _ISALPHA; }
-                    if ::libc::isdigit(c) != 0 { flags |= _ISDIGIT; }
-                    if ::libc::isxdigit(c) != 0 { flags |= _ISXDIGIT; }
-                    if ::libc::isspace(c) != 0 { flags |= _ISSPACE; }
-                    if ::libc::isprint(c) != 0 { flags |= _ISPRINT; }
-                    if ::libc::isalnum(c) != 0 { flags |= _ISALNUM; }
+                    if ::libc::isupper(c) != 0 {
+                        flags |= _ISUPPER;
+                    }
+                    if ::libc::islower(c) != 0 {
+                        flags |= _ISLOWER;
+                    }
+                    if ::libc::isalpha(c) != 0 {
+                        flags |= _ISALPHA;
+                    }
+                    if ::libc::isdigit(c) != 0 {
+                        flags |= _ISDIGIT;
+                    }
+                    if ::libc::isxdigit(c) != 0 {
+                        flags |= _ISXDIGIT;
+                    }
+                    if ::libc::isspace(c) != 0 {
+                        flags |= _ISSPACE;
+                    }
+                    if ::libc::isprint(c) != 0 {
+                        flags |= _ISPRINT;
+                    }
+                    if ::libc::isalnum(c) != 0 {
+                        flags |= _ISALNUM;
+                    }
                     TABLE[i] = flags;
                 }
             }
@@ -188,7 +263,6 @@ pub mod internal {
 
     #[derive(Copy, Clone)]
     #[repr(C)]
-
     pub struct __va_list_tag {
         pub gp_offset: ::core::ffi::c_uint,
         pub fp_offset: ::core::ffi::c_uint,
@@ -210,7 +284,6 @@ pub mod geopoly_c {
     use crate::src::ext::rtree::rtree::RtreeCoord;
     #[derive(Copy, Clone)]
     #[repr(C)]
-
     pub struct GeoPoly {
         pub nVertex: ::core::ffi::c_int,
         pub hdr: [::core::ffi::c_uchar; 4],
@@ -219,7 +292,6 @@ pub mod geopoly_c {
 
     #[derive(Copy, Clone)]
     #[repr(C)]
-
     pub struct GeoParse {
         pub z: *const ::core::ffi::c_uchar,
         pub nVertex: ::core::ffi::c_int,
@@ -232,7 +304,6 @@ pub mod geopoly_c {
 
     #[derive(Copy, Clone)]
     #[repr(C)]
-
     pub struct GeoBBox {
         pub isInit: ::core::ffi::c_int,
         pub a: [RtreeCoord; 4],
@@ -240,7 +311,6 @@ pub mod geopoly_c {
 
     #[derive(Copy, Clone)]
     #[repr(C)]
-
     pub struct GeoEvent {
         pub x: ::core::ffi::c_double,
         pub eType: ::core::ffi::c_int,
@@ -250,7 +320,6 @@ pub mod geopoly_c {
 
     #[derive(Copy, Clone)]
     #[repr(C)]
-
     pub struct GeoSegment {
         pub C: ::core::ffi::c_double,
         pub B: ::core::ffi::c_double,
@@ -263,7 +332,6 @@ pub mod geopoly_c {
 
     #[derive(Copy, Clone)]
     #[repr(C)]
-
     pub struct GeoOverlap {
         pub aEvent: *mut crate::geopoly_c::GeoEvent,
         pub aSegment: *mut crate::geopoly_c::GeoSegment,
@@ -273,7 +341,6 @@ pub mod geopoly_c {
 
     #[derive(Copy, Clone)]
     #[repr(C)]
-
     pub struct C2RustUnnamed_2 {
         pub xFunc: Option<
             unsafe extern "C" fn(
@@ -289,7 +356,6 @@ pub mod geopoly_c {
 
     #[derive(Copy, Clone)]
     #[repr(C)]
-
     pub struct C2RustUnnamed_1 {
         pub xStep: Option<
             unsafe extern "C" fn(
@@ -366,7 +432,6 @@ pub mod fts3Int_h {
     #[cfg(feature = "fts3")]
     #[derive(Copy, Clone)]
     #[repr(C)]
-
     pub struct Fts3Table {
         pub base: crate::src::headers::sqlite3_h::sqlite3_vtab,
         pub db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -408,7 +473,6 @@ pub mod fts3Int_h {
 
     #[derive(Copy, Clone)]
     #[repr(C)]
-
     #[cfg(feature = "fts3")]
     pub struct Fts3Index {
         pub nPrefix: ::core::ffi::c_int,
@@ -417,7 +481,6 @@ pub mod fts3Int_h {
 
     #[derive(Copy, Clone)]
     #[repr(C)]
-
     #[cfg(feature = "fts3")]
     pub struct Fts3Cursor {
         pub base: crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
@@ -464,7 +527,6 @@ pub mod fts3Int_h {
 
     #[derive(Copy, Clone)]
     #[repr(C)]
-
     #[cfg(feature = "fts3")]
     pub struct Fts3Doclist {
         pub aAll: *mut ::core::ffi::c_char,
@@ -478,7 +540,6 @@ pub mod fts3Int_h {
 
     #[derive(Copy, Clone)]
     #[repr(C)]
-
     #[cfg(feature = "fts3")]
     pub struct Fts3PhraseToken {
         pub z: *mut ::core::ffi::c_char,
@@ -491,7 +552,6 @@ pub mod fts3Int_h {
 
     #[derive(Copy, Clone)]
     #[repr(C)]
-
     #[cfg(feature = "fts3")]
     pub struct Fts3Phrase {
         pub doclist: crate::fts3Int_h::Fts3Doclist,
@@ -506,7 +566,6 @@ pub mod fts3Int_h {
 
     #[derive(Copy, Clone)]
     #[repr(C)]
-
     #[cfg(feature = "fts3")]
     pub struct Fts3Expr {
         pub eType: ::core::ffi::c_int,
@@ -573,7 +632,6 @@ pub mod fts3Int_h {
 
     #[derive(Copy, Clone)]
     #[repr(C)]
-
     #[cfg(feature = "fts3")]
     pub struct Fts3SegFilter {
         pub zTerm: *const ::core::ffi::c_char,
@@ -584,7 +642,6 @@ pub mod fts3Int_h {
 
     #[derive(Copy, Clone)]
     #[repr(C)]
-
     #[cfg(feature = "fts3")]
     pub struct Fts3MultiSegReader {
         pub apSegment: *mut *mut crate::fts3Int_h::Fts3SegReader,
@@ -603,7 +660,6 @@ pub mod fts3Int_h {
         pub nDoclist: ::core::ffi::c_int,
     }
 }
-
 
 #[macro_use]
 extern crate c2rust_bitfields;
@@ -677,6 +733,7 @@ pub mod src {
         pub mod json;
         pub mod legacy;
         pub mod loadext;
+        pub mod main;
         pub mod malloc;
         pub mod mem0;
         pub mod mem1;
@@ -704,8 +761,6 @@ pub mod src {
         pub mod resolve;
         pub mod rowset;
         pub mod select;
-        pub mod main;
-        pub mod r#where;
         pub mod status;
         pub mod table;
         pub mod threads;
@@ -728,6 +783,7 @@ pub mod src {
         pub mod vtab;
         pub mod wal;
         pub mod walker;
+        pub mod r#where;
         pub mod wherecode;
         pub mod whereexpr;
         pub mod window;

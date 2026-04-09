@@ -1,4 +1,3 @@
-
 static mut sqlite3azCompileOpt: [*const ::core::ffi::c_char; 55] = [
     b"ATOMIC_INTRINSICS=1\0" as *const u8 as *const ::core::ffi::c_char,
     b"COMPILER=clang-20.1.8\0" as *const u8 as *const ::core::ffi::c_char,
@@ -56,8 +55,8 @@ static mut sqlite3azCompileOpt: [*const ::core::ffi::c_char; 55] = [
     b"TEST\0" as *const u8 as *const ::core::ffi::c_char,
     b"THREADSAFE=1\0" as *const u8 as *const ::core::ffi::c_char,
 ];
-#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 pub unsafe extern "C" fn sqlite3CompileOptions(
     mut pnOpt: *mut ::core::ffi::c_int,
 ) -> *mut *const ::core::ffi::c_char {

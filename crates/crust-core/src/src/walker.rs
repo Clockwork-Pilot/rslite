@@ -1,29 +1,154 @@
-
-
-
-
-
-
-
-
-
-
-
-pub use crate::src::src::hash::Hash;pub use crate::src::src::hash::HashElem;pub use crate::src::src::hash::_ht;
+pub use crate::src::src::hash::_ht;
+pub use crate::src::src::hash::Hash;
+pub use crate::src::src::hash::HashElem;
 pub use crate::src::src::pager::Pgno;
 
-pub use crate::src::headers::vdbeInt_h::sqlite3_context;pub use crate::src::headers::sqlite3_h::sqlite3_file;pub use crate::src::headers::sqlite3_h::sqlite3_filename;pub use crate::src::headers::sqlite3_h::sqlite3_index_constraint;pub use crate::src::headers::sqlite3_h::sqlite3_index_constraint_usage;pub use crate::src::headers::sqlite3_h::sqlite3_index_info;pub use crate::src::headers::sqlite3_h::sqlite3_index_orderby;pub use crate::src::headers::sqlite3_h::sqlite3_int64;pub use crate::src::headers::sqlite3_h::sqlite3_io_methods;pub use crate::src::headers::sqlite3_h::sqlite3_module;pub use crate::src::src::mutex_unix::sqlite3_mutex;pub use crate::src::headers::sqlite3_h::sqlite3_syscall_ptr;pub use crate::src::headers::sqlite3_h::sqlite3_uint64;pub use crate::src::headers::vdbeInt_h::sqlite3_value;pub use crate::src::headers::sqlite3_h::sqlite3_vfs;pub use crate::src::headers::sqlite3_h::sqlite3_vtab;pub use crate::src::headers::sqlite3_h::sqlite3_vtab_cursor;pub use crate::src::headers::sqlite3_h::sqlite_int64;pub use crate::src::headers::sqlite3_h::sqlite_uint64;pub use crate::src::headers::sqliteInt_h::__anon_struct_0;pub use crate::src::headers::sqliteInt_h::__anon_struct_1;pub use crate::src::headers::sqliteInt_h::__anon_struct_2;pub use crate::src::headers::sqliteInt_h::__anon_struct_3;pub use crate::src::headers::sqliteInt_h::__anon_struct_4;pub use crate::src::headers::sqliteInt_h::__anon_struct_5;pub use crate::src::headers::sqliteInt_h::__anon_struct_6;pub use crate::src::headers::sqliteInt_h::__anon_struct_7;pub use crate::src::headers::sqliteInt_h::__anon_struct_8;pub use crate::src::headers::sqliteInt_h::__anon_union_0;pub use crate::src::headers::sqliteInt_h::__anon_union_1;pub use crate::src::headers::sqliteInt_h::__anon_union_10;pub use crate::src::headers::sqliteInt_h::__anon_union_11;pub use crate::src::headers::sqliteInt_h::__anon_union_12;pub use crate::src::headers::sqliteInt_h::__anon_union_13;pub use crate::src::headers::sqliteInt_h::__anon_union_14;pub use crate::src::headers::sqliteInt_h::__anon_union_15;pub use crate::src::headers::sqliteInt_h::__anon_union_16;pub use crate::src::headers::sqliteInt_h::__anon_union_2;pub use crate::src::headers::sqliteInt_h::__anon_union_3;pub use crate::src::headers::sqliteInt_h::__anon_union_5;pub use crate::src::headers::sqliteInt_h::__anon_union_6;pub use crate::src::headers::sqliteInt_h::__anon_union_7;pub use crate::src::headers::sqliteInt_h::__anon_union_8;pub use crate::src::headers::sqliteInt_h::__anon_union_9;pub use crate::src::headers::sqliteInt_h::bft;pub use crate::src::fts5::i16_0;pub use crate::src::ext::rtree::rtree::i64_0;pub use crate::src::headers::sqliteInt_h::sColMap;pub use crate::src::headers::sqliteInt_h::sqlite3;pub use crate::src::headers::sqliteInt_h::sqlite3InitInfo;pub use crate::src::src::select::sqlite3SelectPopWith;pub use crate::src::headers::sqliteInt_h::sqlite3_xauth;pub use crate::src::fts5::u16_0;pub use crate::src::ext::rtree::rtree::u32_0;pub use crate::src::ext::rtree::rtree::u64_0;pub use crate::src::ext::rtree::rtree::u8_0;pub use crate::src::headers::sqliteInt_h::yDbMask;pub use crate::src::headers::sqliteInt_h::ynVar;pub use crate::src::headers::sqliteInt_h::AggInfo;pub use crate::src::headers::sqliteInt_h::AggInfo_col;pub use crate::src::headers::sqliteInt_h::AggInfo_func;pub use crate::src::headers::sqliteInt_h::AutoincInfo;pub use crate::src::headers::sqliteInt_h::Bitmask;pub use crate::src::headers::sqliteInt_h::BusyHandler;pub use crate::src::headers::sqliteInt_h::CCurHint;pub use crate::src::headers::sqliteInt_h::CheckOnCtx;pub use crate::src::headers::sqliteInt_h::CollSeq;pub use crate::src::headers::sqliteInt_h::Column;pub use crate::src::headers::sqliteInt_h::CoveringIndexCheck;pub use crate::src::headers::sqliteInt_h::Cte;pub use crate::src::headers::sqliteInt_h::CteUse;pub use crate::src::headers::sqliteInt_h::Db;pub use crate::src::headers::sqliteInt_h::DbClientData;pub use crate::src::headers::sqliteInt_h::DbFixer;pub use crate::src::headers::sqliteInt_h::EP_xIsSelect;pub use crate::src::headers::sqliteInt_h::Expr;pub use crate::src::headers::sqliteInt_h::ExprList;pub use crate::src::headers::sqliteInt_h::ExprList_item;pub use crate::src::headers::sqliteInt_h::FKey;pub use crate::src::headers::sqliteInt_h::FuncDef;pub use crate::src::headers::sqliteInt_h::FuncDestructor;pub use crate::src::headers::sqliteInt_h::IdList;pub use crate::src::headers::sqliteInt_h::IdList_item;pub use crate::src::headers::sqliteInt_h::IdxCover;pub use crate::src::headers::sqliteInt_h::Index;pub use crate::src::headers::sqliteInt_h::IndexedExpr;pub use crate::src::headers::sqliteInt_h::KeyInfo;pub use crate::src::headers::sqliteInt_h::LogEst;pub use crate::src::headers::sqliteInt_h::Lookaside;pub use crate::src::headers::sqliteInt_h::LookasideSlot;pub use crate::src::headers::sqliteInt_h::Module;pub use crate::src::headers::sqliteInt_h::NameContext;pub use crate::src::headers::sqliteInt_h::Parse;pub use crate::src::headers::sqliteInt_h::ParseCleanup;pub use crate::src::headers::vdbeInt_h::PreUpdate;pub use crate::src::headers::sqliteInt_h::RefSrcList;pub use crate::src::headers::sqliteInt_h::RenameCtx;pub use crate::src::headers::sqliteInt_h::RenameToken;pub use crate::src::headers::sqliteInt_h::Returning;pub use crate::src::headers::sqliteInt_h::Savepoint;pub use crate::src::headers::sqliteInt_h::Schema;pub use crate::src::headers::sqliteInt_h::Select;pub use crate::src::headers::sqliteInt_h::SrcItem;pub use crate::src::headers::sqliteInt_h::SrcList;pub use crate::src::headers::sqliteInt_h::Subquery;pub use crate::src::headers::sqliteInt_h::Table;pub use crate::src::headers::sqliteInt_h::TableLock;pub use crate::src::headers::sqliteInt_h::Token;pub use crate::src::headers::sqliteInt_h::Trigger;pub use crate::src::headers::sqliteInt_h::TriggerPrg;pub use crate::src::headers::sqliteInt_h::TriggerStep;pub use crate::src::headers::sqliteInt_h::Upsert;pub use crate::src::headers::sqliteInt_h::VList;pub use crate::src::headers::sqliteInt_h::VTable;pub use crate::src::headers::sqliteInt_h::VtabCtx;pub use crate::src::headers::sqliteInt_h::WRC_Abort;pub use crate::src::headers::sqliteInt_h::WRC_Continue;pub use crate::src::headers::sqliteInt_h::Walker;pub use crate::src::headers::sqliteInt_h::WhereConst;pub use crate::src::headers::sqliteInt_h::Window;pub use crate::src::headers::sqliteInt_h::WindowRewrite;pub use crate::src::headers::sqliteInt_h::With;pub use crate::src::headers::sqliteInt_h::PARSE_MODE_RENAME;
+pub use crate::src::ext::rtree::rtree::i64_0;
+pub use crate::src::ext::rtree::rtree::u8_0;
+pub use crate::src::ext::rtree::rtree::u32_0;
+pub use crate::src::ext::rtree::rtree::u64_0;
+pub use crate::src::fts5::i16_0;
+pub use crate::src::fts5::u16_0;
+pub use crate::src::headers::sqlite3_h::sqlite_int64;
+pub use crate::src::headers::sqlite3_h::sqlite_uint64;
+pub use crate::src::headers::sqlite3_h::sqlite3_file;
+pub use crate::src::headers::sqlite3_h::sqlite3_filename;
+pub use crate::src::headers::sqlite3_h::sqlite3_index_constraint;
+pub use crate::src::headers::sqlite3_h::sqlite3_index_constraint_usage;
+pub use crate::src::headers::sqlite3_h::sqlite3_index_info;
+pub use crate::src::headers::sqlite3_h::sqlite3_index_orderby;
+pub use crate::src::headers::sqlite3_h::sqlite3_int64;
+pub use crate::src::headers::sqlite3_h::sqlite3_io_methods;
+pub use crate::src::headers::sqlite3_h::sqlite3_module;
+pub use crate::src::headers::sqlite3_h::sqlite3_syscall_ptr;
+pub use crate::src::headers::sqlite3_h::sqlite3_uint64;
+pub use crate::src::headers::sqlite3_h::sqlite3_vfs;
+pub use crate::src::headers::sqlite3_h::sqlite3_vtab;
+pub use crate::src::headers::sqlite3_h::sqlite3_vtab_cursor;
+pub use crate::src::headers::sqliteInt_h::__anon_struct_0;
+pub use crate::src::headers::sqliteInt_h::__anon_struct_1;
+pub use crate::src::headers::sqliteInt_h::__anon_struct_2;
+pub use crate::src::headers::sqliteInt_h::__anon_struct_3;
+pub use crate::src::headers::sqliteInt_h::__anon_struct_4;
+pub use crate::src::headers::sqliteInt_h::__anon_struct_5;
+pub use crate::src::headers::sqliteInt_h::__anon_struct_6;
+pub use crate::src::headers::sqliteInt_h::__anon_struct_7;
+pub use crate::src::headers::sqliteInt_h::__anon_struct_8;
+pub use crate::src::headers::sqliteInt_h::__anon_union_0;
+pub use crate::src::headers::sqliteInt_h::__anon_union_1;
+pub use crate::src::headers::sqliteInt_h::__anon_union_2;
+pub use crate::src::headers::sqliteInt_h::__anon_union_3;
+pub use crate::src::headers::sqliteInt_h::__anon_union_5;
+pub use crate::src::headers::sqliteInt_h::__anon_union_6;
+pub use crate::src::headers::sqliteInt_h::__anon_union_7;
+pub use crate::src::headers::sqliteInt_h::__anon_union_8;
+pub use crate::src::headers::sqliteInt_h::__anon_union_9;
+pub use crate::src::headers::sqliteInt_h::__anon_union_10;
+pub use crate::src::headers::sqliteInt_h::__anon_union_11;
+pub use crate::src::headers::sqliteInt_h::__anon_union_12;
+pub use crate::src::headers::sqliteInt_h::__anon_union_13;
+pub use crate::src::headers::sqliteInt_h::__anon_union_14;
+pub use crate::src::headers::sqliteInt_h::__anon_union_15;
+pub use crate::src::headers::sqliteInt_h::__anon_union_16;
+pub use crate::src::headers::sqliteInt_h::AggInfo;
+pub use crate::src::headers::sqliteInt_h::AggInfo_col;
+pub use crate::src::headers::sqliteInt_h::AggInfo_func;
+pub use crate::src::headers::sqliteInt_h::AutoincInfo;
+pub use crate::src::headers::sqliteInt_h::Bitmask;
+pub use crate::src::headers::sqliteInt_h::BusyHandler;
+pub use crate::src::headers::sqliteInt_h::CCurHint;
+pub use crate::src::headers::sqliteInt_h::CheckOnCtx;
+pub use crate::src::headers::sqliteInt_h::CollSeq;
+pub use crate::src::headers::sqliteInt_h::Column;
+pub use crate::src::headers::sqliteInt_h::CoveringIndexCheck;
+pub use crate::src::headers::sqliteInt_h::Cte;
+pub use crate::src::headers::sqliteInt_h::CteUse;
+pub use crate::src::headers::sqliteInt_h::Db;
+pub use crate::src::headers::sqliteInt_h::DbClientData;
+pub use crate::src::headers::sqliteInt_h::DbFixer;
+pub use crate::src::headers::sqliteInt_h::EP_xIsSelect;
+pub use crate::src::headers::sqliteInt_h::Expr;
+pub use crate::src::headers::sqliteInt_h::ExprList;
+pub use crate::src::headers::sqliteInt_h::ExprList_item;
+pub use crate::src::headers::sqliteInt_h::FKey;
+pub use crate::src::headers::sqliteInt_h::FuncDef;
+pub use crate::src::headers::sqliteInt_h::FuncDestructor;
+pub use crate::src::headers::sqliteInt_h::IdList;
+pub use crate::src::headers::sqliteInt_h::IdList_item;
+pub use crate::src::headers::sqliteInt_h::IdxCover;
+pub use crate::src::headers::sqliteInt_h::Index;
+pub use crate::src::headers::sqliteInt_h::IndexedExpr;
+pub use crate::src::headers::sqliteInt_h::KeyInfo;
+pub use crate::src::headers::sqliteInt_h::LogEst;
+pub use crate::src::headers::sqliteInt_h::Lookaside;
+pub use crate::src::headers::sqliteInt_h::LookasideSlot;
+pub use crate::src::headers::sqliteInt_h::Module;
+pub use crate::src::headers::sqliteInt_h::NameContext;
+pub use crate::src::headers::sqliteInt_h::PARSE_MODE_RENAME;
+pub use crate::src::headers::sqliteInt_h::Parse;
+pub use crate::src::headers::sqliteInt_h::ParseCleanup;
+pub use crate::src::headers::sqliteInt_h::RefSrcList;
+pub use crate::src::headers::sqliteInt_h::RenameCtx;
+pub use crate::src::headers::sqliteInt_h::RenameToken;
+pub use crate::src::headers::sqliteInt_h::Returning;
+pub use crate::src::headers::sqliteInt_h::Savepoint;
+pub use crate::src::headers::sqliteInt_h::Schema;
+pub use crate::src::headers::sqliteInt_h::Select;
+pub use crate::src::headers::sqliteInt_h::SrcItem;
+pub use crate::src::headers::sqliteInt_h::SrcList;
+pub use crate::src::headers::sqliteInt_h::Subquery;
+pub use crate::src::headers::sqliteInt_h::Table;
+pub use crate::src::headers::sqliteInt_h::TableLock;
+pub use crate::src::headers::sqliteInt_h::Token;
+pub use crate::src::headers::sqliteInt_h::Trigger;
+pub use crate::src::headers::sqliteInt_h::TriggerPrg;
+pub use crate::src::headers::sqliteInt_h::TriggerStep;
+pub use crate::src::headers::sqliteInt_h::Upsert;
+pub use crate::src::headers::sqliteInt_h::VList;
+pub use crate::src::headers::sqliteInt_h::VTable;
+pub use crate::src::headers::sqliteInt_h::VtabCtx;
+pub use crate::src::headers::sqliteInt_h::WRC_Abort;
+pub use crate::src::headers::sqliteInt_h::WRC_Continue;
+pub use crate::src::headers::sqliteInt_h::Walker;
+pub use crate::src::headers::sqliteInt_h::WhereConst;
+pub use crate::src::headers::sqliteInt_h::Window;
+pub use crate::src::headers::sqliteInt_h::WindowRewrite;
+pub use crate::src::headers::sqliteInt_h::With;
+pub use crate::src::headers::sqliteInt_h::bft;
+pub use crate::src::headers::sqliteInt_h::sColMap;
+pub use crate::src::headers::sqliteInt_h::sqlite3;
+pub use crate::src::headers::sqliteInt_h::sqlite3_xauth;
+pub use crate::src::headers::sqliteInt_h::sqlite3InitInfo;
+pub use crate::src::headers::sqliteInt_h::yDbMask;
+pub use crate::src::headers::sqliteInt_h::ynVar;
 pub use crate::src::headers::stdlib::int16_t;
+pub use crate::src::headers::vdbeInt_h::PreUpdate;
+pub use crate::src::headers::vdbeInt_h::sqlite3_context;
+pub use crate::src::headers::vdbeInt_h::sqlite3_value;
+pub use crate::src::src::mutex_unix::sqlite3_mutex;
+pub use crate::src::src::select::sqlite3SelectPopWith;
 
-
-pub use crate::src::headers::stdlib::uint16_t;pub use crate::src::headers::stdlib::uint32_t;pub use crate::src::headers::stdlib::uint8_t;pub use crate::src::headers::stdlib::__int16_t;pub use crate::src::headers::stdlib::__uint16_t;pub use crate::src::headers::stdlib::__uint32_t;pub use crate::src::headers::stdlib::__uint8_t;pub use crate::src::src::vdbe::p4union;pub use crate::src::src::vdbe::Mem;pub use crate::src::src::vdbe::SubProgram;pub use crate::src::src::vdbe::SubrtnSig;pub use crate::src::headers::vdbeInt_h::Vdbe;pub use crate::src::src::vdbe::VdbeOp;
+pub use crate::src::headers::stdlib::__int16_t;
+pub use crate::src::headers::stdlib::__uint8_t;
+pub use crate::src::headers::stdlib::__uint16_t;
+pub use crate::src::headers::stdlib::__uint32_t;
+pub use crate::src::headers::stdlib::uint8_t;
+pub use crate::src::headers::stdlib::uint16_t;
+pub use crate::src::headers::stdlib::uint32_t;
+pub use crate::src::headers::vdbeInt_h::Vdbe;
+pub use crate::src::src::vdbe::Mem;
+pub use crate::src::src::vdbe::SubProgram;
+pub use crate::src::src::vdbe::SubrtnSig;
+pub use crate::src::src::vdbe::VdbeOp;
+pub use crate::src::src::vdbe::p4union;
 
 unsafe extern "C" fn walkWindowList(
     mut pWalker: *mut crate::src::headers::sqliteInt_h::Walker,
     mut pList: *mut crate::src::headers::sqliteInt_h::Window,
     mut bOneOnly: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
-    let mut pWin: *mut crate::src::headers::sqliteInt_h::Window = ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::Window>();
+    let mut pWin: *mut crate::src::headers::sqliteInt_h::Window =
+        ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::Window>();
     pWin = pList;
     while !pWin.is_null() {
         let mut rc: ::core::ffi::c_int = 0;
@@ -56,7 +181,6 @@ unsafe extern "C" fn walkWindowList(
 }
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 #[inline(never)]
-
 pub unsafe extern "C" fn sqlite3WalkExprNN(
     mut pWalker: *mut crate::src::headers::sqliteInt_h::Walker,
     mut pExpr: *mut crate::src::headers::sqliteInt_h::Expr,
@@ -68,7 +192,8 @@ pub unsafe extern "C" fn sqlite3WalkExprNN(
             return rc & crate::src::headers::sqliteInt_h::WRC_Abort;
         }
         if (*pExpr).flags
-            & (0x10000 as ::core::ffi::c_int | 0x800000 as ::core::ffi::c_int) as crate::src::ext::rtree::rtree::u32_0
+            & (0x10000 as ::core::ffi::c_int | 0x800000 as ::core::ffi::c_int)
+                as crate::src::ext::rtree::rtree::u32_0
             != 0 as crate::src::ext::rtree::rtree::u32_0
         {
             break;
@@ -79,7 +204,11 @@ pub unsafe extern "C" fn sqlite3WalkExprNN(
         if !(*pExpr).pRight.is_null() {
             pExpr = (*pExpr).pRight;
         } else {
-            if (*pExpr).flags & crate::src::headers::sqliteInt_h::EP_xIsSelect as crate::src::ext::rtree::rtree::u32_0 != 0 as crate::src::ext::rtree::rtree::u32_0 {
+            if (*pExpr).flags
+                & crate::src::headers::sqliteInt_h::EP_xIsSelect
+                    as crate::src::ext::rtree::rtree::u32_0
+                != 0 as crate::src::ext::rtree::rtree::u32_0
+            {
                 if sqlite3WalkSelect(pWalker, (*pExpr).x.pSelect) != 0 {
                     return crate::src::headers::sqliteInt_h::WRC_Abort;
                 }
@@ -89,7 +218,10 @@ pub unsafe extern "C" fn sqlite3WalkExprNN(
                         return crate::src::headers::sqliteInt_h::WRC_Abort;
                     }
                 }
-                if (*pExpr).flags & 0x1000000 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::u32_0 != 0 as crate::src::ext::rtree::rtree::u32_0 {
+                if (*pExpr).flags
+                    & 0x1000000 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::u32_0
+                    != 0 as crate::src::ext::rtree::rtree::u32_0
+                {
                     if walkWindowList(pWalker, (*pExpr).y.pWin, 1 as ::core::ffi::c_int) != 0 {
                         return crate::src::headers::sqliteInt_h::WRC_Abort;
                     }
@@ -119,10 +251,12 @@ pub unsafe extern "C" fn sqlite3WalkExprList(
     mut p: *mut crate::src::headers::sqliteInt_h::ExprList,
 ) -> ::core::ffi::c_int {
     let mut i: ::core::ffi::c_int = 0;
-    let mut pItem: *mut crate::src::headers::sqliteInt_h::ExprList_item = ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::ExprList_item>();
+    let mut pItem: *mut crate::src::headers::sqliteInt_h::ExprList_item =
+        ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::ExprList_item>();
     if !p.is_null() {
         i = (*p).nExpr;
-        pItem = &raw mut (*p).a as *mut crate::src::headers::sqliteInt_h::ExprList_item as *mut crate::src::headers::sqliteInt_h::ExprList_item;
+        pItem = &raw mut (*p).a as *mut crate::src::headers::sqliteInt_h::ExprList_item
+            as *mut crate::src::headers::sqliteInt_h::ExprList_item;
         while i > 0 as ::core::ffi::c_int {
             if sqlite3WalkExpr(pWalker, (*pItem).pExpr) != 0 {
                 return crate::src::headers::sqliteInt_h::WRC_Abort;
@@ -166,19 +300,29 @@ pub unsafe extern "C" fn sqlite3WalkSelectExpr(
         return crate::src::headers::sqliteInt_h::WRC_Abort;
     }
     if !__p_ref.pWinDefn.is_null() {
-        let mut pParse: *mut crate::src::headers::sqliteInt_h::Parse = ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::Parse>();
+        let mut pParse: *mut crate::src::headers::sqliteInt_h::Parse =
+            ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::Parse>();
         if (*pWalker).xSelectCallback2
             == Some(
                 sqlite3WalkWinDefnDummyCallback
-                    as unsafe extern "C" fn(*mut crate::src::headers::sqliteInt_h::Walker, *mut crate::src::headers::sqliteInt_h::Select) -> (),
+                    as unsafe extern "C" fn(
+                        *mut crate::src::headers::sqliteInt_h::Walker,
+                        *mut crate::src::headers::sqliteInt_h::Select,
+                    ) -> (),
             )
             || {
                 pParse = (*pWalker).pParse;
-                !pParse.is_null() && (*pParse).eParseMode as ::core::ffi::c_int >= crate::src::headers::sqliteInt_h::PARSE_MODE_RENAME
+                !pParse.is_null()
+                    && (*pParse).eParseMode as ::core::ffi::c_int
+                        >= crate::src::headers::sqliteInt_h::PARSE_MODE_RENAME
             }
             || (*pWalker).xSelectCallback2
                 == Some(
-                    crate::src::src::select::sqlite3SelectPopWith as unsafe extern "C" fn(*mut crate::src::headers::sqliteInt_h::Walker, *mut crate::src::headers::sqliteInt_h::Select) -> (),
+                    crate::src::src::select::sqlite3SelectPopWith
+                        as unsafe extern "C" fn(
+                            *mut crate::src::headers::sqliteInt_h::Walker,
+                            *mut crate::src::headers::sqliteInt_h::Select,
+                        ) -> (),
                 )
         {
             let mut rc: ::core::ffi::c_int =
@@ -194,9 +338,11 @@ pub unsafe extern "C" fn sqlite3WalkSelectFrom(
     mut pWalker: *mut crate::src::headers::sqliteInt_h::Walker,
     mut p: *mut crate::src::headers::sqliteInt_h::Select,
 ) -> ::core::ffi::c_int {
-    let mut pSrc: *mut crate::src::headers::sqliteInt_h::SrcList = ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::SrcList>();
+    let mut pSrc: *mut crate::src::headers::sqliteInt_h::SrcList =
+        ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::SrcList>();
     let mut i: ::core::ffi::c_int = 0;
-    let mut pItem: *mut crate::src::headers::sqliteInt_h::SrcItem = ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::SrcItem>();
+    let mut pItem: *mut crate::src::headers::sqliteInt_h::SrcItem =
+        ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::SrcItem>();
     pSrc = (*p).pSrc;
     if !pSrc.is_null() {
         i = (*pSrc).nSrc;

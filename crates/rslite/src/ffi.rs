@@ -17,8 +17,10 @@ use rslite_raw::{
     sqlite3_stmt, SQLITE_OK, SQLITE_ROW, SQLITE_DONE,
     SQLITE_INTEGER, SQLITE_FLOAT, SQLITE_BLOB, SQLITE_NULL, SQLITE_TEXT,
 };
+use std::ffi::{CStr, CString};
+use std::os::raw::c_int;
 
-use crate::{Error, Value, Result};
+use crate::{Error, Result, Value};
 
 /// Low-level FFI database handle wrapper.
 pub struct Database {
@@ -28,8 +30,7 @@ pub struct Database {
 impl Database {
     /// Open a database (unsafe - requires valid path).
     pub fn open(path: &str) -> Result<Self> {
-        let c_path = CString::new(path)
-            .map_err(|_| Error::Database("invalid path".to_string()))?;
+        let c_path = CString::new(path).map_err(|_| Error::Database("invalid path".to_string()))?;
 
         let mut db = std::ptr::null_mut();
         unsafe {
@@ -56,12 +57,17 @@ impl Database {
 
     /// Execute a statement without parameters (unsafe - caller owns safety).
     pub fn execute(&self, sql: &str) -> Result<()> {
-        let c_sql = CString::new(sql)
-            .map_err(|_| Error::Database("invalid SQL".to_string()))?;
+        let c_sql = CString::new(sql).map_err(|_| Error::Database("invalid SQL".to_string()))?;
 
         unsafe {
             let mut stmt = std::ptr::null_mut();
-            let rc = sqlite3_prepare_v2(self.ptr, c_sql.as_ptr(), -1, &mut stmt, std::ptr::null_mut());
+            let rc = sqlite3_prepare_v2(
+                self.ptr,
+                c_sql.as_ptr(),
+                -1,
+                &mut stmt,
+                std::ptr::null_mut(),
+            );
             if rc != SQLITE_OK {
                 return Err(Error::Database(self.error_msg()));
             }
@@ -80,12 +86,17 @@ impl Database {
 
     /// Execute a query without parameters (unsafe - caller owns safety).
     pub fn query(&self, sql: &str) -> Result<Vec<Vec<Value>>> {
-        let c_sql = CString::new(sql)
-            .map_err(|_| Error::Database("invalid SQL".to_string()))?;
+        let c_sql = CString::new(sql).map_err(|_| Error::Database("invalid SQL".to_string()))?;
 
         unsafe {
             let mut stmt = std::ptr::null_mut();
-            let rc = sqlite3_prepare_v2(self.ptr, c_sql.as_ptr(), -1, &mut stmt, std::ptr::null_mut());
+            let rc = sqlite3_prepare_v2(
+                self.ptr,
+                c_sql.as_ptr(),
+                -1,
+                &mut stmt,
+                std::ptr::null_mut(),
+            );
             if rc != SQLITE_OK {
                 return Err(Error::Database(self.error_msg()));
             }
@@ -118,12 +129,17 @@ impl Database {
 
     /// Execute a statement with parameters (unsafe - caller owns safety).
     pub fn execute_with_params(&self, sql: &str, params: &[Value]) -> Result<()> {
-        let c_sql = CString::new(sql)
-            .map_err(|_| Error::Database("invalid SQL".to_string()))?;
+        let c_sql = CString::new(sql).map_err(|_| Error::Database("invalid SQL".to_string()))?;
 
         unsafe {
             let mut stmt = std::ptr::null_mut();
-            let rc = sqlite3_prepare_v2(self.ptr, c_sql.as_ptr(), -1, &mut stmt, std::ptr::null_mut());
+            let rc = sqlite3_prepare_v2(
+                self.ptr,
+                c_sql.as_ptr(),
+                -1,
+                &mut stmt,
+                std::ptr::null_mut(),
+            );
             if rc != SQLITE_OK {
                 return Err(Error::Database(self.error_msg()));
             }
@@ -148,12 +164,17 @@ impl Database {
 
     /// Execute a query with parameters (unsafe - caller owns safety).
     pub fn query_with_params(&self, sql: &str, params: &[Value]) -> Result<Vec<Vec<Value>>> {
-        let c_sql = CString::new(sql)
-            .map_err(|_| Error::Database("invalid SQL".to_string()))?;
+        let c_sql = CString::new(sql).map_err(|_| Error::Database("invalid SQL".to_string()))?;
 
         unsafe {
             let mut stmt = std::ptr::null_mut();
-            let rc = sqlite3_prepare_v2(self.ptr, c_sql.as_ptr(), -1, &mut stmt, std::ptr::null_mut());
+            let rc = sqlite3_prepare_v2(
+                self.ptr,
+                c_sql.as_ptr(),
+                -1,
+                &mut stmt,
+                std::ptr::null_mut(),
+            );
             if rc != SQLITE_OK {
                 return Err(Error::Database(self.error_msg()));
             }
@@ -243,12 +264,8 @@ unsafe fn extract_column(stmt: *mut sqlite3_stmt, col: c_int) -> Value {
     let col_type = unsafe { sqlite3_column_type(stmt, col) };
 
     match col_type {
-        SQLITE_INTEGER => {
-            Value::Integer(unsafe { sqlite3_column_int64(stmt, col) })
-        }
-        SQLITE_FLOAT => {
-            Value::Real(unsafe { sqlite3_column_double(stmt, col) })
-        }
+        SQLITE_INTEGER => Value::Integer(unsafe { sqlite3_column_int64(stmt, col) }),
+        SQLITE_FLOAT => Value::Real(unsafe { sqlite3_column_double(stmt, col) }),
         SQLITE_TEXT => {
             let ptr = unsafe { sqlite3_column_text(stmt, col) };
             if ptr.is_null() {

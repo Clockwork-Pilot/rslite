@@ -1,37 +1,190 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 pub use crate::__stddef_size_t_h::size_t;
 
-pub use crate::src::src::hash::Hash;pub use crate::src::src::hash::HashElem;pub use crate::src::src::hash::_ht;
 pub use crate::internal::__ATOMIC_RELAXED;
+pub use crate::src::src::hash::_ht;
+pub use crate::src::src::hash::Hash;
+pub use crate::src::src::hash::HashElem;
 
-
-
-
-pub use crate::src::src::pager::sqlite3SectorSize;pub use crate::src::src::pager::Pager;pub use crate::src::src::pager::Pgno;pub use crate::pcache_h::PCache;pub use crate::src::src::pcache::PgHdr;pub use crate::src::src::pcache::PGHDR_WAL_APPEND;pub use crate::src::headers::vdbeInt_h::sqlite3_context;pub use crate::src::headers::sqlite3_h::sqlite3_file;pub use crate::src::headers::sqlite3_h::sqlite3_filename;pub use crate::src::src::malloc::sqlite3_free;pub use crate::src::headers::sqlite3_h::sqlite3_index_constraint;pub use crate::src::headers::sqlite3_h::sqlite3_index_constraint_usage;pub use crate::src::headers::sqlite3_h::sqlite3_index_info;pub use crate::src::headers::sqlite3_h::sqlite3_index_orderby;pub use crate::src::headers::sqlite3_h::sqlite3_int64;pub use crate::src::headers::sqlite3_h::sqlite3_io_methods;pub use crate::src::src::malloc::sqlite3_malloc;pub use crate::src::src::malloc::sqlite3_malloc64;pub use crate::src::headers::sqlite3_h::sqlite3_module;pub use crate::src::src::mutex_unix::sqlite3_mutex;pub use crate::src::headers::sqlite3_h::sqlite3_pcache_page;pub use crate::src::src::random::sqlite3_randomness;pub use crate::src::headers::sqlite3_h::sqlite3_syscall_ptr;pub use crate::src::headers::sqlite3_h::sqlite3_uint64;pub use crate::src::headers::vdbeInt_h::sqlite3_value;pub use crate::src::headers::sqlite3_h::sqlite3_vfs;pub use crate::src::headers::sqlite3_h::sqlite3_vtab;pub use crate::src::headers::sqlite3_h::sqlite3_vtab_cursor;pub use crate::src::headers::sqlite3_h::sqlite_int64;pub use crate::src::headers::sqlite3_h::sqlite_uint64;pub use crate::src::headers::sqlite3_h::SQLITE_BUSY;pub use crate::src::headers::sqlite3_h::SQLITE_BUSY_RECOVERY_1;pub use crate::src::headers::sqlite3_h::SQLITE_BUSY_SNAPSHOT;pub use crate::src::headers::sqlite3_h::SQLITE_CHECKPOINT_NOOP;pub use crate::src::headers::sqlite3_h::SQLITE_CHECKPOINT_PASSIVE;pub use crate::src::headers::sqlite3_h::SQLITE_CHECKPOINT_RESTART;pub use crate::src::headers::sqlite3_h::SQLITE_CHECKPOINT_TRUNCATE;pub use crate::src::headers::sqlite3_h::SQLITE_ERROR;pub use crate::src::headers::sqlite3_h::SQLITE_FCNTL_CKPT_DONE;pub use crate::src::headers::sqlite3_h::SQLITE_FCNTL_CKPT_START;pub use crate::src::headers::sqlite3_h::SQLITE_FCNTL_PERSIST_WAL_1;pub use crate::src::headers::sqlite3_h::SQLITE_FCNTL_SIZE_HINT_1;pub use crate::src::headers::sqlite3_h::SQLITE_INTERRUPT;pub use crate::src::headers::sqlite3_h::SQLITE_IOCAP_POWERSAFE_OVERWRITE;pub use crate::src::headers::sqlite3_h::SQLITE_IOCAP_SEQUENTIAL;pub use crate::src::headers::sqlite3_h::SQLITE_IOERR;pub use crate::src::headers::sqlite3_h::SQLITE_IOERR_SHORT_READ_1;pub use crate::src::headers::sqlite3_h::SQLITE_LOCK_EXCLUSIVE;pub use crate::src::headers::sqlite3_h::SQLITE_NOMEM;pub use crate::src::headers::sqlite3_h::SQLITE_NOTICE;pub use crate::src::headers::sqlite3_h::SQLITE_NOTICE_RECOVER_WAL_1;pub use crate::src::headers::sqlite3_h::SQLITE_OK;pub use crate::src::headers::sqlite3_h::SQLITE_OPEN_CREATE;pub use crate::src::headers::sqlite3_h::SQLITE_OPEN_READONLY;pub use crate::src::headers::sqlite3_h::SQLITE_OPEN_READWRITE;pub use crate::src::headers::sqlite3_h::SQLITE_OPEN_WAL;pub use crate::src::headers::sqlite3_h::SQLITE_PROTOCOL_1;pub use crate::src::headers::sqlite3_h::SQLITE_READONLY;pub use crate::src::headers::sqlite3_h::SQLITE_READONLY_CANTINIT_1;pub use crate::src::headers::sqlite3_h::SQLITE_READONLY_RECOVERY_1;pub use crate::src::headers::sqlite3_h::SQLITE_SHM_EXCLUSIVE;pub use crate::src::headers::sqlite3_h::SQLITE_SHM_LOCK;pub use crate::src::headers::sqlite3_h::SQLITE_SHM_NLOCK;pub use crate::src::headers::sqlite3_h::SQLITE_SHM_SHARED;pub use crate::src::headers::sqlite3_h::SQLITE_SHM_UNLOCK;pub use crate::src::headers::sqliteInt_h::__anon_struct_0;pub use crate::src::headers::sqliteInt_h::__anon_struct_1;pub use crate::src::headers::sqliteInt_h::__anon_struct_2;pub use crate::src::headers::sqliteInt_h::__anon_struct_3;pub use crate::src::headers::sqliteInt_h::__anon_struct_4;pub use crate::src::headers::sqliteInt_h::__anon_struct_5;pub use crate::src::headers::sqliteInt_h::__anon_struct_6;pub use crate::src::headers::sqliteInt_h::__anon_struct_7;pub use crate::src::headers::sqliteInt_h::__anon_struct_8;pub use crate::src::headers::sqliteInt_h::__anon_union_0;pub use crate::src::headers::sqliteInt_h::__anon_union_1;pub use crate::src::headers::sqliteInt_h::__anon_union_10;pub use crate::src::headers::sqliteInt_h::__anon_union_11;pub use crate::src::headers::sqliteInt_h::__anon_union_12;pub use crate::src::headers::sqliteInt_h::__anon_union_13;pub use crate::src::headers::sqliteInt_h::__anon_union_15;pub use crate::src::headers::sqliteInt_h::__anon_union_2;pub use crate::src::headers::sqliteInt_h::__anon_union_3;pub use crate::src::headers::sqliteInt_h::__anon_union_5;pub use crate::src::headers::sqliteInt_h::__anon_union_6;pub use crate::src::headers::sqliteInt_h::__anon_union_7;pub use crate::src::headers::sqliteInt_h::__anon_union_8;pub use crate::src::headers::sqliteInt_h::__anon_union_9;pub use crate::src::headers::sqliteInt_h::bft;pub use crate::src::fts5::i16_0;pub use crate::src::ext::rtree::rtree::i64_0;pub use crate::src::headers::sqliteInt_h::sColMap;pub use crate::src::headers::sqliteInt_h::sqlite3;pub use crate::src::src::fault::sqlite3BeginBenignMalloc;pub use crate::src::src::main::sqlite3CantopenError;pub use crate::src::src::main::sqlite3CorruptError;pub use crate::src::src::fault::sqlite3EndBenignMalloc;pub use crate::src::src::util::sqlite3FaultSim;pub use crate::src::src::util::sqlite3Get4byte;pub use crate::src::headers::sqliteInt_h::sqlite3InitInfo;pub use crate::src::src::malloc::sqlite3MallocZero;pub use crate::src::src::util::sqlite3Put4byte;pub use crate::src::src::malloc::sqlite3Realloc;pub use crate::src::headers::sqliteInt_h::sqlite3_xauth;pub use crate::src::fts5::u16_0;pub use crate::src::ext::rtree::rtree::u32_0;pub use crate::src::ext::rtree::rtree::u64_0;pub use crate::src::ext::rtree::rtree::u8_0;pub use crate::src::headers::sqliteInt_h::yDbMask;pub use crate::src::headers::sqliteInt_h::ynVar;pub use crate::src::headers::sqliteInt_h::AggInfo;pub use crate::src::headers::sqliteInt_h::AggInfo_col;pub use crate::src::headers::sqliteInt_h::AggInfo_func;pub use crate::src::headers::sqliteInt_h::AutoincInfo;pub use crate::src::headers::sqliteInt_h::Bitmask;pub use crate::src::headers::sqliteInt_h::BusyHandler;pub use crate::src::headers::sqliteInt_h::CollSeq;pub use crate::src::headers::sqliteInt_h::Column;pub use crate::src::headers::sqliteInt_h::Cte;pub use crate::src::headers::sqliteInt_h::CteUse;pub use crate::src::headers::sqliteInt_h::Db;pub use crate::src::headers::sqliteInt_h::DbClientData;pub use crate::src::headers::sqliteInt_h::Expr;pub use crate::src::headers::sqliteInt_h::ExprList;pub use crate::src::headers::sqliteInt_h::ExprList_item;pub use crate::src::headers::sqliteInt_h::FKey;pub use crate::src::headers::sqliteInt_h::FuncDef;pub use crate::src::headers::sqliteInt_h::FuncDestructor;pub use crate::src::headers::sqliteInt_h::IdList;pub use crate::src::headers::sqliteInt_h::IdList_item;pub use crate::src::headers::sqliteInt_h::Index;pub use crate::src::headers::sqliteInt_h::IndexedExpr;pub use crate::src::headers::sqliteInt_h::KeyInfo;pub use crate::src::headers::sqliteInt_h::LogEst;pub use crate::src::headers::sqliteInt_h::Lookaside;pub use crate::src::headers::sqliteInt_h::LookasideSlot;pub use crate::src::headers::sqliteInt_h::Module;pub use crate::src::headers::sqliteInt_h::Parse;pub use crate::src::headers::sqliteInt_h::ParseCleanup;pub use crate::src::headers::vdbeInt_h::PreUpdate;pub use crate::src::headers::sqliteInt_h::RenameToken;pub use crate::src::headers::sqliteInt_h::Returning;pub use crate::src::headers::sqliteInt_h::Savepoint;pub use crate::src::headers::sqliteInt_h::Schema;pub use crate::src::headers::sqliteInt_h::Select;pub use crate::src::headers::sqliteInt_h::SrcItem;pub use crate::src::headers::sqliteInt_h::SrcList;pub use crate::src::headers::sqliteInt_h::Subquery;pub use crate::src::headers::sqliteInt_h::Table;pub use crate::src::headers::sqliteInt_h::TableLock;pub use crate::src::headers::sqliteInt_h::Token;pub use crate::src::headers::sqliteInt_h::Trigger;pub use crate::src::headers::sqliteInt_h::TriggerPrg;pub use crate::src::headers::sqliteInt_h::TriggerStep;pub use crate::src::headers::sqliteInt_h::Upsert;pub use crate::src::headers::sqliteInt_h::VList;pub use crate::src::headers::sqliteInt_h::VTable;pub use crate::src::headers::sqliteInt_h::VtabCtx;pub use crate::src::headers::sqliteInt_h::Window;pub use crate::src::headers::sqliteInt_h::With;pub use crate::src::headers::sqliteInt_h::SQLITE_BIGENDIAN;pub use crate::src::headers::sqliteInt_h::SQLITE_NOMEM_BKPT;
+pub use crate::pcache_h::PCache;
 pub use crate::sqliteLimit_h::SQLITE_MAX_PAGE_SIZE;
+pub use crate::src::ext::rtree::rtree::i64_0;
+pub use crate::src::ext::rtree::rtree::u8_0;
+pub use crate::src::ext::rtree::rtree::u32_0;
+pub use crate::src::ext::rtree::rtree::u64_0;
+pub use crate::src::fts5::i16_0;
+pub use crate::src::fts5::u16_0;
+pub use crate::src::headers::sqlite3_h::SQLITE_BUSY;
+pub use crate::src::headers::sqlite3_h::SQLITE_BUSY_RECOVERY_1;
+pub use crate::src::headers::sqlite3_h::SQLITE_BUSY_SNAPSHOT;
+pub use crate::src::headers::sqlite3_h::SQLITE_CHECKPOINT_NOOP;
+pub use crate::src::headers::sqlite3_h::SQLITE_CHECKPOINT_PASSIVE;
+pub use crate::src::headers::sqlite3_h::SQLITE_CHECKPOINT_RESTART;
+pub use crate::src::headers::sqlite3_h::SQLITE_CHECKPOINT_TRUNCATE;
+pub use crate::src::headers::sqlite3_h::SQLITE_ERROR;
+pub use crate::src::headers::sqlite3_h::SQLITE_FCNTL_CKPT_DONE;
+pub use crate::src::headers::sqlite3_h::SQLITE_FCNTL_CKPT_START;
+pub use crate::src::headers::sqlite3_h::SQLITE_FCNTL_PERSIST_WAL_1;
+pub use crate::src::headers::sqlite3_h::SQLITE_FCNTL_SIZE_HINT_1;
+pub use crate::src::headers::sqlite3_h::SQLITE_INTERRUPT;
+pub use crate::src::headers::sqlite3_h::SQLITE_IOCAP_POWERSAFE_OVERWRITE;
+pub use crate::src::headers::sqlite3_h::SQLITE_IOCAP_SEQUENTIAL;
+pub use crate::src::headers::sqlite3_h::SQLITE_IOERR;
+pub use crate::src::headers::sqlite3_h::SQLITE_IOERR_SHORT_READ_1;
+pub use crate::src::headers::sqlite3_h::SQLITE_LOCK_EXCLUSIVE;
+pub use crate::src::headers::sqlite3_h::SQLITE_NOMEM;
+pub use crate::src::headers::sqlite3_h::SQLITE_NOTICE;
+pub use crate::src::headers::sqlite3_h::SQLITE_NOTICE_RECOVER_WAL_1;
+pub use crate::src::headers::sqlite3_h::SQLITE_OK;
+pub use crate::src::headers::sqlite3_h::SQLITE_OPEN_CREATE;
+pub use crate::src::headers::sqlite3_h::SQLITE_OPEN_READONLY;
+pub use crate::src::headers::sqlite3_h::SQLITE_OPEN_READWRITE;
+pub use crate::src::headers::sqlite3_h::SQLITE_OPEN_WAL;
+pub use crate::src::headers::sqlite3_h::SQLITE_PROTOCOL_1;
+pub use crate::src::headers::sqlite3_h::SQLITE_READONLY;
+pub use crate::src::headers::sqlite3_h::SQLITE_READONLY_CANTINIT_1;
+pub use crate::src::headers::sqlite3_h::SQLITE_READONLY_RECOVERY_1;
+pub use crate::src::headers::sqlite3_h::SQLITE_SHM_EXCLUSIVE;
+pub use crate::src::headers::sqlite3_h::SQLITE_SHM_LOCK;
+pub use crate::src::headers::sqlite3_h::SQLITE_SHM_NLOCK;
+pub use crate::src::headers::sqlite3_h::SQLITE_SHM_SHARED;
+pub use crate::src::headers::sqlite3_h::SQLITE_SHM_UNLOCK;
+pub use crate::src::headers::sqlite3_h::sqlite_int64;
+pub use crate::src::headers::sqlite3_h::sqlite_uint64;
+pub use crate::src::headers::sqlite3_h::sqlite3_file;
+pub use crate::src::headers::sqlite3_h::sqlite3_filename;
+pub use crate::src::headers::sqlite3_h::sqlite3_index_constraint;
+pub use crate::src::headers::sqlite3_h::sqlite3_index_constraint_usage;
+pub use crate::src::headers::sqlite3_h::sqlite3_index_info;
+pub use crate::src::headers::sqlite3_h::sqlite3_index_orderby;
+pub use crate::src::headers::sqlite3_h::sqlite3_int64;
+pub use crate::src::headers::sqlite3_h::sqlite3_io_methods;
+pub use crate::src::headers::sqlite3_h::sqlite3_module;
+pub use crate::src::headers::sqlite3_h::sqlite3_pcache_page;
+pub use crate::src::headers::sqlite3_h::sqlite3_syscall_ptr;
+pub use crate::src::headers::sqlite3_h::sqlite3_uint64;
+pub use crate::src::headers::sqlite3_h::sqlite3_vfs;
+pub use crate::src::headers::sqlite3_h::sqlite3_vtab;
+pub use crate::src::headers::sqlite3_h::sqlite3_vtab_cursor;
+pub use crate::src::headers::sqliteInt_h::__anon_struct_0;
+pub use crate::src::headers::sqliteInt_h::__anon_struct_1;
+pub use crate::src::headers::sqliteInt_h::__anon_struct_2;
+pub use crate::src::headers::sqliteInt_h::__anon_struct_3;
+pub use crate::src::headers::sqliteInt_h::__anon_struct_4;
+pub use crate::src::headers::sqliteInt_h::__anon_struct_5;
+pub use crate::src::headers::sqliteInt_h::__anon_struct_6;
+pub use crate::src::headers::sqliteInt_h::__anon_struct_7;
+pub use crate::src::headers::sqliteInt_h::__anon_struct_8;
+pub use crate::src::headers::sqliteInt_h::__anon_union_0;
+pub use crate::src::headers::sqliteInt_h::__anon_union_1;
+pub use crate::src::headers::sqliteInt_h::__anon_union_2;
+pub use crate::src::headers::sqliteInt_h::__anon_union_3;
+pub use crate::src::headers::sqliteInt_h::__anon_union_5;
+pub use crate::src::headers::sqliteInt_h::__anon_union_6;
+pub use crate::src::headers::sqliteInt_h::__anon_union_7;
+pub use crate::src::headers::sqliteInt_h::__anon_union_8;
+pub use crate::src::headers::sqliteInt_h::__anon_union_9;
+pub use crate::src::headers::sqliteInt_h::__anon_union_10;
+pub use crate::src::headers::sqliteInt_h::__anon_union_11;
+pub use crate::src::headers::sqliteInt_h::__anon_union_12;
+pub use crate::src::headers::sqliteInt_h::__anon_union_13;
+pub use crate::src::headers::sqliteInt_h::__anon_union_15;
+pub use crate::src::headers::sqliteInt_h::AggInfo;
+pub use crate::src::headers::sqliteInt_h::AggInfo_col;
+pub use crate::src::headers::sqliteInt_h::AggInfo_func;
+pub use crate::src::headers::sqliteInt_h::AutoincInfo;
+pub use crate::src::headers::sqliteInt_h::Bitmask;
+pub use crate::src::headers::sqliteInt_h::BusyHandler;
+pub use crate::src::headers::sqliteInt_h::CollSeq;
+pub use crate::src::headers::sqliteInt_h::Column;
+pub use crate::src::headers::sqliteInt_h::Cte;
+pub use crate::src::headers::sqliteInt_h::CteUse;
+pub use crate::src::headers::sqliteInt_h::Db;
+pub use crate::src::headers::sqliteInt_h::DbClientData;
+pub use crate::src::headers::sqliteInt_h::Expr;
+pub use crate::src::headers::sqliteInt_h::ExprList;
+pub use crate::src::headers::sqliteInt_h::ExprList_item;
+pub use crate::src::headers::sqliteInt_h::FKey;
+pub use crate::src::headers::sqliteInt_h::FuncDef;
+pub use crate::src::headers::sqliteInt_h::FuncDestructor;
+pub use crate::src::headers::sqliteInt_h::IdList;
+pub use crate::src::headers::sqliteInt_h::IdList_item;
+pub use crate::src::headers::sqliteInt_h::Index;
+pub use crate::src::headers::sqliteInt_h::IndexedExpr;
+pub use crate::src::headers::sqliteInt_h::KeyInfo;
+pub use crate::src::headers::sqliteInt_h::LogEst;
+pub use crate::src::headers::sqliteInt_h::Lookaside;
+pub use crate::src::headers::sqliteInt_h::LookasideSlot;
+pub use crate::src::headers::sqliteInt_h::Module;
+pub use crate::src::headers::sqliteInt_h::Parse;
+pub use crate::src::headers::sqliteInt_h::ParseCleanup;
+pub use crate::src::headers::sqliteInt_h::RenameToken;
+pub use crate::src::headers::sqliteInt_h::Returning;
+pub use crate::src::headers::sqliteInt_h::SQLITE_BIGENDIAN;
+pub use crate::src::headers::sqliteInt_h::SQLITE_NOMEM_BKPT;
+pub use crate::src::headers::sqliteInt_h::Savepoint;
+pub use crate::src::headers::sqliteInt_h::Schema;
+pub use crate::src::headers::sqliteInt_h::Select;
+pub use crate::src::headers::sqliteInt_h::SrcItem;
+pub use crate::src::headers::sqliteInt_h::SrcList;
+pub use crate::src::headers::sqliteInt_h::Subquery;
+pub use crate::src::headers::sqliteInt_h::Table;
+pub use crate::src::headers::sqliteInt_h::TableLock;
+pub use crate::src::headers::sqliteInt_h::Token;
+pub use crate::src::headers::sqliteInt_h::Trigger;
+pub use crate::src::headers::sqliteInt_h::TriggerPrg;
+pub use crate::src::headers::sqliteInt_h::TriggerStep;
+pub use crate::src::headers::sqliteInt_h::Upsert;
+pub use crate::src::headers::sqliteInt_h::VList;
+pub use crate::src::headers::sqliteInt_h::VTable;
+pub use crate::src::headers::sqliteInt_h::VtabCtx;
+pub use crate::src::headers::sqliteInt_h::Window;
+pub use crate::src::headers::sqliteInt_h::With;
+pub use crate::src::headers::sqliteInt_h::bft;
+pub use crate::src::headers::sqliteInt_h::sColMap;
+pub use crate::src::headers::sqliteInt_h::sqlite3;
+pub use crate::src::headers::sqliteInt_h::sqlite3_xauth;
+pub use crate::src::headers::sqliteInt_h::sqlite3InitInfo;
+pub use crate::src::headers::sqliteInt_h::yDbMask;
+pub use crate::src::headers::sqliteInt_h::ynVar;
 pub use crate::src::headers::stdlib::int16_t;
+pub use crate::src::headers::vdbeInt_h::PreUpdate;
+pub use crate::src::headers::vdbeInt_h::sqlite3_context;
+pub use crate::src::headers::vdbeInt_h::sqlite3_value;
+pub use crate::src::src::fault::sqlite3BeginBenignMalloc;
+pub use crate::src::src::fault::sqlite3EndBenignMalloc;
+pub use crate::src::src::main::sqlite3CantopenError;
+pub use crate::src::src::main::sqlite3CorruptError;
+pub use crate::src::src::malloc::sqlite3_free;
+pub use crate::src::src::malloc::sqlite3_malloc;
+pub use crate::src::src::malloc::sqlite3_malloc64;
+pub use crate::src::src::malloc::sqlite3MallocZero;
+pub use crate::src::src::malloc::sqlite3Realloc;
+pub use crate::src::src::mutex_unix::sqlite3_mutex;
+pub use crate::src::src::pager::Pager;
+pub use crate::src::src::pager::Pgno;
+pub use crate::src::src::pager::sqlite3SectorSize;
+pub use crate::src::src::pcache::PGHDR_WAL_APPEND;
+pub use crate::src::src::pcache::PgHdr;
+pub use crate::src::src::random::sqlite3_randomness;
+pub use crate::src::src::util::sqlite3FaultSim;
+pub use crate::src::src::util::sqlite3Get4byte;
+pub use crate::src::src::util::sqlite3Put4byte;
 
-
-
-pub use crate::src::headers::stdlib::uint16_t;pub use crate::src::headers::stdlib::uint32_t;pub use crate::src::headers::stdlib::uint8_t;pub use crate::src::headers::stdlib::__int16_t;pub use crate::src::headers::stdlib::__uint16_t;pub use crate::src::headers::stdlib::__uint32_t;pub use crate::src::headers::stdlib::__uint8_t;pub use crate::src::src::vdbe::p4union;pub use crate::src::src::vdbe::Mem;pub use crate::src::src::vdbe::SubProgram;pub use crate::src::src::vdbe::SubrtnSig;pub use crate::src::headers::vdbeInt_h::Vdbe;pub use crate::src::src::vdbe::VdbeOp;
+pub use crate::src::headers::stdlib::__int16_t;
+pub use crate::src::headers::stdlib::__uint8_t;
+pub use crate::src::headers::stdlib::__uint16_t;
+pub use crate::src::headers::stdlib::__uint32_t;
+pub use crate::src::headers::stdlib::uint8_t;
+pub use crate::src::headers::stdlib::uint16_t;
+pub use crate::src::headers::stdlib::uint32_t;
+pub use crate::src::headers::vdbeInt_h::Vdbe;
+pub use crate::src::src::vdbe::Mem;
+pub use crate::src::src::vdbe::SubProgram;
+pub use crate::src::src::vdbe::SubrtnSig;
+pub use crate::src::src::vdbe::VdbeOp;
+pub use crate::src::src::vdbe::p4union;
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct Wal {
     pub pVfs: *mut crate::src::headers::sqlite3_h::sqlite3_vfs,
     pub pDbFd: *mut crate::src::headers::sqlite3_h::sqlite3_file,
@@ -60,7 +213,6 @@ pub struct Wal {
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct WalIndexHdr {
     pub iVersion: crate::src::ext::rtree::rtree::u32_0,
     pub unused: crate::src::ext::rtree::rtree::u32_0,
@@ -76,7 +228,6 @@ pub struct WalIndexHdr {
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct WalCkptInfo {
     pub nBackfill: crate::src::ext::rtree::rtree::u32_0,
     pub aReadMark: [crate::src::ext::rtree::rtree::u32_0; 5],
@@ -86,7 +237,6 @@ pub struct WalCkptInfo {
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct WalIterator {
     pub iPrior: crate::src::ext::rtree::rtree::u32_0,
     pub nSegment: ::core::ffi::c_int,
@@ -94,7 +244,6 @@ pub struct WalIterator {
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct WalSegment {
     pub iNext: ::core::ffi::c_int,
     pub aIndex: *mut ht_slot,
@@ -106,7 +255,6 @@ pub struct WalSegment {
 pub type ht_slot = crate::src::fts5::u16_0;
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct WalHashLoc {
     pub aHash: *mut ht_slot,
     pub aPgno: *mut crate::src::ext::rtree::rtree::u32_0,
@@ -114,14 +262,12 @@ pub struct WalHashLoc {
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct Sublist {
     pub nList: ::core::ffi::c_int,
     pub aList: *mut ht_slot,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct WalWriter {
     pub pWal: *mut Wal,
     pub pFd: *mut crate::src::headers::sqlite3_h::sqlite3_file,
@@ -142,7 +288,8 @@ pub const WAL_CKPT_LOCK: ::core::ffi::c_int = 1 as ::core::ffi::c_int;
 
 pub const WAL_RECOVER_LOCK: ::core::ffi::c_int = 2 as ::core::ffi::c_int;
 
-pub const WAL_NREADER: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_SHM_NLOCK - 3 as ::core::ffi::c_int;
+pub const WAL_NREADER: ::core::ffi::c_int =
+    crate::src::headers::sqlite3_h::SQLITE_SHM_NLOCK - 3 as ::core::ffi::c_int;
 
 pub const READMARK_NOT_USED: ::core::ffi::c_uint = 0xffffffff as ::core::ffi::c_uint;
 
@@ -172,16 +319,18 @@ pub const HASHTABLE_HASH_1: ::core::ffi::c_int = 383 as ::core::ffi::c_int;
 
 pub const HASHTABLE_NSLOT: ::core::ffi::c_int = HASHTABLE_NPAGE * 2 as ::core::ffi::c_int;
 
-pub const HASHTABLE_NPAGE_ONE: usize = (HASHTABLE_NPAGE as usize)
-    .wrapping_sub(WALINDEX_HDR_SIZE.wrapping_div(::core::mem::size_of::<crate::src::ext::rtree::rtree::u32_0>() as usize));
+pub const HASHTABLE_NPAGE_ONE: usize = (HASHTABLE_NPAGE as usize).wrapping_sub(
+    WALINDEX_HDR_SIZE
+        .wrapping_div(::core::mem::size_of::<crate::src::ext::rtree::rtree::u32_0>() as usize),
+);
 
 pub const WALINDEX_PGSZ: usize = (::core::mem::size_of::<ht_slot>() as usize)
     .wrapping_mul(HASHTABLE_NSLOT as usize)
     .wrapping_add(
-        (HASHTABLE_NPAGE as usize).wrapping_mul(::core::mem::size_of::<crate::src::ext::rtree::rtree::u32_0>() as usize),
+        (HASHTABLE_NPAGE as usize)
+            .wrapping_mul(::core::mem::size_of::<crate::src::ext::rtree::rtree::u32_0>() as usize),
     );
 #[inline(never)]
-
 unsafe extern "C" fn walIndexPageRealloc(
     mut pWal: *mut Wal,
     mut iPage: ::core::ffi::c_int,
@@ -190,48 +339,67 @@ unsafe extern "C" fn walIndexPageRealloc(
     let mut rc: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_OK;
     let __pWal_ref = unsafe { &mut *pWal };
     if __pWal_ref.nWiData <= iPage {
-        let mut nByte: crate::src::headers::sqlite3_h::sqlite3_int64 = (::core::mem::size_of::<*mut crate::src::ext::rtree::rtree::u32_0>()
-            as ::core::ffi::c_ulonglong)
-            .wrapping_mul((1 as crate::src::ext::rtree::rtree::i64_0 + iPage as crate::src::ext::rtree::rtree::i64_0) as ::core::ffi::c_ulonglong)
-            as crate::src::headers::sqlite3_h::sqlite3_int64;
-        let mut apNew: *mut *mut crate::src::ext::rtree::rtree::u32_0 = ::core::ptr::null_mut::<*mut crate::src::ext::rtree::rtree::u32_0>();
-        apNew = crate::src::src::malloc::sqlite3Realloc(__pWal_ref.apWiData as *mut ::core::ffi::c_void, nByte as crate::src::ext::rtree::rtree::u64_0)
-            as *mut *mut crate::src::ext::rtree::rtree::u32_0;
+        let mut nByte: crate::src::headers::sqlite3_h::sqlite3_int64 =
+            (::core::mem::size_of::<*mut crate::src::ext::rtree::rtree::u32_0>()
+                as ::core::ffi::c_ulonglong)
+                .wrapping_mul(
+                    (1 as crate::src::ext::rtree::rtree::i64_0
+                        + iPage as crate::src::ext::rtree::rtree::i64_0)
+                        as ::core::ffi::c_ulonglong,
+                ) as crate::src::headers::sqlite3_h::sqlite3_int64;
+        let mut apNew: *mut *mut crate::src::ext::rtree::rtree::u32_0 =
+            ::core::ptr::null_mut::<*mut crate::src::ext::rtree::rtree::u32_0>();
+        apNew = crate::src::src::malloc::sqlite3Realloc(
+            __pWal_ref.apWiData as *mut ::core::ffi::c_void,
+            nByte as crate::src::ext::rtree::rtree::u64_0,
+        ) as *mut *mut crate::src::ext::rtree::rtree::u32_0;
         if apNew.is_null() {
             *ppPage = ::core::ptr::null_mut::<crate::src::ext::rtree::rtree::u32_0>();
             return crate::src::headers::sqliteInt_h::SQLITE_NOMEM_BKPT;
         }
         ::libc::memset(
-            apNew.offset(__pWal_ref.nWiData as isize) as *mut *mut crate::src::ext::rtree::rtree::u32_0 as *mut ::core::ffi::c_void,
+            apNew.offset(__pWal_ref.nWiData as isize)
+                as *mut *mut crate::src::ext::rtree::rtree::u32_0
+                as *mut ::core::ffi::c_void,
             0 as ::core::ffi::c_int,
-            (::core::mem::size_of::<*mut crate::src::ext::rtree::rtree::u32_0>() as crate::__stddef_size_t_h::size_t)
-                .wrapping_mul((iPage + 1 as ::core::ffi::c_int - __pWal_ref.nWiData) as crate::__stddef_size_t_h::size_t),
+            (::core::mem::size_of::<*mut crate::src::ext::rtree::rtree::u32_0>()
+                as crate::__stddef_size_t_h::size_t)
+                .wrapping_mul(
+                    (iPage + 1 as ::core::ffi::c_int - __pWal_ref.nWiData)
+                        as crate::__stddef_size_t_h::size_t,
+                ),
         );
         __pWal_ref.apWiData = apNew;
         __pWal_ref.nWiData = iPage + 1 as ::core::ffi::c_int;
     }
     if __pWal_ref.exclusiveMode as ::core::ffi::c_int == WAL_HEAPMEMORY_MODE {
         let ref mut fresh24 = *__pWal_ref.apWiData.offset(iPage as isize);
-        *fresh24 = crate::src::src::malloc::sqlite3MallocZero(WALINDEX_PGSZ as crate::src::ext::rtree::rtree::u64_0) as *mut crate::src::ext::rtree::rtree::u32_0;
+        *fresh24 = crate::src::src::malloc::sqlite3MallocZero(
+            WALINDEX_PGSZ as crate::src::ext::rtree::rtree::u64_0,
+        ) as *mut crate::src::ext::rtree::rtree::u32_0;
         if (*__pWal_ref.apWiData.offset(iPage as isize)).is_null() {
             rc = crate::src::headers::sqliteInt_h::SQLITE_NOMEM_BKPT;
         }
     } else {
         rc = crate::src::src::os::sqlite3OsShmMap(
-            
             __pWal_ref.pDbFd as *mut crate::src::headers::sqlite3_h::sqlite3_file,
             iPage,
             WALINDEX_PGSZ as ::core::ffi::c_int,
             __pWal_ref.writeLock as ::core::ffi::c_int,
-            __pWal_ref.apWiData.offset(iPage as isize) as *mut *mut crate::src::ext::rtree::rtree::u32_0
+            __pWal_ref.apWiData.offset(iPage as isize)
+                as *mut *mut crate::src::ext::rtree::rtree::u32_0
                 as *mut *mut ::core::ffi::c_void,
         );
         if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
-            if iPage > 0 as ::core::ffi::c_int && crate::src::src::util::sqlite3FaultSim(600 as ::core::ffi::c_int) != 0 {
+            if iPage > 0 as ::core::ffi::c_int
+                && crate::src::src::util::sqlite3FaultSim(600 as ::core::ffi::c_int) != 0
+            {
                 rc = crate::src::headers::sqlite3_h::SQLITE_NOMEM;
             }
-        } else if rc & 0xff as ::core::ffi::c_int == crate::src::headers::sqlite3_h::SQLITE_READONLY {
-            __pWal_ref.readOnly = (__pWal_ref.readOnly as ::core::ffi::c_int | WAL_SHM_RDONLY) as crate::src::ext::rtree::rtree::u8_0;
+        } else if rc & 0xff as ::core::ffi::c_int == crate::src::headers::sqlite3_h::SQLITE_READONLY
+        {
+            __pWal_ref.readOnly = (__pWal_ref.readOnly as ::core::ffi::c_int | WAL_SHM_RDONLY)
+                as crate::src::ext::rtree::rtree::u8_0;
             if rc == crate::src::headers::sqlite3_h::SQLITE_READONLY {
                 rc = crate::src::headers::sqlite3_h::SQLITE_OK;
             }
@@ -274,8 +442,11 @@ unsafe extern "C" fn walChecksumBytes(
 ) {
     let mut s1: crate::src::ext::rtree::rtree::u32_0 = 0;
     let mut s2: crate::src::ext::rtree::rtree::u32_0 = 0;
-    let mut aData: *mut crate::src::ext::rtree::rtree::u32_0 = a as *mut crate::src::ext::rtree::rtree::u32_0;
-    let mut aEnd: *mut crate::src::ext::rtree::rtree::u32_0 = a.offset(nByte as isize) as *mut crate::src::ext::rtree::rtree::u8_0 as *mut crate::src::ext::rtree::rtree::u32_0;
+    let mut aData: *mut crate::src::ext::rtree::rtree::u32_0 =
+        a as *mut crate::src::ext::rtree::rtree::u32_0;
+    let mut aEnd: *mut crate::src::ext::rtree::rtree::u32_0 = a.offset(nByte as isize)
+        as *mut crate::src::ext::rtree::rtree::u8_0
+        as *mut crate::src::ext::rtree::rtree::u32_0;
     if !aIn.is_null() {
         s1 = *aIn.offset(0 as isize);
         s2 = *aIn.offset(1 as isize);
@@ -289,36 +460,44 @@ unsafe extern "C" fn walChecksumBytes(
                 ((*aData.offset(0 as isize) & 0xff as crate::src::ext::rtree::rtree::u32_0)
                     << 24 as ::core::ffi::c_int)
                     .wrapping_add(
-                        (*aData.offset(0 as isize) & 0xff00 as crate::src::ext::rtree::rtree::u32_0)
+                        (*aData.offset(0 as isize)
+                            & 0xff00 as crate::src::ext::rtree::rtree::u32_0)
                             << 8 as ::core::ffi::c_int,
                     )
                     .wrapping_add(
-                        (*aData.offset(0 as isize) & 0xff0000 as crate::src::ext::rtree::rtree::u32_0)
+                        (*aData.offset(0 as isize)
+                            & 0xff0000 as crate::src::ext::rtree::rtree::u32_0)
                             >> 8 as ::core::ffi::c_int,
                     )
                     .wrapping_add(
-                        (*aData.offset(0 as isize) & 0xff000000 as crate::src::ext::rtree::rtree::u32_0)
+                        (*aData.offset(0 as isize)
+                            & 0xff000000 as crate::src::ext::rtree::rtree::u32_0)
                             >> 24 as ::core::ffi::c_int,
                     )
                     .wrapping_add(s2) as ::core::ffi::c_uint,
-            ) as crate::src::ext::rtree::rtree::u32_0 as crate::src::ext::rtree::rtree::u32_0;
+            ) as crate::src::ext::rtree::rtree::u32_0
+                as crate::src::ext::rtree::rtree::u32_0;
             s2 = (s2 as ::core::ffi::c_uint).wrapping_add(
                 ((*aData.offset(1 as isize) & 0xff as crate::src::ext::rtree::rtree::u32_0)
                     << 24 as ::core::ffi::c_int)
                     .wrapping_add(
-                        (*aData.offset(1 as isize) & 0xff00 as crate::src::ext::rtree::rtree::u32_0)
+                        (*aData.offset(1 as isize)
+                            & 0xff00 as crate::src::ext::rtree::rtree::u32_0)
                             << 8 as ::core::ffi::c_int,
                     )
                     .wrapping_add(
-                        (*aData.offset(1 as isize) & 0xff0000 as crate::src::ext::rtree::rtree::u32_0)
+                        (*aData.offset(1 as isize)
+                            & 0xff0000 as crate::src::ext::rtree::rtree::u32_0)
                             >> 8 as ::core::ffi::c_int,
                     )
                     .wrapping_add(
-                        (*aData.offset(1 as isize) & 0xff000000 as crate::src::ext::rtree::rtree::u32_0)
+                        (*aData.offset(1 as isize)
+                            & 0xff000000 as crate::src::ext::rtree::rtree::u32_0)
                             >> 24 as ::core::ffi::c_int,
                     )
                     .wrapping_add(s1) as ::core::ffi::c_uint,
-            ) as crate::src::ext::rtree::rtree::u32_0 as crate::src::ext::rtree::rtree::u32_0;
+            ) as crate::src::ext::rtree::rtree::u32_0
+                as crate::src::ext::rtree::rtree::u32_0;
             aData = aData.offset(2 as isize);
             if !(aData < aEnd) {
                 break;
@@ -397,7 +576,9 @@ unsafe extern "C" fn walChecksumBytes(
 
 unsafe extern "C" fn walShmBarrier(mut pWal: *mut Wal) {
     if (*pWal).exclusiveMode as ::core::ffi::c_int != WAL_HEAPMEMORY_MODE {
-        crate::src::src::os::sqlite3OsShmBarrier((*pWal).pDbFd as *mut crate::src::headers::sqlite3_h::sqlite3_file);
+        crate::src::src::os::sqlite3OsShmBarrier(
+            (*pWal).pDbFd as *mut crate::src::headers::sqlite3_h::sqlite3_file,
+        );
     }
 }
 
@@ -415,16 +596,16 @@ unsafe extern "C" fn walIndexWriteHdr(mut pWal: *mut Wal) {
         &raw mut __pWal_ref.hdr.aCksum as *mut crate::src::ext::rtree::rtree::u32_0,
     );
     ::core::ptr::copy_nonoverlapping(
-                    &raw mut __pWal_ref.hdr as *const u8,
-                    aHdr.offset(1 as isize) as *mut WalIndexHdr as *mut u8,
-                    ::core::mem::size_of::<WalIndexHdr>() as usize,
-                );
+        &raw mut __pWal_ref.hdr as *const u8,
+        aHdr.offset(1 as isize) as *mut WalIndexHdr as *mut u8,
+        ::core::mem::size_of::<WalIndexHdr>() as usize,
+    );
     walShmBarrier(pWal);
     ::core::ptr::copy_nonoverlapping(
-                    &raw mut __pWal_ref.hdr as *const u8,
-                    aHdr.offset(0 as isize) as *mut WalIndexHdr as *mut u8,
-                    ::core::mem::size_of::<WalIndexHdr>() as usize,
-                );
+        &raw mut __pWal_ref.hdr as *const u8,
+        aHdr.offset(0 as isize) as *mut WalIndexHdr as *mut u8,
+        ::core::mem::size_of::<WalIndexHdr>() as usize,
+    );
 }
 
 unsafe extern "C" fn walEncodeFrame(
@@ -435,7 +616,8 @@ unsafe extern "C" fn walEncodeFrame(
     mut aFrame: *mut crate::src::ext::rtree::rtree::u8_0,
 ) {
     let mut nativeCksum: ::core::ffi::c_int = 0;
-    let mut aCksum: *mut crate::src::ext::rtree::rtree::u32_0 = &raw mut (*pWal).hdr.aFrameCksum as *mut crate::src::ext::rtree::rtree::u32_0;
+    let mut aCksum: *mut crate::src::ext::rtree::rtree::u32_0 =
+        &raw mut (*pWal).hdr.aFrameCksum as *mut crate::src::ext::rtree::rtree::u32_0;
     crate::src::src::util::sqlite3Put4byte(
         aFrame.offset(0 as isize) as *mut crate::src::ext::rtree::rtree::u8_0,
         iPage,
@@ -447,11 +629,12 @@ unsafe extern "C" fn walEncodeFrame(
     if (*pWal).iReCksum == 0 as crate::src::ext::rtree::rtree::u32_0 {
         let __pWal_ref = unsafe { &mut *pWal };
         ::core::ptr::copy_nonoverlapping(
-                    &raw mut __pWal_ref.hdr.aSalt as *mut crate::src::ext::rtree::rtree::u32_0 as *const u8,
-                    aFrame.offset(8 as isize) as *mut crate::src::ext::rtree::rtree::u8_0 as *mut u8,
-                    8 as usize,
-                );
-        nativeCksum = (__pWal_ref.hdr.bigEndCksum as ::core::ffi::c_int == crate::src::headers::sqliteInt_h::SQLITE_BIGENDIAN)
+            &raw mut __pWal_ref.hdr.aSalt as *mut crate::src::ext::rtree::rtree::u32_0 as *const u8,
+            aFrame.offset(8 as isize) as *mut crate::src::ext::rtree::rtree::u8_0 as *mut u8,
+            8 as usize,
+        );
+        nativeCksum = (__pWal_ref.hdr.bigEndCksum as ::core::ffi::c_int
+            == crate::src::headers::sqliteInt_h::SQLITE_BIGENDIAN)
             as ::core::ffi::c_int;
         walChecksumBytes(nativeCksum, aFrame, 8 as ::core::ffi::c_int, aCksum, aCksum);
         walChecksumBytes(
@@ -488,22 +671,27 @@ unsafe extern "C" fn walDecodeFrame(
 ) -> ::core::ffi::c_int {
     let mut nativeCksum: ::core::ffi::c_int = 0;
     let __pWal_ref = unsafe { &mut *pWal };
-    let mut aCksum: *mut crate::src::ext::rtree::rtree::u32_0 = &raw mut __pWal_ref.hdr.aFrameCksum as *mut crate::src::ext::rtree::rtree::u32_0;
+    let mut aCksum: *mut crate::src::ext::rtree::rtree::u32_0 =
+        &raw mut __pWal_ref.hdr.aFrameCksum as *mut crate::src::ext::rtree::rtree::u32_0;
     let mut pgno: crate::src::ext::rtree::rtree::u32_0 = 0;
     if ::libc::memcmp(
         &raw mut __pWal_ref.hdr.aSalt as *const ::core::ffi::c_void,
-        aFrame.offset(8 as isize) as *mut crate::src::ext::rtree::rtree::u8_0 as *const ::core::ffi::c_void,
+        aFrame.offset(8 as isize) as *mut crate::src::ext::rtree::rtree::u8_0
+            as *const ::core::ffi::c_void,
         8 as crate::__stddef_size_t_h::size_t,
     ) != 0 as ::core::ffi::c_int
     {
         return 0 as ::core::ffi::c_int;
     }
-    pgno = crate::src::src::util::sqlite3Get4byte(aFrame.offset(0 as isize) as *mut crate::src::ext::rtree::rtree::u8_0);
+    pgno = crate::src::src::util::sqlite3Get4byte(
+        aFrame.offset(0 as isize) as *mut crate::src::ext::rtree::rtree::u8_0
+    );
     if pgno == 0 as crate::src::ext::rtree::rtree::u32_0 {
         return 0 as ::core::ffi::c_int;
     }
-    nativeCksum =
-        (__pWal_ref.hdr.bigEndCksum as ::core::ffi::c_int == crate::src::headers::sqliteInt_h::SQLITE_BIGENDIAN) as ::core::ffi::c_int;
+    nativeCksum = (__pWal_ref.hdr.bigEndCksum as ::core::ffi::c_int
+        == crate::src::headers::sqliteInt_h::SQLITE_BIGENDIAN)
+        as ::core::ffi::c_int;
     walChecksumBytes(nativeCksum, aFrame, 8 as ::core::ffi::c_int, aCksum, aCksum);
     walChecksumBytes(
         nativeCksum,
@@ -513,14 +701,20 @@ unsafe extern "C" fn walDecodeFrame(
         aCksum,
     );
     if *aCksum.offset(0 as isize)
-        != crate::src::src::util::sqlite3Get4byte(aFrame.offset(16 as isize) as *mut crate::src::ext::rtree::rtree::u8_0)
+        != crate::src::src::util::sqlite3Get4byte(
+            aFrame.offset(16 as isize) as *mut crate::src::ext::rtree::rtree::u8_0
+        )
         || *aCksum.offset(1 as isize)
-            != crate::src::src::util::sqlite3Get4byte(aFrame.offset(20 as isize) as *mut crate::src::ext::rtree::rtree::u8_0)
+            != crate::src::src::util::sqlite3Get4byte(
+                aFrame.offset(20 as isize) as *mut crate::src::ext::rtree::rtree::u8_0
+            )
     {
         return 0 as ::core::ffi::c_int;
     }
     *piPage = pgno;
-    *pnTruncate = crate::src::src::util::sqlite3Get4byte(aFrame.offset(4 as isize) as *mut crate::src::ext::rtree::rtree::u8_0);
+    *pnTruncate = crate::src::src::util::sqlite3Get4byte(
+        aFrame.offset(4 as isize) as *mut crate::src::ext::rtree::rtree::u8_0
+    );
     1 as ::core::ffi::c_int
 }
 
@@ -533,11 +727,11 @@ unsafe extern "C" fn walLockShared(
         return crate::src::headers::sqlite3_h::SQLITE_OK;
     }
     rc = crate::src::src::os::sqlite3OsShmLock(
-        
         (*pWal).pDbFd as *mut crate::src::headers::sqlite3_h::sqlite3_file,
         lockIdx,
         1 as ::core::ffi::c_int,
-        crate::src::headers::sqlite3_h::SQLITE_SHM_LOCK | crate::src::headers::sqlite3_h::SQLITE_SHM_SHARED,
+        crate::src::headers::sqlite3_h::SQLITE_SHM_LOCK
+            | crate::src::headers::sqlite3_h::SQLITE_SHM_SHARED,
     );
     rc
 }
@@ -547,11 +741,11 @@ unsafe extern "C" fn walUnlockShared(mut pWal: *mut Wal, mut lockIdx: ::core::ff
         return;
     }
     crate::src::src::os::sqlite3OsShmLock(
-        
         (*pWal).pDbFd as *mut crate::src::headers::sqlite3_h::sqlite3_file,
         lockIdx,
         1 as ::core::ffi::c_int,
-        crate::src::headers::sqlite3_h::SQLITE_SHM_UNLOCK | crate::src::headers::sqlite3_h::SQLITE_SHM_SHARED,
+        crate::src::headers::sqlite3_h::SQLITE_SHM_UNLOCK
+            | crate::src::headers::sqlite3_h::SQLITE_SHM_SHARED,
     );
 }
 
@@ -565,11 +759,11 @@ unsafe extern "C" fn walLockExclusive(
         return crate::src::headers::sqlite3_h::SQLITE_OK;
     }
     rc = crate::src::src::os::sqlite3OsShmLock(
-        
         (*pWal).pDbFd as *mut crate::src::headers::sqlite3_h::sqlite3_file,
         lockIdx,
         n,
-        crate::src::headers::sqlite3_h::SQLITE_SHM_LOCK | crate::src::headers::sqlite3_h::SQLITE_SHM_EXCLUSIVE,
+        crate::src::headers::sqlite3_h::SQLITE_SHM_LOCK
+            | crate::src::headers::sqlite3_h::SQLITE_SHM_EXCLUSIVE,
     );
     rc
 }
@@ -583,17 +777,20 @@ unsafe extern "C" fn walUnlockExclusive(
         return;
     }
     crate::src::src::os::sqlite3OsShmLock(
-        
         (*pWal).pDbFd as *mut crate::src::headers::sqlite3_h::sqlite3_file,
         lockIdx,
         n,
-        crate::src::headers::sqlite3_h::SQLITE_SHM_UNLOCK | crate::src::headers::sqlite3_h::SQLITE_SHM_EXCLUSIVE,
+        crate::src::headers::sqlite3_h::SQLITE_SHM_UNLOCK
+            | crate::src::headers::sqlite3_h::SQLITE_SHM_EXCLUSIVE,
     );
 }
 
-unsafe extern "C" fn walHash(mut iPage: crate::src::ext::rtree::rtree::u32_0) -> ::core::ffi::c_int {
+unsafe extern "C" fn walHash(
+    mut iPage: crate::src::ext::rtree::rtree::u32_0,
+) -> ::core::ffi::c_int {
     (iPage.wrapping_mul(HASHTABLE_HASH_1 as crate::src::ext::rtree::rtree::u32_0)
-        & (HASHTABLE_NSLOT - 1 as ::core::ffi::c_int) as crate::src::ext::rtree::rtree::u32_0) as ::core::ffi::c_int
+        & (HASHTABLE_NSLOT - 1 as ::core::ffi::c_int) as crate::src::ext::rtree::rtree::u32_0)
+        as ::core::ffi::c_int
 }
 
 unsafe extern "C" fn walNextHash(mut iPriorHash: ::core::ffi::c_int) -> ::core::ffi::c_int {
@@ -608,13 +805,17 @@ unsafe extern "C" fn walHashGet(
     let mut rc: ::core::ffi::c_int = 0;
     rc = walIndexPage(pWal, iHash, &raw mut (*pLoc).aPgno);
     if !(*pLoc).aPgno.is_null() {
-        (*pLoc).aHash =
-            (*pLoc).aPgno.offset(HASHTABLE_NPAGE as isize) as *mut crate::src::ext::rtree::rtree::u32_0 as *mut ht_slot;
+        (*pLoc).aHash = (*pLoc).aPgno.offset(HASHTABLE_NPAGE as isize)
+            as *mut crate::src::ext::rtree::rtree::u32_0 as *mut ht_slot;
         if iHash == 0 as ::core::ffi::c_int {
             let __pLoc_ref = unsafe { &mut *pLoc };
-            __pLoc_ref.aPgno = __pLoc_ref.aPgno.offset(
-                WALINDEX_HDR_SIZE.wrapping_div(::core::mem::size_of::<crate::src::ext::rtree::rtree::u32_0>() as usize) as isize,
-            ) as *mut crate::src::ext::rtree::rtree::u32_0;
+            __pLoc_ref.aPgno =
+                __pLoc_ref
+                    .aPgno
+                    .offset(WALINDEX_HDR_SIZE.wrapping_div(::core::mem::size_of::<
+                        crate::src::ext::rtree::rtree::u32_0,
+                    >() as usize) as isize)
+                    as *mut crate::src::ext::rtree::rtree::u32_0;
             __pLoc_ref.iZero = 0 as crate::src::ext::rtree::rtree::u32_0;
         } else {
             (*pLoc).iZero = HASHTABLE_NPAGE_ONE
@@ -627,21 +828,28 @@ unsafe extern "C" fn walHashGet(
     rc
 }
 
-unsafe extern "C" fn walFramePage(mut iFrame: crate::src::ext::rtree::rtree::u32_0) -> ::core::ffi::c_int {
-    let mut iHash: ::core::ffi::c_int = (iFrame.wrapping_add(HASHTABLE_NPAGE as crate::src::ext::rtree::rtree::u32_0) as usize)
-        .wrapping_sub(HASHTABLE_NPAGE_ONE)
-        .wrapping_sub(1 as usize)
-        .wrapping_div(HASHTABLE_NPAGE as usize)
-        as ::core::ffi::c_int;
+unsafe extern "C" fn walFramePage(
+    mut iFrame: crate::src::ext::rtree::rtree::u32_0,
+) -> ::core::ffi::c_int {
+    let mut iHash: ::core::ffi::c_int =
+        (iFrame.wrapping_add(HASHTABLE_NPAGE as crate::src::ext::rtree::rtree::u32_0) as usize)
+            .wrapping_sub(HASHTABLE_NPAGE_ONE)
+            .wrapping_sub(1 as usize)
+            .wrapping_div(HASHTABLE_NPAGE as usize) as ::core::ffi::c_int;
     iHash
 }
 
-unsafe extern "C" fn walFramePgno(mut pWal: *mut Wal, mut iFrame: crate::src::ext::rtree::rtree::u32_0) -> crate::src::ext::rtree::rtree::u32_0 {
+unsafe extern "C" fn walFramePgno(
+    mut pWal: *mut Wal,
+    mut iFrame: crate::src::ext::rtree::rtree::u32_0,
+) -> crate::src::ext::rtree::rtree::u32_0 {
     let mut iHash: ::core::ffi::c_int = walFramePage(iFrame);
     if iHash == 0 as ::core::ffi::c_int {
         return *(*(*pWal).apWiData.offset(0 as isize)).offset(
             WALINDEX_HDR_SIZE
-                .wrapping_div(::core::mem::size_of::<crate::src::ext::rtree::rtree::u32_0>() as usize)
+                .wrapping_div(
+                    ::core::mem::size_of::<crate::src::ext::rtree::rtree::u32_0>() as usize,
+                )
                 .wrapping_add(iFrame as usize)
                 .wrapping_sub(1 as usize) as isize,
         );
@@ -678,11 +886,12 @@ unsafe extern "C" fn walCleanupHash(mut pWal: *mut Wal) {
         }
         i += 1;
     }
-    nByte = (sLoc.aHash as *mut ::core::ffi::c_char)
-        .offset_from(sLoc.aPgno.offset(iLimit as isize) as *mut crate::src::ext::rtree::rtree::u32_0 as *mut ::core::ffi::c_char)
-        as ::core::ffi::c_long as ::core::ffi::c_int;
+    nByte = (sLoc.aHash as *mut ::core::ffi::c_char).offset_from(sLoc.aPgno.offset(iLimit as isize)
+        as *mut crate::src::ext::rtree::rtree::u32_0
+        as *mut ::core::ffi::c_char) as ::core::ffi::c_long as ::core::ffi::c_int;
     ::libc::memset(
-        sLoc.aPgno.offset(iLimit as isize) as *mut crate::src::ext::rtree::rtree::u32_0 as *mut ::core::ffi::c_void,
+        sLoc.aPgno.offset(iLimit as isize) as *mut crate::src::ext::rtree::rtree::u32_0
+            as *mut ::core::ffi::c_void,
         0 as ::core::ffi::c_int,
         nByte as crate::__stddef_size_t_h::size_t,
     );
@@ -707,9 +916,10 @@ unsafe extern "C" fn walIndexAppend(
         idx = iFrame.wrapping_sub(sLoc.iZero) as ::core::ffi::c_int;
         if idx == 1 as ::core::ffi::c_int {
             let mut nByte: ::core::ffi::c_int =
-                (sLoc.aHash.offset(HASHTABLE_NSLOT as isize) as *mut ht_slot as *mut crate::src::ext::rtree::rtree::u8_0)
-                    .offset_from(sLoc.aPgno as *mut crate::src::ext::rtree::rtree::u8_0) as ::core::ffi::c_long
-                    as ::core::ffi::c_int;
+                (sLoc.aHash.offset(HASHTABLE_NSLOT as isize) as *mut ht_slot
+                    as *mut crate::src::ext::rtree::rtree::u8_0)
+                    .offset_from(sLoc.aPgno as *mut crate::src::ext::rtree::rtree::u8_0)
+                    as ::core::ffi::c_long as ::core::ffi::c_int;
             ::libc::memset(
                 sLoc.aPgno as *mut ::core::ffi::c_void,
                 0 as ::core::ffi::c_int,
@@ -733,7 +943,8 @@ unsafe extern "C" fn walIndexAppend(
             sLoc.aPgno.offset((idx - 1 as ::core::ffi::c_int) as isize),
             iPage,
         );
-        (*(sLoc.aHash.offset(iKey as isize) as *mut std::sync::atomic::AtomicU16)).store(idx as ht_slot, std::sync::atomic::Ordering::Relaxed);
+        (*(sLoc.aHash.offset(iKey as isize) as *mut std::sync::atomic::AtomicU16))
+            .store(idx as ht_slot, std::sync::atomic::Ordering::Relaxed);
     }
     rc
 }
@@ -762,14 +973,20 @@ unsafe extern "C" fn walIndexRecover(mut pWal: *mut Wal) -> ::core::ffi::c_int {
         0 as ::core::ffi::c_int,
         ::core::mem::size_of::<WalIndexHdr>() as crate::__stddef_size_t_h::size_t,
     );
-    rc = crate::src::src::os::sqlite3OsFileSize(__pWal_ref.pWalFd as *mut crate::src::headers::sqlite3_h::sqlite3_file, &raw mut nSize);
+    rc = crate::src::src::os::sqlite3OsFileSize(
+        __pWal_ref.pWalFd as *mut crate::src::headers::sqlite3_h::sqlite3_file,
+        &raw mut nSize,
+    );
     if !(rc != crate::src::headers::sqlite3_h::SQLITE_OK) {
         if nSize > WAL_HDRSIZE as crate::src::ext::rtree::rtree::i64_0 {
             let mut aBuf: [crate::src::ext::rtree::rtree::u8_0; 32] = [0; 32];
-            let mut aPrivate: *mut crate::src::ext::rtree::rtree::u32_0 = ::core::ptr::null_mut::<crate::src::ext::rtree::rtree::u32_0>();
-            let mut aFrame: *mut crate::src::ext::rtree::rtree::u8_0 = ::core::ptr::null_mut::<crate::src::ext::rtree::rtree::u8_0>();
+            let mut aPrivate: *mut crate::src::ext::rtree::rtree::u32_0 =
+                ::core::ptr::null_mut::<crate::src::ext::rtree::rtree::u32_0>();
+            let mut aFrame: *mut crate::src::ext::rtree::rtree::u8_0 =
+                ::core::ptr::null_mut::<crate::src::ext::rtree::rtree::u8_0>();
             let mut szFrame: ::core::ffi::c_int = 0;
-            let mut aData: *mut crate::src::ext::rtree::rtree::u8_0 = ::core::ptr::null_mut::<crate::src::ext::rtree::rtree::u8_0>();
+            let mut aData: *mut crate::src::ext::rtree::rtree::u8_0 =
+                ::core::ptr::null_mut::<crate::src::ext::rtree::rtree::u8_0>();
             let mut szPage: ::core::ffi::c_int = 0;
             let mut magic: crate::src::ext::rtree::rtree::u32_0 = 0;
             let mut version: crate::src::ext::rtree::rtree::u32_0 = 0;
@@ -777,9 +994,9 @@ unsafe extern "C" fn walIndexRecover(mut pWal: *mut Wal) -> ::core::ffi::c_int {
             let mut iPg: crate::src::ext::rtree::rtree::u32_0 = 0;
             let mut iLastFrame: crate::src::ext::rtree::rtree::u32_0 = 0;
             rc = crate::src::src::os::sqlite3OsRead(
-                
                 __pWal_ref.pWalFd as *mut crate::src::headers::sqlite3_h::sqlite3_file,
-                &raw mut aBuf as *mut crate::src::ext::rtree::rtree::u8_0 as *mut ::core::ffi::c_void,
+                &raw mut aBuf as *mut crate::src::ext::rtree::rtree::u8_0
+                    as *mut ::core::ffi::c_void,
                 WAL_HDRSIZE,
                 0 as crate::src::ext::rtree::rtree::i64_0,
             );
@@ -794,36 +1011,45 @@ unsafe extern "C" fn walIndexRecover(mut pWal: *mut Wal) -> ::core::ffi::c_int {
                     (&raw mut aBuf as *mut crate::src::ext::rtree::rtree::u8_0).offset(8 as isize)
                         as *mut crate::src::ext::rtree::rtree::u8_0,
                 ) as ::core::ffi::c_int;
-                if magic & 0xfffffffe as crate::src::ext::rtree::rtree::u32_0 != WAL_MAGIC as crate::src::ext::rtree::rtree::u32_0
+                if magic & 0xfffffffe as crate::src::ext::rtree::rtree::u32_0
+                    != WAL_MAGIC as crate::src::ext::rtree::rtree::u32_0
                     || szPage & szPage - 1 as ::core::ffi::c_int != 0
                     || szPage > crate::sqliteLimit_h::SQLITE_MAX_PAGE_SIZE
                     || szPage < 512 as ::core::ffi::c_int
                 {
                     current_block = 1095482132288021607;
                 } else {
-                    __pWal_ref.hdr.bigEndCksum = (magic & 0x1 as crate::src::ext::rtree::rtree::u32_0) as crate::src::ext::rtree::rtree::u8_0;
+                    __pWal_ref.hdr.bigEndCksum = (magic
+                        & 0x1 as crate::src::ext::rtree::rtree::u32_0)
+                        as crate::src::ext::rtree::rtree::u8_0;
                     __pWal_ref.szPage = szPage as crate::src::ext::rtree::rtree::u32_0;
                     __pWal_ref.nCkpt = crate::src::src::util::sqlite3Get4byte(
-                        (&raw mut aBuf as *mut crate::src::ext::rtree::rtree::u8_0).offset(12 as isize)
+                        (&raw mut aBuf as *mut crate::src::ext::rtree::rtree::u8_0)
+                            .offset(12 as isize)
                             as *mut crate::src::ext::rtree::rtree::u8_0,
                     );
                     ::core::ptr::copy_nonoverlapping(
-                    (&raw mut aBuf as *mut crate::src::ext::rtree::rtree::u8_0).offset(16 as isize)
-                            as *mut crate::src::ext::rtree::rtree::u8_0 as *const u8,
-                    &raw mut __pWal_ref.hdr.aSalt as *mut u8,
-                    8 as usize,
-                );
+                        (&raw mut aBuf as *mut crate::src::ext::rtree::rtree::u8_0)
+                            .offset(16 as isize)
+                            as *mut crate::src::ext::rtree::rtree::u8_0
+                            as *const u8,
+                        &raw mut __pWal_ref.hdr.aSalt as *mut u8,
+                        8 as usize,
+                    );
                     walChecksumBytes(
-                        (__pWal_ref.hdr.bigEndCksum as ::core::ffi::c_int == crate::src::headers::sqliteInt_h::SQLITE_BIGENDIAN)
+                        (__pWal_ref.hdr.bigEndCksum as ::core::ffi::c_int
+                            == crate::src::headers::sqliteInt_h::SQLITE_BIGENDIAN)
                             as ::core::ffi::c_int,
                         &raw mut aBuf as *mut crate::src::ext::rtree::rtree::u8_0,
                         WAL_HDRSIZE - 2 as ::core::ffi::c_int * 4 as ::core::ffi::c_int,
                         ::core::ptr::null::<crate::src::ext::rtree::rtree::u32_0>(),
-                        &raw mut __pWal_ref.hdr.aFrameCksum as *mut crate::src::ext::rtree::rtree::u32_0,
+                        &raw mut __pWal_ref.hdr.aFrameCksum
+                            as *mut crate::src::ext::rtree::rtree::u32_0,
                     );
                     if __pWal_ref.hdr.aFrameCksum[0 as ::core::ffi::c_int as usize]
                         != crate::src::src::util::sqlite3Get4byte(
-                            (&raw mut aBuf as *mut crate::src::ext::rtree::rtree::u8_0).offset(24 as isize)
+                            (&raw mut aBuf as *mut crate::src::ext::rtree::rtree::u8_0)
+                                .offset(24 as isize)
                                 as *mut crate::src::ext::rtree::rtree::u8_0,
                         )
                         || __pWal_ref.hdr.aFrameCksum[1 as ::core::ffi::c_int as usize]
@@ -836,90 +1062,133 @@ unsafe extern "C" fn walIndexRecover(mut pWal: *mut Wal) -> ::core::ffi::c_int {
                         current_block = 1095482132288021607;
                     } else {
                         version = crate::src::src::util::sqlite3Get4byte(
-                            (&raw mut aBuf as *mut crate::src::ext::rtree::rtree::u8_0).offset(4 as isize)
+                            (&raw mut aBuf as *mut crate::src::ext::rtree::rtree::u8_0)
+                                .offset(4 as isize)
                                 as *mut crate::src::ext::rtree::rtree::u8_0,
                         );
                         if version != WAL_MAX_VERSION as crate::src::ext::rtree::rtree::u32_0 {
-                            rc = crate::src::src::main::sqlite3CantopenError(1467 as ::core::ffi::c_int);
+                            rc = crate::src::src::main::sqlite3CantopenError(
+                                1467 as ::core::ffi::c_int,
+                            );
                             current_block = 1095482132288021607;
                         } else {
                             szFrame = szPage + WAL_FRAME_HDRSIZE;
-                            aFrame =
-                                crate::src::src::malloc::sqlite3_malloc64((szFrame as usize).wrapping_add(WALINDEX_PGSZ)
-                                    as crate::src::headers::sqlite3_h::sqlite3_uint64) as *mut crate::src::ext::rtree::rtree::u8_0;
+                            aFrame = crate::src::src::malloc::sqlite3_malloc64(
+                                (szFrame as usize).wrapping_add(WALINDEX_PGSZ)
+                                    as crate::src::headers::sqlite3_h::sqlite3_uint64,
+                            )
+                                as *mut crate::src::ext::rtree::rtree::u8_0;
                             if aFrame.is_null() {
                                 rc = crate::src::headers::sqliteInt_h::SQLITE_NOMEM_BKPT;
                                 current_block = 2310077433060450808;
                             } else {
-                                aData = aFrame.offset(WAL_FRAME_HDRSIZE as isize) as *mut crate::src::ext::rtree::rtree::u8_0;
-                                aPrivate = aData.offset(szPage as isize) as *mut crate::src::ext::rtree::rtree::u8_0 as *mut crate::src::ext::rtree::rtree::u32_0;
-                                iLastFrame =
-                                    ((nSize - WAL_HDRSIZE as crate::src::ext::rtree::rtree::i64_0) / szFrame as crate::src::ext::rtree::rtree::i64_0) as crate::src::ext::rtree::rtree::u32_0;
+                                aData = aFrame.offset(WAL_FRAME_HDRSIZE as isize)
+                                    as *mut crate::src::ext::rtree::rtree::u8_0;
+                                aPrivate = aData.offset(szPage as isize)
+                                    as *mut crate::src::ext::rtree::rtree::u8_0
+                                    as *mut crate::src::ext::rtree::rtree::u32_0;
+                                iLastFrame = ((nSize
+                                    - WAL_HDRSIZE as crate::src::ext::rtree::rtree::i64_0)
+                                    / szFrame as crate::src::ext::rtree::rtree::i64_0)
+                                    as crate::src::ext::rtree::rtree::u32_0;
                                 iPg = 0 as crate::src::ext::rtree::rtree::u32_0;
-                                while iPg <= walFramePage(iLastFrame) as crate::src::ext::rtree::rtree::u32_0 {
-                                    let mut aShare: *mut crate::src::ext::rtree::rtree::u32_0 = ::core::ptr::null_mut::<crate::src::ext::rtree::rtree::u32_0>();
+                                while iPg
+                                    <= walFramePage(iLastFrame)
+                                        as crate::src::ext::rtree::rtree::u32_0
+                                {
+                                    let mut aShare: *mut crate::src::ext::rtree::rtree::u32_0 =
+                                        ::core::ptr::null_mut::<crate::src::ext::rtree::rtree::u32_0>(
+                                        );
                                     let mut iFrame: crate::src::ext::rtree::rtree::u32_0 = 0;
-                                    let mut iLast: crate::src::ext::rtree::rtree::u32_0 = (if (iLastFrame as usize)
-                                        < (4096 as usize)
-                                            .wrapping_sub(
-                                                (::core::mem::size_of::<WalIndexHdr>() as usize)
-                                                    .wrapping_mul(2 as usize)
-                                                    .wrapping_add(
-                                                        ::core::mem::size_of::<WalCkptInfo>()
-                                                            as usize,
-                                                    )
-                                                    .wrapping_div(
-                                                        ::core::mem::size_of::<crate::src::ext::rtree::rtree::u32_0>() as usize
-                                                    ),
-                                            )
-                                            .wrapping_add(iPg.wrapping_mul(4096 as crate::src::ext::rtree::rtree::u32_0) as usize)
-                                    {
-                                        iLastFrame as usize
-                                    } else {
-                                        (4096 as usize)
-                                            .wrapping_sub(
-                                                (::core::mem::size_of::<WalIndexHdr>() as usize)
-                                                    .wrapping_mul(2 as usize)
-                                                    .wrapping_add(
-                                                        ::core::mem::size_of::<WalCkptInfo>()
-                                                            as usize,
-                                                    )
-                                                    .wrapping_div(
-                                                        ::core::mem::size_of::<crate::src::ext::rtree::rtree::u32_0>() as usize
-                                                    ),
-                                            )
-                                            .wrapping_add(iPg.wrapping_mul(4096 as crate::src::ext::rtree::rtree::u32_0) as usize)
-                                    })
-                                        as crate::src::ext::rtree::rtree::u32_0;
-                                    let mut iFirst: crate::src::ext::rtree::rtree::u32_0 = (1 as usize).wrapping_add(
-                                        if iPg == 0 as crate::src::ext::rtree::rtree::u32_0 {
-                                            0 as usize
+                                    let mut iLast: crate::src::ext::rtree::rtree::u32_0 =
+                                        (if (iLastFrame as usize)
+                                            < (4096 as usize)
+                                                .wrapping_sub(
+                                                    (::core::mem::size_of::<WalIndexHdr>()
+                                                        as usize)
+                                                        .wrapping_mul(2 as usize)
+                                                        .wrapping_add(::core::mem::size_of::<
+                                                            WalCkptInfo,
+                                                        >(
+                                                        )
+                                                            as usize)
+                                                        .wrapping_div(::core::mem::size_of::<
+                                                            crate::src::ext::rtree::rtree::u32_0,
+                                                        >(
+                                                        )
+                                                            as usize),
+                                                )
+                                                .wrapping_add(iPg.wrapping_mul(
+                                                    4096 as crate::src::ext::rtree::rtree::u32_0,
+                                                )
+                                                    as usize)
+                                        {
+                                            iLastFrame as usize
                                         } else {
-                                            HASHTABLE_NPAGE_ONE.wrapping_add(
-                                                iPg.wrapping_sub(1 as crate::src::ext::rtree::rtree::u32_0)
-                                                    .wrapping_mul(HASHTABLE_NPAGE as crate::src::ext::rtree::rtree::u32_0)
-                                                    as usize,
-                                            )
-                                        },
-                                    )
-                                        as crate::src::ext::rtree::rtree::u32_0;
+                                            (4096 as usize)
+                                                .wrapping_sub(
+                                                    (::core::mem::size_of::<WalIndexHdr>()
+                                                        as usize)
+                                                        .wrapping_mul(2 as usize)
+                                                        .wrapping_add(::core::mem::size_of::<
+                                                            WalCkptInfo,
+                                                        >(
+                                                        )
+                                                            as usize)
+                                                        .wrapping_div(::core::mem::size_of::<
+                                                            crate::src::ext::rtree::rtree::u32_0,
+                                                        >(
+                                                        )
+                                                            as usize),
+                                                )
+                                                .wrapping_add(iPg.wrapping_mul(
+                                                    4096 as crate::src::ext::rtree::rtree::u32_0,
+                                                )
+                                                    as usize)
+                                        })
+                                            as crate::src::ext::rtree::rtree::u32_0;
+                                    let mut iFirst: crate::src::ext::rtree::rtree::u32_0 =
+                                        (1 as usize).wrapping_add(
+                                            if iPg == 0 as crate::src::ext::rtree::rtree::u32_0 {
+                                                0 as usize
+                                            } else {
+                                                HASHTABLE_NPAGE_ONE.wrapping_add(
+                                                    iPg.wrapping_sub(
+                                                        1 as crate::src::ext::rtree::rtree::u32_0,
+                                                    )
+                                                    .wrapping_mul(
+                                                        HASHTABLE_NPAGE
+                                                            as crate::src::ext::rtree::rtree::u32_0,
+                                                    )
+                                                        as usize,
+                                                )
+                                            },
+                                        )
+                                            as crate::src::ext::rtree::rtree::u32_0;
                                     let mut nHdr: crate::src::ext::rtree::rtree::u32_0 = 0;
                                     let mut nHdr32: crate::src::ext::rtree::rtree::u32_0 = 0;
                                     rc = walIndexPage(
                                         pWal,
                                         iPg as ::core::ffi::c_int,
-                                        &raw mut aShare as *mut *mut crate::src::ext::rtree::rtree::u32_0,
+                                        &raw mut aShare
+                                            as *mut *mut crate::src::ext::rtree::rtree::u32_0,
                                     );
                                     if aShare.is_null() {
                                         break;
                                     }
                                     let ref mut fresh25 = *__pWal_ref.apWiData.offset(iPg as isize);
-                                    *fresh25 = aPrivate as *mut crate::src::ext::rtree::rtree::u32_0;
+                                    *fresh25 =
+                                        aPrivate as *mut crate::src::ext::rtree::rtree::u32_0;
                                     iFrame = iFirst;
                                     while iFrame <= iLast {
-                                        let mut iOffset: crate::src::ext::rtree::rtree::i64_0 = WAL_HDRSIZE as crate::src::ext::rtree::rtree::i64_0
-                                            + iFrame.wrapping_sub(1 as crate::src::ext::rtree::rtree::u32_0) as crate::src::ext::rtree::rtree::i64_0
-                                                * (szPage + WAL_FRAME_HDRSIZE) as crate::src::ext::rtree::rtree::i64_0;
+                                        let mut iOffset: crate::src::ext::rtree::rtree::i64_0 =
+                                            WAL_HDRSIZE as crate::src::ext::rtree::rtree::i64_0
+                                                + iFrame.wrapping_sub(
+                                                    1 as crate::src::ext::rtree::rtree::u32_0,
+                                                )
+                                                    as crate::src::ext::rtree::rtree::i64_0
+                                                    * (szPage + WAL_FRAME_HDRSIZE)
+                                                        as crate::src::ext::rtree::rtree::i64_0;
                                         let mut pgno: crate::src::ext::rtree::rtree::u32_0 = 0;
                                         let mut nTruncate: crate::src::ext::rtree::rtree::u32_0 = 0;
                                         rc = crate::src::src::os::sqlite3OsRead(
@@ -968,22 +1237,33 @@ unsafe extern "C" fn walIndexRecover(mut pWal: *mut Wal) -> ::core::ffi::c_int {
                                         WALINDEX_HDR_SIZE
                                     } else {
                                         0 as usize
-                                    }) as crate::src::ext::rtree::rtree::u32_0;
-                                    nHdr32 =
-                                        (nHdr as usize)
-                                            .wrapping_div(::core::mem::size_of::<crate::src::ext::rtree::rtree::u32_0>() as usize)
-                                            as crate::src::ext::rtree::rtree::u32_0;
+                                    })
+                                        as crate::src::ext::rtree::rtree::u32_0;
+                                    nHdr32 = (nHdr as usize).wrapping_div(::core::mem::size_of::<
+                                        crate::src::ext::rtree::rtree::u32_0,
+                                    >(
+                                    )
+                                        as usize)
+                                        as crate::src::ext::rtree::rtree::u32_0;
                                     ::core::ptr::copy_nonoverlapping(
-                    aPrivate.offset(nHdr32 as isize) as *mut crate::src::ext::rtree::rtree::u32_0 as *const u8,
-                    aShare.offset(nHdr32 as isize) as *mut crate::src::ext::rtree::rtree::u32_0 as *mut u8,
-                    (WALINDEX_PGSZ.wrapping_sub(nHdr as crate::__stddef_size_t_h::size_t)) as usize,
-                );
+                                        aPrivate.offset(nHdr32 as isize)
+                                            as *mut crate::src::ext::rtree::rtree::u32_0
+                                            as *const u8,
+                                        aShare.offset(nHdr32 as isize)
+                                            as *mut crate::src::ext::rtree::rtree::u32_0
+                                            as *mut u8,
+                                        (WALINDEX_PGSZ
+                                            .wrapping_sub(nHdr as crate::__stddef_size_t_h::size_t))
+                                            as usize,
+                                    );
                                     if iFrame <= iLast {
                                         break;
                                     }
                                     iPg = iPg.wrapping_add(1);
                                 }
-                                crate::src::src::malloc::sqlite3_free(aFrame as *mut ::core::ffi::c_void);
+                                crate::src::src::malloc::sqlite3_free(
+                                    aFrame as *mut ::core::ffi::c_void,
+                                );
                                 current_block = 1095482132288021607;
                             }
                         }
@@ -1005,13 +1285,18 @@ unsafe extern "C" fn walIndexRecover(mut pWal: *mut Wal) -> ::core::ffi::c_int {
                         aFrameCksum[1 as ::core::ffi::c_int as usize];
                     walIndexWriteHdr(pWal);
                     pInfo = walCkptInfo(pWal);
-                    ::core::ptr::write_volatile(&mut (*pInfo).nBackfill as *mut crate::src::ext::rtree::rtree::u32_0, 0 as crate::src::ext::rtree::rtree::u32_0);
                     ::core::ptr::write_volatile(
-                        &mut (*pInfo).nBackfillAttempted as *mut crate::src::ext::rtree::rtree::u32_0,
+                        &mut (*pInfo).nBackfill as *mut crate::src::ext::rtree::rtree::u32_0,
+                        0 as crate::src::ext::rtree::rtree::u32_0,
+                    );
+                    ::core::ptr::write_volatile(
+                        &mut (*pInfo).nBackfillAttempted
+                            as *mut crate::src::ext::rtree::rtree::u32_0,
                         __pWal_ref.hdr.mxFrame,
                     );
                     ::core::ptr::write_volatile(
-                        &mut (*pInfo).aReadMark[0 as ::core::ffi::c_int as usize] as *mut crate::src::ext::rtree::rtree::u32_0,
+                        &mut (*pInfo).aReadMark[0 as ::core::ffi::c_int as usize]
+                            as *mut crate::src::ext::rtree::rtree::u32_0,
                         0 as crate::src::ext::rtree::rtree::u32_0,
                     );
                     i = 1 as ::core::ffi::c_int;
@@ -1028,12 +1313,14 @@ unsafe extern "C" fn walIndexRecover(mut pWal: *mut Wal) -> ::core::ffi::c_int {
                         if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
                             if i == 1 as ::core::ffi::c_int && __pWal_ref.hdr.mxFrame != 0 {
                                 ::core::ptr::write_volatile(
-                                    &mut (*pInfo).aReadMark[i as usize] as *mut crate::src::ext::rtree::rtree::u32_0,
+                                    &mut (*pInfo).aReadMark[i as usize]
+                                        as *mut crate::src::ext::rtree::rtree::u32_0,
                                     __pWal_ref.hdr.mxFrame,
                                 );
                             } else {
                                 ::core::ptr::write_volatile(
-                                    &mut (*pInfo).aReadMark[i as usize] as *mut crate::src::ext::rtree::rtree::u32_0,
+                                    &mut (*pInfo).aReadMark[i as usize]
+                                        as *mut crate::src::ext::rtree::rtree::u32_0,
                                     READMARK_NOT_USED as crate::src::ext::rtree::rtree::u32_0,
                                 );
                             }
@@ -1057,8 +1344,13 @@ unsafe extern "C" fn walIndexRecover(mut pWal: *mut Wal) -> ::core::ffi::c_int {
                                     b"recovered %d frames from WAL file %s\0" as *const u8
                                         as *const ::core::ffi::c_char,
                                     &[
-                                        crate::src::src::printf::PrintfArg::Int(__pWal_ref.hdr.mxFrame as crate::src::ext::rtree::rtree::i64_0),
-                                        crate::src::src::printf::PrintfArg::Str(__pWal_ref.zWalName as *mut ::core::ffi::c_char),
+                                        crate::src::src::printf::PrintfArg::Int(
+                                            __pWal_ref.hdr.mxFrame
+                                                as crate::src::ext::rtree::rtree::i64_0,
+                                        ),
+                                        crate::src::src::printf::PrintfArg::Str(
+                                            __pWal_ref.zWalName as *mut ::core::ffi::c_char,
+                                        ),
                                     ],
                                 );
                             }
@@ -1084,14 +1376,19 @@ unsafe extern "C" fn walIndexClose(mut pWal: *mut Wal, mut isDelete: ::core::ffi
         let mut i: ::core::ffi::c_int = 0;
         i = 0 as ::core::ffi::c_int;
         while i < __pWal_ref.nWiData {
-            crate::src::src::malloc::sqlite3_free(*__pWal_ref.apWiData.offset(i as isize) as *mut ::core::ffi::c_void);
+            crate::src::src::malloc::sqlite3_free(
+                *__pWal_ref.apWiData.offset(i as isize) as *mut ::core::ffi::c_void
+            );
             let ref mut fresh0 = *__pWal_ref.apWiData.offset(i as isize);
             *fresh0 = ::core::ptr::null_mut::<crate::src::ext::rtree::rtree::u32_0>();
             i += 1;
         }
     }
     if __pWal_ref.exclusiveMode as ::core::ffi::c_int != WAL_HEAPMEMORY_MODE {
-        crate::src::src::os::sqlite3OsShmUnmap(__pWal_ref.pDbFd as *mut crate::src::headers::sqlite3_h::sqlite3_file, isDelete);
+        crate::src::src::os::sqlite3OsShmUnmap(
+            __pWal_ref.pDbFd as *mut crate::src::headers::sqlite3_h::sqlite3_file,
+            isDelete,
+        );
     }
 }
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
@@ -1109,13 +1406,15 @@ pub unsafe extern "C" fn sqlite3WalOpen(
     let mut flags: ::core::ffi::c_int = 0;
     *ppWal = ::core::ptr::null_mut::<Wal>();
     pRet = crate::src::src::malloc::sqlite3MallocZero(
-        (::core::mem::size_of::<Wal>() as usize).wrapping_add((*pVfs).szOsFile as usize) as crate::src::ext::rtree::rtree::u64_0,
+        (::core::mem::size_of::<Wal>() as usize).wrapping_add((*pVfs).szOsFile as usize)
+            as crate::src::ext::rtree::rtree::u64_0,
     ) as *mut Wal;
     if pRet.is_null() {
         return crate::src::headers::sqliteInt_h::SQLITE_NOMEM_BKPT;
     }
     (*pRet).pVfs = pVfs;
-    (*pRet).pWalFd = pRet.offset(1 as isize) as *mut Wal as *mut crate::src::headers::sqlite3_h::sqlite3_file;
+    (*pRet).pWalFd =
+        pRet.offset(1 as isize) as *mut Wal as *mut crate::src::headers::sqlite3_h::sqlite3_file;
     (*pRet).pDbFd = pDbFd;
     (*pRet).readLock = -(1 as ::core::ffi::c_int) as crate::src::fts5::i16_0;
     (*pRet).mxWalSize = mxWalSize;
@@ -1127,17 +1426,31 @@ pub unsafe extern "C" fn sqlite3WalOpen(
     } else {
         WAL_NORMAL_MODE
     }) as crate::src::ext::rtree::rtree::u8_0;
-    flags = crate::src::headers::sqlite3_h::SQLITE_OPEN_READWRITE | crate::src::headers::sqlite3_h::SQLITE_OPEN_CREATE | crate::src::headers::sqlite3_h::SQLITE_OPEN_WAL;
-    rc = crate::src::src::os::sqlite3OsOpen(pVfs as *mut crate::src::headers::sqlite3_h::sqlite3_vfs, zWalName,  (*pRet).pWalFd as *mut crate::src::headers::sqlite3_h::sqlite3_file, flags, &raw mut flags);
-    if rc == crate::src::headers::sqlite3_h::SQLITE_OK && flags & crate::src::headers::sqlite3_h::SQLITE_OPEN_READONLY != 0 {
+    flags = crate::src::headers::sqlite3_h::SQLITE_OPEN_READWRITE
+        | crate::src::headers::sqlite3_h::SQLITE_OPEN_CREATE
+        | crate::src::headers::sqlite3_h::SQLITE_OPEN_WAL;
+    rc = crate::src::src::os::sqlite3OsOpen(
+        pVfs as *mut crate::src::headers::sqlite3_h::sqlite3_vfs,
+        zWalName,
+        (*pRet).pWalFd as *mut crate::src::headers::sqlite3_h::sqlite3_file,
+        flags,
+        &raw mut flags,
+    );
+    if rc == crate::src::headers::sqlite3_h::SQLITE_OK
+        && flags & crate::src::headers::sqlite3_h::SQLITE_OPEN_READONLY != 0
+    {
         (*pRet).readOnly = WAL_RDONLY as crate::src::ext::rtree::rtree::u8_0;
     }
     if rc != crate::src::headers::sqlite3_h::SQLITE_OK {
         walIndexClose(pRet, 0 as ::core::ffi::c_int);
-        crate::src::src::os::sqlite3OsClose((*pRet).pWalFd as *mut crate::src::headers::sqlite3_h::sqlite3_file);
+        crate::src::src::os::sqlite3OsClose(
+            (*pRet).pWalFd as *mut crate::src::headers::sqlite3_h::sqlite3_file,
+        );
         crate::src::src::malloc::sqlite3_free(pRet as *mut ::core::ffi::c_void);
     } else {
-        let mut iDC: ::core::ffi::c_int = crate::src::src::os::sqlite3OsDeviceCharacteristics(pDbFd as *mut crate::src::headers::sqlite3_h::sqlite3_file);
+        let mut iDC: ::core::ffi::c_int = crate::src::src::os::sqlite3OsDeviceCharacteristics(
+            pDbFd as *mut crate::src::headers::sqlite3_h::sqlite3_file,
+        );
         if iDC & crate::src::headers::sqlite3_h::SQLITE_IOCAP_SEQUENTIAL != 0 {
             (*pRet).syncHeader = 0 as crate::src::ext::rtree::rtree::u8_0;
         }
@@ -1150,7 +1463,10 @@ pub unsafe extern "C" fn sqlite3WalOpen(
 }
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
-pub unsafe extern "C" fn sqlite3WalLimit(mut pWal: *mut Wal, mut iLimit: crate::src::ext::rtree::rtree::i64_0) {
+pub unsafe extern "C" fn sqlite3WalLimit(
+    mut pWal: *mut Wal,
+    mut iLimit: crate::src::ext::rtree::rtree::i64_0,
+) {
     if !pWal.is_null() {
         (*pWal).mxWalSize = iLimit;
     }
@@ -1162,7 +1478,8 @@ unsafe extern "C" fn walIteratorNext(
     mut piFrame: *mut crate::src::ext::rtree::rtree::u32_0,
 ) -> ::core::ffi::c_int {
     let mut iMin: crate::src::ext::rtree::rtree::u32_0 = 0;
-    let mut iRet: crate::src::ext::rtree::rtree::u32_0 = 0xffffffff as crate::src::ext::rtree::rtree::u32_0;
+    let mut iRet: crate::src::ext::rtree::rtree::u32_0 =
+        0xffffffff as crate::src::ext::rtree::rtree::u32_0;
     let mut i: ::core::ffi::c_int = 0;
     let __p_ref = unsafe { &mut *p };
     iMin = __p_ref.iPrior;
@@ -1180,7 +1497,8 @@ unsafe extern "C" fn walIteratorNext(
                     iRet = iPg;
                     *piFrame = (__pSegment_ref.iZero
                         + *__pSegment_ref.aIndex.offset(__pSegment_ref.iNext as isize)
-                            as ::core::ffi::c_int) as crate::src::ext::rtree::rtree::u32_0;
+                            as ::core::ffi::c_int)
+                        as crate::src::ext::rtree::rtree::u32_0;
                 }
                 break;
             } else {
@@ -1234,10 +1552,11 @@ unsafe extern "C" fn walMerge(
     *paRight = aLeft;
     *pnRight = iOut;
     ::core::ptr::copy_nonoverlapping(
-                    aTmp as *const u8,
-                    aLeft as *mut u8,
-                    ((::core::mem::size_of::<ht_slot>() as crate::__stddef_size_t_h::size_t).wrapping_mul(iOut as crate::__stddef_size_t_h::size_t)) as usize,
-                );
+        aTmp as *const u8,
+        aLeft as *mut u8,
+        ((::core::mem::size_of::<ht_slot>() as crate::__stddef_size_t_h::size_t)
+            .wrapping_mul(iOut as crate::__stddef_size_t_h::size_t)) as usize,
+    );
 }
 
 unsafe extern "C" fn walMergesort(
@@ -1321,15 +1640,17 @@ unsafe extern "C" fn walIteratorInit(
         )
         .wrapping_add((iLast as usize).wrapping_mul(::core::mem::size_of::<ht_slot>() as usize))
         as crate::src::headers::sqlite3_h::sqlite3_int64;
-    p = crate::src::src::malloc::sqlite3_malloc64((nByte as crate::src::headers::sqlite3_h::sqlite3_uint64).wrapping_add(
-        (::core::mem::size_of::<ht_slot>() as usize).wrapping_mul(
-            (if iLast > HASHTABLE_NPAGE as crate::src::ext::rtree::rtree::u32_0 {
-                HASHTABLE_NPAGE as crate::src::ext::rtree::rtree::u32_0
-            } else {
-                iLast
-            }) as usize,
-        ) as crate::src::headers::sqlite3_h::sqlite3_uint64,
-    )) as *mut WalIterator;
+    p = crate::src::src::malloc::sqlite3_malloc64(
+        (nByte as crate::src::headers::sqlite3_h::sqlite3_uint64).wrapping_add(
+            (::core::mem::size_of::<ht_slot>() as usize).wrapping_mul(
+                (if iLast > HASHTABLE_NPAGE as crate::src::ext::rtree::rtree::u32_0 {
+                    HASHTABLE_NPAGE as crate::src::ext::rtree::rtree::u32_0
+                } else {
+                    iLast
+                }) as usize,
+            ) as crate::src::headers::sqlite3_h::sqlite3_uint64,
+        ),
+    ) as *mut WalIterator;
     if p.is_null() {
         return crate::src::headers::sqliteInt_h::SQLITE_NOMEM_BKPT;
     }
@@ -1339,7 +1660,8 @@ unsafe extern "C" fn walIteratorInit(
         nByte as crate::__stddef_size_t_h::size_t,
     );
     (*p).nSegment = nSegment;
-    aTmp = (p as *mut crate::src::ext::rtree::rtree::u8_0).offset(nByte as isize) as *mut crate::src::ext::rtree::rtree::u8_0 as *mut ht_slot;
+    aTmp = (p as *mut crate::src::ext::rtree::rtree::u8_0).offset(nByte as isize)
+        as *mut crate::src::ext::rtree::rtree::u8_0 as *mut ht_slot;
     i = walFramePage(nBackfill.wrapping_add(1 as crate::src::ext::rtree::rtree::u32_0));
     while rc == crate::src::headers::sqlite3_h::SQLITE_OK && i < nSegment {
         let mut sLoc: WalHashLoc = unsafe { ::core::mem::zeroed() };
@@ -1351,12 +1673,14 @@ unsafe extern "C" fn walIteratorInit(
             if i + 1 as ::core::ffi::c_int == nSegment {
                 nEntry = iLast.wrapping_sub(sLoc.iZero) as ::core::ffi::c_int;
             } else {
-                nEntry = (sLoc.aHash as *mut crate::src::ext::rtree::rtree::u32_0).offset_from(sLoc.aPgno as *mut crate::src::ext::rtree::rtree::u32_0)
+                nEntry = (sLoc.aHash as *mut crate::src::ext::rtree::rtree::u32_0)
+                    .offset_from(sLoc.aPgno as *mut crate::src::ext::rtree::rtree::u32_0)
                     as ::core::ffi::c_long as ::core::ffi::c_int;
             }
             let __p_ref = unsafe { &mut *p };
-            aIndex = ((&raw mut __p_ref.aSegment as *mut WalSegment).offset(__p_ref.nSegment as isize)
-                as *mut WalSegment as *mut ht_slot)
+            aIndex = ((&raw mut __p_ref.aSegment as *mut WalSegment)
+                .offset(__p_ref.nSegment as isize) as *mut WalSegment
+                as *mut ht_slot)
                 .offset(sLoc.iZero as isize) as *mut ht_slot;
             sLoc.iZero = sLoc.iZero.wrapping_add(1);
             j = 0 as ::core::ffi::c_int;
@@ -1364,7 +1688,12 @@ unsafe extern "C" fn walIteratorInit(
                 *aIndex.offset(j as isize) = j as ht_slot;
                 j += 1;
             }
-            walMergesort(sLoc.aPgno as *mut crate::src::ext::rtree::rtree::u32_0, aTmp, aIndex, &raw mut nEntry);
+            walMergesort(
+                sLoc.aPgno as *mut crate::src::ext::rtree::rtree::u32_0,
+                aTmp,
+                aIndex,
+                &raw mut nEntry,
+            );
             (*(&raw mut __p_ref.aSegment as *mut WalSegment).offset(i as isize)).iZero =
                 sLoc.iZero as ::core::ffi::c_int;
             (*(&raw mut __p_ref.aSegment as *mut WalSegment).offset(i as isize)).nEntry = nEntry;
@@ -1411,31 +1740,45 @@ unsafe extern "C" fn walPagesize(mut pWal: *mut Wal) -> ::core::ffi::c_int {
             << 16 as ::core::ffi::c_int)
 }
 
-unsafe extern "C" fn walRestartHdr(mut pWal: *mut Wal, mut salt1: crate::src::ext::rtree::rtree::u32_0) {
+unsafe extern "C" fn walRestartHdr(
+    mut pWal: *mut Wal,
+    mut salt1: crate::src::ext::rtree::rtree::u32_0,
+) {
     let mut pInfo: *mut WalCkptInfo = walCkptInfo(pWal);
     let mut i: ::core::ffi::c_int = 0;
     let __pWal_ref = unsafe { &mut *pWal };
-    let mut aSalt: *mut crate::src::ext::rtree::rtree::u32_0 = &raw mut __pWal_ref.hdr.aSalt as *mut crate::src::ext::rtree::rtree::u32_0;
+    let mut aSalt: *mut crate::src::ext::rtree::rtree::u32_0 =
+        &raw mut __pWal_ref.hdr.aSalt as *mut crate::src::ext::rtree::rtree::u32_0;
     __pWal_ref.nCkpt = __pWal_ref.nCkpt.wrapping_add(1);
     __pWal_ref.hdr.mxFrame = 0 as crate::src::ext::rtree::rtree::u32_0;
     crate::src::src::util::sqlite3Put4byte(
-        aSalt.offset(0 as isize) as *mut crate::src::ext::rtree::rtree::u32_0 as *mut crate::src::ext::rtree::rtree::u8_0,
-        (1 as crate::src::ext::rtree::rtree::u32_0).wrapping_add(crate::src::src::util::sqlite3Get4byte(
-            aSalt.offset(0 as isize) as *mut crate::src::ext::rtree::rtree::u32_0 as *mut crate::src::ext::rtree::rtree::u8_0,
-        )),
+        aSalt.offset(0 as isize) as *mut crate::src::ext::rtree::rtree::u32_0
+            as *mut crate::src::ext::rtree::rtree::u8_0,
+        (1 as crate::src::ext::rtree::rtree::u32_0).wrapping_add(
+            crate::src::src::util::sqlite3Get4byte(aSalt.offset(0 as isize)
+                as *mut crate::src::ext::rtree::rtree::u32_0
+                as *mut crate::src::ext::rtree::rtree::u8_0),
+        ),
     );
     ::core::ptr::copy_nonoverlapping(
-                    &raw mut salt1 as *const u8,
-                    (&raw mut __pWal_ref.hdr.aSalt as *mut crate::src::ext::rtree::rtree::u32_0).offset(1 as isize)
-            as *mut crate::src::ext::rtree::rtree::u32_0 as *mut u8,
-                    4 as usize,
-                );
+        &raw mut salt1 as *const u8,
+        (&raw mut __pWal_ref.hdr.aSalt as *mut crate::src::ext::rtree::rtree::u32_0)
+            .offset(1 as isize) as *mut crate::src::ext::rtree::rtree::u32_0 as *mut u8,
+        4 as usize,
+    );
     walIndexWriteHdr(pWal);
     let __pInfo_ref = unsafe { &mut *pInfo };
-    (*((&raw mut __pInfo_ref.nBackfill) as *mut std::sync::atomic::AtomicU32)).store(0 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::u32_0, std::sync::atomic::Ordering::Relaxed);
-    ::core::ptr::write_volatile(&mut __pInfo_ref.nBackfillAttempted as *mut crate::src::ext::rtree::rtree::u32_0, 0 as crate::src::ext::rtree::rtree::u32_0);
+    (*((&raw mut __pInfo_ref.nBackfill) as *mut std::sync::atomic::AtomicU32)).store(
+        0 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::u32_0,
+        std::sync::atomic::Ordering::Relaxed,
+    );
     ::core::ptr::write_volatile(
-        &mut __pInfo_ref.aReadMark[1 as ::core::ffi::c_int as usize] as *mut crate::src::ext::rtree::rtree::u32_0,
+        &mut __pInfo_ref.nBackfillAttempted as *mut crate::src::ext::rtree::rtree::u32_0,
+        0 as crate::src::ext::rtree::rtree::u32_0,
+    );
+    ::core::ptr::write_volatile(
+        &mut __pInfo_ref.aReadMark[1 as ::core::ffi::c_int as usize]
+            as *mut crate::src::ext::rtree::rtree::u32_0,
         0 as crate::src::ext::rtree::rtree::u32_0,
     );
     i = 2 as ::core::ffi::c_int;
@@ -1461,8 +1804,10 @@ unsafe extern "C" fn walCheckpoint(
     let mut rc: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_OK;
     let mut szPage: ::core::ffi::c_int = 0;
     let mut pIter: *mut WalIterator = ::core::ptr::null_mut::<WalIterator>();
-    let mut iDbpage: crate::src::ext::rtree::rtree::u32_0 = 0 as crate::src::ext::rtree::rtree::u32_0;
-    let mut iFrame: crate::src::ext::rtree::rtree::u32_0 = 0 as crate::src::ext::rtree::rtree::u32_0;
+    let mut iDbpage: crate::src::ext::rtree::rtree::u32_0 =
+        0 as crate::src::ext::rtree::rtree::u32_0;
+    let mut iFrame: crate::src::ext::rtree::rtree::u32_0 =
+        0 as crate::src::ext::rtree::rtree::u32_0;
     let mut mxSafeFrame: crate::src::ext::rtree::rtree::u32_0 = 0;
     let mut mxPage: crate::src::ext::rtree::rtree::u32_0 = 0;
     let mut i: ::core::ffi::c_int = 0;
@@ -1478,7 +1823,10 @@ unsafe extern "C" fn walCheckpoint(
                 current_block = 5634871135123216486;
                 break;
             }
-            let mut y: crate::src::ext::rtree::rtree::u32_0 = (*((&raw mut (*pInfo).aReadMark as *mut crate::src::ext::rtree::rtree::u32_0).offset(i as isize) as *mut std::sync::atomic::AtomicU32)).load(std::sync::atomic::Ordering::Relaxed);
+            let mut y: crate::src::ext::rtree::rtree::u32_0 =
+                (*((&raw mut (*pInfo).aReadMark as *mut crate::src::ext::rtree::rtree::u32_0)
+                    .offset(i as isize) as *mut std::sync::atomic::AtomicU32))
+                    .load(std::sync::atomic::Ordering::Relaxed);
             if mxSafeFrame > y {
                 rc = walBusyLock(
                     pWal,
@@ -1488,12 +1836,16 @@ unsafe extern "C" fn walCheckpoint(
                     1 as ::core::ffi::c_int,
                 );
                 if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
-                    let mut iMark: crate::src::ext::rtree::rtree::u32_0 = if i == 1 as ::core::ffi::c_int {
-                        mxSafeFrame
-                    } else {
-                        READMARK_NOT_USED as crate::src::ext::rtree::rtree::u32_0
-                    };
-                    (*((&raw mut (*pInfo).aReadMark as *mut crate::src::ext::rtree::rtree::u32_0).offset(i as isize) as *mut std::sync::atomic::AtomicU32)).store(iMark, std::sync::atomic::Ordering::Relaxed);
+                    let mut iMark: crate::src::ext::rtree::rtree::u32_0 =
+                        if i == 1 as ::core::ffi::c_int {
+                            mxSafeFrame
+                        } else {
+                            READMARK_NOT_USED as crate::src::ext::rtree::rtree::u32_0
+                        };
+                    (*((&raw mut (*pInfo).aReadMark as *mut crate::src::ext::rtree::rtree::u32_0)
+                        .offset(i as isize)
+                        as *mut std::sync::atomic::AtomicU32))
+                        .store(iMark, std::sync::atomic::Ordering::Relaxed);
                     walUnlockExclusive(pWal, 3 as ::core::ffi::c_int + i, 1 as ::core::ffi::c_int);
                 } else {
                     if !(rc == crate::src::headers::sqlite3_h::SQLITE_BUSY) {
@@ -1524,35 +1876,42 @@ unsafe extern "C" fn walCheckpoint(
                 } {
                     let mut nBackfill: crate::src::ext::rtree::rtree::u32_0 = (*pInfo).nBackfill;
                     ::core::ptr::write_volatile(
-                        &mut (*pInfo).nBackfillAttempted as *mut crate::src::ext::rtree::rtree::u32_0,
+                        &mut (*pInfo).nBackfillAttempted
+                            as *mut crate::src::ext::rtree::rtree::u32_0,
                         mxSafeFrame,
                     );
                     rc = crate::src::src::os::sqlite3OsSync(
-                        
                         (*pWal).pWalFd as *mut crate::src::headers::sqlite3_h::sqlite3_file,
                         sync_flags >> 2 as ::core::ffi::c_int & 0x3 as ::core::ffi::c_int,
                     );
                     if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
-                        let mut nReq: crate::src::ext::rtree::rtree::i64_0 = mxPage as crate::src::ext::rtree::rtree::i64_0 * szPage as crate::src::ext::rtree::rtree::i64_0;
+                        let mut nReq: crate::src::ext::rtree::rtree::i64_0 = mxPage
+                            as crate::src::ext::rtree::rtree::i64_0
+                            * szPage as crate::src::ext::rtree::rtree::i64_0;
                         let mut nSize: crate::src::ext::rtree::rtree::i64_0 = 0;
                         crate::src::src::os::sqlite3OsFileControl(
-                            
                             (*pWal).pDbFd as *mut crate::src::headers::sqlite3_h::sqlite3_file,
                             crate::src::headers::sqlite3_h::SQLITE_FCNTL_CKPT_START,
                             ::core::ptr::null_mut::<::core::ffi::c_void>(),
                         );
-                        rc = crate::src::src::os::sqlite3OsFileSize((*pWal).pDbFd as *mut crate::src::headers::sqlite3_h::sqlite3_file, &raw mut nSize);
+                        rc = crate::src::src::os::sqlite3OsFileSize(
+                            (*pWal).pDbFd as *mut crate::src::headers::sqlite3_h::sqlite3_file,
+                            &raw mut nSize,
+                        );
                         if rc == crate::src::headers::sqlite3_h::SQLITE_OK && nSize < nReq {
                             if (nSize
                                 + 65536 as crate::src::ext::rtree::rtree::i64_0
-                                + (*pWal).hdr.mxFrame as crate::src::ext::rtree::rtree::i64_0 * szPage as crate::src::ext::rtree::rtree::i64_0)
+                                + (*pWal).hdr.mxFrame as crate::src::ext::rtree::rtree::i64_0
+                                    * szPage as crate::src::ext::rtree::rtree::i64_0)
                                 < nReq
                             {
-                                rc = crate::src::src::main::sqlite3CorruptError(2276 as ::core::ffi::c_int);
+                                rc = crate::src::src::main::sqlite3CorruptError(
+                                    2276 as ::core::ffi::c_int,
+                                );
                             } else {
                                 crate::src::src::os::sqlite3OsFileControlHint(
-                                    
-                                    (*pWal).pDbFd as *mut crate::src::headers::sqlite3_h::sqlite3_file,
+                                    (*pWal).pDbFd
+                                        as *mut crate::src::headers::sqlite3_h::sqlite3_file,
                                     crate::src::headers::sqlite3_h::SQLITE_FCNTL_SIZE_HINT_1,
                                     &raw mut nReq as *mut ::core::ffi::c_void,
                                 );
@@ -1564,7 +1923,9 @@ unsafe extern "C" fn walCheckpoint(
                             == walIteratorNext(pIter, &raw mut iDbpage, &raw mut iFrame)
                     {
                         let mut iOffset: crate::src::ext::rtree::rtree::i64_0 = 0;
-                        if (*((&raw mut (*db).u1.isInterrupted) as *mut std::sync::atomic::AtomicI32)).load(std::sync::atomic::Ordering::Relaxed)
+                        if (*((&raw mut (*db).u1.isInterrupted)
+                            as *mut std::sync::atomic::AtomicI32))
+                            .load(std::sync::atomic::Ordering::Relaxed)
                             != 0
                         {
                             rc = if (*db).mallocFailed as ::core::ffi::c_int != 0 {
@@ -1578,11 +1939,12 @@ unsafe extern "C" fn walCheckpoint(
                                 continue;
                             }
                             iOffset = WAL_HDRSIZE as crate::src::ext::rtree::rtree::i64_0
-                                + iFrame.wrapping_sub(1 as crate::src::ext::rtree::rtree::u32_0) as crate::src::ext::rtree::rtree::i64_0
-                                    * (szPage + WAL_FRAME_HDRSIZE) as crate::src::ext::rtree::rtree::i64_0
+                                + iFrame.wrapping_sub(1 as crate::src::ext::rtree::rtree::u32_0)
+                                    as crate::src::ext::rtree::rtree::i64_0
+                                    * (szPage + WAL_FRAME_HDRSIZE)
+                                        as crate::src::ext::rtree::rtree::i64_0
                                 + WAL_FRAME_HDRSIZE as crate::src::ext::rtree::rtree::i64_0;
                             rc = crate::src::src::os::sqlite3OsRead(
-                                
                                 (*pWal).pWalFd as *mut crate::src::headers::sqlite3_h::sqlite3_file,
                                 zBuf as *mut ::core::ffi::c_void,
                                 szPage,
@@ -1591,9 +1953,11 @@ unsafe extern "C" fn walCheckpoint(
                             if rc != crate::src::headers::sqlite3_h::SQLITE_OK {
                                 break;
                             }
-                            iOffset = iDbpage.wrapping_sub(1 as crate::src::ext::rtree::rtree::u32_0) as crate::src::ext::rtree::rtree::i64_0 * szPage as crate::src::ext::rtree::rtree::i64_0;
+                            iOffset = iDbpage
+                                .wrapping_sub(1 as crate::src::ext::rtree::rtree::u32_0)
+                                as crate::src::ext::rtree::rtree::i64_0
+                                * szPage as crate::src::ext::rtree::rtree::i64_0;
                             rc = crate::src::src::os::sqlite3OsWrite(
-                                
                                 (*pWal).pDbFd as *mut crate::src::headers::sqlite3_h::sqlite3_file,
                                 zBuf as *const ::core::ffi::c_void,
                                 szPage,
@@ -1605,26 +1969,31 @@ unsafe extern "C" fn walCheckpoint(
                         }
                     }
                     crate::src::src::os::sqlite3OsFileControl(
-                        
                         (*pWal).pDbFd as *mut crate::src::headers::sqlite3_h::sqlite3_file,
                         crate::src::headers::sqlite3_h::SQLITE_FCNTL_CKPT_DONE,
                         ::core::ptr::null_mut::<::core::ffi::c_void>(),
                     );
                     if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
                         if mxSafeFrame == (*walIndexHdr(pWal)).mxFrame {
-                            let mut szDb: crate::src::ext::rtree::rtree::i64_0 = (*pWal).hdr.nPage as crate::src::ext::rtree::rtree::i64_0 * szPage as crate::src::ext::rtree::rtree::i64_0;
-                            rc = crate::src::src::os::sqlite3OsTruncate((*pWal).pDbFd as *mut crate::src::headers::sqlite3_h::sqlite3_file, szDb);
+                            let mut szDb: crate::src::ext::rtree::rtree::i64_0 = (*pWal).hdr.nPage
+                                as crate::src::ext::rtree::rtree::i64_0
+                                * szPage as crate::src::ext::rtree::rtree::i64_0;
+                            rc = crate::src::src::os::sqlite3OsTruncate(
+                                (*pWal).pDbFd as *mut crate::src::headers::sqlite3_h::sqlite3_file,
+                                szDb,
+                            );
                             if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
                                 rc = crate::src::src::os::sqlite3OsSync(
-                                    
-                                    (*pWal).pDbFd as *mut crate::src::headers::sqlite3_h::sqlite3_file,
+                                    (*pWal).pDbFd
+                                        as *mut crate::src::headers::sqlite3_h::sqlite3_file,
                                     sync_flags >> 2 as ::core::ffi::c_int
                                         & 0x3 as ::core::ffi::c_int,
                                 );
                             }
                         }
                         if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
-                            (*((&raw mut (*pInfo).nBackfill) as *mut std::sync::atomic::AtomicU32)).store(mxSafeFrame, std::sync::atomic::Ordering::Relaxed);
+                            (*((&raw mut (*pInfo).nBackfill) as *mut std::sync::atomic::AtomicU32))
+                                .store(mxSafeFrame, std::sync::atomic::Ordering::Relaxed);
                         }
                     }
                     walUnlockExclusive(
@@ -1644,7 +2013,9 @@ unsafe extern "C" fn walCheckpoint(
     }
     match current_block {
         12264624100856317061 => {
-            if rc == crate::src::headers::sqlite3_h::SQLITE_OK && eMode != crate::src::headers::sqlite3_h::SQLITE_CHECKPOINT_PASSIVE {
+            if rc == crate::src::headers::sqlite3_h::SQLITE_OK
+                && eMode != crate::src::headers::sqlite3_h::SQLITE_CHECKPOINT_PASSIVE
+            {
                 if (*pInfo).nBackfill < (*pWal).hdr.mxFrame {
                     rc = crate::src::headers::sqlite3_h::SQLITE_BUSY;
                 } else if eMode >= crate::src::headers::sqlite3_h::SQLITE_CHECKPOINT_RESTART {
@@ -1663,7 +2034,10 @@ unsafe extern "C" fn walCheckpoint(
                     if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
                         if eMode == crate::src::headers::sqlite3_h::SQLITE_CHECKPOINT_TRUNCATE {
                             walRestartHdr(pWal, salt1);
-                            rc = crate::src::src::os::sqlite3OsTruncate((*pWal).pWalFd as *mut crate::src::headers::sqlite3_h::sqlite3_file, 0 as crate::src::ext::rtree::rtree::i64_0);
+                            rc = crate::src::src::os::sqlite3OsTruncate(
+                                (*pWal).pWalFd as *mut crate::src::headers::sqlite3_h::sqlite3_file,
+                                0 as crate::src::ext::rtree::rtree::i64_0,
+                            );
                         }
                         walUnlockExclusive(
                             pWal,
@@ -1680,20 +2054,31 @@ unsafe extern "C" fn walCheckpoint(
     rc
 }
 
-unsafe extern "C" fn walLimitSize(mut pWal: *mut Wal, mut nMax: crate::src::ext::rtree::rtree::i64_0) {
+unsafe extern "C" fn walLimitSize(
+    mut pWal: *mut Wal,
+    mut nMax: crate::src::ext::rtree::rtree::i64_0,
+) {
     let mut sz: crate::src::ext::rtree::rtree::i64_0 = 0;
     let mut rx: ::core::ffi::c_int = 0;
     crate::src::src::fault::sqlite3BeginBenignMalloc();
-    rx = crate::src::src::os::sqlite3OsFileSize((*pWal).pWalFd as *mut crate::src::headers::sqlite3_h::sqlite3_file, &raw mut sz);
+    rx = crate::src::src::os::sqlite3OsFileSize(
+        (*pWal).pWalFd as *mut crate::src::headers::sqlite3_h::sqlite3_file,
+        &raw mut sz,
+    );
     if rx == crate::src::headers::sqlite3_h::SQLITE_OK && sz > nMax {
-        rx = crate::src::src::os::sqlite3OsTruncate((*pWal).pWalFd as *mut crate::src::headers::sqlite3_h::sqlite3_file, nMax);
+        rx = crate::src::src::os::sqlite3OsTruncate(
+            (*pWal).pWalFd as *mut crate::src::headers::sqlite3_h::sqlite3_file,
+            nMax,
+        );
     }
     crate::src::src::fault::sqlite3EndBenignMalloc();
     if rx != 0 {
         crate::src::printf_c_variadic::sqlite3_log_args(
             rx,
             b"cannot limit WAL size: %s\0" as *const u8 as *const ::core::ffi::c_char,
-            &[crate::src::src::printf::PrintfArg::Str((*pWal).zWalName as *mut ::core::ffi::c_char)],
+            &[crate::src::src::printf::PrintfArg::Str(
+                (*pWal).zWalName as *mut ::core::ffi::c_char,
+            )],
         );
     }
 }
@@ -1710,7 +2095,10 @@ pub unsafe extern "C" fn sqlite3WalClose(
     if !pWal.is_null() {
         let mut isDelete: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
         if !zBuf.is_null() && {
-            rc = crate::src::src::os::sqlite3OsLock((*pWal).pDbFd as *mut crate::src::headers::sqlite3_h::sqlite3_file, crate::src::headers::sqlite3_h::SQLITE_LOCK_EXCLUSIVE);
+            rc = crate::src::src::os::sqlite3OsLock(
+                (*pWal).pDbFd as *mut crate::src::headers::sqlite3_h::sqlite3_file,
+                crate::src::headers::sqlite3_h::SQLITE_LOCK_EXCLUSIVE,
+            );
             crate::src::headers::sqlite3_h::SQLITE_OK == rc
         } {
             if (*pWal).exclusiveMode as ::core::ffi::c_int == WAL_NORMAL_MODE {
@@ -1731,7 +2119,6 @@ pub unsafe extern "C" fn sqlite3WalClose(
             if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
                 let mut bPersist: ::core::ffi::c_int = -(1 as ::core::ffi::c_int);
                 crate::src::src::os::sqlite3OsFileControlHint(
-                    
                     (*pWal).pDbFd as *mut crate::src::headers::sqlite3_h::sqlite3_file,
                     crate::src::headers::sqlite3_h::SQLITE_FCNTL_PERSIST_WAL_1,
                     &raw mut bPersist as *mut ::core::ffi::c_void,
@@ -1744,10 +2131,16 @@ pub unsafe extern "C" fn sqlite3WalClose(
             }
         }
         walIndexClose(pWal, isDelete);
-        crate::src::src::os::sqlite3OsClose((*pWal).pWalFd as *mut crate::src::headers::sqlite3_h::sqlite3_file);
+        crate::src::src::os::sqlite3OsClose(
+            (*pWal).pWalFd as *mut crate::src::headers::sqlite3_h::sqlite3_file,
+        );
         if isDelete != 0 {
             crate::src::src::fault::sqlite3BeginBenignMalloc();
-            crate::src::src::os::sqlite3OsDelete((*pWal).pVfs as *mut crate::src::headers::sqlite3_h::sqlite3_vfs, (*pWal).zWalName, 0 as ::core::ffi::c_int);
+            crate::src::src::os::sqlite3OsDelete(
+                (*pWal).pVfs as *mut crate::src::headers::sqlite3_h::sqlite3_vfs,
+                (*pWal).zWalName,
+                0 as ::core::ffi::c_int,
+            );
             crate::src::src::fault::sqlite3EndBenignMalloc();
         }
         crate::src::src::malloc::sqlite3_free((*pWal).apWiData as *mut ::core::ffi::c_void);
@@ -1767,15 +2160,13 @@ unsafe extern "C" fn walIndexTryHdr(
     aHdr = walIndexHdr(pWal);
     ::libc::memcpy(
         &raw mut h1 as *mut ::core::ffi::c_void,
-        aHdr.offset(0 as isize) as *mut WalIndexHdr
-            as *mut ::core::ffi::c_void,
+        aHdr.offset(0 as isize) as *mut WalIndexHdr as *mut ::core::ffi::c_void,
         ::core::mem::size_of::<WalIndexHdr>() as crate::__stddef_size_t_h::size_t,
     );
     walShmBarrier(pWal);
     ::libc::memcpy(
         &raw mut h2 as *mut ::core::ffi::c_void,
-        aHdr.offset(1 as isize) as *mut WalIndexHdr
-            as *mut ::core::ffi::c_void,
+        aHdr.offset(1 as isize) as *mut WalIndexHdr as *mut ::core::ffi::c_void,
         ::core::mem::size_of::<WalIndexHdr>() as crate::__stddef_size_t_h::size_t,
     );
     if ::libc::memcmp(
@@ -1792,9 +2183,9 @@ unsafe extern "C" fn walIndexTryHdr(
     walChecksumBytes(
         1 as ::core::ffi::c_int,
         &raw mut h1 as *mut crate::src::ext::rtree::rtree::u8_0,
-        (::core::mem::size_of::<WalIndexHdr>() as usize)
-            .wrapping_sub(::core::mem::size_of::<[crate::src::ext::rtree::rtree::u32_0; 2]>() as usize)
-            as ::core::ffi::c_int,
+        (::core::mem::size_of::<WalIndexHdr>() as usize).wrapping_sub(::core::mem::size_of::<
+            [crate::src::ext::rtree::rtree::u32_0; 2],
+        >() as usize) as ::core::ffi::c_int,
         ::core::ptr::null::<crate::src::ext::rtree::rtree::u32_0>(),
         &raw mut aCksum as *mut crate::src::ext::rtree::rtree::u32_0,
     );
@@ -1812,13 +2203,15 @@ unsafe extern "C" fn walIndexTryHdr(
         *pChanged = 1 as ::core::ffi::c_int;
         let __pWal_ref = unsafe { &mut *pWal };
         ::core::ptr::copy_nonoverlapping(
-                    &raw mut h1 as *const u8,
-                    &raw mut __pWal_ref.hdr as *mut u8,
-                    ::core::mem::size_of::<WalIndexHdr>() as usize,
-                );
-        __pWal_ref.szPage = ((__pWal_ref.hdr.szPage as ::core::ffi::c_int & 0xfe00 as ::core::ffi::c_int)
+            &raw mut h1 as *const u8,
+            &raw mut __pWal_ref.hdr as *mut u8,
+            ::core::mem::size_of::<WalIndexHdr>() as usize,
+        );
+        __pWal_ref.szPage = ((__pWal_ref.hdr.szPage as ::core::ffi::c_int
+            & 0xfe00 as ::core::ffi::c_int)
             + ((__pWal_ref.hdr.szPage as ::core::ffi::c_int & 0x1 as ::core::ffi::c_int)
-                << 16 as ::core::ffi::c_int)) as crate::src::ext::rtree::rtree::u32_0;
+                << 16 as ::core::ffi::c_int))
+            as crate::src::ext::rtree::rtree::u32_0;
     }
     0 as ::core::ffi::c_int
 }
@@ -1831,7 +2224,8 @@ unsafe extern "C" fn walIndexReadHdr(
 ) -> ::core::ffi::c_int {
     let mut rc: ::core::ffi::c_int = 0;
     let mut badHdr: ::core::ffi::c_int = 0;
-    let mut page0: *mut crate::src::ext::rtree::rtree::u32_0 = ::core::ptr::null_mut::<crate::src::ext::rtree::rtree::u32_0>();
+    let mut page0: *mut crate::src::ext::rtree::rtree::u32_0 =
+        ::core::ptr::null_mut::<crate::src::ext::rtree::rtree::u32_0>();
     rc = walIndexPage(pWal, 0 as ::core::ffi::c_int, &raw mut page0);
     if rc != crate::src::headers::sqlite3_h::SQLITE_OK {
         if rc == crate::src::headers::sqlite3_h::SQLITE_READONLY_CANTINIT_1 {
@@ -1880,7 +2274,9 @@ unsafe extern "C" fn walIndexReadHdr(
             }
         }
     }
-    if badHdr == 0 as ::core::ffi::c_int && (*pWal).hdr.iVersion != WALINDEX_MAX_VERSION as crate::src::ext::rtree::rtree::u32_0 {
+    if badHdr == 0 as ::core::ffi::c_int
+        && (*pWal).hdr.iVersion != WALINDEX_MAX_VERSION as crate::src::ext::rtree::rtree::u32_0
+    {
         rc = crate::src::src::main::sqlite3CantopenError(2727 as ::core::ffi::c_int);
     }
     if (*pWal).bShmUnreliable != 0 {
@@ -1903,9 +2299,11 @@ unsafe extern "C" fn walBeginShmUnreliable(
     let mut szWal: crate::src::ext::rtree::rtree::i64_0 = 0;
     let mut iOffset: crate::src::ext::rtree::rtree::i64_0 = 0;
     let mut aBuf: [crate::src::ext::rtree::rtree::u8_0; 32] = [0; 32];
-    let mut aFrame: *mut crate::src::ext::rtree::rtree::u8_0 = ::core::ptr::null_mut::<crate::src::ext::rtree::rtree::u8_0>();
+    let mut aFrame: *mut crate::src::ext::rtree::rtree::u8_0 =
+        ::core::ptr::null_mut::<crate::src::ext::rtree::rtree::u8_0>();
     let mut szFrame: ::core::ffi::c_int = 0;
-    let mut aData: *mut crate::src::ext::rtree::rtree::u8_0 = ::core::ptr::null_mut::<crate::src::ext::rtree::rtree::u8_0>();
+    let mut aData: *mut crate::src::ext::rtree::rtree::u8_0 =
+        ::core::ptr::null_mut::<crate::src::ext::rtree::rtree::u8_0>();
     let mut pDummy: *mut ::core::ffi::c_void = ::core::ptr::null_mut::<::core::ffi::c_void>();
     let mut rc: ::core::ffi::c_int = 0;
     let mut aSaveCksum: [crate::src::ext::rtree::rtree::u32_0; 2] = [0; 2];
@@ -1917,7 +2315,6 @@ unsafe extern "C" fn walBeginShmUnreliable(
     } else {
         (*pWal).readLock = 0 as crate::src::fts5::i16_0;
         rc = crate::src::src::os::sqlite3OsShmMap(
-            
             (*pWal).pDbFd as *mut crate::src::headers::sqlite3_h::sqlite3_file,
             0 as ::core::ffi::c_int,
             WALINDEX_PGSZ as ::core::ffi::c_int,
@@ -1925,14 +2322,21 @@ unsafe extern "C" fn walBeginShmUnreliable(
             &raw mut pDummy,
         );
         if rc != crate::src::headers::sqlite3_h::SQLITE_READONLY_CANTINIT_1 {
-            rc = if rc == crate::src::headers::sqlite3_h::SQLITE_READONLY { WAL_RETRY } else { rc };
+            rc = if rc == crate::src::headers::sqlite3_h::SQLITE_READONLY {
+                WAL_RETRY
+            } else {
+                rc
+            };
         } else {
             ::libc::memcpy(
                 &raw mut (*pWal).hdr as *mut ::core::ffi::c_void,
                 walIndexHdr(pWal) as *mut ::core::ffi::c_void,
                 ::core::mem::size_of::<WalIndexHdr>() as crate::__stddef_size_t_h::size_t,
             );
-            rc = crate::src::src::os::sqlite3OsFileSize((*pWal).pWalFd as *mut crate::src::headers::sqlite3_h::sqlite3_file, &raw mut szWal);
+            rc = crate::src::src::os::sqlite3OsFileSize(
+                (*pWal).pWalFd as *mut crate::src::headers::sqlite3_h::sqlite3_file,
+                &raw mut szWal,
+            );
             if !(rc != crate::src::headers::sqlite3_h::SQLITE_OK) {
                 if szWal < WAL_HDRSIZE as crate::src::ext::rtree::rtree::i64_0 {
                     *pChanged = 1 as ::core::ffi::c_int;
@@ -1943,16 +2347,17 @@ unsafe extern "C" fn walBeginShmUnreliable(
                     };
                 } else {
                     rc = crate::src::src::os::sqlite3OsRead(
-                        
                         (*pWal).pWalFd as *mut crate::src::headers::sqlite3_h::sqlite3_file,
-                        &raw mut aBuf as *mut crate::src::ext::rtree::rtree::u8_0 as *mut ::core::ffi::c_void,
+                        &raw mut aBuf as *mut crate::src::ext::rtree::rtree::u8_0
+                            as *mut ::core::ffi::c_void,
                         WAL_HDRSIZE,
                         0 as crate::src::ext::rtree::rtree::i64_0,
                     );
                     if !(rc != crate::src::headers::sqlite3_h::SQLITE_OK) {
                         if ::libc::memcmp(
                             &raw mut (*pWal).hdr.aSalt as *const ::core::ffi::c_void,
-                            (&raw mut aBuf as *mut crate::src::ext::rtree::rtree::u8_0).offset(16 as isize)
+                            (&raw mut aBuf as *mut crate::src::ext::rtree::rtree::u8_0)
+                                .offset(16 as isize)
                                 as *mut crate::src::ext::rtree::rtree::u8_0
                                 as *const ::core::ffi::c_void,
                             8 as crate::__stddef_size_t_h::size_t,
@@ -1960,13 +2365,18 @@ unsafe extern "C" fn walBeginShmUnreliable(
                         {
                             rc = WAL_RETRY;
                         } else {
-                            szFrame = (*pWal).szPage.wrapping_add(WAL_FRAME_HDRSIZE as crate::src::ext::rtree::rtree::u32_0)
-                                as ::core::ffi::c_int;
-                            aFrame = crate::src::src::malloc::sqlite3_malloc64(szFrame as crate::src::headers::sqlite3_h::sqlite3_uint64) as *mut crate::src::ext::rtree::rtree::u8_0;
+                            szFrame = (*pWal).szPage.wrapping_add(
+                                WAL_FRAME_HDRSIZE as crate::src::ext::rtree::rtree::u32_0,
+                            ) as ::core::ffi::c_int;
+                            aFrame = crate::src::src::malloc::sqlite3_malloc64(
+                                szFrame as crate::src::headers::sqlite3_h::sqlite3_uint64,
+                            )
+                                as *mut crate::src::ext::rtree::rtree::u8_0;
                             if aFrame.is_null() {
                                 rc = crate::src::headers::sqliteInt_h::SQLITE_NOMEM_BKPT;
                             } else {
-                                aData = aFrame.offset(WAL_FRAME_HDRSIZE as isize) as *mut crate::src::ext::rtree::rtree::u8_0;
+                                aData = aFrame.offset(WAL_FRAME_HDRSIZE as isize)
+                                    as *mut crate::src::ext::rtree::rtree::u8_0;
                                 let __pWal_ref = unsafe { &mut *pWal };
                                 aSaveCksum[0 as ::core::ffi::c_int as usize] =
                                     __pWal_ref.hdr.aFrameCksum[0 as ::core::ffi::c_int as usize];
@@ -1979,14 +2389,19 @@ unsafe extern "C" fn walBeginShmUnreliable(
                                         .wrapping_add(1 as crate::src::ext::rtree::rtree::u32_0)
                                         .wrapping_sub(1 as crate::src::ext::rtree::rtree::u32_0)
                                         as crate::src::ext::rtree::rtree::i64_0
-                                        * __pWal_ref.szPage.wrapping_add(WAL_FRAME_HDRSIZE as crate::src::ext::rtree::rtree::u32_0)
+                                        * __pWal_ref.szPage.wrapping_add(
+                                            WAL_FRAME_HDRSIZE
+                                                as crate::src::ext::rtree::rtree::u32_0,
+                                        )
                                             as crate::src::ext::rtree::rtree::i64_0;
-                                while iOffset + szFrame as crate::src::ext::rtree::rtree::i64_0 <= szWal {
+                                while iOffset + szFrame as crate::src::ext::rtree::rtree::i64_0
+                                    <= szWal
+                                {
                                     let mut pgno: crate::src::ext::rtree::rtree::u32_0 = 0;
                                     let mut nTruncate: crate::src::ext::rtree::rtree::u32_0 = 0;
                                     rc = crate::src::src::os::sqlite3OsRead(
-                                        
-                                        __pWal_ref.pWalFd as *mut crate::src::headers::sqlite3_h::sqlite3_file,
+                                        __pWal_ref.pWalFd
+                                            as *mut crate::src::headers::sqlite3_h::sqlite3_file,
                                         aFrame as *mut ::core::ffi::c_void,
                                         szFrame,
                                         iOffset,
@@ -2027,7 +2442,9 @@ unsafe extern "C" fn walBeginShmUnreliable(
         let mut i: ::core::ffi::c_int = 0;
         i = 0 as ::core::ffi::c_int;
         while i < (*pWal).nWiData {
-            crate::src::src::malloc::sqlite3_free(*(*pWal).apWiData.offset(i as isize) as *mut ::core::ffi::c_void);
+            crate::src::src::malloc::sqlite3_free(
+                *(*pWal).apWiData.offset(i as isize) as *mut ::core::ffi::c_void
+            );
             let ref mut fresh28 = *(*pWal).apWiData.offset(i as isize);
             *fresh28 = ::core::ptr::null_mut::<crate::src::ext::rtree::rtree::u32_0>();
             i += 1;
@@ -2064,7 +2481,10 @@ unsafe extern "C" fn walTryBeginRead(
                 * (cnt - 9 as ::core::ffi::c_int)
                 * 39 as ::core::ffi::c_int;
         }
-        crate::src::src::os::sqlite3OsSleep(__pWal_ref.pVfs as *mut crate::src::headers::sqlite3_h::sqlite3_vfs, nDelay);
+        crate::src::src::os::sqlite3OsSleep(
+            __pWal_ref.pVfs as *mut crate::src::headers::sqlite3_h::sqlite3_vfs,
+            nDelay,
+        );
         *pCnt &= !WAL_RETRY_BLOCKED_MASK;
     }
     if useWal == 0 {
@@ -2096,7 +2516,8 @@ unsafe extern "C" fn walTryBeginRead(
     let mut i: ::core::ffi::c_int = 0;
     let mut mxFrame: crate::src::ext::rtree::rtree::u32_0 = 0;
     if useWal == 0
-        && (*((&raw mut (*pInfo).nBackfill) as *mut std::sync::atomic::AtomicU32)).load(std::sync::atomic::Ordering::Relaxed)
+        && (*((&raw mut (*pInfo).nBackfill) as *mut std::sync::atomic::AtomicU32))
+            .load(std::sync::atomic::Ordering::Relaxed)
             == __pWal_ref.hdr.mxFrame
     {
         rc = walLockShared(pWal, 3 as ::core::ffi::c_int + 0 as ::core::ffi::c_int);
@@ -2122,7 +2543,10 @@ unsafe extern "C" fn walTryBeginRead(
     mxFrame = __pWal_ref.hdr.mxFrame;
     i = 1 as ::core::ffi::c_int;
     while i < WAL_NREADER {
-        let mut thisMark: crate::src::ext::rtree::rtree::u32_0 = (*((&raw mut (*pInfo).aReadMark as *mut crate::src::ext::rtree::rtree::u32_0).offset(i as isize) as *mut std::sync::atomic::AtomicU32)).load(std::sync::atomic::Ordering::Relaxed);
+        let mut thisMark: crate::src::ext::rtree::rtree::u32_0 =
+            (*((&raw mut (*pInfo).aReadMark as *mut crate::src::ext::rtree::rtree::u32_0)
+                .offset(i as isize) as *mut std::sync::atomic::AtomicU32))
+                .load(std::sync::atomic::Ordering::Relaxed);
         if mxReadMark <= thisMark && thisMark <= mxFrame {
             mxReadMark = thisMark;
             mxI = i;
@@ -2136,7 +2560,9 @@ unsafe extern "C" fn walTryBeginRead(
         while i < WAL_NREADER {
             rc = walLockExclusive(pWal, 3 as ::core::ffi::c_int + i, 1 as ::core::ffi::c_int);
             if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
-                (*((&raw mut (*pInfo).aReadMark as *mut crate::src::ext::rtree::rtree::u32_0).offset(i as isize) as *mut std::sync::atomic::AtomicU32)).store(mxFrame, std::sync::atomic::Ordering::Relaxed);
+                (*((&raw mut (*pInfo).aReadMark as *mut crate::src::ext::rtree::rtree::u32_0)
+                    .offset(i as isize) as *mut std::sync::atomic::AtomicU32))
+                    .store(mxFrame, std::sync::atomic::Ordering::Relaxed);
                 mxReadMark = mxFrame;
                 mxI = i;
                 walUnlockExclusive(pWal, 3 as ::core::ffi::c_int + i, 1 as ::core::ffi::c_int);
@@ -2164,10 +2590,14 @@ unsafe extern "C" fn walTryBeginRead(
             rc
         };
     }
-    __pWal_ref.minFrame = (*((&raw mut (*pInfo).nBackfill) as *mut std::sync::atomic::AtomicU32)).load(std::sync::atomic::Ordering::Relaxed)
+    __pWal_ref.minFrame = (*((&raw mut (*pInfo).nBackfill) as *mut std::sync::atomic::AtomicU32))
+        .load(std::sync::atomic::Ordering::Relaxed)
         .wrapping_add(1 as crate::src::ext::rtree::rtree::u32_0);
     walShmBarrier(pWal);
-    if (*((&raw mut (*pInfo).aReadMark as *mut crate::src::ext::rtree::rtree::u32_0).offset(mxI as isize) as *mut std::sync::atomic::AtomicU32)).load(std::sync::atomic::Ordering::Relaxed) != mxReadMark
+    if (*((&raw mut (*pInfo).aReadMark as *mut crate::src::ext::rtree::rtree::u32_0)
+        .offset(mxI as isize) as *mut std::sync::atomic::AtomicU32))
+        .load(std::sync::atomic::Ordering::Relaxed)
+        != mxReadMark
         || ::libc::memcmp(
             walIndexHdr(pWal) as *mut ::core::ffi::c_void,
             &raw mut __pWal_ref.hdr as *const ::core::ffi::c_void,
@@ -2251,7 +2681,8 @@ unsafe extern "C" fn walFindFrame(
         nCollide = HASHTABLE_NSLOT;
         iKey = walHash(pgno as crate::src::ext::rtree::rtree::u32_0);
         loop {
-            iH = (*(sLoc.aHash.offset(iKey as isize) as *mut std::sync::atomic::AtomicU16)).load(std::sync::atomic::Ordering::Relaxed)
+            iH = (*(sLoc.aHash.offset(iKey as isize) as *mut std::sync::atomic::AtomicU16))
+                .load(std::sync::atomic::Ordering::Relaxed)
                 as crate::src::ext::rtree::rtree::u32_0;
             if !(iH != 0 as crate::src::ext::rtree::rtree::u32_0) {
                 break;
@@ -2259,7 +2690,10 @@ unsafe extern "C" fn walFindFrame(
             let mut iFrame: crate::src::ext::rtree::rtree::u32_0 = iH.wrapping_add(sLoc.iZero);
             if iFrame <= iLast
                 && iFrame >= __pWal_ref.minFrame
-                && *sLoc.aPgno.offset(iH.wrapping_sub(1 as crate::src::ext::rtree::rtree::u32_0) as isize) == pgno
+                && *sLoc
+                    .aPgno
+                    .offset(iH.wrapping_sub(1 as crate::src::ext::rtree::rtree::u32_0) as isize)
+                    == pgno
             {
                 iRead = iFrame;
             }
@@ -2304,10 +2738,11 @@ pub unsafe extern "C" fn sqlite3WalReadFrame(
     sz = (sz & 0xfe00 as ::core::ffi::c_int)
         + ((sz & 0x1 as ::core::ffi::c_int) << 16 as ::core::ffi::c_int);
     iOffset = WAL_HDRSIZE as crate::src::ext::rtree::rtree::i64_0
-        + iRead.wrapping_sub(1 as crate::src::ext::rtree::rtree::u32_0) as crate::src::ext::rtree::rtree::i64_0 * (sz + WAL_FRAME_HDRSIZE) as crate::src::ext::rtree::rtree::i64_0
+        + iRead.wrapping_sub(1 as crate::src::ext::rtree::rtree::u32_0)
+            as crate::src::ext::rtree::rtree::i64_0
+            * (sz + WAL_FRAME_HDRSIZE) as crate::src::ext::rtree::rtree::i64_0
         + WAL_FRAME_HDRSIZE as crate::src::ext::rtree::rtree::i64_0;
     crate::src::src::os::sqlite3OsRead(
-        
         (*pWal).pWalFd as *mut crate::src::headers::sqlite3_h::sqlite3_file,
         pOut as *mut ::core::ffi::c_void,
         if nOut > sz { sz } else { nOut },
@@ -2365,24 +2800,35 @@ pub unsafe extern "C" fn sqlite3WalEndWriteTransaction(mut pWal: *mut Wal) -> ::
 
 pub unsafe extern "C" fn sqlite3WalUndo(
     mut pWal: *mut Wal,
-    mut xUndo: Option<unsafe extern "C" fn(*mut ::core::ffi::c_void, crate::src::src::pager::Pgno) -> ::core::ffi::c_int>,
+    mut xUndo: Option<
+        unsafe extern "C" fn(
+            *mut ::core::ffi::c_void,
+            crate::src::src::pager::Pgno,
+        ) -> ::core::ffi::c_int,
+    >,
     mut pUndoCtx: *mut ::core::ffi::c_void,
 ) -> ::core::ffi::c_int {
     let mut rc: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_OK;
     if (*pWal).writeLock != 0 {
         let __pWal_ref = unsafe { &mut *pWal };
-        let mut iMax: crate::src::src::pager::Pgno = __pWal_ref.hdr.mxFrame as crate::src::src::pager::Pgno;
+        let mut iMax: crate::src::src::pager::Pgno =
+            __pWal_ref.hdr.mxFrame as crate::src::src::pager::Pgno;
         let mut iFrame: crate::src::src::pager::Pgno = 0;
         ::libc::memcpy(
             &raw mut __pWal_ref.hdr as *mut ::core::ffi::c_void,
             walIndexHdr(pWal) as *mut ::core::ffi::c_void,
             ::core::mem::size_of::<WalIndexHdr>() as crate::__stddef_size_t_h::size_t,
         );
-        iFrame = __pWal_ref.hdr.mxFrame.wrapping_add(1 as crate::src::ext::rtree::rtree::u32_0) as crate::src::src::pager::Pgno;
+        iFrame = __pWal_ref
+            .hdr
+            .mxFrame
+            .wrapping_add(1 as crate::src::ext::rtree::rtree::u32_0)
+            as crate::src::src::pager::Pgno;
         while rc == 0 as ::core::ffi::c_int && iFrame <= iMax {
             rc = xUndo.expect("non-null function pointer")(
                 pUndoCtx,
-                walFramePgno(pWal, iFrame as crate::src::ext::rtree::rtree::u32_0) as crate::src::src::pager::Pgno,
+                walFramePgno(pWal, iFrame as crate::src::ext::rtree::rtree::u32_0)
+                    as crate::src::src::pager::Pgno,
             );
             iFrame = iFrame.wrapping_add(1);
         }
@@ -2395,13 +2841,14 @@ pub unsafe extern "C" fn sqlite3WalUndo(
 }
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
-pub unsafe extern "C" fn sqlite3WalSavepoint(mut pWal: *mut Wal, mut aWalData: *mut crate::src::ext::rtree::rtree::u32_0) {
+pub unsafe extern "C" fn sqlite3WalSavepoint(
+    mut pWal: *mut Wal,
+    mut aWalData: *mut crate::src::ext::rtree::rtree::u32_0,
+) {
     let __pWal_ref = unsafe { &*pWal };
     *aWalData.offset(0 as isize) = __pWal_ref.hdr.mxFrame;
-    *aWalData.offset(1 as isize) =
-        __pWal_ref.hdr.aFrameCksum[0 as ::core::ffi::c_int as usize];
-    *aWalData.offset(2 as isize) =
-        __pWal_ref.hdr.aFrameCksum[1 as ::core::ffi::c_int as usize];
+    *aWalData.offset(1 as isize) = __pWal_ref.hdr.aFrameCksum[0 as ::core::ffi::c_int as usize];
+    *aWalData.offset(2 as isize) = __pWal_ref.hdr.aFrameCksum[1 as ::core::ffi::c_int as usize];
     *aWalData.offset(3 as isize) = __pWal_ref.nCkpt;
 }
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
@@ -2418,10 +2865,8 @@ pub unsafe extern "C" fn sqlite3WalSavepointUndo(
     if *aWalData.offset(0 as isize) < (*pWal).hdr.mxFrame {
         let __pWal_ref = unsafe { &mut *pWal };
         __pWal_ref.hdr.mxFrame = *aWalData.offset(0 as isize);
-        __pWal_ref.hdr.aFrameCksum[0 as ::core::ffi::c_int as usize] =
-            *aWalData.offset(1 as isize);
-        __pWal_ref.hdr.aFrameCksum[1 as ::core::ffi::c_int as usize] =
-            *aWalData.offset(2 as isize);
+        __pWal_ref.hdr.aFrameCksum[0 as ::core::ffi::c_int as usize] = *aWalData.offset(1 as isize);
+        __pWal_ref.hdr.aFrameCksum[1 as ::core::ffi::c_int as usize] = *aWalData.offset(2 as isize);
         walCleanupHash(pWal);
         if __pWal_ref.iReCksum > __pWal_ref.hdr.mxFrame {
             __pWal_ref.iReCksum = 0 as crate::src::ext::rtree::rtree::u32_0;
@@ -2484,9 +2929,17 @@ unsafe extern "C" fn walWriteToLog(
 ) -> ::core::ffi::c_int {
     let mut rc: ::core::ffi::c_int = 0;
     let __p_ref = unsafe { &*p };
-    if iOffset < __p_ref.iSyncPoint && iOffset + iAmt as crate::src::headers::sqlite3_h::sqlite3_int64 >= __p_ref.iSyncPoint {
-        let mut iFirstAmt: ::core::ffi::c_int = (__p_ref.iSyncPoint - iOffset) as ::core::ffi::c_int;
-        rc = crate::src::src::os::sqlite3OsWrite(__p_ref.pFd as *mut crate::src::headers::sqlite3_h::sqlite3_file, pContent, iFirstAmt, iOffset as crate::src::ext::rtree::rtree::i64_0);
+    if iOffset < __p_ref.iSyncPoint
+        && iOffset + iAmt as crate::src::headers::sqlite3_h::sqlite3_int64 >= __p_ref.iSyncPoint
+    {
+        let mut iFirstAmt: ::core::ffi::c_int =
+            (__p_ref.iSyncPoint - iOffset) as ::core::ffi::c_int;
+        rc = crate::src::src::os::sqlite3OsWrite(
+            __p_ref.pFd as *mut crate::src::headers::sqlite3_h::sqlite3_file,
+            pContent,
+            iFirstAmt,
+            iOffset as crate::src::ext::rtree::rtree::i64_0,
+        );
         if rc != 0 {
             return rc;
         }
@@ -2494,12 +2947,20 @@ unsafe extern "C" fn walWriteToLog(
         iAmt -= iFirstAmt;
         pContent = (pContent as *mut ::core::ffi::c_char).offset(iFirstAmt as isize)
             as *mut ::core::ffi::c_void;
-        rc = crate::src::src::os::sqlite3OsSync(__p_ref.pFd as *mut crate::src::headers::sqlite3_h::sqlite3_file, __p_ref.syncFlags & 0x3 as ::core::ffi::c_int);
+        rc = crate::src::src::os::sqlite3OsSync(
+            __p_ref.pFd as *mut crate::src::headers::sqlite3_h::sqlite3_file,
+            __p_ref.syncFlags & 0x3 as ::core::ffi::c_int,
+        );
         if iAmt == 0 as ::core::ffi::c_int || rc != 0 {
             return rc;
         }
     }
-    rc = crate::src::src::os::sqlite3OsWrite(__p_ref.pFd as *mut crate::src::headers::sqlite3_h::sqlite3_file, pContent, iAmt, iOffset as crate::src::ext::rtree::rtree::i64_0);
+    rc = crate::src::src::os::sqlite3OsWrite(
+        __p_ref.pFd as *mut crate::src::headers::sqlite3_h::sqlite3_file,
+        pContent,
+        iAmt,
+        iOffset as crate::src::ext::rtree::rtree::i64_0,
+    );
     rc
 }
 
@@ -2533,9 +2994,9 @@ unsafe extern "C" fn walWriteOneFrame(
         p,
         pData,
         (*p).szPage,
-        (iOffset as ::core::ffi::c_ulonglong)
-            .wrapping_add(::core::mem::size_of::<[crate::src::ext::rtree::rtree::u8_0; 24]>() as ::core::ffi::c_ulonglong)
-            as crate::src::headers::sqlite3_h::sqlite3_int64,
+        (iOffset as ::core::ffi::c_ulonglong).wrapping_add(::core::mem::size_of::<
+            [crate::src::ext::rtree::rtree::u8_0; 24],
+        >() as ::core::ffi::c_ulonglong) as crate::src::headers::sqlite3_h::sqlite3_int64,
     );
     rc
 }
@@ -2547,11 +3008,13 @@ unsafe extern "C" fn walRewriteChecksums(
     let __pWal_ref = unsafe { &mut *pWal };
     let szPage: ::core::ffi::c_int = __pWal_ref.szPage as ::core::ffi::c_int;
     let mut rc: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_OK;
-    let mut aBuf: *mut crate::src::ext::rtree::rtree::u8_0 = ::core::ptr::null_mut::<crate::src::ext::rtree::rtree::u8_0>();
+    let mut aBuf: *mut crate::src::ext::rtree::rtree::u8_0 =
+        ::core::ptr::null_mut::<crate::src::ext::rtree::rtree::u8_0>();
     let mut aFrame: [crate::src::ext::rtree::rtree::u8_0; 24] = [0; 24];
     let mut iRead: crate::src::ext::rtree::rtree::u32_0 = 0;
     let mut iCksumOff: crate::src::ext::rtree::rtree::i64_0 = 0;
-    aBuf = crate::src::src::malloc::sqlite3_malloc(szPage + WAL_FRAME_HDRSIZE) as *mut crate::src::ext::rtree::rtree::u8_0;
+    aBuf = crate::src::src::malloc::sqlite3_malloc(szPage + WAL_FRAME_HDRSIZE)
+        as *mut crate::src::ext::rtree::rtree::u8_0;
     if aBuf.is_null() {
         return crate::src::headers::sqliteInt_h::SQLITE_NOMEM_BKPT;
     }
@@ -2562,27 +3025,34 @@ unsafe extern "C" fn walRewriteChecksums(
             + (*pWal)
                 .iReCksum
                 .wrapping_sub(1 as crate::src::ext::rtree::rtree::u32_0)
-                .wrapping_sub(1 as crate::src::ext::rtree::rtree::u32_0) as crate::src::ext::rtree::rtree::i64_0
+                .wrapping_sub(1 as crate::src::ext::rtree::rtree::u32_0)
+                as crate::src::ext::rtree::rtree::i64_0
                 * (szPage + WAL_FRAME_HDRSIZE) as crate::src::ext::rtree::rtree::i64_0
             + 16 as crate::src::ext::rtree::rtree::i64_0;
     }
     rc = crate::src::src::os::sqlite3OsRead(
-        
         __pWal_ref.pWalFd as *mut crate::src::headers::sqlite3_h::sqlite3_file,
         aBuf as *mut ::core::ffi::c_void,
-        (::core::mem::size_of::<crate::src::ext::rtree::rtree::u32_0>() as usize).wrapping_mul(2 as usize) as ::core::ffi::c_int,
+        (::core::mem::size_of::<crate::src::ext::rtree::rtree::u32_0>() as usize)
+            .wrapping_mul(2 as usize) as ::core::ffi::c_int,
         iCksumOff,
     );
-    __pWal_ref.hdr.aFrameCksum[0 as ::core::ffi::c_int as usize] = crate::src::src::util::sqlite3Get4byte(aBuf);
+    __pWal_ref.hdr.aFrameCksum[0 as ::core::ffi::c_int as usize] =
+        crate::src::src::util::sqlite3Get4byte(aBuf);
     __pWal_ref.hdr.aFrameCksum[1 as ::core::ffi::c_int as usize] =
-        crate::src::src::util::sqlite3Get4byte(aBuf.offset(::core::mem::size_of::<crate::src::ext::rtree::rtree::u32_0>() as isize) as *mut crate::src::ext::rtree::rtree::u8_0);
+        crate::src::src::util::sqlite3Get4byte(
+            aBuf.offset(::core::mem::size_of::<crate::src::ext::rtree::rtree::u32_0>() as isize)
+                as *mut crate::src::ext::rtree::rtree::u8_0,
+        );
     iRead = __pWal_ref.iReCksum;
     __pWal_ref.iReCksum = 0 as crate::src::ext::rtree::rtree::u32_0;
     while rc == crate::src::headers::sqlite3_h::SQLITE_OK && iRead <= iLast {
-        let mut iOff: crate::src::ext::rtree::rtree::i64_0 = WAL_HDRSIZE as crate::src::ext::rtree::rtree::i64_0
-            + iRead.wrapping_sub(1 as crate::src::ext::rtree::rtree::u32_0) as crate::src::ext::rtree::rtree::i64_0 * (szPage + WAL_FRAME_HDRSIZE) as crate::src::ext::rtree::rtree::i64_0;
+        let mut iOff: crate::src::ext::rtree::rtree::i64_0 = WAL_HDRSIZE
+            as crate::src::ext::rtree::rtree::i64_0
+            + iRead.wrapping_sub(1 as crate::src::ext::rtree::rtree::u32_0)
+                as crate::src::ext::rtree::rtree::i64_0
+                * (szPage + WAL_FRAME_HDRSIZE) as crate::src::ext::rtree::rtree::i64_0;
         rc = crate::src::src::os::sqlite3OsRead(
-            
             __pWal_ref.pWalFd as *mut crate::src::headers::sqlite3_h::sqlite3_file,
             aBuf as *mut ::core::ffi::c_void,
             szPage + WAL_FRAME_HDRSIZE,
@@ -2592,7 +3062,9 @@ unsafe extern "C" fn walRewriteChecksums(
             let mut iPgno: crate::src::ext::rtree::rtree::u32_0 = 0;
             let mut nDbSize: crate::src::ext::rtree::rtree::u32_0 = 0;
             iPgno = crate::src::src::util::sqlite3Get4byte(aBuf);
-            nDbSize = crate::src::src::util::sqlite3Get4byte(aBuf.offset(4 as isize) as *mut crate::src::ext::rtree::rtree::u8_0);
+            nDbSize = crate::src::src::util::sqlite3Get4byte(
+                aBuf.offset(4 as isize) as *mut crate::src::ext::rtree::rtree::u8_0
+            );
             walEncodeFrame(
                 pWal,
                 iPgno,
@@ -2601,10 +3073,11 @@ unsafe extern "C" fn walRewriteChecksums(
                 &raw mut aFrame as *mut crate::src::ext::rtree::rtree::u8_0,
             );
             rc = crate::src::src::os::sqlite3OsWrite(
-                
                 __pWal_ref.pWalFd as *mut crate::src::headers::sqlite3_h::sqlite3_file,
-                &raw mut aFrame as *mut crate::src::ext::rtree::rtree::u8_0 as *const ::core::ffi::c_void,
-                ::core::mem::size_of::<[crate::src::ext::rtree::rtree::u8_0; 24]>() as ::core::ffi::c_int,
+                &raw mut aFrame as *mut crate::src::ext::rtree::rtree::u8_0
+                    as *const ::core::ffi::c_void,
+                ::core::mem::size_of::<[crate::src::ext::rtree::rtree::u8_0; 24]>()
+                    as ::core::ffi::c_int,
                 iOff,
             );
         }
@@ -2624,13 +3097,16 @@ unsafe extern "C" fn walFrames(
 ) -> ::core::ffi::c_int {
     let mut rc: ::core::ffi::c_int = 0;
     let mut iFrame: crate::src::ext::rtree::rtree::u32_0 = 0;
-    let mut p: *mut crate::src::src::pcache::PgHdr = ::core::ptr::null_mut::<crate::src::src::pcache::PgHdr>();
-    let mut pLast: *mut crate::src::src::pcache::PgHdr = ::core::ptr::null_mut::<crate::src::src::pcache::PgHdr>();
+    let mut p: *mut crate::src::src::pcache::PgHdr =
+        ::core::ptr::null_mut::<crate::src::src::pcache::PgHdr>();
+    let mut pLast: *mut crate::src::src::pcache::PgHdr =
+        ::core::ptr::null_mut::<crate::src::src::pcache::PgHdr>();
     let mut nExtra: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
     let mut szFrame: ::core::ffi::c_int = 0;
     let mut iOffset: crate::src::ext::rtree::rtree::i64_0 = 0;
     let mut w: WalWriter = unsafe { ::core::mem::zeroed() };
-    let mut iFirst: crate::src::ext::rtree::rtree::u32_0 = 0 as crate::src::ext::rtree::rtree::u32_0;
+    let mut iFirst: crate::src::ext::rtree::rtree::u32_0 =
+        0 as crate::src::ext::rtree::rtree::u32_0;
     let mut pLive: *mut WalIndexHdr = ::core::ptr::null_mut::<WalIndexHdr>();
     pLive = walIndexHdr(pWal) as *mut WalIndexHdr;
     let __pWal_ref = unsafe { &mut *pWal };
@@ -2640,7 +3116,9 @@ unsafe extern "C" fn walFrames(
         ::core::mem::size_of::<WalIndexHdr>() as crate::__stddef_size_t_h::size_t,
     ) != 0 as ::core::ffi::c_int
     {
-        iFirst = (*pLive).mxFrame.wrapping_add(1 as crate::src::ext::rtree::rtree::u32_0);
+        iFirst = (*pLive)
+            .mxFrame
+            .wrapping_add(1 as crate::src::ext::rtree::rtree::u32_0);
     }
     rc = walRestartLog(pWal);
     if crate::src::headers::sqlite3_h::SQLITE_OK != rc {
@@ -2651,32 +3129,39 @@ unsafe extern "C" fn walFrames(
         let mut aWalHdr: [crate::src::ext::rtree::rtree::u8_0; 32] = [0; 32];
         let mut aCksum: [crate::src::ext::rtree::rtree::u32_0; 2] = [0; 2];
         crate::src::src::util::sqlite3Put4byte(
-            (&raw mut aWalHdr as *mut crate::src::ext::rtree::rtree::u8_0).offset(0 as isize) as *mut crate::src::ext::rtree::rtree::u8_0,
-            (WAL_MAGIC | crate::src::headers::sqliteInt_h::SQLITE_BIGENDIAN) as crate::src::ext::rtree::rtree::u32_0,
+            (&raw mut aWalHdr as *mut crate::src::ext::rtree::rtree::u8_0).offset(0 as isize)
+                as *mut crate::src::ext::rtree::rtree::u8_0,
+            (WAL_MAGIC | crate::src::headers::sqliteInt_h::SQLITE_BIGENDIAN)
+                as crate::src::ext::rtree::rtree::u32_0,
         );
         crate::src::src::util::sqlite3Put4byte(
-            (&raw mut aWalHdr as *mut crate::src::ext::rtree::rtree::u8_0).offset(4 as isize) as *mut crate::src::ext::rtree::rtree::u8_0,
+            (&raw mut aWalHdr as *mut crate::src::ext::rtree::rtree::u8_0).offset(4 as isize)
+                as *mut crate::src::ext::rtree::rtree::u8_0,
             WAL_MAX_VERSION as crate::src::ext::rtree::rtree::u32_0,
         );
         crate::src::src::util::sqlite3Put4byte(
-            (&raw mut aWalHdr as *mut crate::src::ext::rtree::rtree::u8_0).offset(8 as isize) as *mut crate::src::ext::rtree::rtree::u8_0,
+            (&raw mut aWalHdr as *mut crate::src::ext::rtree::rtree::u8_0).offset(8 as isize)
+                as *mut crate::src::ext::rtree::rtree::u8_0,
             szPage as crate::src::ext::rtree::rtree::u32_0,
         );
         crate::src::src::util::sqlite3Put4byte(
-            (&raw mut aWalHdr as *mut crate::src::ext::rtree::rtree::u8_0).offset(12 as isize) as *mut crate::src::ext::rtree::rtree::u8_0,
+            (&raw mut aWalHdr as *mut crate::src::ext::rtree::rtree::u8_0).offset(12 as isize)
+                as *mut crate::src::ext::rtree::rtree::u8_0,
             __pWal_ref.nCkpt,
         );
         if __pWal_ref.nCkpt == 0 as crate::src::ext::rtree::rtree::u32_0 {
             crate::src::src::random::sqlite3_randomness(
                 8 as ::core::ffi::c_int,
-                &raw mut __pWal_ref.hdr.aSalt as *mut crate::src::ext::rtree::rtree::u32_0 as *mut ::core::ffi::c_void,
+                &raw mut __pWal_ref.hdr.aSalt as *mut crate::src::ext::rtree::rtree::u32_0
+                    as *mut ::core::ffi::c_void,
             );
         }
         ::core::ptr::copy_nonoverlapping(
-                    &raw mut __pWal_ref.hdr.aSalt as *mut crate::src::ext::rtree::rtree::u32_0 as *const u8,
-                    (&raw mut aWalHdr as *mut crate::src::ext::rtree::rtree::u8_0).offset(16 as isize) as *mut crate::src::ext::rtree::rtree::u8_0 as *mut u8,
-                    8 as usize,
-                );
+            &raw mut __pWal_ref.hdr.aSalt as *mut crate::src::ext::rtree::rtree::u32_0 as *const u8,
+            (&raw mut aWalHdr as *mut crate::src::ext::rtree::rtree::u8_0).offset(16 as isize)
+                as *mut crate::src::ext::rtree::rtree::u8_0 as *mut u8,
+            8 as usize,
+        );
         walChecksumBytes(
             1 as ::core::ffi::c_int,
             &raw mut aWalHdr as *mut crate::src::ext::rtree::rtree::u8_0,
@@ -2685,25 +3170,29 @@ unsafe extern "C" fn walFrames(
             &raw mut aCksum as *mut crate::src::ext::rtree::rtree::u32_0,
         );
         crate::src::src::util::sqlite3Put4byte(
-            (&raw mut aWalHdr as *mut crate::src::ext::rtree::rtree::u8_0).offset(24 as isize) as *mut crate::src::ext::rtree::rtree::u8_0,
+            (&raw mut aWalHdr as *mut crate::src::ext::rtree::rtree::u8_0).offset(24 as isize)
+                as *mut crate::src::ext::rtree::rtree::u8_0,
             aCksum[0 as ::core::ffi::c_int as usize],
         );
         crate::src::src::util::sqlite3Put4byte(
-            (&raw mut aWalHdr as *mut crate::src::ext::rtree::rtree::u8_0).offset(28 as isize) as *mut crate::src::ext::rtree::rtree::u8_0,
+            (&raw mut aWalHdr as *mut crate::src::ext::rtree::rtree::u8_0).offset(28 as isize)
+                as *mut crate::src::ext::rtree::rtree::u8_0,
             aCksum[1 as ::core::ffi::c_int as usize],
         );
         __pWal_ref.szPage = szPage as crate::src::ext::rtree::rtree::u32_0;
-        __pWal_ref.hdr.bigEndCksum = crate::src::headers::sqliteInt_h::SQLITE_BIGENDIAN as crate::src::ext::rtree::rtree::u8_0;
+        __pWal_ref.hdr.bigEndCksum = crate::src::headers::sqliteInt_h::SQLITE_BIGENDIAN
+            as crate::src::ext::rtree::rtree::u8_0;
         __pWal_ref.hdr.aFrameCksum[0 as ::core::ffi::c_int as usize] =
             aCksum[0 as ::core::ffi::c_int as usize];
         __pWal_ref.hdr.aFrameCksum[1 as ::core::ffi::c_int as usize] =
             aCksum[1 as ::core::ffi::c_int as usize];
         __pWal_ref.truncateOnCommit = 1 as crate::src::ext::rtree::rtree::u8_0;
         rc = crate::src::src::os::sqlite3OsWrite(
-            
             __pWal_ref.pWalFd as *mut crate::src::headers::sqlite3_h::sqlite3_file,
-            &raw mut aWalHdr as *mut crate::src::ext::rtree::rtree::u8_0 as *const ::core::ffi::c_void,
-            ::core::mem::size_of::<[crate::src::ext::rtree::rtree::u8_0; 32]>() as ::core::ffi::c_int,
+            &raw mut aWalHdr as *mut crate::src::ext::rtree::rtree::u8_0
+                as *const ::core::ffi::c_void,
+            ::core::mem::size_of::<[crate::src::ext::rtree::rtree::u8_0; 32]>()
+                as ::core::ffi::c_int,
             0 as crate::src::ext::rtree::rtree::i64_0,
         );
         if rc != crate::src::headers::sqlite3_h::SQLITE_OK {
@@ -2711,7 +3200,6 @@ unsafe extern "C" fn walFrames(
         }
         if __pWal_ref.syncHeader != 0 {
             rc = crate::src::src::os::sqlite3OsSync(
-                
                 __pWal_ref.pWalFd as *mut crate::src::headers::sqlite3_h::sqlite3_file,
                 sync_flags >> 2 as ::core::ffi::c_int & 0x3 as ::core::ffi::c_int,
             );
@@ -2729,7 +3217,10 @@ unsafe extern "C" fn walFrames(
     w.syncFlags = sync_flags;
     w.szPage = szPage;
     iOffset = WAL_HDRSIZE as crate::src::ext::rtree::rtree::i64_0
-        + iFrame.wrapping_add(1 as crate::src::ext::rtree::rtree::u32_0).wrapping_sub(1 as crate::src::ext::rtree::rtree::u32_0) as crate::src::ext::rtree::rtree::i64_0
+        + iFrame
+            .wrapping_add(1 as crate::src::ext::rtree::rtree::u32_0)
+            .wrapping_sub(1 as crate::src::ext::rtree::rtree::u32_0)
+            as crate::src::ext::rtree::rtree::i64_0
             * (szPage + WAL_FRAME_HDRSIZE) as crate::src::ext::rtree::rtree::i64_0;
     szFrame = szPage + WAL_FRAME_HDRSIZE;
     let mut current_block_67: u64;
@@ -2737,25 +3228,37 @@ unsafe extern "C" fn walFrames(
     while !p.is_null() {
         let mut nDbSize: ::core::ffi::c_int = 0;
         if iFirst != 0 && (!(*p).pDirty.is_null() || isCommit == 0 as ::core::ffi::c_int) {
-            let mut iWrite: crate::src::ext::rtree::rtree::u32_0 = 0 as crate::src::ext::rtree::rtree::u32_0;
+            let mut iWrite: crate::src::ext::rtree::rtree::u32_0 =
+                0 as crate::src::ext::rtree::rtree::u32_0;
             walFindFrame(pWal, (*p).pgno, &raw mut iWrite);
             if iWrite >= iFirst {
-                let mut iOff: crate::src::ext::rtree::rtree::i64_0 = WAL_HDRSIZE as crate::src::ext::rtree::rtree::i64_0
-                    + iWrite.wrapping_sub(1 as crate::src::ext::rtree::rtree::u32_0) as crate::src::ext::rtree::rtree::i64_0
+                let mut iOff: crate::src::ext::rtree::rtree::i64_0 = WAL_HDRSIZE
+                    as crate::src::ext::rtree::rtree::i64_0
+                    + iWrite.wrapping_sub(1 as crate::src::ext::rtree::rtree::u32_0)
+                        as crate::src::ext::rtree::rtree::i64_0
                         * (szPage + WAL_FRAME_HDRSIZE) as crate::src::ext::rtree::rtree::i64_0
                     + WAL_FRAME_HDRSIZE as crate::src::ext::rtree::rtree::i64_0;
                 let mut pData: *mut ::core::ffi::c_void =
                     ::core::ptr::null_mut::<::core::ffi::c_void>();
-                if __pWal_ref.iReCksum == 0 as crate::src::ext::rtree::rtree::u32_0 || iWrite < __pWal_ref.iReCksum {
+                if __pWal_ref.iReCksum == 0 as crate::src::ext::rtree::rtree::u32_0
+                    || iWrite < __pWal_ref.iReCksum
+                {
                     __pWal_ref.iReCksum = iWrite;
                 }
                 let __p_ref = unsafe { &mut *p };
                 pData = __p_ref.pData;
-                rc = crate::src::src::os::sqlite3OsWrite(__pWal_ref.pWalFd as *mut crate::src::headers::sqlite3_h::sqlite3_file, pData, szPage, iOff);
+                rc = crate::src::src::os::sqlite3OsWrite(
+                    __pWal_ref.pWalFd as *mut crate::src::headers::sqlite3_h::sqlite3_file,
+                    pData,
+                    szPage,
+                    iOff,
+                );
                 if rc != 0 {
                     return rc;
                 }
-                __p_ref.flags = (__p_ref.flags as ::core::ffi::c_int & !crate::src::src::pcache::PGHDR_WAL_APPEND) as crate::src::fts5::u16_0;
+                __p_ref.flags = (__p_ref.flags as ::core::ffi::c_int
+                    & !crate::src::src::pcache::PGHDR_WAL_APPEND)
+                    as crate::src::fts5::u16_0;
                 current_block_67 = 6417057564578538666;
             } else {
                 current_block_67 = 14220266465818359136;
@@ -2772,13 +3275,20 @@ unsafe extern "C" fn walFrames(
                 } else {
                     0 as crate::src::src::pager::Pgno
                 }) as ::core::ffi::c_int;
-                rc = walWriteOneFrame(&raw mut w, p, nDbSize, iOffset as crate::src::headers::sqlite3_h::sqlite3_int64);
+                rc = walWriteOneFrame(
+                    &raw mut w,
+                    p,
+                    nDbSize,
+                    iOffset as crate::src::headers::sqlite3_h::sqlite3_int64,
+                );
                 if rc != 0 {
                     return rc;
                 }
                 pLast = p;
                 iOffset += szFrame as crate::src::ext::rtree::rtree::i64_0;
-                __p_ref.flags = (__p_ref.flags as ::core::ffi::c_int | crate::src::src::pcache::PGHDR_WAL_APPEND) as crate::src::fts5::u16_0;
+                __p_ref.flags = (__p_ref.flags as ::core::ffi::c_int
+                    | crate::src::src::pcache::PGHDR_WAL_APPEND)
+                    as crate::src::fts5::u16_0;
             }
             _ => {}
         }
@@ -2793,9 +3303,14 @@ unsafe extern "C" fn walFrames(
     if isCommit != 0 && sync_flags & 0x3 as ::core::ffi::c_int != 0 as ::core::ffi::c_int {
         let mut bSync: ::core::ffi::c_int = 1 as ::core::ffi::c_int;
         if __pWal_ref.padToSectorBoundary != 0 {
-            let mut sectorSize: ::core::ffi::c_int = crate::src::src::pager::sqlite3SectorSize(__pWal_ref.pWalFd as *mut crate::src::headers::sqlite3_h::sqlite3_file);
-            w.iSyncPoint = ((iOffset + sectorSize as crate::src::ext::rtree::rtree::i64_0 - 1 as crate::src::ext::rtree::rtree::i64_0) / sectorSize as crate::src::ext::rtree::rtree::i64_0
-                * sectorSize as crate::src::ext::rtree::rtree::i64_0) as crate::src::headers::sqlite3_h::sqlite3_int64;
+            let mut sectorSize: ::core::ffi::c_int = crate::src::src::pager::sqlite3SectorSize(
+                __pWal_ref.pWalFd as *mut crate::src::headers::sqlite3_h::sqlite3_file,
+            );
+            w.iSyncPoint = ((iOffset + sectorSize as crate::src::ext::rtree::rtree::i64_0
+                - 1 as crate::src::ext::rtree::rtree::i64_0)
+                / sectorSize as crate::src::ext::rtree::rtree::i64_0
+                * sectorSize as crate::src::ext::rtree::rtree::i64_0)
+                as crate::src::headers::sqlite3_h::sqlite3_int64;
             bSync = (w.iSyncPoint == iOffset) as ::core::ffi::c_int;
             while iOffset < w.iSyncPoint {
                 rc = walWriteOneFrame(
@@ -2812,7 +3327,10 @@ unsafe extern "C" fn walFrames(
             }
         }
         if bSync != 0 {
-            rc = crate::src::src::os::sqlite3OsSync(w.pFd as *mut crate::src::headers::sqlite3_h::sqlite3_file, sync_flags & 0x3 as ::core::ffi::c_int);
+            rc = crate::src::src::os::sqlite3OsSync(
+                w.pFd as *mut crate::src::headers::sqlite3_h::sqlite3_file,
+                sync_flags & 0x3 as ::core::ffi::c_int,
+            );
         }
     }
     if isCommit != 0
@@ -2824,7 +3342,8 @@ unsafe extern "C" fn walFrames(
             + iFrame
                 .wrapping_add(nExtra as crate::src::ext::rtree::rtree::u32_0)
                 .wrapping_add(1 as crate::src::ext::rtree::rtree::u32_0)
-                .wrapping_sub(1 as crate::src::ext::rtree::rtree::u32_0) as crate::src::ext::rtree::rtree::i64_0
+                .wrapping_sub(1 as crate::src::ext::rtree::rtree::u32_0)
+                as crate::src::ext::rtree::rtree::i64_0
                 * (szPage + WAL_FRAME_HDRSIZE) as crate::src::ext::rtree::rtree::i64_0
             > __pWal_ref.mxWalSize
         {
@@ -2832,7 +3351,8 @@ unsafe extern "C" fn walFrames(
                 + iFrame
                     .wrapping_add(nExtra as crate::src::ext::rtree::rtree::u32_0)
                     .wrapping_add(1 as crate::src::ext::rtree::rtree::u32_0)
-                    .wrapping_sub(1 as crate::src::ext::rtree::rtree::u32_0) as crate::src::ext::rtree::rtree::i64_0
+                    .wrapping_sub(1 as crate::src::ext::rtree::rtree::u32_0)
+                    as crate::src::ext::rtree::rtree::i64_0
                     * (szPage + WAL_FRAME_HDRSIZE) as crate::src::ext::rtree::rtree::i64_0;
         }
         walLimitSize(pWal, sz);
@@ -2841,20 +3361,31 @@ unsafe extern "C" fn walFrames(
     iFrame = __pWal_ref.hdr.mxFrame;
     p = pList;
     while !p.is_null() && rc == crate::src::headers::sqlite3_h::SQLITE_OK {
-        if !((*p).flags as ::core::ffi::c_int & crate::src::src::pcache::PGHDR_WAL_APPEND == 0 as ::core::ffi::c_int) {
+        if !((*p).flags as ::core::ffi::c_int & crate::src::src::pcache::PGHDR_WAL_APPEND
+            == 0 as ::core::ffi::c_int)
+        {
             iFrame = iFrame.wrapping_add(1);
-            rc = walIndexAppend(pWal, iFrame, (*p).pgno as crate::src::ext::rtree::rtree::u32_0);
+            rc = walIndexAppend(
+                pWal,
+                iFrame,
+                (*p).pgno as crate::src::ext::rtree::rtree::u32_0,
+            );
         }
         p = (*p).pDirty;
     }
     while rc == crate::src::headers::sqlite3_h::SQLITE_OK && nExtra > 0 as ::core::ffi::c_int {
         iFrame = iFrame.wrapping_add(1);
         nExtra -= 1;
-        rc = walIndexAppend(pWal, iFrame, (*pLast).pgno as crate::src::ext::rtree::rtree::u32_0);
+        rc = walIndexAppend(
+            pWal,
+            iFrame,
+            (*pLast).pgno as crate::src::ext::rtree::rtree::u32_0,
+        );
     }
     if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
-        __pWal_ref.hdr.szPage =
-            (szPage & 0xff00 as ::core::ffi::c_int | szPage >> 16 as ::core::ffi::c_int) as crate::src::fts5::u16_0;
+        __pWal_ref.hdr.szPage = (szPage & 0xff00 as ::core::ffi::c_int
+            | szPage >> 16 as ::core::ffi::c_int)
+            as crate::src::fts5::u16_0;
         __pWal_ref.hdr.mxFrame = iFrame;
         if isCommit != 0 {
             __pWal_ref.hdr.iChange = __pWal_ref.hdr.iChange.wrapping_add(1);
@@ -2933,7 +3464,6 @@ pub unsafe extern "C" fn sqlite3WalCheckpoint(
         let _ = eMode2 > crate::src::headers::sqlite3_h::SQLITE_CHECKPOINT_PASSIVE;
         if isChanged != 0 && (*(*(*pWal).pDbFd).pMethods).iVersion >= 3 as ::core::ffi::c_int {
             crate::src::src::os::sqlite3OsUnfetch(
-                
                 (*pWal).pDbFd as *mut crate::src::headers::sqlite3_h::sqlite3_file,
                 0 as crate::src::ext::rtree::rtree::i64_0,
                 ::core::ptr::null_mut::<::core::ffi::c_void>(),
@@ -2946,7 +3476,9 @@ pub unsafe extern "C" fn sqlite3WalCheckpoint(
         } else if eMode2 != crate::src::headers::sqlite3_h::SQLITE_CHECKPOINT_NOOP {
             rc = walCheckpoint(pWal, db, eMode2, xBusy2, pBusyArg, sync_flags, zBuf);
         }
-        if rc == crate::src::headers::sqlite3_h::SQLITE_OK || rc == crate::src::headers::sqlite3_h::SQLITE_BUSY {
+        if rc == crate::src::headers::sqlite3_h::SQLITE_OK
+            || rc == crate::src::headers::sqlite3_h::SQLITE_BUSY
+        {
             if !pnLog.is_null() {
                 *pnLog = (*pWal).hdr.mxFrame as ::core::ffi::c_int;
             }
@@ -2999,7 +3531,8 @@ pub unsafe extern "C" fn sqlite3WalExclusiveMode(
                 3 as ::core::ffi::c_int + __pWal_ref.readLock as ::core::ffi::c_int,
             ) != crate::src::headers::sqlite3_h::SQLITE_OK
             {
-                __pWal_ref.exclusiveMode = WAL_EXCLUSIVE_MODE as crate::src::ext::rtree::rtree::u8_0;
+                __pWal_ref.exclusiveMode =
+                    WAL_EXCLUSIVE_MODE as crate::src::ext::rtree::rtree::u8_0;
             }
             rc = (__pWal_ref.exclusiveMode as ::core::ffi::c_int == WAL_NORMAL_MODE)
                 as ::core::ffi::c_int;
@@ -3026,6 +3559,8 @@ pub unsafe extern "C" fn sqlite3WalHeapMemory(mut pWal: *mut Wal) -> ::core::ffi
 }
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
-pub unsafe extern "C" fn sqlite3WalFile(mut pWal: *mut Wal) -> *mut crate::src::headers::sqlite3_h::sqlite3_file {
+pub unsafe extern "C" fn sqlite3WalFile(
+    mut pWal: *mut Wal,
+) -> *mut crate::src::headers::sqlite3_h::sqlite3_file {
     (*pWal).pWalFd
 }

@@ -7,12 +7,11 @@
 use core::ffi::{c_char, c_int, c_void};
 use std::ffi::CStr;
 
-use sqlite_noamalgam::src::src::printf::{
-    PrintfArg, sqlite3_str_vappendf_args,
-    sqlite3StrAccumInit, sqlite3StrAccumFinish,
-};
-use sqlite_noamalgam::src::headers::sqliteInt_h::StrAccum;
 use sqlite_noamalgam::sqliteLimit_h::SQLITE_MAX_LENGTH;
+use sqlite_noamalgam::src::headers::sqliteInt_h::StrAccum;
+use sqlite_noamalgam::src::src::printf::{
+    PrintfArg, sqlite3_str_vappendf_args, sqlite3StrAccumFinish, sqlite3StrAccumInit,
+};
 
 unsafe extern "C" {
     fn sqlite3_mprintf(fmt: *const c_char, ...) -> *mut c_char;
@@ -44,7 +43,9 @@ unsafe fn fmt2(fmt: &[u8], args: &[PrintfArg]) -> String {
 
 /// Call sqlite3_mprintf (reference), return result as String.
 unsafe fn mprintf_ref(p: *mut c_char) -> String {
-    if p.is_null() { return "(null)".into(); }
+    if p.is_null() {
+        return "(null)".into();
+    }
     let s = CStr::from_ptr(p).to_string_lossy().into_owned();
     sqlite3_free(p as *mut c_void);
     s
@@ -183,8 +184,15 @@ fn cmp_x_zero_pad() {
 fn cmp_x_precision() {
     unsafe {
         // "%.3x+%.6x" pattern from codebase
-        let new = fmt2(b"%.3x+%.6x\0", &[PrintfArg::UInt(0xAB), PrintfArg::UInt(0x123456)]);
-        let old = mprintf_ref(sqlite3_mprintf(b"%.3x+%.6x\0".as_ptr() as _, 0xABu32, 0x123456u32));
+        let new = fmt2(
+            b"%.3x+%.6x\0",
+            &[PrintfArg::UInt(0xAB), PrintfArg::UInt(0x123456)],
+        );
+        let old = mprintf_ref(sqlite3_mprintf(
+            b"%.3x+%.6x\0".as_ptr() as _,
+            0xABu32,
+            0x123456u32,
+        ));
         assert_eq!(new, old, "%.3x+%.6x");
     }
 }
@@ -211,7 +219,10 @@ fn cmp_s_basic() {
 fn cmp_s_null() {
     unsafe {
         let new = fmt2(b"%s\0", &[PrintfArg::Str(core::ptr::null_mut())]);
-        let old = mprintf_ref(sqlite3_mprintf(b"%s\0".as_ptr() as _, core::ptr::null::<c_char>()));
+        let old = mprintf_ref(sqlite3_mprintf(
+            b"%s\0".as_ptr() as _,
+            core::ptr::null::<c_char>(),
+        ));
         assert_eq!(new, old, "%s(NULL)");
     }
 }
@@ -382,7 +393,11 @@ fn cmp_mixed_s_d() {
         let name = b"col\0".as_ptr() as *mut c_char;
         let new = fmt2(
             b"%s=%d (%.2f)\0",
-            &[PrintfArg::Str(name), PrintfArg::Int(42), PrintfArg::Double(3.14)],
+            &[
+                PrintfArg::Str(name),
+                PrintfArg::Int(42),
+                PrintfArg::Double(3.14),
+            ],
         );
         let old = mprintf_ref(sqlite3_mprintf(
             b"%s=%d (%.2f)\0".as_ptr() as _,
@@ -465,22 +480,34 @@ fn cmp_c_sqlfunc_basic() {
 #[test]
 fn cmp_c_sqlfunc_repeat_small() {
     unsafe {
-        assert_eq!(fmt2_dynamic(b"%.8c\0", &[PrintfArg::Char('*' as u32)]), "********");
+        assert_eq!(
+            fmt2_dynamic(b"%.8c\0", &[PrintfArg::Char('*' as u32)]),
+            "********"
+        );
     }
 }
 
 #[test]
 fn cmp_c_sqlfunc_repeat_with_width() {
     unsafe {
-        assert_eq!(fmt2_dynamic(b"%8.8c\0", &[PrintfArg::Char('*' as u32)]), "********");
+        assert_eq!(
+            fmt2_dynamic(b"%8.8c\0", &[PrintfArg::Char('*' as u32)]),
+            "********"
+        );
     }
 }
 
 #[test]
 fn cmp_c_sqlfunc_repeat_with_padding() {
     unsafe {
-        assert_eq!(fmt2_dynamic(b"%9.8c\0", &[PrintfArg::Char('*' as u32)]), " ********");
-        assert_eq!(fmt2_dynamic(b"%-9.8c\0", &[PrintfArg::Char('*' as u32)]), "******** ");
+        assert_eq!(
+            fmt2_dynamic(b"%9.8c\0", &[PrintfArg::Char('*' as u32)]),
+            " ********"
+        );
+        assert_eq!(
+            fmt2_dynamic(b"%-9.8c\0", &[PrintfArg::Char('*' as u32)]),
+            "******** "
+        );
     }
 }
 
@@ -571,8 +598,20 @@ fn cmp_raw_bytes_with_suffix() {
     unsafe {
         let data = b"hello world\0".as_ptr() as *mut c_char;
         let suffix = b"_end\0".as_ptr() as *mut c_char;
-        let new = fmt2(b"%.*s%s\0", &[PrintfArg::Int(5), PrintfArg::Str(data), PrintfArg::Str(suffix)]);
-        let old = mprintf_ref(sqlite3_mprintf(b"%.*s%s\0".as_ptr() as _, 5i32, data, suffix));
+        let new = fmt2(
+            b"%.*s%s\0",
+            &[
+                PrintfArg::Int(5),
+                PrintfArg::Str(data),
+                PrintfArg::Str(suffix),
+            ],
+        );
+        let old = mprintf_ref(sqlite3_mprintf(
+            b"%.*s%s\0".as_ptr() as _,
+            5i32,
+            data,
+            suffix,
+        ));
         assert_eq!(new, old, "%.*s%s");
     }
 }
@@ -588,9 +627,18 @@ fn cmp_create_pattern() {
         let len = 17i32;
         let new = fmt2(
             b"CREATE %s %.*s\0",
-            &[PrintfArg::Str(kind), PrintfArg::Int(len as i64), PrintfArg::Str(sql)],
+            &[
+                PrintfArg::Str(kind),
+                PrintfArg::Int(len as i64),
+                PrintfArg::Str(sql),
+            ],
         );
-        let old = mprintf_ref(sqlite3_mprintf(b"CREATE %s %.*s\0".as_ptr() as _, kind, len, sql));
+        let old = mprintf_ref(sqlite3_mprintf(
+            b"CREATE %s %.*s\0".as_ptr() as _,
+            kind,
+            len,
+            sql,
+        ));
         assert_eq!(new, old, "CREATE %%s %%.*s");
     }
 }
@@ -655,11 +703,17 @@ fn cmp_multi_Q() {
         let c_str = b"O'Reilly\0".as_ptr() as *mut c_char;
         let new = fmt2(
             b"UPDATE %Q SET name=%Q, val=%Q\0",
-            &[PrintfArg::Str(a), PrintfArg::Str(b_str), PrintfArg::Str(c_str)],
+            &[
+                PrintfArg::Str(a),
+                PrintfArg::Str(b_str),
+                PrintfArg::Str(c_str),
+            ],
         );
         let old = mprintf_ref(sqlite3_mprintf(
             b"UPDATE %Q SET name=%Q, val=%Q\0".as_ptr() as _,
-            a, b_str, c_str,
+            a,
+            b_str,
+            c_str,
         ));
         assert_eq!(new, old, "multi %Q");
     }
@@ -800,11 +854,19 @@ fn cmp_g_015() {
     // "%!0.15g" — SQLite's canonical float serialization
     unsafe {
         for &v in &[
-            0.0f64, 1.0, -1.0, 0.5, 1.0/3.0,
+            0.0f64,
+            1.0,
+            -1.0,
+            0.5,
+            1.0 / 3.0,
             3.14159265358979323846,
             1.23456789012345678,
-            1e10, 1e-10, 1e100, 1e-100,
-            f64::MAX, f64::MIN_POSITIVE,
+            1e10,
+            1e-10,
+            1e100,
+            1e-100,
+            f64::MAX,
+            f64::MIN_POSITIVE,
         ] {
             let new = fmt2(b"%!0.15g\0", &[PrintfArg::Double(v)]);
             let old = mprintf_ref(sqlite3_mprintf(b"%!0.15g\0".as_ptr() as _, v));
@@ -817,7 +879,7 @@ fn cmp_g_015() {
 
 fn cmp_g_15_variant() {
     unsafe {
-        for &v in &[1.0f64, 3.14159265358979, 1.0/3.0] {
+        for &v in &[1.0f64, 3.14159265358979, 1.0 / 3.0] {
             let new = fmt2(b"%!.15g\0", &[PrintfArg::Double(v)]);
             let old = mprintf_ref(sqlite3_mprintf(b"%!.15g\0".as_ptr() as _, v));
             assert_eq!(new, old, "%!.15g({v})");
@@ -875,7 +937,7 @@ fn cmp_f_dynamic_prec_strip() {
             (6, 1.0),
             (2, 0.0),
             (3, -1.5),
-            (10, 1.0/3.0),
+            (10, 1.0 / 3.0),
         ] {
             let new = fmt2(
                 b"%!.*f\0",
@@ -936,10 +998,17 @@ fn cmp_geopolygon_pattern() {
     unsafe {
         let new = fmt2(
             b"%c%g,%g\0",
-            &[PrintfArg::Char(b'[' as u32), PrintfArg::Double(1.5), PrintfArg::Double(2.5)],
+            &[
+                PrintfArg::Char(b'[' as u32),
+                PrintfArg::Double(1.5),
+                PrintfArg::Double(2.5),
+            ],
         );
         let old = mprintf_ref(sqlite3_mprintf(
-            b"%c%g,%g\0".as_ptr() as _, b'[' as i32, 1.5f64, 2.5f64,
+            b"%c%g,%g\0".as_ptr() as _,
+            b'[' as i32,
+            1.5f64,
+            2.5f64,
         ));
         assert_eq!(new, old, "%c%g,%g");
     }
@@ -955,14 +1024,23 @@ fn cmp_datetime_full() {
             b"%c%04d-%02d-%02d %02d:%02d:%06.3f\0",
             &[
                 PrintfArg::Char(b'+' as u32),
-                PrintfArg::Int(2024), PrintfArg::Int(3), PrintfArg::Int(15),
-                PrintfArg::Int(10), PrintfArg::Int(30),
+                PrintfArg::Int(2024),
+                PrintfArg::Int(3),
+                PrintfArg::Int(15),
+                PrintfArg::Int(10),
+                PrintfArg::Int(30),
                 PrintfArg::Double(5.123),
             ],
         );
         let old = mprintf_ref(sqlite3_mprintf(
             b"%c%04d-%02d-%02d %02d:%02d:%06.3f\0".as_ptr() as _,
-            b'+' as i32, 2024i32, 3i32, 15i32, 10i32, 30i32, 5.123f64,
+            b'+' as i32,
+            2024i32,
+            3i32,
+            15i32,
+            10i32,
+            30i32,
+            5.123f64,
         ));
         assert_eq!(new, old, "datetime full");
     }

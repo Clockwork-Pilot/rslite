@@ -62,13 +62,10 @@ int extract_va_to_packed(const char *fmt, va_list ap,
 
         /* Skip flags */
         int flag_long = 0;
-        int flag_alt = 0;
         for (;;) {
             switch (*p) {
-            case '-': case '+': case ' ': case '0': case ',': case '!':
+            case '-': case '+': case ' ': case '0': case ',': case '!': case '#':
                 p++; continue;
-            case '#':
-                flag_alt = 1; p++; continue;
             default:
                 break;
             }

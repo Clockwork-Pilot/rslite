@@ -23,7 +23,9 @@ const fn str_to_i8_array<const N: usize>(s: &str) -> [i8; N] {
     arr
 }
 
-pub const SQLITE_SOURCE_ID: [i8; 85] = str_to_i8_array::<85>("2026-01-09 17:27:48 b270f8339eb13b504d0b2ba154ebca966b7dde08e40c3ed7d559749818cbalt1\0");
+pub const SQLITE_SOURCE_ID: [i8; 85] = str_to_i8_array::<85>(
+    "2026-01-09 17:27:48 b270f8339eb13b504d0b2ba154ebca966b7dde08e40c3ed7d559749818cbalt1\0",
+);
 
 pub type sqlite_int64 = ::core::ffi::c_longlong;
 
@@ -131,12 +133,13 @@ pub const SQLITE_DONE: ::core::ffi::c_int = 101 as ::core::ffi::c_int;
 pub const SQLITE_DONE_1: ::core::ffi::c_int = 101;
 
 pub const SQLITE_ERROR_MISSING_COLLSEQ: ::core::ffi::c_int =
-    crate::src::headers::sqlite3_h::SQLITE_ERROR | (1 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
+    crate::src::headers::sqlite3_h::SQLITE_ERROR
+        | (1 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
 
 pub const SQLITE_ERROR_MISSING_COLLSEQ_1: ::core::ffi::c_int = 257;
 
-pub const SQLITE_ERROR_RETRY: ::core::ffi::c_int =
-    crate::src::headers::sqlite3_h::SQLITE_ERROR | (2 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
+pub const SQLITE_ERROR_RETRY: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_ERROR
+    | (2 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
 
 pub const SQLITE_ERROR_RETRY_1: ::core::ffi::c_int = 513;
 
@@ -144,18 +147,19 @@ pub const SQLITE_ERROR_SNAPSHOT: ::core::ffi::c_int = 769;
 
 pub const SQLITE_IOERR_READ: ::core::ffi::c_int = 266;
 
-pub const SQLITE_IOERR_READ_1: ::core::ffi::c_int =
-    crate::src::headers::sqlite3_h::SQLITE_IOERR | (1 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
+pub const SQLITE_IOERR_READ_1: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_IOERR
+    | (1 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
 
 pub const SQLITE_IOERR_SHORT_READ: ::core::ffi::c_int = 522;
 
 pub const SQLITE_IOERR_SHORT_READ_1: ::core::ffi::c_int =
-    crate::src::headers::sqlite3_h::SQLITE_IOERR | (2 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
+    crate::src::headers::sqlite3_h::SQLITE_IOERR
+        | (2 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
 
 pub const SQLITE_IOERR_WRITE: ::core::ffi::c_int = 778;
 
-pub const SQLITE_IOERR_WRITE_1: ::core::ffi::c_int =
-    crate::src::headers::sqlite3_h::SQLITE_IOERR | (3 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
+pub const SQLITE_IOERR_WRITE_1: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_IOERR
+    | (3 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
 
 pub const SQLITE_IOERR_FSYNC: ::core::ffi::c_int = 1034;
 
@@ -165,43 +169,44 @@ pub const SQLITE_IOERR_TRUNCATE: ::core::ffi::c_int = 1546;
 
 pub const SQLITE_IOERR_FSTAT: ::core::ffi::c_int = 1802;
 
-pub const SQLITE_IOERR_FSTAT_1: ::core::ffi::c_int =
-    crate::src::headers::sqlite3_h::SQLITE_IOERR | (7 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
+pub const SQLITE_IOERR_FSTAT_1: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_IOERR
+    | (7 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
 
 pub const SQLITE_IOERR_UNLOCK: ::core::ffi::c_int = 2058;
 
-pub const SQLITE_IOERR_UNLOCK_1: ::core::ffi::c_int =
-    crate::src::headers::sqlite3_h::SQLITE_IOERR | (8 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
+pub const SQLITE_IOERR_UNLOCK_1: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_IOERR
+    | (8 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
 
 pub const SQLITE_IOERR_RDLOCK: ::core::ffi::c_int = 2314;
 
-pub const SQLITE_IOERR_RDLOCK_1: ::core::ffi::c_int =
-    crate::src::headers::sqlite3_h::SQLITE_IOERR | (9 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
+pub const SQLITE_IOERR_RDLOCK_1: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_IOERR
+    | (9 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
 
 pub const SQLITE_IOERR_DELETE: ::core::ffi::c_int = 2570;
 
-pub const SQLITE_IOERR_NOMEM: ::core::ffi::c_int =
-    crate::src::headers::sqlite3_h::SQLITE_IOERR | (12 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
+pub const SQLITE_IOERR_NOMEM: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_IOERR
+    | (12 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
 
 pub const SQLITE_IOERR_ACCESS: ::core::ffi::c_int = 3338;
 
-pub const SQLITE_IOERR_ACCESS_1: ::core::ffi::c_int =
-    crate::src::headers::sqlite3_h::SQLITE_IOERR | (13 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
+pub const SQLITE_IOERR_ACCESS_1: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_IOERR
+    | (13 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
 
 pub const SQLITE_IOERR_CHECKRESERVEDLOCK: ::core::ffi::c_int = 3594;
 
 pub const SQLITE_IOERR_CHECKRESERVEDLOCK_1: ::core::ffi::c_int =
-    crate::src::headers::sqlite3_h::SQLITE_IOERR | (14 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
+    crate::src::headers::sqlite3_h::SQLITE_IOERR
+        | (14 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
 
 pub const SQLITE_IOERR_LOCK: ::core::ffi::c_int = 3850;
 
-pub const SQLITE_IOERR_LOCK_1: ::core::ffi::c_int =
-    crate::src::headers::sqlite3_h::SQLITE_IOERR | (15 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
+pub const SQLITE_IOERR_LOCK_1: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_IOERR
+    | (15 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
 
 pub const SQLITE_IOERR_CLOSE: ::core::ffi::c_int = 4106;
 
-pub const SQLITE_IOERR_CLOSE_1: ::core::ffi::c_int =
-    crate::src::headers::sqlite3_h::SQLITE_IOERR | (16 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
+pub const SQLITE_IOERR_CLOSE_1: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_IOERR
+    | (16 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
 
 pub const SQLITE_IOERR_DIR_CLOSE: ::core::ffi::c_int = 4362;
 
@@ -209,13 +214,13 @@ pub const SQLITE_IOERR_SHMOPEN: ::core::ffi::c_int = 4618;
 
 pub const SQLITE_IOERR_SHMSIZE: ::core::ffi::c_int = 4874;
 
-pub const SQLITE_IOERR_SHMSIZE_1: ::core::ffi::c_int =
-    crate::src::headers::sqlite3_h::SQLITE_IOERR | (19 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
+pub const SQLITE_IOERR_SHMSIZE_1: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_IOERR
+    | (19 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
 
 pub const SQLITE_IOERR_SHMLOCK: ::core::ffi::c_int = 5130;
 
-pub const SQLITE_IOERR_SHMLOCK_1: ::core::ffi::c_int =
-    crate::src::headers::sqlite3_h::SQLITE_IOERR | (20 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
+pub const SQLITE_IOERR_SHMLOCK_1: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_IOERR
+    | (20 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
 
 pub const SQLITE_IOERR_SHMMAP: ::core::ffi::c_int = 5386;
 
@@ -224,35 +229,38 @@ pub const SQLITE_IOERR_SEEK: ::core::ffi::c_int = 5642;
 pub const SQLITE_IOERR_DELETE_NOENT: ::core::ffi::c_int = 5898;
 
 pub const SQLITE_IOERR_DELETE_NOENT_1: ::core::ffi::c_int =
-    crate::src::headers::sqlite3_h::SQLITE_IOERR | (23 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
+    crate::src::headers::sqlite3_h::SQLITE_IOERR
+        | (23 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
 
 pub const SQLITE_IOERR_MMAP: ::core::ffi::c_int = 6154;
 
 pub const SQLITE_IOERR_GETTEMPPATH: ::core::ffi::c_int = 6410;
 
 pub const SQLITE_IOERR_GETTEMPPATH_1: ::core::ffi::c_int =
-    crate::src::headers::sqlite3_h::SQLITE_IOERR | (25 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
+    crate::src::headers::sqlite3_h::SQLITE_IOERR
+        | (25 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
 
 pub const SQLITE_IOERR_CONVPATH: ::core::ffi::c_int = 6666;
 
-pub const SQLITE_IOERR_CORRUPTFS: ::core::ffi::c_int =
-    crate::src::headers::sqlite3_h::SQLITE_IOERR | (33 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
+pub const SQLITE_IOERR_CORRUPTFS: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_IOERR
+    | (33 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
 
 pub const SQLITE_LOCKED_SHAREDCACHE: ::core::ffi::c_int =
-    crate::src::headers::sqlite3_h::SQLITE_LOCKED | (1 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
+    crate::src::headers::sqlite3_h::SQLITE_LOCKED
+        | (1 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
 
 pub const SQLITE_LOCKED_SHAREDCACHE_1: ::core::ffi::c_int = 262;
 
-pub const SQLITE_LOCKED_VTAB: ::core::ffi::c_int =
-    crate::src::headers::sqlite3_h::SQLITE_LOCKED | (2 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
+pub const SQLITE_LOCKED_VTAB: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_LOCKED
+    | (2 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
 
 pub const SQLITE_BUSY_RECOVERY: ::core::ffi::c_int = 261;
 
-pub const SQLITE_BUSY_RECOVERY_1: ::core::ffi::c_int =
-    crate::src::headers::sqlite3_h::SQLITE_BUSY | (1 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
+pub const SQLITE_BUSY_RECOVERY_1: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_BUSY
+    | (1 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
 
-pub const SQLITE_BUSY_SNAPSHOT: ::core::ffi::c_int =
-    crate::src::headers::sqlite3_h::SQLITE_BUSY | (2 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
+pub const SQLITE_BUSY_SNAPSHOT: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_BUSY
+    | (2 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
 
 pub const SQLITE_BUSY_SNAPSHOT_1: ::core::ffi::c_int = 517;
 
@@ -267,121 +275,141 @@ pub const SQLITE_CANTOPEN_CONVPATH: ::core::ffi::c_int = 1038;
 pub const SQLITE_CANTOPEN_SYMLINK: ::core::ffi::c_int = 1550;
 
 pub const SQLITE_CANTOPEN_SYMLINK_1: ::core::ffi::c_int =
-    crate::src::headers::sqlite3_h::SQLITE_CANTOPEN | (6 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
+    crate::src::headers::sqlite3_h::SQLITE_CANTOPEN
+        | (6 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
 
-pub const SQLITE_CORRUPT_VTAB: ::core::ffi::c_int =
-    crate::src::headers::sqlite3_h::SQLITE_CORRUPT | (1 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
+pub const SQLITE_CORRUPT_VTAB: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_CORRUPT
+    | (1 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
 
 pub const SQLITE_CORRUPT_VTAB_1: ::core::ffi::c_int = 267;
 
 pub const SQLITE_CORRUPT_SEQUENCE: ::core::ffi::c_int =
-    crate::src::headers::sqlite3_h::SQLITE_CORRUPT | (2 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
+    crate::src::headers::sqlite3_h::SQLITE_CORRUPT
+        | (2 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
 
-pub const SQLITE_CORRUPT_INDEX: ::core::ffi::c_int =
-    crate::src::headers::sqlite3_h::SQLITE_CORRUPT | (3 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
+pub const SQLITE_CORRUPT_INDEX: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_CORRUPT
+    | (3 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
 
 pub const SQLITE_READONLY_RECOVERY: ::core::ffi::c_int = 264;
 
 pub const SQLITE_READONLY_RECOVERY_1: ::core::ffi::c_int =
-    crate::src::headers::sqlite3_h::SQLITE_READONLY | (1 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
+    crate::src::headers::sqlite3_h::SQLITE_READONLY
+        | (1 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
 
 pub const SQLITE_READONLY_ROLLBACK: ::core::ffi::c_int = 776;
 
 pub const SQLITE_READONLY_ROLLBACK_1: ::core::ffi::c_int =
-    crate::src::headers::sqlite3_h::SQLITE_READONLY | (3 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
+    crate::src::headers::sqlite3_h::SQLITE_READONLY
+        | (3 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
 
 pub const SQLITE_READONLY_DBMOVED: ::core::ffi::c_int = 1032;
 
 pub const SQLITE_READONLY_DBMOVED_1: ::core::ffi::c_int =
-    crate::src::headers::sqlite3_h::SQLITE_READONLY | (4 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
+    crate::src::headers::sqlite3_h::SQLITE_READONLY
+        | (4 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
 
 pub const SQLITE_READONLY_CANTINIT: ::core::ffi::c_int = 1288;
 
 pub const SQLITE_READONLY_CANTINIT_1: ::core::ffi::c_int =
-    crate::src::headers::sqlite3_h::SQLITE_READONLY | (5 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
+    crate::src::headers::sqlite3_h::SQLITE_READONLY
+        | (5 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
 
 pub const SQLITE_READONLY_DIRECTORY: ::core::ffi::c_int = 1544;
 
 pub const SQLITE_READONLY_DIRECTORY_1: ::core::ffi::c_int =
-    crate::src::headers::sqlite3_h::SQLITE_READONLY | (6 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
+    crate::src::headers::sqlite3_h::SQLITE_READONLY
+        | (6 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
 
 pub const SQLITE_ABORT_ROLLBACK: ::core::ffi::c_int = 516;
 
-pub const SQLITE_ABORT_ROLLBACK_1: ::core::ffi::c_int =
-    crate::src::headers::sqlite3_h::SQLITE_ABORT | (2 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
+pub const SQLITE_ABORT_ROLLBACK_1: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_ABORT
+    | (2 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
 
 pub const SQLITE_CONSTRAINT_CHECK: ::core::ffi::c_int =
-    crate::src::headers::sqlite3_h::SQLITE_CONSTRAINT | (1 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
+    crate::src::headers::sqlite3_h::SQLITE_CONSTRAINT
+        | (1 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
 
 pub const SQLITE_CONSTRAINT_CHECK_1: ::core::ffi::c_int = 275;
 
 pub const SQLITE_CONSTRAINT_COMMITHOOK: ::core::ffi::c_int = 531;
 
 pub const SQLITE_CONSTRAINT_COMMITHOOK_1: ::core::ffi::c_int =
-    crate::src::headers::sqlite3_h::SQLITE_CONSTRAINT | (2 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
+    crate::src::headers::sqlite3_h::SQLITE_CONSTRAINT
+        | (2 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
 
 pub const SQLITE_CONSTRAINT_FOREIGNKEY: ::core::ffi::c_int =
-    crate::src::headers::sqlite3_h::SQLITE_CONSTRAINT | (3 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
+    crate::src::headers::sqlite3_h::SQLITE_CONSTRAINT
+        | (3 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
 
 pub const SQLITE_CONSTRAINT_FOREIGNKEY_1: ::core::ffi::c_int = 787;
 
 pub const SQLITE_CONSTRAINT_FUNCTION: ::core::ffi::c_int = 1043;
 
 pub const SQLITE_CONSTRAINT_NOTNULL: ::core::ffi::c_int =
-    crate::src::headers::sqlite3_h::SQLITE_CONSTRAINT | (5 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
+    crate::src::headers::sqlite3_h::SQLITE_CONSTRAINT
+        | (5 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
 
 pub const SQLITE_CONSTRAINT_NOTNULL_1: ::core::ffi::c_int = 1299;
 
 pub const SQLITE_CONSTRAINT_PRIMARYKEY: ::core::ffi::c_int =
-    crate::src::headers::sqlite3_h::SQLITE_CONSTRAINT | (6 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
+    crate::src::headers::sqlite3_h::SQLITE_CONSTRAINT
+        | (6 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
 
 pub const SQLITE_CONSTRAINT_PRIMARYKEY_1: ::core::ffi::c_int = 1555;
 
 pub const SQLITE_CONSTRAINT_TRIGGER: ::core::ffi::c_int =
-    crate::src::headers::sqlite3_h::SQLITE_CONSTRAINT | (7 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
+    crate::src::headers::sqlite3_h::SQLITE_CONSTRAINT
+        | (7 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
 
 pub const SQLITE_CONSTRAINT_TRIGGER_1: ::core::ffi::c_int = 1811;
 
 pub const SQLITE_CONSTRAINT_UNIQUE: ::core::ffi::c_int =
-    crate::src::headers::sqlite3_h::SQLITE_CONSTRAINT | (8 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
+    crate::src::headers::sqlite3_h::SQLITE_CONSTRAINT
+        | (8 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
 
 pub const SQLITE_CONSTRAINT_UNIQUE_1: ::core::ffi::c_int = 2067;
 
 pub const SQLITE_CONSTRAINT_VTAB: ::core::ffi::c_int = 2323;
 
 pub const SQLITE_CONSTRAINT_ROWID: ::core::ffi::c_int =
-    crate::src::headers::sqlite3_h::SQLITE_CONSTRAINT | (10 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
+    crate::src::headers::sqlite3_h::SQLITE_CONSTRAINT
+        | (10 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
 
 pub const SQLITE_CONSTRAINT_ROWID_1: ::core::ffi::c_int = 2579;
 
 pub const SQLITE_CONSTRAINT_PINNED: ::core::ffi::c_int =
-    crate::src::headers::sqlite3_h::SQLITE_CONSTRAINT | (11 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
+    crate::src::headers::sqlite3_h::SQLITE_CONSTRAINT
+        | (11 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
 
 pub const SQLITE_CONSTRAINT_DATATYPE: ::core::ffi::c_int =
-    crate::src::headers::sqlite3_h::SQLITE_CONSTRAINT | (12 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
+    crate::src::headers::sqlite3_h::SQLITE_CONSTRAINT
+        | (12 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
 
 pub const SQLITE_NOTICE_RECOVER_WAL: ::core::ffi::c_int = 283;
 
 pub const SQLITE_NOTICE_RECOVER_WAL_1: ::core::ffi::c_int =
-    crate::src::headers::sqlite3_h::SQLITE_NOTICE | (1 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
+    crate::src::headers::sqlite3_h::SQLITE_NOTICE
+        | (1 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
 
 pub const SQLITE_NOTICE_RECOVER_ROLLBACK: ::core::ffi::c_int = 539;
 
 pub const SQLITE_NOTICE_RECOVER_ROLLBACK_1: ::core::ffi::c_int =
-    crate::src::headers::sqlite3_h::SQLITE_NOTICE | (2 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
+    crate::src::headers::sqlite3_h::SQLITE_NOTICE
+        | (2 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
 
 pub const SQLITE_NOTICE_RBU: ::core::ffi::c_int = 795;
 
 pub const SQLITE_WARNING_AUTOINDEX: ::core::ffi::c_int = 284;
 
 pub const SQLITE_WARNING_AUTOINDEX_1: ::core::ffi::c_int =
-    crate::src::headers::sqlite3_h::SQLITE_WARNING | (1 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
+    crate::src::headers::sqlite3_h::SQLITE_WARNING
+        | (1 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
 
-pub const SQLITE_OK_LOAD_PERMANENTLY: ::core::ffi::c_int =
-    crate::src::headers::sqlite3_h::SQLITE_OK | (1 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
+pub const SQLITE_OK_LOAD_PERMANENTLY: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_OK
+    | (1 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
 
-pub const SQLITE_OK_SYMLINK: ::core::ffi::c_int =
-    crate::src::headers::sqlite3_h::SQLITE_OK | (2 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
+pub const SQLITE_OK_SYMLINK: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_OK
+    | (2 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int;
 
 pub const SQLITE_OPEN_READONLY: ::core::ffi::c_int = 0x1 as ::core::ffi::c_int;
 
@@ -455,18 +483,19 @@ pub const SQLITE_SYNC_DATAONLY: ::core::ffi::c_int = 0x10 as ::core::ffi::c_int;
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct sqlite3_file {
     pub pMethods: *const crate::src::headers::sqlite3_h::sqlite3_io_methods,
 }
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct sqlite3_io_methods {
     pub iVersion: ::core::ffi::c_int,
-    pub xClose:
-        Option<unsafe extern "C" fn(*mut crate::src::headers::sqlite3_h::sqlite3_file) -> ::core::ffi::c_int>,
+    pub xClose: Option<
+        unsafe extern "C" fn(
+            *mut crate::src::headers::sqlite3_h::sqlite3_file,
+        ) -> ::core::ffi::c_int,
+    >,
     pub xRead: Option<
         unsafe extern "C" fn(
             *mut crate::src::headers::sqlite3_h::sqlite3_file,
@@ -526,10 +555,16 @@ pub struct sqlite3_io_methods {
             *mut ::core::ffi::c_void,
         ) -> ::core::ffi::c_int,
     >,
-    pub xSectorSize:
-        Option<unsafe extern "C" fn(*mut crate::src::headers::sqlite3_h::sqlite3_file) -> ::core::ffi::c_int>,
-    pub xDeviceCharacteristics:
-        Option<unsafe extern "C" fn(*mut crate::src::headers::sqlite3_h::sqlite3_file) -> ::core::ffi::c_int>,
+    pub xSectorSize: Option<
+        unsafe extern "C" fn(
+            *mut crate::src::headers::sqlite3_h::sqlite3_file,
+        ) -> ::core::ffi::c_int,
+    >,
+    pub xDeviceCharacteristics: Option<
+        unsafe extern "C" fn(
+            *mut crate::src::headers::sqlite3_h::sqlite3_file,
+        ) -> ::core::ffi::c_int,
+    >,
     pub xShmMap: Option<
         unsafe extern "C" fn(
             *mut crate::src::headers::sqlite3_h::sqlite3_file,
@@ -547,7 +582,8 @@ pub struct sqlite3_io_methods {
             ::core::ffi::c_int,
         ) -> ::core::ffi::c_int,
     >,
-    pub xShmBarrier: Option<unsafe extern "C" fn(*mut crate::src::headers::sqlite3_h::sqlite3_file) -> ()>,
+    pub xShmBarrier:
+        Option<unsafe extern "C" fn(*mut crate::src::headers::sqlite3_h::sqlite3_file) -> ()>,
     pub xShmUnmap: Option<
         unsafe extern "C" fn(
             *mut crate::src::headers::sqlite3_h::sqlite3_file,
@@ -647,7 +683,6 @@ pub type sqlite3_syscall_ptr = Option<unsafe extern "C" fn() -> ()>;
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct sqlite3_vfs {
     pub iVersion: ::core::ffi::c_int,
     pub szOsFile: ::core::ffi::c_int,
@@ -708,7 +743,10 @@ pub struct sqlite3_vfs {
         ) -> Option<unsafe extern "C" fn() -> ()>,
     >,
     pub xDlClose: Option<
-        unsafe extern "C" fn(*mut crate::src::headers::sqlite3_h::sqlite3_vfs, *mut ::core::ffi::c_void) -> (),
+        unsafe extern "C" fn(
+            *mut crate::src::headers::sqlite3_h::sqlite3_vfs,
+            *mut ::core::ffi::c_void,
+        ) -> (),
     >,
     pub xRandomness: Option<
         unsafe extern "C" fn(
@@ -779,7 +817,6 @@ pub const SQLITE_SHM_NLOCK: ::core::ffi::c_int = 8 as ::core::ffi::c_int;
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct sqlite3_mem_methods {
     pub xMalloc: Option<unsafe extern "C" fn(::core::ffi::c_int) -> *mut ::core::ffi::c_void>,
     pub xFree: Option<unsafe extern "C" fn(*mut ::core::ffi::c_void) -> ()>,
@@ -824,7 +861,6 @@ pub enum SqliteConfig {
     MEMDB_MAXSIZE = 29,
     ROWID_IN_VIEW = 30,
 }
-
 pub const SQLITE_CONFIG_MALLOC_1: ::core::ffi::c_int = SqliteConfig::MALLOC as ::core::ffi::c_int;
 pub const SQLITE_CONFIG_PCACHE2_1: ::core::ffi::c_int = SqliteConfig::PCACHE2 as ::core::ffi::c_int;
 
@@ -855,7 +891,6 @@ pub enum SqliteDbConfig {
     ENABLE_ATTACH_WRITE = 1021,
     ENABLE_COMMENTS = 1022,
 }
-
 impl SqliteDbConfig {
     pub fn flag_mask(&self) -> Option<u64_0> {
         use crate::src::headers::sqliteInt_h::*;
@@ -1050,7 +1085,6 @@ pub const SQLITE_TXN_WRITE: ::core::ffi::c_int = 2 as ::core::ffi::c_int;
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct sqlite3_module {
     pub iVersion: ::core::ffi::c_int,
     pub xCreate: Option<
@@ -1079,10 +1113,16 @@ pub struct sqlite3_module {
             *mut crate::src::headers::sqlite3_h::sqlite3_index_info,
         ) -> ::core::ffi::c_int,
     >,
-    pub xDisconnect:
-        Option<unsafe extern "C" fn(*mut crate::src::headers::sqlite3_h::sqlite3_vtab) -> ::core::ffi::c_int>,
-    pub xDestroy:
-        Option<unsafe extern "C" fn(*mut crate::src::headers::sqlite3_h::sqlite3_vtab) -> ::core::ffi::c_int>,
+    pub xDisconnect: Option<
+        unsafe extern "C" fn(
+            *mut crate::src::headers::sqlite3_h::sqlite3_vtab,
+        ) -> ::core::ffi::c_int,
+    >,
+    pub xDestroy: Option<
+        unsafe extern "C" fn(
+            *mut crate::src::headers::sqlite3_h::sqlite3_vtab,
+        ) -> ::core::ffi::c_int,
+    >,
     pub xOpen: Option<
         unsafe extern "C" fn(
             *mut crate::src::headers::sqlite3_h::sqlite3_vtab,
@@ -1090,7 +1130,9 @@ pub struct sqlite3_module {
         ) -> ::core::ffi::c_int,
     >,
     pub xClose: Option<
-        unsafe extern "C" fn(*mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor) -> ::core::ffi::c_int,
+        unsafe extern "C" fn(
+            *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
+        ) -> ::core::ffi::c_int,
     >,
     pub xFilter: Option<
         unsafe extern "C" fn(
@@ -1102,10 +1144,14 @@ pub struct sqlite3_module {
         ) -> ::core::ffi::c_int,
     >,
     pub xNext: Option<
-        unsafe extern "C" fn(*mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor) -> ::core::ffi::c_int,
+        unsafe extern "C" fn(
+            *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
+        ) -> ::core::ffi::c_int,
     >,
     pub xEof: Option<
-        unsafe extern "C" fn(*mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor) -> ::core::ffi::c_int,
+        unsafe extern "C" fn(
+            *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
+        ) -> ::core::ffi::c_int,
     >,
     pub xColumn: Option<
         unsafe extern "C" fn(
@@ -1128,14 +1174,26 @@ pub struct sqlite3_module {
             *mut crate::src::headers::sqlite3_h::sqlite3_int64,
         ) -> ::core::ffi::c_int,
     >,
-    pub xBegin:
-        Option<unsafe extern "C" fn(*mut crate::src::headers::sqlite3_h::sqlite3_vtab) -> ::core::ffi::c_int>,
-    pub xSync:
-        Option<unsafe extern "C" fn(*mut crate::src::headers::sqlite3_h::sqlite3_vtab) -> ::core::ffi::c_int>,
-    pub xCommit:
-        Option<unsafe extern "C" fn(*mut crate::src::headers::sqlite3_h::sqlite3_vtab) -> ::core::ffi::c_int>,
-    pub xRollback:
-        Option<unsafe extern "C" fn(*mut crate::src::headers::sqlite3_h::sqlite3_vtab) -> ::core::ffi::c_int>,
+    pub xBegin: Option<
+        unsafe extern "C" fn(
+            *mut crate::src::headers::sqlite3_h::sqlite3_vtab,
+        ) -> ::core::ffi::c_int,
+    >,
+    pub xSync: Option<
+        unsafe extern "C" fn(
+            *mut crate::src::headers::sqlite3_h::sqlite3_vtab,
+        ) -> ::core::ffi::c_int,
+    >,
+    pub xCommit: Option<
+        unsafe extern "C" fn(
+            *mut crate::src::headers::sqlite3_h::sqlite3_vtab,
+        ) -> ::core::ffi::c_int,
+    >,
+    pub xRollback: Option<
+        unsafe extern "C" fn(
+            *mut crate::src::headers::sqlite3_h::sqlite3_vtab,
+        ) -> ::core::ffi::c_int,
+    >,
     pub xFindFunction: Option<
         unsafe extern "C" fn(
             *mut crate::src::headers::sqlite3_h::sqlite3_vtab,
@@ -1189,7 +1247,6 @@ pub struct sqlite3_module {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct sqlite3_index_info {
     pub nConstraint: ::core::ffi::c_int,
     pub aConstraint: *mut crate::src::headers::sqlite3_h::sqlite3_index_constraint,
@@ -1208,7 +1265,6 @@ pub struct sqlite3_index_info {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct sqlite3_index_constraint {
     pub iColumn: ::core::ffi::c_int,
     pub op: ::core::ffi::c_uchar,
@@ -1218,7 +1274,6 @@ pub struct sqlite3_index_constraint {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct sqlite3_index_orderby {
     pub iColumn: ::core::ffi::c_int,
     pub desc: ::core::ffi::c_uchar,
@@ -1226,7 +1281,6 @@ pub struct sqlite3_index_orderby {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct sqlite3_index_constraint_usage {
     pub argvIndex: ::core::ffi::c_int,
     pub omit: ::core::ffi::c_uchar,
@@ -1284,7 +1338,6 @@ pub const SQLITE_INDEX_CONSTRAINT_FUNCTION: ::core::ffi::c_int = 150 as ::core::
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct sqlite3_vtab {
     pub pModule: *const crate::src::headers::sqlite3_h::sqlite3_module,
     pub nRef: ::core::ffi::c_int,
@@ -1293,14 +1346,12 @@ pub struct sqlite3_vtab {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct sqlite3_vtab_cursor {
     pub pVtab: *mut crate::src::headers::sqlite3_h::sqlite3_vtab,
 }
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct sqlite3_mutex_methods {
     pub xMutexInit: Option<unsafe extern "C" fn() -> ::core::ffi::c_int>,
     pub xMutexEnd: Option<unsafe extern "C" fn() -> ::core::ffi::c_int>,
@@ -1377,9 +1428,6 @@ pub enum SqliteTestCtrl {
     TRACEFLAGS = 31,
     LOGEST = 33,
 }
-
-
-
 pub const SQLITE_STATUS_MEMORY_USED: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
 
 pub const SQLITE_STATUS_PAGECACHE_USED: ::core::ffi::c_int = 1 as ::core::ffi::c_int;
@@ -1444,7 +1492,6 @@ pub const SQLITE_STMTSTATUS_MEMUSED: ::core::ffi::c_int = 99 as ::core::ffi::c_i
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct sqlite3_pcache_page {
     pub pBuf: *mut ::core::ffi::c_void,
     pub pExtra: *mut ::core::ffi::c_void,
@@ -1452,7 +1499,6 @@ pub struct sqlite3_pcache_page {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct sqlite3_pcache_methods2 {
     pub iVersion: ::core::ffi::c_int,
     pub pArg: *mut ::core::ffi::c_void,
@@ -1466,10 +1512,16 @@ pub struct sqlite3_pcache_methods2 {
         ) -> *mut crate::src::headers::sqlite3_h::sqlite3_pcache,
     >,
     pub xCachesize: Option<
-        unsafe extern "C" fn(*mut crate::src::headers::sqlite3_h::sqlite3_pcache, ::core::ffi::c_int) -> (),
+        unsafe extern "C" fn(
+            *mut crate::src::headers::sqlite3_h::sqlite3_pcache,
+            ::core::ffi::c_int,
+        ) -> (),
     >,
-    pub xPagecount:
-        Option<unsafe extern "C" fn(*mut crate::src::headers::sqlite3_h::sqlite3_pcache) -> ::core::ffi::c_int>,
+    pub xPagecount: Option<
+        unsafe extern "C" fn(
+            *mut crate::src::headers::sqlite3_h::sqlite3_pcache,
+        ) -> ::core::ffi::c_int,
+    >,
     pub xFetch: Option<
         unsafe extern "C" fn(
             *mut crate::src::headers::sqlite3_h::sqlite3_pcache,
@@ -1493,10 +1545,15 @@ pub struct sqlite3_pcache_methods2 {
         ) -> (),
     >,
     pub xTruncate: Option<
-        unsafe extern "C" fn(*mut crate::src::headers::sqlite3_h::sqlite3_pcache, ::core::ffi::c_uint) -> (),
+        unsafe extern "C" fn(
+            *mut crate::src::headers::sqlite3_h::sqlite3_pcache,
+            ::core::ffi::c_uint,
+        ) -> (),
     >,
-    pub xDestroy: Option<unsafe extern "C" fn(*mut crate::src::headers::sqlite3_h::sqlite3_pcache) -> ()>,
-    pub xShrink: Option<unsafe extern "C" fn(*mut crate::src::headers::sqlite3_h::sqlite3_pcache) -> ()>,
+    pub xDestroy:
+        Option<unsafe extern "C" fn(*mut crate::src::headers::sqlite3_h::sqlite3_pcache) -> ()>,
+    pub xShrink:
+        Option<unsafe extern "C" fn(*mut crate::src::headers::sqlite3_h::sqlite3_pcache) -> ()>,
 }
 
 pub const SQLITE_CHECKPOINT_NOOP: ::core::ffi::c_int = -(1 as ::core::ffi::c_int);
@@ -1517,11 +1574,14 @@ pub enum SqliteVtabConfig {
     DIRECTONLY = 3,
     USES_ALL_SCHEMAS = 4,
 }
-
-pub const SQLITE_VTAB_CONSTRAINT_SUPPORT: ::core::ffi::c_int = SqliteVtabConfig::CONSTRAINT_SUPPORT as ::core::ffi::c_int;
-pub const SQLITE_VTAB_INNOCUOUS: ::core::ffi::c_int = SqliteVtabConfig::INNOCUOUS as ::core::ffi::c_int;
-pub const SQLITE_VTAB_DIRECTONLY: ::core::ffi::c_int = SqliteVtabConfig::DIRECTONLY as ::core::ffi::c_int;
-pub const SQLITE_VTAB_USES_ALL_SCHEMAS: ::core::ffi::c_int = SqliteVtabConfig::USES_ALL_SCHEMAS as ::core::ffi::c_int;
+pub const SQLITE_VTAB_CONSTRAINT_SUPPORT: ::core::ffi::c_int =
+    SqliteVtabConfig::CONSTRAINT_SUPPORT as ::core::ffi::c_int;
+pub const SQLITE_VTAB_INNOCUOUS: ::core::ffi::c_int =
+    SqliteVtabConfig::INNOCUOUS as ::core::ffi::c_int;
+pub const SQLITE_VTAB_DIRECTONLY: ::core::ffi::c_int =
+    SqliteVtabConfig::DIRECTONLY as ::core::ffi::c_int;
+pub const SQLITE_VTAB_USES_ALL_SCHEMAS: ::core::ffi::c_int =
+    SqliteVtabConfig::USES_ALL_SCHEMAS as ::core::ffi::c_int;
 
 pub const SQLITE_ROLLBACK: ::core::ffi::c_int = 1 as ::core::ffi::c_int;
 
@@ -1551,7 +1611,6 @@ pub type sqlite3_rtree_dbl = ::core::ffi::c_double;
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct sqlite3_rtree_geometry {
     pub pContext: *mut ::core::ffi::c_void,
     pub nParam: ::core::ffi::c_int,
@@ -1562,7 +1621,6 @@ pub struct sqlite3_rtree_geometry {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct sqlite3_rtree_query_info {
     pub pContext: *mut ::core::ffi::c_void,
     pub nParam: ::core::ffi::c_int,

@@ -11,7 +11,6 @@ pub const PTF_LEAF: ::core::ffi::c_int = 0x8 as ::core::ffi::c_int;
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct MemPage {
     pub isInit: crate::src::ext::rtree::rtree::u8_0,
     pub intKey: crate::src::ext::rtree::rtree::u8_0,
@@ -53,7 +52,6 @@ pub struct MemPage {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct BtLock {
     pub pBtree: *mut crate::src::headers::btreeInt_h::Btree,
     pub iTable: crate::src::src::pager::Pgno,
@@ -67,7 +65,6 @@ pub const WRITE_LOCK: ::core::ffi::c_int = 2 as ::core::ffi::c_int;
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct Btree {
     pub db: *mut crate::src::headers::sqliteInt_h::sqlite3,
     pub pBt: *mut crate::src::headers::btreeInt_h::BtShared,
@@ -91,7 +88,6 @@ pub const TRANS_WRITE: ::core::ffi::c_int = 2 as ::core::ffi::c_int;
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct BtShared {
     pub pPager: *mut crate::src::src::pager::Pager,
     pub db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -143,7 +139,6 @@ pub const BTS_PENDING: ::core::ffi::c_int = 0x80 as ::core::ffi::c_int;
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct CellInfo {
     pub nKey: crate::src::ext::rtree::rtree::i64_0,
     pub pPayload: *mut crate::src::ext::rtree::rtree::u8_0,
@@ -156,7 +151,6 @@ pub const BTCURSOR_MAX_DEPTH: ::core::ffi::c_int = 20 as ::core::ffi::c_int;
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct BtCursor {
     pub eState: crate::src::ext::rtree::rtree::u8_0,
     pub curFlags: crate::src::ext::rtree::rtree::u8_0,
@@ -216,7 +210,6 @@ pub const PTRMAP_BTREE: ::core::ffi::c_int = 5 as ::core::ffi::c_int;
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct IntegrityCk {
     pub pBt: *mut crate::src::headers::btreeInt_h::BtShared,
     pub pPager: *mut crate::src::src::pager::Pager,

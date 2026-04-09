@@ -5,10 +5,8 @@ pub struct WhereMemBlock {
     pub pNext: *mut crate::src::headers::whereInt_h::WhereMemBlock,
     pub sz: crate::src::ext::rtree::rtree::u64_0,
 }
-
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct WhereRightJoin {
     pub iMatch: ::core::ffi::c_int,
     pub regBloom: ::core::ffi::c_int,
@@ -19,7 +17,6 @@ pub struct WhereRightJoin {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct WhereLevel {
     pub iLeftJoin: ::core::ffi::c_int,
     pub iTabCur: ::core::ffi::c_int,
@@ -50,7 +47,6 @@ pub struct WhereLevel {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub union __anon_union_19 {
     pub in_0: crate::src::headers::whereInt_h::__anon_struct_11,
     pub pCoveringIdx: *mut crate::src::headers::sqliteInt_h::Index,
@@ -58,7 +54,6 @@ pub union __anon_union_19 {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct __anon_struct_11 {
     pub nIn: ::core::ffi::c_int,
     pub aInLoop: *mut crate::src::headers::whereInt_h::InLoop,
@@ -66,7 +61,6 @@ pub struct __anon_struct_11 {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct InLoop {
     pub iCur: ::core::ffi::c_int,
     pub addrInTop: ::core::ffi::c_int,
@@ -77,7 +71,6 @@ pub struct InLoop {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct WhereLoop {
     pub prereq: crate::src::headers::sqliteInt_h::Bitmask,
     pub maskSelf: crate::src::headers::sqliteInt_h::Bitmask,
@@ -98,7 +91,6 @@ pub struct WhereLoop {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub union __anon_union_20 {
     pub btree: crate::src::headers::whereInt_h::__anon_struct_12,
     pub vtab: crate::src::headers::whereInt_h::__anon_struct_13,
@@ -106,7 +98,6 @@ pub union __anon_union_20 {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct __anon_struct_12 {
     pub nEq: crate::src::fts5::u16_0,
     pub nBtm: crate::src::fts5::u16_0,
@@ -118,7 +109,6 @@ pub struct __anon_struct_12 {
 
 #[derive(Copy, Clone, BitfieldStruct)]
 #[repr(C)]
-
 pub struct __anon_struct_13 {
     pub idxNum: ::core::ffi::c_int,
     #[bitfield(name = "needFree", ty = "u32_0", bits = "0..=0")]
@@ -135,7 +125,6 @@ pub const WHERE_LOOP_XFER_SZ: ::core::ffi::c_ulong = 56 as ::core::ffi::c_ulong;
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct WhereOrCost {
     pub prereq: crate::src::headers::sqliteInt_h::Bitmask,
     pub rRun: crate::src::headers::sqliteInt_h::LogEst,
@@ -146,7 +135,6 @@ pub const N_OR_COST: ::core::ffi::c_int = 3 as ::core::ffi::c_int;
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct WhereOrSet {
     pub n: crate::src::fts5::u16_0,
     pub a: [crate::src::headers::whereInt_h::WhereOrCost; 3],
@@ -154,7 +142,6 @@ pub struct WhereOrSet {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct WherePath {
     pub maskLoop: crate::src::headers::sqliteInt_h::Bitmask,
     pub revLoop: crate::src::headers::sqliteInt_h::Bitmask,
@@ -167,7 +154,6 @@ pub struct WherePath {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct WhereTerm {
     pub pExpr: *mut crate::src::headers::sqliteInt_h::Expr,
     pub pWC: *mut crate::src::headers::whereInt_h::WhereClause,
@@ -185,7 +171,6 @@ pub struct WhereTerm {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub union __anon_union_21 {
     pub x: crate::src::headers::whereInt_h::__anon_struct_14,
     pub pOrInfo: *mut crate::src::headers::whereInt_h::WhereOrInfo,
@@ -194,7 +179,6 @@ pub union __anon_union_21 {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct __anon_struct_14 {
     pub leftColumn: ::core::ffi::c_int,
     pub iField: ::core::ffi::c_int,
@@ -234,7 +218,6 @@ pub const TERM_SLICE: ::core::ffi::c_int = 0x8000 as ::core::ffi::c_int;
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct WhereScan {
     pub pOrigWC: *mut crate::src::headers::whereInt_h::WhereClause,
     pub pWC: *mut crate::src::headers::whereInt_h::WhereClause,
@@ -251,7 +234,6 @@ pub struct WhereScan {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct WhereClause {
     pub pWInfo: *mut crate::src::headers::whereInt_h::WhereInfo,
     pub pOuter: *mut crate::src::headers::whereInt_h::WhereClause,
@@ -266,7 +248,6 @@ pub struct WhereClause {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct WhereOrInfo {
     pub wc: crate::src::headers::whereInt_h::WhereClause,
     pub indexable: crate::src::headers::sqliteInt_h::Bitmask,
@@ -274,14 +255,12 @@ pub struct WhereOrInfo {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct WhereAndInfo {
     pub wc: crate::src::headers::whereInt_h::WhereClause,
 }
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct WhereMaskSet {
     pub bVarSelect: ::core::ffi::c_int,
     pub n: ::core::ffi::c_int,
@@ -290,7 +269,6 @@ pub struct WhereMaskSet {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct WhereLoopBuilder {
     pub pWInfo: *mut crate::src::headers::whereInt_h::WhereInfo,
     pub pWC: *mut crate::src::headers::whereInt_h::WhereClause,
@@ -311,7 +289,6 @@ pub const SQLITE_QUERY_PLANNER_LIMIT_INCR: ::core::ffi::c_int = 1000 as ::core::
 
 #[derive(Copy, Clone, BitfieldStruct)]
 #[repr(C)]
-
 pub struct WhereInfo {
     pub pParse: *mut crate::src::headers::sqliteInt_h::Parse,
     pub pTabList: *mut crate::src::headers::sqliteInt_h::SrcList,

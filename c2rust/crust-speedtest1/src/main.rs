@@ -3,7 +3,6 @@
 #![allow(non_camel_case_types)]
 #![allow(non_snake_case)]
 #![allow(unused)]
-#![allow(warnings)]
 #![allow(static_mut_refs)]
 
 // Force cargo to link sqlite_noamalgam — speedtest1.rs calls its symbols via C FFI

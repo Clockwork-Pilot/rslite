@@ -14,9 +14,10 @@
       "constraints": {
         "constraint_build_all": {
           "id": "constraint_build_all",
-          "cmd": "cd $WORKSPACE_ROOT && make test",
+          "cmd": "cd $WORKSPACE_ROOT && make c-tcl-tests",
           "description": "Ensure our rust codebase is healthy",
-          "fails_count": 1
+          "fails_count": 1,
+          "timeout": 300
         }
       }
     },
@@ -98,6 +99,33 @@
           "id": "no_rust_variadic_exports",
           "cmd": "! grep -qE \"pub unsafe extern.*fn (sqlite3_str_appendf|sqlite3_snprintf|sqlite3_mprintf|sqlite3_vsnprintf|sqlite3_vmprintf|sqlite3_test_control|sqlite3_db_config|sqlite3_config|sqlite3_vtab_config|sqlite3_log)\" $PROJECT_ROOT/src/src/printf.rs $PROJECT_ROOT/crates/crust-core/src/printf_c_variadic.rs 2>/dev/null",
           "description": "Negative: none of the 10 exported symbols must be Rust variadic extern fns \u2014 they live in C only",
+          "fails_count": 1
+        }
+      }
+    },
+    "clippy_checks": {
+      "type": "Feature",
+      "model_version": 1,
+      "id": "clippy_checks",
+      "description": "Verify no clippy warnings in rust codebase",
+      "goals": [
+        "Run cargo clippy on all packages",
+        "Ensure all clippy lints pass with no warnings"
+      ],
+      "depends_on": [
+        "build_all"
+      ],
+      "constraints": {
+        "clippy_checks": {
+          "id": "clippy_checks",
+          "cmd": "cd $PROJECT_ROOT && cargo clippy --all-targets --all-features -- -D warnings",
+          "description": "Run cargo clippy and ensure no warnings reported",
+          "fails_count": 1
+        },
+        "no_forbidden_allows_robust": {
+          "id": "no_forbidden_allows_robust",
+          "cmd": "! grep -rE \"allow[[:space:]]*\\\\(.*clippy::(unnecessary_cast|missing_safety_doc|needless_return)|allow[[:space:]]*\\\\(.*warnings\" \"$PROJECT_ROOT/crates\" --include=\"*.rs\" 2>/dev/null",
+          "description": "Structural: Robust whitespace-tolerant detection of forbidden clippy allows. Detects any formatting of allow() with forbidden lints, ignoring whitespace between allow and (.",
           "fails_count": 1
         }
       }

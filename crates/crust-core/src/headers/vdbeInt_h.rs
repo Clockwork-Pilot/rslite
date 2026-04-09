@@ -23,7 +23,6 @@ pub const CURTYPE_PSEUDO: ::core::ffi::c_int = 3 as ::core::ffi::c_int;
 
 #[derive(Copy, Clone, BitfieldStruct)]
 #[repr(C)]
-
 pub struct VdbeCursor {
     pub eCurType: crate::src::ext::rtree::rtree::u8_0,
     pub iDb: crate::src::headers::sqliteInt_h::i8_0,
@@ -59,7 +58,6 @@ pub struct VdbeCursor {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub union __anon_union_17 {
     pub pBtx: *mut crate::src::headers::btreeInt_h::Btree,
     pub aAltMap: *mut crate::src::ext::rtree::rtree::u32_0,
@@ -67,7 +65,6 @@ pub union __anon_union_17 {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub union __anon_union_18 {
     pub pCursor: *mut crate::src::headers::btreeInt_h::BtCursor,
     pub pVCur: *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
@@ -78,7 +75,6 @@ pub const CACHE_STALE: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct VdbeTxtBlbCache {
     pub pCValue: *mut ::core::ffi::c_char,
     pub iOffset: crate::src::ext::rtree::rtree::i64_0,
@@ -89,7 +85,6 @@ pub struct VdbeTxtBlbCache {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct VdbeFrame {
     pub v: *mut crate::src::headers::vdbeInt_h::Vdbe,
     pub pParent: *mut crate::src::headers::vdbeInt_h::VdbeFrame,
@@ -112,7 +107,6 @@ pub struct VdbeFrame {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct sqlite3_value {
     pub u: crate::src::headers::vdbeInt_h::MemValue,
     pub z: *mut ::core::ffi::c_char,
@@ -129,7 +123,6 @@ pub struct sqlite3_value {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub union MemValue {
     pub r: ::core::ffi::c_double,
     pub i: crate::src::ext::rtree::rtree::i64_0,
@@ -178,7 +171,6 @@ pub const MEM_Agg: ::core::ffi::c_int = 0x8000 as ::core::ffi::c_int;
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct AuxData {
     pub iAuxOp: ::core::ffi::c_int,
     pub iAuxArg: ::core::ffi::c_int,
@@ -189,7 +181,6 @@ pub struct AuxData {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct sqlite3_context {
     pub pOut: *mut crate::src::src::vdbe::Mem,
     pub pFunc: *mut crate::src::headers::sqliteInt_h::FuncDef,
@@ -205,7 +196,6 @@ pub struct sqlite3_context {
 
 #[derive(Copy, Clone, BitfieldStruct)]
 #[repr(C)]
-
 pub struct Vdbe {
     pub db: *mut crate::src::headers::sqliteInt_h::sqlite3,
     pub ppVPrev: *mut *mut crate::src::headers::vdbeInt_h::Vdbe,
@@ -274,7 +264,6 @@ pub const VDBE_HALT_STATE: ::core::ffi::c_int = 3 as ::core::ffi::c_int;
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct PreUpdate {
     pub v: *mut crate::src::headers::vdbeInt_h::Vdbe,
     pub pCsr: *mut crate::src::headers::vdbeInt_h::VdbeCursor,
@@ -297,14 +286,12 @@ pub struct PreUpdate {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct __anon_struct_10 {
     pub keyinfoSpace: [crate::src::ext::rtree::rtree::u8_0; 32],
 }
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct ValueList {
     pub pCsr: *mut crate::src::headers::btreeInt_h::BtCursor,
     pub pOut: *mut crate::src::headers::vdbeInt_h::sqlite3_value,

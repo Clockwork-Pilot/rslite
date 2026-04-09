@@ -1,6 +1,5 @@
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct BenignMallocHooks {
     pub xBenignBegin: Option<unsafe extern "C" fn() -> ()>,
     pub xBenignEnd: Option<unsafe extern "C" fn() -> ()>,

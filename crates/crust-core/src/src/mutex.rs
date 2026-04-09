@@ -1,24 +1,43 @@
 
-
-
-
-
-
-
-pub use crate::src::src::main::sqlite3_initialize;pub use crate::src::headers::sqlite3_h::sqlite3_int64;pub use crate::src::headers::sqlite3_h::sqlite3_mem_methods;pub use crate::src::src::mutex_unix::sqlite3_mutex;pub use crate::src::headers::sqlite3_h::sqlite3_mutex_methods;pub use crate::src::headers::sqlite3_h::sqlite3_pcache;pub use crate::src::headers::sqlite3_h::sqlite3_pcache_methods2;pub use crate::src::headers::sqlite3_h::sqlite3_pcache_page;pub use crate::src::headers::sqlite3_h::sqlite_int64;pub use crate::src::headers::sqlite3_h::SQLITE_MUTEX_RECURSIVE;pub use crate::src::headers::sqlite3_h::SQLITE_OK;pub use crate::src::src::global::sqlite3Config;pub use crate::src::src::mutex_unix::sqlite3DefaultMutex;pub use crate::src::src::mutex_unix::sqlite3MemoryBarrier;pub use crate::src::src::mutex_noop::sqlite3NoopMutex;pub use crate::src::ext::rtree::rtree::u32_0;pub use crate::src::ext::rtree::rtree::u8_0;pub use crate::src::headers::sqliteInt_h::Sqlite3Config;pub use crate::src::headers::stdlib::uint32_t;pub use crate::src::headers::stdlib::uint8_t;pub use crate::src::headers::stdlib::__uint32_t;pub use crate::src::headers::stdlib::__uint8_t;
-#[cfg_attr(feature = "test", unsafe(no_mangle))]
-
+pub use crate::src::ext::rtree::rtree::u8_0;
+pub use crate::src::ext::rtree::rtree::u32_0;
+pub use crate::src::headers::sqlite3_h::SQLITE_MUTEX_RECURSIVE;
+pub use crate::src::headers::sqlite3_h::SQLITE_OK;
+pub use crate::src::headers::sqlite3_h::sqlite_int64;
+pub use crate::src::headers::sqlite3_h::sqlite3_int64;
+pub use crate::src::headers::sqlite3_h::sqlite3_mem_methods;
+pub use crate::src::headers::sqlite3_h::sqlite3_mutex_methods;
+pub use crate::src::headers::sqlite3_h::sqlite3_pcache;
+pub use crate::src::headers::sqlite3_h::sqlite3_pcache_methods2;
+pub use crate::src::headers::sqlite3_h::sqlite3_pcache_page;
+pub use crate::src::headers::sqliteInt_h::Sqlite3Config;
+pub use crate::src::headers::stdlib::__uint8_t;
+pub use crate::src::headers::stdlib::__uint32_t;
+pub use crate::src::headers::stdlib::uint8_t;
+pub use crate::src::headers::stdlib::uint32_t;
+pub use crate::src::src::global::sqlite3Config;
+pub use crate::src::src::main::sqlite3_initialize;
+pub use crate::src::src::mutex_noop::sqlite3NoopMutex;
+pub use crate::src::src::mutex_unix::sqlite3_mutex;
+pub use crate::src::src::mutex_unix::sqlite3DefaultMutex;
+pub use crate::src::src::mutex_unix::sqlite3MemoryBarrier;
 pub unsafe extern "C" fn sqlite3MutexInit() -> ::core::ffi::c_int {
     let mut rc: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_OK;
-    if crate::src::src::global::sqlite3Config.mutex.xMutexAlloc.is_none() {
-        let mut pFrom: *const crate::src::headers::sqlite3_h::sqlite3_mutex_methods = ::core::ptr::null::<crate::src::headers::sqlite3_h::sqlite3_mutex_methods>();
-        let mut pTo: *mut crate::src::headers::sqlite3_h::sqlite3_mutex_methods = &raw mut crate::src::src::global::sqlite3Config.mutex;
+    if crate::src::src::global::sqlite3Config
+        .mutex
+        .xMutexAlloc
+        .is_none()
+    {
+        let mut pFrom: *const crate::src::headers::sqlite3_h::sqlite3_mutex_methods =
+            ::core::ptr::null::<crate::src::headers::sqlite3_h::sqlite3_mutex_methods>();
+        let mut pTo: *mut crate::src::headers::sqlite3_h::sqlite3_mutex_methods =
+            &raw mut crate::src::src::global::sqlite3Config.mutex;
         if crate::src::src::global::sqlite3Config.bCoreMutex != 0 {
-            pFrom =  crate::src::src::mutex_unix::sqlite3DefaultMutex() as
-    *const crate::src::headers::sqlite3_h::sqlite3_mutex_methods;
+            pFrom = crate::src::src::mutex_unix::sqlite3DefaultMutex()
+                as *const crate::src::headers::sqlite3_h::sqlite3_mutex_methods;
         } else {
-            pFrom =  crate::src::src::mutex_noop::sqlite3NoopMutex() as
-    *const crate::src::headers::sqlite3_h::sqlite3_mutex_methods;
+            pFrom = crate::src::src::mutex_noop::sqlite3NoopMutex()
+                as *const crate::src::headers::sqlite3_h::sqlite3_mutex_methods;
         }
         let __pTo_ref = unsafe { &mut *pTo };
         __pTo_ref.xMutexInit = (*pFrom).xMutexInit;
@@ -43,7 +62,11 @@ pub unsafe extern "C" fn sqlite3MutexInit() -> ::core::ffi::c_int {
 
 pub unsafe extern "C" fn sqlite3MutexEnd() -> ::core::ffi::c_int {
     let mut rc: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_OK;
-    if crate::src::src::global::sqlite3Config.mutex.xMutexEnd.is_some() {
+    if crate::src::src::global::sqlite3Config
+        .mutex
+        .xMutexEnd
+        .is_some()
+    {
         rc = crate::src::src::global::sqlite3Config
             .mutex
             .xMutexEnd
@@ -52,9 +75,12 @@ pub unsafe extern "C" fn sqlite3MutexEnd() -> ::core::ffi::c_int {
     rc
 }
 #[unsafe(no_mangle)]
-
-pub unsafe extern "C" fn sqlite3_mutex_alloc(mut id: ::core::ffi::c_int) -> *mut crate::src::src::mutex_unix::sqlite3_mutex {
-    if id <= crate::src::headers::sqlite3_h::SQLITE_MUTEX_RECURSIVE && crate::src::src::main::sqlite3_initialize() != 0 {
+pub unsafe extern "C" fn sqlite3_mutex_alloc(
+    mut id: ::core::ffi::c_int,
+) -> *mut crate::src::src::mutex_unix::sqlite3_mutex {
+    if id <= crate::src::headers::sqlite3_h::SQLITE_MUTEX_RECURSIVE
+        && crate::src::src::main::sqlite3_initialize() != 0
+    {
         return ::core::ptr::null_mut::<crate::src::src::mutex_unix::sqlite3_mutex>();
     }
     if id > crate::src::headers::sqlite3_h::SQLITE_MUTEX_RECURSIVE && sqlite3MutexInit() != 0 {
@@ -67,7 +93,9 @@ pub unsafe extern "C" fn sqlite3_mutex_alloc(mut id: ::core::ffi::c_int) -> *mut
 }
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
-pub unsafe extern "C" fn sqlite3MutexAlloc(mut id: ::core::ffi::c_int) -> *mut crate::src::src::mutex_unix::sqlite3_mutex {
+pub unsafe extern "C" fn sqlite3MutexAlloc(
+    mut id: ::core::ffi::c_int,
+) -> *mut crate::src::src::mutex_unix::sqlite3_mutex {
     if crate::src::src::global::sqlite3Config.bCoreMutex == 0 {
         return ::core::ptr::null_mut::<crate::src::src::mutex_unix::sqlite3_mutex>();
     }
@@ -77,8 +105,9 @@ pub unsafe extern "C" fn sqlite3MutexAlloc(mut id: ::core::ffi::c_int) -> *mut c
         .expect("non-null function pointer")(id)
 }
 #[unsafe(no_mangle)]
-
-pub unsafe extern "C" fn sqlite3_mutex_free(mut p: *mut crate::src::src::mutex_unix::sqlite3_mutex) {
+pub unsafe extern "C" fn sqlite3_mutex_free(
+    mut p: *mut crate::src::src::mutex_unix::sqlite3_mutex,
+) {
     if !p.is_null() {
         crate::src::src::global::sqlite3Config
             .mutex
@@ -87,8 +116,9 @@ pub unsafe extern "C" fn sqlite3_mutex_free(mut p: *mut crate::src::src::mutex_u
     }
 }
 #[unsafe(no_mangle)]
-
-pub unsafe extern "C" fn sqlite3_mutex_enter(mut p: *mut crate::src::src::mutex_unix::sqlite3_mutex) {
+pub unsafe extern "C" fn sqlite3_mutex_enter(
+    mut p: *mut crate::src::src::mutex_unix::sqlite3_mutex,
+) {
     if !p.is_null() {
         crate::src::src::global::sqlite3Config
             .mutex
@@ -97,8 +127,9 @@ pub unsafe extern "C" fn sqlite3_mutex_enter(mut p: *mut crate::src::src::mutex_
     }
 }
 #[unsafe(no_mangle)]
-
-pub unsafe extern "C" fn sqlite3_mutex_try(mut p: *mut crate::src::src::mutex_unix::sqlite3_mutex) -> ::core::ffi::c_int {
+pub unsafe extern "C" fn sqlite3_mutex_try(
+    mut p: *mut crate::src::src::mutex_unix::sqlite3_mutex,
+) -> ::core::ffi::c_int {
     let mut rc: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_OK;
     if !p.is_null() {
         return crate::src::src::global::sqlite3Config
@@ -109,8 +140,9 @@ pub unsafe extern "C" fn sqlite3_mutex_try(mut p: *mut crate::src::src::mutex_un
     rc
 }
 #[unsafe(no_mangle)]
-
-pub unsafe extern "C" fn sqlite3_mutex_leave(mut p: *mut crate::src::src::mutex_unix::sqlite3_mutex) {
+pub unsafe extern "C" fn sqlite3_mutex_leave(
+    mut p: *mut crate::src::src::mutex_unix::sqlite3_mutex,
+) {
     if !p.is_null() {
         crate::src::src::global::sqlite3Config
             .mutex

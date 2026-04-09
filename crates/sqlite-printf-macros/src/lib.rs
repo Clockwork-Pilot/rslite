@@ -1,9 +1,9 @@
 use proc_macro::TokenStream;
 use quote::quote;
-use syn::{parse::Parse, parse_macro_input, Lit, Token, Expr, Error};
+use syn::{Error, Expr, Lit, Token, parse::Parse, parse_macro_input};
 
 mod format_utils;
-use format_utils::{FormatSpec, parse_format_specs, convert_format_string};
+use format_utils::{FormatSpec, convert_format_string, parse_format_specs};
 
 /// Parse arguments for sqlite_snprintf! — buffer, size, format_str, args...
 struct SqliteSnprintf {
@@ -32,7 +32,12 @@ impl Parse for SqliteSnprintf {
             }
             args.push(input.parse::<Expr>()?);
         }
-        Ok(SqliteSnprintf { buffer, size, format_str, args })
+        Ok(SqliteSnprintf {
+            buffer,
+            size,
+            format_str,
+            args,
+        })
     }
 }
 
@@ -66,12 +71,11 @@ impl Parse for SqlitePrintf {
 }
 
 /// Parse SQLite format specifiers
-
-
-
-
 /// Generate code for json_printf! — formats and appends to JsonString buffer
-fn gen_json_format(args: &[Expr], specs: &[FormatSpec]) -> Result<proc_macro2::TokenStream, String> {
+fn gen_json_format(
+    args: &[Expr],
+    specs: &[FormatSpec],
+) -> Result<proc_macro2::TokenStream, String> {
     let mut code_parts = Vec::new();
     let mut arg_idx = 0;
 
@@ -253,7 +257,6 @@ fn gen_arg_handler(arg: &Expr, spec: &FormatSpec) -> proc_macro2::TokenStream {
 }
 
 /// Convert SQLite format string to Rust format string
-
 /// sqlite_printf! macro
 ///
 /// Compile-time validated SQLite printf formatting with runtime safety
@@ -283,8 +286,7 @@ fn gen_arg_handler(arg: &Expr, spec: &FormatSpec) -> proc_macro2::TokenStream {
 /// ```
 #[proc_macro]
 pub fn sqlite_printf(input: TokenStream) -> TokenStream {
-    let SqlitePrintf { format_str, args } =
-        parse_macro_input!(input as SqlitePrintf);
+    let SqlitePrintf { format_str, args } = parse_macro_input!(input as SqlitePrintf);
 
     // Compile-time validation
     let specs = match parse_format_specs(&format_str) {
@@ -395,7 +397,8 @@ pub fn sqlite_printf(input: TokenStream) -> TokenStream {
     // Escape the format string and create a string literal token
     let escaped_fmt = rust_format.replace('\\', "\\\\").replace('"', "\\\"");
     let fmt_literal = format!("\"{}\"", escaped_fmt);
-    let fmt_token: proc_macro2::TokenStream = fmt_literal.parse().expect("Failed to parse format literal");
+    let fmt_token: proc_macro2::TokenStream =
+        fmt_literal.parse().expect("Failed to parse format literal");
 
     let expanded = quote! {
         {
@@ -466,7 +469,7 @@ pub fn json_printf(input: TokenStream) -> TokenStream {
     let specs = match parse_format_specs(format_lit) {
         Ok(s) => s,
         Err(e) => {
-            return syn::Error::new_spanned(&format_lit, e)
+            return syn::Error::new_spanned(format_lit, e)
                 .to_compile_error()
                 .into();
         }
@@ -481,8 +484,7 @@ pub fn json_printf(input: TokenStream) -> TokenStream {
             proc_macro2::Span::call_site(),
             format!(
                 "format string expects {} arguments but got {}",
-                total_args_needed,
-                provided_args
+                total_args_needed, provided_args
             ),
         )
         .to_compile_error()
@@ -491,13 +493,13 @@ pub fn json_printf(input: TokenStream) -> TokenStream {
 
     // Parse remaining args as expressions
     let mut args = Vec::new();
-    for i in 2..parts.len() {
-        match syn::parse_str::<Expr>(parts[i].trim()) {
+    for part in parts.iter().skip(2) {
+        match syn::parse_str::<Expr>(part.trim()) {
             Ok(expr) => args.push(expr),
             Err(_) => {
                 return syn::Error::new(
                     proc_macro2::Span::call_site(),
-                    format!("Failed to parse argument: {}", parts[i]),
+                    format!("Failed to parse argument: {}", part),
                 )
                 .to_compile_error()
                 .into();
@@ -509,17 +511,13 @@ pub fn json_printf(input: TokenStream) -> TokenStream {
     let format_code = match gen_json_format(&args, &specs) {
         Ok(code) => code,
         Err(e) => {
-            return syn::Error::new(
-                proc_macro2::Span::call_site(),
-                e,
-            )
-            .to_compile_error()
-            .into();
+            return syn::Error::new(proc_macro2::Span::call_site(), e)
+                .to_compile_error()
+                .into();
         }
     };
 
-    let target_tokens: proc_macro2::TokenStream = target.parse()
-        .unwrap_or_else(|_| quote! { p });
+    let target_tokens: proc_macro2::TokenStream = target.parse().unwrap_or_else(|_| quote! { p });
 
     let expanded = quote! {
         unsafe {
@@ -553,8 +551,12 @@ pub fn json_printf(input: TokenStream) -> TokenStream {
 /// ```
 #[proc_macro]
 pub fn sqlite_snprintf(input: TokenStream) -> TokenStream {
-    let SqliteSnprintf { buffer, size, format_str, args } =
-        parse_macro_input!(input as SqliteSnprintf);
+    let SqliteSnprintf {
+        buffer,
+        size,
+        format_str,
+        args,
+    } = parse_macro_input!(input as SqliteSnprintf);
 
     // Compile-time validation
     let specs = match parse_format_specs(&format_str) {
@@ -691,8 +693,7 @@ pub fn sqlite_vmprintf(input: TokenStream) -> TokenStream {
         };
         return TokenStream::from(expanded);
     }
-    let SqlitePrintf { format_str, args } =
-        parse_macro_input!(input2 as SqlitePrintf);
+    let SqlitePrintf { format_str, args } = parse_macro_input!(input2 as SqlitePrintf);
 
     let specs = match parse_format_specs(&format_str) {
         Ok(s) => s,
@@ -707,7 +708,11 @@ pub fn sqlite_vmprintf(input: TokenStream) -> TokenStream {
     if arg_count != args.len() {
         return syn::Error::new(
             proc_macro2::Span::call_site(),
-            format!("format string expects {} arguments but got {}", arg_count, args.len()),
+            format!(
+                "format string expects {} arguments but got {}",
+                arg_count,
+                args.len()
+            ),
         )
         .to_compile_error()
         .into();
@@ -722,8 +727,14 @@ pub fn sqlite_vmprintf(input: TokenStream) -> TokenStream {
     for spec in specs.iter() {
         match spec {
             FormatSpec::RawBytes => {
-                let len_arg = match arg_iter.next() { Some(a) => a, None => break };
-                let ptr_arg = match arg_iter.next() { Some(a) => a, None => break };
+                let len_arg = match arg_iter.next() {
+                    Some(a) => a,
+                    None => break,
+                };
+                let ptr_arg = match arg_iter.next() {
+                    Some(a) => a,
+                    None => break,
+                };
                 arg_handlers.push(quote! {{
                     let __ptr = (#ptr_arg) as *const u8;
                     let __len = (#len_arg) as usize;
@@ -748,11 +759,16 @@ pub fn sqlite_vmprintf(input: TokenStream) -> TokenStream {
     }
 
     let free_stmts = if !z_args_to_free.is_empty() {
-        let stmts: Vec<_> = z_args_to_free.iter().map(|arg| quote! {
-            if !(#arg).is_null() {
-                unsafe { sqlite3_free(#arg as *mut ::core::ffi::c_void); }
-            }
-        }).collect();
+        let stmts: Vec<_> = z_args_to_free
+            .iter()
+            .map(|arg| {
+                quote! {
+                    if !(#arg).is_null() {
+                        unsafe { sqlite3_free(#arg as *mut ::core::ffi::c_void); }
+                    }
+                }
+            })
+            .collect();
         quote! { #(#stmts)* }
     } else {
         quote! {}
@@ -789,15 +805,22 @@ pub fn sqlite_vmprintf(input: TokenStream) -> TokenStream {
 #[proc_macro]
 pub fn sqlite_vsnprintf(input: TokenStream) -> TokenStream {
     // Same approach as sqlite_snprintf! — compile-time validated, Rust format! based, no C function call
-    let SqliteSnprintf { buffer, size, format_str, args } =
-        parse_macro_input!(input as SqliteSnprintf);
+    let SqliteSnprintf {
+        buffer,
+        size,
+        format_str,
+        args,
+    } = parse_macro_input!(input as SqliteSnprintf);
 
     let specs = match parse_format_specs(&format_str) {
         Ok(s) => s,
         Err(e) => {
-            return syn::Error::new(proc_macro2::Span::call_site(), format!("Invalid format string: {}", e))
-                .to_compile_error()
-                .into();
+            return syn::Error::new(
+                proc_macro2::Span::call_site(),
+                format!("Invalid format string: {}", e),
+            )
+            .to_compile_error()
+            .into();
         }
     };
 
@@ -809,8 +832,14 @@ pub fn sqlite_vsnprintf(input: TokenStream) -> TokenStream {
     for spec in specs.iter() {
         match spec {
             FormatSpec::RawBytes => {
-                let len_arg = match arg_iter.next() { Some(a) => a, None => break };
-                let ptr_arg = match arg_iter.next() { Some(a) => a, None => break };
+                let len_arg = match arg_iter.next() {
+                    Some(a) => a,
+                    None => break,
+                };
+                let ptr_arg = match arg_iter.next() {
+                    Some(a) => a,
+                    None => break,
+                };
                 arg_handlers.push(quote! {{
                     let __ptr = (#ptr_arg) as *const u8;
                     let __len = (#len_arg) as usize;

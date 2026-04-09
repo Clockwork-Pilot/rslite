@@ -135,7 +135,12 @@ fn date_time_hhmm() {
 fn date_time_hhmmss() {
     // "%02d:%02d:%02d" — from codebase
     unsafe {
-        let m = take_m(sqlite3_mprintf(b"%02d:%02d:%02d\0".as_ptr() as _, 12i32, 30i32, 5i32));
+        let m = take_m(sqlite3_mprintf(
+            b"%02d:%02d:%02d\0".as_ptr() as _,
+            12i32,
+            30i32,
+            5i32,
+        ));
         let p = take_p(sqlite_printf!("%02d:%02d:%02d", 12i32, 30i32, 5i32));
         assert_eq!(m, p, "%02d:%02d:%02d(12,30,5)");
     }
@@ -145,7 +150,12 @@ fn date_time_hhmmss() {
 fn date_yyyymmdd() {
     // "%04d-%02d-%02d" — from codebase
     unsafe {
-        let m = take_m(sqlite3_mprintf(b"%04d-%02d-%02d\0".as_ptr() as _, 2024i32, 1i32, 5i32));
+        let m = take_m(sqlite3_mprintf(
+            b"%04d-%02d-%02d\0".as_ptr() as _,
+            2024i32,
+            1i32,
+            5i32,
+        ));
         let p = take_p(sqlite_printf!("%04d-%02d-%02d", 2024i32, 1i32, 5i32));
         assert_eq!(m, p, "%04d-%02d-%02d(2024,1,5)");
     }
@@ -155,8 +165,20 @@ fn date_yyyymmdd() {
 fn date_with_char_prefix() {
     // "%c%04d-%02d-%02d" — from codebase (sign + date)
     unsafe {
-        let m = take_m(sqlite3_mprintf(b"%c%04d-%02d-%02d\0".as_ptr() as _, b'+' as i32, 2024i32, 1i32, 5i32));
-        let p = take_p(sqlite_printf!("%c%04d-%02d-%02d", b'+' as i32, 2024i32, 1i32, 5i32));
+        let m = take_m(sqlite3_mprintf(
+            b"%c%04d-%02d-%02d\0".as_ptr() as _,
+            b'+' as i32,
+            2024i32,
+            1i32,
+            5i32,
+        ));
+        let p = take_p(sqlite_printf!(
+            "%c%04d-%02d-%02d",
+            b'+' as i32,
+            2024i32,
+            1i32,
+            5i32
+        ));
         assert_eq!(m, p, "%c%04d-%02d-%02d");
     }
 }
@@ -168,11 +190,23 @@ fn datetime_full() {
     unsafe {
         let m = take_m(sqlite3_mprintf(
             b"%c%04d-%02d-%02d %02d:%02d:%06.3f\0".as_ptr() as _,
-            b'+' as i32, 2024i32, 3i32, 15i32, 10i32, 30i32, 5.123f64,
+            b'+' as i32,
+            2024i32,
+            3i32,
+            15i32,
+            10i32,
+            30i32,
+            5.123f64,
         ));
         let p = take_p(sqlite_printf!(
             "%c%04d-%02d-%02d %02d:%02d:%06.3f",
-            b'+' as i32, 2024i32, 3i32, 15i32, 10i32, 30i32, 5.123f64
+            b'+' as i32,
+            2024i32,
+            3i32,
+            15i32,
+            10i32,
+            30i32,
+            5.123f64
         ));
         assert_eq!(m, p, "%c%04d-%02d-%02d %02d:%02d:%06.3f");
     }
@@ -204,7 +238,12 @@ fn s_basic() {
 
         // "%s.%s.%s" — from codebase  (e.g. "db.schema.table")
         let foo: *const c_char = b"foo\0".as_ptr() as _;
-        let m = take_m(sqlite3_mprintf(b"%s.%s.%s\0".as_ptr() as _, hello, world, foo));
+        let m = take_m(sqlite3_mprintf(
+            b"%s.%s.%s\0".as_ptr() as _,
+            hello,
+            world,
+            foo,
+        ));
         let p = take_p(sqlite_printf!("%s.%s.%s", hello, world, foo));
         assert_eq!(m, p, "%s.%s.%s");
 
@@ -226,7 +265,10 @@ fn s_basic() {
 
         // "%s constraint failed" — from codebase
         let kind: *const c_char = b"UNIQUE\0".as_ptr() as _;
-        let m = take_m(sqlite3_mprintf(b"%s constraint failed\0".as_ptr() as _, kind));
+        let m = take_m(sqlite3_mprintf(
+            b"%s constraint failed\0".as_ptr() as _,
+            kind,
+        ));
         let p = take_p(sqlite_printf!("%s constraint failed", kind));
         assert_eq!(m, p, "%s constraint failed");
 
@@ -236,19 +278,37 @@ fn s_basic() {
         assert_eq!(m, p, "%d:%s");
 
         // "%d values for %d columns" — from codebase
-        let m = take_m(sqlite3_mprintf(b"%d values for %d columns\0".as_ptr() as _, 3i32, 2i32));
+        let m = take_m(sqlite3_mprintf(
+            b"%d values for %d columns\0".as_ptr() as _,
+            3i32,
+            2i32,
+        ));
         let p = take_p(sqlite_printf!("%d values for %d columns", 3i32, 2i32));
         assert_eq!(m, p, "%d values for %d columns");
 
         // "%d columns assigned %d values" — from codebase
-        let m = take_m(sqlite3_mprintf(b"%d columns assigned %d values\0".as_ptr() as _, 2i32, 3i32));
+        let m = take_m(sqlite3_mprintf(
+            b"%d columns assigned %d values\0".as_ptr() as _,
+            2i32,
+            3i32,
+        ));
         let p = take_p(sqlite_printf!("%d columns assigned %d values", 2i32, 3i32));
         assert_eq!(m, p, "%d columns assigned %d values");
 
         // "%s is %u but should be %u" — from codebase
         let field: *const c_char = b"nHeight\0".as_ptr() as _;
-        let m = take_m(sqlite3_mprintf(b"%s is %u but should be %u\0".as_ptr() as _, field, 1u32, 2u32));
-        let p = take_p(sqlite_printf!("%s is %u but should be %u", field, 1u32, 2u32));
+        let m = take_m(sqlite3_mprintf(
+            b"%s is %u but should be %u\0".as_ptr() as _,
+            field,
+            1u32,
+            2u32,
+        ));
+        let p = take_p(sqlite_printf!(
+            "%s is %u but should be %u",
+            field,
+            1u32,
+            2u32
+        ));
         assert_eq!(m, p, "%s is %u but should be %u");
     }
 }
@@ -268,7 +328,12 @@ fn raw_bytes() {
             assert_eq!(m, p, "%.*s(n={n})");
         }
         // "%.*s%s" — from codebase
-        let m = take_m(sqlite3_mprintf(b"%.*s%s\0".as_ptr() as _, 5i32, data, suffix));
+        let m = take_m(sqlite3_mprintf(
+            b"%.*s%s\0".as_ptr() as _,
+            5i32,
+            data,
+            suffix,
+        ));
         let p = take_p(sqlite_printf!("%.*s%s", 5i32, data, suffix));
         assert_eq!(m, p, "%.*s%s");
     }
@@ -278,10 +343,10 @@ fn raw_bytes() {
 
 #[test]
 fn sql_q() {
-    let simple:     *const c_char = b"hello\0".as_ptr() as _;
+    let simple: *const c_char = b"hello\0".as_ptr() as _;
     let apostrophe: *const c_char = b"it's\0".as_ptr() as _;
-    let multi:      *const c_char = b"O'Reilly's\0".as_ptr() as _;
-    let null_ptr:   *const c_char = core::ptr::null();
+    let multi: *const c_char = b"O'Reilly's\0".as_ptr() as _;
+    let null_ptr: *const c_char = core::ptr::null();
 
     unsafe {
         // %q — simple string (no apostrophes)
@@ -315,7 +380,7 @@ fn sql_q() {
         assert_eq!(m, p, "%Q NULL ptr");
 
         // "%Q.%Q" — from codebase  (e.g. schema.table SQL fragment)
-        let db:  *const c_char = b"main\0".as_ptr() as _;
+        let db: *const c_char = b"main\0".as_ptr() as _;
         let tbl: *const c_char = b"my_table\0".as_ptr() as _;
         let m = take_m(sqlite3_mprintf(b"%Q.%Q\0".as_ptr() as _, db, tbl));
         let p = take_p(sqlite_printf!("%Q.%Q", db, tbl));
@@ -327,7 +392,7 @@ fn sql_q() {
 
 #[test]
 fn sql_w() {
-    let simple:     *const c_char = b"mytable\0".as_ptr() as _;
+    let simple: *const c_char = b"mytable\0".as_ptr() as _;
     let with_quote: *const c_char = b"my\"table\0".as_ptr() as _;
 
     unsafe {
@@ -342,7 +407,7 @@ fn sql_w() {
         assert_eq!(m, p, "%w with double-quote");
 
         // "%w_%s" — from codebase  (e.g. "fts5_content")
-        let name:   *const c_char = b"fts5\0".as_ptr() as _;
+        let name: *const c_char = b"fts5\0".as_ptr() as _;
         let suffix: *const c_char = b"content\0".as_ptr() as _;
         let m = take_m(sqlite3_mprintf(b"%w_%s\0".as_ptr() as _, name, suffix));
         let p = take_p(sqlite_printf!("%w_%s", name, suffix));
@@ -413,13 +478,22 @@ fn hex_zero_padded() {
 fn hex_precision() {
     unsafe {
         // "%.3x+%.6x" — from codebase  (e.g. page/offset formatting)
-        let m = take_m(sqlite3_mprintf(b"%.3x+%.6x\0".as_ptr() as _, 0xABu32, 0x123456u32));
+        let m = take_m(sqlite3_mprintf(
+            b"%.3x+%.6x\0".as_ptr() as _,
+            0xABu32,
+            0x123456u32,
+        ));
         let p = take_p(sqlite_printf!("%.3x+%.6x", 0xABu32, 0x123456u32));
         assert_eq!(m, p, "%.3x+%.6x");
 
         // "%s%.3x+%.6x" — from codebase  (prefix string + two hex values)
         let prefix: *const c_char = b"pg:\0".as_ptr() as _;
-        let m = take_m(sqlite3_mprintf(b"%s%.3x+%.6x\0".as_ptr() as _, prefix, 0xABu32, 0x123456u32));
+        let m = take_m(sqlite3_mprintf(
+            b"%s%.3x+%.6x\0".as_ptr() as _,
+            prefix,
+            0xABu32,
+            0x123456u32,
+        ));
         let p = take_p(sqlite_printf!("%s%.3x+%.6x", prefix, 0xABu32, 0x123456u32));
         assert_eq!(m, p, "%s%.3x+%.6x");
     }
@@ -537,7 +611,9 @@ fn ordinal() {
     // "%r" — from: "%r ORDER BY term does not match any column",
     //              "%r %s BY term out of range"
     unsafe {
-        for &n in &[0i32, 1, 2, 3, 4, 5, 11, 12, 13, 21, 22, 23, 100, 101, 111, 112, 113] {
+        for &n in &[
+            0i32, 1, 2, 3, 4, 5, 11, 12, 13, 21, 22, 23, 100, 101, 111, 112, 113,
+        ] {
             let m = take_m(sqlite3_mprintf(b"%r\0".as_ptr() as _, n));
             let p = take_p(sqlite_printf!("%r", n));
             assert_eq!(m, p, "%r({n})");

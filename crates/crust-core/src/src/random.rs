@@ -1,20 +1,27 @@
-
-
-
-
-
-
-
 pub use crate::__stddef_size_t_h::size_t;
 
-
-
-
-
-pub use crate::src::headers::sqlite3_h::sqlite3_file;pub use crate::src::headers::sqlite3_h::sqlite3_filename;pub use crate::src::src::main::sqlite3_initialize;pub use crate::src::headers::sqlite3_h::sqlite3_int64;pub use crate::src::headers::sqlite3_h::sqlite3_io_methods;pub use crate::src::src::mutex_unix::sqlite3_mutex;pub use crate::src::src::mutex::sqlite3_mutex_enter;pub use crate::src::src::mutex::sqlite3_mutex_leave;pub use crate::src::headers::sqlite3_h::sqlite3_syscall_ptr;pub use crate::src::headers::sqlite3_h::sqlite3_vfs;pub use crate::src::src::os::sqlite3_vfs_find;pub use crate::src::headers::sqlite3_h::sqlite_int64;pub use crate::src::headers::sqlite3_h::SQLITE_MUTEX_STATIC_PRNG;pub use crate::src::src::mutex::sqlite3MutexAlloc;pub use crate::src::ext::rtree::rtree::u32_0;pub use crate::src::ext::rtree::rtree::u8_0;pub use crate::src::headers::stdlib::uint32_t;pub use crate::src::headers::stdlib::uint8_t;pub use crate::src::headers::stdlib::__uint32_t;pub use crate::src::headers::stdlib::__uint8_t;
+pub use crate::src::ext::rtree::rtree::u8_0;
+pub use crate::src::ext::rtree::rtree::u32_0;
+pub use crate::src::headers::sqlite3_h::SQLITE_MUTEX_STATIC_PRNG;
+pub use crate::src::headers::sqlite3_h::sqlite_int64;
+pub use crate::src::headers::sqlite3_h::sqlite3_file;
+pub use crate::src::headers::sqlite3_h::sqlite3_filename;
+pub use crate::src::headers::sqlite3_h::sqlite3_int64;
+pub use crate::src::headers::sqlite3_h::sqlite3_io_methods;
+pub use crate::src::headers::sqlite3_h::sqlite3_syscall_ptr;
+pub use crate::src::headers::sqlite3_h::sqlite3_vfs;
+pub use crate::src::headers::stdlib::__uint8_t;
+pub use crate::src::headers::stdlib::__uint32_t;
+pub use crate::src::headers::stdlib::uint8_t;
+pub use crate::src::headers::stdlib::uint32_t;
+pub use crate::src::src::main::sqlite3_initialize;
+pub use crate::src::src::mutex::sqlite3_mutex_enter;
+pub use crate::src::src::mutex::sqlite3_mutex_leave;
+pub use crate::src::src::mutex::sqlite3MutexAlloc;
+pub use crate::src::src::mutex_unix::sqlite3_mutex;
+pub use crate::src::src::os::sqlite3_vfs_find;
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct sqlite3PrngType {
     pub s: [crate::src::ext::rtree::rtree::u32_0; 16],
     pub out: [crate::src::ext::rtree::rtree::u8_0; 64],
@@ -27,14 +34,17 @@ static mut sqlite3Prng: sqlite3PrngType = sqlite3PrngType {
     n: 0,
 };
 
-unsafe extern "C" fn chacha_block(mut out: *mut crate::src::ext::rtree::rtree::u32_0, mut in_0: *const crate::src::ext::rtree::rtree::u32_0) {
+unsafe extern "C" fn chacha_block(
+    mut out: *mut crate::src::ext::rtree::rtree::u32_0,
+    mut in_0: *const crate::src::ext::rtree::rtree::u32_0,
+) {
     let mut i: ::core::ffi::c_int = 0;
     let mut x: [crate::src::ext::rtree::rtree::u32_0; 16] = [0; 16];
     ::core::ptr::copy_nonoverlapping(
-                    in_0 as *const u8,
-                    &raw mut x as *mut crate::src::ext::rtree::rtree::u32_0 as *mut u8,
-                    64 as usize,
-                );
+        in_0 as *const u8,
+        &raw mut x as *mut crate::src::ext::rtree::rtree::u32_0 as *mut u8,
+        64 as usize,
+    );
     i = 0 as ::core::ffi::c_int;
     while i < 10 as ::core::ffi::c_int {
         x[0 as ::core::ffi::c_int as usize] =
@@ -270,28 +280,30 @@ unsafe extern "C" fn chacha_block(mut out: *mut crate::src::ext::rtree::rtree::u
     }
 }
 #[unsafe(no_mangle)]
-
 pub unsafe extern "C" fn sqlite3_randomness(
     mut N: ::core::ffi::c_int,
     mut pBuf: *mut ::core::ffi::c_void,
 ) {
     let mut zBuf: *mut ::core::ffi::c_uchar = pBuf as *mut ::core::ffi::c_uchar;
-    let mut mutex: *mut crate::src::src::mutex_unix::sqlite3_mutex = ::core::ptr::null_mut::<crate::src::src::mutex_unix::sqlite3_mutex>();
+    let mut mutex: *mut crate::src::src::mutex_unix::sqlite3_mutex =
+        ::core::ptr::null_mut::<crate::src::src::mutex_unix::sqlite3_mutex>();
     if crate::src::src::main::sqlite3_initialize() != 0 {
         return;
     }
-    mutex = crate::src::src::mutex::sqlite3MutexAlloc(crate::src::headers::sqlite3_h::SQLITE_MUTEX_STATIC_PRNG);
+    mutex = crate::src::src::mutex::sqlite3MutexAlloc(
+        crate::src::headers::sqlite3_h::SQLITE_MUTEX_STATIC_PRNG,
+    );
     crate::src::src::mutex::sqlite3_mutex_enter(mutex);
     if N <= 0 as ::core::ffi::c_int || pBuf.is_null() {
         sqlite3Prng.s[0 as ::core::ffi::c_int as usize] = 0 as crate::src::ext::rtree::rtree::u32_0;
         crate::src::src::mutex::sqlite3_mutex_leave(mutex);
         return;
     }
-    if sqlite3Prng.s[0 as ::core::ffi::c_int as usize] == 0 as crate::src::ext::rtree::rtree::u32_0 {
+    if sqlite3Prng.s[0 as ::core::ffi::c_int as usize] == 0 as crate::src::ext::rtree::rtree::u32_0
+    {
         let mut pVfs: *mut crate::src::headers::sqlite3_h::sqlite3_vfs =
-            
             crate::src::src::os::sqlite3_vfs_find(::core::ptr::null::<::core::ffi::c_char>())
-    as *mut crate::src::headers::sqlite3_h::sqlite3_vfs;
+                as *mut crate::src::headers::sqlite3_h::sqlite3_vfs;
         static mut chacha20_init: [crate::src::ext::rtree::rtree::u32_0; 4] = [
             0x61707865 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::u32_0,
             0x3320646e as ::core::ffi::c_int as crate::src::ext::rtree::rtree::u32_0,
@@ -299,47 +311,51 @@ pub unsafe extern "C" fn sqlite3_randomness(
             0x6b206574 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::u32_0,
         ];
         ::core::ptr::copy_nonoverlapping(
-                    &raw const chacha20_init as *const crate::src::ext::rtree::rtree::u32_0 as *const u8,
-                    (&raw mut sqlite3Prng.s as *mut crate::src::ext::rtree::rtree::u32_0).offset(0 as isize)
+            &raw const chacha20_init as *const crate::src::ext::rtree::rtree::u32_0 as *const u8,
+            (&raw mut sqlite3Prng.s as *mut crate::src::ext::rtree::rtree::u32_0).offset(0 as isize)
                 as *mut crate::src::ext::rtree::rtree::u32_0 as *mut u8,
-                    16 as usize,
-                );
+            16 as usize,
+        );
         if pVfs.is_null() {
             ::libc::memset(
-                (&raw mut sqlite3Prng.s as *mut crate::src::ext::rtree::rtree::u32_0).offset(4 as isize)
-                    as *mut crate::src::ext::rtree::rtree::u32_0 as *mut ::core::ffi::c_void,
+                (&raw mut sqlite3Prng.s as *mut crate::src::ext::rtree::rtree::u32_0)
+                    .offset(4 as isize) as *mut crate::src::ext::rtree::rtree::u32_0
+                    as *mut ::core::ffi::c_void,
                 0 as ::core::ffi::c_int,
                 44 as crate::__stddef_size_t_h::size_t,
             );
         } else {
             crate::src::src::os::sqlite3OsRandomness(
-                
                 pVfs as *mut crate::src::headers::sqlite3_h::sqlite3_vfs,
                 44 as ::core::ffi::c_int,
-                (&raw mut sqlite3Prng.s as *mut crate::src::ext::rtree::rtree::u32_0).offset(4 as isize)
-                    as *mut crate::src::ext::rtree::rtree::u32_0 as *mut ::core::ffi::c_char,
+                (&raw mut sqlite3Prng.s as *mut crate::src::ext::rtree::rtree::u32_0)
+                    .offset(4 as isize) as *mut crate::src::ext::rtree::rtree::u32_0
+                    as *mut ::core::ffi::c_char,
             );
         }
         sqlite3Prng.s[15 as ::core::ffi::c_int as usize] =
             sqlite3Prng.s[12 as ::core::ffi::c_int as usize];
-        sqlite3Prng.s[12 as ::core::ffi::c_int as usize] = 0 as crate::src::ext::rtree::rtree::u32_0;
+        sqlite3Prng.s[12 as ::core::ffi::c_int as usize] =
+            0 as crate::src::ext::rtree::rtree::u32_0;
         sqlite3Prng.n = 0 as crate::src::ext::rtree::rtree::u8_0;
     }
     loop {
         if N <= sqlite3Prng.n as ::core::ffi::c_int {
             ::core::ptr::copy_nonoverlapping(
-                    (&raw mut sqlite3Prng.out as *mut crate::src::ext::rtree::rtree::u8_0)
+                (&raw mut sqlite3Prng.out as *mut crate::src::ext::rtree::rtree::u8_0)
                     .offset((sqlite3Prng.n as ::core::ffi::c_int - N) as isize)
                     as *mut crate::src::ext::rtree::rtree::u8_0 as *const u8,
-                    zBuf as *mut u8,
-                    N as usize,
-                );
-            sqlite3Prng.n = (sqlite3Prng.n as ::core::ffi::c_int - N) as crate::src::ext::rtree::rtree::u8_0;
+                zBuf as *mut u8,
+                N as usize,
+            );
+            sqlite3Prng.n =
+                (sqlite3Prng.n as ::core::ffi::c_int - N) as crate::src::ext::rtree::rtree::u8_0;
             break;
         } else {
             if sqlite3Prng.n as ::core::ffi::c_int > 0 as ::core::ffi::c_int {
                 ::core::ptr::copy_nonoverlapping(
-                    &raw mut sqlite3Prng.out as *mut crate::src::ext::rtree::rtree::u8_0 as *const u8,
+                    &raw mut sqlite3Prng.out as *mut crate::src::ext::rtree::rtree::u8_0
+                        as *const u8,
                     zBuf as *mut u8,
                     sqlite3Prng.n as usize,
                 );
@@ -349,7 +365,8 @@ pub unsafe extern "C" fn sqlite3_randomness(
             sqlite3Prng.s[12 as ::core::ffi::c_int as usize] =
                 sqlite3Prng.s[12 as ::core::ffi::c_int as usize].wrapping_add(1);
             chacha_block(
-                &raw mut sqlite3Prng.out as *mut crate::src::ext::rtree::rtree::u8_0 as *mut crate::src::ext::rtree::rtree::u32_0,
+                &raw mut sqlite3Prng.out as *mut crate::src::ext::rtree::rtree::u8_0
+                    as *mut crate::src::ext::rtree::rtree::u32_0,
                 &raw mut sqlite3Prng.s as *mut crate::src::ext::rtree::rtree::u32_0,
             );
             sqlite3Prng.n = 64 as crate::src::ext::rtree::rtree::u8_0;
@@ -367,17 +384,17 @@ static mut sqlite3SavedPrng: sqlite3PrngType = sqlite3PrngType {
 
 pub unsafe extern "C" fn sqlite3PrngSaveState() {
     ::core::ptr::copy_nonoverlapping(
-                    &raw mut sqlite3Prng as *const u8,
-                    &raw mut sqlite3SavedPrng as *mut u8,
-                    ::core::mem::size_of::<sqlite3PrngType>() as usize,
-                );
+        &raw mut sqlite3Prng as *const u8,
+        &raw mut sqlite3SavedPrng as *mut u8,
+        ::core::mem::size_of::<sqlite3PrngType>() as usize,
+    );
 }
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PrngRestoreState() {
     ::core::ptr::copy_nonoverlapping(
-                    &raw mut sqlite3SavedPrng as *const u8,
-                    &raw mut sqlite3Prng as *mut u8,
-                    ::core::mem::size_of::<sqlite3PrngType>() as usize,
-                );
+        &raw mut sqlite3SavedPrng as *const u8,
+        &raw mut sqlite3Prng as *mut u8,
+        ::core::mem::size_of::<sqlite3PrngType>() as usize,
+    );
 }

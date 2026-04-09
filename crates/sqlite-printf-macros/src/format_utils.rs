@@ -25,8 +25,16 @@ pub enum FormatSpec {
     HexPrecision(usize),
     FloatPrecisionStripped,
     Ordinal,
-    HexWidth { width: usize, zero_pad: bool, upper: bool },
-    HexWidthLong { width: usize, zero_pad: bool, upper: bool },
+    HexWidth {
+        width: usize,
+        zero_pad: bool,
+        upper: bool,
+    },
+    HexWidthLong {
+        width: usize,
+        zero_pad: bool,
+        upper: bool,
+    },
     /// %.Nf / %.Ne / %.Ng — float with fixed precision N
     FloatFixed(usize),
 }
@@ -53,12 +61,20 @@ impl FormatSpec {
             FormatSpec::HexPrecision(n) => format!("{{:0{}x}}", n),
             FormatSpec::FloatPrecisionStripped => "{}".to_string(),
             FormatSpec::Ordinal => "{}".to_string(),
-            FormatSpec::HexWidth { width, zero_pad, upper } => {
+            FormatSpec::HexWidth {
+                width,
+                zero_pad,
+                upper,
+            } => {
                 let pad = if *zero_pad { "0" } else { "" };
                 let case = if *upper { "X" } else { "x" };
                 format!("{{:{}{}{}}}", pad, width, case)
             }
-            FormatSpec::HexWidthLong { width, zero_pad, upper } => {
+            FormatSpec::HexWidthLong {
+                width,
+                zero_pad,
+                upper,
+            } => {
                 let pad = if *zero_pad { "0" } else { "" };
                 let case = if *upper { "X" } else { "x" };
                 format!("{{:{}{}{}}}", pad, width, case)
@@ -76,7 +92,13 @@ impl FormatSpec {
             FormatSpec::RawBytes => 2,
             FormatSpec::FloatPrecisionStripped => 2,
             FormatSpec::Percent => 0,
-            _ => if self.is_argument_consuming() { 1 } else { 0 },
+            _ => {
+                if self.is_argument_consuming() {
+                    1
+                } else {
+                    0
+                }
+            }
         }
     }
 }
@@ -87,279 +109,355 @@ pub fn parse_format_specs(format: &str) -> Result<Vec<FormatSpec>, String> {
     let mut chars = format.chars().peekable();
 
     while let Some(ch) = chars.next() {
-        if ch == '%' {
-            if let Some(&next) = chars.peek() {
-                match next {
-                    '%' => {
-                        chars.next();
-                        specs.push(FormatSpec::Percent);
-                    }
-                    's' | 'S' => {
-                        chars.next();
-                        specs.push(FormatSpec::String);
-                    }
-                    'd' | 'i' => {
-                        chars.next();
-                        specs.push(FormatSpec::Integer);
-                    }
-                    'u' => {
-                        chars.next();
-                        specs.push(FormatSpec::Unsigned);
-                    }
-                    'x' => {
-                        chars.next();
-                        specs.push(FormatSpec::Hex);
-                    }
-                    'X' => {
-                        chars.next();
-                        specs.push(FormatSpec::HexUpper);
-                    }
-                    'p' => {
-                        chars.next();
-                        specs.push(FormatSpec::Pointer);
-                    }
-                    'f' | 'e' | 'E' | 'g' | 'G' => {
-                        chars.next();
-                        specs.push(FormatSpec::Float);
-                    }
-                    'c' => {
-                        chars.next();
-                        specs.push(FormatSpec::Char);
-                    }
-                    'z' => {
-                        chars.next();
-                        specs.push(FormatSpec::ZeroCopy);
-                    }
-                    'q' => {
-                        chars.next();
-                        specs.push(FormatSpec::SqliteQuote);
-                    }
-                    'Q' => {
-                        chars.next();
-                        specs.push(FormatSpec::SqliteQuotedString);
-                    }
-                    'w' => {
-                        chars.next();
-                        specs.push(FormatSpec::SqliteIdentifier);
-                    }
-                    'l' => {
-                        chars.next();
-                        if let Some(&second) = chars.peek() {
-                            if second == 'l' {
-                                chars.next();
-                                if let Some(&third) = chars.peek() {
-                                    match third {
-                                        'd' | 'i' => {
-                                            chars.next();
-                                            specs.push(FormatSpec::Long64);
-                                        }
-                                        'u' => {
-                                            chars.next();
-                                            specs.push(FormatSpec::ULong64);
-                                        }
-                                        'x' | 'X' => {
-                                            chars.next();
-                                            let upper = third == 'X';
-                                            specs.push(FormatSpec::HexWidthLong { width: 0, zero_pad: false, upper });
-                                        }
-                                        _ => {
-                                            return Err(format!("Unknown format specifier: %ll{}", third));
-                                        }
+        if ch == '%'
+            && let Some(&next) = chars.peek()
+        {
+            match next {
+                '%' => {
+                    chars.next();
+                    specs.push(FormatSpec::Percent);
+                }
+                's' | 'S' => {
+                    chars.next();
+                    specs.push(FormatSpec::String);
+                }
+                'd' | 'i' => {
+                    chars.next();
+                    specs.push(FormatSpec::Integer);
+                }
+                'u' => {
+                    chars.next();
+                    specs.push(FormatSpec::Unsigned);
+                }
+                'x' => {
+                    chars.next();
+                    specs.push(FormatSpec::Hex);
+                }
+                'X' => {
+                    chars.next();
+                    specs.push(FormatSpec::HexUpper);
+                }
+                'p' => {
+                    chars.next();
+                    specs.push(FormatSpec::Pointer);
+                }
+                'f' | 'e' | 'E' | 'g' | 'G' => {
+                    chars.next();
+                    specs.push(FormatSpec::Float);
+                }
+                'c' => {
+                    chars.next();
+                    specs.push(FormatSpec::Char);
+                }
+                'z' => {
+                    chars.next();
+                    specs.push(FormatSpec::ZeroCopy);
+                }
+                'q' => {
+                    chars.next();
+                    specs.push(FormatSpec::SqliteQuote);
+                }
+                'Q' => {
+                    chars.next();
+                    specs.push(FormatSpec::SqliteQuotedString);
+                }
+                'w' => {
+                    chars.next();
+                    specs.push(FormatSpec::SqliteIdentifier);
+                }
+                'l' => {
+                    chars.next();
+                    if let Some(&second) = chars.peek() {
+                        if second == 'l' {
+                            chars.next();
+                            if let Some(&third) = chars.peek() {
+                                match third {
+                                    'd' | 'i' => {
+                                        chars.next();
+                                        specs.push(FormatSpec::Long64);
+                                    }
+                                    'u' => {
+                                        chars.next();
+                                        specs.push(FormatSpec::ULong64);
+                                    }
+                                    'x' | 'X' => {
+                                        chars.next();
+                                        let upper = third == 'X';
+                                        specs.push(FormatSpec::HexWidthLong {
+                                            width: 0,
+                                            zero_pad: false,
+                                            upper,
+                                        });
+                                    }
+                                    _ => {
+                                        return Err(format!(
+                                            "Unknown format specifier: %ll{}",
+                                            third
+                                        ));
                                     }
                                 }
-                            } else if second == 'd' || second == 'i' {
-                                chars.next();
-                                specs.push(FormatSpec::Long);
                             }
+                        } else if second == 'd' || second == 'i' {
+                            chars.next();
+                            specs.push(FormatSpec::Long);
                         }
                     }
-                    '!' => {
-                        chars.next();
-                        if let Some(&second) = chars.peek() {
-                            if second == '0' {
+                }
+                '!' => {
+                    chars.next();
+                    if let Some(&second) = chars.peek() {
+                        if second == '0' {
+                            chars.next();
+                            if let Some(&third) = chars.peek()
+                                && third == '.'
+                            {
                                 chars.next();
-                                if let Some(&third) = chars.peek() {
-                                    if third == '.' {
-                                        chars.next();
-                                        while let Some(&d) = chars.peek() {
-                                            if d.is_ascii_digit() { chars.next(); } else { break; }
-                                        }
-                                        if let Some(&final_char) = chars.peek() {
-                                            if final_char == 'g' || final_char == 'G' {
-                                                chars.next();
-                                                specs.push(FormatSpec::FloatG15);
-                                            }
-                                        }
-                                    }
-                                }
-                            } else if second == '.' {
-                                chars.next();
-                                if let Some(&third) = chars.peek() {
-                                    if third == '*' {
-                                        chars.next();
-                                        if let Some(&fourth) = chars.peek() {
-                                            if matches!(fourth, 'f' | 'F') {
-                                                chars.next();
-                                                specs.push(FormatSpec::FloatPrecisionStripped);
-                                            } else {
-                                                return Err(format!("Unknown format specifier: %!.*{}", fourth));
-                                            }
-                                        }
-                                    } else if third.is_ascii_digit() {
-                                        while let Some(&d) = chars.peek() {
-                                            if d.is_ascii_digit() { chars.next(); } else { break; }
-                                        }
-                                        if let Some(&final_char) = chars.peek() {
-                                            if matches!(final_char, 'g' | 'G') {
-                                                chars.next();
-                                                specs.push(FormatSpec::FloatG15);
-                                            } else {
-                                                return Err(format!("Unknown format specifier: %!.N{}", final_char));
-                                            }
-                                        }
-                                    } else {
-                                        return Err(format!("Unknown format specifier: %!.{}", third));
-                                    }
-                                }
-                            } else {
-                                return Err(format!("Unknown format specifier: %!{}", second));
-                            }
-                        }
-                    }
-                    '.' => {
-                        chars.next();
-                        if let Some(&next2) = chars.peek() {
-                            if next2 == '*' {
-                                chars.next();
-                                if let Some(&next3) = chars.peek() {
-                                    if next3 == 's' || next3 == 'S' {
-                                        chars.next();
-                                        specs.push(FormatSpec::RawBytes);
-                                    } else {
-                                        return Err(format!("Unknown format specifier: %.*{}", next3));
-                                    }
-                                } else {
-                                    return Err("Incomplete format specifier: %.*".to_string());
-                                }
-                            } else if next2.is_ascii_digit() {
-                                let mut prec_str = String::new();
                                 while let Some(&d) = chars.peek() {
                                     if d.is_ascii_digit() {
-                                        prec_str.push(d);
                                         chars.next();
                                     } else {
                                         break;
                                     }
                                 }
-                                let prec: usize = prec_str.parse().unwrap_or(0);
-                                if let Some(&type_ch) = chars.peek() {
-                                    match type_ch {
-                                        'x' | 'X' => {
+                                if let Some(&final_char) = chars.peek()
+                                    && (final_char == 'g' || final_char == 'G')
+                                {
+                                    chars.next();
+                                    specs.push(FormatSpec::FloatG15);
+                                }
+                            }
+                        } else if second == '.' {
+                            chars.next();
+                            if let Some(&third) = chars.peek() {
+                                if third == '*' {
+                                    chars.next();
+                                    if let Some(&fourth) = chars.peek() {
+                                        if matches!(fourth, 'f' | 'F') {
                                             chars.next();
-                                            specs.push(FormatSpec::HexPrecision(prec));
+                                            specs.push(FormatSpec::FloatPrecisionStripped);
+                                        } else {
+                                            return Err(format!(
+                                                "Unknown format specifier: %!.*{}",
+                                                fourth
+                                            ));
                                         }
-                                        'f' | 'F' | 'e' | 'E' | 'g' | 'G' => {
+                                    }
+                                } else if third.is_ascii_digit() {
+                                    while let Some(&d) = chars.peek() {
+                                        if d.is_ascii_digit() {
                                             chars.next();
-                                            specs.push(FormatSpec::FloatFixed(prec));
+                                        } else {
+                                            break;
                                         }
-                                        _ => {
-                                            return Err(format!("Unknown format specifier: %.{}{}", prec_str, type_ch));
+                                    }
+                                    if let Some(&final_char) = chars.peek() {
+                                        if matches!(final_char, 'g' | 'G') {
+                                            chars.next();
+                                            specs.push(FormatSpec::FloatG15);
+                                        } else {
+                                            return Err(format!(
+                                                "Unknown format specifier: %!.N{}",
+                                                final_char
+                                            ));
                                         }
                                     }
                                 } else {
-                                    return Err(format!("Incomplete format specifier: %.{}", prec_str));
+                                    return Err(format!("Unknown format specifier: %!.{}", third));
                                 }
-                            } else {
-                                return Err(format!("Unknown format specifier: %.{}", next2));
                             }
+                        } else {
+                            return Err(format!("Unknown format specifier: %!{}", second));
                         }
                     }
-                    'r' => {
-                        chars.next();
-                        specs.push(FormatSpec::Ordinal);
+                }
+                '.' => {
+                    chars.next();
+                    if let Some(&next2) = chars.peek() {
+                        if next2 == '*' {
+                            chars.next();
+                            if let Some(&next3) = chars.peek() {
+                                if next3 == 's' || next3 == 'S' {
+                                    chars.next();
+                                    specs.push(FormatSpec::RawBytes);
+                                } else {
+                                    return Err(format!("Unknown format specifier: %.*{}", next3));
+                                }
+                            } else {
+                                return Err("Incomplete format specifier: %.*".to_string());
+                            }
+                        } else if next2.is_ascii_digit() {
+                            let mut prec_str = String::new();
+                            while let Some(&d) = chars.peek() {
+                                if d.is_ascii_digit() {
+                                    prec_str.push(d);
+                                    chars.next();
+                                } else {
+                                    break;
+                                }
+                            }
+                            let prec: usize = prec_str.parse().unwrap_or(0);
+                            if let Some(&type_ch) = chars.peek() {
+                                match type_ch {
+                                    'x' | 'X' => {
+                                        chars.next();
+                                        specs.push(FormatSpec::HexPrecision(prec));
+                                    }
+                                    'f' | 'F' | 'e' | 'E' | 'g' | 'G' => {
+                                        chars.next();
+                                        specs.push(FormatSpec::FloatFixed(prec));
+                                    }
+                                    _ => {
+                                        return Err(format!(
+                                            "Unknown format specifier: %.{}{}",
+                                            prec_str, type_ch
+                                        ));
+                                    }
+                                }
+                            } else {
+                                return Err(format!("Incomplete format specifier: %.{}", prec_str));
+                            }
+                        } else {
+                            return Err(format!("Unknown format specifier: %.{}", next2));
+                        }
                     }
-                    '-' | '+' | ' ' | '#' | '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' => {
-                        let mut zero_pad = next == '0';
+                }
+                'r' => {
+                    chars.next();
+                    specs.push(FormatSpec::Ordinal);
+                }
+                '-' | '+' | ' ' | '#' | '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8'
+                | '9' => {
+                    let mut zero_pad = next == '0';
+                    while let Some(&c) = chars.peek() {
+                        if matches!(c, '-' | '+' | ' ' | '#') {
+                            if c == '0' {
+                                zero_pad = true;
+                            }
+                            chars.next();
+                        } else {
+                            break;
+                        }
+                    }
+                    let mut width_str = String::new();
+                    if next.is_ascii_digit() {
+                        width_str.push(next);
+                    }
+                    while let Some(&c) = chars.peek() {
+                        if c.is_ascii_digit() {
+                            width_str.push(c);
+                            chars.next();
+                        } else {
+                            break;
+                        }
+                    }
+                    let width: usize = width_str.parse().unwrap_or(0);
+                    if chars.peek() == Some(&'.') {
+                        chars.next();
                         while let Some(&c) = chars.peek() {
-                            if matches!(c, '-' | '+' | ' ' | '#') {
-                                if c == '0' { zero_pad = true; }
+                            if c.is_ascii_digit() || c == '*' {
                                 chars.next();
                             } else {
                                 break;
                             }
                         }
-                        let mut width_str = String::new();
-                        if next.is_ascii_digit() { width_str.push(next); }
-                        while let Some(&c) = chars.peek() {
-                            if c.is_ascii_digit() { width_str.push(c); chars.next(); } else { break; }
-                        }
-                        let width: usize = width_str.parse().unwrap_or(0);
-                        if chars.peek() == Some(&'.') {
+                    }
+                    let ll_prefix = if chars.peek() == Some(&'l') {
+                        chars.next();
+                        if chars.peek() == Some(&'l') {
                             chars.next();
-                            while let Some(&c) = chars.peek() {
-                                if c.is_ascii_digit() || c == '*' { chars.next(); } else { break; }
-                            }
-                        }
-                        let ll_prefix = if chars.peek() == Some(&'l') {
-                            chars.next();
-                            if chars.peek() == Some(&'l') { chars.next(); true } else { false }
-                        } else { false };
-                        if let Some(&type_ch) = chars.peek() {
-                            match type_ch {
-                                'x' | 'X' => {
-                                    chars.next();
-                                    let upper = type_ch == 'X';
-                                    if ll_prefix {
-                                        specs.push(FormatSpec::HexWidthLong { width, zero_pad, upper });
-                                    } else {
-                                        specs.push(FormatSpec::HexWidth { width, zero_pad, upper });
-                                    }
-                                }
-                                'd' | 'i' => {
-                                    chars.next();
-                                    if ll_prefix {
-                                        specs.push(FormatSpec::Long64);
-                                    } else if width > 0 {
-                                        if zero_pad {
-                                            specs.push(FormatSpec::IntegerZeroPad(width));
-                                        } else {
-                                            specs.push(FormatSpec::IntegerWidth(width));
-                                        }
-                                    } else {
-                                        specs.push(FormatSpec::Integer);
-                                    }
-                                }
-                                'u' => {
-                                    chars.next();
-                                    if ll_prefix {
-                                        specs.push(FormatSpec::ULong64);
-                                    } else if width > 0 {
-                                        if zero_pad {
-                                            specs.push(FormatSpec::IntegerZeroPad(width));
-                                        } else {
-                                            specs.push(FormatSpec::IntegerWidth(width));
-                                        }
-                                    } else {
-                                        specs.push(FormatSpec::Unsigned);
-                                    }
-                                }
-                                's' | 'S' => { chars.next(); specs.push(FormatSpec::String); }
-                                'f' | 'F' | 'e' | 'E' | 'g' | 'G' => { chars.next(); specs.push(FormatSpec::Float); }
-                                'q' => { chars.next(); specs.push(FormatSpec::SqliteQuote); }
-                                'Q' => { chars.next(); specs.push(FormatSpec::SqliteQuotedString); }
-                                'w' => { chars.next(); specs.push(FormatSpec::SqliteIdentifier); }
-                                'z' => { chars.next(); specs.push(FormatSpec::ZeroCopy); }
-                                _ => {
-                                    return Err(format!("Unknown format specifier: %{}{}{}", width_str, if ll_prefix { "ll" } else { "" }, type_ch));
-                                }
-                            }
+                            true
                         } else {
-                            return Err(format!("Incomplete format specifier after %{}", width_str));
+                            false
                         }
+                    } else {
+                        false
+                    };
+                    if let Some(&type_ch) = chars.peek() {
+                        match type_ch {
+                            'x' | 'X' => {
+                                chars.next();
+                                let upper = type_ch == 'X';
+                                if ll_prefix {
+                                    specs.push(FormatSpec::HexWidthLong {
+                                        width,
+                                        zero_pad,
+                                        upper,
+                                    });
+                                } else {
+                                    specs.push(FormatSpec::HexWidth {
+                                        width,
+                                        zero_pad,
+                                        upper,
+                                    });
+                                }
+                            }
+                            'd' | 'i' => {
+                                chars.next();
+                                if ll_prefix {
+                                    specs.push(FormatSpec::Long64);
+                                } else if width > 0 {
+                                    if zero_pad {
+                                        specs.push(FormatSpec::IntegerZeroPad(width));
+                                    } else {
+                                        specs.push(FormatSpec::IntegerWidth(width));
+                                    }
+                                } else {
+                                    specs.push(FormatSpec::Integer);
+                                }
+                            }
+                            'u' => {
+                                chars.next();
+                                if ll_prefix {
+                                    specs.push(FormatSpec::ULong64);
+                                } else if width > 0 {
+                                    if zero_pad {
+                                        specs.push(FormatSpec::IntegerZeroPad(width));
+                                    } else {
+                                        specs.push(FormatSpec::IntegerWidth(width));
+                                    }
+                                } else {
+                                    specs.push(FormatSpec::Unsigned);
+                                }
+                            }
+                            's' | 'S' => {
+                                chars.next();
+                                specs.push(FormatSpec::String);
+                            }
+                            'f' | 'F' | 'e' | 'E' | 'g' | 'G' => {
+                                chars.next();
+                                specs.push(FormatSpec::Float);
+                            }
+                            'q' => {
+                                chars.next();
+                                specs.push(FormatSpec::SqliteQuote);
+                            }
+                            'Q' => {
+                                chars.next();
+                                specs.push(FormatSpec::SqliteQuotedString);
+                            }
+                            'w' => {
+                                chars.next();
+                                specs.push(FormatSpec::SqliteIdentifier);
+                            }
+                            'z' => {
+                                chars.next();
+                                specs.push(FormatSpec::ZeroCopy);
+                            }
+                            _ => {
+                                return Err(format!(
+                                    "Unknown format specifier: %{}{}{}",
+                                    width_str,
+                                    if ll_prefix { "ll" } else { "" },
+                                    type_ch
+                                ));
+                            }
+                        }
+                    } else {
+                        return Err(format!("Incomplete format specifier after %{}", width_str));
                     }
-                    _ => {
-                        return Err(format!("Unknown format specifier: %{}", next));
-                    }
+                }
+                _ => {
+                    return Err(format!("Unknown format specifier: %{}", next));
                 }
             }
         }
@@ -394,64 +492,110 @@ pub fn convert_format_string(format: &str, specs: &[FormatSpec]) -> String {
                 if next == 'r' {
                 } else if matches!(next, '-' | '+' | ' ' | '#' | '0'..='9') {
                     while let Some(&c) = chars.peek() {
-                        if matches!(c, '-' | '+' | ' ' | '#' | '0'..='9') { chars.next(); } else { break; }
+                        if matches!(c, '-' | '+' | ' ' | '#' | '0'..='9') {
+                            chars.next();
+                        } else {
+                            break;
+                        }
                     }
                     if chars.peek() == Some(&'l') {
                         chars.next();
-                        if chars.peek() == Some(&'l') { chars.next(); }
+                        if chars.peek() == Some(&'l') {
+                            chars.next();
+                        }
                     }
-                    if let Some(&type_ch) = chars.peek() {
-                        if matches!(type_ch, 'x' | 'X' | 'd' | 'i' | 'u' | 's' | 'S' | 'f' | 'F' | 'e' | 'E' | 'g' | 'G' | 'q' | 'Q' | 'w' | 'z') { chars.next(); }
+                    if let Some(&type_ch) = chars.peek()
+                        && matches!(
+                            type_ch,
+                            'x' | 'X'
+                                | 'd'
+                                | 'i'
+                                | 'u'
+                                | 's'
+                                | 'S'
+                                | 'f'
+                                | 'F'
+                                | 'e'
+                                | 'E'
+                                | 'g'
+                                | 'G'
+                                | 'q'
+                                | 'Q'
+                                | 'w'
+                                | 'z'
+                        )
+                    {
+                        chars.next();
                     }
                 } else if next == 'l' {
                     if let Some(&second) = chars.peek() {
                         if second == 'l' {
                             chars.next();
-                            if let Some(&third) = chars.peek() {
-                                if matches!(third, 'd' | 'i' | 'u') { chars.next(); }
+                            if let Some(&third) = chars.peek()
+                                && matches!(third, 'd' | 'i' | 'u')
+                            {
+                                chars.next();
                             }
-                        } else if second == 'd' || second == 'i' { chars.next(); }
+                        } else if second == 'd' || second == 'i' {
+                            chars.next();
+                        }
                     }
                 } else if next == '.' {
                     if let Some(&second) = chars.peek() {
                         if second == '*' {
                             chars.next();
-                            if let Some(&third) = chars.peek() {
-                                if third == 's' || third == 'S' { chars.next(); }
+                            if let Some(&third) = chars.peek()
+                                && (third == 's' || third == 'S')
+                            {
+                                chars.next();
                             }
                         } else if second.is_ascii_digit() {
                             while let Some(&d) = chars.peek() {
-                                if d.is_ascii_digit() { chars.next(); } else { break; }
+                                if d.is_ascii_digit() {
+                                    chars.next();
+                                } else {
+                                    break;
+                                }
                             }
-                            if let Some(&type_ch) = chars.peek() {
-                                if matches!(type_ch, 'x' | 'X' | 'f' | 'F' | 'e' | 'E' | 'g' | 'G') { chars.next(); }
+                            if let Some(&type_ch) = chars.peek()
+                                && matches!(type_ch, 'x' | 'X' | 'f' | 'F' | 'e' | 'E' | 'g' | 'G')
+                            {
+                                chars.next();
                             }
                         }
                     }
-                } else if next == '!' {
-                    if let Some(&second) = chars.peek() {
-                        if second == '0' {
+                } else if next == '!'
+                    && let Some(&second) = chars.peek()
+                {
+                    if second == '0' {
+                        chars.next();
+                        if let Some(&dot) = chars.peek()
+                            && dot == '.'
+                        {
                             chars.next();
-                            if let Some(&dot) = chars.peek() {
-                                if dot == '.' {
+                            while let Some(&d) = chars.peek() {
+                                if d.is_ascii_digit() {
                                     chars.next();
-                                    while let Some(&d) = chars.peek() {
-                                        if d.is_ascii_digit() { chars.next(); } else { break; }
-                                    }
-                                    if let Some(&g) = chars.peek() {
-                                        if matches!(g, 'g' | 'G') { chars.next(); }
-                                    }
+                                } else {
+                                    break;
                                 }
                             }
-                        } else if second == '.' {
+                            if let Some(&g) = chars.peek()
+                                && matches!(g, 'g' | 'G')
+                            {
+                                chars.next();
+                            }
+                        }
+                    } else if second == '.' {
+                        chars.next();
+                        if let Some(&star) = chars.peek()
+                            && star == '*'
+                        {
                             chars.next();
-                            if let Some(&star) = chars.peek() {
-                                if star == '*' {
-                                    chars.next();
-                                    if let Some(&f) = chars.peek() {
-                                        if matches!(f, 'f' | 'F') { chars.next(); }
-                                    }
-                                }
+                            if let Some(&f) = chars.peek()
+                                && matches!(f, 'f' | 'F')
+                            {
+                                chars.next();
                             }
                         }
                     }

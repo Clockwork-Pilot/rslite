@@ -272,7 +272,6 @@ pub enum SqliteFormatSpec {
     SqliteQuote,      // %q - escape quotes, no wrapping
     SqliteIdentifier, // %Q or %w - escape and wrap in quotes
 }
-
 /// Token representation of a parsed format string
 #[derive(Debug, Clone)]
 pub enum FormatToken {
@@ -282,7 +281,6 @@ pub enum FormatToken {
         arg_index: usize
     },
 }
-
 /// Tokenize a SQLite format string into literal and specifier tokens
 pub fn tokenize_format(format: &str) -> Result<Vec<FormatToken>, String> {
     let mut tokens = Vec::new();

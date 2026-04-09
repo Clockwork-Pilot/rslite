@@ -1,20 +1,26 @@
-
-
-
-
-
-
-
 pub use crate::__stddef_size_t_h::size_t;
 
-
-pub use crate::src::headers::sqlite3_h::sqlite3_file;pub use crate::src::headers::sqlite3_h::sqlite3_filename;pub use crate::src::src::malloc::sqlite3_free;pub use crate::src::headers::sqlite3_h::sqlite3_int64;pub use crate::src::headers::sqlite3_h::sqlite3_io_methods;pub use crate::src::src::malloc::sqlite3_malloc;pub use crate::src::headers::sqlite3_h::sqlite3_syscall_ptr;pub use crate::src::headers::sqlite3_h::sqlite3_vfs;pub use crate::src::headers::sqlite3_h::sqlite_int64;pub use crate::src::headers::sqlite3_h::SQLITE_IOERR;pub use crate::src::headers::sqlite3_h::SQLITE_IOERR_NOMEM;pub use crate::src::headers::sqlite3_h::SQLITE_IOERR_SHORT_READ_1;pub use crate::src::headers::sqlite3_h::SQLITE_OK;pub use crate::src::ext::rtree::rtree::i64_0;pub use crate::src::ext::rtree::rtree::u8_0;pub use crate::src::headers::sqliteInt_h::SQLITE_IOERR_NOMEM_BKPT;
+pub use crate::src::ext::rtree::rtree::i64_0;
+pub use crate::src::ext::rtree::rtree::u8_0;
+pub use crate::src::headers::sqlite3_h::SQLITE_IOERR;
+pub use crate::src::headers::sqlite3_h::SQLITE_IOERR_NOMEM;
+pub use crate::src::headers::sqlite3_h::SQLITE_IOERR_SHORT_READ_1;
+pub use crate::src::headers::sqlite3_h::SQLITE_OK;
+pub use crate::src::headers::sqlite3_h::sqlite_int64;
+pub use crate::src::headers::sqlite3_h::sqlite3_file;
+pub use crate::src::headers::sqlite3_h::sqlite3_filename;
+pub use crate::src::headers::sqlite3_h::sqlite3_int64;
+pub use crate::src::headers::sqlite3_h::sqlite3_io_methods;
+pub use crate::src::headers::sqlite3_h::sqlite3_syscall_ptr;
+pub use crate::src::headers::sqlite3_h::sqlite3_vfs;
+pub use crate::src::headers::sqliteInt_h::SQLITE_IOERR_NOMEM_BKPT;
 pub use crate::src::headers::stdlib::uint8_t;
+pub use crate::src::src::malloc::sqlite3_free;
+pub use crate::src::src::malloc::sqlite3_malloc;
 
 pub use crate::src::headers::stdlib::__uint8_t;
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct MemJournal {
     pub pMethod: *const crate::src::headers::sqlite3_h::sqlite3_io_methods,
     pub nChunkSize: ::core::ffi::c_int,
@@ -28,14 +34,12 @@ pub struct MemJournal {
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct FilePoint {
     pub iOffset: crate::src::headers::sqlite3_h::sqlite3_int64,
     pub pChunk: *mut FileChunk,
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct FileChunk {
     pub pNext: *mut FileChunk,
     pub zChunk: [crate::src::ext::rtree::rtree::u8_0; 8],
@@ -50,7 +54,8 @@ unsafe extern "C" fn memjrnlRead(
     mut iOfst: crate::src::headers::sqlite3_h::sqlite_int64,
 ) -> ::core::ffi::c_int {
     let mut p: *mut MemJournal = pJfd as *mut MemJournal;
-    let mut zOut: *mut crate::src::ext::rtree::rtree::u8_0 = zBuf as *mut crate::src::ext::rtree::rtree::u8_0;
+    let mut zOut: *mut crate::src::ext::rtree::rtree::u8_0 =
+        zBuf as *mut crate::src::ext::rtree::rtree::u8_0;
     let mut nRead: ::core::ffi::c_int = iAmt;
     let mut iChunkOffset: ::core::ffi::c_int = 0;
     let mut pChunk: *mut FileChunk = ::core::ptr::null_mut::<FileChunk>();
@@ -58,17 +63,23 @@ unsafe extern "C" fn memjrnlRead(
     if iAmt as crate::src::headers::sqlite3_h::sqlite_int64 + iOfst > __p_ref.endpoint.iOffset {
         return crate::src::headers::sqlite3_h::SQLITE_IOERR_SHORT_READ_1;
     }
-    if __p_ref.readpoint.iOffset != iOfst || iOfst == 0 as crate::src::headers::sqlite3_h::sqlite_int64 {
-        let mut iOff: crate::src::headers::sqlite3_h::sqlite3_int64 = 0 as crate::src::headers::sqlite3_h::sqlite3_int64;
+    if __p_ref.readpoint.iOffset != iOfst
+        || iOfst == 0 as crate::src::headers::sqlite3_h::sqlite_int64
+    {
+        let mut iOff: crate::src::headers::sqlite3_h::sqlite3_int64 =
+            0 as crate::src::headers::sqlite3_h::sqlite3_int64;
         pChunk = __p_ref.pFirst;
-        while !pChunk.is_null() && iOff + __p_ref.nChunkSize as crate::src::headers::sqlite3_h::sqlite3_int64 <= iOfst {
+        while !pChunk.is_null()
+            && iOff + __p_ref.nChunkSize as crate::src::headers::sqlite3_h::sqlite3_int64 <= iOfst
+        {
             iOff += __p_ref.nChunkSize as crate::src::headers::sqlite3_h::sqlite3_int64;
             pChunk = (*pChunk).pNext;
         }
     } else {
         pChunk = __p_ref.readpoint.pChunk;
     }
-    iChunkOffset = (iOfst % __p_ref.nChunkSize as crate::src::headers::sqlite3_h::sqlite_int64) as ::core::ffi::c_int;
+    iChunkOffset = (iOfst % __p_ref.nChunkSize as crate::src::headers::sqlite3_h::sqlite_int64)
+        as ::core::ffi::c_int;
     loop {
         let mut iSpace: ::core::ffi::c_int = __p_ref.nChunkSize - iChunkOffset;
         let mut nCopy: ::core::ffi::c_int = if nRead < __p_ref.nChunkSize - iChunkOffset {
@@ -77,10 +88,11 @@ unsafe extern "C" fn memjrnlRead(
             __p_ref.nChunkSize - iChunkOffset
         };
         ::core::ptr::copy_nonoverlapping(
-                    (&raw mut (*pChunk).zChunk as *mut crate::src::ext::rtree::rtree::u8_0).offset(iChunkOffset as isize) as *const u8,
-                    zOut as *mut u8,
-                    nCopy as usize,
-                );
+            (&raw mut (*pChunk).zChunk as *mut crate::src::ext::rtree::rtree::u8_0)
+                .offset(iChunkOffset as isize) as *const u8,
+            zOut as *mut u8,
+            nCopy as usize,
+        );
         zOut = zOut.offset(nCopy as isize);
         nRead -= iSpace;
         iChunkOffset = 0 as ::core::ffi::c_int;
@@ -116,7 +128,8 @@ unsafe extern "C" fn memjrnlFreeChunks(mut pFirst: *mut FileChunk) {
 
 unsafe extern "C" fn memjrnlCreateFile(mut p: *mut MemJournal) -> ::core::ffi::c_int {
     let mut rc: ::core::ffi::c_int = 0;
-    let mut pReal: *mut crate::src::headers::sqlite3_h::sqlite3_file = p as *mut crate::src::headers::sqlite3_h::sqlite3_file;
+    let mut pReal: *mut crate::src::headers::sqlite3_h::sqlite3_file =
+        p as *mut crate::src::headers::sqlite3_h::sqlite3_file;
     let mut copy: MemJournal = *p;
     ::libc::memset(
         p as *mut ::core::ffi::c_void,
@@ -124,27 +137,27 @@ unsafe extern "C" fn memjrnlCreateFile(mut p: *mut MemJournal) -> ::core::ffi::c
         ::core::mem::size_of::<MemJournal>() as crate::__stddef_size_t_h::size_t,
     );
     rc = crate::src::src::os::sqlite3OsOpen(
-        
         copy.pVfs as *mut crate::src::headers::sqlite3_h::sqlite3_vfs,
         copy.zJournal,
-        
         pReal as *mut crate::src::headers::sqlite3_h::sqlite3_file,
         copy.flags,
         ::core::ptr::null_mut::<::core::ffi::c_int>(),
     );
     if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
         let mut nChunk: ::core::ffi::c_int = copy.nChunkSize;
-        let mut iOff: crate::src::ext::rtree::rtree::i64_0 = 0 as crate::src::ext::rtree::rtree::i64_0;
+        let mut iOff: crate::src::ext::rtree::rtree::i64_0 =
+            0 as crate::src::ext::rtree::rtree::i64_0;
         let mut pIter: *mut FileChunk = ::core::ptr::null_mut::<FileChunk>();
         pIter = copy.pFirst;
         while !pIter.is_null() {
             if iOff + nChunk as crate::src::ext::rtree::rtree::i64_0 > copy.endpoint.iOffset {
-                nChunk = (copy.endpoint.iOffset as crate::src::ext::rtree::rtree::i64_0 - iOff) as ::core::ffi::c_int;
+                nChunk = (copy.endpoint.iOffset as crate::src::ext::rtree::rtree::i64_0 - iOff)
+                    as ::core::ffi::c_int;
             }
             rc = crate::src::src::os::sqlite3OsWrite(
-                
                 pReal as *mut crate::src::headers::sqlite3_h::sqlite3_file,
-                &raw mut (*pIter).zChunk as *mut crate::src::ext::rtree::rtree::u8_0 as *const ::core::ffi::c_void,
+                &raw mut (*pIter).zChunk as *mut crate::src::ext::rtree::rtree::u8_0
+                    as *const ::core::ffi::c_void,
                 nChunk,
                 iOff,
             );
@@ -159,7 +172,9 @@ unsafe extern "C" fn memjrnlCreateFile(mut p: *mut MemJournal) -> ::core::ffi::c
         }
     }
     if rc != crate::src::headers::sqlite3_h::SQLITE_OK {
-        crate::src::src::os::sqlite3OsClose(pReal as *mut crate::src::headers::sqlite3_h::sqlite3_file);
+        crate::src::src::os::sqlite3OsClose(
+            pReal as *mut crate::src::headers::sqlite3_h::sqlite3_file,
+        );
         *p = copy;
     }
     rc
@@ -173,22 +188,32 @@ unsafe extern "C" fn memjrnlWrite(
 ) -> ::core::ffi::c_int {
     let mut p: *mut MemJournal = pJfd as *mut MemJournal;
     let mut nWrite: ::core::ffi::c_int = iAmt;
-    let mut zWrite: *mut crate::src::ext::rtree::rtree::u8_0 = zBuf as *mut crate::src::ext::rtree::rtree::u8_0;
+    let mut zWrite: *mut crate::src::ext::rtree::rtree::u8_0 =
+        zBuf as *mut crate::src::ext::rtree::rtree::u8_0;
     if (*p).nSpill > 0 as ::core::ffi::c_int
-        && iAmt as crate::src::headers::sqlite3_h::sqlite_int64 + iOfst > (*p).nSpill as crate::src::headers::sqlite3_h::sqlite_int64
+        && iAmt as crate::src::headers::sqlite3_h::sqlite_int64 + iOfst
+            > (*p).nSpill as crate::src::headers::sqlite3_h::sqlite_int64
     {
         let mut rc: ::core::ffi::c_int = memjrnlCreateFile(p);
         if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
-            rc = crate::src::src::os::sqlite3OsWrite(pJfd as *mut crate::src::headers::sqlite3_h::sqlite3_file, zBuf, iAmt, iOfst as crate::src::ext::rtree::rtree::i64_0);
+            rc = crate::src::src::os::sqlite3OsWrite(
+                pJfd as *mut crate::src::headers::sqlite3_h::sqlite3_file,
+                zBuf,
+                iAmt,
+                iOfst as crate::src::ext::rtree::rtree::i64_0,
+            );
         }
         return rc;
     } else {
-        if iOfst > 0 as crate::src::headers::sqlite3_h::sqlite_int64 && iOfst != (*p).endpoint.iOffset {
+        if iOfst > 0 as crate::src::headers::sqlite3_h::sqlite_int64
+            && iOfst != (*p).endpoint.iOffset
+        {
             memjrnlTruncate(pJfd, iOfst);
         }
         if iOfst == 0 as crate::src::headers::sqlite3_h::sqlite_int64 && !(*p).pFirst.is_null() {
             ::libc::memcpy(
-                &raw mut (*(*p).pFirst).zChunk as *mut crate::src::ext::rtree::rtree::u8_0 as *mut ::core::ffi::c_void,
+                &raw mut (*(*p).pFirst).zChunk as *mut crate::src::ext::rtree::rtree::u8_0
+                    as *mut ::core::ffi::c_void,
                 zBuf,
                 iAmt as crate::__stddef_size_t_h::size_t,
             );
@@ -224,7 +249,8 @@ unsafe extern "C" fn memjrnlWrite(
                 }
                 ::core::ptr::copy_nonoverlapping(
                     zWrite as *const u8,
-                    (&raw mut (*pChunk).zChunk as *mut crate::src::ext::rtree::rtree::u8_0).offset(iChunkOffset as isize) as *mut u8,
+                    (&raw mut (*pChunk).zChunk as *mut crate::src::ext::rtree::rtree::u8_0)
+                        .offset(iChunkOffset as isize) as *mut u8,
                     iSpace as usize,
                 );
                 zWrite = zWrite.offset(iSpace as isize);
@@ -248,7 +274,8 @@ unsafe extern "C" fn memjrnlTruncate(
             memjrnlFreeChunks(__p_ref.pFirst);
             __p_ref.pFirst = ::core::ptr::null_mut::<FileChunk>();
         } else {
-            let mut iOff: crate::src::ext::rtree::rtree::i64_0 = __p_ref.nChunkSize as crate::src::ext::rtree::rtree::i64_0;
+            let mut iOff: crate::src::ext::rtree::rtree::i64_0 =
+                __p_ref.nChunkSize as crate::src::ext::rtree::rtree::i64_0;
             pIter = __p_ref.pFirst;
             while !pIter.is_null() && iOff < size {
                 iOff += __p_ref.nChunkSize as crate::src::ext::rtree::rtree::i64_0;
@@ -267,7 +294,9 @@ unsafe extern "C" fn memjrnlTruncate(
     crate::src::headers::sqlite3_h::SQLITE_OK
 }
 
-unsafe extern "C" fn memjrnlClose(mut pJfd: *mut crate::src::headers::sqlite3_h::sqlite3_file) -> ::core::ffi::c_int {
+unsafe extern "C" fn memjrnlClose(
+    mut pJfd: *mut crate::src::headers::sqlite3_h::sqlite3_file,
+) -> ::core::ffi::c_int {
     let mut p: *mut MemJournal = pJfd as *mut MemJournal;
     memjrnlFreeChunks((*p).pFirst);
     crate::src::headers::sqlite3_h::SQLITE_OK
@@ -291,9 +320,14 @@ unsafe extern "C" fn memjrnlFileSize(
 
 static mut MemJournalMethods: crate::src::headers::sqlite3_h::sqlite3_io_methods = {
     crate::src::headers::sqlite3_h::sqlite3_io_methods {
-    iVersion:  1 as ::core::ffi::c_int,
-    xClose:  Some(memjrnlClose as unsafe extern "C" fn(*mut crate::src::headers::sqlite3_h::sqlite3_file) -> ::core::ffi::c_int),
-    xRead:  Some(
+        iVersion: 1 as ::core::ffi::c_int,
+        xClose: Some(
+            memjrnlClose
+                as unsafe extern "C" fn(
+                    *mut crate::src::headers::sqlite3_h::sqlite3_file,
+                ) -> ::core::ffi::c_int,
+        ),
+        xRead: Some(
             memjrnlRead
                 as unsafe extern "C" fn(
                     *mut crate::src::headers::sqlite3_h::sqlite3_file,
@@ -302,7 +336,7 @@ static mut MemJournalMethods: crate::src::headers::sqlite3_h::sqlite3_io_methods
                     crate::src::headers::sqlite3_h::sqlite_int64,
                 ) -> ::core::ffi::c_int,
         ),
-    xWrite:  Some(
+        xWrite: Some(
             memjrnlWrite
                 as unsafe extern "C" fn(
                     *mut crate::src::headers::sqlite3_h::sqlite3_file,
@@ -311,34 +345,40 @@ static mut MemJournalMethods: crate::src::headers::sqlite3_h::sqlite3_io_methods
                     crate::src::headers::sqlite3_h::sqlite_int64,
                 ) -> ::core::ffi::c_int,
         ),
-    xTruncate:  Some(
+        xTruncate: Some(
             memjrnlTruncate
-                as unsafe extern "C" fn(*mut crate::src::headers::sqlite3_h::sqlite3_file, crate::src::headers::sqlite3_h::sqlite_int64) -> ::core::ffi::c_int,
+                as unsafe extern "C" fn(
+                    *mut crate::src::headers::sqlite3_h::sqlite3_file,
+                    crate::src::headers::sqlite3_h::sqlite_int64,
+                ) -> ::core::ffi::c_int,
         ),
-    xSync:  Some(
+        xSync: Some(
             memjrnlSync
                 as unsafe extern "C" fn(
                     *mut crate::src::headers::sqlite3_h::sqlite3_file,
                     ::core::ffi::c_int,
                 ) -> ::core::ffi::c_int,
         ),
-    xFileSize:  Some(
+        xFileSize: Some(
             memjrnlFileSize
-                as unsafe extern "C" fn(*mut crate::src::headers::sqlite3_h::sqlite3_file, *mut crate::src::headers::sqlite3_h::sqlite_int64) -> ::core::ffi::c_int,
+                as unsafe extern "C" fn(
+                    *mut crate::src::headers::sqlite3_h::sqlite3_file,
+                    *mut crate::src::headers::sqlite3_h::sqlite_int64,
+                ) -> ::core::ffi::c_int,
         ),
-    xLock:  None,
-    xUnlock:  None,
-    xCheckReservedLock:  None,
-    xFileControl:  None,
-    xSectorSize:  None,
-    xDeviceCharacteristics:  None,
-    xShmMap:  None,
-    xShmLock:  None,
-    xShmBarrier:  None,
-    xShmUnmap:  None,
-    xFetch:  None,
-    xUnfetch:  None,
-}
+        xLock: None,
+        xUnlock: None,
+        xCheckReservedLock: None,
+        xFileControl: None,
+        xSectorSize: None,
+        xDeviceCharacteristics: None,
+        xShmMap: None,
+        xShmLock: None,
+        xShmBarrier: None,
+        xShmUnmap: None,
+        xFetch: None,
+        xUnfetch: None,
+    }
 };
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
@@ -357,10 +397,8 @@ pub unsafe extern "C" fn sqlite3JournalOpen(
     );
     if nSpill == 0 as ::core::ffi::c_int {
         return crate::src::src::os::sqlite3OsOpen(
-            
             pVfs as *mut crate::src::headers::sqlite3_h::sqlite3_vfs,
             zName,
-            
             pJfd as *mut crate::src::headers::sqlite3_h::sqlite3_file,
             flags,
             ::core::ptr::null_mut::<::core::ffi::c_int>(),
@@ -374,8 +412,9 @@ pub unsafe extern "C" fn sqlite3JournalOpen(
             .wrapping_sub(::core::mem::size_of::<FileChunk>() as usize)
             as ::core::ffi::c_int;
     }
-    (*pJfd).pMethods =
-        &raw const MemJournalMethods as *const crate::src::headers::sqlite3_h::sqlite3_io_methods as *const crate::src::headers::sqlite3_h::sqlite3_io_methods;
+    (*pJfd).pMethods = &raw const MemJournalMethods
+        as *const crate::src::headers::sqlite3_h::sqlite3_io_methods
+        as *const crate::src::headers::sqlite3_h::sqlite3_io_methods;
     __p_ref.nSpill = nSpill;
     __p_ref.flags = flags;
     __p_ref.zJournal = zName;
@@ -384,7 +423,9 @@ pub unsafe extern "C" fn sqlite3JournalOpen(
 }
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
-pub unsafe extern "C" fn sqlite3MemJournalOpen(mut pJfd: *mut crate::src::headers::sqlite3_h::sqlite3_file) {
+pub unsafe extern "C" fn sqlite3MemJournalOpen(
+    mut pJfd: *mut crate::src::headers::sqlite3_h::sqlite3_file,
+) {
     sqlite3JournalOpen(
         ::core::ptr::null_mut::<crate::src::headers::sqlite3_h::sqlite3_vfs>(),
         ::core::ptr::null::<::core::ffi::c_char>(),
@@ -395,12 +436,14 @@ pub unsafe extern "C" fn sqlite3MemJournalOpen(mut pJfd: *mut crate::src::header
 }
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
-pub unsafe extern "C" fn sqlite3JournalIsInMemory(mut p: *mut crate::src::headers::sqlite3_h::sqlite3_file) -> ::core::ffi::c_int {
+pub unsafe extern "C" fn sqlite3JournalIsInMemory(
+    mut p: *mut crate::src::headers::sqlite3_h::sqlite3_file,
+) -> ::core::ffi::c_int {
     ((*p).pMethods == &raw const MemJournalMethods) as ::core::ffi::c_int
 }
-#[cfg_attr(feature = "test", unsafe(no_mangle))]
-
-pub unsafe extern "C" fn sqlite3JournalSize(mut pVfs: *mut crate::src::headers::sqlite3_h::sqlite3_vfs) -> ::core::ffi::c_int {
+pub unsafe extern "C" fn sqlite3JournalSize(
+    mut pVfs: *mut crate::src::headers::sqlite3_h::sqlite3_vfs,
+) -> ::core::ffi::c_int {
     if (*pVfs).szOsFile > ::core::mem::size_of::<MemJournal>() as ::core::ffi::c_int {
         (*pVfs).szOsFile
     } else {

@@ -77,7 +77,6 @@ pub const SQLITE_DEFAULT_MMAP_SIZE: ::core::ffi::c_int = 0 as ::core::ffi::c_int
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct BusyHandler {
     pub xBusyHandler: Option<
         unsafe extern "C" fn(*mut ::core::ffi::c_void, ::core::ffi::c_int) -> ::core::ffi::c_int,
@@ -106,8 +105,9 @@ pub type StrAccum = crate::src::headers::sqliteInt_h::sqlite3_str;
 
 pub type Bitmask = crate::src::ext::rtree::rtree::u64_0;
 
-pub const BMS: ::core::ffi::c_int = (::core::mem::size_of::<crate::src::headers::sqliteInt_h::Bitmask>() as usize)
-    .wrapping_mul(8 as usize) as ::core::ffi::c_int;
+pub const BMS: ::core::ffi::c_int =
+    (::core::mem::size_of::<crate::src::headers::sqliteInt_h::Bitmask>() as usize)
+        .wrapping_mul(8 as usize) as ::core::ffi::c_int;
 
 pub const ALLBITS: crate::src::headers::sqliteInt_h::Bitmask =
     -(1 as ::core::ffi::c_int) as crate::src::headers::sqliteInt_h::Bitmask;
@@ -122,7 +122,6 @@ pub const SQLITE_DEFAULT_SYNCHRONOUS: ::core::ffi::c_int = 2 as ::core::ffi::c_i
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct Db {
     pub zDbSName: *mut ::core::ffi::c_char,
     pub pBt: *mut crate::src::headers::btreeInt_h::Btree,
@@ -133,7 +132,6 @@ pub struct Db {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct Schema {
     pub schema_cookie: ::core::ffi::c_int,
     pub iGeneration: ::core::ffi::c_int,
@@ -159,7 +157,6 @@ pub const SQLITE_N_LIMIT: ::core::ffi::c_int =
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct Lookaside {
     pub bDisable: crate::src::ext::rtree::rtree::u32_0,
     pub sz: crate::src::fts5::u16_0,
@@ -179,7 +176,6 @@ pub struct Lookaside {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct LookasideSlot {
     pub pNext: *mut crate::src::headers::sqliteInt_h::LookasideSlot,
 }
@@ -190,7 +186,6 @@ pub const SQLITE_FUNC_HASH_SZ: ::core::ffi::c_int = 23 as ::core::ffi::c_int;
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct FuncDefHash {
     pub a: [*mut crate::src::headers::sqliteInt_h::FuncDef; 23],
 }
@@ -217,7 +212,6 @@ pub const SQLITE_MAX_DB: ::core::ffi::c_int =
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct sqlite3 {
     pub pVfs: *mut crate::src::headers::sqlite3_h::sqlite3_vfs,
     pub pVdbe: *mut crate::src::headers::vdbeInt_h::Vdbe,
@@ -370,7 +364,6 @@ pub struct sqlite3 {
 
 #[derive(Copy, Clone, BitfieldStruct)]
 #[repr(C)]
-
 pub struct sqlite3InitInfo {
     pub newTnum: crate::src::src::pager::Pgno,
     pub iDb: crate::src::ext::rtree::rtree::u8_0,
@@ -386,7 +379,6 @@ pub struct sqlite3InitInfo {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub union __anon_union_0 {
     pub xLegacy:
         Option<unsafe extern "C" fn(*mut ::core::ffi::c_void, *const ::core::ffi::c_char) -> ()>,
@@ -402,7 +394,6 @@ pub union __anon_union_0 {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub union __anon_union_1 {
     pub isInterrupted: ::core::ffi::c_int,
     pub notUsed1: ::core::ffi::c_double,
@@ -524,7 +515,6 @@ pub const SQLITE_STATE_ZOMBIE: ::core::ffi::c_int = 0xa7 as ::core::ffi::c_int;
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct FuncDef {
     pub nArg: crate::src::fts5::i16_0,
     pub funcFlags: crate::src::ext::rtree::rtree::u32_0,
@@ -537,8 +527,10 @@ pub struct FuncDef {
             *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
         ) -> (),
     >,
-    pub xFinalize: Option<unsafe extern "C" fn(*mut crate::src::headers::vdbeInt_h::sqlite3_context) -> ()>,
-    pub xValue: Option<unsafe extern "C" fn(*mut crate::src::headers::vdbeInt_h::sqlite3_context) -> ()>,
+    pub xFinalize:
+        Option<unsafe extern "C" fn(*mut crate::src::headers::vdbeInt_h::sqlite3_context) -> ()>,
+    pub xValue:
+        Option<unsafe extern "C" fn(*mut crate::src::headers::vdbeInt_h::sqlite3_context) -> ()>,
     pub xInverse: Option<
         unsafe extern "C" fn(
             *mut crate::src::headers::vdbeInt_h::sqlite3_context,
@@ -552,7 +544,6 @@ pub struct FuncDef {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub union __anon_union_2 {
     pub pHash: *mut crate::src::headers::sqliteInt_h::FuncDef,
     pub pDestructor: *mut crate::src::headers::sqliteInt_h::FuncDestructor,
@@ -560,7 +551,6 @@ pub union __anon_union_2 {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct FuncDestructor {
     pub nRef: ::core::ffi::c_int,
     pub xDestroy: Option<unsafe extern "C" fn(*mut ::core::ffi::c_void) -> ()>,
@@ -623,7 +613,6 @@ pub const INLINEFUNC_iif: ::core::ffi::c_int = 5 as ::core::ffi::c_int;
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct Savepoint {
     pub zName: *mut ::core::ffi::c_char,
     pub nDeferredCons: crate::src::ext::rtree::rtree::i64_0,
@@ -643,7 +632,6 @@ pub const SAVEPOINT_ROLLBACK_1: ::core::ffi::c_int = 2;
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct Module {
     pub pModule: *const crate::src::headers::sqlite3_h::sqlite3_module,
     pub zName: *const ::core::ffi::c_char,
@@ -655,7 +643,6 @@ pub struct Module {
 
 #[derive(Copy, Clone, BitfieldStruct)]
 #[repr(C)]
-
 pub struct Column {
     pub zCnName: *mut ::core::ffi::c_char,
     #[bitfield(name = "notNull", ty = "::core::ffi::c_uint", bits = "0..=3")]
@@ -712,7 +699,6 @@ pub const COLFLAG_NOINSERT: ::core::ffi::c_int = 0x62 as ::core::ffi::c_int;
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct CollSeq {
     pub zName: *mut ::core::ffi::c_char,
     pub enc: crate::src::ext::rtree::rtree::u8_0,
@@ -765,7 +751,6 @@ pub const SQLITE_NOTNULL: ::core::ffi::c_int = 0x90 as ::core::ffi::c_int;
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct VTable {
     pub db: *mut crate::src::headers::sqliteInt_h::sqlite3,
     pub pMod: *mut crate::src::headers::sqliteInt_h::Module,
@@ -786,7 +771,6 @@ pub const SQLITE_VTABRISK_High: ::core::ffi::c_int = 2 as ::core::ffi::c_int;
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct Table {
     pub zName: *mut ::core::ffi::c_char,
     pub aCol: *mut crate::src::headers::sqliteInt_h::Column,
@@ -811,7 +795,6 @@ pub struct Table {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub union __anon_union_3 {
     pub tab: crate::src::headers::sqliteInt_h::__anon_struct_0,
     pub view: crate::src::headers::sqliteInt_h::__anon_struct_1,
@@ -820,7 +803,6 @@ pub union __anon_union_3 {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct __anon_struct_0 {
     pub addColOffset: ::core::ffi::c_int,
     pub pFKey: *mut crate::src::headers::sqliteInt_h::FKey,
@@ -829,14 +811,12 @@ pub struct __anon_struct_0 {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct __anon_struct_1 {
     pub pSelect: *mut crate::src::headers::sqliteInt_h::Select,
 }
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct __anon_struct_2 {
     pub nArg: ::core::ffi::c_int,
     pub azArg: *mut *mut ::core::ffi::c_char,
@@ -889,7 +869,6 @@ pub const ViewCanHaveRowid: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct FKey {
     pub pFrom: *mut crate::src::headers::sqliteInt_h::Table,
     pub pNextFrom: *mut crate::src::headers::sqliteInt_h::FKey,
@@ -905,7 +884,6 @@ pub struct FKey {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct sColMap {
     pub iFrom: ::core::ffi::c_int,
     pub zCol: *mut ::core::ffi::c_char,
@@ -951,7 +929,6 @@ pub const OE_Default: ::core::ffi::c_int = 11 as ::core::ffi::c_int;
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct KeyInfo {
     pub nRef: crate::src::ext::rtree::rtree::u32_0,
     pub enc: crate::src::ext::rtree::rtree::u8_0,
@@ -968,7 +945,6 @@ pub const KEYINFO_ORDER_BIGNULL: ::core::ffi::c_int = 0x2 as ::core::ffi::c_int;
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct UnpackedRecord {
     pub pKeyInfo: *mut crate::src::headers::sqliteInt_h::KeyInfo,
     pub aMem: *mut crate::src::src::vdbe::Mem,
@@ -984,7 +960,6 @@ pub struct UnpackedRecord {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub union __anon_union_4 {
     pub z: *mut ::core::ffi::c_char,
     pub i: crate::src::ext::rtree::rtree::i64_0,
@@ -997,10 +972,8 @@ pub struct CCurHint {
     pub iIdxCur: ::core::ffi::c_int,
     pub pIdx: *mut Index,
 }
-
 #[derive(Copy, Clone, BitfieldStruct)]
 #[repr(C)]
-
 pub struct Index {
     pub zName: *mut ::core::ffi::c_char,
     pub aiColumn: *mut crate::src::fts5::i16_0,
@@ -1050,7 +1023,6 @@ pub const XN_EXPR: ::core::ffi::c_int = -(2 as ::core::ffi::c_int);
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct Token {
     pub z: *const ::core::ffi::c_char,
     pub n: ::core::ffi::c_uint,
@@ -1073,10 +1045,8 @@ pub struct AggInfo {
     pub nFunc: ::core::ffi::c_int,
     pub selId: crate::src::ext::rtree::rtree::u32_0,
 }
-
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct AggInfo_col {
     pub pTab: *mut crate::src::headers::sqliteInt_h::Table,
     pub pCExpr: *mut crate::src::headers::sqliteInt_h::Expr,
@@ -1087,7 +1057,6 @@ pub struct AggInfo_col {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct AggInfo_func {
     pub pFExpr: *mut crate::src::headers::sqliteInt_h::Expr,
     pub pFunc: *mut crate::src::headers::sqliteInt_h::FuncDef,
@@ -1103,7 +1072,6 @@ pub type ynVar = crate::src::fts5::i16_0;
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct Expr {
     pub op: crate::src::ext::rtree::rtree::u8_0,
     pub affExpr: ::core::ffi::c_char,
@@ -1124,7 +1092,6 @@ pub struct Expr {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub union __anon_union_5 {
     pub zToken: *mut ::core::ffi::c_char,
     pub iValue: ::core::ffi::c_int,
@@ -1132,7 +1099,6 @@ pub union __anon_union_5 {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub union __anon_union_6 {
     pub pList: *mut crate::src::headers::sqliteInt_h::ExprList,
     pub pSelect: *mut crate::src::headers::sqliteInt_h::Select,
@@ -1140,7 +1106,6 @@ pub union __anon_union_6 {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub union __anon_union_7 {
     pub iJoin: ::core::ffi::c_int,
     pub iOfst: ::core::ffi::c_int,
@@ -1148,7 +1113,6 @@ pub union __anon_union_7 {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub union __anon_union_8 {
     pub pTab: *mut crate::src::headers::sqliteInt_h::Table,
     pub pWin: *mut crate::src::headers::sqliteInt_h::Window,
@@ -1158,7 +1122,6 @@ pub union __anon_union_8 {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct __anon_struct_3 {
     pub iAddr: ::core::ffi::c_int,
     pub regReturn: ::core::ffi::c_int,
@@ -1224,7 +1187,6 @@ pub const EXPRDUP_REDUCE: ::core::ffi::c_int = 0x1 as ::core::ffi::c_int;
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct ExprList {
     pub nExpr: ::core::ffi::c_int,
     pub nAlloc: ::core::ffi::c_int,
@@ -1233,7 +1195,6 @@ pub struct ExprList {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct ExprList_item {
     pub pExpr: *mut crate::src::headers::sqliteInt_h::Expr,
     pub zEName: *mut ::core::ffi::c_char,
@@ -1243,7 +1204,6 @@ pub struct ExprList_item {
 
 #[derive(Copy, Clone, BitfieldStruct)]
 #[repr(C)]
-
 pub struct __anon_struct_4 {
     pub sortFlags: crate::src::ext::rtree::rtree::u8_0,
     #[bitfield(name = "eEName", ty = "::core::ffi::c_uint", bits = "0..=1")]
@@ -1261,7 +1221,6 @@ pub struct __anon_struct_4 {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub union __anon_union_9 {
     pub x: crate::src::headers::sqliteInt_h::__anon_struct_5,
     pub iConstExprReg: ::core::ffi::c_int,
@@ -1269,7 +1228,6 @@ pub union __anon_union_9 {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct __anon_struct_5 {
     pub iOrderByCol: crate::src::fts5::u16_0,
     pub iAlias: crate::src::fts5::u16_0,
@@ -1285,7 +1243,6 @@ pub const ENAME_ROWID: ::core::ffi::c_int = 3 as ::core::ffi::c_int;
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct IdList {
     pub nId: ::core::ffi::c_int,
     pub a: [crate::src::headers::sqliteInt_h::IdList_item; 0],
@@ -1293,14 +1250,12 @@ pub struct IdList {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct IdList_item {
     pub zName: *mut ::core::ffi::c_char,
 }
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct Subquery {
     pub pSelect: *mut crate::src::headers::sqliteInt_h::Select,
     pub addrFillSub: ::core::ffi::c_int,
@@ -1310,7 +1265,6 @@ pub struct Subquery {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct SrcItem {
     pub zName: *mut ::core::ffi::c_char,
     pub zAlias: *mut ::core::ffi::c_char,
@@ -1326,7 +1280,6 @@ pub struct SrcItem {
 
 #[derive(Copy, Clone, BitfieldStruct)]
 #[repr(C)]
-
 pub struct __anon_struct_6 {
     pub jointype: crate::src::ext::rtree::rtree::u8_0,
     #[bitfield(name = "notIndexed", ty = "::core::ffi::c_uint", bits = "0..=0")]
@@ -1354,7 +1307,6 @@ pub struct __anon_struct_6 {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub union __anon_union_10 {
     pub zIndexedBy: *mut ::core::ffi::c_char,
     pub pFuncArg: *mut crate::src::headers::sqliteInt_h::ExprList,
@@ -1363,7 +1315,6 @@ pub union __anon_union_10 {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub union __anon_union_11 {
     pub pIBIndex: *mut crate::src::headers::sqliteInt_h::Index,
     pub pCteUse: *mut crate::src::headers::sqliteInt_h::CteUse,
@@ -1371,7 +1322,6 @@ pub union __anon_union_11 {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub union __anon_union_12 {
     pub pOn: *mut crate::src::headers::sqliteInt_h::Expr,
     pub pUsing: *mut crate::src::headers::sqliteInt_h::IdList,
@@ -1379,7 +1329,6 @@ pub union __anon_union_12 {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub union __anon_union_13 {
     pub pSchema: *mut crate::src::headers::sqliteInt_h::Schema,
     pub zDatabase: *mut ::core::ffi::c_char,
@@ -1388,7 +1337,6 @@ pub union __anon_union_13 {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct OnOrUsing {
     pub pOn: *mut crate::src::headers::sqliteInt_h::Expr,
     pub pUsing: *mut crate::src::headers::sqliteInt_h::IdList,
@@ -1396,15 +1344,14 @@ pub struct OnOrUsing {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct SrcList {
     pub nSrc: ::core::ffi::c_int,
     pub nAlloc: crate::src::ext::rtree::rtree::u32_0,
     pub a: [crate::src::headers::sqliteInt_h::SrcItem; 0],
 }
 
-pub const SZ_SRCLIST_1: usize =
-    (8 as usize).wrapping_add(::core::mem::size_of::<crate::src::headers::sqliteInt_h::SrcItem>() as usize);
+pub const SZ_SRCLIST_1: usize = (8 as usize)
+    .wrapping_add(::core::mem::size_of::<crate::src::headers::sqliteInt_h::SrcItem>() as usize);
 
 pub const JT_INNER: ::core::ffi::c_int = 0x1 as ::core::ffi::c_int;
 
@@ -1464,7 +1411,6 @@ pub const WHERE_DISTINCT_UNORDERED: ::core::ffi::c_int = 3 as ::core::ffi::c_int
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct NameContext {
     pub pParse: *mut crate::src::headers::sqliteInt_h::Parse,
     pub pSrcList: *mut crate::src::headers::sqliteInt_h::SrcList,
@@ -1479,7 +1425,6 @@ pub struct NameContext {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub union __anon_union_14 {
     pub pEList: *mut crate::src::headers::sqliteInt_h::ExprList,
     pub pAggInfo: *mut crate::src::headers::sqliteInt_h::AggInfo,
@@ -1529,7 +1474,6 @@ pub const NC_OrderAgg: ::core::ffi::c_int = 0x8000000 as ::core::ffi::c_int;
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct Upsert {
     pub pUpsertTarget: *mut crate::src::headers::sqliteInt_h::ExprList,
     pub pUpsertTargetWhere: *mut crate::src::headers::sqliteInt_h::Expr,
@@ -1548,7 +1492,6 @@ pub struct Upsert {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct Select {
     pub op: crate::src::ext::rtree::rtree::u8_0,
     pub nSelectRow: crate::src::headers::sqliteInt_h::LogEst,
@@ -1667,7 +1610,6 @@ pub const SRT_Upfrom_1: ::core::ffi::c_int = 15 as ::core::ffi::c_int;
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct SelectDest {
     pub eDest: crate::src::ext::rtree::rtree::u8_0,
     pub iSDParm: ::core::ffi::c_int,
@@ -1680,7 +1622,6 @@ pub struct SelectDest {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct AutoincInfo {
     pub pNext: *mut crate::src::headers::sqliteInt_h::AutoincInfo,
     pub pTab: *mut crate::src::headers::sqliteInt_h::Table,
@@ -1690,7 +1631,6 @@ pub struct AutoincInfo {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct TriggerPrg {
     pub pTrigger: *mut crate::src::headers::sqliteInt_h::Trigger,
     pub pNext: *mut crate::src::headers::sqliteInt_h::TriggerPrg,
@@ -1703,7 +1643,6 @@ pub type yDbMask = ::core::ffi::c_uint;
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct IndexedExpr {
     pub pExpr: *mut crate::src::headers::sqliteInt_h::Expr,
     pub iDataCur: ::core::ffi::c_int,
@@ -1716,18 +1655,19 @@ pub struct IndexedExpr {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct ParseCleanup {
     pub pNext: *mut crate::src::headers::sqliteInt_h::ParseCleanup,
     pub pPtr: *mut ::core::ffi::c_void,
     pub xCleanup: Option<
-        unsafe extern "C" fn(*mut crate::src::headers::sqliteInt_h::sqlite3, *mut ::core::ffi::c_void) -> (),
+        unsafe extern "C" fn(
+            *mut crate::src::headers::sqliteInt_h::sqlite3,
+            *mut ::core::ffi::c_void,
+        ) -> (),
     >,
 }
 
 #[derive(Copy, Clone, BitfieldStruct)]
 #[repr(C)]
-
 pub struct Parse {
     pub db: *mut crate::src::headers::sqliteInt_h::sqlite3,
     pub zErrMsg: *mut ::core::ffi::c_char,
@@ -1809,7 +1749,6 @@ pub struct Parse {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub union __anon_union_15 {
     pub cr: crate::src::headers::sqliteInt_h::__anon_struct_7,
     pub d: crate::src::headers::sqliteInt_h::__anon_struct_8,
@@ -1817,7 +1756,6 @@ pub union __anon_union_15 {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct __anon_struct_7 {
     pub addrCrTab: ::core::ffi::c_int,
     pub regRowid: ::core::ffi::c_int,
@@ -1827,7 +1765,6 @@ pub struct __anon_struct_7 {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct __anon_struct_8 {
     pub pReturning: *mut crate::src::headers::sqliteInt_h::Returning,
 }
@@ -1845,12 +1782,12 @@ pub const PARSE_HDR_SZ: ::core::ffi::c_ulong =
 
 pub const PARSE_RECURSE_SZ: ::core::ffi::c_ulong = 288 as ::core::ffi::c_ulong;
 
-pub const PARSE_TAIL_SZ: usize = (::core::mem::size_of::<crate::src::headers::sqliteInt_h::Parse>() as usize)
+pub const PARSE_TAIL_SZ: usize = (::core::mem::size_of::<crate::src::headers::sqliteInt_h::Parse>()
+    as usize)
     .wrapping_sub(crate::src::headers::sqliteInt_h::PARSE_RECURSE_SZ as usize);
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct AuthContext {
     pub zAuthContext: *const ::core::ffi::c_char,
     pub pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -1892,7 +1829,6 @@ pub const OPFLAG_PREFORMAT: ::core::ffi::c_int = 0x80 as ::core::ffi::c_int;
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct Trigger {
     pub zName: *mut ::core::ffi::c_char,
     pub table: *mut ::core::ffi::c_char,
@@ -1913,7 +1849,6 @@ pub const TRIGGER_AFTER: ::core::ffi::c_int = 2 as ::core::ffi::c_int;
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct TriggerStep {
     pub op: crate::src::ext::rtree::rtree::u8_0,
     pub orconf: crate::src::ext::rtree::rtree::u8_0,
@@ -1932,7 +1867,6 @@ pub struct TriggerStep {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct Returning {
     pub pParse: *mut crate::src::headers::sqliteInt_h::Parse,
     pub pReturnEL: *mut crate::src::headers::sqliteInt_h::ExprList,
@@ -1946,7 +1880,6 @@ pub struct Returning {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct sqlite3_str {
     pub db: *mut crate::src::headers::sqliteInt_h::sqlite3,
     pub zText: *mut ::core::ffi::c_char,
@@ -1965,7 +1898,6 @@ pub const SQLITE_PRINTF_MALLOCED: ::core::ffi::c_int = 0x4 as ::core::ffi::c_int
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct RCStr {
     pub nRCRef: crate::src::ext::rtree::rtree::u64_0,
 }
@@ -1974,7 +1906,6 @@ pub type InitData = crate::src::headers::sqliteInt_h::__anon_struct_9;
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct __anon_struct_9 {
     pub db: *mut crate::src::headers::sqliteInt_h::sqlite3,
     pub pzErrMsg: *mut *mut ::core::ffi::c_char,
@@ -1995,7 +1926,6 @@ pub const INITFLAG_AlterAdd: ::core::ffi::c_int = 0x3 as ::core::ffi::c_int;
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct Sqlite3Config {
     pub bMemstat: ::core::ffi::c_int,
     pub bCoreMutex: crate::src::ext::rtree::rtree::u8_0,
@@ -2055,7 +1985,6 @@ pub struct Sqlite3Config {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct Walker {
     pub pParse: *mut crate::src::headers::sqliteInt_h::Parse,
     pub xExprCallback: Option<
@@ -2084,7 +2013,6 @@ pub struct Walker {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub union __anon_union_16 {
     pub pNC: *mut crate::src::headers::sqliteInt_h::NameContext,
     pub n: ::core::ffi::c_int,
@@ -2109,7 +2037,6 @@ pub union __anon_union_16 {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct DbFixer {
     pub pParse: *mut crate::src::headers::sqliteInt_h::Parse,
     pub w: crate::src::headers::sqliteInt_h::Walker,
@@ -2128,7 +2055,6 @@ pub const WRC_Abort: ::core::ffi::c_int = 2 as ::core::ffi::c_int;
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct Cte {
     pub zName: *mut ::core::ffi::c_char,
     pub pCols: *mut crate::src::headers::sqliteInt_h::ExprList,
@@ -2146,7 +2072,6 @@ pub const M10d_No: ::core::ffi::c_int = 2 as ::core::ffi::c_int;
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct With {
     pub nCte: ::core::ffi::c_int,
     pub bView: ::core::ffi::c_int,
@@ -2156,7 +2081,6 @@ pub struct With {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct CteUse {
     pub nUse: ::core::ffi::c_int,
     pub addrM9e: ::core::ffi::c_int,
@@ -2168,7 +2092,6 @@ pub struct CteUse {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct DbClientData {
     pub pNext: *mut crate::src::headers::sqliteInt_h::DbClientData,
     pub pData: *mut ::core::ffi::c_void,
@@ -2178,7 +2101,6 @@ pub struct DbClientData {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct Window {
     pub zName: *mut ::core::ffi::c_char,
     pub zBase: *mut ::core::ffi::c_char,
@@ -2212,7 +2134,8 @@ pub struct Window {
 
 pub const SQLITE_NOMEM_BKPT: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_NOMEM;
 
-pub const SQLITE_IOERR_NOMEM_BKPT: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_IOERR_NOMEM;
+pub const SQLITE_IOERR_NOMEM_BKPT: ::core::ffi::c_int =
+    crate::src::headers::sqlite3_h::SQLITE_IOERR_NOMEM;
 
 pub const EXP754: crate::src::ext::rtree::rtree::u64_0 = (0x7ff as ::core::ffi::c_int
     as crate::src::ext::rtree::rtree::u64_0)
@@ -2224,7 +2147,6 @@ pub const MAN754: crate::src::ext::rtree::rtree::u64_0 =
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct PrintfArguments {
     pub nArg: ::core::ffi::c_int,
     pub nUsed: ::core::ffi::c_int,
@@ -2233,7 +2155,6 @@ pub struct PrintfArguments {
 
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct FpDecode {
     pub sign: ::core::ffi::c_char,
     pub isSpecial: ::core::ffi::c_char,

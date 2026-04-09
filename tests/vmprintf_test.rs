@@ -6,8 +6,8 @@ use core::ffi::{c_char, c_int, c_void};
 use std::ffi::{CStr, CString};
 
 // Use functions through the crate's module system
-use sqlite_noamalgam::src::src::main::{sqlite3_open, sqlite3_close_v2 as sqlite3_close};
 use sqlite_noamalgam::src::src::legacy::sqlite3_exec;
+use sqlite_noamalgam::src::src::main::{sqlite3_close_v2 as sqlite3_close, sqlite3_open};
 use sqlite_noamalgam::src::src::malloc::sqlite3_free;
 
 unsafe extern "C" {
@@ -42,19 +42,30 @@ unsafe fn exec(db: *mut c_void, sql: &str) -> Result<(), String> {
             sqlite3_free(errmsg as *mut c_void);
             s
         } else {
-            CStr::from_ptr(sqlite3_errmsg(db)).to_string_lossy().into_owned()
+            CStr::from_ptr(sqlite3_errmsg(db))
+                .to_string_lossy()
+                .into_owned()
         };
         Err(format!("rc={rc}: {msg}"))
     } else {
-        if !errmsg.is_null() { sqlite3_free(errmsg as *mut c_void); }
+        if !errmsg.is_null() {
+            sqlite3_free(errmsg as *mut c_void);
+        }
         Ok(())
     }
 }
 
 /// Collect query results as Vec<Vec<String>>
 unsafe fn query(db: *mut c_void, sql: &str) -> Vec<Vec<String>> {
-    struct Ctx { rows: Vec<Vec<String>> }
-    unsafe extern "C" fn cb(arg: *mut c_void, ncols: c_int, values: *mut *mut c_char, _names: *mut *mut c_char) -> c_int {
+    struct Ctx {
+        rows: Vec<Vec<String>>,
+    }
+    unsafe extern "C" fn cb(
+        arg: *mut c_void,
+        ncols: c_int,
+        values: *mut *mut c_char,
+        _names: *mut *mut c_char,
+    ) -> c_int {
         let ctx = unsafe { &mut *(arg as *mut Ctx) };
         let mut row = Vec::new();
         for i in 0..ncols as isize {
@@ -78,7 +89,9 @@ unsafe fn query(db: *mut c_void, sql: &str) -> Vec<Vec<String>> {
         &mut ctx as *mut Ctx as *mut c_void,
         &mut errmsg,
     );
-    if !errmsg.is_null() { sqlite3_free(errmsg as *mut c_void); }
+    if !errmsg.is_null() {
+        sqlite3_free(errmsg as *mut c_void);
+    }
     assert_eq!(rc, SQLITE_OK, "query failed: {sql}");
     ctx.rows
 }
@@ -126,19 +139,28 @@ fn vmprintf_error_messages() {
         let err = exec(db, "INSERT INTO t1 VALUES(1)");
         assert!(err.is_err());
         let msg = err.unwrap_err();
-        assert!(msg.contains("UNIQUE constraint failed"), "Expected UNIQUE error, got: {msg}");
+        assert!(
+            msg.contains("UNIQUE constraint failed"),
+            "Expected UNIQUE error, got: {msg}"
+        );
 
         // No such table
         let err = exec(db, "SELECT * FROM nonexistent_table");
         assert!(err.is_err());
         let msg = err.unwrap_err();
-        assert!(msg.contains("nonexistent_table"), "Expected table name in error, got: {msg}");
+        assert!(
+            msg.contains("nonexistent_table"),
+            "Expected table name in error, got: {msg}"
+        );
 
         // No such column
         let err = exec(db, "SELECT nonexistent_col FROM t1");
         assert!(err.is_err());
         let msg = err.unwrap_err();
-        assert!(msg.contains("nonexistent_col"), "Expected column name in error, got: {msg}");
+        assert!(
+            msg.contains("nonexistent_col"),
+            "Expected column name in error, got: {msg}"
+        );
 
         sqlite3_close(db as _);
     }
@@ -183,7 +205,10 @@ fn vmprintf_complex_sql_patterns() {
         assert_eq!(rows[1][0], "98");
         assert_eq!(rows[2][0], "97");
 
-        let rows = query(db, "SELECT a % 10 AS bucket, count(*) FROM t1 GROUP BY bucket ORDER BY bucket");
+        let rows = query(
+            db,
+            "SELECT a % 10 AS bucket, count(*) FROM t1 GROUP BY bucket ORDER BY bucket",
+        );
         assert_eq!(rows.len(), 10);
 
         sqlite3_close(db as _);
@@ -222,8 +247,10 @@ fn vmprintf_index_and_constraint_errors() {
         let err = exec(db, "INSERT INTO t1 VALUES(2, 'unique_val')");
         assert!(err.is_err());
         let msg = err.unwrap_err();
-        assert!(msg.contains("UNIQUE constraint failed") && msg.contains("t1.b"),
-            "Expected UNIQUE constraint error mentioning t1.b, got: {msg}");
+        assert!(
+            msg.contains("UNIQUE constraint failed") && msg.contains("t1.b"),
+            "Expected UNIQUE constraint error mentioning t1.b, got: {msg}"
+        );
 
         sqlite3_close(db as _);
     }
@@ -281,10 +308,16 @@ fn vmprintf_fts5_operations_disabled() {
         exec(db, "INSERT INTO ft VALUES('goodbye world')").unwrap();
         exec(db, "INSERT INTO ft VALUES('hello goodbye')").unwrap();
 
-        let rows = query(db, "SELECT content FROM ft WHERE ft MATCH 'hello' ORDER BY rank");
+        let rows = query(
+            db,
+            "SELECT content FROM ft WHERE ft MATCH 'hello' ORDER BY rank",
+        );
         assert_eq!(rows.len(), 2);
 
-        let rows = query(db, "SELECT content FROM ft WHERE ft MATCH 'world' ORDER BY rank");
+        let rows = query(
+            db,
+            "SELECT content FROM ft WHERE ft MATCH 'world' ORDER BY rank",
+        );
         assert_eq!(rows.len(), 2);
 
         exec(db, "INSERT INTO ft(ft) VALUES('rebuild')").unwrap();
@@ -298,12 +331,19 @@ fn vmprintf_fts5_operations_disabled() {
 fn vmprintf_rtree_operations() {
     unsafe {
         let db = open_memdb();
-        exec(db, "CREATE VIRTUAL TABLE rt USING rtree(id, x1, x2, y1, y2)").unwrap();
+        exec(
+            db,
+            "CREATE VIRTUAL TABLE rt USING rtree(id, x1, x2, y1, y2)",
+        )
+        .unwrap();
         exec(db, "INSERT INTO rt VALUES(1, 0.0, 1.0, 0.0, 1.0)").unwrap();
         exec(db, "INSERT INTO rt VALUES(2, 5.0, 6.0, 5.0, 6.0)").unwrap();
         exec(db, "INSERT INTO rt VALUES(3, 0.5, 1.5, 0.5, 1.5)").unwrap();
 
-        let rows = query(db, "SELECT id FROM rt WHERE x1 >= 0.0 AND x2 <= 2.0 AND y1 >= 0.0 AND y2 <= 2.0");
+        let rows = query(
+            db,
+            "SELECT id FROM rt WHERE x1 >= 0.0 AND x2 <= 2.0 AND y1 >= 0.0 AND y2 <= 2.0",
+        );
         assert!(rows.len() >= 1, "Expected at least one rtree result");
 
         sqlite3_close(db as _);
@@ -418,7 +458,9 @@ fn vmprintf_embedded_nul_bytes() {
     // which produces: \0\0\0\0 + mainFilePath + \0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0
     unsafe {
         let take = |p: *mut c_char| -> Vec<u8> {
-            if p.is_null() { return vec![]; }
+            if p.is_null() {
+                return vec![];
+            }
             // Can't use CStr because of embedded NULs
             // Use sqlite3_mprintf's return - we know the format produces exactly
             // 4 + len(filename) + 16 bytes
@@ -453,7 +495,9 @@ fn vmprintf_embedded_nul_bytes() {
 fn vmprintf_multiple_format_specifiers() {
     unsafe {
         let take = |p: *mut c_char| -> String {
-            if p.is_null() { return "(null)".into(); }
+            if p.is_null() {
+                return "(null)".into();
+            }
             let s = CStr::from_ptr(p).to_string_lossy().into_owned();
             sqlite3_free(p as *mut c_void);
             s
@@ -461,16 +505,32 @@ fn vmprintf_multiple_format_specifiers() {
 
         let a: *const c_char = b"hello\0".as_ptr() as _;
         let b: *const c_char = b"world\0".as_ptr() as _;
-        assert_eq!(take(sqlite3_mprintf(b"%s %s\0".as_ptr() as _, a, b)), "hello world");
+        assert_eq!(
+            take(sqlite3_mprintf(b"%s %s\0".as_ptr() as _, a, b)),
+            "hello world"
+        );
 
         assert_eq!(
-            take(sqlite3_mprintf(b"%s=%d (%.2f)\0".as_ptr() as _, a, 42i32, 3.14f64)),
+            take(sqlite3_mprintf(
+                b"%s=%d (%.2f)\0".as_ptr() as _,
+                a,
+                42i32,
+                3.14f64
+            )),
             "hello=42 (3.14)"
         );
 
-        let long_name: *const c_char = b"a_very_long_table_name_that_exceeds_the_stack_buffer_size_in_straccum_init\0".as_ptr() as _;
-        let result = take(sqlite3_mprintf(b"CREATE TABLE %s (id INT)\0".as_ptr() as _, long_name));
-        assert!(result.contains("a_very_long_table_name"), "Long string formatting failed: {result}");
+        let long_name: *const c_char =
+            b"a_very_long_table_name_that_exceeds_the_stack_buffer_size_in_straccum_init\0".as_ptr()
+                as _;
+        let result = take(sqlite3_mprintf(
+            b"CREATE TABLE %s (id INT)\0".as_ptr() as _,
+            long_name,
+        ));
+        assert!(
+            result.contains("a_very_long_table_name"),
+            "Long string formatting failed: {result}"
+        );
         assert!(result.contains("(id INT)"), "Suffix lost: {result}");
     }
 }
@@ -527,7 +587,11 @@ fn sqlfunc_printf_char_repeat_width_eq_precision() {
         let result = sql_printf(db, "printf('|%110.100c|','*')");
         let stars: String = std::iter::repeat('*').take(100).collect();
         let spaces: String = std::iter::repeat(' ').take(10).collect();
-        assert_eq!(result, format!("|{spaces}{stars}|"), "printf2-3.1: large repeat");
+        assert_eq!(
+            result,
+            format!("|{spaces}{stars}|"),
+            "printf2-3.1: large repeat"
+        );
 
         // Different characters in multi-%c
         assert_eq!(
@@ -597,11 +661,7 @@ fn sqlfunc_printf_percent_arg_alignment() {
         let db = open_memdb();
 
         // %% produces literal %, no arg consumed
-        assert_eq!(
-            sql_printf(db, "printf('100%%')"),
-            "100%",
-            "bare %%"
-        );
+        assert_eq!(sql_printf(db, "printf('100%%')"), "100%", "bare %%");
 
         // %s after %%
         assert_eq!(
@@ -642,7 +702,9 @@ fn sqlfunc_printf_dynstring_z() {
     // when the arg is null (bufpt was set to static "\0" then assigned to zExtra).
     unsafe {
         let take = |p: *mut c_char| -> String {
-            if p.is_null() { return "(null)".into(); }
+            if p.is_null() {
+                return "(null)".into();
+            }
             let s = CStr::from_ptr(p).to_string_lossy().into_owned();
             sqlite3_free(p as *mut c_void);
             s
@@ -657,7 +719,9 @@ fn sqlfunc_printf_dynstring_z() {
         // First call: %z with NULL (no prior string to free), then ,one
         let p1 = sqlite3_mprintf(
             b"%z%s%s\0".as_ptr() as _,
-            std::ptr::null::<c_char>(), sep, a,
+            std::ptr::null::<c_char>(),
+            sep,
+            a,
         );
         assert!(!p1.is_null());
         let s1 = CStr::from_ptr(p1).to_string_lossy().into_owned();

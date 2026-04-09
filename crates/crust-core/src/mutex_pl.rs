@@ -12,8 +12,8 @@
 //! Link with: -Wl,-init,tungsten_register_mutex
 
 use std::ffi::c_int;
-use std::sync::atomic::{fence, AtomicUsize, Ordering};
 use std::sync::OnceLock;
+use std::sync::atomic::{AtomicUsize, Ordering, fence};
 
 use parking_lot::ReentrantMutex;
 
@@ -73,11 +73,10 @@ const _: () = {
 // static array, with the actual ReentrantMutex initialized on first use.
 // ---------------------------------------------------------------------------
 
-#[repr(align(64))]
+#[repr(C, align(64))]
 pub struct Sqlite3Mutex {
     inner: OnceLock<ReentrantMutex<()>>,
 }
-
 impl Default for Sqlite3Mutex {
     fn default() -> Self {
         Self::new()
@@ -253,7 +252,6 @@ pub struct sqlite3_mutex_methods {
 }
 unsafe impl Send for sqlite3_mutex_methods {}
 unsafe impl Sync for sqlite3_mutex_methods {}
-
 unsafe extern "C" fn mutex_init() -> c_int {
     SQLITE_OK
 }
@@ -317,7 +315,6 @@ pub static SQLITE3_MUTEX_METHODS: sqlite3_mutex_methods = sqlite3_mutex_methods 
     xMutexHeld: mutex_held,
     xMutexNotheld: mutex_not_held,
 };
-
 // ---------------------------------------------------------------------------
 // Memory barrier for SQLite synchronization
 // ---------------------------------------------------------------------------
@@ -329,7 +326,6 @@ pub static SQLITE3_MUTEX_METHODS: sqlite3_mutex_methods = sqlite3_mutex_methods 
 pub extern "C" fn sqlite3MemoryBarrier() {
     fence(Ordering::SeqCst);
 }
-
 // ---------------------------------------------------------------------------
 // Public function for C callers to get the methods
 // ---------------------------------------------------------------------------

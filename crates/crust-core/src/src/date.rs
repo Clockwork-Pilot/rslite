@@ -1,41 +1,186 @@
-use ::c2rust_bitfields;
 use crate::printf_args;
+use ::c2rust_bitfields;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-pub use crate::src::headers::stdlib::va_list;
 pub use crate::__stddef_size_t_h::size_t;
+pub use crate::src::headers::stdlib::va_list;
 
-
-pub use crate::src::src::hash::Hash;pub use crate::src::src::hash::HashElem;pub use crate::src::src::hash::_ht;pub use crate::internal::__builtin_va_list;pub use crate::internal::__va_list_tag;
+pub use crate::internal::__builtin_va_list;
+pub use crate::internal::__va_list_tag;
+pub use crate::src::src::hash::_ht;
+pub use crate::src::src::hash::Hash;
+pub use crate::src::src::hash::HashElem;
 pub use crate::src::src::pager::Pgno;
 
-pub use crate::src::headers::vdbeInt_h::sqlite3_context;pub use crate::src::src::vdbeapi::sqlite3_context_db_handle;pub use crate::src::headers::sqlite3_h::sqlite3_destructor_type;pub use crate::src::headers::sqlite3_h::sqlite3_file;pub use crate::src::headers::sqlite3_h::sqlite3_filename;pub use crate::src::headers::sqlite3_h::sqlite3_index_constraint;pub use crate::src::headers::sqlite3_h::sqlite3_index_constraint_usage;pub use crate::src::headers::sqlite3_h::sqlite3_index_info;pub use crate::src::headers::sqlite3_h::sqlite3_index_orderby;pub use crate::src::headers::sqlite3_h::sqlite3_int64;pub use crate::src::headers::sqlite3_h::sqlite3_io_methods;pub use crate::src::headers::sqlite3_h::sqlite3_mem_methods;pub use crate::src::headers::sqlite3_h::sqlite3_module;pub use crate::src::src::mutex_unix::sqlite3_mutex;pub use crate::src::headers::sqlite3_h::sqlite3_mutex_methods;pub use crate::src::headers::sqlite3_h::sqlite3_pcache;pub use crate::src::headers::sqlite3_h::sqlite3_pcache_methods2;pub use crate::src::headers::sqlite3_h::sqlite3_pcache_page;pub use crate::src::src::vdbeapi::sqlite3_result_double;pub use crate::src::src::vdbeapi::sqlite3_result_error;pub use crate::src::src::vdbeapi::sqlite3_result_int64;pub use crate::src::src::vdbeapi::sqlite3_result_text;pub use crate::src::src::printf::sqlite3_str_append;pub use crate::src::src::printf::sqlite3_str_appendchar;pub use crate::src::src::printf::sqlite3_str_reset;pub use crate::src::src::util::sqlite3_stricmp;pub use crate::src::src::util::sqlite3_strnicmp;pub use crate::src::headers::sqlite3_h::sqlite3_syscall_ptr;pub use crate::src::headers::sqlite3_h::sqlite3_uint64;pub use crate::src::headers::vdbeInt_h::sqlite3_value;pub use crate::src::src::vdbeapi::sqlite3_value_bytes;pub use crate::src::src::vdbeapi::sqlite3_value_double;pub use crate::src::src::vdbeapi::sqlite3_value_text;pub use crate::src::src::vdbeapi::sqlite3_value_type;pub use crate::src::headers::sqlite3_h::sqlite3_vfs;pub use crate::src::headers::sqlite3_h::sqlite3_vtab;pub use crate::src::headers::sqlite3_h::sqlite3_vtab_cursor;pub use crate::src::headers::sqlite3_h::sqlite_int64;pub use crate::src::headers::sqlite3_h::sqlite_uint64;pub use crate::src::headers::sqlite3_h::SQLITE_ERROR;pub use crate::src::headers::sqlite3_h::SQLITE_FLOAT;pub use crate::src::headers::sqlite3_h::SQLITE_INTEGER;pub use crate::src::headers::sqlite3_h::SQLITE_LIMIT_LENGTH;pub use crate::src::headers::sqlite3_h::SQLITE_OK;pub use crate::src::headers::sqlite3_h::SQLITE_UTF8;pub use crate::src::headers::sqliteInt_h::__anon_struct_0;pub use crate::src::headers::sqliteInt_h::__anon_struct_1;pub use crate::src::headers::sqliteInt_h::__anon_struct_2;pub use crate::src::headers::sqliteInt_h::__anon_struct_3;pub use crate::src::headers::sqliteInt_h::__anon_struct_4;pub use crate::src::headers::sqliteInt_h::__anon_struct_5;pub use crate::src::headers::sqliteInt_h::__anon_struct_6;pub use crate::src::headers::sqliteInt_h::__anon_struct_7;pub use crate::src::headers::sqliteInt_h::__anon_struct_8;pub use crate::src::headers::sqliteInt_h::__anon_union_0;pub use crate::src::headers::sqliteInt_h::__anon_union_1;pub use crate::src::headers::sqliteInt_h::__anon_union_10;pub use crate::src::headers::sqliteInt_h::__anon_union_11;pub use crate::src::headers::sqliteInt_h::__anon_union_12;pub use crate::src::headers::sqliteInt_h::__anon_union_13;pub use crate::src::headers::sqliteInt_h::__anon_union_15;pub use crate::src::headers::sqliteInt_h::__anon_union_2;pub use crate::src::headers::sqliteInt_h::__anon_union_3;pub use crate::src::headers::sqliteInt_h::__anon_union_5;pub use crate::src::headers::sqliteInt_h::__anon_union_6;pub use crate::src::headers::sqliteInt_h::__anon_union_7;pub use crate::src::headers::sqliteInt_h::__anon_union_8;pub use crate::src::headers::sqliteInt_h::__anon_union_9;pub use crate::src::headers::sqliteInt_h::bft;pub use crate::src::fts5::i16_0;pub use crate::src::ext::rtree::rtree::i64_0;pub use crate::src::headers::sqliteInt_h::sColMap;pub use crate::src::headers::sqliteInt_h::sqlite3;pub use crate::src::src::util::sqlite3AtoF;pub use crate::src::src::global::sqlite3Config;pub use crate::src::src::global::sqlite3CtypeMap;pub use crate::src::headers::sqliteInt_h::sqlite3InitInfo;pub use crate::src::src::callback::sqlite3InsertBuiltinFuncs;pub use crate::src::src::printf::sqlite3ResultStrAccum;pub use crate::src::src::vdbeapi::sqlite3StmtCurrentTime;pub use crate::src::src::printf::sqlite3StrAccumInit;pub use crate::src::src::util::sqlite3StrICmp;pub use crate::src::src::util::sqlite3Strlen30;pub use crate::src::src::global::sqlite3UpperToLower;pub use crate::src::headers::sqliteInt_h::sqlite3_str;pub use crate::src::headers::sqliteInt_h::sqlite3_xauth;pub use crate::src::fts5::u16_0;pub use crate::src::ext::rtree::rtree::u32_0;pub use crate::src::ext::rtree::rtree::u64_0;pub use crate::src::ext::rtree::rtree::u8_0;pub use crate::src::headers::sqliteInt_h::yDbMask;pub use crate::src::headers::sqliteInt_h::ynVar;pub use crate::src::headers::sqliteInt_h::AggInfo;pub use crate::src::headers::sqliteInt_h::AggInfo_col;pub use crate::src::headers::sqliteInt_h::AggInfo_func;pub use crate::src::headers::sqliteInt_h::AutoincInfo;pub use crate::src::headers::sqliteInt_h::Bitmask;pub use crate::src::headers::sqliteInt_h::BusyHandler;pub use crate::src::headers::sqliteInt_h::CollSeq;pub use crate::src::headers::sqliteInt_h::Column;pub use crate::src::headers::sqliteInt_h::Cte;pub use crate::src::headers::sqliteInt_h::CteUse;pub use crate::src::headers::sqliteInt_h::Db;pub use crate::src::headers::sqliteInt_h::DbClientData;pub use crate::src::headers::sqliteInt_h::Expr;pub use crate::src::headers::sqliteInt_h::ExprList;pub use crate::src::headers::sqliteInt_h::ExprList_item;pub use crate::src::headers::sqliteInt_h::FKey;pub use crate::src::headers::sqliteInt_h::FuncDef;pub use crate::src::headers::sqliteInt_h::FuncDestructor;pub use crate::src::headers::sqliteInt_h::IdList;pub use crate::src::headers::sqliteInt_h::IdList_item;pub use crate::src::headers::sqliteInt_h::Index;pub use crate::src::headers::sqliteInt_h::IndexedExpr;pub use crate::src::headers::sqliteInt_h::KeyInfo;pub use crate::src::headers::sqliteInt_h::LogEst;pub use crate::src::headers::sqliteInt_h::Lookaside;pub use crate::src::headers::sqliteInt_h::LookasideSlot;pub use crate::src::headers::sqliteInt_h::Module;pub use crate::src::headers::sqliteInt_h::Parse;pub use crate::src::headers::sqliteInt_h::ParseCleanup;pub use crate::src::headers::vdbeInt_h::PreUpdate;pub use crate::src::headers::sqliteInt_h::RenameToken;pub use crate::src::headers::sqliteInt_h::Returning;pub use crate::src::headers::sqliteInt_h::Savepoint;pub use crate::src::headers::sqliteInt_h::Schema;pub use crate::src::headers::sqliteInt_h::Select;pub use crate::src::headers::sqliteInt_h::Sqlite3Config;pub use crate::src::headers::sqliteInt_h::SrcItem;pub use crate::src::headers::sqliteInt_h::SrcList;pub use crate::src::headers::sqliteInt_h::StrAccum;pub use crate::src::headers::sqliteInt_h::Subquery;pub use crate::src::headers::sqliteInt_h::Table;pub use crate::src::headers::sqliteInt_h::TableLock;pub use crate::src::headers::sqliteInt_h::Token;pub use crate::src::headers::sqliteInt_h::Trigger;pub use crate::src::headers::sqliteInt_h::TriggerPrg;pub use crate::src::headers::sqliteInt_h::TriggerStep;pub use crate::src::headers::sqliteInt_h::Upsert;pub use crate::src::headers::sqliteInt_h::VList;pub use crate::src::headers::sqliteInt_h::VTable;pub use crate::src::headers::sqliteInt_h::VtabCtx;pub use crate::src::headers::sqliteInt_h::Window;pub use crate::src::headers::sqliteInt_h::With;pub use crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN;pub use crate::src::headers::sqliteInt_h::SQLITE_FUNC_CONSTANT;pub use crate::src::headers::sqliteInt_h::SQLITE_FUNC_SLOCHNG;
+pub use crate::src::ext::rtree::rtree::i64_0;
+pub use crate::src::ext::rtree::rtree::u8_0;
+pub use crate::src::ext::rtree::rtree::u32_0;
+pub use crate::src::ext::rtree::rtree::u64_0;
+pub use crate::src::fts5::i16_0;
+pub use crate::src::fts5::u16_0;
+pub use crate::src::headers::sqlite3_h::SQLITE_ERROR;
+pub use crate::src::headers::sqlite3_h::SQLITE_FLOAT;
+pub use crate::src::headers::sqlite3_h::SQLITE_INTEGER;
+pub use crate::src::headers::sqlite3_h::SQLITE_LIMIT_LENGTH;
+pub use crate::src::headers::sqlite3_h::SQLITE_OK;
+pub use crate::src::headers::sqlite3_h::SQLITE_UTF8;
+pub use crate::src::headers::sqlite3_h::sqlite_int64;
+pub use crate::src::headers::sqlite3_h::sqlite_uint64;
+pub use crate::src::headers::sqlite3_h::sqlite3_destructor_type;
+pub use crate::src::headers::sqlite3_h::sqlite3_file;
+pub use crate::src::headers::sqlite3_h::sqlite3_filename;
+pub use crate::src::headers::sqlite3_h::sqlite3_index_constraint;
+pub use crate::src::headers::sqlite3_h::sqlite3_index_constraint_usage;
+pub use crate::src::headers::sqlite3_h::sqlite3_index_info;
+pub use crate::src::headers::sqlite3_h::sqlite3_index_orderby;
+pub use crate::src::headers::sqlite3_h::sqlite3_int64;
+pub use crate::src::headers::sqlite3_h::sqlite3_io_methods;
+pub use crate::src::headers::sqlite3_h::sqlite3_mem_methods;
+pub use crate::src::headers::sqlite3_h::sqlite3_module;
+pub use crate::src::headers::sqlite3_h::sqlite3_mutex_methods;
+pub use crate::src::headers::sqlite3_h::sqlite3_pcache;
+pub use crate::src::headers::sqlite3_h::sqlite3_pcache_methods2;
+pub use crate::src::headers::sqlite3_h::sqlite3_pcache_page;
+pub use crate::src::headers::sqlite3_h::sqlite3_syscall_ptr;
+pub use crate::src::headers::sqlite3_h::sqlite3_uint64;
+pub use crate::src::headers::sqlite3_h::sqlite3_vfs;
+pub use crate::src::headers::sqlite3_h::sqlite3_vtab;
+pub use crate::src::headers::sqlite3_h::sqlite3_vtab_cursor;
+pub use crate::src::headers::sqliteInt_h::__anon_struct_0;
+pub use crate::src::headers::sqliteInt_h::__anon_struct_1;
+pub use crate::src::headers::sqliteInt_h::__anon_struct_2;
+pub use crate::src::headers::sqliteInt_h::__anon_struct_3;
+pub use crate::src::headers::sqliteInt_h::__anon_struct_4;
+pub use crate::src::headers::sqliteInt_h::__anon_struct_5;
+pub use crate::src::headers::sqliteInt_h::__anon_struct_6;
+pub use crate::src::headers::sqliteInt_h::__anon_struct_7;
+pub use crate::src::headers::sqliteInt_h::__anon_struct_8;
+pub use crate::src::headers::sqliteInt_h::__anon_union_0;
+pub use crate::src::headers::sqliteInt_h::__anon_union_1;
+pub use crate::src::headers::sqliteInt_h::__anon_union_2;
+pub use crate::src::headers::sqliteInt_h::__anon_union_3;
+pub use crate::src::headers::sqliteInt_h::__anon_union_5;
+pub use crate::src::headers::sqliteInt_h::__anon_union_6;
+pub use crate::src::headers::sqliteInt_h::__anon_union_7;
+pub use crate::src::headers::sqliteInt_h::__anon_union_8;
+pub use crate::src::headers::sqliteInt_h::__anon_union_9;
+pub use crate::src::headers::sqliteInt_h::__anon_union_10;
+pub use crate::src::headers::sqliteInt_h::__anon_union_11;
+pub use crate::src::headers::sqliteInt_h::__anon_union_12;
+pub use crate::src::headers::sqliteInt_h::__anon_union_13;
+pub use crate::src::headers::sqliteInt_h::__anon_union_15;
+pub use crate::src::headers::sqliteInt_h::AggInfo;
+pub use crate::src::headers::sqliteInt_h::AggInfo_col;
+pub use crate::src::headers::sqliteInt_h::AggInfo_func;
+pub use crate::src::headers::sqliteInt_h::AutoincInfo;
+pub use crate::src::headers::sqliteInt_h::Bitmask;
+pub use crate::src::headers::sqliteInt_h::BusyHandler;
+pub use crate::src::headers::sqliteInt_h::CollSeq;
+pub use crate::src::headers::sqliteInt_h::Column;
+pub use crate::src::headers::sqliteInt_h::Cte;
+pub use crate::src::headers::sqliteInt_h::CteUse;
+pub use crate::src::headers::sqliteInt_h::Db;
+pub use crate::src::headers::sqliteInt_h::DbClientData;
+pub use crate::src::headers::sqliteInt_h::Expr;
+pub use crate::src::headers::sqliteInt_h::ExprList;
+pub use crate::src::headers::sqliteInt_h::ExprList_item;
+pub use crate::src::headers::sqliteInt_h::FKey;
+pub use crate::src::headers::sqliteInt_h::FuncDef;
+pub use crate::src::headers::sqliteInt_h::FuncDestructor;
+pub use crate::src::headers::sqliteInt_h::IdList;
+pub use crate::src::headers::sqliteInt_h::IdList_item;
+pub use crate::src::headers::sqliteInt_h::Index;
+pub use crate::src::headers::sqliteInt_h::IndexedExpr;
+pub use crate::src::headers::sqliteInt_h::KeyInfo;
+pub use crate::src::headers::sqliteInt_h::LogEst;
+pub use crate::src::headers::sqliteInt_h::Lookaside;
+pub use crate::src::headers::sqliteInt_h::LookasideSlot;
+pub use crate::src::headers::sqliteInt_h::Module;
+pub use crate::src::headers::sqliteInt_h::Parse;
+pub use crate::src::headers::sqliteInt_h::ParseCleanup;
+pub use crate::src::headers::sqliteInt_h::RenameToken;
+pub use crate::src::headers::sqliteInt_h::Returning;
+pub use crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN;
+pub use crate::src::headers::sqliteInt_h::SQLITE_FUNC_CONSTANT;
+pub use crate::src::headers::sqliteInt_h::SQLITE_FUNC_SLOCHNG;
+pub use crate::src::headers::sqliteInt_h::Savepoint;
+pub use crate::src::headers::sqliteInt_h::Schema;
+pub use crate::src::headers::sqliteInt_h::Select;
+pub use crate::src::headers::sqliteInt_h::Sqlite3Config;
+pub use crate::src::headers::sqliteInt_h::SrcItem;
+pub use crate::src::headers::sqliteInt_h::SrcList;
+pub use crate::src::headers::sqliteInt_h::StrAccum;
+pub use crate::src::headers::sqliteInt_h::Subquery;
+pub use crate::src::headers::sqliteInt_h::Table;
+pub use crate::src::headers::sqliteInt_h::TableLock;
+pub use crate::src::headers::sqliteInt_h::Token;
+pub use crate::src::headers::sqliteInt_h::Trigger;
+pub use crate::src::headers::sqliteInt_h::TriggerPrg;
+pub use crate::src::headers::sqliteInt_h::TriggerStep;
+pub use crate::src::headers::sqliteInt_h::Upsert;
+pub use crate::src::headers::sqliteInt_h::VList;
+pub use crate::src::headers::sqliteInt_h::VTable;
+pub use crate::src::headers::sqliteInt_h::VtabCtx;
+pub use crate::src::headers::sqliteInt_h::Window;
+pub use crate::src::headers::sqliteInt_h::With;
+pub use crate::src::headers::sqliteInt_h::bft;
+pub use crate::src::headers::sqliteInt_h::sColMap;
+pub use crate::src::headers::sqliteInt_h::sqlite3;
+pub use crate::src::headers::sqliteInt_h::sqlite3_str;
+pub use crate::src::headers::sqliteInt_h::sqlite3_xauth;
+pub use crate::src::headers::sqliteInt_h::sqlite3InitInfo;
+pub use crate::src::headers::sqliteInt_h::yDbMask;
+pub use crate::src::headers::sqliteInt_h::ynVar;
 pub use crate::src::headers::stdlib::int16_t;
-pub use crate::src::headers::stdlib::uint16_t;pub use crate::src::headers::stdlib::uint32_t;pub use crate::src::headers::stdlib::uint8_t;
+pub use crate::src::headers::stdlib::uint8_t;
+pub use crate::src::headers::stdlib::uint16_t;
+pub use crate::src::headers::stdlib::uint32_t;
+pub use crate::src::headers::vdbeInt_h::PreUpdate;
+pub use crate::src::headers::vdbeInt_h::sqlite3_context;
+pub use crate::src::headers::vdbeInt_h::sqlite3_value;
+pub use crate::src::src::callback::sqlite3InsertBuiltinFuncs;
+pub use crate::src::src::global::sqlite3Config;
+pub use crate::src::src::global::sqlite3CtypeMap;
+pub use crate::src::src::global::sqlite3UpperToLower;
+pub use crate::src::src::mutex_unix::sqlite3_mutex;
+pub use crate::src::src::printf::sqlite3_str_append;
+pub use crate::src::src::printf::sqlite3_str_appendchar;
+pub use crate::src::src::printf::sqlite3_str_reset;
+pub use crate::src::src::printf::sqlite3ResultStrAccum;
+pub use crate::src::src::printf::sqlite3StrAccumInit;
+pub use crate::src::src::util::sqlite3_stricmp;
+pub use crate::src::src::util::sqlite3_strnicmp;
+pub use crate::src::src::util::sqlite3AtoF;
+pub use crate::src::src::util::sqlite3StrICmp;
+pub use crate::src::src::util::sqlite3Strlen30;
+pub use crate::src::src::vdbeapi::sqlite3_context_db_handle;
+pub use crate::src::src::vdbeapi::sqlite3_result_double;
+pub use crate::src::src::vdbeapi::sqlite3_result_error;
+pub use crate::src::src::vdbeapi::sqlite3_result_int64;
+pub use crate::src::src::vdbeapi::sqlite3_result_text;
+pub use crate::src::src::vdbeapi::sqlite3_value_bytes;
+pub use crate::src::src::vdbeapi::sqlite3_value_double;
+pub use crate::src::src::vdbeapi::sqlite3_value_text;
+pub use crate::src::src::vdbeapi::sqlite3_value_type;
+pub use crate::src::src::vdbeapi::sqlite3StmtCurrentTime;
 
 pub use ::libc::tm;
 
 pub use crate::src::headers::stdlib::time_t;
 
-pub use crate::src::headers::stdlib::__int16_t;pub use crate::src::headers::stdlib::__time_t;pub use crate::src::headers::stdlib::__uint16_t;pub use crate::src::headers::stdlib::__uint32_t;pub use crate::src::headers::stdlib::__uint8_t;pub use crate::src::src::vdbe::p4union;pub use crate::src::src::vdbeaux::sqlite3NotPureFunc;pub use crate::src::src::vdbe::Mem;pub use crate::src::src::vdbe::SubProgram;pub use crate::src::src::vdbe::SubrtnSig;pub use crate::src::headers::vdbeInt_h::Vdbe;pub use crate::src::src::vdbe::VdbeOp;
+pub use crate::src::headers::stdlib::__int16_t;
+pub use crate::src::headers::stdlib::__time_t;
+pub use crate::src::headers::stdlib::__uint8_t;
+pub use crate::src::headers::stdlib::__uint16_t;
+pub use crate::src::headers::stdlib::__uint32_t;
+pub use crate::src::headers::vdbeInt_h::Vdbe;
+pub use crate::src::src::vdbe::Mem;
+pub use crate::src::src::vdbe::SubProgram;
+pub use crate::src::src::vdbe::SubrtnSig;
+pub use crate::src::src::vdbe::VdbeOp;
+pub use crate::src::src::vdbe::p4union;
+pub use crate::src::src::vdbeaux::sqlite3NotPureFunc;
 #[derive(Copy, Clone, BitfieldStruct)]
 #[repr(C)]
-
 pub struct DateTime {
     pub iJD: crate::src::headers::sqlite3_h::sqlite3_int64,
     pub Y: ::core::ffi::c_int,
@@ -60,7 +205,6 @@ pub struct DateTime {
 }
 #[derive(Copy, Clone)]
 #[repr(C)]
-
 pub struct C2RustUnnamed {
     pub nName: crate::src::ext::rtree::rtree::u8_0,
     pub zName: [::core::ffi::c_char; 7],
@@ -80,17 +224,25 @@ unsafe fn getDigits_args(
     let mut nextC: ::core::ffi::c_char;
     let mut out_idx: usize = 0;
     's_15: loop {
-        let mut N: ::core::ffi::c_char = (*zFormat.offset(0) as ::core::ffi::c_int - '0' as i32) as ::core::ffi::c_char;
-        let min: ::core::ffi::c_char = (*zFormat.offset(1) as ::core::ffi::c_int - '0' as i32) as ::core::ffi::c_char;
+        let mut N: ::core::ffi::c_char =
+            (*zFormat.offset(0) as ::core::ffi::c_int - '0' as i32) as ::core::ffi::c_char;
+        let min: ::core::ffi::c_char =
+            (*zFormat.offset(1) as ::core::ffi::c_int - '0' as i32) as ::core::ffi::c_char;
         let mut val: ::core::ffi::c_int = 0;
-        let max: crate::src::fts5::u16_0 = aMx[(*zFormat.offset(2) as ::core::ffi::c_int - 'a' as i32) as usize];
+        let max: crate::src::fts5::u16_0 =
+            aMx[(*zFormat.offset(2) as ::core::ffi::c_int - 'a' as i32) as usize];
         nextC = *zFormat.offset(3);
         loop {
             let fresh = N;
             N -= 1;
-            if fresh == 0 { break; }
+            if fresh == 0 {
+                break;
+            }
             if *(&raw const crate::src::src::global::sqlite3CtypeMap as *const ::core::ffi::c_uchar)
-                .offset(*zDate as ::core::ffi::c_uchar as isize) as ::core::ffi::c_int & 0x4 == 0
+                .offset(*zDate as ::core::ffi::c_uchar as isize)
+                as ::core::ffi::c_int
+                & 0x4
+                == 0
             {
                 break 's_15;
             }
@@ -99,7 +251,8 @@ unsafe fn getDigits_args(
         }
         if val < min as ::core::ffi::c_int
             || val > max as ::core::ffi::c_int
-            || nextC as ::core::ffi::c_int != 0 && nextC as ::core::ffi::c_int != *zDate as ::core::ffi::c_int
+            || nextC as ::core::ffi::c_int != 0
+                && nextC as ::core::ffi::c_int != *zDate as ::core::ffi::c_int
         {
             break;
         }
@@ -108,7 +261,9 @@ unsafe fn getDigits_args(
         zDate = zDate.offset(1);
         cnt += 1;
         zFormat = zFormat.offset(4);
-        if nextC == 0 { break; }
+        if nextC == 0 {
+            break;
+        }
     }
     cnt
 }
@@ -206,15 +361,16 @@ unsafe extern "C" fn parseHhMmSs(
         }
         zDate = zDate.offset(2 as isize);
         if *zDate as ::core::ffi::c_int == '.' as i32
-            && *(&raw const crate::src::src::global::sqlite3CtypeMap as *const ::core::ffi::c_uchar).offset(
-                *zDate.offset(1 as isize) as ::core::ffi::c_uchar as isize,
-            ) as ::core::ffi::c_int
+            && *(&raw const crate::src::src::global::sqlite3CtypeMap as *const ::core::ffi::c_uchar)
+                .offset(*zDate.offset(1 as isize) as ::core::ffi::c_uchar as isize)
+                as ::core::ffi::c_int
                 & 0x4 as ::core::ffi::c_int
                 != 0
         {
             let mut rScale: ::core::ffi::c_double = 1.0f64;
             zDate = zDate.offset(1);
-            while *(&raw const crate::src::src::global::sqlite3CtypeMap as *const ::core::ffi::c_uchar)
+            while *(&raw const crate::src::src::global::sqlite3CtypeMap
+                as *const ::core::ffi::c_uchar)
                 .offset(*zDate as ::core::ffi::c_uchar as isize)
                 as ::core::ffi::c_int
                 & 0x4 as ::core::ffi::c_int
@@ -292,15 +448,18 @@ unsafe extern "C" fn computeJD(mut p: *mut DateTime) {
     X1 = 36525 as ::core::ffi::c_int * (Y + 4716 as ::core::ffi::c_int) / 100 as ::core::ffi::c_int;
     X2 = 306001 as ::core::ffi::c_int * (M + 1 as ::core::ffi::c_int) / 10000 as ::core::ffi::c_int;
     __p_ref.iJD = (((X1 + X2 + D + B) as ::core::ffi::c_double - 1524.5f64)
-        * 86400000 as ::core::ffi::c_int as ::core::ffi::c_double) as crate::src::headers::sqlite3_h::sqlite3_int64;
+        * 86400000 as ::core::ffi::c_int as ::core::ffi::c_double)
+        as crate::src::headers::sqlite3_h::sqlite3_int64;
     __p_ref.validJD = 1 as ::core::ffi::c_char;
     if __p_ref.validHMS != 0 {
-        __p_ref.iJD += (__p_ref.h * 3600000 as ::core::ffi::c_int + __p_ref.m * 60000 as ::core::ffi::c_int)
+        __p_ref.iJD += (__p_ref.h * 3600000 as ::core::ffi::c_int
+            + __p_ref.m * 60000 as ::core::ffi::c_int)
             as crate::src::headers::sqlite3_h::sqlite3_int64
             + (__p_ref.s * 1000 as ::core::ffi::c_int as ::core::ffi::c_double + 0.5f64)
                 as crate::src::headers::sqlite3_h::sqlite3_int64;
         if __p_ref.tz != 0 {
-            __p_ref.iJD -= (__p_ref.tz * 60000 as ::core::ffi::c_int) as crate::src::headers::sqlite3_h::sqlite3_int64;
+            __p_ref.iJD -= (__p_ref.tz * 60000 as ::core::ffi::c_int)
+                as crate::src::headers::sqlite3_h::sqlite3_int64;
             __p_ref.validYMD = 0 as ::core::ffi::c_char;
             __p_ref.validHMS = 0 as ::core::ffi::c_char;
             __p_ref.tz = 0 as ::core::ffi::c_int;
@@ -416,8 +575,10 @@ unsafe extern "C" fn parseDateOrTime(
         return 0 as ::core::ffi::c_int;
     } else if parseHhMmSs(zDate, p) == 0 as ::core::ffi::c_int {
         return 0 as ::core::ffi::c_int;
-    } else if crate::src::src::util::sqlite3StrICmp(zDate, b"now\0" as *const u8 as *const ::core::ffi::c_char)
-        == 0 as ::core::ffi::c_int
+    } else if crate::src::src::util::sqlite3StrICmp(
+        zDate,
+        b"now\0" as *const u8 as *const ::core::ffi::c_char,
+    ) == 0 as ::core::ffi::c_int
         && crate::src::src::vdbeaux::sqlite3NotPureFunc(context) != 0
     {
         return setDateTimeToCurrent(context, p);
@@ -446,11 +607,16 @@ unsafe extern "C" fn parseDateOrTime(
     1 as ::core::ffi::c_int
 }
 
-pub const INT_464269060799999: crate::src::ext::rtree::rtree::i64_0 =
-    (0x1a640 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::i64_0) << 32 as ::core::ffi::c_int | 0x1072fdff as crate::src::ext::rtree::rtree::i64_0;
+pub const INT_464269060799999: crate::src::ext::rtree::rtree::i64_0 = (0x1a640 as ::core::ffi::c_int
+    as crate::src::ext::rtree::rtree::i64_0)
+    << 32 as ::core::ffi::c_int
+    | 0x1072fdff as crate::src::ext::rtree::rtree::i64_0;
 
-unsafe extern "C" fn validJulianDay(mut iJD: crate::src::headers::sqlite3_h::sqlite3_int64) -> ::core::ffi::c_int {
-    (iJD >= 0 as crate::src::headers::sqlite3_h::sqlite3_int64 && iJD <= INT_464269060799999) as ::core::ffi::c_int
+unsafe extern "C" fn validJulianDay(
+    mut iJD: crate::src::headers::sqlite3_h::sqlite3_int64,
+) -> ::core::ffi::c_int {
+    (iJD >= 0 as crate::src::headers::sqlite3_h::sqlite3_int64 && iJD <= INT_464269060799999)
+        as ::core::ffi::c_int
 }
 
 unsafe extern "C" fn computeYMD(mut p: *mut DateTime) {
@@ -474,7 +640,8 @@ unsafe extern "C" fn computeYMD(mut p: *mut DateTime) {
         datetimeError(p);
         return;
     } else {
-        Z = ((__p_ref.iJD + 43200000 as crate::src::headers::sqlite3_h::sqlite3_int64) / 86400000 as crate::src::headers::sqlite3_h::sqlite3_int64)
+        Z = ((__p_ref.iJD + 43200000 as crate::src::headers::sqlite3_h::sqlite3_int64)
+            / 86400000 as crate::src::headers::sqlite3_h::sqlite3_int64)
             as ::core::ffi::c_int;
         alpha = ((Z as ::core::ffi::c_double + 32044.75f64) / 36524.25f64) as ::core::ffi::c_int
             - 52 as ::core::ffi::c_int;
@@ -510,8 +677,9 @@ unsafe extern "C" fn computeHMS(mut p: *mut DateTime) {
         return;
     }
     computeJD(p);
-    day_ms =
-        ((__p_ref.iJD + 43200000 as crate::src::headers::sqlite3_h::sqlite3_int64) % 86400000 as crate::src::headers::sqlite3_h::sqlite3_int64) as ::core::ffi::c_int;
+    day_ms = ((__p_ref.iJD + 43200000 as crate::src::headers::sqlite3_h::sqlite3_int64)
+        % 86400000 as crate::src::headers::sqlite3_h::sqlite3_int64)
+        as ::core::ffi::c_int;
     __p_ref.s = (day_ms % 60000 as ::core::ffi::c_int) as ::core::ffi::c_double / 1000.0f64;
     day_min = day_ms / 60000 as ::core::ffi::c_int;
     __p_ref.m = day_min % 60 as ::core::ffi::c_int;
@@ -532,10 +700,16 @@ unsafe extern "C" fn clearYMD_HMS_TZ(mut p: *mut DateTime) {
     __p_ref.tz = 0 as ::core::ffi::c_int;
 }
 
-unsafe extern "C" fn osLocaltime(mut t: *mut crate::src::headers::stdlib::time_t, mut pTm: *mut ::libc::tm) -> ::core::ffi::c_int {
+unsafe extern "C" fn osLocaltime(
+    mut t: *mut crate::src::headers::stdlib::time_t,
+    mut pTm: *mut ::libc::tm,
+) -> ::core::ffi::c_int {
     let mut rc: ::core::ffi::c_int = 0;
     if crate::src::src::global::sqlite3Config.bLocaltimeFault != 0 {
-        if crate::src::src::global::sqlite3Config.xAltLocaltime.is_some() {
+        if crate::src::src::global::sqlite3Config
+            .xAltLocaltime
+            .is_some()
+        {
             return crate::src::src::global::sqlite3Config
                 .xAltLocaltime
                 .expect("non-null function pointer")(
@@ -546,7 +720,8 @@ unsafe extern "C" fn osLocaltime(mut t: *mut crate::src::headers::stdlib::time_t
             return 1 as ::core::ffi::c_int;
         }
     }
-    rc = (::libc::localtime_r(t,  pTm as *mut ::libc::tm) as *mut ::libc::tm == ::core::ptr::null_mut::<::libc::tm>()) as ::core::ffi::c_int;
+    rc = (::libc::localtime_r(t, pTm as *mut ::libc::tm) as *mut ::libc::tm
+        == ::core::ptr::null_mut::<::libc::tm>()) as ::core::ffi::c_int;
     rc
 }
 
@@ -559,8 +734,12 @@ unsafe extern "C" fn toLocaltime(
     let mut iYearDiff: ::core::ffi::c_int = 0;
     computeJD(p);
     let __p_ref = { &mut *p };
-    if __p_ref.iJD < 2108667600 as crate::src::ext::rtree::rtree::i64_0 * 100000 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::i64_0
-        || __p_ref.iJD > 2130141456 as crate::src::ext::rtree::rtree::i64_0 * 100000 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::i64_0
+    if __p_ref.iJD
+        < 2108667600 as crate::src::ext::rtree::rtree::i64_0
+            * 100000 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::i64_0
+        || __p_ref.iJD
+            > 2130141456 as crate::src::ext::rtree::rtree::i64_0
+                * 100000 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::i64_0
     {
         let mut x: DateTime = *p;
         computeYMD_HMS(&raw mut x);
@@ -568,12 +747,18 @@ unsafe extern "C" fn toLocaltime(
         x.Y += iYearDiff;
         x.validJD = 0 as ::core::ffi::c_char;
         computeJD(&raw mut x);
-        t = (x.iJD as crate::src::ext::rtree::rtree::i64_0 / 1000 as crate::src::ext::rtree::rtree::i64_0
-            - 21086676 as crate::src::ext::rtree::rtree::i64_0 * 10000 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::i64_0) as crate::src::headers::stdlib::time_t;
+        t = (x.iJD as crate::src::ext::rtree::rtree::i64_0
+            / 1000 as crate::src::ext::rtree::rtree::i64_0
+            - 21086676 as crate::src::ext::rtree::rtree::i64_0
+                * 10000 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::i64_0)
+            as crate::src::headers::stdlib::time_t;
     } else {
         iYearDiff = 0 as ::core::ffi::c_int;
-        t = (__p_ref.iJD as crate::src::ext::rtree::rtree::i64_0 / 1000 as crate::src::ext::rtree::rtree::i64_0
-            - 21086676 as crate::src::ext::rtree::rtree::i64_0 * 10000 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::i64_0) as crate::src::headers::stdlib::time_t;
+        t = (__p_ref.iJD as crate::src::ext::rtree::rtree::i64_0
+            / 1000 as crate::src::ext::rtree::rtree::i64_0
+            - 21086676 as crate::src::ext::rtree::rtree::i64_0
+                * 10000 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::i64_0)
+            as crate::src::headers::stdlib::time_t;
     }
     if osLocaltime(&raw mut t, &raw mut sLocal) != 0 {
         crate::src::src::vdbeapi::sqlite3_result_error(
@@ -589,7 +774,9 @@ unsafe extern "C" fn toLocaltime(
     __p_ref.h = sLocal.tm_hour;
     __p_ref.m = sLocal.tm_min;
     __p_ref.s = sLocal.tm_sec as ::core::ffi::c_double
-        + (__p_ref.iJD % 1000 as crate::src::headers::sqlite3_h::sqlite3_int64) as ::core::ffi::c_double * 0.001f64;
+        + (__p_ref.iJD % 1000 as crate::src::headers::sqlite3_h::sqlite3_int64)
+            as ::core::ffi::c_double
+            * 0.001f64;
     __p_ref.validYMD = 1 as ::core::ffi::c_char;
     __p_ref.validHMS = 1 as ::core::ffi::c_char;
     __p_ref.validJD = 0 as ::core::ffi::c_char;
@@ -603,37 +790,49 @@ static mut aXformType: [C2RustUnnamed; 6] = {
     [
         C2RustUnnamed {
             nName: 6 as crate::src::ext::rtree::rtree::u8_0,
-            zName: unsafe { ::core::mem::transmute::<[u8; 7], [::core::ffi::c_char; 7]>(*b"second\0") },
+            zName: unsafe {
+                ::core::mem::transmute::<[u8; 7], [::core::ffi::c_char; 7]>(*b"second\0")
+            },
             rLimit: 4.6427e+14f32,
             rXform: 1.0f32,
         },
         C2RustUnnamed {
             nName: 6 as crate::src::ext::rtree::rtree::u8_0,
-            zName: unsafe { ::core::mem::transmute::<[u8; 7], [::core::ffi::c_char; 7]>(*b"minute\0") },
+            zName: unsafe {
+                ::core::mem::transmute::<[u8; 7], [::core::ffi::c_char; 7]>(*b"minute\0")
+            },
             rLimit: 7.7379e+12f32,
             rXform: 60.0f32,
         },
         C2RustUnnamed {
             nName: 4 as crate::src::ext::rtree::rtree::u8_0,
-            zName: unsafe { ::core::mem::transmute::<[u8; 7], [::core::ffi::c_char; 7]>(*b"hour\0\0\0") },
+            zName: unsafe {
+                ::core::mem::transmute::<[u8; 7], [::core::ffi::c_char; 7]>(*b"hour\0\0\0")
+            },
             rLimit: 1.2897e+11f32,
             rXform: 3600.0f32,
         },
         C2RustUnnamed {
             nName: 3 as crate::src::ext::rtree::rtree::u8_0,
-            zName: unsafe { ::core::mem::transmute::<[u8; 7], [::core::ffi::c_char; 7]>(*b"day\0\0\0\0") },
+            zName: unsafe {
+                ::core::mem::transmute::<[u8; 7], [::core::ffi::c_char; 7]>(*b"day\0\0\0\0")
+            },
             rLimit: 5373485.0f32,
             rXform: 86400.0f32,
         },
         C2RustUnnamed {
             nName: 5 as crate::src::ext::rtree::rtree::u8_0,
-            zName: unsafe { ::core::mem::transmute::<[u8; 7], [::core::ffi::c_char; 7]>(*b"month\0\0") },
+            zName: unsafe {
+                ::core::mem::transmute::<[u8; 7], [::core::ffi::c_char; 7]>(*b"month\0\0")
+            },
             rLimit: 176546.0f32,
             rXform: 2592000.0f32,
         },
         C2RustUnnamed {
             nName: 4 as crate::src::ext::rtree::rtree::u8_0,
-            zName: unsafe { ::core::mem::transmute::<[u8; 7], [::core::ffi::c_char; 7]>(*b"year\0\0\0") },
+            zName: unsafe {
+                ::core::mem::transmute::<[u8; 7], [::core::ffi::c_char; 7]>(*b"year\0\0\0")
+            },
             rLimit: 14713.0f32,
             rXform: 31536000.0f32,
         },
@@ -645,10 +844,13 @@ unsafe extern "C" fn autoAdjustDate(mut p: *mut DateTime) {
     if __p_ref.rawS() == 0 || __p_ref.validJD as ::core::ffi::c_int != 0 {
         __p_ref.set_rawS(0 as ::core::ffi::c_uint as ::core::ffi::c_uint);
     } else if __p_ref.s
-        >= (-(21086676 as ::core::ffi::c_int) as crate::src::ext::rtree::rtree::i64_0 * 10000 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::i64_0)
+        >= (-(21086676 as ::core::ffi::c_int) as crate::src::ext::rtree::rtree::i64_0
+            * 10000 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::i64_0)
             as ::core::ffi::c_double
         && __p_ref.s
-            <= (25340230 as crate::src::ext::rtree::rtree::i64_0 * 10000 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::i64_0 + 799 as crate::src::ext::rtree::rtree::i64_0)
+            <= (25340230 as crate::src::ext::rtree::rtree::i64_0
+                * 10000 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::i64_0
+                + 799 as crate::src::ext::rtree::rtree::i64_0)
                 as ::core::ffi::c_double
     {
         let mut r: ::core::ffi::c_double = __p_ref.s * 1000.0f64 + 210866760000000.0f64;
@@ -674,8 +876,10 @@ unsafe extern "C" fn parseModifier(
         as ::core::ffi::c_int
     {
         97 => {
-            if crate::src::src::util::sqlite3_stricmp(z, b"auto\0" as *const u8 as *const ::core::ffi::c_char)
-                == 0 as ::core::ffi::c_int
+            if crate::src::src::util::sqlite3_stricmp(
+                z,
+                b"auto\0" as *const u8 as *const ::core::ffi::c_char,
+            ) == 0 as ::core::ffi::c_int
             {
                 if idx > 1 as ::core::ffi::c_int {
                     return 1 as ::core::ffi::c_int;
@@ -685,8 +889,10 @@ unsafe extern "C" fn parseModifier(
             }
         }
         99 => {
-            if crate::src::src::util::sqlite3_stricmp(z, b"ceiling\0" as *const u8 as *const ::core::ffi::c_char)
-                == 0 as ::core::ffi::c_int
+            if crate::src::src::util::sqlite3_stricmp(
+                z,
+                b"ceiling\0" as *const u8 as *const ::core::ffi::c_char,
+            ) == 0 as ::core::ffi::c_int
             {
                 computeJD(p);
                 clearYMD_HMS_TZ(p);
@@ -695,8 +901,10 @@ unsafe extern "C" fn parseModifier(
             }
         }
         102 => {
-            if crate::src::src::util::sqlite3_stricmp(z, b"floor\0" as *const u8 as *const ::core::ffi::c_char)
-                == 0 as ::core::ffi::c_int
+            if crate::src::src::util::sqlite3_stricmp(
+                z,
+                b"floor\0" as *const u8 as *const ::core::ffi::c_char,
+            ) == 0 as ::core::ffi::c_int
             {
                 computeJD(p);
                 (*p).iJD -= ((*p).nFloor as ::core::ffi::c_int * 86400000 as ::core::ffi::c_int)
@@ -706,8 +914,10 @@ unsafe extern "C" fn parseModifier(
             }
         }
         106 => {
-            if crate::src::src::util::sqlite3_stricmp(z, b"julianday\0" as *const u8 as *const ::core::ffi::c_char)
-                == 0 as ::core::ffi::c_int
+            if crate::src::src::util::sqlite3_stricmp(
+                z,
+                b"julianday\0" as *const u8 as *const ::core::ffi::c_char,
+            ) == 0 as ::core::ffi::c_int
             {
                 if idx > 1 as ::core::ffi::c_int {
                     return 1 as ::core::ffi::c_int;
@@ -720,8 +930,10 @@ unsafe extern "C" fn parseModifier(
             }
         }
         108 => {
-            if crate::src::src::util::sqlite3_stricmp(z, b"localtime\0" as *const u8 as *const ::core::ffi::c_char)
-                == 0 as ::core::ffi::c_int
+            if crate::src::src::util::sqlite3_stricmp(
+                z,
+                b"localtime\0" as *const u8 as *const ::core::ffi::c_char,
+            ) == 0 as ::core::ffi::c_int
                 && crate::src::src::vdbeaux::sqlite3NotPureFunc(pCtx) != 0
             {
                 let __p_ref = { &mut *p };
@@ -735,8 +947,10 @@ unsafe extern "C" fn parseModifier(
             }
         }
         117 => {
-            if crate::src::src::util::sqlite3_stricmp(z, b"unixepoch\0" as *const u8 as *const ::core::ffi::c_char)
-                == 0 as ::core::ffi::c_int
+            if crate::src::src::util::sqlite3_stricmp(
+                z,
+                b"unixepoch\0" as *const u8 as *const ::core::ffi::c_char,
+            ) == 0 as ::core::ffi::c_int
                 && (*p).rawS() as ::core::ffi::c_int != 0
             {
                 if idx > 1 as ::core::ffi::c_int {
@@ -751,8 +965,10 @@ unsafe extern "C" fn parseModifier(
                     __p_ref.set_rawS(0 as ::core::ffi::c_uint as ::core::ffi::c_uint);
                     rc = 0 as ::core::ffi::c_int;
                 }
-            } else if crate::src::src::util::sqlite3_stricmp(z, b"utc\0" as *const u8 as *const ::core::ffi::c_char)
-                == 0 as ::core::ffi::c_int
+            } else if crate::src::src::util::sqlite3_stricmp(
+                z,
+                b"utc\0" as *const u8 as *const ::core::ffi::c_char,
+            ) == 0 as ::core::ffi::c_int
                 && crate::src::src::vdbeaux::sqlite3NotPureFunc(pCtx) != 0
             {
                 if (*p).isUtc() as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
@@ -809,7 +1025,8 @@ unsafe extern "C" fn parseModifier(
                     crate::src::src::util::sqlite3Strlen30(
                         z.offset(8 as isize) as *const ::core::ffi::c_char
                     ),
-                    crate::src::headers::sqlite3_h::SQLITE_UTF8 as crate::src::ext::rtree::rtree::u8_0,
+                    crate::src::headers::sqlite3_h::SQLITE_UTF8
+                        as crate::src::ext::rtree::rtree::u8_0,
                 ) > 0 as ::core::ffi::c_int
                 && r >= 0.0f64
                 && r < 7.0f64
@@ -824,12 +1041,14 @@ unsafe extern "C" fn parseModifier(
                 __p_ref.tz = 0 as ::core::ffi::c_int;
                 __p_ref.validJD = 0 as ::core::ffi::c_char;
                 computeJD(p);
-                Z = (__p_ref.iJD + 129600000 as crate::src::headers::sqlite3_h::sqlite3_int64) / 86400000 as crate::src::headers::sqlite3_h::sqlite3_int64
+                Z = (__p_ref.iJD + 129600000 as crate::src::headers::sqlite3_h::sqlite3_int64)
+                    / 86400000 as crate::src::headers::sqlite3_h::sqlite3_int64
                     % 7 as crate::src::headers::sqlite3_h::sqlite3_int64;
                 if Z > n as crate::src::headers::sqlite3_h::sqlite3_int64 {
                     Z -= 7 as crate::src::headers::sqlite3_h::sqlite3_int64;
                 }
-                __p_ref.iJD += (n as crate::src::headers::sqlite3_h::sqlite3_int64 - Z) * 86400000 as crate::src::headers::sqlite3_h::sqlite3_int64;
+                __p_ref.iJD += (n as crate::src::headers::sqlite3_h::sqlite3_int64 - Z)
+                    * 86400000 as crate::src::headers::sqlite3_h::sqlite3_int64;
                 clearYMD_HMS_TZ(p);
                 rc = 0 as ::core::ffi::c_int;
             }
@@ -842,10 +1061,14 @@ unsafe extern "C" fn parseModifier(
                 9 as ::core::ffi::c_int,
             ) != 0 as ::core::ffi::c_int
             {
-                if crate::src::src::util::sqlite3_stricmp(z, b"subsec\0" as *const u8 as *const ::core::ffi::c_char)
-                    == 0 as ::core::ffi::c_int
-                    || crate::src::src::util::sqlite3_stricmp(z, b"subsecond\0" as *const u8 as *const ::core::ffi::c_char)
-                        == 0 as ::core::ffi::c_int
+                if crate::src::src::util::sqlite3_stricmp(
+                    z,
+                    b"subsec\0" as *const u8 as *const ::core::ffi::c_char,
+                ) == 0 as ::core::ffi::c_int
+                    || crate::src::src::util::sqlite3_stricmp(
+                        z,
+                        b"subsecond\0" as *const u8 as *const ::core::ffi::c_char,
+                    ) == 0 as ::core::ffi::c_int
                 {
                     __p_ref.set_useSubsec(1 as ::core::ffi::c_uint as ::core::ffi::c_uint);
                     rc = 0 as ::core::ffi::c_int;
@@ -860,19 +1083,25 @@ unsafe extern "C" fn parseModifier(
                 __p_ref.set_rawS(0 as ::core::ffi::c_uint as ::core::ffi::c_uint);
                 __p_ref.tz = 0 as ::core::ffi::c_int;
                 __p_ref.validJD = 0 as ::core::ffi::c_char;
-                if crate::src::src::util::sqlite3_stricmp(z, b"month\0" as *const u8 as *const ::core::ffi::c_char)
-                    == 0 as ::core::ffi::c_int
+                if crate::src::src::util::sqlite3_stricmp(
+                    z,
+                    b"month\0" as *const u8 as *const ::core::ffi::c_char,
+                ) == 0 as ::core::ffi::c_int
                 {
                     __p_ref.D = 1 as ::core::ffi::c_int;
                     rc = 0 as ::core::ffi::c_int;
-                } else if crate::src::src::util::sqlite3_stricmp(z, b"year\0" as *const u8 as *const ::core::ffi::c_char)
-                    == 0 as ::core::ffi::c_int
+                } else if crate::src::src::util::sqlite3_stricmp(
+                    z,
+                    b"year\0" as *const u8 as *const ::core::ffi::c_char,
+                ) == 0 as ::core::ffi::c_int
                 {
                     __p_ref.M = 1 as ::core::ffi::c_int;
                     __p_ref.D = 1 as ::core::ffi::c_int;
                     rc = 0 as ::core::ffi::c_int;
-                } else if crate::src::src::util::sqlite3_stricmp(z, b"day\0" as *const u8 as *const ::core::ffi::c_char)
-                    == 0 as ::core::ffi::c_int
+                } else if crate::src::src::util::sqlite3_stricmp(
+                    z,
+                    b"day\0" as *const u8 as *const ::core::ffi::c_char,
+                ) == 0 as ::core::ffi::c_int
                 {
                     rc = 0 as ::core::ffi::c_int;
                 }
@@ -894,7 +1123,8 @@ unsafe extern "C" fn parseModifier(
                 if *z.offset(n as isize) as ::core::ffi::c_int == ':' as i32 {
                     break;
                 }
-                if *(&raw const crate::src::src::global::sqlite3CtypeMap as *const ::core::ffi::c_uchar)
+                if *(&raw const crate::src::src::global::sqlite3CtypeMap
+                    as *const ::core::ffi::c_uchar)
                     .offset(*z.offset(n as isize) as ::core::ffi::c_uchar as isize)
                     as ::core::ffi::c_int
                     & 0x1 as ::core::ffi::c_int
@@ -905,8 +1135,7 @@ unsafe extern "C" fn parseModifier(
                 if *z.offset(n as isize) as ::core::ffi::c_int == '-' as i32 {
                     if n == 5 as ::core::ffi::c_int
                         && getDigits_args(
-                            z.offset(1 as isize)
-                                as *const ::core::ffi::c_char,
+                            z.offset(1 as isize) as *const ::core::ffi::c_char,
                             b"40f\0" as *const u8 as *const ::core::ffi::c_char,
                             &[&raw mut Y],
                         ) == 1 as ::core::ffi::c_int
@@ -915,8 +1144,7 @@ unsafe extern "C" fn parseModifier(
                     }
                     if n == 6 as ::core::ffi::c_int
                         && getDigits_args(
-                            z.offset(1 as isize)
-                                as *const ::core::ffi::c_char,
+                            z.offset(1 as isize) as *const ::core::ffi::c_char,
                             b"50f\0" as *const u8 as *const ::core::ffi::c_char,
                             &[&raw mut Y],
                         ) == 1 as ::core::ffi::c_int
@@ -926,7 +1154,13 @@ unsafe extern "C" fn parseModifier(
                 }
                 n += 1;
             }
-            if !(crate::src::src::util::sqlite3AtoF(z, &raw mut r, n, crate::src::headers::sqlite3_h::SQLITE_UTF8 as crate::src::ext::rtree::rtree::u8_0) <= 0 as ::core::ffi::c_int) {
+            if !(crate::src::src::util::sqlite3AtoF(
+                z,
+                &raw mut r,
+                n,
+                crate::src::headers::sqlite3_h::SQLITE_UTF8 as crate::src::ext::rtree::rtree::u8_0,
+            ) <= 0 as ::core::ffi::c_int)
+            {
                 if *z.offset(n as isize) as ::core::ffi::c_int == '-' as i32 {
                     if z0 as ::core::ffi::c_int != '+' as i32
                         && z0 as ::core::ffi::c_int != '-' as i32
@@ -935,8 +1169,7 @@ unsafe extern "C" fn parseModifier(
                     } else {
                         if n == 5 as ::core::ffi::c_int {
                             if getDigits_args(
-                                z.offset(1 as isize)
-                                    as *const ::core::ffi::c_char,
+                                z.offset(1 as isize) as *const ::core::ffi::c_char,
                                 b"40f-20a-20d\0" as *const u8 as *const ::core::ffi::c_char,
                                 &[&raw mut Y, &raw mut M, &raw mut D],
                             ) != 3 as ::core::ffi::c_int
@@ -946,8 +1179,7 @@ unsafe extern "C" fn parseModifier(
                                 current_block_175 = 3024367268842933116;
                             }
                         } else if getDigits_args(
-                            z.offset(1 as isize)
-                                as *const ::core::ffi::c_char,
+                            z.offset(1 as isize) as *const ::core::ffi::c_char,
                             b"50f-20a-20d\0" as *const u8 as *const ::core::ffi::c_char,
                             &[&raw mut Y, &raw mut M, &raw mut D],
                         ) != 3 as ::core::ffi::c_int
@@ -989,30 +1221,29 @@ unsafe extern "C" fn parseModifier(
                                     computeJD(p);
                                     __p_ref.validHMS = 0 as ::core::ffi::c_char;
                                     __p_ref.validYMD = 0 as ::core::ffi::c_char;
-                                    __p_ref.iJD += (D as crate::src::ext::rtree::rtree::i64_0 * 86400000 as crate::src::ext::rtree::rtree::i64_0) as crate::src::headers::sqlite3_h::sqlite_int64;
-                                    if *z.offset(11 as isize)
-                                        as ::core::ffi::c_int
+                                    __p_ref.iJD += (D as crate::src::ext::rtree::rtree::i64_0
+                                        * 86400000 as crate::src::ext::rtree::rtree::i64_0)
+                                        as crate::src::headers::sqlite3_h::sqlite_int64;
+                                    if *z.offset(11 as isize) as ::core::ffi::c_int
                                         == 0 as ::core::ffi::c_int
                                     {
                                         rc = 0 as ::core::ffi::c_int;
                                         current_block_175 = 2413388577390654262;
                                     } else if *(&raw const crate::src::src::global::sqlite3CtypeMap
                                         as *const ::core::ffi::c_uchar)
-                                        .offset(*z.offset(11 as isize)
-                                            as ::core::ffi::c_uchar
-                                            as isize)
+                                        .offset(
+                                            *z.offset(11 as isize) as ::core::ffi::c_uchar as isize
+                                        )
                                         as ::core::ffi::c_int
                                         & 0x1 as ::core::ffi::c_int
                                         != 0
                                         && getDigits_args(
-                                            z.offset(12 as isize)
-                                                as *const ::core::ffi::c_char,
+                                            z.offset(12 as isize) as *const ::core::ffi::c_char,
                                             b"20c:20e\0" as *const u8 as *const ::core::ffi::c_char,
                                             &[&raw mut h, &raw mut m],
                                         ) == 2 as ::core::ffi::c_int
                                     {
-                                        z2 = z.offset(12 as isize)
-                                            as *const ::core::ffi::c_char;
+                                        z2 = z.offset(12 as isize) as *const ::core::ffi::c_char;
                                         n = 2 as ::core::ffi::c_int;
                                         current_block_175 = 6897179874198677617;
                                     } else {
@@ -1031,7 +1262,8 @@ unsafe extern "C" fn parseModifier(
                         if *z2.offset(n as isize) as ::core::ffi::c_int == ':' as i32 {
                             let mut tx: DateTime = { ::core::mem::zeroed() };
                             let mut day: crate::src::headers::sqlite3_h::sqlite3_int64 = 0;
-                            if *(&raw const crate::src::src::global::sqlite3CtypeMap as *const ::core::ffi::c_uchar)
+                            if *(&raw const crate::src::src::global::sqlite3CtypeMap
+                                as *const ::core::ffi::c_uchar)
                                 .offset(*z2 as ::core::ffi::c_uchar as isize)
                                 as ::core::ffi::c_int
                                 & 0x4 as ::core::ffi::c_int
@@ -1042,8 +1274,10 @@ unsafe extern "C" fn parseModifier(
                             if !(parseHhMmSs(z2, &raw mut tx) != 0) {
                                 computeJD(&raw mut tx);
                                 tx.iJD -= 43200000 as crate::src::headers::sqlite3_h::sqlite3_int64;
-                                day = tx.iJD / 86400000 as crate::src::headers::sqlite3_h::sqlite3_int64;
-                                tx.iJD -= day * 86400000 as crate::src::headers::sqlite3_h::sqlite3_int64;
+                                day = tx.iJD
+                                    / 86400000 as crate::src::headers::sqlite3_h::sqlite3_int64;
+                                tx.iJD -=
+                                    day * 86400000 as crate::src::headers::sqlite3_h::sqlite3_int64;
                                 if z0 as ::core::ffi::c_int == '-' as i32 {
                                     tx.iJD = -tx.iJD;
                                 }
@@ -1054,7 +1288,8 @@ unsafe extern "C" fn parseModifier(
                             }
                         } else {
                             z = z.offset(n as isize);
-                            while *(&raw const crate::src::src::global::sqlite3CtypeMap as *const ::core::ffi::c_uchar)
+                            while *(&raw const crate::src::src::global::sqlite3CtypeMap
+                                as *const ::core::ffi::c_uchar)
                                 .offset(*z as ::core::ffi::c_uchar as isize)
                                 as ::core::ffi::c_int
                                 & 0x1 as ::core::ffi::c_int
@@ -1064,7 +1299,8 @@ unsafe extern "C" fn parseModifier(
                             }
                             n = crate::src::src::util::sqlite3Strlen30(z);
                             if !(n < 3 as ::core::ffi::c_int || n > 10 as ::core::ffi::c_int) {
-                                if *(&raw const crate::src::src::global::sqlite3UpperToLower as *const ::core::ffi::c_uchar)
+                                if *(&raw const crate::src::src::global::sqlite3UpperToLower
+                                    as *const ::core::ffi::c_uchar)
                                     .offset(*z.offset((n - 1 as ::core::ffi::c_int) as isize)
                                         as crate::src::ext::rtree::rtree::u8_0
                                         as isize)
@@ -1181,7 +1417,9 @@ unsafe extern "C" fn isDate(
         return setDateTimeToCurrent(context, p);
     }
     eType = crate::src::src::vdbeapi::sqlite3_value_type(*argv.offset(0 as isize));
-    if eType == crate::src::headers::sqlite3_h::SQLITE_FLOAT || eType == crate::src::headers::sqlite3_h::SQLITE_INTEGER {
+    if eType == crate::src::headers::sqlite3_h::SQLITE_FLOAT
+        || eType == crate::src::headers::sqlite3_h::SQLITE_INTEGER
+    {
         setRawDateNumber(
             p,
             crate::src::src::vdbeapi::sqlite3_value_double(*argv.offset(0 as isize)),
@@ -1238,7 +1476,10 @@ unsafe extern "C" fn juliandayFunc(
     };
     if isDate(context, argc, argv, &raw mut x) == 0 as ::core::ffi::c_int {
         computeJD(&raw mut x);
-        crate::src::src::vdbeapi::sqlite3_result_double(context, x.iJD as ::core::ffi::c_double / 86400000.0f64);
+        crate::src::src::vdbeapi::sqlite3_result_double(
+            context,
+            x.iJD as ::core::ffi::c_double / 86400000.0f64,
+        );
     }
 }
 
@@ -1268,7 +1509,9 @@ unsafe extern "C" fn unixepochFunc(
         if x.useSubsec() != 0 {
             crate::src::src::vdbeapi::sqlite3_result_double(
                 context,
-                (x.iJD as crate::src::ext::rtree::rtree::i64_0 - 21086676 as crate::src::ext::rtree::rtree::i64_0 * 10000000 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::i64_0)
+                (x.iJD as crate::src::ext::rtree::rtree::i64_0
+                    - 21086676 as crate::src::ext::rtree::rtree::i64_0
+                        * 10000000 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::i64_0)
                     as ::core::ffi::c_double
                     / 1000.0f64,
             );
@@ -1276,7 +1519,9 @@ unsafe extern "C" fn unixepochFunc(
             crate::src::src::vdbeapi::sqlite3_result_int64(
                 context,
                 x.iJD / 1000 as crate::src::headers::sqlite3_h::sqlite3_int64
-                    - 21086676 as crate::src::headers::sqlite3_h::sqlite3_int64 * 10000 as ::core::ffi::c_int as crate::src::headers::sqlite3_h::sqlite3_int64,
+                    - 21086676 as crate::src::headers::sqlite3_h::sqlite3_int64
+                        * 10000 as ::core::ffi::c_int
+                            as crate::src::headers::sqlite3_h::sqlite3_int64,
             );
         }
     }
@@ -1568,19 +1813,19 @@ unsafe extern "C" fn daysAfterJan01(mut pDate: *mut DateTime) -> ::core::ffi::c_
     jan01.M = 1 as ::core::ffi::c_int;
     jan01.D = 1 as ::core::ffi::c_int;
     computeJD(&raw mut jan01);
-    (((*pDate).iJD - jan01.iJD + 43200000 as crate::src::headers::sqlite3_h::sqlite3_int64) / 86400000 as crate::src::headers::sqlite3_h::sqlite3_int64)
-        as ::core::ffi::c_int
+    (((*pDate).iJD - jan01.iJD + 43200000 as crate::src::headers::sqlite3_h::sqlite3_int64)
+        / 86400000 as crate::src::headers::sqlite3_h::sqlite3_int64) as ::core::ffi::c_int
 }
 
 unsafe extern "C" fn daysAfterMonday(mut pDate: *mut DateTime) -> ::core::ffi::c_int {
-    (((*pDate).iJD + 43200000 as crate::src::headers::sqlite3_h::sqlite3_int64) / 86400000 as crate::src::headers::sqlite3_h::sqlite3_int64)
-        as ::core::ffi::c_int
+    (((*pDate).iJD + 43200000 as crate::src::headers::sqlite3_h::sqlite3_int64)
+        / 86400000 as crate::src::headers::sqlite3_h::sqlite3_int64) as ::core::ffi::c_int
         % 7 as ::core::ffi::c_int
 }
 
 unsafe extern "C" fn daysAfterSunday(mut pDate: *mut DateTime) -> ::core::ffi::c_int {
-    (((*pDate).iJD + 129600000 as crate::src::headers::sqlite3_h::sqlite3_int64) / 86400000 as crate::src::headers::sqlite3_h::sqlite3_int64)
-        as ::core::ffi::c_int
+    (((*pDate).iJD + 129600000 as crate::src::headers::sqlite3_h::sqlite3_int64)
+        / 86400000 as crate::src::headers::sqlite3_h::sqlite3_int64) as ::core::ffi::c_int
         % 7 as ::core::ffi::c_int
 }
 
@@ -1607,17 +1852,19 @@ unsafe extern "C" fn strftimeFunc(
     };
     let mut i: crate::__stddef_size_t_h::size_t = 0;
     let mut j: crate::__stddef_size_t_h::size_t = 0;
-    let mut db: *mut crate::src::headers::sqliteInt_h::sqlite3 = ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::sqlite3>();
+    let mut db: *mut crate::src::headers::sqliteInt_h::sqlite3 =
+        ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::sqlite3>();
     let mut zFmt: *const ::core::ffi::c_char = ::core::ptr::null::<::core::ffi::c_char>();
-    let mut sRes: crate::src::headers::sqliteInt_h::sqlite3_str = crate::src::headers::sqliteInt_h::sqlite3_str {
-    db:  ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::sqlite3>(),
-    zText:  ::core::ptr::null_mut::<::core::ffi::c_char>(),
-    nAlloc:  0,
-    mxAlloc:  0,
-    nChar:  0,
-    accError:  0,
-    printfFlags:  0,
-};
+    let mut sRes: crate::src::headers::sqliteInt_h::sqlite3_str =
+        crate::src::headers::sqliteInt_h::sqlite3_str {
+            db: ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::sqlite3>(),
+            zText: ::core::ptr::null_mut::<::core::ffi::c_char>(),
+            nAlloc: 0,
+            mxAlloc: 0,
+            nChar: 0,
+            accError: 0,
+            printfFlags: 0,
+        };
     if argc == 0 as ::core::ffi::c_int {
         return;
     }
@@ -1633,14 +1880,12 @@ unsafe extern "C" fn strftimeFunc(
     {
         return;
     }
-    db =  crate::src::src::vdbeapi::sqlite3_context_db_handle(context) as
-    *mut crate::src::headers::sqliteInt_h::sqlite3;
+    db = crate::src::src::vdbeapi::sqlite3_context_db_handle(context)
+        as *mut crate::src::headers::sqliteInt_h::sqlite3;
     crate::src::src::printf::sqlite3StrAccumInit(
-        
         &raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
-        
-        ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::sqlite3>() as
-    *mut crate::src::headers::sqliteInt_h::sqlite3,
+        ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::sqlite3>()
+            as *mut crate::src::headers::sqliteInt_h::sqlite3,
         ::core::ptr::null_mut::<::core::ffi::c_char>(),
         0 as ::core::ffi::c_int,
         (*db).aLimit[crate::src::headers::sqlite3_h::SQLITE_LIMIT_LENGTH as usize],
@@ -1654,7 +1899,6 @@ unsafe extern "C" fn strftimeFunc(
         if !(*zFmt.offset(i as isize) as ::core::ffi::c_int != '%' as i32) {
             if j < i {
                 crate::src::src::printf::sqlite3_str_append(
-                    
                     &raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
                     zFmt.offset(j as isize),
                     i.wrapping_sub(j) as ::core::ffi::c_int,
@@ -1667,13 +1911,15 @@ unsafe extern "C" fn strftimeFunc(
                 100 | 101 => {
                     if cf as ::core::ffi::c_int == 'd' as i32 {
                         crate::src::src::printf::sqlite3_str_vappendf2(
-                            &raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
+                            &raw mut sRes as *mut _
+                                as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
                             "%02d",
                             printf_args!(x.D),
                         );
                     } else {
                         crate::src::src::printf::sqlite3_str_vappendf2(
-                            &raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
+                            &raw mut sRes as *mut _
+                                as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
                             "%2d",
                             printf_args!(x.D),
                         );
@@ -1685,14 +1931,16 @@ unsafe extern "C" fn strftimeFunc(
                         s = 59.999f64;
                     }
                     crate::src::src::printf::sqlite3_str_vappendf2(
-                        &raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
+                        &raw mut sRes as *mut _
+                            as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
                         "%06.3f",
                         printf_args!(s),
                     );
                 }
                 70 => {
                     crate::src::src::printf::sqlite3_str_vappendf2(
-                        &raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
+                        &raw mut sRes as *mut _
+                            as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
                         "%04d-%02d-%02d",
                         printf_args!(x.Y, x.M, x.D),
                     );
@@ -1706,13 +1954,15 @@ unsafe extern "C" fn strftimeFunc(
                     computeYMD(&raw mut y);
                     if cf as ::core::ffi::c_int == 'g' as i32 {
                         crate::src::src::printf::sqlite3_str_vappendf2(
-                            &raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
+                            &raw mut sRes as *mut _
+                                as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
                             "%02d",
                             printf_args!(y.Y % 100 as ::core::ffi::c_int),
                         );
                     } else {
                         crate::src::src::printf::sqlite3_str_vappendf2(
-                            &raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
+                            &raw mut sRes as *mut _
+                                as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
                             "%04d",
                             printf_args!(y.Y),
                         );
@@ -1721,13 +1971,15 @@ unsafe extern "C" fn strftimeFunc(
                 72 | 107 => {
                     if cf as ::core::ffi::c_int == 'H' as i32 {
                         crate::src::src::printf::sqlite3_str_vappendf2(
-                            &raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
+                            &raw mut sRes as *mut _
+                                as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
                             "%02d",
                             printf_args!(x.h),
                         );
                     } else {
                         crate::src::src::printf::sqlite3_str_vappendf2(
-                            &raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
+                            &raw mut sRes as *mut _
+                                as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
                             "%2d",
                             printf_args!(x.h),
                         );
@@ -1743,13 +1995,15 @@ unsafe extern "C" fn strftimeFunc(
                     }
                     if cf as ::core::ffi::c_int == 'I' as i32 {
                         crate::src::src::printf::sqlite3_str_vappendf2(
-                            &raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
+                            &raw mut sRes as *mut _
+                                as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
                             "%02d",
                             printf_args!(h),
                         );
                     } else {
                         crate::src::src::printf::sqlite3_str_vappendf2(
-                            &raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
+                            &raw mut sRes as *mut _
+                                as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
                             "%2d",
                             printf_args!(h),
                         );
@@ -1757,28 +2011,32 @@ unsafe extern "C" fn strftimeFunc(
                 }
                 106 => {
                     crate::src::src::printf::sqlite3_str_vappendf2(
-                        &raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
+                        &raw mut sRes as *mut _
+                            as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
                         "%03d",
                         printf_args!(daysAfterJan01(&raw mut x) + 1 as ::core::ffi::c_int),
                     );
                 }
                 74 => {
                     crate::src::src::printf::sqlite3_str_vappendf2(
-                        &raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
+                        &raw mut sRes as *mut _
+                            as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
                         "%.16g",
                         printf_args!(x.iJD as ::core::ffi::c_double / 86400000.0f64),
                     );
                 }
                 109 => {
                     crate::src::src::printf::sqlite3_str_vappendf2(
-                        &raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
+                        &raw mut sRes as *mut _
+                            as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
                         "%02d",
                         printf_args!(x.M),
                     );
                 }
                 77 => {
                     crate::src::src::printf::sqlite3_str_vappendf2(
-                        &raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
+                        &raw mut sRes as *mut _
+                            as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
                         "%02d",
                         printf_args!(x.m),
                     );
@@ -1786,8 +2044,8 @@ unsafe extern "C" fn strftimeFunc(
                 112 | 80 => {
                     if x.h >= 12 as ::core::ffi::c_int {
                         crate::src::src::printf::sqlite3_str_append(
-                            
-                            &raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
+                            &raw mut sRes as *mut _
+                                as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
                             if cf as ::core::ffi::c_int == 'p' as i32 {
                                 b"PM\0" as *const u8 as *const ::core::ffi::c_char
                             } else {
@@ -1797,8 +2055,8 @@ unsafe extern "C" fn strftimeFunc(
                         );
                     } else {
                         crate::src::src::printf::sqlite3_str_append(
-                            
-                            &raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
+                            &raw mut sRes as *mut _
+                                as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
                             if cf as ::core::ffi::c_int == 'p' as i32 {
                                 b"AM\0" as *const u8 as *const ::core::ffi::c_char
                             } else {
@@ -1810,7 +2068,8 @@ unsafe extern "C" fn strftimeFunc(
                 }
                 82 => {
                     crate::src::src::printf::sqlite3_str_vappendf2(
-                        &raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
+                        &raw mut sRes as *mut _
+                            as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
                         "%02d:%02d",
                         printf_args!(x.h, x.m),
                     );
@@ -1818,20 +2077,28 @@ unsafe extern "C" fn strftimeFunc(
                 115 => {
                     if x.useSubsec() != 0 {
                         crate::src::src::printf::sqlite3_str_vappendf2(
-                            &raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
+                            &raw mut sRes as *mut _
+                                as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
                             "%.3f",
                             printf_args!(
                                 (x.iJD as crate::src::ext::rtree::rtree::i64_0
-                                    - 21086676 as crate::src::ext::rtree::rtree::i64_0 * 10000000 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::i64_0)
+                                    - 21086676 as crate::src::ext::rtree::rtree::i64_0
+                                        * 10000000 as ::core::ffi::c_int
+                                            as crate::src::ext::rtree::rtree::i64_0)
                                     as ::core::ffi::c_double
                                     / 1000.0f64
                             ),
                         );
                     } else {
-                        let mut iS: crate::src::ext::rtree::rtree::i64_0 = x.iJD as crate::src::ext::rtree::rtree::i64_0 / 1000 as crate::src::ext::rtree::rtree::i64_0
-                            - 21086676 as crate::src::ext::rtree::rtree::i64_0 * 10000 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::i64_0;
+                        let mut iS: crate::src::ext::rtree::rtree::i64_0 = x.iJD
+                            as crate::src::ext::rtree::rtree::i64_0
+                            / 1000 as crate::src::ext::rtree::rtree::i64_0
+                            - 21086676 as crate::src::ext::rtree::rtree::i64_0
+                                * 10000 as ::core::ffi::c_int
+                                    as crate::src::ext::rtree::rtree::i64_0;
                         crate::src::src::printf::sqlite3_str_vappendf2(
-                            &raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
+                            &raw mut sRes as *mut _
+                                as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
                             "%lld",
                             printf_args!(iS),
                         );
@@ -1839,14 +2106,16 @@ unsafe extern "C" fn strftimeFunc(
                 }
                 83 => {
                     crate::src::src::printf::sqlite3_str_vappendf2(
-                        &raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
+                        &raw mut sRes as *mut _
+                            as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
                         "%02d",
                         printf_args!(x.s as ::core::ffi::c_int),
                     );
                 }
                 84 => {
                     crate::src::src::printf::sqlite3_str_vappendf2(
-                        &raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
+                        &raw mut sRes as *mut _
+                            as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
                         "%02d:%02d:%02d",
                         printf_args!(x.h, x.m, x.s as ::core::ffi::c_int),
                     );
@@ -1860,11 +2129,17 @@ unsafe extern "C" fn strftimeFunc(
                     {
                         c = '7' as i32 as ::core::ffi::c_char;
                     }
-                    crate::src::src::printf::sqlite3_str_appendchar(&raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str, 1 as ::core::ffi::c_int, c);
+                    crate::src::src::printf::sqlite3_str_appendchar(
+                        &raw mut sRes as *mut _
+                            as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
+                        1 as ::core::ffi::c_int,
+                        c,
+                    );
                 }
                 85 => {
                     crate::src::src::printf::sqlite3_str_vappendf2(
-                        &raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
+                        &raw mut sRes as *mut _
+                            as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
                         "%02d",
                         printf_args!(
                             (daysAfterJan01(&raw mut x) - daysAfterSunday(&raw mut x)
@@ -1881,7 +2156,8 @@ unsafe extern "C" fn strftimeFunc(
                     y_0.validYMD = 0 as ::core::ffi::c_char;
                     computeYMD(&raw mut y_0);
                     crate::src::src::printf::sqlite3_str_vappendf2(
-                        &raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
+                        &raw mut sRes as *mut _
+                            as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
                         "%02d",
                         printf_args!(
                             daysAfterJan01(&raw mut y_0) / 7 as ::core::ffi::c_int
@@ -1891,7 +2167,8 @@ unsafe extern "C" fn strftimeFunc(
                 }
                 87 => {
                     crate::src::src::printf::sqlite3_str_vappendf2(
-                        &raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
+                        &raw mut sRes as *mut _
+                            as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
                         "%02d",
                         printf_args!(
                             (daysAfterJan01(&raw mut x) - daysAfterMonday(&raw mut x)
@@ -1902,21 +2179,25 @@ unsafe extern "C" fn strftimeFunc(
                 }
                 89 => {
                     crate::src::src::printf::sqlite3_str_vappendf2(
-                        &raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
+                        &raw mut sRes as *mut _
+                            as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
                         "%04d",
                         printf_args!(x.Y),
                     );
                 }
                 37 => {
                     crate::src::src::printf::sqlite3_str_appendchar(
-                        
-                        &raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
+                        &raw mut sRes as *mut _
+                            as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
                         1 as ::core::ffi::c_int,
                         '%' as i32 as ::core::ffi::c_char,
                     );
                 }
                 _ => {
-                    crate::src::src::printf::sqlite3_str_reset(&raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str);
+                    crate::src::src::printf::sqlite3_str_reset(
+                        &raw mut sRes as *mut _
+                            as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
+                    );
                     return;
                 }
             }
@@ -1925,13 +2206,15 @@ unsafe extern "C" fn strftimeFunc(
     }
     if j < i {
         crate::src::src::printf::sqlite3_str_append(
-            
             &raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
             zFmt.offset(j as isize),
             i.wrapping_sub(j) as ::core::ffi::c_int,
         );
     }
-    crate::src::src::printf::sqlite3ResultStrAccum(context,  &raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str);
+    crate::src::src::printf::sqlite3ResultStrAccum(
+        context,
+        &raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
+    );
 }
 
 unsafe extern "C" fn ctimeFunc(
@@ -1998,15 +2281,16 @@ unsafe extern "C" fn timediffFunc(
         rawS_isError_useSubsec_isUtc_isLocal: [0; 1],
         c2rust_padding: [0; 3],
     };
-    let mut sRes: crate::src::headers::sqliteInt_h::sqlite3_str = crate::src::headers::sqliteInt_h::sqlite3_str {
-    db:  ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::sqlite3>(),
-    zText:  ::core::ptr::null_mut::<::core::ffi::c_char>(),
-    nAlloc:  0,
-    mxAlloc:  0,
-    nChar:  0,
-    accError:  0,
-    printfFlags:  0,
-};
+    let mut sRes: crate::src::headers::sqliteInt_h::sqlite3_str =
+        crate::src::headers::sqliteInt_h::sqlite3_str {
+            db: ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::sqlite3>(),
+            zText: ::core::ptr::null_mut::<::core::ffi::c_char>(),
+            nAlloc: 0,
+            mxAlloc: 0,
+            nChar: 0,
+            accError: 0,
+            printfFlags: 0,
+        };
     if isDate(
         context,
         1 as ::core::ffi::c_int,
@@ -2063,7 +2347,8 @@ unsafe extern "C" fn timediffFunc(
         d1.iJD = (d1.iJD as crate::src::ext::rtree::rtree::u64_0).wrapping_add(
             (1486995408 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::u64_0)
                 .wrapping_mul(100000 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::u64_0),
-        ) as crate::src::headers::sqlite3_h::sqlite3_int64 as crate::src::headers::sqlite3_h::sqlite3_int64;
+        ) as crate::src::headers::sqlite3_h::sqlite3_int64
+            as crate::src::headers::sqlite3_h::sqlite3_int64;
     } else {
         sign = '-' as i32 as ::core::ffi::c_char;
         Y = d2.Y - d1.Y;
@@ -2100,16 +2385,15 @@ unsafe extern "C" fn timediffFunc(
         d1.iJD = (d1.iJD as crate::src::ext::rtree::rtree::u64_0).wrapping_add(
             (1486995408 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::u64_0)
                 .wrapping_mul(100000 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::u64_0),
-        ) as crate::src::headers::sqlite3_h::sqlite3_int64 as crate::src::headers::sqlite3_h::sqlite3_int64;
+        ) as crate::src::headers::sqlite3_h::sqlite3_int64
+            as crate::src::headers::sqlite3_h::sqlite3_int64;
     }
     clearYMD_HMS_TZ(&raw mut d1);
     computeYMD_HMS(&raw mut d1);
     crate::src::src::printf::sqlite3StrAccumInit(
-        
         &raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
-        
-        ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::sqlite3>() as
-    *mut crate::src::headers::sqliteInt_h::sqlite3,
+        ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::sqlite3>()
+            as *mut crate::src::headers::sqliteInt_h::sqlite3,
         ::core::ptr::null_mut::<::core::ffi::c_char>(),
         0 as ::core::ffi::c_int,
         100 as ::core::ffi::c_int,
@@ -2127,7 +2411,10 @@ unsafe extern "C" fn timediffFunc(
             d1.s
         ),
     );
-    crate::src::src::printf::sqlite3ResultStrAccum(context,  &raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str);
+    crate::src::src::printf::sqlite3ResultStrAccum(
+        context,
+        &raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
+    );
 }
 
 unsafe extern "C" fn ctimestampFunc(
@@ -2147,15 +2434,18 @@ pub unsafe extern "C" fn sqlite3RegisterDateTimeFunctions() {
     static mut aDateTimeFuncs: [crate::src::headers::sqliteInt_h::FuncDef; 10] = {
         [
             crate::src::headers::sqliteInt_h::FuncDef {
-    nArg:  -(1 as ::core::ffi::c_int) as crate::src::fts5::i16_0,
-    funcFlags:  (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
+                nArg: -(1 as ::core::ffi::c_int) as crate::src::fts5::i16_0,
+                funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
                     | crate::src::headers::sqliteInt_h::SQLITE_FUNC_SLOCHNG
                     | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | crate::src::headers::sqliteInt_h::SQLITE_FUNC_CONSTANT) as crate::src::ext::rtree::rtree::u32_0,
-    pUserData:  &raw const crate::src::src::global::sqlite3Config as *mut crate::src::headers::sqliteInt_h::Sqlite3Config
+                    | crate::src::headers::sqliteInt_h::SQLITE_FUNC_CONSTANT)
+                    as crate::src::ext::rtree::rtree::u32_0,
+                pUserData: &raw const crate::src::src::global::sqlite3Config
+                    as *mut crate::src::headers::sqliteInt_h::Sqlite3Config
                     as *mut ::core::ffi::c_void,
-    pNext:  ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>() as *mut crate::src::headers::sqliteInt_h::FuncDef,
-    xSFunc:  Some(
+                pNext: ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>()
+                    as *mut crate::src::headers::sqliteInt_h::FuncDef,
+                xSFunc: Some(
                     juliandayFunc
                         as unsafe extern "C" fn(
                             *mut crate::src::headers::vdbeInt_h::sqlite3_context,
@@ -2163,24 +2453,28 @@ pub unsafe extern "C" fn sqlite3RegisterDateTimeFunctions() {
                             *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
                         ) -> (),
                 ),
-    xFinalize:  None,
-    xValue:  None,
-    xInverse:  None,
-    zName:  b"julianday\0" as *const u8 as *const ::core::ffi::c_char,
-    u:  crate::src::headers::sqliteInt_h::__anon_union_2 {
-    pHash:  ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>() as *mut crate::src::headers::sqliteInt_h::FuncDef,
-},
-},
+                xFinalize: None,
+                xValue: None,
+                xInverse: None,
+                zName: b"julianday\0" as *const u8 as *const ::core::ffi::c_char,
+                u: crate::src::headers::sqliteInt_h::__anon_union_2 {
+                    pHash: ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>()
+                        as *mut crate::src::headers::sqliteInt_h::FuncDef,
+                },
+            },
             crate::src::headers::sqliteInt_h::FuncDef {
-    nArg:  -(1 as ::core::ffi::c_int) as crate::src::fts5::i16_0,
-    funcFlags:  (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
+                nArg: -(1 as ::core::ffi::c_int) as crate::src::fts5::i16_0,
+                funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
                     | crate::src::headers::sqliteInt_h::SQLITE_FUNC_SLOCHNG
                     | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | crate::src::headers::sqliteInt_h::SQLITE_FUNC_CONSTANT) as crate::src::ext::rtree::rtree::u32_0,
-    pUserData:  &raw const crate::src::src::global::sqlite3Config as *mut crate::src::headers::sqliteInt_h::Sqlite3Config
+                    | crate::src::headers::sqliteInt_h::SQLITE_FUNC_CONSTANT)
+                    as crate::src::ext::rtree::rtree::u32_0,
+                pUserData: &raw const crate::src::src::global::sqlite3Config
+                    as *mut crate::src::headers::sqliteInt_h::Sqlite3Config
                     as *mut ::core::ffi::c_void,
-    pNext:  ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>() as *mut crate::src::headers::sqliteInt_h::FuncDef,
-    xSFunc:  Some(
+                pNext: ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>()
+                    as *mut crate::src::headers::sqliteInt_h::FuncDef,
+                xSFunc: Some(
                     unixepochFunc
                         as unsafe extern "C" fn(
                             *mut crate::src::headers::vdbeInt_h::sqlite3_context,
@@ -2188,24 +2482,28 @@ pub unsafe extern "C" fn sqlite3RegisterDateTimeFunctions() {
                             *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
                         ) -> (),
                 ),
-    xFinalize:  None,
-    xValue:  None,
-    xInverse:  None,
-    zName:  b"unixepoch\0" as *const u8 as *const ::core::ffi::c_char,
-    u:  crate::src::headers::sqliteInt_h::__anon_union_2 {
-    pHash:  ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>() as *mut crate::src::headers::sqliteInt_h::FuncDef,
-},
-},
+                xFinalize: None,
+                xValue: None,
+                xInverse: None,
+                zName: b"unixepoch\0" as *const u8 as *const ::core::ffi::c_char,
+                u: crate::src::headers::sqliteInt_h::__anon_union_2 {
+                    pHash: ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>()
+                        as *mut crate::src::headers::sqliteInt_h::FuncDef,
+                },
+            },
             crate::src::headers::sqliteInt_h::FuncDef {
-    nArg:  -(1 as ::core::ffi::c_int) as crate::src::fts5::i16_0,
-    funcFlags:  (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
+                nArg: -(1 as ::core::ffi::c_int) as crate::src::fts5::i16_0,
+                funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
                     | crate::src::headers::sqliteInt_h::SQLITE_FUNC_SLOCHNG
                     | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | crate::src::headers::sqliteInt_h::SQLITE_FUNC_CONSTANT) as crate::src::ext::rtree::rtree::u32_0,
-    pUserData:  &raw const crate::src::src::global::sqlite3Config as *mut crate::src::headers::sqliteInt_h::Sqlite3Config
+                    | crate::src::headers::sqliteInt_h::SQLITE_FUNC_CONSTANT)
+                    as crate::src::ext::rtree::rtree::u32_0,
+                pUserData: &raw const crate::src::src::global::sqlite3Config
+                    as *mut crate::src::headers::sqliteInt_h::Sqlite3Config
                     as *mut ::core::ffi::c_void,
-    pNext:  ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>() as *mut crate::src::headers::sqliteInt_h::FuncDef,
-    xSFunc:  Some(
+                pNext: ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>()
+                    as *mut crate::src::headers::sqliteInt_h::FuncDef,
+                xSFunc: Some(
                     dateFunc
                         as unsafe extern "C" fn(
                             *mut crate::src::headers::vdbeInt_h::sqlite3_context,
@@ -2213,24 +2511,28 @@ pub unsafe extern "C" fn sqlite3RegisterDateTimeFunctions() {
                             *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
                         ) -> (),
                 ),
-    xFinalize:  None,
-    xValue:  None,
-    xInverse:  None,
-    zName:  b"date\0" as *const u8 as *const ::core::ffi::c_char,
-    u:  crate::src::headers::sqliteInt_h::__anon_union_2 {
-    pHash:  ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>() as *mut crate::src::headers::sqliteInt_h::FuncDef,
-},
-},
+                xFinalize: None,
+                xValue: None,
+                xInverse: None,
+                zName: b"date\0" as *const u8 as *const ::core::ffi::c_char,
+                u: crate::src::headers::sqliteInt_h::__anon_union_2 {
+                    pHash: ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>()
+                        as *mut crate::src::headers::sqliteInt_h::FuncDef,
+                },
+            },
             crate::src::headers::sqliteInt_h::FuncDef {
-    nArg:  -(1 as ::core::ffi::c_int) as crate::src::fts5::i16_0,
-    funcFlags:  (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
+                nArg: -(1 as ::core::ffi::c_int) as crate::src::fts5::i16_0,
+                funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
                     | crate::src::headers::sqliteInt_h::SQLITE_FUNC_SLOCHNG
                     | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | crate::src::headers::sqliteInt_h::SQLITE_FUNC_CONSTANT) as crate::src::ext::rtree::rtree::u32_0,
-    pUserData:  &raw const crate::src::src::global::sqlite3Config as *mut crate::src::headers::sqliteInt_h::Sqlite3Config
+                    | crate::src::headers::sqliteInt_h::SQLITE_FUNC_CONSTANT)
+                    as crate::src::ext::rtree::rtree::u32_0,
+                pUserData: &raw const crate::src::src::global::sqlite3Config
+                    as *mut crate::src::headers::sqliteInt_h::Sqlite3Config
                     as *mut ::core::ffi::c_void,
-    pNext:  ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>() as *mut crate::src::headers::sqliteInt_h::FuncDef,
-    xSFunc:  Some(
+                pNext: ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>()
+                    as *mut crate::src::headers::sqliteInt_h::FuncDef,
+                xSFunc: Some(
                     timeFunc
                         as unsafe extern "C" fn(
                             *mut crate::src::headers::vdbeInt_h::sqlite3_context,
@@ -2238,24 +2540,28 @@ pub unsafe extern "C" fn sqlite3RegisterDateTimeFunctions() {
                             *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
                         ) -> (),
                 ),
-    xFinalize:  None,
-    xValue:  None,
-    xInverse:  None,
-    zName:  b"time\0" as *const u8 as *const ::core::ffi::c_char,
-    u:  crate::src::headers::sqliteInt_h::__anon_union_2 {
-    pHash:  ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>() as *mut crate::src::headers::sqliteInt_h::FuncDef,
-},
-},
+                xFinalize: None,
+                xValue: None,
+                xInverse: None,
+                zName: b"time\0" as *const u8 as *const ::core::ffi::c_char,
+                u: crate::src::headers::sqliteInt_h::__anon_union_2 {
+                    pHash: ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>()
+                        as *mut crate::src::headers::sqliteInt_h::FuncDef,
+                },
+            },
             crate::src::headers::sqliteInt_h::FuncDef {
-    nArg:  -(1 as ::core::ffi::c_int) as crate::src::fts5::i16_0,
-    funcFlags:  (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
+                nArg: -(1 as ::core::ffi::c_int) as crate::src::fts5::i16_0,
+                funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
                     | crate::src::headers::sqliteInt_h::SQLITE_FUNC_SLOCHNG
                     | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | crate::src::headers::sqliteInt_h::SQLITE_FUNC_CONSTANT) as crate::src::ext::rtree::rtree::u32_0,
-    pUserData:  &raw const crate::src::src::global::sqlite3Config as *mut crate::src::headers::sqliteInt_h::Sqlite3Config
+                    | crate::src::headers::sqliteInt_h::SQLITE_FUNC_CONSTANT)
+                    as crate::src::ext::rtree::rtree::u32_0,
+                pUserData: &raw const crate::src::src::global::sqlite3Config
+                    as *mut crate::src::headers::sqliteInt_h::Sqlite3Config
                     as *mut ::core::ffi::c_void,
-    pNext:  ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>() as *mut crate::src::headers::sqliteInt_h::FuncDef,
-    xSFunc:  Some(
+                pNext: ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>()
+                    as *mut crate::src::headers::sqliteInt_h::FuncDef,
+                xSFunc: Some(
                     datetimeFunc
                         as unsafe extern "C" fn(
                             *mut crate::src::headers::vdbeInt_h::sqlite3_context,
@@ -2263,24 +2569,28 @@ pub unsafe extern "C" fn sqlite3RegisterDateTimeFunctions() {
                             *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
                         ) -> (),
                 ),
-    xFinalize:  None,
-    xValue:  None,
-    xInverse:  None,
-    zName:  b"datetime\0" as *const u8 as *const ::core::ffi::c_char,
-    u:  crate::src::headers::sqliteInt_h::__anon_union_2 {
-    pHash:  ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>() as *mut crate::src::headers::sqliteInt_h::FuncDef,
-},
-},
+                xFinalize: None,
+                xValue: None,
+                xInverse: None,
+                zName: b"datetime\0" as *const u8 as *const ::core::ffi::c_char,
+                u: crate::src::headers::sqliteInt_h::__anon_union_2 {
+                    pHash: ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>()
+                        as *mut crate::src::headers::sqliteInt_h::FuncDef,
+                },
+            },
             crate::src::headers::sqliteInt_h::FuncDef {
-    nArg:  -(1 as ::core::ffi::c_int) as crate::src::fts5::i16_0,
-    funcFlags:  (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
+                nArg: -(1 as ::core::ffi::c_int) as crate::src::fts5::i16_0,
+                funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
                     | crate::src::headers::sqliteInt_h::SQLITE_FUNC_SLOCHNG
                     | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | crate::src::headers::sqliteInt_h::SQLITE_FUNC_CONSTANT) as crate::src::ext::rtree::rtree::u32_0,
-    pUserData:  &raw const crate::src::src::global::sqlite3Config as *mut crate::src::headers::sqliteInt_h::Sqlite3Config
+                    | crate::src::headers::sqliteInt_h::SQLITE_FUNC_CONSTANT)
+                    as crate::src::ext::rtree::rtree::u32_0,
+                pUserData: &raw const crate::src::src::global::sqlite3Config
+                    as *mut crate::src::headers::sqliteInt_h::Sqlite3Config
                     as *mut ::core::ffi::c_void,
-    pNext:  ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>() as *mut crate::src::headers::sqliteInt_h::FuncDef,
-    xSFunc:  Some(
+                pNext: ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>()
+                    as *mut crate::src::headers::sqliteInt_h::FuncDef,
+                xSFunc: Some(
                     strftimeFunc
                         as unsafe extern "C" fn(
                             *mut crate::src::headers::vdbeInt_h::sqlite3_context,
@@ -2288,24 +2598,28 @@ pub unsafe extern "C" fn sqlite3RegisterDateTimeFunctions() {
                             *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
                         ) -> (),
                 ),
-    xFinalize:  None,
-    xValue:  None,
-    xInverse:  None,
-    zName:  b"strftime\0" as *const u8 as *const ::core::ffi::c_char,
-    u:  crate::src::headers::sqliteInt_h::__anon_union_2 {
-    pHash:  ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>() as *mut crate::src::headers::sqliteInt_h::FuncDef,
-},
-},
+                xFinalize: None,
+                xValue: None,
+                xInverse: None,
+                zName: b"strftime\0" as *const u8 as *const ::core::ffi::c_char,
+                u: crate::src::headers::sqliteInt_h::__anon_union_2 {
+                    pHash: ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>()
+                        as *mut crate::src::headers::sqliteInt_h::FuncDef,
+                },
+            },
             crate::src::headers::sqliteInt_h::FuncDef {
-    nArg:  2 as crate::src::fts5::i16_0,
-    funcFlags:  (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
+                nArg: 2 as crate::src::fts5::i16_0,
+                funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
                     | crate::src::headers::sqliteInt_h::SQLITE_FUNC_SLOCHNG
                     | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | crate::src::headers::sqliteInt_h::SQLITE_FUNC_CONSTANT) as crate::src::ext::rtree::rtree::u32_0,
-    pUserData:  &raw const crate::src::src::global::sqlite3Config as *mut crate::src::headers::sqliteInt_h::Sqlite3Config
+                    | crate::src::headers::sqliteInt_h::SQLITE_FUNC_CONSTANT)
+                    as crate::src::ext::rtree::rtree::u32_0,
+                pUserData: &raw const crate::src::src::global::sqlite3Config
+                    as *mut crate::src::headers::sqliteInt_h::Sqlite3Config
                     as *mut ::core::ffi::c_void,
-    pNext:  ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>() as *mut crate::src::headers::sqliteInt_h::FuncDef,
-    xSFunc:  Some(
+                pNext: ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>()
+                    as *mut crate::src::headers::sqliteInt_h::FuncDef,
+                xSFunc: Some(
                     timediffFunc
                         as unsafe extern "C" fn(
                             *mut crate::src::headers::vdbeInt_h::sqlite3_context,
@@ -2313,20 +2627,25 @@ pub unsafe extern "C" fn sqlite3RegisterDateTimeFunctions() {
                             *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
                         ) -> (),
                 ),
-    xFinalize:  None,
-    xValue:  None,
-    xInverse:  None,
-    zName:  b"timediff\0" as *const u8 as *const ::core::ffi::c_char,
-    u:  crate::src::headers::sqliteInt_h::__anon_union_2 {
-    pHash:  ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>() as *mut crate::src::headers::sqliteInt_h::FuncDef,
-},
-},
+                xFinalize: None,
+                xValue: None,
+                xInverse: None,
+                zName: b"timediff\0" as *const u8 as *const ::core::ffi::c_char,
+                u: crate::src::headers::sqliteInt_h::__anon_union_2 {
+                    pHash: ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>()
+                        as *mut crate::src::headers::sqliteInt_h::FuncDef,
+                },
+            },
             crate::src::headers::sqliteInt_h::FuncDef {
-    nArg:  0 as crate::src::fts5::i16_0,
-    funcFlags:  (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN | crate::src::headers::sqliteInt_h::SQLITE_FUNC_SLOCHNG | crate::src::headers::sqlite3_h::SQLITE_UTF8) as crate::src::ext::rtree::rtree::u32_0,
-    pUserData:  ::core::ptr::null::<::core::ffi::c_void>() as *mut ::core::ffi::c_void,
-    pNext:  ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>() as *mut crate::src::headers::sqliteInt_h::FuncDef,
-    xSFunc:  Some(
+                nArg: 0 as crate::src::fts5::i16_0,
+                funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
+                    | crate::src::headers::sqliteInt_h::SQLITE_FUNC_SLOCHNG
+                    | crate::src::headers::sqlite3_h::SQLITE_UTF8)
+                    as crate::src::ext::rtree::rtree::u32_0,
+                pUserData: ::core::ptr::null::<::core::ffi::c_void>() as *mut ::core::ffi::c_void,
+                pNext: ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>()
+                    as *mut crate::src::headers::sqliteInt_h::FuncDef,
+                xSFunc: Some(
                     ctimeFunc
                         as unsafe extern "C" fn(
                             *mut crate::src::headers::vdbeInt_h::sqlite3_context,
@@ -2334,20 +2653,25 @@ pub unsafe extern "C" fn sqlite3RegisterDateTimeFunctions() {
                             *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
                         ) -> (),
                 ),
-    xFinalize:  None,
-    xValue:  None,
-    xInverse:  None,
-    zName:  b"current_time\0" as *const u8 as *const ::core::ffi::c_char,
-    u:  crate::src::headers::sqliteInt_h::__anon_union_2 {
-    pHash:  ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>() as *mut crate::src::headers::sqliteInt_h::FuncDef,
-},
-},
+                xFinalize: None,
+                xValue: None,
+                xInverse: None,
+                zName: b"current_time\0" as *const u8 as *const ::core::ffi::c_char,
+                u: crate::src::headers::sqliteInt_h::__anon_union_2 {
+                    pHash: ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>()
+                        as *mut crate::src::headers::sqliteInt_h::FuncDef,
+                },
+            },
             crate::src::headers::sqliteInt_h::FuncDef {
-    nArg:  0 as crate::src::fts5::i16_0,
-    funcFlags:  (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN | crate::src::headers::sqliteInt_h::SQLITE_FUNC_SLOCHNG | crate::src::headers::sqlite3_h::SQLITE_UTF8) as crate::src::ext::rtree::rtree::u32_0,
-    pUserData:  ::core::ptr::null::<::core::ffi::c_void>() as *mut ::core::ffi::c_void,
-    pNext:  ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>() as *mut crate::src::headers::sqliteInt_h::FuncDef,
-    xSFunc:  Some(
+                nArg: 0 as crate::src::fts5::i16_0,
+                funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
+                    | crate::src::headers::sqliteInt_h::SQLITE_FUNC_SLOCHNG
+                    | crate::src::headers::sqlite3_h::SQLITE_UTF8)
+                    as crate::src::ext::rtree::rtree::u32_0,
+                pUserData: ::core::ptr::null::<::core::ffi::c_void>() as *mut ::core::ffi::c_void,
+                pNext: ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>()
+                    as *mut crate::src::headers::sqliteInt_h::FuncDef,
+                xSFunc: Some(
                     ctimestampFunc
                         as unsafe extern "C" fn(
                             *mut crate::src::headers::vdbeInt_h::sqlite3_context,
@@ -2355,20 +2679,25 @@ pub unsafe extern "C" fn sqlite3RegisterDateTimeFunctions() {
                             *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
                         ) -> (),
                 ),
-    xFinalize:  None,
-    xValue:  None,
-    xInverse:  None,
-    zName:  b"current_timestamp\0" as *const u8 as *const ::core::ffi::c_char,
-    u:  crate::src::headers::sqliteInt_h::__anon_union_2 {
-    pHash:  ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>() as *mut crate::src::headers::sqliteInt_h::FuncDef,
-},
-},
+                xFinalize: None,
+                xValue: None,
+                xInverse: None,
+                zName: b"current_timestamp\0" as *const u8 as *const ::core::ffi::c_char,
+                u: crate::src::headers::sqliteInt_h::__anon_union_2 {
+                    pHash: ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>()
+                        as *mut crate::src::headers::sqliteInt_h::FuncDef,
+                },
+            },
             crate::src::headers::sqliteInt_h::FuncDef {
-    nArg:  0 as crate::src::fts5::i16_0,
-    funcFlags:  (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN | crate::src::headers::sqliteInt_h::SQLITE_FUNC_SLOCHNG | crate::src::headers::sqlite3_h::SQLITE_UTF8) as crate::src::ext::rtree::rtree::u32_0,
-    pUserData:  ::core::ptr::null::<::core::ffi::c_void>() as *mut ::core::ffi::c_void,
-    pNext:  ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>() as *mut crate::src::headers::sqliteInt_h::FuncDef,
-    xSFunc:  Some(
+                nArg: 0 as crate::src::fts5::i16_0,
+                funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
+                    | crate::src::headers::sqliteInt_h::SQLITE_FUNC_SLOCHNG
+                    | crate::src::headers::sqlite3_h::SQLITE_UTF8)
+                    as crate::src::ext::rtree::rtree::u32_0,
+                pUserData: ::core::ptr::null::<::core::ffi::c_void>() as *mut ::core::ffi::c_void,
+                pNext: ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>()
+                    as *mut crate::src::headers::sqliteInt_h::FuncDef,
+                xSFunc: Some(
                     cdateFunc
                         as unsafe extern "C" fn(
                             *mut crate::src::headers::vdbeInt_h::sqlite3_context,
@@ -2376,21 +2705,24 @@ pub unsafe extern "C" fn sqlite3RegisterDateTimeFunctions() {
                             *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
                         ) -> (),
                 ),
-    xFinalize:  None,
-    xValue:  None,
-    xInverse:  None,
-    zName:  b"current_date\0" as *const u8 as *const ::core::ffi::c_char,
-    u:  crate::src::headers::sqliteInt_h::__anon_union_2 {
-    pHash:  ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>() as *mut crate::src::headers::sqliteInt_h::FuncDef,
-},
-},
+                xFinalize: None,
+                xValue: None,
+                xInverse: None,
+                zName: b"current_date\0" as *const u8 as *const ::core::ffi::c_char,
+                u: crate::src::headers::sqliteInt_h::__anon_union_2 {
+                    pHash: ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>()
+                        as *mut crate::src::headers::sqliteInt_h::FuncDef,
+                },
+            },
         ]
     };
     crate::src::src::callback::sqlite3InsertBuiltinFuncs(
-        
-        &raw mut aDateTimeFuncs as *mut crate::src::headers::sqliteInt_h::FuncDef as *mut crate::src::headers::sqliteInt_h::FuncDef,
+        &raw mut aDateTimeFuncs as *mut crate::src::headers::sqliteInt_h::FuncDef
+            as *mut crate::src::headers::sqliteInt_h::FuncDef,
         (::core::mem::size_of::<[crate::src::headers::sqliteInt_h::FuncDef; 10]>() as usize)
-            .wrapping_div(::core::mem::size_of::<crate::src::headers::sqliteInt_h::FuncDef>() as usize) as ::core::ffi::c_int,
+            .wrapping_div(
+                ::core::mem::size_of::<crate::src::headers::sqliteInt_h::FuncDef>() as usize,
+            ) as ::core::ffi::c_int,
     );
 }
 

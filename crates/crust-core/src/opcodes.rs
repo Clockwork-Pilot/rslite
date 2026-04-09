@@ -1,5 +1,4 @@
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
-
 pub unsafe extern "C" fn sqlite3OpcodeName(
     mut i: ::core::ffi::c_int,
 ) -> *const ::core::ffi::c_char {
