@@ -20,6 +20,22 @@ version = "0.0.0"
 edition = "2024"
 publish = false
 
+[package]
+name = "sqlite-noamalgam"
+version.workspace = true
+edition.workspace = true
+publish = false
+
+[features]
+default = []
+test = ["crust-core/test"]
+fts3 = ["crust-core/fts3"]
+fts4 = ["crust-core/fts4"]
+update_delete_limit = ["crust-core/update_delete_limit"]
+
+[dependencies]
+crust-core = { workspace = true }
+
 [profile.release]
 lto = true
 codegen-units = 1

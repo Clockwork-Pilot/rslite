@@ -57,6 +57,21 @@ fn main() {
         // println!("cargo:rustc-link-lib=readline");
     }
 
+    #[cfg(feature = "test")]
+    {
+        let sqlite_src = std::env::var("SQLITE_SRC").unwrap_or_else(|_| "/sqlite".to_string());
+        let tsrc = std::path::Path::new(&sqlite_src).join("tsrc");
+        let fts3_src = std::path::Path::new(&sqlite_src).join("ext/fts3/fts3_term.c");
+        cc::Build::new()
+            .file(&fts3_src)
+            .include(&tsrc)
+            .define("SQLITE_TEST", None)
+            .define("SQLITE_ENABLE_FTS3", None)
+            .define("SQLITE_CORE", None)
+            .compile("fts3_term");
+        println!("cargo:rustc-link-lib=tcl8.6");
+    }
+
     #[cfg(target_os = "macos")]
     {
         // add macos dependencies below

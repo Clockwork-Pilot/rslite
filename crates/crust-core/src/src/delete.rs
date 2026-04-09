@@ -222,6 +222,108 @@ pub unsafe extern "C" fn sqlite3MaterializeView(
     crate::src::src::select::sqlite3Select(pParse as *mut crate::src::headers::sqliteInt_h::Parse,  pSel as *mut crate::src::headers::sqliteInt_h::Select,  &raw mut dest as *mut _ as *mut crate::src::headers::sqliteInt_h::SelectDest);
     crate::src::src::select::sqlite3SelectDelete(db as *mut crate::src::headers::sqliteInt_h::sqlite3,  pSel as *mut crate::src::headers::sqliteInt_h::Select);
 }
+#[cfg(feature = "update_delete_limit")]
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn sqlite3LimitWhere(
+    mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
+    mut pSrc: *mut crate::src::headers::sqliteInt_h::SrcList,
+    mut pWhere: *mut crate::src::headers::sqliteInt_h::Expr,
+    mut pOrderBy: *mut crate::src::headers::sqliteInt_h::ExprList,
+    mut pLimit: *mut crate::src::headers::sqliteInt_h::Expr,
+    mut zStmtType: *const ::core::ffi::c_char,
+) -> *mut crate::src::headers::sqliteInt_h::Expr {
+    let mut db: *mut crate::src::headers::sqliteInt_h::sqlite3 = (*pParse).db;
+    let mut pLhs: *mut crate::src::headers::sqliteInt_h::Expr = ::core::ptr::null_mut();
+    let mut pInClause: *mut crate::src::headers::sqliteInt_h::Expr = ::core::ptr::null_mut();
+    let mut pEList: *mut crate::src::headers::sqliteInt_h::ExprList = ::core::ptr::null_mut();
+    let mut pSelectSrc: *mut crate::src::headers::sqliteInt_h::SrcList = ::core::ptr::null_mut();
+    let mut pSelect: *mut crate::src::headers::sqliteInt_h::Select = ::core::ptr::null_mut();
+    let mut pTab: *mut crate::src::headers::sqliteInt_h::Table;
+    if !pOrderBy.is_null() && pLimit.is_null() {
+        crate::src::printf_c_variadic::sqlite3ErrorMsg_args(
+            pParse,
+            b"ORDER BY without LIMIT on %s\0" as *const u8 as *const ::core::ffi::c_char,
+            &[crate::src::src::printf::PrintfArg::Str(zStmtType as *mut ::core::ffi::c_char)],
+        );
+        crate::src::src::expr::sqlite3ExprDelete(db, pWhere);
+        crate::src::src::expr::sqlite3ExprListDelete(db, pOrderBy);
+        return ::core::ptr::null_mut();
+    }
+    if pLimit.is_null() {
+        return pWhere;
+    }
+    pTab = (*(&raw mut (*pSrc).a as *mut crate::src::headers::sqliteInt_h::SrcItem).offset(0)).pSTab;
+    if (*pTab).tabFlags & crate::src::headers::sqliteInt_h::TF_WithoutRowid as crate::src::ext::rtree::rtree::u32_0 == 0 {
+        /* HasRowid */
+        pLhs = crate::src::src::expr::sqlite3PExpr(
+            pParse, crate::src::parse::TK_ROW,
+            ::core::ptr::null_mut(), ::core::ptr::null_mut(),
+        );
+        pEList = crate::src::src::expr::sqlite3ExprListAppend(
+            pParse, ::core::ptr::null_mut(),
+            crate::src::src::expr::sqlite3PExpr(
+                pParse, crate::src::parse::TK_ROW,
+                ::core::ptr::null_mut(), ::core::ptr::null_mut(),
+            ),
+        );
+    } else {
+        let mut pPk: *mut crate::src::headers::sqliteInt_h::Index =
+            crate::src::src::build::sqlite3PrimaryKeyIndex(pTab);
+        if (*pPk).nKeyCol == 1 {
+            let zName: *const ::core::ffi::c_char =
+                (*(*pTab).aCol.offset((*(*pPk).aiColumn.offset(0)) as isize)).zCnName;
+            pLhs = crate::src::src::expr::sqlite3Expr(db, crate::src::parse::TK_ID, zName);
+            pEList = crate::src::src::expr::sqlite3ExprListAppend(
+                pParse, ::core::ptr::null_mut(),
+                crate::src::src::expr::sqlite3Expr(db, crate::src::parse::TK_ID, zName),
+            );
+        } else {
+            let mut i: ::core::ffi::c_int = 0;
+            while i < (*pPk).nKeyCol as ::core::ffi::c_int {
+                let zName: *const ::core::ffi::c_char =
+                    (*(*pTab).aCol.offset((*(*pPk).aiColumn.offset(i as isize)) as isize)).zCnName;
+                let p = crate::src::src::expr::sqlite3Expr(db, crate::src::parse::TK_ID, zName);
+                pEList = crate::src::src::expr::sqlite3ExprListAppend(pParse, pEList, p);
+                i += 1;
+            }
+            pLhs = crate::src::src::expr::sqlite3PExpr(
+                pParse, crate::src::parse::TK_VECTOR,
+                ::core::ptr::null_mut(), ::core::ptr::null_mut(),
+            );
+            if !pLhs.is_null() {
+                (*pLhs).x.pList = crate::src::src::expr::sqlite3ExprListDup(db, pEList, 0);
+            }
+        }
+    }
+    /* Duplicate pSrc for the SELECT sub-tree, nulling out pSTab first so
+    ** the reference count is not double-decremented by the delete. */
+    (*(&raw mut (*pSrc).a as *mut crate::src::headers::sqliteInt_h::SrcItem).offset(0)).pSTab =
+        ::core::ptr::null_mut();
+    pSelectSrc = crate::src::src::expr::sqlite3SrcListDup(db, pSrc, 0);
+    (*(&raw mut (*pSrc).a as *mut crate::src::headers::sqliteInt_h::SrcItem).offset(0)).pSTab = pTab;
+    let pItem = &raw mut (*pSrc).a as *mut crate::src::headers::sqliteInt_h::SrcItem;
+    if (*pItem).fg.isIndexedBy() != 0 {
+        (*pItem).u2.pIBIndex = ::core::ptr::null_mut();
+        (*pItem).fg.set_isIndexedBy(0);
+        crate::src::src::malloc::sqlite3DbFree(db, (*pItem).u1.zIndexedBy as *mut ::core::ffi::c_void);
+        (*pItem).u1.zIndexedBy = ::core::ptr::null_mut();
+    } else if (*pItem).fg.isCte() != 0 {
+        (*(*pItem).u2.pCteUse).nUse += 1;
+    }
+    /* Build SELECT pEList FROM pSelectSrc WHERE pWhere ORDER BY pOrderBy
+    ** LIMIT pLimit */
+    pSelect = crate::src::src::select::sqlite3SelectNew(
+        pParse, pEList, pSelectSrc, pWhere, ::core::ptr::null_mut(),
+        ::core::ptr::null_mut(), pOrderBy, 0, pLimit,
+    );
+    /* Build the new WHERE rowid IN (pSelect) clause */
+    pInClause = crate::src::src::expr::sqlite3PExpr(
+        pParse, crate::src::parse::TK_IN, pLhs, ::core::ptr::null_mut(),
+    );
+    crate::src::src::expr::sqlite3PExprAddSelect(pParse, pInClause, pSelect);
+    pInClause
+}
+
 #[unsafe(no_mangle)]
 
 pub unsafe extern "C" fn sqlite3DeleteFrom(
@@ -280,6 +382,15 @@ pub unsafe extern "C" fn sqlite3DeleteFrom(
             ) as
     *mut crate::src::headers::sqliteInt_h::Trigger;
             isView = ((*pTab).eTabType as ::core::ffi::c_int == crate::src::headers::sqliteInt_h::TABTYP_VIEW) as ::core::ffi::c_int;
+            #[cfg(feature = "update_delete_limit")]
+            if isView == 0 {
+                pWhere = sqlite3LimitWhere(
+                    pParse, pTabList, pWhere, pOrderBy, pLimit,
+                    b"DELETE\0" as *const u8 as *const ::core::ffi::c_char,
+                );
+                pOrderBy = ::core::ptr::null_mut();
+                pLimit = ::core::ptr::null_mut();
+            }
             bComplex = (!pTrigger.is_null()
                 || crate::src::src::fkey::sqlite3FkRequired(
                     
@@ -754,6 +865,11 @@ pub unsafe extern "C" fn sqlite3DeleteFrom(
     crate::src::src::auth::sqlite3AuthContextPop(&raw mut sContext as *mut _ as *mut crate::src::headers::sqliteInt_h::AuthContext);
     crate::src::src::build::sqlite3SrcListDelete(db as *mut crate::src::headers::sqliteInt_h::sqlite3,  pTabList as *mut crate::src::headers::sqliteInt_h::SrcList);
     crate::src::src::expr::sqlite3ExprDelete(db as *mut crate::src::headers::sqliteInt_h::sqlite3,  pWhere as *mut crate::src::headers::sqliteInt_h::Expr);
+    #[cfg(feature = "update_delete_limit")]
+    {
+        crate::src::src::expr::sqlite3ExprListDelete(db as *mut crate::src::headers::sqliteInt_h::sqlite3, pOrderBy as *mut crate::src::headers::sqliteInt_h::ExprList);
+        crate::src::src::expr::sqlite3ExprDelete(db as *mut crate::src::headers::sqliteInt_h::sqlite3, pLimit as *mut crate::src::headers::sqliteInt_h::Expr);
+    }
     if !aToOpen.is_null() {
         crate::src::src::malloc::sqlite3DbNNFreeNN(db as *mut crate::src::headers::sqliteInt_h::sqlite3, aToOpen as *mut ::core::ffi::c_void);
     }

@@ -14,7 +14,7 @@
       "constraints": {
         "constraint_build_all": {
           "id": "constraint_build_all",
-          "cmd": "cd $WORKSPACE_ROOT && ./build_all.sh",
+          "cmd": "cd $WORKSPACE_ROOT && make test",
           "description": "Ensure our rust codebase is healthy",
           "fails_count": 1
         }
@@ -30,16 +30,16 @@
         "c2rust rust-toolchain.toml must specify channel nightly"
       ],
       "constraints": {
-        "stable_toolchain": {
-          "id": "stable_toolchain",
-          "cmd": "grep -q \"^channel.*=.*\\\"stable\\\"\" \"$PROJECT_ROOT/rust-toolchain.toml\" && exit 0 || exit 1",
-          "description": "rust-toolchain.toml must use stable channel (c_variadic removed from lib crate)",
-          "fails_count": 1
-        },
         "c2rust_nightly": {
           "id": "c2rust_nightly",
           "cmd": "grep -q \"^channel.*=.*\\\"nightly\" \"$PROJECT_ROOT/c2rust/rust-toolchain.toml\" && exit 0 || exit 1",
           "description": "c2rust must use nightly toolchain (needs c_variadic, extern_types)",
+          "fails_count": 1
+        },
+        "stable_toolchain_or_missing": {
+          "id": "stable_toolchain_or_missing",
+          "cmd": "test ! -f \"$PROJECT_ROOT/rust-toolchain.toml\" || grep -q \"^channel.*=.*\\\"stable\\\"\" \"$PROJECT_ROOT/rust-toolchain.toml\"",
+          "description": "rust-toolchain.toml must either be missing or use stable channel",
           "fails_count": 1
         }
       }

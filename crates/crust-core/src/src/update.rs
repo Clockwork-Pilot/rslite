@@ -117,9 +117,11 @@ unsafe extern "C" fn updateFromSelect(
     mut pChanges: *mut crate::src::headers::sqliteInt_h::ExprList,
     mut pTabList: *mut crate::src::headers::sqliteInt_h::SrcList,
     mut pWhere: *mut crate::src::headers::sqliteInt_h::Expr,
-    mut _pOrderBy: *mut crate::src::headers::sqliteInt_h::ExprList,
-    mut _pLimit: *mut crate::src::headers::sqliteInt_h::Expr,
+    mut pOrderBy: *mut crate::src::headers::sqliteInt_h::ExprList,
+    mut pLimit: *mut crate::src::headers::sqliteInt_h::Expr,
 ) {
+    #[cfg(not(feature = "update_delete_limit"))]
+    let _ = (pOrderBy, pLimit);
     let mut i: ::core::ffi::c_int = 0;
     let mut dest: crate::src::headers::sqliteInt_h::SelectDest = crate::src::headers::sqliteInt_h::SelectDest {
     eDest:  0,
@@ -141,6 +143,19 @@ unsafe extern "C" fn updateFromSelect(
     let mut pSrc: *mut crate::src::headers::sqliteInt_h::SrcList = ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::SrcList>();
     let mut pWhere2: *mut crate::src::headers::sqliteInt_h::Expr = ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::Expr>();
     let mut eDest: ::core::ffi::c_int = 0;
+    #[cfg(feature = "update_delete_limit")]
+    {
+        if !pOrderBy.is_null() && pLimit.is_null() {
+            crate::src::printf_c_variadic::sqlite3ErrorMsg_args(
+                pParse,
+                b"ORDER BY without LIMIT on UPDATE\0" as *const u8 as *const ::core::ffi::c_char,
+                &[],
+            );
+            return;
+        }
+        pOrderBy2 = crate::src::src::expr::sqlite3ExprListDup(db, pOrderBy, 0);
+        pLimit2 = crate::src::src::expr::sqlite3ExprDup(db, pLimit, 0);
+    }
     pSrc =  crate::src::src::expr::sqlite3SrcListDup(db as *mut crate::src::headers::sqliteInt_h::sqlite3,  pTabList as *const crate::src::headers::sqliteInt_h::SrcList, 0 as ::core::ffi::c_int) as *mut crate::src::headers::sqliteInt_h::SrcList;
     pWhere2 =  crate::src::src::expr::sqlite3ExprDup(db as *mut crate::src::headers::sqliteInt_h::sqlite3,  pWhere as *const crate::src::headers::sqliteInt_h::Expr, 0 as ::core::ffi::c_int) as
     *mut crate::src::headers::sqliteInt_h::Expr;
@@ -164,6 +179,13 @@ unsafe extern "C" fn updateFromSelect(
                 pParse,
                 *(*pPk).aiColumn.offset(i as isize) as ::core::ffi::c_int,
             );
+            #[cfg(feature = "update_delete_limit")]
+            if !pLimit.is_null() {
+                pGrp = crate::src::src::expr::sqlite3ExprListAppend(
+                    pParse, pGrp,
+                    crate::src::src::expr::sqlite3ExprDup(db, pNew, 0),
+                );
+            }
             pList =  crate::src::src::expr::sqlite3ExprListAppend(pParse as *mut crate::src::headers::sqliteInt_h::Parse,  pList as *mut crate::src::headers::sqliteInt_h::ExprList,  pNew as *mut crate::src::headers::sqliteInt_h::Expr) as
     *mut crate::src::headers::sqliteInt_h::ExprList;
             i += 1;
@@ -195,19 +217,29 @@ unsafe extern "C" fn updateFromSelect(
     *mut crate::src::headers::sqliteInt_h::ExprList,
             
             crate::src::src::expr::sqlite3PExpr(
-                
+
                 pParse as *mut crate::src::headers::sqliteInt_h::Parse,
                 crate::src::parse::TK_ROW_1,
-                
+
                 ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::Expr>() as
     *mut crate::src::headers::sqliteInt_h::Expr,
-                
+
                 ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::Expr>() as
     *mut crate::src::headers::sqliteInt_h::Expr,
             ) as
         *mut crate::src::headers::sqliteInt_h::Expr as *mut crate::src::headers::sqliteInt_h::Expr,
         ) as
     *mut crate::src::headers::sqliteInt_h::ExprList;
+        #[cfg(feature = "update_delete_limit")]
+        if !pLimit.is_null() {
+            pGrp = crate::src::src::expr::sqlite3ExprListAppend(
+                pParse, ::core::ptr::null_mut(),
+                crate::src::src::expr::sqlite3PExpr(
+                    pParse, crate::src::parse::TK_ROW_1,
+                    ::core::ptr::null_mut(), ::core::ptr::null_mut(),
+                ),
+            );
+        }
     }
     if !pChanges.is_null() {
         i = 0 as ::core::ffi::c_int;
@@ -342,6 +374,15 @@ pub unsafe extern "C" fn sqlite3Update(
             } else {
                 0 as ::core::ffi::c_int
             };
+            #[cfg(feature = "update_delete_limit")]
+            if isView == 0 && nChangeFrom == 0 {
+                pWhere = crate::src::src::delete::sqlite3LimitWhere(
+                    pParse, pTabList, pWhere, pOrderBy, pLimit,
+                    b"UPDATE\0" as *const u8 as *const ::core::ffi::c_char,
+                );
+                pOrderBy = ::core::ptr::null_mut();
+                pLimit = ::core::ptr::null_mut();
+            }
             if !(crate::src::src::build::sqlite3ViewGetColumnNames(pParse as *mut crate::src::headers::sqliteInt_h::Parse,  pTab as *mut crate::src::headers::sqliteInt_h::Table) != 0) {
                 if !(crate::src::src::delete::sqlite3IsReadOnly(pParse as *mut crate::src::headers::sqliteInt_h::Parse,  pTab as *mut crate::src::headers::sqliteInt_h::Table,  pTrigger as *mut crate::src::headers::sqliteInt_h::Trigger) != 0) {
                     let __pParse_ref = unsafe { &mut *pParse };
@@ -1664,6 +1705,11 @@ pub unsafe extern "C" fn sqlite3Update(
     crate::src::src::build::sqlite3SrcListDelete(db as *mut crate::src::headers::sqliteInt_h::sqlite3,  pTabList as *mut crate::src::headers::sqliteInt_h::SrcList);
     crate::src::src::expr::sqlite3ExprListDelete(db as *mut crate::src::headers::sqliteInt_h::sqlite3,  pChanges as *mut crate::src::headers::sqliteInt_h::ExprList);
     crate::src::src::expr::sqlite3ExprDelete(db as *mut crate::src::headers::sqliteInt_h::sqlite3,  pWhere as *mut crate::src::headers::sqliteInt_h::Expr);
+    #[cfg(feature = "update_delete_limit")]
+    {
+        crate::src::src::expr::sqlite3ExprListDelete(db as *mut crate::src::headers::sqliteInt_h::sqlite3, pOrderBy as *mut crate::src::headers::sqliteInt_h::ExprList);
+        crate::src::src::expr::sqlite3ExprDelete(db as *mut crate::src::headers::sqliteInt_h::sqlite3, pLimit as *mut crate::src::headers::sqliteInt_h::Expr);
+    }
 }
 
 unsafe extern "C" fn updateVirtualTable(

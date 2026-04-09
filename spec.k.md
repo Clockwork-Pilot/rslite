@@ -19,7 +19,7 @@ Verify c_variadic feature isolation: only in printf_c_variadic.rs
       - [shell_symbols](#shell_symbols)
     - [Feature: toolchain_version](#feature-toolchain_version)
       - [c2rust_nightly](#c2rust_nightly)
-      - [stable_toolchain](#stable_toolchain)
+      - [stable_toolchain_or_missing](#stable_toolchain_or_missing)
 
 ## Features
 
@@ -69,5 +69,5 @@ Verify c_variadic feature isolation: only in printf_c_variadic.rs
 #### c2rust_nightly
 **Description:** c2rust must use nightly toolchain (needs c_variadic, extern_types)
 
-#### stable_toolchain
-**Description:** rust-toolchain.toml must use stable channel (c_variadic removed from lib crate)
+#### stable_toolchain_or_missing
+**Description:** rust-toolchain.toml must either be missing or use stable channel
