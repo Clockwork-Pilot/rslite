@@ -1,0 +1,33 @@
+name: Check Constraints
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  check-constraints:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/clockwork-pilot/rslite-ws:latest
+      options: --user root
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run constraint checks
+        id: constraints
+        env:
+          PROJECT_ROOT: ${{ github.workspace }}
+          WORKSPACE_ROOT: ${{ github.workspace }}
+          CLAUDE_PROJECT_ROOT: ${{ github.workspace }}
+        run: |
+          ~/create-venv-docker.sh && \
+          python /plugin/constraints_tool/constraints_tool/check_spec_constraints.py
+
+      - name: Show full results on failure
+        if: failure() && steps.constraints.outcome == 'failure'
+        run: |
+          cat ${{ github.workspace }}/spec-checks.k.md
+          echo "--- testrunner failures ---"
+          grep "errors out of" /sqlite/testrunner.log 2>/dev/null | grep -v " 0 errors" || echo "(no testrunner.log failures found)"
