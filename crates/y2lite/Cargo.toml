@@ -10,7 +10,6 @@ y2lite = []
 
 [dependencies]
 y2lite-sys = { workspace = true }
-crust-core = { workspace = true, features = ["fts4"] }
 
 [[example]]
 name = "demo"

@@ -12,6 +12,7 @@ default-members = [
 ]
 exclude = [
     "pub-interface",
+    "examples",
 ]
 
 [workspace.package]
