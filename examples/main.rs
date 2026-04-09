@@ -1,6 +1,6 @@
-use y2lite::{Connection, Value};
+use rslite::{Connection, Value};
 
-fn main() -> y2lite::Result<()> {
+fn main() -> rslite::Result<()> {
     // Open an in-memory database (statically linked C API).
     let mut db = Connection::open(":memory:")?;
 
@@ -41,14 +41,14 @@ fn main() -> y2lite::Result<()> {
 
     // Transaction with rollback demo
     println!("\n=== Rollback Demo ===");
-    let result: y2lite::Result<()> = db.transaction(|conn| {
+    let result: rslite::Result<()> = db.transaction(|conn| {
         println!("  Attempting insert in transaction");
         conn.execute_with_params(
             "INSERT INTO users VALUES (?, ?, ?)",
             &[Value::Integer(4), Value::Text("Dave".to_string()), Value::Integer(40)],
         )?;
         println!("  Dave inserted, but will rollback");
-        Err(y2lite::Error::Database("simulated error".to_string()))
+        Err(rslite::Error::Database("simulated error".to_string()))
     });
     match result {
         Ok(()) => println!("  Transaction succeeded"),
