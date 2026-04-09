@@ -2,6 +2,8 @@ name: Check Constraints
 
 on:
   push:
+    branches:
+      - main
   pull_request:
 
 jobs:
@@ -10,13 +12,15 @@ jobs:
 
     steps:
       - name: Checkout rslite
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
+        with:
+          path: rslite
 
       - name: Checkout y2-claude-plugin
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           repository: Clockwork-Pilot/y2-claude-plugin
-          path: .claude-plugin
+          path: claude-plugin
 
       - name: Setup Docker mount directories
         run: |
@@ -60,8 +64,8 @@ jobs:
         id: constraints
         run: |
           docker run --rm \
-            -v ${{ github.workspace }}:/workspace \
-            -v ${{ github.workspace }}/.claude-plugin:/plugin:ro \
+            -v ${{ github.workspace }}/rslite:/workspace \
+            -v ${{ github.workspace }}/claude-plugin:/plugin:ro \
             -v ${{ github.workspace }}/docker-files/.cargo:/home/node/.cargo \
             -v ${{ github.workspace }}/docker-files/.credentials:/home/node/.claude \
             -v ${{ github.workspace }}/docker-files/.claude.local.json:/home/node/.claude.json \
@@ -76,12 +80,8 @@ jobs:
             ghcr.io/clockwork-pilot/rslite-ws:latest \
             bash -c "/docker-scripts/work-on-sqlite/create-venv-docker.sh; \
               source /docker-scripts/work-on-sqlite/user-entrypoint.sh; \
-              python /plugin/constraints_tool/constraints_tool/check_spec_constraints.py"
-
-      - name: Show full results on failure
-        if: failure() && steps.constraints.outcome == 'failure'
-        run: |
-          echo "--- Spec checks results ---"
-          cat "${{ github.workspace }}/spec-checks.k.md"
-          echo "--- testrunner failures ---"
-          grep "errors out of" "${{ github.workspace }}/sqlite/testrunner.log" 2>/dev/null | grep -v " 0 errors" || echo "(no testrunner.log failures found)"
+              python /plugin/constraints_tool/constraints_tool/check_spec_constraints.py || { \
+              echo '--- Spec checks results ---'; \
+              cat /workspace/spec-checks.k.md; \
+              echo '--- testrunner failures ---'; \
+              grep 'errors out of' /sqlite/testrunner.log 2>/dev/null | grep -v ' 0 errors' || echo '(no testrunner.log failures found)'; exit 1; }"
