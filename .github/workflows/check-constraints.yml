@@ -74,8 +74,8 @@ jobs:
             -e DISABLE_STOP_HOOK=1 \
             --user root \
             ghcr.io/clockwork-pilot/rslite-ws:latest \
-            bash -c "source /docker-scripts/work-on-sqlite/user-entrypoint.sh; \
-              ~/create-venv-docker.sh && \
+            bash -c "/docker-scripts/work-on-sqlite/create-venv-docker.sh; \
+              source /docker-scripts/work-on-sqlite/user-entrypoint.sh; \
               python /plugin/constraints_tool/constraints_tool/check_spec_constraints.py"
 
       - name: Show full results on failure
