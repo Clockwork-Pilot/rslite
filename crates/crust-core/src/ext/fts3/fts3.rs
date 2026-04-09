@@ -185,20 +185,9 @@ pub use crate::src::src::vdbeapi::sqlite3_value_text;
 pub use crate::src::src::vdbeapi::sqlite3_value_type;
 pub use crate::src::src::vtab::sqlite3_create_module_v2;
 pub use crate::src::src::vtab::sqlite3_declare_vtab;
-unsafe extern "C" {
-
-    pub fn sqlite3Fts3SimpleTokenizerModule(
-        ppModule: *mut *const crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_module,
-    );
-
-    pub fn sqlite3Fts3PorterTokenizerModule(
-        ppModule: *mut *const crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_module,
-    );
-
-    pub fn sqlite3Fts3UnicodeTokenizer(
-        ppModule: *mut *const crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_module,
-    );
-}
+pub use crate::src::ext::fts3::fts3_tokenizer::sqlite3Fts3SimpleTokenizerModule;
+pub use crate::src::ext::fts3::fts3_porter::sqlite3Fts3PorterTokenizerModule;
+pub use crate::src::ext::fts3::fts3_unicode::sqlite3Fts3UnicodeTokenizer;
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct TokenDoclist {

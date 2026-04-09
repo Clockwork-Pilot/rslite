@@ -3275,15 +3275,8 @@ pub use crate::src::src::vtab::sqlite3_declare_vtab;
 pub use crate::src::src::vtab::sqlite3_vtab_on_conflict;
 
 
-unsafe extern "C" {
-
-    pub fn sqlite3GetToken(
-        _: *const ::core::ffi::c_uchar,
-        _: *mut ::core::ffi::c_int,
-    ) -> crate::src::headers::sqlite3_h::sqlite3_int64;
-
-    pub fn sqlite3IntFloatCompare(_: i64_0, _: ::core::ffi::c_double) -> ::core::ffi::c_int;
-}
+pub use crate::src::src::tokenize::sqlite3GetToken;
+pub use crate::src::src::vdbeaux::sqlite3IntFloatCompare;
 
 pub type RtreeDValue = ::core::ffi::c_double;
 #[derive(Copy, Clone)]
