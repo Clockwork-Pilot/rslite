@@ -62,7 +62,7 @@ pub struct IndexListTerm {
 pub struct C2RustUnnamed_1 {
     pub pIdx: *mut crate::src::headers::sqliteInt_h::Index,
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3OpenTable(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -147,7 +147,7 @@ unsafe extern "C" fn computeIndexAffStr(
     *__pIdx_ref.zColAff.offset(n as isize) = 0 as ::core::ffi::c_char;
     __pIdx_ref.zColAff
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3IndexAffinityStr(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -158,7 +158,7 @@ pub unsafe extern "C" fn sqlite3IndexAffinityStr(
     }
     (*pIdx).zColAff
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3TableAffinityStr(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -198,7 +198,7 @@ pub unsafe extern "C" fn sqlite3TableAffinityStr(
     }
     zColAff
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3TableAffinity(
     mut v: *mut crate::src::headers::vdbeInt_h::Vdbe,
@@ -300,7 +300,7 @@ unsafe extern "C" fn exprColumnFlagUnion(
     }
     crate::src::headers::sqliteInt_h::WRC_Continue
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3ComputeGeneratedColumns(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -477,7 +477,7 @@ unsafe extern "C" fn autoIncBegin(
     }
     memId
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3AutoincrementBegin(mut pParse: *mut crate::src::headers::sqliteInt_h::Parse) {
     let mut p: *mut crate::src::headers::sqliteInt_h::AutoincInfo = ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::AutoincInfo>();
@@ -700,14 +700,14 @@ unsafe extern "C" fn autoIncrementEnd(mut pParse: *mut crate::src::headers::sqli
         p = (*p).pNext;
     }
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3AutoincrementEnd(mut pParse: *mut crate::src::headers::sqliteInt_h::Parse) {
     if !(*pParse).pAinc.is_null() {
         autoIncrementEnd(pParse);
     }
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3MultiValuesEnd(mut pParse: *mut crate::src::headers::sqliteInt_h::Parse, mut pVal: *mut crate::src::headers::sqliteInt_h::Select) {
     if !pVal.is_null() && (*(*pVal).pSrc).nSrc > 0 as ::core::ffi::c_int {
@@ -765,7 +765,7 @@ unsafe extern "C" fn exprListIsNoAffinity(
     }
     1 as ::core::ffi::c_int
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3MultiValues(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -919,7 +919,7 @@ pub unsafe extern "C" fn sqlite3MultiValues(
     }
     pLeft
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3Insert(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -2050,7 +2050,7 @@ unsafe extern "C" fn checkConstraintExprNode(
     }
     crate::src::headers::sqliteInt_h::WRC_Continue
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3ExprReferencesUpdatedColumn(
     mut pExpr: *mut crate::src::headers::sqliteInt_h::Expr,
@@ -2106,7 +2106,7 @@ unsafe extern "C" fn indexIteratorNext(
         return __pIter_ref.u.lx.pIdx;
     };
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3GenerateConstraintChecks(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -2943,7 +2943,7 @@ unsafe extern "C" fn codeWithoutRowidPreupdate(
     crate::src::src::vdbeaux::sqlite3VdbeChangeP5(v, crate::src::headers::sqliteInt_h::OPFLAG_ISNOOP as crate::src::fts5::u16_0);
     crate::src::src::expr::sqlite3ReleaseTempReg(pParse as *mut crate::src::headers::sqliteInt_h::Parse, r);
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3CompleteInsertion(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -3044,7 +3044,7 @@ pub unsafe extern "C" fn sqlite3CompleteInsertion(
     }
     crate::src::src::vdbeaux::sqlite3VdbeChangeP5(v, pik_flags as crate::src::fts5::u16_0);
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3OpenTableAndIndices(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -3120,7 +3120,7 @@ pub unsafe extern "C" fn sqlite3OpenTableAndIndices(
     }
     i
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub static mut sqlite3_xferopt_count: ::core::ffi::c_int = 0;
 

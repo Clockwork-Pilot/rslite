@@ -7199,7 +7199,7 @@ unsafe extern "C" fn yyGrowStack(mut p: *mut yyParser) -> ::core::ffi::c_int {
             .offset((newSize - 1 as ::core::ffi::c_int) as isize) as *mut yyStackEntry;
     0 as ::core::ffi::c_int
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3ParserInit(
     mut yypRawParser: *mut ::core::ffi::c_void,
@@ -7223,7 +7223,7 @@ pub unsafe extern "C" fn sqlite3ParserInit(
         .offset(0 as isize))
     .major = 0 as ::core::ffi::c_ushort;
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3ParserAlloc(
     mut mallocProc: Option<unsafe extern "C" fn(crate::src::ext::rtree::rtree::u64_0) -> *mut ::core::ffi::c_void>,
@@ -7293,7 +7293,7 @@ unsafe extern "C" fn yy_pop_parser_stack(mut pParser: *mut yyParser) {
     yytos = fresh0;
     yy_destructor(pParser, (*yytos).major, &raw mut (*yytos).minor);
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3ParserFinalize(mut p: *mut ::core::ffi::c_void) {
     let mut pParser: *mut yyParser = p as *mut yyParser;
@@ -7309,7 +7309,7 @@ pub unsafe extern "C" fn sqlite3ParserFinalize(mut p: *mut ::core::ffi::c_void) 
         crate::src::src::malloc::sqlite3_free(__pParser_ref.yystack as *mut ::core::ffi::c_void);
     }
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3ParserFree(
     mut p: *mut ::core::ffi::c_void,
@@ -14439,7 +14439,7 @@ unsafe extern "C" fn yy_accept(mut yypParser: *mut yyParser) {
     let mut pParse: *mut crate::src::headers::sqliteInt_h::Parse = (*yypParser).pParse;
     (*yypParser).pParse = pParse;
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3Parser(
     mut yyp: *mut ::core::ffi::c_void,
@@ -14484,7 +14484,7 @@ pub unsafe extern "C" fn sqlite3Parser(
         }
     }
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3ParserFallback(
     mut iToken: ::core::ffi::c_int,

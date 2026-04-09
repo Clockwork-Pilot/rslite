@@ -1042,12 +1042,12 @@ pub unsafe extern "C" fn sqlite3_deserialize(
     crate::src::src::mutex::sqlite3_mutex_leave((*db).mutex);
     rc
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3IsMemdb(mut pVfs: *const crate::src::headers::sqlite3_h::sqlite3_vfs) -> ::core::ffi::c_int {
     (pVfs == &raw mut memdb_vfs as *const crate::src::headers::sqlite3_h::sqlite3_vfs) as ::core::ffi::c_int
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3MemdbInit() -> ::core::ffi::c_int {
     let mut pLower: *mut crate::src::headers::sqlite3_h::sqlite3_vfs =  crate::src::src::os::sqlite3_vfs_find(::core::ptr::null::<::core::ffi::c_char>())

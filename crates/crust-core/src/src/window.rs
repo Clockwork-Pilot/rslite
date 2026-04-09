@@ -540,7 +540,7 @@ unsafe extern "C" fn noopStepFunc(
 }
 
 unsafe extern "C" fn noopValueFunc(mut _p: *mut crate::src::headers::vdbeInt_h::sqlite3_context) {}
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3WindowFunctions() {
     static mut aWindowFuncs: [crate::src::headers::sqliteInt_h::FuncDef; 15] = {
@@ -1066,7 +1066,7 @@ unsafe extern "C" fn windowFind(
     }
     p
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3WindowUpdate(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -1455,7 +1455,7 @@ unsafe extern "C" fn disallowAggregatesInOrderByCb(
     }
     crate::src::headers::sqliteInt_h::WRC_Continue
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3WindowRewrite(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -1702,7 +1702,7 @@ pub unsafe extern "C" fn sqlite3WindowRewrite(
     }
     rc
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3WindowUnlinkFromSelect(mut p: *mut crate::src::headers::sqliteInt_h::Window) {
     if !(*p).ppThis.is_null() {
@@ -1714,7 +1714,7 @@ pub unsafe extern "C" fn sqlite3WindowUnlinkFromSelect(mut p: *mut crate::src::h
         __p_ref.ppThis = ::core::ptr::null_mut::<*mut crate::src::headers::sqliteInt_h::Window>();
     }
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3WindowDelete(mut db: *mut crate::src::headers::sqliteInt_h::sqlite3, mut p: *mut crate::src::headers::sqliteInt_h::Window) {
     if !p.is_null() {
@@ -1730,7 +1730,7 @@ pub unsafe extern "C" fn sqlite3WindowDelete(mut db: *mut crate::src::headers::s
         crate::src::src::malloc::sqlite3DbFree(db as *mut crate::src::headers::sqliteInt_h::sqlite3, p as *mut ::core::ffi::c_void);
     }
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3WindowListDelete(mut db: *mut crate::src::headers::sqliteInt_h::sqlite3, mut p: *mut crate::src::headers::sqliteInt_h::Window) {
     while !p.is_null() {
@@ -1764,7 +1764,7 @@ unsafe extern "C" fn sqlite3WindowOffsetExpr(
     }
     pExpr
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3WindowAlloc(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -1813,7 +1813,7 @@ pub unsafe extern "C" fn sqlite3WindowAlloc(
     crate::src::src::expr::sqlite3ExprDelete((*pParse).db as *mut crate::src::headers::sqliteInt_h::sqlite3,  pStart as *mut crate::src::headers::sqliteInt_h::Expr);
     ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::Window>()
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3WindowAssemble(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -1834,7 +1834,7 @@ pub unsafe extern "C" fn sqlite3WindowAssemble(
     }
     pWin
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3WindowChain(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -1879,7 +1879,7 @@ pub unsafe extern "C" fn sqlite3WindowChain(
         }
     }
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3WindowAttach(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -1905,7 +1905,7 @@ pub unsafe extern "C" fn sqlite3WindowAttach(
         sqlite3WindowDelete((*pParse).db, pWin);
     };
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3WindowLink(mut pSel: *mut crate::src::headers::sqliteInt_h::Select, mut pWin: *mut crate::src::headers::sqliteInt_h::Window) {
     if !pSel.is_null() {
@@ -1937,7 +1937,7 @@ pub unsafe extern "C" fn sqlite3WindowLink(mut pSel: *mut crate::src::headers::s
         }
     }
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3WindowCompare(
     mut pParse: *const crate::src::headers::sqliteInt_h::Parse,
@@ -2008,7 +2008,7 @@ pub unsafe extern "C" fn sqlite3WindowCompare(
     }
     0 as ::core::ffi::c_int
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3WindowCodeInit(mut pParse: *mut crate::src::headers::sqliteInt_h::Parse, mut pSelect: *mut crate::src::headers::sqliteInt_h::Select) {
     let mut pWin: *mut crate::src::headers::sqliteInt_h::Window = ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::Window>();
@@ -3020,7 +3020,7 @@ unsafe extern "C" fn windowCodeOp(
     crate::src::src::vdbeaux::sqlite3VdbeResolveLabel(v, lblDone);
     ret
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3WindowDup(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -3057,7 +3057,7 @@ pub unsafe extern "C" fn sqlite3WindowDup(
     }
     pNew
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3WindowListDup(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -3100,7 +3100,7 @@ unsafe extern "C" fn windowExprGtZero(
     crate::src::src::vdbemem::sqlite3ValueFree(pVal);
     ret
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3WindowCodeStep(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,

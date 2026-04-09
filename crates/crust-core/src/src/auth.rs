@@ -54,7 +54,7 @@ unsafe extern "C" fn sqliteAuthBadReturnCode(mut pParse: *mut crate::src::header
     );
     (*pParse).rc = crate::src::headers::sqlite3_h::SQLITE_ERROR;
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3AuthReadCol(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -93,7 +93,7 @@ pub unsafe extern "C" fn sqlite3AuthReadCol(
     }
     rc
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3AuthRead(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -140,7 +140,7 @@ pub unsafe extern "C" fn sqlite3AuthRead(
         (*pExpr).op = crate::src::parse::TK_NULL as crate::src::ext::rtree::rtree::u8_0;
     }
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3AuthCheck(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -180,7 +180,7 @@ pub unsafe extern "C" fn sqlite3AuthCheck(
     }
     rc
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3AuthContextPush(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -191,7 +191,7 @@ pub unsafe extern "C" fn sqlite3AuthContextPush(
     (*pContext).zAuthContext = (*pParse).zAuthContext;
     (*pParse).zAuthContext = zContext;
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3AuthContextPop(mut pContext: *mut crate::src::headers::sqliteInt_h::AuthContext) {
     if !(*pContext).pParse.is_null() {

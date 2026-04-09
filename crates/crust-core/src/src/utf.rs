@@ -90,7 +90,7 @@ static mut sqlite3Utf8Trans1: [::core::ffi::c_uchar; 64] = [
     0 as ::core::ffi::c_int as ::core::ffi::c_uchar,
     0 as ::core::ffi::c_int as ::core::ffi::c_uchar,
 ];
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3AppendOneUtf8Character(
     mut zOut: *mut ::core::ffi::c_char,
@@ -136,7 +136,7 @@ pub unsafe extern "C" fn sqlite3AppendOneUtf8Character(
         as ::core::ffi::c_char;
     4 as ::core::ffi::c_int
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3Utf8Read(mut pz: *mut *const ::core::ffi::c_uchar) -> crate::src::ext::rtree::rtree::u32_0 {
     let mut c: ::core::ffi::c_uint = 0;
@@ -163,7 +163,7 @@ pub unsafe extern "C" fn sqlite3Utf8Read(mut pz: *mut *const ::core::ffi::c_ucha
     }
     c as crate::src::ext::rtree::rtree::u32_0
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3Utf8ReadLimited(
     mut z: *const crate::src::ext::rtree::rtree::u8_0,
@@ -191,7 +191,7 @@ pub unsafe extern "C" fn sqlite3Utf8ReadLimited(
     *piOut = c;
     i
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 #[inline(never)]
 
 pub unsafe extern "C" fn sqlite3VdbeMemTranslate(
@@ -573,7 +573,7 @@ pub unsafe extern "C" fn sqlite3VdbeMemTranslate(
     }
     crate::src::headers::sqlite3_h::SQLITE_OK
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3VdbeMemHandleBom(mut pMem: *mut crate::src::src::vdbe::Mem) -> ::core::ffi::c_int {
     let mut rc: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_OK;
@@ -613,7 +613,7 @@ pub unsafe extern "C" fn sqlite3VdbeMemHandleBom(mut pMem: *mut crate::src::src:
     }
     rc
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3Utf8CharLen(
     mut zIn: *const ::core::ffi::c_char,
@@ -641,7 +641,7 @@ pub unsafe extern "C" fn sqlite3Utf8CharLen(
     }
     r
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3Utf16to8(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -666,7 +666,7 @@ pub unsafe extern "C" fn sqlite3Utf16to8(
     }
     m.z
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3Utf16ByteLen(
     mut zIn: *const ::core::ffi::c_void,
@@ -700,7 +700,7 @@ pub unsafe extern "C" fn sqlite3Utf16ByteLen(
         as ::core::ffi::c_int
         - (crate::src::headers::sqliteInt_h::SQLITE_UTF16NATIVE == crate::src::headers::sqlite3_h::SQLITE_UTF16LE) as ::core::ffi::c_int
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 #[allow(unused_assignments)]
 pub unsafe extern "C" fn sqlite3UtfSelfTest() {

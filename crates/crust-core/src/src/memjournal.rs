@@ -340,7 +340,7 @@ static mut MemJournalMethods: crate::src::headers::sqlite3_h::sqlite3_io_methods
     xUnfetch:  None,
 }
 };
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3JournalOpen(
     mut pVfs: *mut crate::src::headers::sqlite3_h::sqlite3_vfs,
@@ -382,7 +382,7 @@ pub unsafe extern "C" fn sqlite3JournalOpen(
     __p_ref.pVfs = pVfs;
     crate::src::headers::sqlite3_h::SQLITE_OK
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3MemJournalOpen(mut pJfd: *mut crate::src::headers::sqlite3_h::sqlite3_file) {
     sqlite3JournalOpen(
@@ -393,12 +393,12 @@ pub unsafe extern "C" fn sqlite3MemJournalOpen(mut pJfd: *mut crate::src::header
         -(1 as ::core::ffi::c_int),
     );
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3JournalIsInMemory(mut p: *mut crate::src::headers::sqlite3_h::sqlite3_file) -> ::core::ffi::c_int {
     ((*p).pMethods == &raw const MemJournalMethods) as ::core::ffi::c_int
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3JournalSize(mut pVfs: *mut crate::src::headers::sqlite3_h::sqlite3_vfs) -> ::core::ffi::c_int {
     if (*pVfs).szOsFile > ::core::mem::size_of::<MemJournal>() as ::core::ffi::c_int {

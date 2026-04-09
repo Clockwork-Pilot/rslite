@@ -87,7 +87,7 @@ pub unsafe extern "C" fn execSql(
     rc
 }
 
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3Vacuum(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -142,7 +142,7 @@ pub unsafe extern "C" fn sqlite3Vacuum(
     }
     crate::src::src::expr::sqlite3ExprDelete((*pParse).db as *mut crate::src::headers::sqliteInt_h::sqlite3,  pInto as *mut crate::src::headers::sqliteInt_h::Expr);
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 #[inline(never)]
 
 pub unsafe extern "C" fn sqlite3RunVacuum(

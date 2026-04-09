@@ -13,6 +13,7 @@ default-members = [
 exclude = [
     "pub-interface",
     "examples",
+    "crates/rslite/examples",
 ]
 
 [workspace.package]

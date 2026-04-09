@@ -94,7 +94,7 @@ unsafe extern "C" fn synthCollSeq(
     }
     crate::src::headers::sqlite3_h::SQLITE_ERROR
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3CheckCollSeq(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -161,7 +161,7 @@ unsafe extern "C" fn findCollSeqEntry(
     }
     pColl
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3FindCollSeq(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -180,7 +180,7 @@ pub unsafe extern "C" fn sqlite3FindCollSeq(
     }
     pColl
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3SetTextEncoding(mut db: *mut crate::src::headers::sqliteInt_h::sqlite3, mut enc: crate::src::ext::rtree::rtree::u8_0) {
     (*db).enc = enc;
@@ -192,7 +192,7 @@ pub unsafe extern "C" fn sqlite3SetTextEncoding(mut db: *mut crate::src::headers
     );
     crate::src::src::vdbeaux::sqlite3ExpirePreparedStatements(db as *mut crate::src::headers::sqliteInt_h::sqlite3, 1 as ::core::ffi::c_int);
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3GetCollSeq(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -223,7 +223,7 @@ pub unsafe extern "C" fn sqlite3GetCollSeq(
     }
     p
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3LocateCollSeq(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -278,7 +278,7 @@ unsafe extern "C" fn matchQuality(
     }
     match_0
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3FunctionSearch(
     mut h: ::core::ffi::c_int,
@@ -294,7 +294,7 @@ pub unsafe extern "C" fn sqlite3FunctionSearch(
     }
     ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::FuncDef>()
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3InsertBuiltinFuncs(
     mut aDef: *mut crate::src::headers::sqliteInt_h::FuncDef,
@@ -324,7 +324,7 @@ pub unsafe extern "C" fn sqlite3InsertBuiltinFuncs(
         i += 1;
     }
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3FindFunction(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -415,7 +415,7 @@ pub unsafe extern "C" fn sqlite3FindFunction(
     }
     ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::FuncDef>()
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3SchemaClear(mut p: *mut ::core::ffi::c_void) {
     let mut temp1: crate::src::src::hash::Hash = unsafe { ::core::mem::zeroed() };
@@ -450,7 +450,7 @@ pub unsafe extern "C" fn sqlite3SchemaClear(mut p: *mut ::core::ffi::c_void) {
     __pSchema_ref.schemaFlags = (__pSchema_ref.schemaFlags as ::core::ffi::c_int
         & !(crate::src::headers::sqliteInt_h::DB_SchemaLoaded | crate::src::headers::sqliteInt_h::DB_ResetWanted)) as crate::src::fts5::u16_0;
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3SchemaGet(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,

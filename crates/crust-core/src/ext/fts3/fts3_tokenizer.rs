@@ -216,7 +216,7 @@ unsafe extern "C" fn fts3TokenizerFunc(
         );
     }
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3Fts3IsIdChar(mut c: ::core::ffi::c_char) -> ::core::ffi::c_int {
     static mut isFtsIdChar: [::core::ffi::c_char; 128] = [
@@ -353,7 +353,7 @@ pub unsafe extern "C" fn sqlite3Fts3IsIdChar(mut c: ::core::ffi::c_char) -> ::co
         || isFtsIdChar[c as ::core::ffi::c_int as usize] as ::core::ffi::c_int != 0)
         as ::core::ffi::c_int
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3Fts3NextToken(
     mut zStr: *const ::core::ffi::c_char,
@@ -407,7 +407,7 @@ pub unsafe extern "C" fn sqlite3Fts3NextToken(
     *pn = z2.offset_from(z1) as ::core::ffi::c_long as ::core::ffi::c_int;
     z1
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3Fts3InitTokenizer(
     mut pHash: *mut crate::src::ext::fts3::fts3_hash::Fts3Hash,
@@ -758,7 +758,7 @@ unsafe extern "C" fn intTestFunc(
         crate::src::headers::sqlite3_h::SQLITE_STATIC,
     );
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3Fts3InitHashTable(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,

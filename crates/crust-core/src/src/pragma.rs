@@ -916,7 +916,7 @@ unsafe extern "C" fn getSafetyLevel(
     }
     dflt
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3GetBoolean(
     mut z: *const ::core::ffi::c_char,
@@ -1135,7 +1135,7 @@ unsafe extern "C" fn actionName(mut action: crate::src::ext::rtree::rtree::u8_0)
 }
     zName
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3JournalModename(
     mut eMode: ::core::ffi::c_int,
@@ -1269,7 +1269,7 @@ unsafe extern "C" fn tableSkipIntegrityCheck(
         return ((*pTab).tabFlags & crate::src::headers::sqliteInt_h::TF_Imposter as crate::src::ext::rtree::rtree::u32_0 != 0 as crate::src::ext::rtree::rtree::u32_0) as ::core::ffi::c_int;
     };
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3Pragma(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -5308,7 +5308,7 @@ static mut pragmaVtabModule: crate::src::headers::sqlite3_h::sqlite3_module = {
     xIntegrity:  None,
 }
 };
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PragmaVtabRegister(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,

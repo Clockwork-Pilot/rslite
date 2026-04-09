@@ -48,7 +48,7 @@ static mut mem0: Mem0Global = Mem0Global {
     hardLimit: SQLITE_MAX_MEMORY as crate::src::headers::sqlite3_h::sqlite3_int64,
     nearlyFull: 0 as ::core::ffi::c_int,
 };
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3MallocMutex() -> *mut crate::src::src::mutex_unix::sqlite3_mutex {
     mem0.mutex
@@ -120,7 +120,7 @@ pub unsafe extern "C" fn sqlite3_hard_heap_limit64(mut n: crate::src::headers::s
     crate::src::src::mutex::sqlite3_mutex_leave(mem0.mutex);
     priorLimit
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3MallocInit() -> ::core::ffi::c_int {
     let mut rc: ::core::ffi::c_int = 0;
@@ -145,12 +145,12 @@ pub unsafe extern "C" fn sqlite3MallocInit() -> ::core::ffi::c_int {
     }
     rc
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3HeapNearlyFull() -> ::core::ffi::c_int {
     (*((&raw mut mem0.nearlyFull) as *mut std::sync::atomic::AtomicI32)).load(std::sync::atomic::Ordering::Relaxed)
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3MallocEnd() {
     if crate::src::src::global::sqlite3Config.m.xShutdown.is_some() {
@@ -237,7 +237,7 @@ unsafe extern "C" fn mallocWithAlarm(
 }
 
 pub const SQLITE_MAX_ALLOCATION_SIZE: ::core::ffi::c_int = 2147483391 as ::core::ffi::c_int;
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3Malloc(mut n: crate::src::ext::rtree::rtree::u64_0) -> *mut ::core::ffi::c_void {
     let mut p: *mut ::core::ffi::c_void = ::core::ptr::null_mut::<::core::ffi::c_void>();
@@ -280,7 +280,7 @@ unsafe extern "C" fn isLookaside(
     (p as crate::src::headers::sqliteInt_h::uptr >= (*db).lookaside.pStart as crate::src::headers::sqliteInt_h::uptr
         && (p as crate::src::headers::sqliteInt_h::uptr) < (*db).lookaside.pTrueEnd as crate::src::headers::sqliteInt_h::uptr) as ::core::ffi::c_int
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3MallocSize(
     mut p: *const ::core::ffi::c_void,
@@ -300,7 +300,7 @@ unsafe extern "C" fn lookasideMallocSize(
         crate::src::headers::sqliteInt_h::LOOKASIDE_SMALL
     }
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3DbMallocSize(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -350,7 +350,7 @@ pub unsafe extern "C" fn sqlite3_free(mut p: *mut ::core::ffi::c_void) {
 unsafe extern "C" fn measureAllocationSize(mut db: *mut crate::src::headers::sqliteInt_h::sqlite3, mut p: *mut ::core::ffi::c_void) {
     *(*db).pnBytesFreed += sqlite3DbMallocSize(db, p);
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3DbFreeNN(mut db: *mut crate::src::headers::sqliteInt_h::sqlite3, mut p: *mut ::core::ffi::c_void) {
     if !db.is_null() {
@@ -375,7 +375,7 @@ pub unsafe extern "C" fn sqlite3DbFreeNN(mut db: *mut crate::src::headers::sqlit
     }
     sqlite3_free(p);
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3DbNNFreeNN(mut db: *mut crate::src::headers::sqliteInt_h::sqlite3, mut p: *mut ::core::ffi::c_void) {
     if (p as crate::src::headers::sqliteInt_h::uptr) < (*db).lookaside.pEnd as crate::src::headers::sqliteInt_h::uptr {
@@ -398,14 +398,14 @@ pub unsafe extern "C" fn sqlite3DbNNFreeNN(mut db: *mut crate::src::headers::sql
     }
     sqlite3_free(p);
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3DbFree(mut db: *mut crate::src::headers::sqliteInt_h::sqlite3, mut p: *mut ::core::ffi::c_void) {
     if !p.is_null() {
         sqlite3DbFreeNN(db, p);
     }
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3Realloc(
     mut pOld: *mut ::core::ffi::c_void,
@@ -483,7 +483,7 @@ pub unsafe extern "C" fn sqlite3_realloc64(
     }
     sqlite3Realloc(pOld, n as crate::src::ext::rtree::rtree::u64_0)
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3MallocZero(mut n: crate::src::ext::rtree::rtree::u64_0) -> *mut ::core::ffi::c_void {
     let mut p: *mut ::core::ffi::c_void = sqlite3Malloc(n);
@@ -492,7 +492,7 @@ pub unsafe extern "C" fn sqlite3MallocZero(mut n: crate::src::ext::rtree::rtree:
     }
     p
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3DbMallocZero(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -518,7 +518,7 @@ unsafe extern "C" fn dbMallocRawFinish(
     }
     p
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3DbMallocRaw(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -531,7 +531,7 @@ pub unsafe extern "C" fn sqlite3DbMallocRaw(
     p = sqlite3Malloc(n);
     p
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3DbMallocRawNN(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -588,7 +588,7 @@ pub unsafe extern "C" fn sqlite3DbMallocRawNN(
     }
     dbMallocRawFinish(db, n)
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3DbRealloc(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -635,7 +635,7 @@ unsafe extern "C" fn dbReallocFinish(
     }
     pNew
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3DbReallocOrFree(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -649,7 +649,7 @@ pub unsafe extern "C" fn sqlite3DbReallocOrFree(
     }
     pNew
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3DbStrDup(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -671,7 +671,7 @@ pub unsafe extern "C" fn sqlite3DbStrDup(
     }
     zNew
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3DbStrNDup(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -694,7 +694,7 @@ pub unsafe extern "C" fn sqlite3DbStrNDup(
     }
     zNew
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3DbSpanDup(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -721,7 +721,7 @@ pub unsafe extern "C" fn sqlite3DbSpanDup(
     }
     sqlite3DbStrNDup(db, zStart, n as crate::src::ext::rtree::rtree::u64_0)
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3SetString(
     mut pz: *mut *mut ::core::ffi::c_char,
@@ -732,7 +732,7 @@ pub unsafe extern "C" fn sqlite3SetString(
     sqlite3DbFree(db, *pz as *mut ::core::ffi::c_void);
     *pz = z;
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3OomFault(mut db: *mut crate::src::headers::sqliteInt_h::sqlite3) -> *mut ::core::ffi::c_void {
     if (*db).mallocFailed as ::core::ffi::c_int == 0 as ::core::ffi::c_int
@@ -763,7 +763,7 @@ pub unsafe extern "C" fn sqlite3OomFault(mut db: *mut crate::src::headers::sqlit
     }
     ::core::ptr::null_mut::<::core::ffi::c_void>()
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3OomClear(mut db: *mut crate::src::headers::sqliteInt_h::sqlite3) {
     if (*db).mallocFailed as ::core::ffi::c_int != 0 && (*db).nVdbeExec == 0 as ::core::ffi::c_int {
@@ -791,7 +791,7 @@ unsafe extern "C" fn apiHandleError(
     }
     rc & (*db).errMask
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3ApiExit(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,

@@ -308,7 +308,7 @@ static mut fmtinfo: [et_info; 23] = [
         iNxt: 0 as ::core::ffi::c_char,
     },
 ];
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3StrAccumSetError(mut p: *mut crate::src::headers::sqliteInt_h::StrAccum, mut eError: crate::src::ext::rtree::rtree::u8_0) {
     (*p).accError = eError;
@@ -377,7 +377,7 @@ pub const etBUFSIZE: ::core::ffi::c_int = SQLITE_PRINT_BUF_SIZE;
 
 pub const SQLITE_FP_PRECISION_LIMIT: ::core::ffi::c_int = 100000000 as ::core::ffi::c_int;
 
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3RecordErrorByteOffset(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -407,7 +407,7 @@ pub unsafe extern "C" fn sqlite3RecordErrorByteOffset(
         (*db).errByteOffset = z.offset_from(zText) as ::core::ffi::c_long as ::core::ffi::c_int;
     }
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3RecordErrorOffsetOfExpr(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -428,7 +428,7 @@ pub unsafe extern "C" fn sqlite3RecordErrorOffsetOfExpr(
     }
     (*db).errByteOffset = (*pExpr).w.iOfst;
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3StrAccumEnlarge(
     mut p: *mut crate::src::headers::sqliteInt_h::StrAccum,
@@ -1152,7 +1152,7 @@ pub unsafe extern "C" fn sqlite3StrAccumFinish(mut p: *mut crate::src::headers::
     }
     (*p).zText
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3ResultStrAccum(
     mut pCtx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
@@ -1378,7 +1378,7 @@ pub unsafe extern "C" fn sqlite3RCStrRef(
     (*p).nRCRef = (*p).nRCRef.wrapping_add(1);
     z
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3RCStrUnref(mut z: *mut ::core::ffi::c_void) {
     let mut p: *mut crate::src::headers::sqliteInt_h::RCStr = z as *mut crate::src::headers::sqliteInt_h::RCStr;
@@ -1389,7 +1389,7 @@ pub unsafe extern "C" fn sqlite3RCStrUnref(mut z: *mut ::core::ffi::c_void) {
         crate::src::src::malloc::sqlite3_free(p as *mut ::core::ffi::c_void);
     };
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3RCStrNew(mut N: crate::src::ext::rtree::rtree::u64_0) -> *mut ::core::ffi::c_char {
     let mut p: *mut crate::src::headers::sqliteInt_h::RCStr = crate::src::src::malloc::sqlite3_malloc64(
@@ -1403,7 +1403,7 @@ pub unsafe extern "C" fn sqlite3RCStrNew(mut N: crate::src::ext::rtree::rtree::u
     (*p).nRCRef = 1 as crate::src::ext::rtree::rtree::u64_0;
     p.offset(1 as isize) as *mut crate::src::headers::sqliteInt_h::RCStr as *mut ::core::ffi::c_char
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3RCStrResize(
     mut z: *mut ::core::ffi::c_char,

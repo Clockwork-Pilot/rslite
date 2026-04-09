@@ -7857,7 +7857,7 @@ unsafe extern "C" fn rtreecheck(
         crate::src::src::malloc::sqlite3_free(zReport as *mut ::core::ffi::c_void);
     };
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3RtreeInit(mut db: *mut crate::src::headers::sqliteInt_h::sqlite3) -> ::core::ffi::c_int {
     let utf8: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_UTF8;

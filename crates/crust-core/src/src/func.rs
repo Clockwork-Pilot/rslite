@@ -1149,7 +1149,7 @@ pub unsafe extern "C" fn sqlite3_strlike(
         );
     };
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub static mut sqlite3_like_count: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
 
@@ -1345,7 +1345,7 @@ static mut hexdigits: [::core::ffi::c_char; 16] = [
     'E' as i32 as ::core::ffi::c_char,
     'F' as i32 as ::core::ffi::c_char,
 ];
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3QuoteValue(
     mut pStr: *mut crate::src::headers::sqliteInt_h::StrAccum,
@@ -2923,7 +2923,7 @@ unsafe extern "C" fn groupConcatValue(mut context: *mut crate::src::headers::vdb
         }
     }
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3RegisterPerConnectionBuiltinFunctions(mut db: *mut crate::src::headers::sqliteInt_h::sqlite3) {
     let mut rc: ::core::ffi::c_int = crate::src::src::main::sqlite3_overload_function(
@@ -2936,7 +2936,7 @@ pub unsafe extern "C" fn sqlite3RegisterPerConnectionBuiltinFunctions(mut db: *m
         crate::src::src::malloc::sqlite3OomFault(db as *mut crate::src::headers::sqliteInt_h::sqlite3);
     }
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3RegisterLikeFunctions(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -2992,7 +2992,7 @@ pub unsafe extern "C" fn sqlite3RegisterLikeFunctions(
         nArg += 1;
     }
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3IsLikeFunction(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -3604,7 +3604,7 @@ unsafe extern "C" fn percentFinal(mut pCtx: *mut crate::src::headers::vdbeInt_h:
 unsafe extern "C" fn percentValue(mut pCtx: *mut crate::src::headers::vdbeInt_h::sqlite3_context) {
     percentCompute(pCtx, 0 as ::core::ffi::c_int);
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3RegisterBuiltinFunctions() {
     static mut aBuiltinFunc: [crate::src::headers::sqliteInt_h::FuncDef; 108] = unsafe {
