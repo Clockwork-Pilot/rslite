@@ -455,7 +455,7 @@ unsafe extern "C" fn carrayBindDel(mut pPtr: *mut ::core::ffi::c_void) {
     }
     crate::src::src::malloc::sqlite3_free(p as *mut ::core::ffi::c_void);
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3_carray_bind(
     mut pStmt: *mut crate::src::headers::sqlite3_h::sqlite3_stmt,
@@ -626,7 +626,7 @@ pub unsafe extern "C" fn sqlite3_carray_bind(
     crate::src::src::malloc::sqlite3_free(pNew as *mut ::core::ffi::c_void);
     rc
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3CarrayRegister(mut db: *mut crate::src::headers::sqliteInt_h::sqlite3) -> *mut crate::src::headers::sqliteInt_h::Module {
     crate::src::src::vtab::sqlite3VtabCreateModule(

@@ -576,7 +576,7 @@ unsafe extern "C" fn backupUpdate(
         }
     }
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3BackupUpdate(
     mut pBackup: *mut sqlite3_backup,
@@ -587,7 +587,7 @@ pub unsafe extern "C" fn sqlite3BackupUpdate(
         backupUpdate(pBackup, iPage, aData);
     }
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3BackupRestart(mut pBackup: *mut sqlite3_backup) {
     let mut p: *mut sqlite3_backup = ::core::ptr::null_mut::<sqlite3_backup>();
@@ -597,7 +597,7 @@ pub unsafe extern "C" fn sqlite3BackupRestart(mut pBackup: *mut sqlite3_backup) 
         p = (*p).pNext;
     }
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3BtreeCopyFile(
     mut pTo: *mut crate::src::headers::btreeInt_h::Btree,

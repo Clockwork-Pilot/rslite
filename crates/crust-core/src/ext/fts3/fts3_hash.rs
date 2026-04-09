@@ -48,7 +48,7 @@ unsafe extern "C" fn fts3HashMalloc(mut n: crate::src::headers::sqlite3_h::sqlit
 unsafe extern "C" fn fts3HashFree(mut p: *mut ::core::ffi::c_void) {
     crate::src::src::malloc::sqlite3_free(p);
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3Fts3HashInit(
     mut pNew: *mut crate::src::ext::fts3::fts3_hash::Fts3Hash,
@@ -63,7 +63,7 @@ pub unsafe extern "C" fn sqlite3Fts3HashInit(
     __pNew_ref.htsize = 0 as ::core::ffi::c_int;
     __pNew_ref.ht = ::core::ptr::null_mut::<crate::src::ext::fts3::fts3_hash::_fts3ht>();
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3Fts3HashClear(mut pH: *mut crate::src::ext::fts3::fts3_hash::Fts3Hash) {
     let mut elem: *mut crate::src::ext::fts3::fts3_hash::Fts3HashElem = ::core::ptr::null_mut::<crate::src::ext::fts3::fts3_hash::Fts3HashElem>();
@@ -346,7 +346,7 @@ unsafe extern "C" fn fts3RemoveElementByHash(
         sqlite3Fts3HashClear(pH);
     }
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3Fts3HashFindElem(
     mut pH: *const crate::src::ext::fts3::fts3_hash::Fts3Hash,
@@ -366,7 +366,7 @@ pub unsafe extern "C" fn sqlite3Fts3HashFindElem(
     );
     fts3FindElementByHash(pH, pKey, nKey, h & (*pH).htsize - 1 as ::core::ffi::c_int)
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3Fts3HashFind(
     mut pH: *const crate::src::ext::fts3::fts3_hash::Fts3Hash,
@@ -381,7 +381,7 @@ pub unsafe extern "C" fn sqlite3Fts3HashFind(
         ::core::ptr::null_mut::<::core::ffi::c_void>()
     }
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3Fts3HashInsert(
     mut pH: *mut crate::src::ext::fts3::fts3_hash::Fts3Hash,

@@ -1094,7 +1094,7 @@ unsafe extern "C" fn walIndexClose(mut pWal: *mut Wal, mut isDelete: ::core::ffi
         crate::src::src::os::sqlite3OsShmUnmap(__pWal_ref.pDbFd as *mut crate::src::headers::sqlite3_h::sqlite3_file, isDelete);
     }
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3WalOpen(
     mut pVfs: *mut crate::src::headers::sqlite3_h::sqlite3_vfs,
@@ -1148,7 +1148,7 @@ pub unsafe extern "C" fn sqlite3WalOpen(
     }
     rc
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3WalLimit(mut pWal: *mut Wal, mut iLimit: crate::src::ext::rtree::rtree::i64_0) {
     if !pWal.is_null() {
@@ -1697,7 +1697,7 @@ unsafe extern "C" fn walLimitSize(mut pWal: *mut Wal, mut nMax: crate::src::ext:
         );
     }
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3WalClose(
     mut pWal: *mut Wal,
@@ -2196,7 +2196,7 @@ unsafe extern "C" fn walBeginReadTransaction(
     }
     rc
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3WalBeginReadTransaction(
     mut pWal: *mut Wal,
@@ -2206,7 +2206,7 @@ pub unsafe extern "C" fn sqlite3WalBeginReadTransaction(
     rc = walBeginReadTransaction(pWal, pChanged);
     rc
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3WalEndReadTransaction(mut pWal: *mut Wal) {
     if (*pWal).readLock as ::core::ffi::c_int >= 0 as ::core::ffi::c_int {
@@ -2279,7 +2279,7 @@ unsafe extern "C" fn walFindFrame(
     *piRead = iRead;
     crate::src::headers::sqlite3_h::SQLITE_OK
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3WalFindFrame(
     mut pWal: *mut Wal,
@@ -2290,7 +2290,7 @@ pub unsafe extern "C" fn sqlite3WalFindFrame(
     rc = walFindFrame(pWal, pgno, piRead);
     rc
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3WalReadFrame(
     mut pWal: *mut Wal,
@@ -2314,7 +2314,7 @@ pub unsafe extern "C" fn sqlite3WalReadFrame(
         iOffset,
     )
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3WalDbsize(mut pWal: *mut Wal) -> crate::src::src::pager::Pgno {
     if !pWal.is_null() && (*pWal).readLock as ::core::ffi::c_int >= 0 as ::core::ffi::c_int {
@@ -2322,7 +2322,7 @@ pub unsafe extern "C" fn sqlite3WalDbsize(mut pWal: *mut Wal) -> crate::src::src
     }
     0 as crate::src::src::pager::Pgno
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3WalBeginWriteTransaction(mut pWal: *mut Wal) -> ::core::ffi::c_int {
     let mut rc: ::core::ffi::c_int = 0;
@@ -2349,7 +2349,7 @@ pub unsafe extern "C" fn sqlite3WalBeginWriteTransaction(mut pWal: *mut Wal) -> 
     }
     rc
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3WalEndWriteTransaction(mut pWal: *mut Wal) -> ::core::ffi::c_int {
     if (*pWal).writeLock != 0 {
@@ -2361,7 +2361,7 @@ pub unsafe extern "C" fn sqlite3WalEndWriteTransaction(mut pWal: *mut Wal) -> ::
     }
     crate::src::headers::sqlite3_h::SQLITE_OK
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3WalUndo(
     mut pWal: *mut Wal,
@@ -2393,7 +2393,7 @@ pub unsafe extern "C" fn sqlite3WalUndo(
     }
     rc
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3WalSavepoint(mut pWal: *mut Wal, mut aWalData: *mut crate::src::ext::rtree::rtree::u32_0) {
     let __pWal_ref = unsafe { &*pWal };
@@ -2404,7 +2404,7 @@ pub unsafe extern "C" fn sqlite3WalSavepoint(mut pWal: *mut Wal, mut aWalData: *
         __pWal_ref.hdr.aFrameCksum[1 as ::core::ffi::c_int as usize];
     *aWalData.offset(3 as isize) = __pWal_ref.nCkpt;
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3WalSavepointUndo(
     mut pWal: *mut Wal,
@@ -2867,7 +2867,7 @@ unsafe extern "C" fn walFrames(
     }
     rc
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3WalFrames(
     mut pWal: *mut Wal,
@@ -2881,7 +2881,7 @@ pub unsafe extern "C" fn sqlite3WalFrames(
     rc = walFrames(pWal, szPage, pList, nTruncate, isCommit, sync_flags);
     rc
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3WalCheckpoint(
     mut pWal: *mut Wal,
@@ -2973,7 +2973,7 @@ pub unsafe extern "C" fn sqlite3WalCheckpoint(
         rc
     }
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3WalCallback(mut pWal: *mut Wal) -> ::core::ffi::c_int {
     let mut ret: crate::src::ext::rtree::rtree::u32_0 = 0 as crate::src::ext::rtree::rtree::u32_0;
@@ -2983,7 +2983,7 @@ pub unsafe extern "C" fn sqlite3WalCallback(mut pWal: *mut Wal) -> ::core::ffi::
     }
     ret as ::core::ffi::c_int
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3WalExclusiveMode(
     mut pWal: *mut Wal,
@@ -3018,13 +3018,13 @@ pub unsafe extern "C" fn sqlite3WalExclusiveMode(
     }
     rc
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3WalHeapMemory(mut pWal: *mut Wal) -> ::core::ffi::c_int {
     (!pWal.is_null() && (*pWal).exclusiveMode as ::core::ffi::c_int == WAL_HEAPMEMORY_MODE)
         as ::core::ffi::c_int
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3WalFile(mut pWal: *mut Wal) -> *mut crate::src::headers::sqlite3_h::sqlite3_file {
     (*pWal).pWalFd

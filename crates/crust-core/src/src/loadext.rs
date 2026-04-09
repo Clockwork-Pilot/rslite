@@ -1994,7 +1994,7 @@ pub unsafe extern "C" fn sqlite3_load_extension(
     crate::src::src::mutex::sqlite3_mutex_leave((*db).mutex);
     rc
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3CloseExtensions(mut db: *mut crate::src::headers::sqliteInt_h::sqlite3) {
     let mut i: ::core::ffi::c_int = 0;
@@ -2106,7 +2106,7 @@ pub unsafe extern "C" fn sqlite3_reset_auto_extension() {
         crate::src::src::mutex::sqlite3_mutex_leave(mutex);
     }
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3AutoLoadExtensions(mut db: *mut crate::src::headers::sqliteInt_h::sqlite3) {
     let mut i: crate::src::ext::rtree::rtree::u32_0 = 0;

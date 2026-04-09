@@ -397,7 +397,7 @@ unsafe extern "C" fn fts3tokRowidMethod(
     *pRowid = pCsr.iRowid as crate::src::headers::sqlite3_h::sqlite3_int64 as crate::src::headers::sqlite3_h::sqlite_int64;
     crate::src::headers::sqlite3_h::SQLITE_OK
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3Fts3InitTok(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,

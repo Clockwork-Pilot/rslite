@@ -12,7 +12,7 @@ pub use crate::src::headers::vdbeInt_h::sqlite3_context;pub use crate::src::head
 pub use crate::src::headers::stdlib::int16_t;
 
 pub use crate::src::headers::stdlib::uint32_t;pub use crate::src::headers::stdlib::uint8_t;pub use crate::src::headers::stdlib::__int16_t;pub use crate::src::headers::stdlib::__uint32_t;pub use crate::src::headers::stdlib::__uint8_t;
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub static mut sqlite3UpperToLower: [::core::ffi::c_uchar; 274] = [
     0 as ::core::ffi::c_int as ::core::ffi::c_uchar,
@@ -290,19 +290,19 @@ pub static mut sqlite3UpperToLower: [::core::ffi::c_uchar; 274] = [
     0 as ::core::ffi::c_int as ::core::ffi::c_uchar,
     1 as ::core::ffi::c_int as ::core::ffi::c_uchar,
 ];
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub static mut sqlite3aLTb: *const ::core::ffi::c_uchar =
     ::core::ptr::null::<::core::ffi::c_uchar>();
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub static mut sqlite3aEQb: *const ::core::ffi::c_uchar =
     ::core::ptr::null::<::core::ffi::c_uchar>();
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub static mut sqlite3aGTb: *const ::core::ffi::c_uchar =
     ::core::ptr::null::<::core::ffi::c_uchar>();
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub static mut sqlite3CtypeMap: [::core::ffi::c_uchar; 256] = [
     0 as ::core::ffi::c_int as ::core::ffi::c_uchar,
@@ -573,7 +573,7 @@ pub const SQLITE_STMTJRNL_SPILL: ::core::ffi::c_int =
     64 as ::core::ffi::c_int * 1024 as ::core::ffi::c_int;
 
 pub const SQLITE_MEMDB_DEFAULT_MAXSIZE: ::core::ffi::c_int = 1073741824 as ::core::ffi::c_int;
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub static mut sqlite3Config: crate::src::headers::sqliteInt_h::Sqlite3Config = crate::src::headers::sqliteInt_h::Sqlite3Config {
     bMemstat:  crate::src::headers::sqliteInt_h::SQLITE_DEFAULT_MEMSTATUS,
@@ -653,21 +653,21 @@ pub static mut sqlite3Config: crate::src::headers::sqliteInt_h::Sqlite3Config = 
     szSorterRef:  crate::src::headers::sqliteInt_h::SQLITE_DEFAULT_SORTERREF_SIZE as crate::src::ext::rtree::rtree::u32_0,
     iPrngSeed:  0 as ::core::ffi::c_uint,
 };
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub static mut sqlite3BuiltinFunctions: crate::src::headers::sqliteInt_h::FuncDefHash = crate::src::headers::sqliteInt_h::FuncDefHash {
     a:  [::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>() as *mut crate::src::headers::sqliteInt_h::FuncDef; 23],
 };
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub static mut sqlite3PendingByte: ::core::ffi::c_int = 0x40000000 as ::core::ffi::c_int;
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub static mut sqlite3TreeTrace: crate::src::ext::rtree::rtree::u32_0 = 0 as crate::src::ext::rtree::rtree::u32_0;
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub static mut sqlite3WhereTrace: crate::src::ext::rtree::rtree::u32_0 = 0 as crate::src::ext::rtree::rtree::u32_0;
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub static mut sqlite3OpcodeProperty: [::core::ffi::c_uchar; 191] = [
     0 as ::core::ffi::c_int as ::core::ffi::c_uchar,
@@ -862,11 +862,11 @@ pub static mut sqlite3OpcodeProperty: [::core::ffi::c_uchar; 191] = [
     0 as ::core::ffi::c_int as ::core::ffi::c_uchar,
     0 as ::core::ffi::c_int as ::core::ffi::c_uchar,
 ];
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub static mut sqlite3StrBINARY: [::core::ffi::c_char; 7] =
     unsafe { ::core::mem::transmute::<[u8; 7], [::core::ffi::c_char; 7]>(*b"BINARY\0") };
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub static mut sqlite3StdTypeLen: [::core::ffi::c_uchar; 6] = [
     3 as ::core::ffi::c_int as ::core::ffi::c_uchar,
@@ -876,7 +876,7 @@ pub static mut sqlite3StdTypeLen: [::core::ffi::c_uchar; 6] = [
     4 as ::core::ffi::c_int as ::core::ffi::c_uchar,
     4 as ::core::ffi::c_int as ::core::ffi::c_uchar,
 ];
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub static mut sqlite3StdTypeAffinity: [::core::ffi::c_char; 6] = [
     crate::src::headers::sqliteInt_h::SQLITE_AFF_NUMERIC as ::core::ffi::c_char,
@@ -886,7 +886,7 @@ pub static mut sqlite3StdTypeAffinity: [::core::ffi::c_char; 6] = [
     crate::src::headers::sqliteInt_h::SQLITE_AFF_REAL as ::core::ffi::c_char,
     crate::src::headers::sqliteInt_h::SQLITE_AFF_TEXT as ::core::ffi::c_char,
 ];
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub static mut sqlite3StdType: [*const ::core::ffi::c_char; 6] = [
     b"ANY\0" as *const u8 as *const ::core::ffi::c_char,

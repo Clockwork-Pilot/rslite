@@ -3,9 +3,8 @@ resolver = "2"
 members = [
     "crates/crust-core",
     "crates/sqlite-printf-macros",
-    "crates/y2lite/y2lite-sys",
-    "crates/y2lite/y2lite",
-    "crates/y2lite/y2lite-orm",
+    "crates/rslite-raw",
+    "crates/rslite",
 ]
 default-members = [
     "crates/crust-core",
@@ -13,6 +12,8 @@ default-members = [
 ]
 exclude = [
     "pub-interface",
+    "examples",
+    "crates/rslite/examples",
 ]
 
 [workspace.package]
@@ -48,9 +49,8 @@ codegen-units = 1
 # Internal crates
 crust-core = { path = "crates/crust-core" }
 sqlite-printf-macros = { path = "crates/sqlite-printf-macros" }
-y2lite-sys = { path = "crates/y2lite/y2lite-sys" }
-y2lite = { path = "crates/y2lite/y2lite" }
-y2lite-orm = { path = "crates/y2lite/y2lite-orm" }
+rslite-raw = { path = "crates/rslite-raw" }
+rslite = { path = "crates/rslite" }
 
 # External dependencies
 c2rust-bitfields = "0.22.1"

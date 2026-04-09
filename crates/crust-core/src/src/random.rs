@@ -363,7 +363,7 @@ static mut sqlite3SavedPrng: sqlite3PrngType = sqlite3PrngType {
     out: [0; 64],
     n: 0,
 };
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PrngSaveState() {
     ::core::ptr::copy_nonoverlapping(
@@ -372,7 +372,7 @@ pub unsafe extern "C" fn sqlite3PrngSaveState() {
                     ::core::mem::size_of::<sqlite3PrngType>() as usize,
                 );
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PrngRestoreState() {
     ::core::ptr::copy_nonoverlapping(

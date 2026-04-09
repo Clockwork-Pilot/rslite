@@ -545,7 +545,7 @@ unsafe extern "C" fn unicodeNext(
     *piPos = fresh18;
     crate::src::headers::sqlite3_h::SQLITE_OK
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3Fts3UnicodeTokenizer(
     mut ppModule: *mut *const crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_module,

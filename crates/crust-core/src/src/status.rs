@@ -68,12 +68,12 @@ static mut statMutex: [::core::ffi::c_char; 10] = [
     0 as ::core::ffi::c_int as ::core::ffi::c_char,
     0 as ::core::ffi::c_int as ::core::ffi::c_char,
 ];
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3StatusValue(mut op: ::core::ffi::c_int) -> crate::src::headers::sqlite3_h::sqlite3_int64 {
     sqlite3Stat.nowValue[op as usize]
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3StatusUp(mut op: ::core::ffi::c_int, mut N: ::core::ffi::c_int) {
     sqlite3Stat.nowValue[op as usize] += N as sqlite3StatValueType;
@@ -81,13 +81,13 @@ pub unsafe extern "C" fn sqlite3StatusUp(mut op: ::core::ffi::c_int, mut N: ::co
         sqlite3Stat.mxValue[op as usize] = sqlite3Stat.nowValue[op as usize];
     }
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3StatusDown(mut op: ::core::ffi::c_int, mut N: ::core::ffi::c_int) {
     sqlite3Stat.nowValue[op as usize] -= N as sqlite3StatValueType;
 }
 
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 pub extern "C" fn sqlite3StatusHighwater(
     mut op: ::core::ffi::c_int,
     mut X: ::core::ffi::c_int,
@@ -158,7 +158,7 @@ unsafe extern "C" fn countLookasideSlots(mut p: *mut crate::src::headers::sqlite
     }
     cnt
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3LookasideUsed(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,

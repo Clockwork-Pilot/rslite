@@ -233,7 +233,7 @@ static mut simpleTokenizerModule: crate::src::ext::fts3::fts3_tokenizer::sqlite3
     xLanguageid:  None,
 }
 };
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3Fts3SimpleTokenizerModule(
     mut ppModule: *mut *const crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_module,

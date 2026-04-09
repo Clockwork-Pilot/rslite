@@ -804,7 +804,7 @@ unsafe extern "C" fn analyzeTable(
     );
     loadAnalysis(pParse, iDb);
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3Analyze(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -1017,10 +1017,10 @@ unsafe extern "C" fn analysisLoader(
     }
     0 as ::core::ffi::c_int
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3DeleteIndexSamples(mut _db: *mut crate::src::headers::sqliteInt_h::sqlite3, mut _pIdx: *mut crate::src::headers::sqliteInt_h::Index) {}
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3AnalysisLoad(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,

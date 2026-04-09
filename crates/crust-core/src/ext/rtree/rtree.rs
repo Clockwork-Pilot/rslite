@@ -2898,15 +2898,8 @@ pub use crate::src::headers::stdlib::C2RustUnnamed_0_1;pub use crate::src::heade
 pub use crate::src::ext::rtree::rtree::stdlib_float_h::atof;
 
 
-unsafe extern "C" {
-    
-    pub fn sqlite3GetToken(
-        _: *const ::core::ffi::c_uchar,
-        _: *mut ::core::ffi::c_int,
-    ) -> crate::src::headers::sqlite3_h::sqlite3_int64;
-    
-    pub fn sqlite3IntFloatCompare(_: i64_0, _: ::core::ffi::c_double) -> ::core::ffi::c_int;
-}
+pub use crate::src::src::tokenize::sqlite3GetToken;
+pub use crate::src::src::vdbeaux::sqlite3IntFloatCompare;
 
 pub type RtreeDValue = ::core::ffi::c_double;
 #[derive(Copy, Clone)]
@@ -7864,7 +7857,7 @@ unsafe extern "C" fn rtreecheck(
         crate::src::src::malloc::sqlite3_free(zReport as *mut ::core::ffi::c_void);
     };
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3RtreeInit(mut db: *mut crate::src::headers::sqliteInt_h::sqlite3) -> ::core::ffi::c_int {
     let utf8: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_UTF8;

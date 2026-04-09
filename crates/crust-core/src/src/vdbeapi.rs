@@ -748,7 +748,7 @@ pub unsafe extern "C" fn sqlite3_result_error_nomem(mut pCtx: *mut crate::src::h
     __pCtx_ref.isError = crate::src::headers::sqliteInt_h::SQLITE_NOMEM_BKPT;
     crate::src::src::malloc::sqlite3OomFault((*__pCtx_ref.pOut).db as *mut crate::src::headers::sqliteInt_h::sqlite3);
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3ResultIntReal(mut pCtx: *mut crate::src::headers::vdbeInt_h::sqlite3_context) {
     if (*(*pCtx).pOut).flags as ::core::ffi::c_int & crate::src::headers::vdbeInt_h::MEM_Int != 0 {
@@ -959,7 +959,7 @@ pub unsafe extern "C" fn sqlite3_context_db_handle(mut p: *mut crate::src::heade
 pub unsafe extern "C" fn sqlite3_vtab_nochange(mut p: *mut crate::src::headers::vdbeInt_h::sqlite3_context) -> ::core::ffi::c_int {
     sqlite3_value_nochange((*p).pOut as *mut crate::src::headers::vdbeInt_h::sqlite3_value)
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3VdbeValueListFree(mut pToDelete: *mut ::core::ffi::c_void) {
     crate::src::src::malloc::sqlite3_free(pToDelete);
@@ -1057,7 +1057,7 @@ pub unsafe extern "C" fn sqlite3_vtab_in_next(
 ) -> ::core::ffi::c_int {
     valueFromValueList(pVal, ppOut, 1 as ::core::ffi::c_int)
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3StmtCurrentTime(mut p: *mut crate::src::headers::vdbeInt_h::sqlite3_context) -> crate::src::headers::sqlite3_h::sqlite3_int64 {
     let mut rc: ::core::ffi::c_int = 0;
@@ -1935,7 +1935,7 @@ pub unsafe extern "C" fn sqlite3_bind_parameter_name(
     }
     crate::src::src::util::sqlite3VListNumToName((*p).pVList, i)
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3VdbeParameterIndex(
     mut p: *mut crate::src::headers::vdbeInt_h::Vdbe,
@@ -1955,7 +1955,7 @@ pub unsafe extern "C" fn sqlite3_bind_parameter_index(
 ) -> ::core::ffi::c_int {
     sqlite3VdbeParameterIndex(pStmt as *mut crate::src::headers::vdbeInt_h::Vdbe, zName, crate::src::src::util::sqlite3Strlen30(zName))
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3TransferBindings(
     mut pFromStmt: *mut crate::src::headers::sqlite3_h::sqlite3_stmt,

@@ -49,17 +49,17 @@ pub struct CoveringIndexCheck {
     pub bExpr: crate::src::ext::rtree::rtree::u8_0,
     pub bUnidx: crate::src::ext::rtree::rtree::u8_0,
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3WhereOutputRowCount(mut pWInfo: *mut crate::src::headers::whereInt_h::WhereInfo) -> crate::src::headers::sqliteInt_h::LogEst {
     (*pWInfo).nRowOut
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3WhereIsDistinct(mut pWInfo: *mut crate::src::headers::whereInt_h::WhereInfo) -> ::core::ffi::c_int {
     (*pWInfo).eDistinct as ::core::ffi::c_int
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3WhereIsOrdered(mut pWInfo: *mut crate::src::headers::whereInt_h::WhereInfo) -> ::core::ffi::c_int {
     if ((*pWInfo).nOBSat as ::core::ffi::c_int) < 0 as ::core::ffi::c_int {
@@ -68,7 +68,7 @@ pub unsafe extern "C" fn sqlite3WhereIsOrdered(mut pWInfo: *mut crate::src::head
         (*pWInfo).nOBSat as ::core::ffi::c_int
     }
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3WhereOrderByLimitOptLabel(
     mut pWInfo: *mut crate::src::headers::whereInt_h::WhereInfo,
@@ -87,7 +87,7 @@ pub unsafe extern "C" fn sqlite3WhereOrderByLimitOptLabel(
         (*pInner).addrNxt
     }
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3WhereMinMaxOptEarlyOut(
     mut v: *mut crate::src::headers::vdbeInt_h::Vdbe,
@@ -113,19 +113,19 @@ pub unsafe extern "C" fn sqlite3WhereMinMaxOptEarlyOut(
     }
     crate::src::src::vdbeaux::sqlite3VdbeGoto(v, __pWInfo_ref.iBreak);
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3WhereContinueLabel(
     mut pWInfo: *mut crate::src::headers::whereInt_h::WhereInfo,
 ) -> ::core::ffi::c_int {
     (*pWInfo).iContinue
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3WhereBreakLabel(mut pWInfo: *mut crate::src::headers::whereInt_h::WhereInfo) -> ::core::ffi::c_int {
     (*pWInfo).iBreak
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3WhereOkOnePass(
     mut pWInfo: *mut crate::src::headers::whereInt_h::WhereInfo,
@@ -138,7 +138,7 @@ pub unsafe extern "C" fn sqlite3WhereOkOnePass(
                 );
     (*pWInfo).eOnePass as ::core::ffi::c_int
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3WhereUsesDeferredSeek(
     mut pWInfo: *mut crate::src::headers::whereInt_h::WhereInfo,
@@ -221,7 +221,7 @@ unsafe extern "C" fn whereOrInsert(
     }
     1 as ::core::ffi::c_int
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3WhereGetMask(
     mut pMaskSet: *mut crate::src::headers::whereInt_h::WhereMaskSet,
@@ -240,7 +240,7 @@ pub unsafe extern "C" fn sqlite3WhereGetMask(
     }
     0 as crate::src::headers::sqliteInt_h::Bitmask
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3WhereMalloc(
     mut pWInfo: *mut crate::src::headers::whereInt_h::WhereInfo,
@@ -260,7 +260,7 @@ pub unsafe extern "C" fn sqlite3WhereMalloc(
     }
     pBlock as *mut ::core::ffi::c_void
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3WhereRealloc(
     mut pWInfo: *mut crate::src::headers::whereInt_h::WhereInfo,
@@ -515,7 +515,7 @@ unsafe extern "C" fn whereScanInit(
     __pScan_ref.aiColumn[0 as ::core::ffi::c_int as usize] = iColumn as crate::src::fts5::i16_0;
     whereScanNext(pScan)
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3WhereFindTerm(
     mut pWC: *mut crate::src::headers::whereInt_h::WhereClause,
@@ -3576,7 +3576,7 @@ pub unsafe extern "C" fn sqlite3_vtab_distinct(
 
     pHidden.eDistinct
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3VtabUsesAllSchemas(mut pParse: *mut crate::src::headers::sqliteInt_h::Parse) {
     let mut nDb: ::core::ffi::c_int = (*(*pParse).db).nDb;
@@ -4580,7 +4580,7 @@ unsafe extern "C" fn wherePathSatisfiesOrderBy(
     }
     -(1 as ::core::ffi::c_int) as crate::src::headers::sqliteInt_h::i8_0
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3WhereIsSorted(mut pWInfo: *mut crate::src::headers::whereInt_h::WhereInfo) -> ::core::ffi::c_int {
     (*pWInfo).sorted() as ::core::ffi::c_int
@@ -5566,7 +5566,7 @@ unsafe extern "C" fn whereReverseScanOrder(mut pWInfo: *mut crate::src::headers:
         ii += 1;
     }
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3WhereBegin(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -6268,7 +6268,7 @@ pub unsafe extern "C" fn sqlite3WhereBegin(
     }
     ::core::ptr::null_mut::<crate::src::headers::whereInt_h::WhereInfo>()
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3WhereEnd(mut pWInfo: *mut crate::src::headers::whereInt_h::WhereInfo) {
     let __pWInfo_ref = unsafe { &mut *pWInfo };

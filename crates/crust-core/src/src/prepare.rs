@@ -83,7 +83,7 @@ unsafe extern "C" fn corruptSchema(
         }
     }
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3IndexHasDuplicateRootPage(
     mut pIndex: *mut crate::src::headers::sqliteInt_h::Index,
@@ -98,7 +98,7 @@ pub unsafe extern "C" fn sqlite3IndexHasDuplicateRootPage(
     }
     0 as ::core::ffi::c_int
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3InitCallback(
     mut pInit: *mut ::core::ffi::c_void,
@@ -226,7 +226,7 @@ pub unsafe extern "C" fn sqlite3InitCallback(
     }
     0 as ::core::ffi::c_int
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3InitOne(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -489,7 +489,7 @@ pub unsafe extern "C" fn sqlite3InitOne(
     __db_ref.init.busy = 0 as crate::src::ext::rtree::rtree::u8_0;
     rc
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3Init(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -529,7 +529,7 @@ pub unsafe extern "C" fn sqlite3Init(
     }
     crate::src::headers::sqlite3_h::SQLITE_OK
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3ReadSchema(mut pParse: *mut crate::src::headers::sqliteInt_h::Parse) -> ::core::ffi::c_int {
     let mut rc: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_OK;
@@ -588,7 +588,7 @@ unsafe extern "C" fn schemaIsValid(mut pParse: *mut crate::src::headers::sqliteI
         iDb += 1;
     }
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3SchemaToIndex(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -603,7 +603,7 @@ pub unsafe extern "C" fn sqlite3SchemaToIndex(
     }
     i
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3ParseObjectReset(mut pParse: *mut crate::src::headers::sqliteInt_h::Parse) {
     let __pParse_ref = unsafe { &mut *pParse };
@@ -636,7 +636,7 @@ pub unsafe extern "C" fn sqlite3ParseObjectReset(mut pParse: *mut crate::src::he
     }) as crate::src::fts5::u16_0;
     __db_ref.pParse = __pParse_ref.pOuterParse;
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3ParserAddCleanup(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -666,7 +666,7 @@ pub unsafe extern "C" fn sqlite3ParserAddCleanup(
     }
     pPtr
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3ParseObjectInit(mut pParse: *mut crate::src::headers::sqliteInt_h::Parse, mut db: *mut crate::src::headers::sqliteInt_h::sqlite3) {
     ::libc::memset(
@@ -1009,7 +1009,7 @@ unsafe extern "C" fn sqlite3LockAndPrepare(
     crate::src::src::mutex::sqlite3_mutex_leave(__db_ref.mutex);
     rc
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3Reprepare(mut p: *mut crate::src::headers::vdbeInt_h::Vdbe) -> ::core::ffi::c_int {
     let mut rc: ::core::ffi::c_int = 0;

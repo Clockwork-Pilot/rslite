@@ -34,7 +34,7 @@ pub use crate::__stddef_size_t_h::size_t;
 
 pub use crate::src::src::malloc::sqlite3_free;pub use crate::src::headers::sqlite3_h::sqlite_uint64;pub use crate::src::src::fault::sqlite3BeginBenignMalloc;pub use crate::src::src::fault::sqlite3EndBenignMalloc;pub use crate::src::src::malloc::sqlite3Malloc;pub use crate::src::src::malloc::sqlite3MallocSize;pub use crate::src::src::util::sqlite3StrICmp;pub use crate::src::ext::rtree::rtree::u64_0;pub use crate::src::headers::sqliteInt_h::SQLITE_MALLOC_SOFT_LIMIT;
 
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3HashInit(mut pNew: *mut crate::src::src::hash::Hash) {
     let __pNew_ref = unsafe { &mut *pNew };
@@ -43,7 +43,7 @@ pub unsafe extern "C" fn sqlite3HashInit(mut pNew: *mut crate::src::src::hash::H
     __pNew_ref.htsize = 0 as ::core::ffi::c_uint;
     __pNew_ref.ht = ::core::ptr::null_mut::<crate::src::src::hash::_ht>();
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3HashClear(mut pH: *mut crate::src::src::hash::Hash) {
     let mut elem: *mut crate::src::src::hash::HashElem = ::core::ptr::null_mut::<crate::src::src::hash::HashElem>();
@@ -229,7 +229,7 @@ unsafe extern "C" fn removeElement(mut pH: *mut crate::src::src::hash::Hash, mut
         sqlite3HashClear(pH);
     }
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3HashFind(
     mut pH: *const crate::src::src::hash::Hash,
@@ -237,7 +237,7 @@ pub unsafe extern "C" fn sqlite3HashFind(
 ) -> *mut ::core::ffi::c_void {
     (*findElementWithHash(pH, pKey, ::core::ptr::null_mut::<::core::ffi::c_uint>())).data
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3HashInsert(
     mut pH: *mut crate::src::src::hash::Hash,

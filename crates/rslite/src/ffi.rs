@@ -3,18 +3,17 @@
 
 use std::ffi::{CStr, CString};
 use std::os::raw::c_int;
-use sqlite_noamalgam::src::src::prepare::sqlite3_prepare_v2;
-use sqlite_noamalgam::src::src::vdbeapi::{
-    sqlite3_step, sqlite3_finalize, sqlite3_column_count, sqlite3_column_int64,
+use rslite_raw::{
+    sqlite3_prepare_v2, sqlite3_step, sqlite3_finalize, sqlite3_column_count, sqlite3_column_int64,
     sqlite3_column_text, sqlite3_column_bytes, sqlite3_column_double, sqlite3_column_type,
     sqlite3_column_blob,
     sqlite3_bind_int64, sqlite3_bind_text, sqlite3_bind_blob, sqlite3_bind_null,
     sqlite3_bind_double,
 };
-use sqlite_noamalgam::src::src::main::{
+use rslite_raw::{
     sqlite3, sqlite3_open, sqlite3_errmsg, sqlite3_close,
 };
-use sqlite_noamalgam::src::headers::sqlite3_h::{
+use rslite_raw::{
     sqlite3_stmt, SQLITE_OK, SQLITE_ROW, SQLITE_DONE,
     SQLITE_INTEGER, SQLITE_FLOAT, SQLITE_BLOB, SQLITE_NULL, SQLITE_TEXT,
 };

@@ -1466,7 +1466,7 @@ pub mod keywordhash_h {
         }
         n
     }
-    #[unsafe(no_mangle)]
+    #[cfg_attr(feature = "test", unsafe(no_mangle))]
     
     pub unsafe extern "C" fn sqlite3KeywordCode(
         mut z: *const ::core::ffi::c_uchar,
@@ -1846,7 +1846,7 @@ static mut aiClass: [::core::ffi::c_uchar; 256] = [
     27 as ::core::ffi::c_int as ::core::ffi::c_uchar,
     27 as ::core::ffi::c_int as ::core::ffi::c_uchar,
 ];
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3IsIdChar(mut c: crate::src::ext::rtree::rtree::u8_0) -> ::core::ffi::c_int {
     (*(&raw const crate::src::src::global::sqlite3CtypeMap as *const ::core::ffi::c_uchar)
@@ -1914,7 +1914,7 @@ unsafe extern "C" fn analyzeFilterKeyword(
     }
     crate::src::parse::TK_ID
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3GetToken(
     mut z: *const ::core::ffi::c_uchar,
@@ -2402,7 +2402,7 @@ pub unsafe extern "C" fn sqlite3GetToken(
     *tokenType = crate::src::parse::TK_ID;
     i
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3RunParser(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,

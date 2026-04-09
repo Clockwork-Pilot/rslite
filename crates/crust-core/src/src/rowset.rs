@@ -60,7 +60,7 @@ pub const ROWSET_ENTRY_PER_CHUNK: usize = ((ROWSET_ALLOCATION_SIZE - 8 as ::core
 pub const ROWSET_SORTED: ::core::ffi::c_int = 0x1 as ::core::ffi::c_int;
 
 pub const ROWSET_NEXT: ::core::ffi::c_int = 0x2 as ::core::ffi::c_int;
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3RowSetInit(mut db: *mut crate::src::headers::sqliteInt_h::sqlite3) -> *mut RowSet {
     let mut p: *mut RowSet =
@@ -89,7 +89,7 @@ pub unsafe extern "C" fn sqlite3RowSetInit(mut db: *mut crate::src::headers::sql
     }
     p
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3RowSetClear(mut pArg: *mut ::core::ffi::c_void) {
     let mut p: *mut RowSet = pArg as *mut RowSet;
@@ -109,7 +109,7 @@ pub unsafe extern "C" fn sqlite3RowSetClear(mut pArg: *mut ::core::ffi::c_void) 
     __p_ref.pForest = ::core::ptr::null_mut::<RowSetEntry>();
     __p_ref.rsFlags = ROWSET_SORTED as crate::src::fts5::u16_0;
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3RowSetDelete(mut pArg: *mut ::core::ffi::c_void) {
     sqlite3RowSetClear(pArg);
@@ -135,7 +135,7 @@ unsafe extern "C" fn rowSetEntryAlloc(mut p: *mut RowSet) -> *mut RowSetEntry {
     __p_ref.pFresh = __p_ref.pFresh.offset(1);
     fresh0
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3RowSetInsert(mut p: *mut RowSet, mut rowid: crate::src::ext::rtree::rtree::i64_0) {
     let mut pEntry: *mut RowSetEntry = ::core::ptr::null_mut::<RowSetEntry>();
@@ -290,7 +290,7 @@ unsafe extern "C" fn rowSetListToTree(mut pList: *mut RowSetEntry) -> *mut RowSe
     }
     p
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3RowSetNext(
     mut p: *mut RowSet,
@@ -316,7 +316,7 @@ pub unsafe extern "C" fn sqlite3RowSetNext(
         return 0 as ::core::ffi::c_int;
     };
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3RowSetTest(
     mut pRowSet: *mut RowSet,

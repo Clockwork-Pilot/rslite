@@ -34,7 +34,7 @@ pub struct Fts3Keyword {
     pub parenOnly: ::core::ffi::c_uchar,
     pub eType: ::core::ffi::c_uchar,
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub static mut sqlite3_fts3_enable_parentheses: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
 
@@ -48,7 +48,7 @@ unsafe extern "C" fn fts3isspace(mut c: ::core::ffi::c_char) -> ::core::ffi::c_i
         || c as ::core::ffi::c_int == '\u{b}' as i32
         || c as ::core::ffi::c_int == '\u{c}' as i32) as ::core::ffi::c_int
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3Fts3MallocZero(
     mut nByte: crate::src::headers::sqlite3_h::sqlite3_int64,
@@ -59,7 +59,7 @@ pub unsafe extern "C" fn sqlite3Fts3MallocZero(
     }
     pRet
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3Fts3OpenTokenizer(
     mut pTokenizer: *mut crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer,
@@ -978,7 +978,7 @@ unsafe extern "C" fn fts3ExprParseUnbalanced(
     }
     rc
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3Fts3ExprParse(
     mut pTokenizer: *mut crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer,
@@ -1036,7 +1036,7 @@ unsafe extern "C" fn fts3FreeExprNode(mut p: *mut crate::fts3Int_h::Fts3Expr) {
     crate::src::src::malloc::sqlite3_free((*p).aMI as *mut ::core::ffi::c_void);
     crate::src::src::malloc::sqlite3_free(p as *mut ::core::ffi::c_void);
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3Fts3ExprFree(mut pDel: *mut crate::fts3Int_h::Fts3Expr) {
     let mut p: *mut crate::fts3Int_h::Fts3Expr = ::core::ptr::null_mut::<crate::fts3Int_h::Fts3Expr>();
@@ -1273,7 +1273,7 @@ unsafe extern "C" fn fts3ExprTestRebalance(
 ) {
     fts3ExprTestCommon(1 as ::core::ffi::c_int, context, argc, argv);
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3Fts3ExprInitTestInterface(
     mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,

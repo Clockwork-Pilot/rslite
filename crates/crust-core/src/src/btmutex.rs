@@ -33,7 +33,7 @@ unsafe extern "C" fn unlockBtreeMutex(mut p: *mut crate::src::headers::btreeInt_
     crate::src::src::mutex::sqlite3_mutex_leave((*pBt).mutex);
     (*p).locked = 0 as crate::src::ext::rtree::rtree::u8_0;
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3BtreeEnter(mut p: *mut crate::src::headers::btreeInt_h::Btree) {
     let __p_ref = unsafe { &mut *p };
@@ -72,7 +72,7 @@ unsafe extern "C" fn btreeLockCarefully(mut p: *mut crate::src::headers::btreeIn
         pLater = (*pLater).pNext;
     }
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3BtreeLeave(mut p: *mut crate::src::headers::btreeInt_h::Btree) {
     if (*p).sharable != 0 {
@@ -99,7 +99,7 @@ unsafe extern "C" fn btreeEnterAll(mut db: *mut crate::src::headers::sqliteInt_h
     }
     (*db).noSharedCache = skipOk;
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3BtreeEnterAll(mut db: *mut crate::src::headers::sqliteInt_h::sqlite3) {
     if (*db).noSharedCache as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
@@ -120,19 +120,19 @@ unsafe extern "C" fn btreeLeaveAll(mut db: *mut crate::src::headers::sqliteInt_h
         i += 1;
     }
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3BtreeLeaveAll(mut db: *mut crate::src::headers::sqliteInt_h::sqlite3) {
     if (*db).noSharedCache as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
         btreeLeaveAll(db);
     }
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3BtreeEnterCursor(mut pCur: *mut crate::src::headers::btreeInt_h::BtCursor) {
     sqlite3BtreeEnter((*pCur).pBtree);
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3BtreeLeaveCursor(mut pCur: *mut crate::src::headers::btreeInt_h::BtCursor) {
     sqlite3BtreeLeave((*pCur).pBtree);

@@ -1,0 +1,16 @@
+[package]
+name = "rslite"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[features]
+default = ["rslite"]
+rslite = []
+
+[dependencies]
+rslite-raw = { workspace = true }
+bitflags = "2"
+
+[dev-dependencies]
+tempfile = "3"

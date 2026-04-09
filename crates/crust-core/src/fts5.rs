@@ -28327,7 +28327,7 @@ unsafe extern "C" fn fts5IterSetOutputCb(
         }
     }
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3Fts5Init(mut db: *mut crate::src::headers::sqliteInt_h::sqlite3) -> ::core::ffi::c_int {
     fts5Init(db)

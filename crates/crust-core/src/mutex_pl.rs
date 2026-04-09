@@ -305,7 +305,7 @@ unsafe extern "C" fn mutex_not_held(p: *mut Sqlite3Mutex) -> c_int {
     }
 }
 
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 pub static SQLITE3_MUTEX_METHODS: sqlite3_mutex_methods = sqlite3_mutex_methods {
     xMutexInit: mutex_init,
     xMutexEnd: mutex_end,
@@ -325,7 +325,7 @@ pub static SQLITE3_MUTEX_METHODS: sqlite3_mutex_methods = sqlite3_mutex_methods 
 /// Provides a full memory barrier for thread synchronization.
 /// Used by SQLite internally to ensure memory ordering across threads.
 /// Uses std::sync::atomic::fence with SeqCst ordering for maximum safety.
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 pub extern "C" fn sqlite3MemoryBarrier() {
     fence(Ordering::SeqCst);
 }
@@ -334,7 +334,7 @@ pub extern "C" fn sqlite3MemoryBarrier() {
 // Public function for C callers to get the methods
 // ---------------------------------------------------------------------------
 
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 pub unsafe extern "C" fn sqlite3DefaultMutex() -> *const sqlite3_mutex_methods {
     &SQLITE3_MUTEX_METHODS as *const sqlite3_mutex_methods
 }

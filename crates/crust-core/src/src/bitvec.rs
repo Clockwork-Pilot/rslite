@@ -58,7 +58,7 @@ pub const BITVEC_MXHASH: usize = BITVEC_NINT.wrapping_div(2 as usize);
 
 pub const BITVEC_NPTR: crate::src::ext::rtree::rtree::u32_0 =
     BITVEC_USIZE.wrapping_div(::core::mem::size_of::<*mut Bitvec>() as usize) as crate::src::ext::rtree::rtree::u32_0;
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3BitvecCreate(mut iSize: crate::src::ext::rtree::rtree::u32_0) -> *mut Bitvec {
     let mut p: *mut Bitvec = ::core::ptr::null_mut::<Bitvec>();
@@ -68,7 +68,7 @@ pub unsafe extern "C" fn sqlite3BitvecCreate(mut iSize: crate::src::ext::rtree::
     }
     p
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3BitvecTestNotNull(
     mut p: *mut Bitvec,
@@ -105,12 +105,12 @@ pub unsafe extern "C" fn sqlite3BitvecTestNotNull(
         return 0 as ::core::ffi::c_int;
     };
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3BitvecTest(mut p: *mut Bitvec, mut i: crate::src::ext::rtree::rtree::u32_0) -> ::core::ffi::c_int {
     (!p.is_null() && sqlite3BitvecTestNotNull(p, i) != 0) as ::core::ffi::c_int
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3BitvecSet(mut p: *mut Bitvec, mut i: crate::src::ext::rtree::rtree::u32_0) -> ::core::ffi::c_int {
     let mut current_block: u64;
@@ -219,7 +219,7 @@ pub unsafe extern "C" fn sqlite3BitvecSet(mut p: *mut Bitvec, mut i: crate::src:
     (*p).u.aHash[h as usize] = i;
     crate::src::headers::sqlite3_h::SQLITE_OK
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3BitvecClear(
     mut p: *mut Bitvec,
@@ -281,7 +281,7 @@ pub unsafe extern "C" fn sqlite3BitvecClear(
         }
     };
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3BitvecDestroy(mut p: *mut Bitvec) {
     if p.is_null() {
@@ -297,12 +297,12 @@ pub unsafe extern "C" fn sqlite3BitvecDestroy(mut p: *mut Bitvec) {
     }
     crate::src::src::malloc::sqlite3_free(p as *mut ::core::ffi::c_void);
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3BitvecSize(mut p: *mut Bitvec) -> crate::src::ext::rtree::rtree::u32_0 {
     (*p).iSize
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3BitvecBuiltinTest(
     mut sz: ::core::ffi::c_int,

@@ -84,10 +84,7 @@ pub use crate::src::headers::stdlib::int16_t;
 
 
 pub use crate::src::headers::stdlib::uint16_t;pub use crate::src::headers::stdlib::uint32_t;pub use crate::src::headers::stdlib::uint8_t;pub use crate::src::headers::stdlib::__int16_t;pub use crate::src::headers::stdlib::__uint16_t;pub use crate::src::headers::stdlib::__uint32_t;pub use crate::src::headers::stdlib::__uint8_t;pub use crate::src::src::vdbe::p4union;pub use crate::src::src::vdbe::Mem;pub use crate::src::src::vdbe::SubProgram;pub use crate::src::src::vdbe::SubrtnSig;pub use crate::src::headers::vdbeInt_h::Vdbe;pub use crate::src::src::vdbe::VdbeOp;
-unsafe extern "C" {
-    
-    pub static mut sqlite3_io_error_pending: ::core::ffi::c_int;
-}
+pub use crate::src::src::os::sqlite3_io_error_pending;
 #[derive(Copy, Clone)]
 #[repr(C)]
 
@@ -208,13 +205,13 @@ pub const PAGER_STAT_MISS: ::core::ffi::c_int = 1 as ::core::ffi::c_int;
 pub const PAGER_STAT_WRITE: ::core::ffi::c_int = 2 as ::core::ffi::c_int;
 
 pub const PAGER_STAT_SPILL: ::core::ffi::c_int = 3 as ::core::ffi::c_int;
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub static mut sqlite3_pager_readdb_count: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub static mut sqlite3_pager_writedb_count: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub static mut sqlite3_pager_writej_count: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
 
@@ -228,7 +225,7 @@ static mut aJournalMagic: [::core::ffi::c_uchar; 8] = [
     0x63 as ::core::ffi::c_int as ::core::ffi::c_uchar,
     0xd7 as ::core::ffi::c_int as ::core::ffi::c_uchar,
 ];
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PagerDirectReadOk(
     mut pPager: *mut Pager,
@@ -830,7 +827,7 @@ unsafe extern "C" fn pager_reset(mut pPager: *mut Pager) {
     crate::src::src::backup::sqlite3BackupRestart(__pPager_ref.pBackup);
     crate::src::src::pcache::sqlite3PcacheClear(__pPager_ref.pPCache);
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PagerDataVersion(mut pPager: *mut Pager) -> crate::src::ext::rtree::rtree::u32_0 {
     (*pPager).iDataVersion
@@ -1391,7 +1388,7 @@ unsafe extern "C" fn pager_truncate(mut pPager: *mut Pager, mut nPage: crate::sr
     }
     rc
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3SectorSize(mut pFile: *mut crate::src::headers::sqlite3_h::sqlite3_file) -> ::core::ffi::c_int {
     let mut iRet: ::core::ffi::c_int = crate::src::src::os::sqlite3OsSectorSize(pFile as *mut crate::src::headers::sqlite3_h::sqlite3_file);
@@ -1911,7 +1908,7 @@ unsafe extern "C" fn pagerPlaybackSavepoint(
     }
     rc
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PagerSetCachesize(
     mut pPager: *mut Pager,
@@ -1919,7 +1916,7 @@ pub unsafe extern "C" fn sqlite3PagerSetCachesize(
 ) {
     crate::src::src::pcache::sqlite3PcacheSetCachesize((*pPager).pPCache, mxPage);
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PagerSetSpillsize(
     mut pPager: *mut Pager,
@@ -1944,7 +1941,7 @@ unsafe extern "C" fn pagerFixMaplimit(mut pPager: *mut Pager) {
         );
     }
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PagerSetMmapLimit(
     mut pPager: *mut Pager,
@@ -1953,12 +1950,12 @@ pub unsafe extern "C" fn sqlite3PagerSetMmapLimit(
     (*pPager).szMmap = szMmap;
     pagerFixMaplimit(pPager);
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PagerShrink(mut pPager: *mut Pager) {
     crate::src::src::pcache::sqlite3PcacheShrink((*pPager).pPCache);
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PagerSetFlags(
     mut pPager: *mut Pager,
@@ -2009,7 +2006,7 @@ pub unsafe extern "C" fn sqlite3PagerSetFlags(
         __pPager_ref.doNotSpill = (__pPager_ref.doNotSpill as ::core::ffi::c_int | SPILLFLAG_OFF) as crate::src::ext::rtree::rtree::u8_0;
     };
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub static mut sqlite3_opentemp_count: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
 
@@ -2035,7 +2032,7 @@ unsafe extern "C" fn pagerOpentemp(
     );
     rc
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PagerSetBusyHandler(
     mut pPager: *mut Pager,
@@ -2054,7 +2051,7 @@ pub unsafe extern "C" fn sqlite3PagerSetBusyHandler(
         ap as *mut ::core::ffi::c_void,
     );
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PagerSetPagesize(
     mut pPager: *mut Pager,
@@ -2117,12 +2114,12 @@ pub unsafe extern "C" fn sqlite3PagerSetPagesize(
     }
     rc
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PagerTempSpace(mut pPager: *mut Pager) -> *mut ::core::ffi::c_void {
     (*pPager).pTmpSpace as *mut ::core::ffi::c_void
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PagerMaxPageCount(
     mut pPager: *mut Pager,
@@ -2135,18 +2132,18 @@ pub unsafe extern "C" fn sqlite3PagerMaxPageCount(
 }
 
 static mut saved_cnt: ::core::ffi::c_int = 0;
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn disable_simulated_io_errors() {
     saved_cnt = sqlite3_io_error_pending;
     sqlite3_io_error_pending = -(1 as ::core::ffi::c_int);
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn enable_simulated_io_errors() {
     sqlite3_io_error_pending = saved_cnt;
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PagerReadFileheader(
     mut pPager: *mut Pager,
@@ -2173,7 +2170,7 @@ pub unsafe extern "C" fn sqlite3PagerReadFileheader(
     }
     rc
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PagerPagecount(
     mut pPager: *mut Pager,
@@ -2199,7 +2196,7 @@ unsafe extern "C" fn pager_wait_on_lock(
     }
     rc
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PagerTruncateImage(mut pPager: *mut Pager, mut nPage: crate::src::src::pager::Pgno) {
     (*pPager).dbSize = nPage;
@@ -2305,7 +2302,7 @@ unsafe extern "C" fn databaseIsUnmoved(mut pPager: *mut Pager) -> ::core::ffi::c
     }
     rc
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PagerClose(
     mut pPager: *mut Pager,
@@ -2351,12 +2348,12 @@ pub unsafe extern "C" fn sqlite3PagerClose(
     crate::src::src::malloc::sqlite3_free(pPager as *mut ::core::ffi::c_void);
     crate::src::headers::sqlite3_h::SQLITE_OK
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PagerPagenumber(mut pPg: *mut crate::src::src::pager::DbPage) -> crate::src::src::pager::Pgno {
     (*pPg).pgno
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PagerRef(mut pPg: *mut crate::src::src::pager::DbPage) {
     crate::src::src::pcache::sqlite3PcacheRef(pPg as *mut crate::src::src::pcache::PgHdr as *mut crate::src::src::pcache::PgHdr);
@@ -2647,7 +2644,7 @@ unsafe extern "C" fn pagerStress(
     }
     pager_error(pPager, rc)
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PagerFlush(mut pPager: *mut Pager) -> ::core::ffi::c_int {
     let mut rc: ::core::ffi::c_int = (*pPager).errCode;
@@ -2664,7 +2661,7 @@ pub unsafe extern "C" fn sqlite3PagerFlush(mut pPager: *mut Pager) -> ::core::ff
     }
     rc
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PagerOpen(
     mut pVfs: *mut crate::src::headers::sqlite3_h::sqlite3_vfs,
@@ -2999,7 +2996,7 @@ pub unsafe extern "C" fn sqlite3PagerOpen(
     *ppPager = pPager;
     crate::src::headers::sqlite3_h::SQLITE_OK
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3_database_file_object(
     mut zName: *const ::core::ffi::c_char,
@@ -3092,7 +3089,7 @@ unsafe extern "C" fn hasHotJournal(
     }
     rc
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PagerSharedLock(mut pPager: *mut Pager) -> ::core::ffi::c_int {
     let mut current_block: u64;
@@ -3438,7 +3435,7 @@ unsafe extern "C" fn getPageError(
     *ppPage = ::core::ptr::null_mut::<crate::src::src::pager::DbPage>();
     (*pPager).errCode
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PagerGet(
     mut pPager: *mut Pager,
@@ -3448,7 +3445,7 @@ pub unsafe extern "C" fn sqlite3PagerGet(
 ) -> ::core::ffi::c_int {
     (*pPager).xGet.expect("non-null function pointer")(pPager, pgno, ppPage, flags)
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PagerLookup(mut pPager: *mut Pager, mut pgno: crate::src::src::pager::Pgno) -> *mut crate::src::src::pager::DbPage {
     let mut pPage: *mut crate::src::headers::sqlite3_h::sqlite3_pcache_page = ::core::ptr::null_mut::<crate::src::headers::sqlite3_h::sqlite3_pcache_page>();
@@ -3459,7 +3456,7 @@ pub unsafe extern "C" fn sqlite3PagerLookup(mut pPager: *mut Pager, mut pgno: cr
     crate::src::src::pcache::sqlite3PcacheFetchFinish((*pPager).pPCache, pgno,  pPage as *mut crate::src::headers::sqlite3_h::sqlite3_pcache_page) as
     *mut crate::src::src::pcache::PgHdr as *mut crate::src::src::pager::DbPage
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PagerUnrefNotNull(mut pPg: *mut crate::src::src::pager::DbPage) {
     if (*pPg).flags as ::core::ffi::c_int & crate::src::src::pcache::PGHDR_MMAP != 0 {
@@ -3468,14 +3465,14 @@ pub unsafe extern "C" fn sqlite3PagerUnrefNotNull(mut pPg: *mut crate::src::src:
         crate::src::src::pcache::sqlite3PcacheRelease(pPg as *mut crate::src::src::pcache::PgHdr as *mut crate::src::src::pcache::PgHdr);
     };
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PagerUnref(mut pPg: *mut crate::src::src::pager::DbPage) {
     if !pPg.is_null() {
         sqlite3PagerUnrefNotNull(pPg);
     }
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PagerUnrefPageOne(mut pPg: *mut crate::src::src::pager::DbPage) {
     let mut pPager: *mut Pager = ::core::ptr::null_mut::<Pager>();
@@ -3535,7 +3532,7 @@ unsafe extern "C" fn pager_open_journal(mut pPager: *mut Pager) -> ::core::ffi::
     }
     rc
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PagerBegin(
     mut pPager: *mut Pager,
@@ -3715,7 +3712,7 @@ unsafe extern "C" fn pagerWriteLargeSector(mut pPg: *mut crate::src::src::pcache
     __pPager_ref.doNotSpill = (__pPager_ref.doNotSpill as ::core::ffi::c_int & !SPILLFLAG_NOSYNC) as crate::src::ext::rtree::rtree::u8_0;
     rc
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PagerWrite(mut pPg: *mut crate::src::src::pcache::PgHdr) -> ::core::ffi::c_int {
     let __pPg_ref = unsafe { &*pPg };
@@ -3736,7 +3733,7 @@ pub unsafe extern "C" fn sqlite3PagerWrite(mut pPg: *mut crate::src::src::pcache
         return pager_write(pPg);
     };
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PagerDontWrite(mut pPg: *mut crate::src::src::pcache::PgHdr) {
     let mut pPager: *mut Pager = (*pPg).pPager;
@@ -3771,7 +3768,7 @@ unsafe extern "C" fn pager_incr_changecounter(
 }
 
 pub const DIRECT_MODE: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PagerSync(
     mut pPager: *mut Pager,
@@ -3788,7 +3785,7 @@ pub unsafe extern "C" fn sqlite3PagerSync(
     }
     rc
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PagerExclusiveLock(mut pPager: *mut Pager) -> ::core::ffi::c_int {
     let mut rc: ::core::ffi::c_int = (*pPager).errCode;
@@ -3801,7 +3798,7 @@ pub unsafe extern "C" fn sqlite3PagerExclusiveLock(mut pPager: *mut Pager) -> ::
     }
     rc
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PagerCommitPhaseOne(
     mut pPager: *mut Pager,
@@ -3894,7 +3891,7 @@ pub unsafe extern "C" fn sqlite3PagerCommitPhaseOne(
 }
 
 pub const bBatch: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PagerCommitPhaseTwo(mut pPager: *mut Pager) -> ::core::ffi::c_int {
     let mut rc: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_OK;
@@ -3917,7 +3914,7 @@ pub unsafe extern "C" fn sqlite3PagerCommitPhaseTwo(mut pPager: *mut Pager) -> :
     );
     pager_error(pPager, rc)
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PagerRollback(mut pPager: *mut Pager) -> ::core::ffi::c_int {
     let mut rc: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_OK;
@@ -3955,12 +3952,12 @@ pub unsafe extern "C" fn sqlite3PagerRollback(mut pPager: *mut Pager) -> ::core:
     }
     pager_error(pPager, rc)
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PagerIsreadonly(mut pPager: *mut Pager) -> crate::src::ext::rtree::rtree::u8_0 {
     (*pPager).readOnly
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PagerMemUsed(mut pPager: *mut Pager) -> ::core::ffi::c_int {
     let __pPager_ref = unsafe { &*pPager };
@@ -3974,12 +3971,12 @@ pub unsafe extern "C" fn sqlite3PagerMemUsed(mut pPager: *mut Pager) -> ::core::
         + crate::src::src::malloc::sqlite3MallocSize(pPager as *const ::core::ffi::c_void)) as crate::src::ext::rtree::rtree::i64_0
         + __pPager_ref.pageSize) as ::core::ffi::c_int
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PagerPageRefcount(mut pPage: *mut crate::src::src::pager::DbPage) -> ::core::ffi::c_int {
     crate::src::src::pcache::sqlite3PcachePageRefcount(pPage as *mut crate::src::src::pcache::PgHdr as *mut crate::src::src::pcache::PgHdr) as ::core::ffi::c_int
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PagerStats(mut pPager: *mut Pager) -> *mut ::core::ffi::c_int {
     static mut a: [::core::ffi::c_int; 11] = [0; 11];
@@ -4008,7 +4005,7 @@ pub unsafe extern "C" fn sqlite3PagerStats(mut pPager: *mut Pager) -> *mut ::cor
         & 0x7fffffff as ::core::ffi::c_int;
     &raw mut a as *mut ::core::ffi::c_int
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PagerCacheStat(
     mut pPager: *mut Pager,
@@ -4022,7 +4019,7 @@ pub unsafe extern "C" fn sqlite3PagerCacheStat(
         (*pPager).aStat[eStat as usize] = 0 as crate::src::ext::rtree::rtree::u32_0;
     }
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PagerIsMemdb(mut pPager: *mut Pager) -> ::core::ffi::c_int {
     ((*pPager).tempFile as ::core::ffi::c_int != 0
@@ -4080,7 +4077,7 @@ unsafe extern "C" fn pagerOpenSavepoint(
     }
     rc
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PagerOpenSavepoint(
     mut pPager: *mut Pager,
@@ -4092,7 +4089,7 @@ pub unsafe extern "C" fn sqlite3PagerOpenSavepoint(
         return crate::src::headers::sqlite3_h::SQLITE_OK;
     };
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PagerSavepoint(
     mut pPager: *mut Pager,
@@ -4141,7 +4138,7 @@ pub unsafe extern "C" fn sqlite3PagerSavepoint(
     }
     rc
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PagerFilename(
     mut pPager: *const Pager,
@@ -4166,17 +4163,17 @@ pub unsafe extern "C" fn sqlite3PagerFilename(
         return (*pPager).zFilename;
     };
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PagerVfs(mut pPager: *mut Pager) -> *mut crate::src::headers::sqlite3_h::sqlite3_vfs {
     (*pPager).pVfs
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PagerFile(mut pPager: *mut Pager) -> *mut crate::src::headers::sqlite3_h::sqlite3_file {
     (*pPager).fd
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PagerJrnlFile(mut pPager: *mut Pager) -> *mut crate::src::headers::sqlite3_h::sqlite3_file {
     if !(*pPager).pWal.is_null() {
@@ -4187,14 +4184,14 @@ pub unsafe extern "C" fn sqlite3PagerJrnlFile(mut pPager: *mut Pager) -> *mut cr
         (*pPager).jfd
     }
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PagerJournalname(
     mut pPager: *mut Pager,
 ) -> *const ::core::ffi::c_char {
     (*pPager).zJournal
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PagerMovepage(
     mut pPager: *mut Pager,
@@ -4269,23 +4266,23 @@ pub unsafe extern "C" fn sqlite3PagerMovepage(
     }
     crate::src::headers::sqlite3_h::SQLITE_OK
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PagerRekey(mut pPg: *mut crate::src::src::pager::DbPage, mut iNew: crate::src::src::pager::Pgno, mut flags: crate::src::fts5::u16_0) {
     (*pPg).flags = flags;
     crate::src::src::pcache::sqlite3PcacheMove(pPg as *mut crate::src::src::pcache::PgHdr as *mut crate::src::src::pcache::PgHdr, iNew);
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PagerGetData(mut pPg: *mut crate::src::src::pager::DbPage) -> *mut ::core::ffi::c_void {
     (*pPg).pData
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PagerGetExtra(mut pPg: *mut crate::src::src::pager::DbPage) -> *mut ::core::ffi::c_void {
     (*pPg).pExtra
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PagerLockingMode(
     mut pPager: *mut Pager,
@@ -4300,7 +4297,7 @@ pub unsafe extern "C" fn sqlite3PagerLockingMode(
     }
     __pPager_ref.exclusiveMode as ::core::ffi::c_int
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PagerSetJournalMode(
     mut pPager: *mut Pager,
@@ -4346,12 +4343,12 @@ pub unsafe extern "C" fn sqlite3PagerSetJournalMode(
     }
     __pPager_ref.journalMode as ::core::ffi::c_int
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PagerGetJournalMode(mut pPager: *mut Pager) -> ::core::ffi::c_int {
     (*pPager).journalMode as ::core::ffi::c_int
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PagerOkToChangeJournalMode(
     mut pPager: *mut Pager,
@@ -4365,7 +4362,7 @@ pub unsafe extern "C" fn sqlite3PagerOkToChangeJournalMode(
     }
     1 as ::core::ffi::c_int
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PagerJournalSizeLimit(
     mut pPager: *mut Pager,
@@ -4377,19 +4374,19 @@ pub unsafe extern "C" fn sqlite3PagerJournalSizeLimit(
     }
     (*pPager).journalSizeLimit
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PagerBackupPtr(mut pPager: *mut Pager) -> *mut *mut crate::src::src::backup::sqlite3_backup {
     &raw mut (*pPager).pBackup
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PagerClearCache(mut pPager: *mut Pager) {
     if (*pPager).tempFile as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
         pager_reset(pPager);
     }
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PagerCheckpoint(
     mut pPager: *mut Pager,
@@ -4433,12 +4430,12 @@ pub unsafe extern "C" fn sqlite3PagerCheckpoint(
     }
     rc
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PagerWalCallback(mut pPager: *mut Pager) -> ::core::ffi::c_int {
     crate::src::src::wal::sqlite3WalCallback((*pPager).pWal)
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PagerWalSupported(mut pPager: *mut Pager) -> ::core::ffi::c_int {
     let __pPager_ref = unsafe { &*pPager };
@@ -4484,7 +4481,7 @@ unsafe extern "C" fn pagerOpenWal(mut pPager: *mut Pager) -> ::core::ffi::c_int 
     pagerFixMaplimit(pPager);
     rc
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PagerOpenWal(
     mut pPager: *mut Pager,
@@ -4506,7 +4503,7 @@ pub unsafe extern "C" fn sqlite3PagerOpenWal(
     }
     rc
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PagerCloseWal(
     mut pPager: *mut Pager,

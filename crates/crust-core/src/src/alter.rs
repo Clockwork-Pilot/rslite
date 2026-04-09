@@ -140,7 +140,7 @@ unsafe extern "C" fn renameReloadSchema(
         }
     }
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3AlterRenameTable(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -313,7 +313,7 @@ unsafe extern "C" fn sqlite3ErrorIfNotEmpty(
         crate::printf_args_slice!(zErr, zDb, zTab),
     );
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3AlterFinishAddColumn(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -501,7 +501,7 @@ pub unsafe extern "C" fn sqlite3AlterFinishAddColumn(
         }
     }
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3AlterBeginAddColumn(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -632,7 +632,7 @@ unsafe extern "C" fn isRealTable(
     }
     0 as ::core::ffi::c_int
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3AlterRenameColumn(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -740,7 +740,7 @@ pub unsafe extern "C" fn sqlite3AlterRenameColumn(
     crate::src::src::malloc::sqlite3DbFree(db as *mut crate::src::headers::sqliteInt_h::sqlite3, zOld as *mut ::core::ffi::c_void);
     crate::src::src::malloc::sqlite3DbFree(db as *mut crate::src::headers::sqliteInt_h::sqlite3, zNew as *mut ::core::ffi::c_void);
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3RenameTokenMap(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -761,7 +761,7 @@ pub unsafe extern "C" fn sqlite3RenameTokenMap(
     }
     pPtr
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3RenameTokenRemap(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -928,7 +928,7 @@ unsafe extern "C" fn renameUnmapSelectCb(
     renameWalkWith(pWalker, p);
     crate::src::headers::sqliteInt_h::WRC_Continue
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3RenameExprUnmap(mut pParse: *mut crate::src::headers::sqliteInt_h::Parse, mut pExpr: *mut crate::src::headers::sqliteInt_h::Expr) {
     let __pParse_ref = { &mut *pParse };
@@ -947,7 +947,7 @@ pub unsafe extern "C" fn sqlite3RenameExprUnmap(mut pParse: *mut crate::src::hea
     crate::src::src::walker::sqlite3WalkExpr(&raw mut sWalker as *mut _ as *mut crate::src::headers::sqliteInt_h::Walker,  pExpr as *mut crate::src::headers::sqliteInt_h::Expr);
     __pParse_ref.eParseMode = eMode;
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3RenameExprlistUnmap(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -2386,7 +2386,7 @@ unsafe extern "C" fn dropColumnFunc(
         crate::src::src::vdbeapi::sqlite3_result_error_code(context, rc);
     }
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3AlterDropColumn(
     mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
@@ -2644,7 +2644,7 @@ pub unsafe extern "C" fn sqlite3AlterDropColumn(
     crate::src::src::malloc::sqlite3DbFree(db as *mut crate::src::headers::sqliteInt_h::sqlite3, zCol as *mut ::core::ffi::c_void);
     crate::src::src::build::sqlite3SrcListDelete(db as *mut crate::src::headers::sqliteInt_h::sqlite3,  pSrc as *mut crate::src::headers::sqliteInt_h::SrcList);
 }
-#[unsafe(no_mangle)]
+#[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3AlterFunctions() {
     static mut aAlterTableFuncs: [crate::src::headers::sqliteInt_h::FuncDef; 5] = {
