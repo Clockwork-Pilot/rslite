@@ -68,15 +68,15 @@ IMPL_TYPE = $(if $(filter 1,$(ORIGINAL)),original C,Rust-linked)
 RUST_LIB_SOURCES := $(shell find $(PROJ)/crates/crust-core -name "*.rs" 2>/dev/null) \
                     $(shell find $(PROJ)/crates/crust-core -name "Cargo.toml" 2>/dev/null) \
                     $(shell find $(PROJ)/c_code -name "*.c" 2>/dev/null) \
-                    $(PROJ)/Cargo.toml $(PROJ)/Cargo.lock $(PROJ)/Makefile
+                    $(PROJ)/Cargo.toml $(PROJ)/Makefile
 
 RUST_SHELL_SOURCES := $(shell find $(PROJ)/c2rust/crust-sqlite-shell/src -name "*.rs" 2>/dev/null) \
                       $(shell find $(PROJ)/c2rust/crust-sqlite-shell -name "build.rs" -o -name "Cargo.toml" 2>/dev/null) \
-                      $(PROJ)/Cargo.toml $(PROJ)/Cargo.lock
+                      $(PROJ)/Cargo.toml
 
 RUST_TEST_SOURCES := $(shell find $(PROJ)/c2rust/crust-tclsqlite/src -name "*.rs" 2>/dev/null) \
                      $(shell find $(PROJ)/c2rust/crust-tclsqlite -name "build.rs" -o -name "Cargo.toml" 2>/dev/null) \
-                     $(PROJ)/Cargo.toml $(PROJ)/Cargo.lock
+                     $(PROJ)/Cargo.toml
 
 # ============ Rust Library Builds ============
 
