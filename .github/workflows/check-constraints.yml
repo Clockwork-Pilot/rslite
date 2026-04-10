@@ -58,8 +58,7 @@ jobs:
             -e DISABLE_STOP_HOOK=1 \
             -v ${{ github.workspace }}/rslite:/workspace \
             ghcr.io/clockwork-pilot/rslite-ws:latest \
-            bash -c "/docker-scripts/work-on-sqlite/create-venv-docker.sh; \
-              source /docker-scripts/work-on-sqlite/user-entrypoint.sh; \
+            bash -c "source /docker-scripts/work-on-sqlite/user-entrypoint.sh; \
               python /plugin/constraints_tool/constraints_tool/check_spec_constraints.py || { \
               echo '--- Spec checks results ---'; \
               cat /workspace/spec-checks.k.md; \
