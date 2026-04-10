@@ -9,7 +9,7 @@ default = ["rslite"]
 rslite = []
 
 [dependencies]
-rslite-raw = { workspace = true }
+rslite-core = { workspace = true }
 bitflags = "2"
 
 [dev-dependencies]

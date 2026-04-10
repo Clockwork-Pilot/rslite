@@ -1,5 +1,5 @@
 use std::fmt;
-use rslite_raw::{sqlite3, sqlite3_errmsg, sqlite3_errcode, sqlite3_extended_errcode};
+use sqlite_noamalgam::{sqlite3, sqlite3_errmsg, sqlite3_errcode, sqlite3_extended_errcode};
 use std::ffi::CStr;
 
 /// Primary SQLite error codes.

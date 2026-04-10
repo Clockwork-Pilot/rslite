@@ -1,13 +1,12 @@
 [workspace]
 resolver = "2"
 members = [
-    "crates/crust-core",
+    "crates/rslite-core",
     "crates/sqlite-printf-macros",
-    "crates/rslite-raw",
     "crates/rslite",
 ]
 default-members = [
-    "crates/crust-core",
+    "crates/rslite-core",
     "crates/sqlite-printf-macros",
 ]
 exclude = [
@@ -29,13 +28,13 @@ publish = false
 
 [features]
 default = []
-test = ["crust-core/test"]
-fts3 = ["crust-core/fts3"]
-fts4 = ["crust-core/fts4"]
-update_delete_limit = ["crust-core/update_delete_limit"]
+test = ["rslite-core/test"]
+fts3 = ["rslite-core/fts3"]
+fts4 = ["rslite-core/fts4"]
+update_delete_limit = ["rslite-core/update_delete_limit"]
 
 [dependencies]
-crust-core = { workspace = true }
+rslite-core = { workspace = true }
 
 [profile.release]
 lto = true
@@ -47,9 +46,8 @@ codegen-units = 1
 
 [workspace.dependencies]
 # Internal crates
-crust-core = { path = "crates/crust-core" }
+rslite-core = { path = "crates/rslite-core" }
 sqlite-printf-macros = { path = "crates/sqlite-printf-macros" }
-rslite-raw = { path = "crates/rslite-raw" }
 rslite = { path = "crates/rslite" }
 
 # External dependencies

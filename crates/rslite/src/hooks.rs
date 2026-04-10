@@ -7,7 +7,7 @@ use std::ffi::CStr;
 use std::os::raw::{c_char, c_int, c_void};
 
 // SQLite authorizer action codes (sqlite.h §3.1).
-// Not re-exported by rslite-raw so we define them here.
+// Action codes not in the stable public API surface, defined locally.
 const SQLITE_DELETE: c_int = 9;
 const SQLITE_INSERT: c_int = 18;
 const SQLITE_UPDATE: c_int = 23;

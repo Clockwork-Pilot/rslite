@@ -1,5 +1,5 @@
 use crate::{statement::Statement, types::{FromSql, FromSqlError, Type, ValueRef}, Error, Result};
-use rslite_raw::{sqlite3_step, SQLITE_ROW, SQLITE_DONE};
+use sqlite_noamalgam::{sqlite3_step, SQLITE_ROW, SQLITE_DONE};
 
 /// A streaming iterator over query result rows.
 ///

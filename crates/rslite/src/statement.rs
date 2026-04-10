@@ -1,6 +1,6 @@
 use std::ffi::{CStr, CString};
 use std::os::raw::c_int;
-use rslite_raw::*;
+use sqlite_noamalgam::*;
 use crate::{
     error::{sqlite_error, sqlite_error_from_code},
     types::{FromSql, FromSqlError, ToSql, ToSqlOutput, Type, Value, ValueRef},

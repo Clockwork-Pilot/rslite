@@ -5,7 +5,7 @@ use std::marker::PhantomData;
 use std::mem::size_of;
 use std::os::raw::{c_char, c_int};
 
-use rslite_raw::*;
+use sqlite_noamalgam::*;
 
 use crate::{
     error::sqlite_error_from_code,
