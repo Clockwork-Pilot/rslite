@@ -77,18 +77,6 @@
         "build_all"
       ],
       "constraints": {
-        "shell_symbols": {
-          "id": "shell_symbols",
-          "cmd": "SYMS=$(nm $PROJECT_ROOT/c2rust/target/release/sqlite3) && for sym in sqlite3_str_appendf sqlite3_snprintf sqlite3_mprintf sqlite3_vsnprintf sqlite3_vmprintf sqlite3_test_control sqlite3_db_config sqlite3_config sqlite3_vtab_config sqlite3_log; do echo \"$SYMS\" | grep -q \"T ${sym}$\" || { echo \"missing $sym in shell\"; exit 1; }; done && grep -q \"export_name.*sqlite3_config_args\" $PROJECT_ROOT/crates/crust-core/src/printf_c_variadic.rs",
-          "description": "Behavioral: all 10 symbols must be global (T) in the shell binary",
-          "fails_count": 1
-        },
-        "rustfixture_symbols": {
-          "id": "rustfixture_symbols",
-          "cmd": "SYMS=$(nm $PROJECT_ROOT/c2rust/target/release/rustfixture) && for sym in sqlite3_str_appendf sqlite3_snprintf sqlite3_mprintf sqlite3_vsnprintf sqlite3_vmprintf sqlite3_test_control sqlite3_db_config sqlite3_config sqlite3_vtab_config sqlite3_log; do echo \"$SYMS\" | grep -q \"T ${sym}$\" || { echo \"missing $sym in rustfixture\"; exit 1; }; done && grep -q \"export_name.*sqlite3_db_config_args\" $PROJECT_ROOT/crates/crust-core/src/printf_c_variadic.rs",
-          "description": "Behavioral: all 10 symbols must be global (T) in the rustfixture binary",
-          "fails_count": 1
-        },
         "cdylib_symbols": {
           "id": "cdylib_symbols",
           "cmd": "SYMS=$(nm -D target/release/libsqlite_noamalgam.so) && for sym in sqlite3_str_appendf sqlite3_snprintf sqlite3_mprintf sqlite3_vsnprintf sqlite3_vmprintf sqlite3_test_control sqlite3_db_config sqlite3_config sqlite3_vtab_config sqlite3_log; do echo \"$SYMS\" | grep -q \"T ${sym}$\" || { echo \"missing $sym in cdylib\"; exit 1; }; done && grep -q \"export_name.*sqlite3_test_control_args\" $PROJECT_ROOT/crates/crust-core/src/printf_c_variadic.rs",

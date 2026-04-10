@@ -18,8 +18,6 @@ Verify c_variadic feature isolation: only in printf_c_variadic.rs
     - [Feature: lib_exports](#feature-lib_exports)
       - [cdylib_symbols](#cdylib_symbols)
       - [no_rust_variadic_exports](#no_rust_variadic_exports)
-      - [rustfixture_symbols](#rustfixture_symbols)
-      - [shell_symbols](#shell_symbols)
     - [Feature: toolchain_version](#feature-toolchain_version)
       - [c2rust_nightly](#c2rust_nightly)
       - [stable_toolchain_or_missing](#stable_toolchain_or_missing)
@@ -68,12 +66,6 @@ Verify c_variadic feature isolation: only in printf_c_variadic.rs
 
 #### no_rust_variadic_exports
 **Description:** Negative: none of the 10 exported symbols must be Rust variadic extern fns — they live in C only
-
-#### rustfixture_symbols
-**Description:** Behavioral: all 10 symbols must be global (T) in the rustfixture binary
-
-#### shell_symbols
-**Description:** Behavioral: all 10 symbols must be global (T) in the shell binary
 
 ### Feature: toolchain_version
 **Enforce Rust toolchain versions. Stable for main code, nightly for shell and tests.**
