@@ -11,7 +11,7 @@ path = "src/main.rs"
 
 [dependencies]
 # shell.c compiled with -DSQLITE_ENABLE_FTS4 — require fts4 (which implies fts3)
-crust-core = { workspace = true, features = ["fts4"] }
+rslite-core = { workspace = true, features = ["fts4"] }
 sqlite-printf-macros = { workspace = true }
 libc = { workspace = true }
 lazy_static = "1.4"

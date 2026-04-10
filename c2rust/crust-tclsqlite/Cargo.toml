@@ -11,7 +11,7 @@ path = "src/main.rs"
 
 [dependencies]
 # testfixture is compiled with -DSQLITE_ENABLE_FTS4 — require fts4 (which implies fts3)
-crust-core = { workspace = true, features = ["fts4"] }
+rslite-core = { workspace = true, features = ["fts4"] }
 libc = { workspace = true }
 c2rust-bitfields = { workspace = true }
 
@@ -20,4 +20,4 @@ pkg-config = "0.3"
 
 [features]
 default = []
-test = ["crust-core/test"]
+test = ["rslite-core/test"]

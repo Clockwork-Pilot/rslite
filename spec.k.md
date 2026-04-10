@@ -88,7 +88,7 @@ Verify c_variadic feature isolation: only in printf_c_variadic.rs
 
 #### cdylib_default_exports
 **Description:** Behavioral: non-test cdylib exports must match expected_exports.txt exactly (~280 stable C API symbols)
-**Command:** `cd $PROJECT_ROOT && cargo build -p crust-core --features fts4,update_delete_limit 2>/dev/null && ACTUAL=$(nm -D --defined-only target/debug/libsqlite_noamalgam.so | grep " T " | awk "{print \$3}" | sort) && EXPECTED=$(sort $PROJECT_ROOT/crates/crust-core/expected_exports.txt) && diff <(echo "$ACTUAL") <(echo "$EXPECTED") || { echo "cdylib exports diverged from expected_exports.txt"; exit 1; }`
+**Command:** `cd $PROJECT_ROOT && cargo build -p rslite-core --features fts4,update_delete_limit 2>/dev/null && nm -D --defined-only target/debug/libsqlite_noamalgam.so | grep " T " | awk "{print \$3}" | sort > /tmp/rslite_actual.txt && sort $PROJECT_ROOT/crates/rslite-core/expected_exports.txt > /tmp/rslite_expected.txt && diff /tmp/rslite_actual.txt /tmp/rslite_expected.txt || { echo "cdylib exports diverged from expected_exports.txt"; exit 1; }`
 
 #### rslite_uses_crust_core
 **Description:** Structural: rslite crate must not reference rslite-raw in its Cargo.toml or source files — it should use crust-core (sqlite_noamalgam) directly

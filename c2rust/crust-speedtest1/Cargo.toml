@@ -10,6 +10,6 @@ name = "speedtest1"
 path = "src/main.rs"
 
 [dependencies]
-crust-core = { workspace = true }
+rslite-core = { workspace = true }
 libc = { workspace = true }
 c2rust-bitfields = { workspace = true }

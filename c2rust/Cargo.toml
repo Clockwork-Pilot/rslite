@@ -18,7 +18,7 @@ opt-level = 3
 
 [workspace.dependencies]
 # Internal crates
-crust-core = { path = "../crates/crust-core" }
+rslite-core = { path = "../crates/rslite-core" }
 sqlite-printf-macros = { path = "../crates/sqlite-printf-macros" }
 
 # External dependencies
