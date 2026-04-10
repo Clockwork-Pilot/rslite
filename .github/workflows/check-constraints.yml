@@ -25,7 +25,7 @@ jobs:
       - name: Setup Docker mount directories
         run: |
           mkdir -p ${{ github.workspace }}/docker-files/.cargo
-          mkdir -p ${{ github.workspace }}/docker-files/.credentials
+          mkdir -p ${{ github.workspace }}/docker-files/.claude
           mkdir -p ${{ github.workspace }}/docker-files/.venv
           echo '{}' > ${{ github.workspace }}/docker-files/.claude.local.json
 
@@ -64,19 +64,18 @@ jobs:
         id: constraints
         run: |
           docker run --rm \
-            -v ${{ github.workspace }}/rslite:/workspace \
-            -v ${{ github.workspace }}/claude-plugin:/plugin:ro \
-            -v ${{ github.workspace }}/docker-files/.cargo:/home/node/.cargo \
-            -v ${{ github.workspace }}/docker-files/.credentials:/home/node/.claude \
-            -v ${{ github.workspace }}/docker-files/.claude.local.json:/home/node/.claude.json \
-            -v ${{ github.workspace }}/docker-files/.venv:/venv \
-            -e WORKSPACE_ROOT=/workspace \
             -e CLAUDE_PROJECT_ROOT=/workspace \
             -e CLAUDE_PLUGIN_ROOT=/plugin \
+            -e WORKSPACE_ROOT=/workspace \
             -e CLAUDE_FILE_RULES=/docker-scripts/work-on-sqlite/y2-plugin-deny-file-rules.json \
             -e PROXY_WRAPPER_CONFIG=/docker-scripts/work-on-sqlite/proxy_wrapper_config.json \
             -e DISABLE_STOP_HOOK=1 \
-            --user root \
+            -v ${{ github.workspace }}/docker-files/.cargo:/home/node/.cargo \
+            -v ${{ github.workspace }}/docker-files/.claude:/home/node/.claude \
+            -v ${{ github.workspace }}/docker-files/.claude.local.json:/home/node/.claude.json \
+            -v ${{ github.workspace }}/docker-files/.venv:/venv \
+            -v ${{ github.workspace }}/claude-plugin:/plugin:ro \
+            -v ${{ github.workspace }}/rslite:/workspace \
             ghcr.io/clockwork-pilot/rslite-ws:latest \
             bash -c "/docker-scripts/work-on-sqlite/create-venv-docker.sh; \
               source /docker-scripts/work-on-sqlite/user-entrypoint.sh; \
