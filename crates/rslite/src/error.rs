@@ -33,6 +33,12 @@ pub enum ErrorCode {
 }
 
 impl ErrorCode {
+    /// Map a raw SQLite integer result code to the most appropriate [`ErrorCode`] variant.
+    ///
+    /// Only the lower 8 bits are examined, which strips extended error information and yields
+    /// the primary error class (e.g. `SQLITE_CONSTRAINT_NOTNULL` → `ConstraintViolation`).
+    /// Codes that do not correspond to a known primary error class are wrapped in the
+    /// `Unknown(i32)` variant so that future SQLite versions do not cause a panic.
     pub(crate) fn from_i32(code: i32) -> Self {
         match code & 0xff {
             1  => ErrorCode::InternalMalfunction,
@@ -71,6 +77,12 @@ pub struct SqliteError {
 }
 
 impl SqliteError {
+    /// Build a [`SqliteError`] by querying the current error state from a live `sqlite3*` handle.
+    ///
+    /// Calls `sqlite3_errcode` for the primary code and `sqlite3_extended_errcode` for the
+    /// extended code, which together describe both the error class and the specific cause
+    /// (e.g. `SQLITE_CONSTRAINT` vs `SQLITE_CONSTRAINT_NOTNULL`).  The caller must ensure
+    /// the handle is non-null and that the most recent API call on it actually failed.
     pub(crate) unsafe fn from_db(db: *mut sqlite3) -> Self {
         let extended = unsafe { sqlite3_extended_errcode(db) };
         let primary   = unsafe { sqlite3_errcode(db) };
@@ -80,6 +92,12 @@ impl SqliteError {
         }
     }
 
+    /// Build a [`SqliteError`] from a bare integer return code, without a live database handle.
+    ///
+    /// Used in situations where no `sqlite3*` is available — for example, when `sqlite3_open`
+    /// fails before the handle is valid, or when an error originates from a context-free API.
+    /// Both `code` and `extended_code` are set to `rc` because no extended information can be
+    /// retrieved without calling `sqlite3_extended_errcode` on a valid connection handle.
     pub(crate) fn from_code(rc: i32) -> Self {
         SqliteError {
             code: ErrorCode::from_i32(rc),
@@ -217,6 +235,13 @@ pub trait OptionalExtension<T> {
 }
 
 impl<T> OptionalExtension<T> for Result<T> {
+    /// Convert `Err(Error::QueryReturnedNoRows)` into `Ok(None)`, leaving all other variants
+    /// unchanged.
+    ///
+    /// This makes it ergonomic to run a `query_row` call and treat "not found" as an optional
+    /// value rather than a hard error, similar to how database ORMs expose nullable lookups.
+    /// Any other error — I/O failures, type mismatches, SQL errors — is propagated as-is so
+    /// that only the "no rows" condition is silently converted.
     fn optional(self) -> Result<Option<T>> {
         match self {
             Ok(v)                           => Ok(Some(v)),
@@ -227,7 +252,7 @@ impl<T> OptionalExtension<T> for Result<T> {
 }
 
 /// Build an `Error::SqliteFailure` from a raw db pointer and return code.
-pub(crate) unsafe fn sqlite_error(db: *mut sqlite3, rc: i32) -> Error {
+pub(crate) unsafe fn sqlite_error(db: *mut sqlite3, _rc: i32) -> Error {
     let sqlite_err = unsafe { SqliteError::from_db(db) };
     let msg = unsafe {
         let p = sqlite3_errmsg(db);

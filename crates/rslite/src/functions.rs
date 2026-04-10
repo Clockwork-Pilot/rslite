@@ -34,6 +34,7 @@ bitflags::bitflags! {
 ///
 /// Provides typed access to the call's arguments via [`get`](Context::get).
 pub struct Context<'a> {
+    #[allow(dead_code)]
     ctx:    *mut sqlite3_context,
     args:   *mut *mut sqlite3_value,
     n_args: usize,
@@ -41,6 +42,13 @@ pub struct Context<'a> {
 }
 
 impl<'a> Context<'a> {
+    /// Construct a [`Context`] from the raw pointers passed to a SQLite scalar or aggregate
+    /// callback trampoline.
+    ///
+    /// `ctx` is the `sqlite3_context*` for result reporting, `argc` is the number of arguments,
+    /// and `argv` is the array of `sqlite3_value*` argument pointers.  The `PhantomData` field
+    /// ties the context's lifetime to the enclosing callback frame so that argument borrows
+    /// cannot escape.  Called exclusively by [`scalar_trampoline`] and the aggregate trampolines.
     pub(crate) unsafe fn from_raw(
         ctx:  *mut sqlite3_context,
         argc: c_int,
@@ -49,12 +57,29 @@ impl<'a> Context<'a> {
         Context { ctx, args: argv, n_args: argc as usize, _lt: PhantomData }
     }
 
-    /// Number of arguments passed to this function call.
+    /// Returns the number of SQL arguments that were passed to this function invocation.
+    ///
+    /// For variadic functions registered with `n_args = -1`, this count reflects the actual
+    /// number of arguments supplied at the call site.  Use this to bounds-check before calling
+    /// [`get`](Context::get) with a specific index, or to iterate over all arguments
+    /// dynamically when implementing a function that accepts a variable number of inputs.
     pub fn len(&self) -> usize { self.n_args }
 
+    /// Returns `true` if the function was called with zero arguments.
+    ///
+    /// Equivalent to `self.len() == 0`.  Provided to satisfy Clippy's requirement that types
+    /// with a `len` method also expose `is_empty`.  In practice, SQL functions are almost
+    /// always called with at least one argument, so this method is primarily used by lints
+    /// and generic code that operates on the [`Context`] without knowledge of the arity.
     pub fn is_empty(&self) -> bool { self.n_args == 0 }
 
-    /// Get the argument at `idx` as type `T`.
+    /// Retrieve the SQL argument at zero-based position `idx`, converting it to Rust type `T`
+    /// via the [`FromSql`] trait.
+    ///
+    /// Returns [`Error::InvalidColumnIndex`] if `idx` is out of range, or
+    /// [`Error::FromSqlConversionFailure`] if the SQLite value cannot be converted to `T`
+    /// (e.g. the value is `NULL` but `T` is a non-optional numeric type).  The conversion
+    /// follows the same rules as [`Row::get`], including integer-to-float widening.
     pub fn get<T: FromSql>(&self, idx: usize) -> Result<T> {
         let vref = self.get_value_ref(idx)?;
         let typ = vref.data_type();

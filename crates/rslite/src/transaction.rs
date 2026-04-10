@@ -1,5 +1,5 @@
 use std::ops::{Deref, DerefMut};
-use crate::{Connection, Error, Result};
+use crate::{Connection, Result};
 
 /// How to start a transaction.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -48,6 +48,12 @@ pub struct Transaction<'conn> {
 }
 
 impl<'conn> Transaction<'conn> {
+    /// Begin a new transaction on `conn` using the SQL statement implied by `behavior`.
+    ///
+    /// Issues `BEGIN DEFERRED`, `BEGIN IMMEDIATE`, or `BEGIN EXCLUSIVE` depending on
+    /// `behavior`, then wraps `conn` in a `Transaction` whose `drop_behavior` defaults to
+    /// [`DropBehavior::Rollback`].  Returns an error if SQLite rejects the `BEGIN` statement
+    /// (e.g. because the connection is already inside an explicit transaction).
     pub(crate) fn new(conn: &'conn mut Connection, behavior: TransactionBehavior) -> Result<Self> {
         conn.execute_batch(behavior.begin_sql())?;
         Ok(Transaction { conn, drop_behavior: DropBehavior::Rollback, committed: false })
@@ -69,11 +75,22 @@ impl<'conn> Transaction<'conn> {
         self.conn.execute_batch("ROLLBACK")
     }
 
-    /// Control what happens on `Drop` if neither `commit` nor `rollback` was called.
+    /// Control what happens when this `Transaction` is dropped without an explicit
+    /// [`commit`](Transaction::commit) or [`rollback`](Transaction::rollback) call.
+    ///
+    /// The default is [`DropBehavior::Rollback`].  Setting [`DropBehavior::Commit`] causes an
+    /// automatic `COMMIT` on drop, which is useful in `?`-propagation patterns where success is
+    /// the common case.  [`DropBehavior::Panic`] can be used in tests to catch forgotten commits.
     pub fn set_drop_behavior(&mut self, behavior: DropBehavior) {
         self.drop_behavior = behavior;
     }
 
+    /// Returns the [`DropBehavior`] that will be applied when this transaction is dropped without
+    /// an explicit call to [`commit`](Transaction::commit) or [`rollback`](Transaction::rollback).
+    ///
+    /// The default is [`DropBehavior::Rollback`], which issues a silent `ROLLBACK` on drop.
+    /// Change it with [`set_drop_behavior`](Transaction::set_drop_behavior) if a different
+    /// policy (commit, ignore, or panic) is required for a specific use case.
     pub fn drop_behavior(&self) -> DropBehavior { self.drop_behavior }
 
     /// Create a `Savepoint` nested within this transaction.
@@ -129,12 +146,24 @@ pub struct Savepoint<'conn> {
 }
 
 impl<'conn> Savepoint<'conn> {
+    /// Create a new savepoint with an auto-generated, globally unique name.
+    ///
+    /// The name is derived from an atomically incrementing counter (e.g. `rslite_sp_0`) to
+    /// prevent name collisions when multiple savepoints are live at the same time on the same
+    /// connection.  Delegates to [`with_name`](Savepoint::with_name) after constructing the
+    /// name, issuing `SAVEPOINT rslite_sp_N` on the connection.
     pub(crate) fn new(conn: &'conn mut Connection) -> Result<Self> {
         let n = SAVEPOINT_COUNTER.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
         let name = format!("rslite_sp_{}", n);
         Self::with_name(conn, name)
     }
 
+    /// Create a new savepoint with the caller-supplied `name`, issuing `SAVEPOINT <name>`.
+    ///
+    /// The name must be a valid SQLite identifier.  If a savepoint with the same name already
+    /// exists on the stack, SQLite interprets the `SAVEPOINT` statement as moving the existing
+    /// mark rather than adding a new level, so callers should ensure names are distinct.
+    /// Returns an error if the underlying `execute_batch` fails.
     pub(crate) fn with_name(conn: &'conn mut Connection, name: String) -> Result<Self> {
         conn.execute_batch(&format!("SAVEPOINT {}", name))?;
         Ok(Savepoint { conn, name, released: false, drop_behavior: DropBehavior::Rollback })
@@ -160,6 +189,13 @@ impl<'conn> Savepoint<'conn> {
         self.conn.execute_batch(&format!("ROLLBACK TO SAVEPOINT {}", self.name))
     }
 
+    /// Set the action taken when this savepoint is dropped without an explicit
+    /// [`commit`](Savepoint::commit) or [`rollback`](Savepoint::rollback).
+    ///
+    /// The default is [`DropBehavior::Rollback`], which rolls back to the savepoint and then
+    /// releases it.  Setting [`DropBehavior::Commit`] releases the savepoint (committing its
+    /// changes to the enclosing transaction), while [`DropBehavior::Ignore`] leaves the
+    /// savepoint open — useful when you intend to release it manually later.
     pub fn set_drop_behavior(&mut self, behavior: DropBehavior) {
         self.drop_behavior = behavior;
     }

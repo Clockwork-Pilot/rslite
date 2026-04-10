@@ -1,4 +1,4 @@
-use crate::{statement::Statement, types::{FromSql, FromSqlError, Type, ValueRef}, Error, Result};
+use crate::{statement::Statement, types::{FromSql, FromSqlError, ValueRef}, Error, Result};
 use sqlite_noamalgam::{sqlite3_step, SQLITE_ROW, SQLITE_DONE};
 
 /// A streaming iterator over query result rows.
@@ -26,6 +26,12 @@ pub struct Rows<'stmt> {
 }
 
 impl<'stmt> Rows<'stmt> {
+    /// Create a new `Rows` streaming iterator bound to the given prepared statement.
+    ///
+    /// The statement must already have parameters bound and must not have been stepped yet;
+    /// `Statement::query` is the only public entry point and ensures these preconditions.
+    /// Holding a `Rows` value prevents any other use of the statement until it is dropped,
+    /// which guarantees that the SQLite column data pointers remain valid for each row's lifetime.
     pub(crate) fn new(stmt: &'stmt Statement<'stmt>) -> Self {
         Rows { stmt, done: false }
     }
@@ -103,12 +109,29 @@ impl<'stmt> Row<'stmt> {
         unsafe { self.stmt.column_value_ref(col) }
     }
 
+    /// Like [`get_ref`](Row::get_ref), but panics with a descriptive message instead of returning
+    /// an error.
+    ///
+    /// Useful in tests or in code paths where an invalid column index or unexpected type is a
+    /// programming error that should never occur in production.  In production code, prefer
+    /// [`get_ref`](Row::get_ref) so that errors are surfaced gracefully.
     pub fn get_ref_unwrap<I: RowIndex>(&self, idx: I) -> ValueRef<'_> {
         self.get_ref(idx).unwrap()
     }
 
+    /// Returns the number of columns projected by the query that produced this row.
+    ///
+    /// The count is fixed for the lifetime of the statement and reflects the number of
+    /// expressions in the `SELECT` list (or all columns for `SELECT *`).  It can be used
+    /// to iterate over all columns dynamically without knowing the schema in advance.
     pub fn column_count(&self) -> usize { self.stmt.column_count() }
 
+    /// Returns the declared name of column `col` (0-based), or an error if out of range.
+    ///
+    /// The name is the alias from the `AS` clause if one was provided, otherwise the column
+    /// name from the table definition.  For expressions with no alias, SQLite generates a
+    /// name such as `"col0"`.  The returned slice borrows from the statement's metadata and
+    /// is valid for the lifetime of the `Row` (and transitively the `Statement`).
     pub fn column_name(&self, col: usize) -> Result<&str> { self.stmt.column_name(col) }
 }
 
@@ -143,5 +166,15 @@ impl private::Sealed for String {}
 impl RowIndex for String {
     fn index(&self, stmt: &Statement<'_>) -> Result<usize> {
         stmt.column_index(self.as_str())
+    }
+}
+
+impl private::Sealed for i32 {}
+impl RowIndex for i32 {
+    fn index(&self, stmt: &Statement<'_>) -> Result<usize> {
+        if *self < 0 {
+            return Err(Error::InvalidColumnIndex(*self as usize));
+        }
+        (*self as usize).index(stmt)
     }
 }

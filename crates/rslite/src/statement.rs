@@ -2,8 +2,8 @@ use std::ffi::{CStr, CString};
 use std::os::raw::c_int;
 use sqlite_noamalgam::*;
 use crate::{
-    error::{sqlite_error, sqlite_error_from_code},
-    types::{FromSql, FromSqlError, ToSql, ToSqlOutput, Type, Value, ValueRef},
+    error::sqlite_error,
+    types::{ToSql, ValueRef},
     Connection, Error, Result, Rows,
 };
 
@@ -143,6 +143,20 @@ impl<'conn> Statement<'conn> {
         }
     }
 
+    /// Execute and apply `f` to each row, collecting into an `AndThenRows` iterator.
+    ///
+    /// Unlike `query_map`, the closure may return any error type `E` that implements
+    /// `From<Error>`.
+    pub fn query_and_then<T, E, P, F>(&mut self, params: P, f: F) -> Result<AndThenRows<'_, F>>
+    where
+        P: crate::Params,
+        E: From<Error>,
+        F: FnMut(&crate::Row<'_>) -> std::result::Result<T, E>,
+    {
+        let rows = self.query(params)?;
+        Ok(AndThenRows { rows, f })
+    }
+
     /// Execute and return whether any row exists.
     pub fn exists<P: crate::Params>(&mut self, params: P) -> Result<bool> {
         let mut rows = self.query(params)?;
@@ -151,18 +165,41 @@ impl<'conn> Statement<'conn> {
 
     // ── Column metadata ───────────────────────────────────────────────────────
 
+    /// Returns the number of columns in the result set projected by this statement.
+    ///
+    /// For `SELECT` statements the count equals the number of expressions in the select list.
+    /// For DML statements (`INSERT`/`UPDATE`/`DELETE`) the count is typically 0 unless a
+    /// `RETURNING` clause is present.  The value is cached at prepare time so calling this
+    /// method is free.
     pub fn column_count(&self) -> usize { self.column_count }
 
+    /// Returns the name of result-set column `col` (0-based), or an [`Error::InvalidColumnIndex`]
+    /// if `col` is out of range.
+    ///
+    /// The name is the `AS` alias when one is supplied; otherwise it is the bare column name from
+    /// the schema.  For computed expressions without an alias, SQLite synthesises a name such as
+    /// `"col0"`.  The slice borrows from the `Statement` and is valid for its lifetime.
     pub fn column_name(&self, col: usize) -> Result<&str> {
         self.column_names.get(col)
             .map(|s| s.as_str())
             .ok_or(Error::InvalidColumnIndex(col))
     }
 
+    /// Returns all result-set column names as a `Vec<&str>`, in left-to-right order.
+    ///
+    /// Each slice borrows from the `Statement`'s internal name cache and is valid for the
+    /// statement's lifetime.  The vector is allocated on each call; for hot paths that need
+    /// a single column, prefer [`column_name`](Statement::column_name) to avoid the allocation.
     pub fn column_names(&self) -> Vec<&str> {
         self.column_names.iter().map(|s| s.as_str()).collect()
     }
 
+    /// Find the 0-based column index for a column with the given name.
+    ///
+    /// The lookup is first attempted with an exact (case-sensitive) match; if no exact match is
+    /// found, a second pass tries ASCII case-insensitive comparison.  Returns
+    /// [`Error::InvalidColumnName`] if no column with that name exists.  This two-pass strategy
+    /// matches rusqlite's behaviour and avoids false negatives for mixed-case aliases.
     pub fn column_index(&self, name: &str) -> Result<usize> {
         self.column_names.iter().position(|n| n == name)
             .or_else(|| self.column_names.iter().position(|n| n.eq_ignore_ascii_case(name)))
@@ -171,6 +208,12 @@ impl<'conn> Statement<'conn> {
 
     // ── Parameter metadata ────────────────────────────────────────────────────
 
+    /// Returns the number of host parameters (`?`, `?N`, `:name`, `@name`, `$name`) in this
+    /// statement, as reported by `sqlite3_bind_parameter_count`.
+    ///
+    /// Parameters are numbered starting at 1 in the SQLite C API.  This count includes all
+    /// positional and named parameters; duplicate named parameters are counted only once.
+    /// It can be used to validate that the correct number of values are bound before execution.
     pub fn parameter_count(&self) -> usize {
         unsafe { sqlite3_bind_parameter_count(self.stmt) as usize }
     }
@@ -196,10 +239,23 @@ impl<'conn> Statement<'conn> {
 
     // ── Statement info ────────────────────────────────────────────────────────
 
+    /// Returns `true` if this statement makes no direct changes to the database content.
+    ///
+    /// The result is derived from `sqlite3_stmt_readonly`, which inspects the compiled VDBE
+    /// bytecode rather than the SQL text.  A `SELECT` that calls a non-deterministic function
+    /// with side effects may still return `true` here; this flag only reflects whether the
+    /// statement itself issues any write operations, not whether side effects are possible.
     pub fn readonly(&self) -> bool {
         unsafe { sqlite3_stmt_readonly(self.stmt) != 0 }
     }
 
+    /// Returns the SQL text of this statement with all bound parameters replaced by their
+    /// literal values, allocated by SQLite and returned as an owned `String`.
+    ///
+    /// The expansion is performed by `sqlite3_expanded_sql` and the memory is freed with
+    /// `sqlite3_free` before returning.  Returns `None` if SQLite could not allocate the
+    /// string (out of memory) or if the statement has no SQL text.  Primarily useful for
+    /// debugging and logging; do not use the result to re-prepare the statement.
     pub fn expanded_sql(&self) -> Option<String> {
         unsafe {
             let ptr = sqlite3_expanded_sql(self.stmt);
@@ -210,6 +266,13 @@ impl<'conn> Statement<'conn> {
         }
     }
 
+    /// Returns the original SQL text that was used to prepare this statement, as a borrowed
+    /// `&str` tied to the statement's lifetime.
+    ///
+    /// The pointer is owned by SQLite and remains valid as long as the statement is not
+    /// finalized.  Returns `None` if the statement handle is null or if the text is not valid
+    /// UTF-8.  Unlike [`expanded_sql`](Statement::expanded_sql), parameter placeholders are
+    /// returned verbatim rather than substituted with their bound values.
     pub fn sql(&self) -> Option<&str> {
         unsafe {
             let ptr = sqlite3_sql(self.stmt);
@@ -220,12 +283,49 @@ impl<'conn> Statement<'conn> {
 
     // ── Internal helpers ──────────────────────────────────────────────────────
 
+    /// Reset the statement cursor back to the beginning so it can be executed again.
+    ///
+    /// Calls `sqlite3_reset`, which does not clear parameter bindings — bound values remain in
+    /// place for the next execution.  Use [`clear_bindings`](Statement::clear_bindings) afterward
+    /// if you need to remove them.  This is called automatically by [`execute`] and [`query`]
+    /// before each execution, so manual calls are rarely necessary.
     pub(crate) fn reset(&mut self) {
         unsafe { sqlite3_reset(self.stmt); }
     }
 
+    #[allow(dead_code)]
     pub(crate) fn clear_bindings(&mut self) {
         unsafe { sqlite3_clear_bindings(self.stmt); }
+    }
+
+    /// Extract the raw `sqlite3_stmt*` pointer, consuming the `Statement`
+    /// without finalizing it.  The caller must eventually finalize the pointer.
+    pub(crate) fn into_raw(self) -> *mut sqlite3_stmt {
+        let ptr = self.stmt;
+        std::mem::forget(self);
+        ptr
+    }
+
+    /// Wrap a raw `sqlite3_stmt*` in a `Statement`.  Resets the statement and
+    /// clears all bindings.  Called by the statement cache on reuse.
+    ///
+    /// # Safety
+    /// `raw` must be a valid, non-finalized `sqlite3_stmt*` associated with
+    /// `conn`'s database handle.
+    pub(crate) unsafe fn from_raw<'c>(conn: &'c Connection, raw: *mut sqlite3_stmt) -> Statement<'c> {
+        unsafe {
+            sqlite3_reset(raw);
+            sqlite3_clear_bindings(raw);
+        }
+        let column_count = unsafe { sqlite3_column_count(raw) } as usize;
+        let column_names = (0..column_count)
+            .map(|i| unsafe {
+                let ptr = sqlite3_column_name(raw, i as c_int);
+                if ptr.is_null() { String::new() }
+                else { CStr::from_ptr(ptr).to_string_lossy().into_owned() }
+            })
+            .collect();
+        Statement { conn, stmt: raw, column_count, column_names }
     }
 
     /// Bind a single `ToSql` value at a 1-based parameter index.
@@ -303,6 +403,17 @@ impl<'conn> Statement<'conn> {
         };
         Ok(vref)
     }
+
+    /// Explicitly finalize the statement, returning any SQLite error.
+    ///
+    /// Calling this is optional — the statement is finalized on drop — but this
+    /// method lets you propagate any deferred error from the last step.
+    pub fn finalize(self) -> Result<()> {
+        let db = self.conn.handle_ptr();
+        let ptr = self.into_raw();
+        let rc = unsafe { sqlite3_finalize(ptr) };
+        if rc == SQLITE_OK { Ok(()) } else { Err(unsafe { sqlite_error(db, rc) }) }
+    }
 }
 
 impl std::fmt::Debug for Statement<'_> {
@@ -336,6 +447,33 @@ where
         match self.rows.next() {
             Err(e)           => Some(Err(e)),
             Ok(None)         => None,
+            Ok(Some(ref row)) => Some((self.f)(row)),
+        }
+    }
+}
+
+// ── AndThenRows ───────────────────────────────────────────────────────────────
+
+/// Iterator produced by [`Statement::query_and_then`].
+///
+/// Like `MappedRows` but the closure returns `Result<T, E>` where `E` can be
+/// any error type that implements `From<Error>`.
+pub struct AndThenRows<'stmt, F> {
+    pub(crate) rows: Rows<'stmt>,
+    pub(crate) f: F,
+}
+
+impl<T, E, F> Iterator for AndThenRows<'_, F>
+where
+    E: From<Error>,
+    F: FnMut(&crate::Row<'_>) -> std::result::Result<T, E>,
+{
+    type Item = std::result::Result<T, E>;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        match self.rows.next() {
+            Err(e)            => Some(Err(E::from(e))),
+            Ok(None)          => None,
             Ok(Some(ref row)) => Some((self.f)(row)),
         }
     }

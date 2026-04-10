@@ -8,6 +8,12 @@ pub enum ToSqlOutput<'a> {
 }
 
 impl<'a> ToSqlOutput<'a> {
+    /// Borrow the contained value as a [`ValueRef`] without copying any heap data.
+    ///
+    /// When the output is [`ToSqlOutput::Borrowed`], the inner `ValueRef` is returned as-is.
+    /// When it is [`ToSqlOutput::Owned`], a `ValueRef` is constructed that borrows from the owned
+    /// [`Value`]'s storage, so no allocation takes place.  This method is called internally by
+    /// [`Statement::bind_value`] immediately before passing the value to `sqlite3_bind_*`.
     pub fn as_value_ref(&'a self) -> ValueRef<'a> {
         match self {
             ToSqlOutput::Borrowed(v) => *v,

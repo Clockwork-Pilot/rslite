@@ -24,6 +24,7 @@
 //! The public API is completely safe.
 
 pub mod error;
+pub mod ffi;
 pub mod functions;
 pub mod hooks;
 pub mod types;
@@ -32,13 +33,15 @@ pub mod statement;
 pub mod rows;
 pub mod transaction;
 pub mod connection;
+pub mod cache;
 
 pub use error::{Error, ErrorCode, Result, OptionalExtension};
 pub use hooks::Action;
 pub use functions::{Aggregate, Context, FunctionFlags};
 pub use types::{Type, Value, ValueRef, ToSql, ToSqlOutput, FromSql, FromSqlError, FromSqlResult, Null};
 pub use params::{Params, ParamsFromIter, params_from_iter};
-pub use statement::{Statement, MappedRows};
+pub use statement::{Statement, MappedRows, AndThenRows};
 pub use rows::{Row, RowIndex, Rows};
 pub use transaction::{Transaction, TransactionBehavior, DropBehavior, Savepoint};
-pub use connection::{Connection, OpenFlags};
+pub use connection::{Connection, OpenFlags, LimitCategory};
+pub use cache::CachedStatement;

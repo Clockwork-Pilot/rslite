@@ -19,7 +19,7 @@ use rslite::{
     Action, Aggregate, Connection, Context, DropBehavior, Error, ErrorCode,
     FunctionFlags, Null, OpenFlags, OptionalExtension,
 };
-use rslite_raw::{SQLITE_CANTOPEN, SQLITE_CONSTRAINT_NOTNULL};
+use rslite::ffi::{SQLITE_CANTOPEN, SQLITE_CONSTRAINT_NOTNULL};
 use std::os::raw::{c_double, c_int};
 
 // ═══════════════════════════════════════════════════════════════════════════

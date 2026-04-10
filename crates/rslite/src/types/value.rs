@@ -19,6 +19,12 @@ pub enum Value {
 }
 
 impl Value {
+    /// Returns the SQLite storage class of this value as a [`Type`] discriminant.
+    ///
+    /// The mapping follows the SQLite type affinity rules: `Integer` → [`Type::Integer`],
+    /// `Real` → [`Type::Real`], `Text` → [`Type::Text`], `Blob` → [`Type::Blob`], and the
+    /// `Null` variant → [`Type::Null`].  This is useful for generic code that inspects a
+    /// value's type before deciding how to serialize or display it.
     pub fn data_type(&self) -> Type {
         match self {
             Value::Null       => Type::Null,
@@ -46,6 +52,11 @@ pub enum ValueRef<'a> {
 }
 
 impl<'a> ValueRef<'a> {
+    /// Returns the SQLite storage class of this borrowed value as a [`Type`] discriminant.
+    ///
+    /// Mirrors [`Value::data_type`] but works on the zero-copy [`ValueRef`] variant.  The result
+    /// describes the actual in-memory representation, not the declared column affinity, so a column
+    /// declared `INTEGER` that currently holds a floating-point literal will return [`Type::Real`].
     pub fn data_type(&self) -> Type {
         match self {
             ValueRef::Null       => Type::Null,
@@ -56,6 +67,12 @@ impl<'a> ValueRef<'a> {
         }
     }
 
+    /// Extract the contained `i64` value, returning an [`Error::InvalidColumnType`] if the value
+    /// is not [`ValueRef::Integer`].
+    ///
+    /// Unlike `as_f64`, this method does **not** coerce real values to integers; callers that
+    /// need numeric coercion should call `as_f64` and then cast, or use the [`FromSql`] trait
+    /// which handles type widening according to the column's declared affinity.
     pub fn as_i64(&self) -> crate::Result<i64> {
         match self {
             ValueRef::Integer(i) => Ok(*i),
@@ -63,6 +80,12 @@ impl<'a> ValueRef<'a> {
         }
     }
 
+    /// Extract the contained floating-point value, widening an [`ValueRef::Integer`] to `f64`
+    /// if necessary, or returning an [`Error::InvalidColumnType`] for text, blob, or null.
+    ///
+    /// The integer-to-float widening matches SQLite's own numeric coercion behaviour: an `i64`
+    /// that does not fit exactly in an `f64` mantissa may lose precision, so callers that need
+    /// lossless integer handling should prefer [`as_i64`](ValueRef::as_i64) instead.
     pub fn as_f64(&self) -> crate::Result<f64> {
         match self {
             ValueRef::Real(f)    => Ok(*f),
@@ -71,6 +94,12 @@ impl<'a> ValueRef<'a> {
         }
     }
 
+    /// Extract the contained UTF-8 string slice, or return an [`Error::InvalidColumnType`]
+    /// if the value is not [`ValueRef::Text`].
+    ///
+    /// The returned slice borrows from the underlying `sqlite3_stmt` step and is valid only
+    /// until the next call to `sqlite3_step` or `sqlite3_finalize`.  The borrow checker
+    /// enforces this through the `'a` lifetime, which is tied to the enclosing [`Row`] borrow.
     pub fn as_str(&self) -> crate::Result<&'a str> {
         match self {
             ValueRef::Text(s) => Ok(s),
@@ -78,6 +107,13 @@ impl<'a> ValueRef<'a> {
         }
     }
 
+    /// Extract the contained blob as a byte slice, or return an [`Error::InvalidColumnType`]
+    /// if the value is not [`ValueRef::Blob`].
+    ///
+    /// Like [`as_str`](ValueRef::as_str), the returned slice borrows from the statement's
+    /// current step and must not be used after the next `sqlite3_step`.  An empty blob
+    /// (length 0) is represented as `&[]` rather than a null pointer, matching SQLite's
+    /// documented behaviour for zero-length blobs.
     pub fn as_blob(&self) -> crate::Result<&'a [u8]> {
         match self {
             ValueRef::Blob(b) => Ok(b),
