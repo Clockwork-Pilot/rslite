@@ -12,7 +12,6 @@ jobs:
     permissions:
       actions: write
       issues: write
-      administration: read
 
     steps:
       - name: Get actor
@@ -27,7 +26,7 @@ jobs:
       - name: Check runner exists for actor
         id: runner_check
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.RUNNERS_PAT }}
         run: |
           USERNAME="${{ steps.actor.outputs.username }}"
           RUNNERS=$(gh api repos/${{ github.repository }}/actions/runners)
