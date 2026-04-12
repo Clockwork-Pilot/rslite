@@ -48,8 +48,10 @@ jobs:
           if [ -n "$YAML_PART" ]; then
             BODY=$(printf '%s\n' "$BODY" | sed '1,/^---$/d; 1,/^---$/d')
           fi
-          TIMEOUT_MINS=$(yq '.timeout // ""' <<< "$YAML_PART")
-          MODEL=$(yq '.model // ""' <<< "$YAML_PART")
+          # Plain grep parsing of flat "key: value" pairs — intentionally avoids
+          # a yq dependency (runner may have yq v3 or v4 with incompatible CLIs).
+          TIMEOUT_MINS=$(grep -iP '^\s*timeout\s*:\s*\K\S+' <<< "$YAML_PART" | head -1 | tr -d '"'"'")
+          MODEL=$(grep -iP '^\s*model\s*:\s*\K\S+' <<< "$YAML_PART" | head -1 | tr -d '"'"'")
           TIMEOUT_SECS=$(( ${TIMEOUT_MINS:-10} * 60 ))
           echo "timeout_secs=${TIMEOUT_SECS}" >> $GITHUB_OUTPUT
           echo "model=${MODEL}" >> $GITHUB_OUTPUT
