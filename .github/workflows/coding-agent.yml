@@ -54,10 +54,9 @@ jobs:
           if [ -n "$YAML_PART" ]; then
             BODY=$(printf '%s\n' "$BODY" | sed '1,/^---$/d; 1,/^---$/d')
           fi
-          # Plain grep parsing of flat "key: value" pairs — intentionally avoids
-          # a yq dependency (runner may have yq v3 or v4 with incompatible CLIs).
-          TIMEOUT_MINS=$(grep -iP '^\s*timeout\s*:\s*\K\S+' <<< "$YAML_PART" | head -1 | tr -d '"'"'")
-          MODEL=$(grep -iP '^\s*model\s*:\s*\K\S+' <<< "$YAML_PART" | head -1 | tr -d '"'"'")
+          # yq is a runner prerequisite (install via `pip install yq` — see ansible/README).
+          TIMEOUT_MINS=$(yq -r '.timeout // ""' <<< "$YAML_PART")
+          MODEL=$(yq -r '.model // ""' <<< "$YAML_PART")
           TIMEOUT_SECS=$(( ${TIMEOUT_MINS:-10} * 60 ))
           echo "timeout_secs=${TIMEOUT_SECS}" >> $GITHUB_OUTPUT
           echo "model=${MODEL}" >> $GITHUB_OUTPUT
