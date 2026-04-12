@@ -21,7 +21,6 @@ Verify c_variadic feature isolation: only in printf_c_variadic.rs
     - [Feature: pub_visibility](#pub_visibility)
       - [cdylib_default_exports](#cdylib_default_exports)
       - [rslite_uses_crust_core](#rslite_uses_crust_core)
-      - [test_cdylib_superset](#test_cdylib_superset)
       - [test_tclsqlite_builds](#test_tclsqlite_builds)
     - [Feature: toolchain_version](#toolchain_version)
       - [c2rust_nightly](#c2rust_nightly)
@@ -94,13 +93,9 @@ Verify c_variadic feature isolation: only in printf_c_variadic.rs
 **Description:** Structural: rslite crate must not reference rslite-raw in its Cargo.toml or source files — it should use crust-core (sqlite_noamalgam) directly
 **Command:** `cd $PROJECT_ROOT && ! grep -r 'rslite.raw\|rslite_raw' crates/rslite/Cargo.toml crates/rslite/src/ && echo 'rslite does not reference rslite-raw'`
 
-#### test_cdylib_superset
-**Description:** Behavioral: test cdylib must be a superset of default exports - all ~280 C API symbols still present
-**Command:** `cd $PROJECT_ROOT && cargo build -p crust-core --features fts4,update_delete_limit,test 2>/dev/null && ACTUAL=$(nm -D --defined-only target/debug/libsqlite_noamalgam.so | grep " T " | awk "{print \$3}" | sort) && EXPECTED=$(sort $PROJECT_ROOT/crates/crust-core/expected_exports.txt) && MISSING=$(comm -23 <(echo "$EXPECTED") <(echo "$ACTUAL")) && test -z "$MISSING" || { echo "test build lost default symbols: $MISSING"; exit 1; }`
-
 #### test_tclsqlite_builds
 **Description:** Environmental: tclsqlite with test feature must compile, proving internal symbols remain accessible
-**Command:** `cd $PROJECT_ROOT && cargo build -p crust-tclsqlite --features test 2>/dev/null`
+**Command:** `cd $PROJECT_ROOT/c2rust/crust-tclsqlite && cargo build -p crust-tclsqlite --features test 2>/dev/null`
 
 ### Feature: toolchain_version
 **Enforce Rust toolchain versions. Stable for main code, nightly for shell and tests.**

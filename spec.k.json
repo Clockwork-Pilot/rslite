@@ -3,7 +3,7 @@
   "model_version": 1,
   "version": 1,
   "description": "Verify c_variadic feature isolation: only in printf_c_variadic.rs",
-  "contains_unverified_constraints": true,
+  "contains_unverified_constraints": false,
   "features": {
     "build_all": {
       "type": "Feature",
@@ -134,7 +134,8 @@
         "cdylib_default_exports": {
           "id": "cdylib_default_exports",
           "cmd": "cd $PROJECT_ROOT && cargo build -p rslite-core --features fts4,update_delete_limit 2>/dev/null && nm -D --defined-only target/debug/libsqlite_noamalgam.so | grep \" T \" | awk \"{print \\$3}\" | sort > /tmp/rslite_actual.txt && sort $PROJECT_ROOT/crates/rslite-core/expected_exports.txt > /tmp/rslite_expected.txt && diff /tmp/rslite_actual.txt /tmp/rslite_expected.txt || { echo \"cdylib exports diverged from expected_exports.txt\"; exit 1; }",
-          "description": "Behavioral: non-test cdylib exports must match expected_exports.txt exactly (~280 stable C API symbols)"
+          "description": "Behavioral: non-test cdylib exports must match expected_exports.txt exactly (~280 stable C API symbols)",
+          "fails_count": 1
         },
         "test_tclsqlite_builds": {
           "id": "test_tclsqlite_builds",
@@ -145,7 +146,8 @@
         "rslite_uses_crust_core": {
           "id": "rslite_uses_crust_core",
           "cmd": "cd $PROJECT_ROOT && ! grep -r 'rslite.raw\\|rslite_raw' crates/rslite/Cargo.toml crates/rslite/src/ && echo 'rslite does not reference rslite-raw'",
-          "description": "Structural: rslite crate must not reference rslite-raw in its Cargo.toml or source files \u2014 it should use crust-core (sqlite_noamalgam) directly"
+          "description": "Structural: rslite crate must not reference rslite-raw in its Cargo.toml or source files \u2014 it should use crust-core (sqlite_noamalgam) directly",
+          "fails_count": 1
         }
       }
     }
