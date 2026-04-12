@@ -88,7 +88,7 @@ jobs:
 
       - name: Prepare docker-files directories
         run: |
-          mkdir -p "$DOCKER_FILES/.credentials" "$DOCKER_FILES/.cargo" "$DOCKER_FILES/venv" "$DOCKER_FILES/.local"
+          mkdir -p "$DOCKER_FILES/.credentials" "$DOCKER_FILES/.cargo" "$DOCKER_FILES/.local"
           [ -s "$DOCKER_FILES/.claude.local.json" ] || printf '{}\n' > "$DOCKER_FILES/.claude.local.json"
 
       - name: Log in to GitHub Container Registry
@@ -114,7 +114,6 @@ jobs:
             -e DISABLE_STOP_HOOK= \
             -e ONESHOT_PROMPT_MESSAGE \
             -v "$DOCKER_FILES/.cargo:/home/node/.cargo:Z" \
-            -v "$DOCKER_FILES/venv:/home/node/venv:Z" \
             -v "$DOCKER_FILES/.credentials:/home/node/.claude:Z" \
             -v "$DOCKER_FILES/.claude.local.json:/home/node/.claude.json:Z" \
             -v "$DOCKER_FILES/.local:/home/node/.local:Z" \
