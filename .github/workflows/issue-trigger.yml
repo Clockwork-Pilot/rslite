@@ -2,7 +2,7 @@ name: Issue Trigger
 
 on:
   issues:
-    types: [opened]
+    types: [opened, edited]
   issue_comment:
     types: [created]
 
