@@ -19,6 +19,12 @@ jobs:
       contents: write
 
     steps:
+      - name: Checkout repo into isolated workspace
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+
       - name: Get issue details
         id: issue
         env:
@@ -63,9 +69,8 @@ jobs:
             echo "EOF"
           } >> $GITHUB_ENV
 
-      - name: Create or checkout branch in project root
+      - name: Create or checkout branch
         run: |
-          cd "$CLAUDE_PROJECT_ROOT"
           git fetch origin
           BRANCH="${{ steps.issue.outputs.branch }}"
           if git ls-remote --exit-code --heads origin "$BRANCH" >/dev/null 2>&1; then
@@ -108,7 +113,7 @@ jobs:
             -v "$DOCKER_FILES/.credentials:/home/node/.claude:Z" \
             -v "$DOCKER_FILES/.claude.local.json:/home/node/.claude.json:Z" \
             -v "$DOCKER_FILES/.local:/home/node/.local:Z" \
-            -v "$CLAUDE_PROJECT_ROOT:/workspace:Z" \
+            -v "$GITHUB_WORKSPACE:/workspace:Z" \
             $CLAUDE_EXTRA_DOCKER_ARGS \
             ghcr.io/clockwork-pilot/rslite-ws:latest \
             bash -c "source /docker-scripts/work-on-sqlite/user-entrypoint.sh; \
@@ -134,7 +139,7 @@ jobs:
               .value.constraints_results | to_entries[] |
               select(.value.verdict == false) |
               "\($feature):\(.key)"
-            ' "$CLAUDE_PROJECT_ROOT/spec-checks.k.json" 2>/dev/null | paste -sd ', ')
+            ' "$GITHUB_WORKSPACE/spec-checks.k.json" 2>/dev/null | paste -sd ', ')
             if [ -n "$FAILED" ]; then
               MSG="agent: failed constraints: ${FAILED}"
             else
@@ -144,7 +149,6 @@ jobs:
             MSG="agent: completed successfully"
           fi
 
-          cd "$CLAUDE_PROJECT_ROOT"
           git add -A
           git diff --cached --quiet || git commit -m "$MSG"
           git push origin "${{ steps.issue.outputs.branch }}"
