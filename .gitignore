@@ -1,5 +1,6 @@
 testdir*/
 target/
+spec-checks.k.*
 sqlite-shell/
 sqlite-testfixture/
 sqlite-shell-src/

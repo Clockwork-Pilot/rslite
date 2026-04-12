@@ -17,6 +17,8 @@ jobs:
     runs-on: [self-hosted, "${{ inputs.runner_label }}"]
     permissions:
       contents: write
+      pull-requests: write
+      issues: write
 
     steps:
       - name: Checkout repo into isolated workspace
@@ -33,6 +35,7 @@ jobs:
           ISSUE=$(gh api repos/${{ github.repository }}/issues/${{ inputs.issue_number }})
           TITLE=$(echo "$ISSUE" | jq -r '.title')
           BODY=$(echo "$ISSUE" | jq -r '.body // ""')
+          echo "title=${TITLE}" >> $GITHUB_OUTPUT
           SLUG=$(echo "$TITLE" | tr '[:upper:]' '[:lower:]' | tr -cs 'a-z0-9' '-' | sed 's/-\+/-/g;s/^-//;s/-$//' | cut -c1-100)
           ISSUE_NUM="${{ inputs.issue_number }}"
           EXISTING=$(gh api "repos/${{ github.repository }}/branches" --paginate -q ".[].name" \
@@ -56,7 +59,6 @@ jobs:
           MODEL=""
           if [ -n "$YAML_PART" ]; then
             BODY=$(printf '%s\n' "$BODY" | sed '1,/^---\s*$/d; 1,/^---\s*$/d')
-            # yq is a runner prerequisite (install via `pip install yq` — see ansible/README).
             TIMEOUT_MINS=$(yq -r '.timeout // ""' <<< "$YAML_PART" 2>/dev/null || true)
             MODEL=$(yq -r '.model // ""' <<< "$YAML_PART" 2>/dev/null || true)
             # yq may emit the literal string "null" when a key resolves to null
@@ -91,12 +93,8 @@ jobs:
           mkdir -p "$DOCKER_FILES/.credentials" "$DOCKER_FILES/.cargo" "$DOCKER_FILES/.local"
           [ -s "$DOCKER_FILES/.claude.local.json" ] || printf '{}\n' > "$DOCKER_FILES/.claude.local.json"
 
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+      # No ghcr.io login needed: ghcr.io/clockwork-pilot/rslite-ws is a public package.
+      # If it's ever made private again, re-add a docker login step with a PAT.
 
       - name: Run Claude agent in Docker
         id: agent
@@ -128,31 +126,82 @@ jobs:
           echo "exit_code=$?" >> $GITHUB_OUTPUT
           set -e
 
-      - name: Commit result
+      - name: Agent commit + constraints dry-run
+        id: finalize
+        if: always()
         run: |
           EXIT_CODE="${{ steps.agent.outputs.exit_code }}"
-          TIMEOUT_SECS="${{ steps.issue.outputs.timeout_secs }}"
-          TIMEOUT_MINS=$(( TIMEOUT_SECS / 60 ))
+          MODEL="${{ steps.issue.outputs.model }}"
+          MODEL="${MODEL:-claude-haiku-4-5}"
+          HEAD_BEFORE=$(git rev-parse HEAD)
 
-          if [ "$EXIT_CODE" -eq 124 ]; then
-            MSG="agent: timed out after ${TIMEOUT_MINS}m"
-          elif [ "$EXIT_CODE" -ne 0 ]; then
-            FAILED=$(jq -r '
-              .features_results | to_entries[] |
-              .key as $feature |
-              .value.constraints_results | to_entries[] |
-              select(.value.verdict == false) |
-              "\($feature):\(.key)"
-            ' "$GITHUB_WORKSPACE/spec-checks.k.json" 2>/dev/null | paste -sd ', ')
-            if [ -n "$FAILED" ]; then
-              MSG="agent: failed constraints: ${FAILED}"
-            else
-              MSG="agent: error (exit code ${EXIT_CODE})"
-            fi
-          else
-            MSG="agent: completed successfully"
+          DOCKER_COMMON=(
+            --rm
+            -e CLAUDE_PROJECT_ROOT=/workspace
+            -e WORKSPACE_ROOT=/workspace
+            -e CLAUDE_FILE_RULES=/docker-scripts/work-on-sqlite/y2-plugin-deny-file-rules.json
+            -e PROXY_WRAPPER_CONFIG=/docker-scripts/work-on-sqlite/proxy_wrapper_config.json
+            -e DISABLE_STOP_HOOK=
+            -v "$DOCKER_FILES/.cargo:/home/node/.cargo:Z"
+            -v "$DOCKER_FILES/.credentials:/home/node/.claude:Z"
+            -v "$DOCKER_FILES/.claude.local.json:/home/node/.claude.json:Z"
+            -v "$DOCKER_FILES/.local:/home/node/.local:Z"
+            -v "$GITHUB_WORKSPACE:/workspace:Z"
+          )
+
+          # Only attempt a commit if the agent run succeeded.
+          if [ "$EXIT_CODE" = "0" ]; then
+            docker run "${DOCKER_COMMON[@]}" $CLAUDE_EXTRA_DOCKER_ARGS \
+              ghcr.io/clockwork-pilot/rslite-ws:latest \
+              bash -c "source /docker-scripts/work-on-sqlite/user-entrypoint.sh; \
+                claude --dangerously-skip-permissions --model $MODEL --plugin-dir /plugin -p 'commit changes'" || true
           fi
 
-          git add -A
-          git diff --cached --quiet || git commit -m "$MSG"
-          git push origin "${{ steps.issue.outputs.branch }}"
+          # Always run the constraints dry-run to build the issue comment.
+          docker run "${DOCKER_COMMON[@]}" \
+            ghcr.io/clockwork-pilot/rslite-ws:latest \
+            bash -c "source /docker-scripts/work-on-sqlite/user-entrypoint.sh; \
+              python /plugin/constraints_tool/constraints_tool/check_spec_constraints.py --dry-run" \
+            > /tmp/constraints.md 2>&1 || true
+
+          HEAD_AFTER=$(git rev-parse HEAD)
+          if [ "$HEAD_BEFORE" != "$HEAD_AFTER" ]; then
+            echo "has_new_commit=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_new_commit=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Push branch and open PR
+        if: steps.finalize.outputs.has_new_commit == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          BRANCH="${{ steps.issue.outputs.branch }}"
+          git push origin "$BRANCH"
+          COMMIT_MSG=$(git log -1 --pretty=%B HEAD)
+          {
+            echo "Refs #${{ inputs.issue_number }}"
+            echo
+            echo "$COMMIT_MSG"
+          } > /tmp/pr-body.md
+          gh pr create \
+            --title "[AGENT] ${{ steps.issue.outputs.title }}" \
+            --body-file /tmp/pr-body.md \
+            --head "$BRANCH" \
+            || true   # tolerate 'pr already exists' on re-runs
+          gh issue comment "${{ inputs.issue_number }}" --body-file /tmp/constraints.md
+
+      - name: Comment on issue (no PR)
+        if: steps.finalize.outputs.has_new_commit != 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          EXIT_CODE="${{ steps.agent.outputs.exit_code }}"
+          if [ "$EXIT_CODE" = "0" ]; then
+            echo "Agent ran successfully but produced no new commit." > /tmp/msg.md
+            echo >> /tmp/msg.md
+            cat /tmp/constraints.md >> /tmp/msg.md
+            gh issue comment "${{ inputs.issue_number }}" --body-file /tmp/msg.md
+          else
+            gh issue comment "${{ inputs.issue_number }}" --body-file /tmp/constraints.md
+          fi

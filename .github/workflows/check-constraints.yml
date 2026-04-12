@@ -16,12 +16,8 @@ jobs:
         with:
           path: rslite
 
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GHCR_TOKEN }}
+      # No ghcr.io login needed: ghcr.io/clockwork-pilot/rslite-ws is a public package.
+      # If it's ever made private again, re-add a docker login step with a PAT.
 
       - name: Get image digest
         id: image-digest
