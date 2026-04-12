@@ -1,0 +1,8 @@
+/home/yurii-sama/Documents/sqlite-rust-port/rslite/spec.k.json
+/home/yurii-sama/Documents/sqlite-rust-port/rslite/spec.k.md
+/home/yurii-sama/Documents/sqlite-rust-port/rslite/task-results.k.json
+/home/yurii-sama/Documents/sqlite-rust-port/rslite/task-results.k.md
+/workspace/spec.k.json
+/workspace/spec.k.md
+/workspace/task-results.k.json
+/workspace/task-results.k.md
