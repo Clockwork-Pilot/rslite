@@ -51,7 +51,7 @@ jobs:
             -e WORKSPACE_ROOT=/workspace \
             -v ${{ github.workspace }}/rslite:/workspace \
             ghcr.io/clockwork-pilot/rslite-ws:latest \
-            bash -c "source /docker-scripts/work-on-sqlite/user-entrypoint.sh; \
+            bash -c "source /docker-scripts/user-entrypoint.sh; \
               python /plugin/constraints_tool/constraints_tool/check_spec_constraints.py || { \
               echo '--- Spec checks results ---'; \
               cat /workspace/spec-checks.k.md; \

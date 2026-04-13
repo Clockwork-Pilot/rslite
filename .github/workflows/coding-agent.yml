@@ -107,8 +107,8 @@ jobs:
           timeout "$TIMEOUT_SECS" docker run --rm \
             -e CLAUDE_PROJECT_ROOT=/workspace \
             -e WORKSPACE_ROOT=/workspace \
-            -e CLAUDE_FILE_RULES=/docker-scripts/work-on-sqlite/y2-plugin-deny-file-rules.json \
-            -e PROXY_WRAPPER_CONFIG=/docker-scripts/work-on-sqlite/proxy_wrapper_config.json \
+            -e CLAUDE_FILE_RULES=/docker-scripts/y2-plugin-deny-file-rules.json \
+            -e PROXY_WRAPPER_CONFIG=/docker-scripts/proxy_wrapper_config.json \
             -e DISABLE_STOP_HOOK= \
             -e ONESHOT_PROMPT_MESSAGE \
             -v "$DOCKER_FILES/.cargo:/home/node/.cargo:Z" \
@@ -118,7 +118,7 @@ jobs:
             -v "$GITHUB_WORKSPACE:/workspace:Z" \
             $CLAUDE_EXTRA_DOCKER_ARGS \
             ghcr.io/clockwork-pilot/rslite-ws:latest \
-            bash -c "source /docker-scripts/work-on-sqlite/user-entrypoint.sh; \
+            bash -c "source /docker-scripts/user-entrypoint.sh; \
               claude --dangerously-skip-permissions \
                 --model $MODEL \
                 --plugin-dir /plugin \
@@ -139,8 +139,8 @@ jobs:
             --rm
             -e CLAUDE_PROJECT_ROOT=/workspace
             -e WORKSPACE_ROOT=/workspace
-            -e CLAUDE_FILE_RULES=/docker-scripts/work-on-sqlite/y2-plugin-deny-file-rules.json
-            -e PROXY_WRAPPER_CONFIG=/docker-scripts/work-on-sqlite/proxy_wrapper_config.json
+            -e CLAUDE_FILE_RULES=/docker-scripts/y2-plugin-deny-file-rules.json
+            -e PROXY_WRAPPER_CONFIG=/docker-scripts/proxy_wrapper_config.json
             -e DISABLE_STOP_HOOK=
             -v "$DOCKER_FILES/.cargo:/home/node/.cargo:Z"
             -v "$DOCKER_FILES/.credentials:/home/node/.claude:Z"
@@ -153,14 +153,14 @@ jobs:
           if [ "$EXIT_CODE" = "0" ]; then
             docker run "${DOCKER_COMMON[@]}" $CLAUDE_EXTRA_DOCKER_ARGS \
               ghcr.io/clockwork-pilot/rslite-ws:latest \
-              bash -c "source /docker-scripts/work-on-sqlite/user-entrypoint.sh; \
+              bash -c "source /docker-scripts/user-entrypoint.sh; \
                 claude --dangerously-skip-permissions --model $MODEL --plugin-dir /plugin -p 'commit changes'" || true
           fi
 
           # Always run the constraints dry-run to build the issue comment.
           docker run "${DOCKER_COMMON[@]}" \
             ghcr.io/clockwork-pilot/rslite-ws:latest \
-            bash -c "source /docker-scripts/work-on-sqlite/user-entrypoint.sh; \
+            bash -c "source /docker-scripts/user-entrypoint.sh; \
               python /plugin/constraints_tool/constraints_tool/check_spec_constraints.py --dry-run" \
             > /tmp/constraints.md 2>&1 || true
 
