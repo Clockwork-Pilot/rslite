@@ -16,19 +16,8 @@ jobs:
         with:
           path: rslite
 
-      - name: Checkout y2-claude-plugin
-        uses: actions/checkout@v6
-        with:
-          repository: Clockwork-Pilot/y2-claude-plugin
-          path: claude-plugin
-          submodules: recursive
-
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GHCR_TOKEN }}
+      # No ghcr.io login needed: ghcr.io/clockwork-pilot/rslite-ws is a public package.
+      # If it's ever made private again, re-add a docker login step with a PAT.
 
       - name: Get image digest
         id: image-digest
@@ -59,18 +48,12 @@ jobs:
         run: |
           docker run --rm \
             -e CLAUDE_PROJECT_ROOT=/workspace \
-            -e CLAUDE_PLUGIN_ROOT=/plugin \
             -e WORKSPACE_ROOT=/workspace \
-            -e CLAUDE_FILE_RULES=/docker-scripts/work-on-sqlite/y2-plugin-deny-file-rules.json \
-            -e PROXY_WRAPPER_CONFIG=/docker-scripts/work-on-sqlite/proxy_wrapper_config.json \
-            -e DISABLE_STOP_HOOK=1 \
-            -v ${{ github.workspace }}/claude-plugin:/plugin:ro \
             -v ${{ github.workspace }}/rslite:/workspace \
             ghcr.io/clockwork-pilot/rslite-ws:latest \
-            bash -c "/docker-scripts/work-on-sqlite/create-venv-docker.sh; \
-              source /docker-scripts/work-on-sqlite/user-entrypoint.sh; \
+            bash -c "source /docker-scripts/user-entrypoint.sh; \
               python /plugin/constraints_tool/constraints_tool/check_spec_constraints.py || { \
               echo '--- Spec checks results ---'; \
               cat /workspace/spec-checks.k.md; \
               echo '--- testrunner failures ---'; \
-              grep 'errors out of' /sqlite/testrunner.log 2>/dev/null | grep -v ' 0 errors' || echo '(no testrunner.log failures found)'; exit 1; }"
+              grep 'errors out of' /sqlite/testrunner.log 2>/dev/null | grep -v '^0 errors' || echo '(no testrunner.log failures found)'; exit 1; }"

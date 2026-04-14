@@ -1,0 +1,78 @@
+name: Issue Trigger
+
+on:
+  issues:
+    types: [opened, labeled]
+
+jobs:
+  ensure-label:
+    if: github.event.action == 'opened'
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Ensure agent-run label exists
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh api "repos/${{ github.repository }}/labels/agent-run" >/dev/null 2>&1 || \
+            gh api -X POST "repos/${{ github.repository }}/labels" \
+              -f name=agent-run \
+              -f color=0E8A16 \
+              -f description="Apply to trigger the coding agent on this issue"
+
+  trigger:
+    if: github.event.action == 'labeled' && github.event.label.name == 'agent-run'
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+      issues: write
+
+    steps:
+      - name: Get actor
+        id: actor
+        run: |
+          echo "username=${{ github.event.sender.login }}" >> $GITHUB_OUTPUT
+
+      - name: Remove trigger label
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh api -X DELETE \
+            "repos/${{ github.repository }}/issues/${{ github.event.issue.number }}/labels/agent-run" \
+            || true
+
+      - name: Check runner exists for actor
+        id: runner_check
+        env:
+          GH_TOKEN: ${{ secrets.RUNNERS_PAT }}
+        run: |
+          USERNAME="${{ steps.actor.outputs.username }}"
+          RUNNERS=$(gh api repos/${{ github.repository }}/actions/runners)
+          MATCH=$(echo "$RUNNERS" | jq --arg label "$USERNAME" '
+            .runners[] | select(.labels[].name == $label) | select(.status == "online")
+          ')
+          if [ -n "$MATCH" ]; then
+            echo "found=true" >> $GITHUB_OUTPUT
+          else
+            echo "found=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Trigger coding agent workflow
+        if: steps.runner_check.outputs.found == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh workflow run coding-agent.yml \
+            --repo ${{ github.repository }} \
+            --field runner_label="${{ steps.actor.outputs.username }}" \
+            --field issue_number="${{ github.event.issue.number }}"
+
+      - name: Comment if no runner found
+        if: steps.runner_check.outputs.found == 'false'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue comment ${{ github.event.issue.number }} \
+            --repo ${{ github.repository }} \
+            --body "No online runner found for user **${{ steps.actor.outputs.username }}**."

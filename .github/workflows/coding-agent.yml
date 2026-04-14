@@ -1,0 +1,207 @@
+name: Coding Agent
+
+on:
+  workflow_dispatch:
+    inputs:
+      runner_label:
+        description: GitHub username (matches self-hosted runner label)
+        required: true
+        type: string
+      issue_number:
+        description: Issue number to work on
+        required: true
+        type: string
+
+jobs:
+  run-agent:
+    runs-on: [self-hosted, "${{ inputs.runner_label }}"]
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+
+    steps:
+      - name: Checkout repo into isolated workspace
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Get issue details
+        id: issue
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          ISSUE=$(gh api repos/${{ github.repository }}/issues/${{ inputs.issue_number }})
+          TITLE=$(echo "$ISSUE" | jq -r '.title')
+          BODY=$(echo "$ISSUE" | jq -r '.body // ""')
+          echo "title=${TITLE}" >> $GITHUB_OUTPUT
+          SLUG=$(echo "$TITLE" | tr '[:upper:]' '[:lower:]' | tr -cs 'a-z0-9' '-' | sed 's/-\+/-/g;s/^-//;s/-$//' | cut -c1-100)
+          ISSUE_NUM="${{ inputs.issue_number }}"
+          EXISTING=$(gh api "repos/${{ github.repository }}/branches" --paginate -q ".[].name" \
+            | grep -E "^agent/${ISSUE_NUM}(-|$)" | head -1 || true)
+          if [ -n "$EXISTING" ]; then
+            echo "Reusing existing branch: $EXISTING"
+            echo "branch=$EXISTING" >> $GITHUB_OUTPUT
+          else
+            echo "branch=agent/${ISSUE_NUM}-${SLUG}" >> $GITHUB_OUTPUT
+          fi
+
+          # Parse optional YAML frontmatter block at top of body:
+          #   ---
+          #   timeout: 30              # minutes (default 10)
+          #   model: claude-opus-4-6   # default: claude-haiku-4-5
+          #   ---
+          # Unknown fields are ignored but the block is stripped from the prompt.
+          # Accept closing --- with or without a trailing newline (issues may not end with \n).
+          YAML_PART=$(printf '%s\n' "$BODY" | grep -Pzo '(?s)^---\r?\n\K.*?(?=\r?\n---(\r?\n|$))' | tr -d '\0' || true)
+          TIMEOUT_MINS=""
+          MODEL=""
+          if [ -n "$YAML_PART" ]; then
+            BODY=$(printf '%s\n' "$BODY" | sed '1,/^---\s*$/d; 1,/^---\s*$/d')
+            TIMEOUT_MINS=$(yq -r '.timeout // ""' <<< "$YAML_PART" 2>/dev/null || true)
+            MODEL=$(yq -r '.model // ""' <<< "$YAML_PART" 2>/dev/null || true)
+            # yq may emit the literal string "null" when a key resolves to null
+            [ "$TIMEOUT_MINS" = "null" ] && TIMEOUT_MINS=""
+            [ "$MODEL" = "null" ] && MODEL=""
+          fi
+          TIMEOUT_SECS=$(( ${TIMEOUT_MINS:-10} * 60 ))
+          echo "timeout_secs=${TIMEOUT_SECS}" >> $GITHUB_OUTPUT
+          echo "model=${MODEL}" >> $GITHUB_OUTPUT
+
+          {
+            echo "ONESHOT_PROMPT_MESSAGE<<EOF"
+            echo "$TITLE"
+            echo "$BODY"
+            echo "EOF"
+          } >> $GITHUB_ENV
+
+      - name: Create or checkout branch
+        run: |
+          git fetch origin
+          BRANCH="${{ steps.issue.outputs.branch }}"
+          if git ls-remote --exit-code --heads origin "$BRANCH" >/dev/null 2>&1; then
+            echo "Checking out existing branch: $BRANCH"
+            git checkout -B "$BRANCH" "origin/${BRANCH}"
+          else
+            DEFAULT_BRANCH=$(git remote show origin | grep 'HEAD branch' | awk '{print $NF}')
+            git checkout -B "$BRANCH" "origin/${DEFAULT_BRANCH}"
+          fi
+
+      - name: Prepare docker-files directories
+        run: |
+          mkdir -p "$DOCKER_FILES/.credentials" "$DOCKER_FILES/.cargo" "$DOCKER_FILES/.local"
+          [ -s "$DOCKER_FILES/.claude.local.json" ] || printf '{}\n' > "$DOCKER_FILES/.claude.local.json"
+
+      # No ghcr.io login needed: ghcr.io/clockwork-pilot/rslite-ws is a public package.
+      # If it's ever made private again, re-add a docker login step with a PAT.
+
+      - name: Run Claude agent in Docker
+        id: agent
+        run: |
+          MODEL="${{ steps.issue.outputs.model }}"
+          MODEL="${MODEL:-claude-haiku-4-5}"
+          TIMEOUT_SECS="${{ steps.issue.outputs.timeout_secs }}"
+
+          set +e
+          timeout "$TIMEOUT_SECS" docker run --rm \
+            -e CLAUDE_PROJECT_ROOT=/workspace \
+            -e WORKSPACE_ROOT=/workspace \
+            -e CLAUDE_FILE_RULES=/docker-scripts/y2-plugin-deny-file-rules.json \
+            -e PROXY_WRAPPER_CONFIG=/docker-scripts/proxy_wrapper_config.json \
+            -e DISABLE_STOP_HOOK= \
+            -e ONESHOT_PROMPT_MESSAGE \
+            -v "$DOCKER_FILES/.cargo:/home/node/.cargo:Z" \
+            -v "$DOCKER_FILES/.credentials:/home/node/.claude:Z" \
+            -v "$DOCKER_FILES/.claude.local.json:/home/node/.claude.json:Z" \
+            -v "$DOCKER_FILES/.local:/home/node/.local:Z" \
+            -v "$GITHUB_WORKSPACE:/workspace:Z" \
+            $CLAUDE_EXTRA_DOCKER_ARGS \
+            ghcr.io/clockwork-pilot/rslite-ws:latest \
+            bash -c "source /docker-scripts/user-entrypoint.sh; \
+              claude --dangerously-skip-permissions \
+                --model $MODEL \
+                --plugin-dir /plugin \
+                -p \"\$ONESHOT_PROMPT_MESSAGE\""
+          echo "exit_code=$?" >> $GITHUB_OUTPUT
+          set -e
+
+      - name: Agent commit + constraints dry-run
+        id: finalize
+        if: always()
+        run: |
+          EXIT_CODE="${{ steps.agent.outputs.exit_code }}"
+          MODEL="${{ steps.issue.outputs.model }}"
+          MODEL="${MODEL:-claude-haiku-4-5}"
+          HEAD_BEFORE=$(git rev-parse HEAD)
+
+          DOCKER_COMMON=(
+            --rm
+            -e CLAUDE_PROJECT_ROOT=/workspace
+            -e WORKSPACE_ROOT=/workspace
+            -e CLAUDE_FILE_RULES=/docker-scripts/y2-plugin-deny-file-rules.json
+            -e PROXY_WRAPPER_CONFIG=/docker-scripts/proxy_wrapper_config.json
+            -e DISABLE_STOP_HOOK=
+            -v "$DOCKER_FILES/.cargo:/home/node/.cargo:Z"
+            -v "$DOCKER_FILES/.credentials:/home/node/.claude:Z"
+            -v "$DOCKER_FILES/.claude.local.json:/home/node/.claude.json:Z"
+            -v "$DOCKER_FILES/.local:/home/node/.local:Z"
+            -v "$GITHUB_WORKSPACE:/workspace:Z"
+          )
+
+          # Only attempt a commit if the agent run succeeded.
+          if [ "$EXIT_CODE" = "0" ]; then
+            docker run "${DOCKER_COMMON[@]}" $CLAUDE_EXTRA_DOCKER_ARGS \
+              ghcr.io/clockwork-pilot/rslite-ws:latest \
+              bash -c "source /docker-scripts/user-entrypoint.sh; \
+                claude --dangerously-skip-permissions --model $MODEL --plugin-dir /plugin -p 'commit changes'" || true
+          fi
+
+          # Always run the constraints dry-run to build the issue comment.
+          docker run "${DOCKER_COMMON[@]}" \
+            ghcr.io/clockwork-pilot/rslite-ws:latest \
+            bash -c "source /docker-scripts/user-entrypoint.sh; \
+              python /plugin/constraints_tool/constraints_tool/check_spec_constraints.py --dry-run" \
+            > /tmp/constraints.md 2>&1 || true
+
+          HEAD_AFTER=$(git rev-parse HEAD)
+          if [ "$HEAD_BEFORE" != "$HEAD_AFTER" ]; then
+            echo "has_new_commit=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_new_commit=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Push branch and open PR
+        if: steps.finalize.outputs.has_new_commit == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          BRANCH="${{ steps.issue.outputs.branch }}"
+          git push origin "$BRANCH"
+          COMMIT_MSG=$(git log -1 --pretty=%B HEAD)
+          {
+            echo "Refs #${{ inputs.issue_number }}"
+            echo
+            echo "$COMMIT_MSG"
+          } > /tmp/pr-body.md
+          gh pr create \
+            --title "[AGENT] ${{ steps.issue.outputs.title }}" \
+            --body-file /tmp/pr-body.md \
+            --head "$BRANCH" \
+            || true   # tolerate 'pr already exists' on re-runs
+          gh issue comment "${{ inputs.issue_number }}" --body-file /tmp/constraints.md
+
+      - name: Comment on issue (no PR)
+        if: steps.finalize.outputs.has_new_commit != 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          EXIT_CODE="${{ steps.agent.outputs.exit_code }}"
+          if [ "$EXIT_CODE" = "0" ]; then
+            echo "Agent ran successfully but produced no new commit." > /tmp/msg.md
+            echo >> /tmp/msg.md
+            cat /tmp/constraints.md >> /tmp/msg.md
+            gh issue comment "${{ inputs.issue_number }}" --body-file /tmp/msg.md
+          else
+            gh issue comment "${{ inputs.issue_number }}" --body-file /tmp/constraints.md
+          fi
