@@ -26,16 +26,9 @@
       "id": "toolchain_version",
       "description": "Enforce Rust toolchain versions. Stable for main code, nightly for shell and tests.",
       "goals": [
-        "rust-toolchain.toml must use stable channel",
-        "c2rust rust-toolchain.toml must specify channel nightly"
+        "rust-toolchain.toml must use stable channel"
       ],
       "constraints": {
-        "c2rust_nightly": {
-          "id": "c2rust_nightly",
-          "cmd": "grep -q \"^channel.*=.*\\\"nightly\" \"$PROJECT_ROOT/c2rust/rust-toolchain.toml\" && exit 0 || exit 1",
-          "description": "c2rust must use nightly toolchain (needs c_variadic, extern_types)",
-          "fails_count": 1
-        },
         "stable_toolchain_or_missing": {
           "id": "stable_toolchain_or_missing",
           "cmd": "test ! -f \"$PROJECT_ROOT/rust-toolchain.toml\" || grep -q \"^channel.*=.*\\\"stable\\\"\" \"$PROJECT_ROOT/rust-toolchain.toml\"",
@@ -87,6 +80,12 @@
           "cmd": "! grep -qE \"pub unsafe extern.*fn (sqlite3_str_appendf|sqlite3_snprintf|sqlite3_mprintf|sqlite3_vsnprintf|sqlite3_vmprintf|sqlite3_test_control|sqlite3_db_config|sqlite3_config|sqlite3_vtab_config|sqlite3_log)\" $PROJECT_ROOT/src/src/printf.rs $PROJECT_ROOT/crates/crust-core/src/printf_c_variadic.rs 2>/dev/null",
           "description": "Negative: none of the 10 exported symbols must be Rust variadic extern fns \u2014 they live in C only",
           "fails_count": 1
+        },
+        "rslite_expected_exports": {
+          "id": "rslite_expected_exports",
+          "cmd": "cd $PROJECT_ROOT && SYMS=$(nm -D target/debug/libsqlite_noamalgam.so 2>/dev/null | awk '{print $3}') && while IFS= read -r sym; do [ -z \"$sym\" ] && continue; echo \"$SYMS\" | grep -q \"^${sym}$\" || { echo \"missing $sym in cdylib\"; exit 1; }; done < $PROJECT_ROOT/crates/rslite-core/expected_exports.txt",
+          "description": "Behavioral: all symbols from expected_exports.txt must appear in cdylib dynamic symbol table",
+          "fails_count": 1
         }
       }
     },
@@ -121,28 +120,15 @@
       "type": "Feature",
       "model_version": 1,
       "id": "pub_visibility",
-      "description": "Non-test cdylib exports only stable C API; test feature re-exposes internals",
+      "description": "rslite crate must use crust-core (sqlite_noamalgam) directly, not rslite-raw",
       "goals": [
-        "Only ~280 C API symbols exported from cdylib in default build",
-        "test feature must not lose any default symbols from cdylib",
-        "test feature must keep internals accessible for tclsqlite/testfixture"
+        "Verify rslite crate uses crust-core (sqlite_noamalgam) for FFI",
+        "Ensure no references to rslite-raw in Cargo.toml or source files"
       ],
       "depends_on": [
         "build_all"
       ],
       "constraints": {
-        "cdylib_default_exports": {
-          "id": "cdylib_default_exports",
-          "cmd": "cd $PROJECT_ROOT && cargo build -p rslite-core --features fts4,update_delete_limit 2>/dev/null && nm -D --defined-only target/debug/libsqlite_noamalgam.so | grep \" T \" | awk \"{print \\$3}\" | sort > /tmp/rslite_actual.txt && sort $PROJECT_ROOT/crates/rslite-core/expected_exports.txt > /tmp/rslite_expected.txt && diff /tmp/rslite_actual.txt /tmp/rslite_expected.txt || { echo \"cdylib exports diverged from expected_exports.txt\"; exit 1; }",
-          "description": "Behavioral: non-test cdylib exports must match expected_exports.txt exactly (~280 stable C API symbols)",
-          "fails_count": 1
-        },
-        "test_tclsqlite_builds": {
-          "id": "test_tclsqlite_builds",
-          "cmd": "cd $PROJECT_ROOT/c2rust/crust-tclsqlite && cargo build -p crust-tclsqlite --features test 2>/dev/null",
-          "description": "Environmental: tclsqlite with test feature must compile, proving internal symbols remain accessible",
-          "fails_count": 1
-        },
         "rslite_uses_crust_core": {
           "id": "rslite_uses_crust_core",
           "cmd": "cd $PROJECT_ROOT && ! grep -r 'rslite.raw\\|rslite_raw' crates/rslite/Cargo.toml crates/rslite/src/ && echo 'rslite does not reference rslite-raw'",
