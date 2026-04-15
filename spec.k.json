@@ -83,7 +83,7 @@
         },
         "rslite_expected_exports": {
           "id": "rslite_expected_exports",
-          "cmd": "cd $PROJECT_ROOT && SYMS=$(nm -D target/debug/libsqlite_noamalgam.so 2>/dev/null | awk '{print $3}') && while IFS= read -r sym; do [ -z \"$sym\" ] && continue; echo \"$SYMS\" | grep -q \"^${sym}$\" || { echo \"missing $sym in cdylib\"; exit 1; }; done < $PROJECT_ROOT/crates/rslite-core/expected_exports.txt",
+          "cmd": "cd $PROJECT_ROOT && SYMS=$(nm -D target/release/libsqlite_noamalgam.so 2>/dev/null | awk '{print $3}') && while IFS= read -r sym; do [ -z \"$sym\" ] && continue; echo \"$SYMS\" | grep -q \"^${sym}$\" || { echo \"missing $sym in cdylib\"; exit 1; }; done < $PROJECT_ROOT/crates/rslite-core/expected_exports.txt",
           "description": "Behavioral: all symbols from expected_exports.txt must appear in cdylib dynamic symbol table",
           "fails_count": 1
         }
