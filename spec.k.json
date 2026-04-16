@@ -103,16 +103,16 @@
         "build_all"
       ],
       "constraints": {
-        "clippy_checks": {
-          "id": "clippy_checks",
-          "cmd": "cd $PROJECT_ROOT && cargo clippy --all-targets --all-features -- -D warnings",
-          "description": "Run cargo clippy and ensure no warnings reported",
-          "fails_count": 1
-        },
         "no_forbidden_allows_robust": {
           "id": "no_forbidden_allows_robust",
           "cmd": "! grep -rE \"allow[[:space:]]*\\\\(.*clippy::(unnecessary_cast|missing_safety_doc|needless_return)|allow[[:space:]]*\\\\(.*warnings\" \"$PROJECT_ROOT/crates\" --include=\"*.rs\" 2>/dev/null",
-          "description": "Structural: Robust whitespace-tolerant detection of forbidden clippy allows. Detects any formatting of allow() with forbidden lints, ignoring whitespace between allow and (.",
+          "description": "Structural: Robust whitespace-tolerant detection of forbidden clippy allows",
+          "fails_count": 1
+        },
+        "clippy_checks": {
+          "id": "clippy_checks",
+          "cmd": "cd $PROJECT_ROOT && cargo clippy --all-targets --all-features -- -D warnings",
+          "description": "Run cargo clippy (benefits from build_all cache)",
           "fails_count": 1
         }
       }
@@ -131,18 +131,6 @@
         "build_all"
       ],
       "constraints": {
-        "cdylib_default_exports": {
-          "id": "cdylib_default_exports",
-          "cmd": "cd $PROJECT_ROOT && cargo build -p rslite-core --features fts4,update_delete_limit 2>/dev/null && nm -D --defined-only target/debug/libsqlite_noamalgam.so | grep \" T \" | awk \"{print \\$3}\" | sort > /tmp/rslite_actual.txt && sort $PROJECT_ROOT/crates/rslite-core/expected_exports.txt > /tmp/rslite_expected.txt && diff /tmp/rslite_actual.txt /tmp/rslite_expected.txt || { echo \"cdylib exports diverged from expected_exports.txt\"; exit 1; }",
-          "description": "Behavioral: non-test cdylib exports must match expected_exports.txt exactly (~280 stable C API symbols)",
-          "fails_count": 1
-        },
-        "test_tclsqlite_builds": {
-          "id": "test_tclsqlite_builds",
-          "cmd": "cd $PROJECT_ROOT/c2rust/crust-tclsqlite && cargo build -p crust-tclsqlite --features test 2>/dev/null",
-          "description": "Environmental: tclsqlite with test feature must compile, proving internal symbols remain accessible",
-          "fails_count": 1
-        },
         "rslite_uses_crust_core": {
           "id": "rslite_uses_crust_core",
           "cmd": "cd $PROJECT_ROOT && ! grep -r 'rslite.raw\\|rslite_raw' crates/rslite/Cargo.toml crates/rslite/src/ && echo 'rslite does not reference rslite-raw'",

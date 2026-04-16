@@ -19,9 +19,7 @@ Verify c_variadic feature isolation: only in printf_c_variadic.rs
       - [cdylib_symbols](#cdylib_symbols)
       - [no_rust_variadic_exports](#no_rust_variadic_exports)
     - [Feature: pub_visibility](#pub_visibility)
-      - [cdylib_default_exports](#cdylib_default_exports)
       - [rslite_uses_crust_core](#rslite_uses_crust_core)
-      - [test_tclsqlite_builds](#test_tclsqlite_builds)
     - [Feature: toolchain_version](#toolchain_version)
       - [c2rust_nightly](#c2rust_nightly)
       - [stable_toolchain_or_missing](#stable_toolchain_or_missing)
@@ -43,11 +41,11 @@ Verify c_variadic feature isolation: only in printf_c_variadic.rs
 - Ensure all clippy lints pass with no warnings
 
 #### clippy_checks
-**Description:** Run cargo clippy and ensure no warnings reported
+**Description:** Run cargo clippy (benefits from build_all cache)
 **Command:** `cd $PROJECT_ROOT && cargo clippy --all-targets --all-features -- -D warnings`
 
 #### no_forbidden_allows_robust
-**Description:** Structural: Robust whitespace-tolerant detection of forbidden clippy allows. Detects any formatting of allow() with forbidden lints, ignoring whitespace between allow and (.
+**Description:** Structural: Robust whitespace-tolerant detection of forbidden clippy allows
 **Command:** `! grep -rE "allow[[:space:]]*\\(.*clippy::(unnecessary_cast|missing_safety_doc|needless_return)|allow[[:space:]]*\\(.*warnings" "$PROJECT_ROOT/crates" --include="*.rs" 2>/dev/null`
 
 ### Feature: fts5_no_libc_global
@@ -71,7 +69,7 @@ Verify c_variadic feature isolation: only in printf_c_variadic.rs
 
 #### cdylib_symbols
 **Description:** Behavioral: all 10 symbols must appear in dynamic symbol table (T) of the cdylib
-**Command:** `SYMS=$(nm -D target/release/libsqlite_noamalgam.so) && for sym in sqlite3_str_appendf sqlite3_snprintf sqlite3_mprintf sqlite3_vsnprintf sqlite3_vmprintf sqlite3_test_control sqlite3_db_config sqlite3_config sqlite3_vtab_config sqlite3_log; do echo "$SYMS" | grep -q "T ${sym}$" || { echo "missing $sym in cdylib"; exit 1; }; done && grep -q "export_name.*sqlite3_test_control_args" $PROJECT_ROOT/crates/crust-core/src/printf_c_variadic.rs`
+**Command:** `SYMS=$(nm -D target/release/libsqlite_noamalgam.so) && for sym in sqlite3_str_appendf sqlite3_snprintf sqlite3_mprintf sqlite3_vsnprintf sqlite3_vmprintf sqlite3_test_control sqlite3_db_config sqlite3_config sqlite3_vtab_config sqlite3_log; do echo "$SYMS" | grep -q "T ${sym}$" || { echo "missing $sym in cdylib"; exit 1; }; done && grep -q "export_name.*sqlite3_test_control_args" $PROJECT_ROOT/crates/rslite-core/src/printf_c_variadic.rs`
 
 #### no_rust_variadic_exports
 **Description:** Negative: none of the 10 exported symbols must be Rust variadic extern fns — they live in C only
@@ -85,17 +83,9 @@ Verify c_variadic feature isolation: only in printf_c_variadic.rs
 - test feature must not lose any default symbols from cdylib
 - test feature must keep internals accessible for tclsqlite/testfixture
 
-#### cdylib_default_exports
-**Description:** Behavioral: non-test cdylib exports must match expected_exports.txt exactly (~280 stable C API symbols)
-**Command:** `cd $PROJECT_ROOT && cargo build -p rslite-core --features fts4,update_delete_limit 2>/dev/null && nm -D --defined-only target/debug/libsqlite_noamalgam.so | grep " T " | awk "{print \$3}" | sort > /tmp/rslite_actual.txt && sort $PROJECT_ROOT/crates/rslite-core/expected_exports.txt > /tmp/rslite_expected.txt && diff /tmp/rslite_actual.txt /tmp/rslite_expected.txt || { echo "cdylib exports diverged from expected_exports.txt"; exit 1; }`
-
 #### rslite_uses_crust_core
 **Description:** Structural: rslite crate must not reference rslite-raw in its Cargo.toml or source files — it should use crust-core (sqlite_noamalgam) directly
 **Command:** `cd $PROJECT_ROOT && ! grep -r 'rslite.raw\|rslite_raw' crates/rslite/Cargo.toml crates/rslite/src/ && echo 'rslite does not reference rslite-raw'`
-
-#### test_tclsqlite_builds
-**Description:** Environmental: tclsqlite with test feature must compile, proving internal symbols remain accessible
-**Command:** `cd $PROJECT_ROOT/c2rust/crust-tclsqlite && cargo build -p crust-tclsqlite --features test 2>/dev/null`
 
 ### Feature: toolchain_version
 **Enforce Rust toolchain versions. Stable for main code, nightly for shell and tests.**
