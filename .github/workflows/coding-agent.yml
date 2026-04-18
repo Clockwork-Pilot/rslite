@@ -13,7 +13,34 @@ on:
         type: string
 
 jobs:
+  validate-runner:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate runner availability
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RUNNER_LABEL: ${{ inputs.runner_label }}
+        run: |
+          echo "::group::Validating Runner"
+          echo "Checking for self-hosted runner with label: $RUNNER_LABEL"
+
+          runners=$(gh api repos/${{ github.repository }}/actions/runners \
+            --jq '.runners[] | select(.labels[].name == "'$RUNNER_LABEL'") | .id' 2>/dev/null || echo "")
+
+          if [ -z "$runners" ]; then
+            echo "::error::No self-hosted runner found with label '$RUNNER_LABEL'"
+            echo ""
+            echo "Available runners:"
+            gh api repos/${{ github.repository }}/actions/runners \
+              --jq '.runners[] | "\(.id): \(.name) (labels: \(.labels[].name | join(", ")))"' || true
+            exit 1
+          fi
+
+          echo "✓ Found runner(s) with label: $RUNNER_LABEL"
+          echo "::endgroup::"
+
   run-agent:
+    needs: validate-runner
     runs-on: [self-hosted, "${{ inputs.runner_label }}"]
     permissions:
       contents: write
