@@ -108,6 +108,9 @@ jobs:
       # No ghcr.io login needed: ghcr.io/clockwork-pilot/rslite-ws is a public package.
       # If it's ever made private again, re-add a docker login step with a PAT.
 
+      - name: Pull latest agent image
+        run: docker pull ghcr.io/clockwork-pilot/rslite-ws:latest
+
       - name: Run Claude agent in Docker
         id: agent
         run: |
