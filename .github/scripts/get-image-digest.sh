@@ -8,27 +8,24 @@ echo "::group::Image Digest Extraction"
 manifest=$(docker manifest inspect ghcr.io/clockwork-pilot/rslite-ws:latest 2>&1)
 echo "Manifest received (length: ${#manifest})"
 
-digest=$(cat <<'PYTHON' | python3
+digest=$(echo "$manifest" | python3 -c '
 import sys, json
 
 try:
   m = json.load(sys.stdin)
-  if 'manifests' in m:
-    digest = m['manifests'][0]['digest']
-  elif 'config' in m:
-    digest = m['config']['digest']
+  if "manifests" in m:
+    digest = m["manifests"][0]["digest"]
+  elif "config" in m:
+    digest = m["config"]["digest"]
   else:
-    raise ValueError('No digest found in manifest')
+    raise ValueError("No digest found in manifest")
   if not digest:
-    raise ValueError('Digest is empty')
+    raise ValueError("Digest is empty")
   print(digest)
 except Exception as e:
-  print(f'ERROR: Failed to extract digest: {e}', file=sys.stderr)
-  import sys
+  print(f"ERROR: Failed to extract digest: {e}", file=sys.stderr)
   sys.exit(1)
-PYTHON
-echo "$manifest"
-)
+')
 
 if [ -z "$digest" ]; then
   echo "::error::Failed to extract image digest - digest is empty"
