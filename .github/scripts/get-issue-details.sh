@@ -24,7 +24,13 @@ echo "::endgroup::"
 #   timeout: 30              # minutes (default 10)
 #   model: claude-opus-4-6   # default: claude-haiku-4-5
 #   ---
-YAML_PART=$(printf '%s\n' "$BODY" | grep -Pzo '(?s)^---\r?\n\K.*?(?=\r?\n---(\r?\n|$))' | tr -d '\0' || true)
+# Extract YAML between --- markers using sed (portable, no grep -P)
+YAML_PART=$(printf '%s\n' "$BODY" | sed -n '/^---$/,/^---$/p' | sed '1d;$d' || true)
+if [ -n "$YAML_PART" ]; then
+  echo "DEBUG: Found YAML: ${#YAML_PART} chars" >&2
+else
+  echo "DEBUG: No YAML frontmatter found" >&2
+fi
 TIMEOUT_MINS=""
 MODEL=""
 BASE_BRANCH=""
