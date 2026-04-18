@@ -182,20 +182,27 @@ jobs:
             -v "$GITHUB_WORKSPACE:/workspace:Z"
           )
 
-          # Only attempt a commit if the agent run succeeded.
-          if [ "$EXIT_CODE" = "0" ]; then
-            docker run "${DOCKER_COMMON[@]}" $CLAUDE_EXTRA_DOCKER_ARGS \
-              ghcr.io/clockwork-pilot/rslite-ws:latest \
-              bash -c "source /docker-scripts/user-entrypoint.sh; \
-                claude --dangerously-skip-permissions --model $MODEL --plugin-dir /plugin -p 'commit changes'" || true
-          fi
-
-          # Always run the constraints dry-run to build the issue comment.
+          # Run the constraints dry-run FIRST — its stdout becomes the issue
+          # comment, and its exit code gates whether we attempt a commit.
+          # We only commit when constraints pass cleanly (exit 0).
+          set +e
           docker run "${DOCKER_COMMON[@]}" \
             ghcr.io/clockwork-pilot/rslite-ws:latest \
             bash -c "source /docker-scripts/user-entrypoint.sh; \
               python /plugin/constraints_tool/constraints_tool/check_spec_constraints.py --dry-run" \
-            > /tmp/constraints.md 2>&1 || true
+            > /tmp/constraints.md 2>&1
+          CONSTRAINTS_EXIT=$?
+          set -e
+          echo "constraints_exit=$CONSTRAINTS_EXIT" >> $GITHUB_OUTPUT
+
+          if [ "$EXIT_CODE" = "0" ] && [ "$CONSTRAINTS_EXIT" = "0" ]; then
+            docker run "${DOCKER_COMMON[@]}" $CLAUDE_EXTRA_DOCKER_ARGS \
+              ghcr.io/clockwork-pilot/rslite-ws:latest \
+              bash -c "source /docker-scripts/user-entrypoint.sh; \
+                claude --dangerously-skip-permissions --model $MODEL --plugin-dir /plugin -p 'commit changes'" || true
+          else
+            echo "::notice::Skipping commit (agent exit=$EXIT_CODE, constraints exit=$CONSTRAINTS_EXIT)"
+          fi
 
           HEAD_AFTER=$(git rev-parse HEAD)
           if [ "$HEAD_BEFORE" != "$HEAD_AFTER" ]; then
