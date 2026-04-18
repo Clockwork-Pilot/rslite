@@ -53,7 +53,7 @@ jobs:
 
     steps:
       - name: Checkout repo into isolated workspace
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
           persist-credentials: true
@@ -102,6 +102,10 @@ jobs:
 
       - name: Prepare docker-files directories
         run: |
+          # DOCKER_FILES must be set in the self-hosted runner's service env
+          # (e.g. actions-runner/.env). It points at the host dir holding
+          # persistent Claude credentials/cargo caches mounted into the agent.
+          : "${DOCKER_FILES:?DOCKER_FILES not set in runner env — configure it in the runner service env (actions-runner/.env)}"
           mkdir -p "$DOCKER_FILES/.credentials" "$DOCKER_FILES/.cargo" "$DOCKER_FILES/.local"
           [ -s "$DOCKER_FILES/.claude.local.json" ] || printf '{}\n' > "$DOCKER_FILES/.claude.local.json"
 
@@ -115,7 +119,6 @@ jobs:
         id: agent
         run: |
           MODEL="${{ steps.issue.outputs.model }}"
-          MODEL="${MODEL:-claude-haiku-4-5}"
           TIMEOUT_SECS="${{ steps.issue.outputs.timeout_secs }}"
 
           # Surface hook events (Edit/Write paths, prompts, session boundaries)
@@ -129,7 +132,8 @@ jobs:
           setsid bash .github/scripts/tail_hooks_log.sh \
             "$GITHUB_WORKSPACE/hooks_log/hooks.log" &
           TAIL_PID=$!
-          trap 'kill -- -"$TAIL_PID" 2>/dev/null || true' EXIT
+          disown "$TAIL_PID" 2>/dev/null || true
+          trap '{ kill -- -"$TAIL_PID"; wait "$TAIL_PID"; } >/dev/null 2>&1 || true' EXIT
 
           echo "::group::Claude Agent Output"
           set +e
@@ -149,7 +153,7 @@ jobs:
               claude --dangerously-skip-permissions \
                 --model $MODEL \
                 --plugin-dir /plugin \
-                -p \"\$ONESHOT_PROMPT_MESSAGE\"" 2>&1 | tee /tmp/agent.log
+                -p \"\$ONESHOT_PROMPT_MESSAGE\""
           EXIT_CODE=$?
           echo "::endgroup::"
           echo "exit_code=$EXIT_CODE" >> $GITHUB_OUTPUT
@@ -161,7 +165,6 @@ jobs:
         run: |
           EXIT_CODE="${{ steps.agent.outputs.exit_code }}"
           MODEL="${{ steps.issue.outputs.model }}"
-          MODEL="${MODEL:-claude-haiku-4-5}"
           HEAD_BEFORE=$(git rev-parse HEAD)
 
           DOCKER_COMMON=(

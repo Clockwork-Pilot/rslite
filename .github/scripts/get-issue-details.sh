@@ -41,22 +41,22 @@ if [ -n "$YAML_PART" ]; then
   # Remove YAML block: delete from start to first ---, then start to second ---
   BODY=$(printf '%s\n' "$BODY" | sed '0,/^---\s*$/d' | sed '0,/^---\s*$/d')
 
-  if [ -z "$(which yq)" ]; then
-    echo "::warning::yq not installed, skipping YAML parsing" >&2
-  else
-    # Assumes python-yq (kislyuk/yq, jq wrapper) — installed via `pip install yq`,
-    # see README Prerequisites. Do NOT swap to mikefarah/yq (Go): it rejects `-r`
-    # and uses different filter syntax, which would silently break this parsing.
-    # GitHub issue bodies are CRLF — strip CRs so yq doesn't choke on '\r'.
-    YAML_PART=$(printf '%s' "$YAML_PART" | tr -d '\r')
-
-    # Stderr intentionally NOT redirected — surface real yq errors.
-    TIMEOUT_MINS=$(yq -r '.timeout // ""'     <<< "$YAML_PART" || true)
-    MODEL=$(yq        -r '.model // ""'       <<< "$YAML_PART" || true)
-    BASE_BRANCH=$(yq  -r '.base_branch // ""' <<< "$YAML_PART" || true)
-    PR_BRANCH=$(yq    -r '.pr_branch // ""'   <<< "$YAML_PART" || true)
-    echo "DEBUG: timeout=$TIMEOUT_MINS model=$MODEL base_branch=$BASE_BRANCH pr_branch=$PR_BRANCH" >&2
+  if ! command -v yq >/dev/null 2>&1; then
+    echo "::error::yq not installed but issue has YAML frontmatter — cannot honor timeout/model/base_branch/pr_branch config. Install python-yq on the runner: pip install yq" >&2
+    exit 1
   fi
+
+  # Assumes python-yq (kislyuk/yq, jq wrapper) — installed via `pip install yq`.
+  # Do NOT swap to mikefarah/yq (Go): it rejects `-r` and uses different filter
+  # syntax, which would silently break this parsing.
+  # GitHub issue bodies are CRLF — strip CRs so yq doesn't choke on '\r'.
+  YAML_PART=$(printf '%s' "$YAML_PART" | tr -d '\r')
+
+  TIMEOUT_MINS=$(yq -r '.timeout // ""'     <<< "$YAML_PART" || true)
+  MODEL=$(yq        -r '.model // ""'       <<< "$YAML_PART" || true)
+  BASE_BRANCH=$(yq  -r '.base_branch // ""' <<< "$YAML_PART" || true)
+  PR_BRANCH=$(yq    -r '.pr_branch // ""'   <<< "$YAML_PART" || true)
+  echo "DEBUG: timeout=$TIMEOUT_MINS model=$MODEL base_branch=$BASE_BRANCH pr_branch=$PR_BRANCH" >&2
 
   # yq may emit the literal string "null" when a key resolves to null
   [ "$TIMEOUT_MINS" = "null" ] && TIMEOUT_MINS=""
