@@ -21,10 +21,7 @@ jobs:
 
       - name: Get image digest
         id: image-digest
-        run: |
-          digest=$(docker manifest inspect ghcr.io/clockwork-pilot/rslite-ws:latest \
-            | python3 -c "import sys,json; m=json.load(sys.stdin); print(m.get('config',{}).get('digest','') or m['manifests'][0]['digest'])")
-          echo "digest=$digest" >> $GITHUB_OUTPUT
+        run: bash ${{ github.workspace }}/rslite/.github/scripts/get-image-digest.sh
 
       - name: Cache Docker image
         id: cache-image
@@ -35,20 +32,17 @@ jobs:
 
       - name: Load cached image
         if: steps.cache-image.outputs.cache-hit == 'true'
-        run: docker load < /tmp/rslite-ws.tar
+        run: bash ${{ github.workspace }}/rslite/.github/scripts/docker-cache.sh load
 
       - name: Pull image and save to cache
         if: steps.cache-image.outputs.cache-hit != 'true'
-        run: |
-          docker pull ghcr.io/clockwork-pilot/rslite-ws:latest
-          docker save ghcr.io/clockwork-pilot/rslite-ws:latest > /tmp/rslite-ws.tar
+        run: bash ${{ github.workspace }}/rslite/.github/scripts/docker-cache.sh save
 
       - name: Run constraint checks
         id: constraints
         run: |
+          echo "::group::Constraint Checks"
           docker run --rm \
-            -e CLAUDE_PROJECT_ROOT=/workspace \
-            -e WORKSPACE_ROOT=/workspace \
             -v ${{ github.workspace }}/rslite:/workspace \
             ghcr.io/clockwork-pilot/rslite-ws:latest \
             bash -c "source /docker-scripts/user-entrypoint.sh; \
@@ -56,4 +50,8 @@ jobs:
               echo '--- Spec checks results ---'; \
               cat /workspace/spec-checks.k.md; \
               echo '--- testrunner failures ---'; \
-              grep 'errors out of' /sqlite/testrunner.log 2>/dev/null | grep -v '^0 errors' || echo '(no testrunner.log failures found)'; exit 1; }"
+              grep 'errors out of' /sqlite/testrunner.log 2>/dev/null | grep -v '^0 errors' || echo '(no testrunner.log failures found)'; exit 1; }" || {
+            echo "::error::Constraint checks failed"
+            exit 1
+          }
+          echo "::endgroup::"

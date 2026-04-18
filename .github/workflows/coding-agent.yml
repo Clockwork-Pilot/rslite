@@ -31,50 +31,7 @@ jobs:
         id: issue
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          ISSUE=$(gh api repos/${{ github.repository }}/issues/${{ inputs.issue_number }})
-          TITLE=$(echo "$ISSUE" | jq -r '.title')
-          BODY=$(echo "$ISSUE" | jq -r '.body // ""')
-          echo "title=${TITLE}" >> $GITHUB_OUTPUT
-          SLUG=$(echo "$TITLE" | tr '[:upper:]' '[:lower:]' | tr -cs 'a-z0-9' '-' | sed 's/-\+/-/g;s/^-//;s/-$//' | cut -c1-100)
-          ISSUE_NUM="${{ inputs.issue_number }}"
-          EXISTING=$(gh api "repos/${{ github.repository }}/branches" --paginate -q ".[].name" \
-            | grep -E "^agent/${ISSUE_NUM}(-|$)" | head -1 || true)
-          if [ -n "$EXISTING" ]; then
-            echo "Reusing existing branch: $EXISTING"
-            echo "branch=$EXISTING" >> $GITHUB_OUTPUT
-          else
-            echo "branch=agent/${ISSUE_NUM}-${SLUG}" >> $GITHUB_OUTPUT
-          fi
-
-          # Parse optional YAML frontmatter block at top of body:
-          #   ---
-          #   timeout: 30              # minutes (default 10)
-          #   model: claude-opus-4-6   # default: claude-haiku-4-5
-          #   ---
-          # Unknown fields are ignored but the block is stripped from the prompt.
-          # Accept closing --- with or without a trailing newline (issues may not end with \n).
-          YAML_PART=$(printf '%s\n' "$BODY" | grep -Pzo '(?s)^---\r?\n\K.*?(?=\r?\n---(\r?\n|$))' | tr -d '\0' || true)
-          TIMEOUT_MINS=""
-          MODEL=""
-          if [ -n "$YAML_PART" ]; then
-            BODY=$(printf '%s\n' "$BODY" | sed '1,/^---\s*$/d; 1,/^---\s*$/d')
-            TIMEOUT_MINS=$(yq -r '.timeout // ""' <<< "$YAML_PART" 2>/dev/null || true)
-            MODEL=$(yq -r '.model // ""' <<< "$YAML_PART" 2>/dev/null || true)
-            # yq may emit the literal string "null" when a key resolves to null
-            [ "$TIMEOUT_MINS" = "null" ] && TIMEOUT_MINS=""
-            [ "$MODEL" = "null" ] && MODEL=""
-          fi
-          TIMEOUT_SECS=$(( ${TIMEOUT_MINS:-10} * 60 ))
-          echo "timeout_secs=${TIMEOUT_SECS}" >> $GITHUB_OUTPUT
-          echo "model=${MODEL}" >> $GITHUB_OUTPUT
-
-          {
-            echo "ONESHOT_PROMPT_MESSAGE<<EOF"
-            echo "$TITLE"
-            echo "$BODY"
-            echo "EOF"
-          } >> $GITHUB_ENV
+        run: bash .github/scripts/get-issue-details.sh ${{ inputs.issue_number }} ${{ github.repository }}
 
       - name: Create or checkout branch
         run: |
@@ -103,10 +60,9 @@ jobs:
           MODEL="${MODEL:-claude-haiku-4-5}"
           TIMEOUT_SECS="${{ steps.issue.outputs.timeout_secs }}"
 
+          echo "::group::Claude Agent Output"
           set +e
           timeout "$TIMEOUT_SECS" docker run --rm \
-            -e CLAUDE_PROJECT_ROOT=/workspace \
-            -e WORKSPACE_ROOT=/workspace \
             -e CLAUDE_FILE_RULES=/docker-scripts/y2-plugin-deny-file-rules.json \
             -e PROXY_WRAPPER_CONFIG=/docker-scripts/proxy_wrapper_config.json \
             -e DISABLE_STOP_HOOK= \
@@ -122,8 +78,10 @@ jobs:
               claude --dangerously-skip-permissions \
                 --model $MODEL \
                 --plugin-dir /plugin \
-                -p \"\$ONESHOT_PROMPT_MESSAGE\""
-          echo "exit_code=$?" >> $GITHUB_OUTPUT
+                -p \"\$ONESHOT_PROMPT_MESSAGE\"" 2>&1 | tee /tmp/agent.log
+          EXIT_CODE=$?
+          echo "::endgroup::"
+          echo "exit_code=$EXIT_CODE" >> $GITHUB_OUTPUT
           set -e
 
       - name: Agent commit + constraints dry-run
@@ -137,8 +95,6 @@ jobs:
 
           DOCKER_COMMON=(
             --rm
-            -e CLAUDE_PROJECT_ROOT=/workspace
-            -e WORKSPACE_ROOT=/workspace
             -e CLAUDE_FILE_RULES=/docker-scripts/y2-plugin-deny-file-rules.json
             -e PROXY_WRAPPER_CONFIG=/docker-scripts/proxy_wrapper_config.json
             -e DISABLE_STOP_HOOK=
