@@ -14,6 +14,10 @@ tail -F -n 0 "$LOG" 2>/dev/null \
   | grep --line-buffered -E '"event": "(Edit|Write|MultiEdit|UserPromptSubmit|SessionStart|SessionEnd|Notification|Stop)"' \
   | sed -u -E '
       s#.*"event": "(Edit|Write|MultiEdit)".*"file_path": "([^"]+)".*#[hook] \1 \2#; t;
-      s#.*"event": "UserPromptSubmit".*"prompt": "([^"]{0,200}).*#[hook] prompt: \1#; t;
+      s#.*"event": "UserPromptSubmit".*"prompt": "([^"]{0,1000}).*#[hook] prompt: \1#; t;
+      s#.*"event": "SessionStart".*"model": "([^"]+)".*#[hook] SessionStart model=\1#; t;
+      s#.*"event": "SessionEnd".*"reason": "([^"]+)".*#[hook] SessionEnd reason=\1#; t;
+      s#.*"event": "Notification".*"message": "([^"]{0,1000}).*#[hook] Notification: \1#; t;
+      s#.*"event": "Stop".*"last_assistant_message": "(([^"\\]|\\.){0,2000}).*#[hook] assistant: \1#; t;
       s#.*"event": "([^"]+)".*#[hook] \1#;
     '
