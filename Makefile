@@ -18,7 +18,7 @@ NPROC := $(shell nproc)
 DEBUG ?= 0
 VERBOSE ?= 0
 ORIGINAL ?= 0
-FEATURES ?=test,fts4,update_delete_limit
+FEATURES ?= --all-features
 
 # Debug/Release selection
 ifeq ($(DEBUG),1)
@@ -83,13 +83,13 @@ RUST_TEST_SOURCES := $(shell find $(PROJ)/c2rust/crust-tclsqlite/src -name "*.rs
 $(PROJ)/target/debug/libsqlite_noamalgam.so: $(RUST_LIB_SOURCES)
 	@echo "→ Building Rust library (debug)..."
 	@cargo build --manifest-path $(PROJ)/Cargo.toml \
-		$(if $(FEATURES),--features $(FEATURES)) \
+		$(FEATURES) \
 		$(if $(filter 1,$(VERBOSE)),, --quiet)
 
 $(PROJ)/target/release/libsqlite_noamalgam.so: $(RUST_LIB_SOURCES)
 	@echo "→ Building Rust library (release)..."
 	@cargo build --release --manifest-path $(PROJ)/Cargo.toml \
-		$(if $(FEATURES),--features $(FEATURES)) \
+		$(FEATURES) \
 		$(if $(filter 1,$(VERBOSE)),, --quiet)
 
 # ============ C Build Targets ============
@@ -377,7 +377,7 @@ help:
 	@echo "  DEBUG=1                 Use debug mode instead of release"
 	@echo "  VERBOSE=1               Show full build output & warnings (quiet by default)"
 	@echo "  ORIGINAL=1              Run C tests with original C sqlite3 (no Rust library)"
-	@echo "  FEATURES=feat1,feat2    Cargo features to enable in the Rust library"
+	@echo "  FEATURES=...            Cargo build flags (default: --all-features)"
 	@echo ""
 	@echo "EXAMPLES:"
 	@echo "  make c-quick-tests      Quick test C (quiet)"
