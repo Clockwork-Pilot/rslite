@@ -44,10 +44,17 @@ if [ -n "$YAML_PART" ]; then
   if [ -z "$(which yq)" ]; then
     echo "::warning::yq not installed, skipping YAML parsing" >&2
   else
-    TIMEOUT_MINS=$(yq -r '.timeout // ""' <<< "$YAML_PART" 2>/dev/null || true)
-    MODEL=$(yq -r '.model // ""' <<< "$YAML_PART" 2>/dev/null || true)
-    BASE_BRANCH=$(yq -r '.base_branch // ""' <<< "$YAML_PART" 2>/dev/null || true)
-    PR_BRANCH=$(yq -r '.pr_branch // ""' <<< "$YAML_PART" 2>/dev/null || true)
+    # Assumes python-yq (kislyuk/yq, jq wrapper) — installed via `pip install yq`,
+    # see README Prerequisites. Do NOT swap to mikefarah/yq (Go): it rejects `-r`
+    # and uses different filter syntax, which would silently break this parsing.
+    # GitHub issue bodies are CRLF — strip CRs so yq doesn't choke on '\r'.
+    YAML_PART=$(printf '%s' "$YAML_PART" | tr -d '\r')
+
+    # Stderr intentionally NOT redirected — surface real yq errors.
+    TIMEOUT_MINS=$(yq -r '.timeout // ""'     <<< "$YAML_PART" || true)
+    MODEL=$(yq        -r '.model // ""'       <<< "$YAML_PART" || true)
+    BASE_BRANCH=$(yq  -r '.base_branch // ""' <<< "$YAML_PART" || true)
+    PR_BRANCH=$(yq    -r '.pr_branch // ""'   <<< "$YAML_PART" || true)
     echo "DEBUG: timeout=$TIMEOUT_MINS model=$MODEL base_branch=$BASE_BRANCH pr_branch=$PR_BRANCH" >&2
   fi
 
