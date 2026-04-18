@@ -11,6 +11,10 @@ on:
         description: Issue number to work on
         required: true
         type: string
+      target_branch:
+        description: Branch to work on (defaults to repo default branch)
+        required: false
+        type: string
 
 jobs:
   validate-runner:
@@ -64,7 +68,12 @@ jobs:
         run: |
           git fetch origin
           BRANCH="${{ steps.issue.outputs.branch }}"
-          BASE_BRANCH="${{ steps.issue.outputs.base_branch }}"
+          BASE_BRANCH="${{ inputs.target_branch }}"
+
+          # Priority: workflow input > issue YAML > repo default
+          if [ -z "$BASE_BRANCH" ]; then
+            BASE_BRANCH="${{ steps.issue.outputs.base_branch }}"
+          fi
 
           if git ls-remote --exit-code --heads origin "$BRANCH" >/dev/null 2>&1; then
             echo "Checking out existing branch: $BRANCH"
