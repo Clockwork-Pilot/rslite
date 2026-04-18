@@ -82,10 +82,9 @@ echo "model=${FINAL_MODEL}" >> $GITHUB_OUTPUT
 echo "base_branch=${BASE_BRANCH}" >> $GITHUB_OUTPUT
 echo "pr_branch=${PR_BRANCH}" >> $GITHUB_OUTPUT
 
-# Export prompt message to environment
+# Export prompt message to environment (body only — title is metadata for branch/PR naming)
 {
   echo "ONESHOT_PROMPT_MESSAGE<<EOF"
-  echo "$TITLE"
   echo "$BODY"
   echo "EOF"
 } >> $GITHUB_ENV
@@ -108,7 +107,6 @@ echo "::endgroup::"
 echo ""
 echo "::group::ONESHOT_PROMPT_MESSAGE (Claude will receive this)"
 cat <<EOF
-$TITLE
 $BODY
 EOF
 echo "::endgroup::"

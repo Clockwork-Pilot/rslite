@@ -118,6 +118,19 @@ jobs:
           MODEL="${MODEL:-claude-haiku-4-5}"
           TIMEOUT_SECS="${{ steps.issue.outputs.timeout_secs }}"
 
+          # Surface hook events (Edit/Write paths, prompts, session boundaries)
+          # into the workflow log while `claude -p` runs silently inside Docker.
+          # Truncate first so the tailer doesn't replay events from previous runs.
+          # `setsid` isolates the tailer in its own process group so the EXIT
+          # trap can take it down without signalling this shell.
+          mkdir -p "$GITHUB_WORKSPACE/hooks_log"
+          : > "$GITHUB_WORKSPACE/hooks_log/hooks.log"
+          chmod +x .github/scripts/tail_hooks_log.sh
+          setsid bash .github/scripts/tail_hooks_log.sh \
+            "$GITHUB_WORKSPACE/hooks_log/hooks.log" &
+          TAIL_PID=$!
+          trap 'kill -- -"$TAIL_PID" 2>/dev/null || true' EXIT
+
           echo "::group::Claude Agent Output"
           set +e
           timeout "$TIMEOUT_SECS" docker run --rm \
