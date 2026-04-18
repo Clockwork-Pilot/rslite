@@ -28,6 +28,7 @@ YAML_PART=$(printf '%s\n' "$BODY" | grep -Pzo '(?s)^---\r?\n\K.*?(?=\r?\n---(\r?
 TIMEOUT_MINS=""
 MODEL=""
 BASE_BRANCH=""
+PR_BRANCH=""
 
 if [ -n "$YAML_PART" ]; then
   echo "DEBUG: Found YAML frontmatter, parsing..." >&2
@@ -40,13 +41,15 @@ if [ -n "$YAML_PART" ]; then
     TIMEOUT_MINS=$(yq -r '.timeout // ""' <<< "$YAML_PART" 2>/dev/null || true)
     MODEL=$(yq -r '.model // ""' <<< "$YAML_PART" 2>/dev/null || true)
     BASE_BRANCH=$(yq -r '.base_branch // ""' <<< "$YAML_PART" 2>/dev/null || true)
-    echo "DEBUG: timeout=$TIMEOUT_MINS model=$MODEL base_branch=$BASE_BRANCH" >&2
+    PR_BRANCH=$(yq -r '.pr_branch // ""' <<< "$YAML_PART" 2>/dev/null || true)
+    echo "DEBUG: timeout=$TIMEOUT_MINS model=$MODEL base_branch=$BASE_BRANCH pr_branch=$PR_BRANCH" >&2
   fi
 
   # yq may emit the literal string "null" when a key resolves to null
   [ "$TIMEOUT_MINS" = "null" ] && TIMEOUT_MINS=""
   [ "$MODEL" = "null" ] && MODEL=""
   [ "$BASE_BRANCH" = "null" ] && BASE_BRANCH=""
+  [ "$PR_BRANCH" = "null" ] && PR_BRANCH=""
 fi
 
 echo "title=${TITLE}" >> $GITHUB_OUTPUT
@@ -71,6 +74,7 @@ FINAL_MODEL="${MODEL:-claude-haiku-4-5}"
 echo "timeout_secs=${TIMEOUT_SECS}" >> $GITHUB_OUTPUT
 echo "model=${FINAL_MODEL}" >> $GITHUB_OUTPUT
 echo "base_branch=${BASE_BRANCH}" >> $GITHUB_OUTPUT
+echo "pr_branch=${PR_BRANCH}" >> $GITHUB_OUTPUT
 
 # Export prompt message to environment
 {
@@ -84,9 +88,12 @@ echo "base_branch=${BASE_BRANCH}" >> $GITHUB_OUTPUT
 echo ""
 echo "::group::Issue Details Summary"
 echo "Issue #${ISSUE_NUMBER}: $TITLE"
-echo "Branch: agent/${ISSUE_NUMBER}-${SLUG}"
+if [ -n "$PR_BRANCH" ]; then
+  echo "PR branch (merge to): $PR_BRANCH"
+fi
+echo "Work branch: agent/${ISSUE_NUMBER}-${SLUG}"
 if [ -n "$BASE_BRANCH" ]; then
-  echo "Base branch: $BASE_BRANCH"
+  echo "Base branch (create from): $BASE_BRANCH"
 fi
 echo "Timeout: ${TIMEOUT_MINS:-10} minutes ($TIMEOUT_SECS seconds)"
 echo "Model: $FINAL_MODEL"

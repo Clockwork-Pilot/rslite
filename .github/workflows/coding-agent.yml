@@ -67,24 +67,35 @@ jobs:
       - name: Create or checkout branch
         run: |
           git fetch origin
-          BRANCH="${{ steps.issue.outputs.branch }}"
+          AGENT_BRANCH="${{ steps.issue.outputs.branch }}"
+          PR_BRANCH="${{ steps.issue.outputs.pr_branch }}"
           BASE_BRANCH="${{ inputs.base_branch }}"
 
-          # Priority: workflow input > issue YAML > repo default
+          # Priority for base_branch: workflow input > issue YAML > repo default
           if [ -z "$BASE_BRANCH" ]; then
             BASE_BRANCH="${{ steps.issue.outputs.base_branch }}"
           fi
 
-          if git ls-remote --exit-code --heads origin "$BRANCH" >/dev/null 2>&1; then
-            echo "Checking out existing branch: $BRANCH"
-            git checkout -B "$BRANCH" "origin/${BRANCH}"
+          # Priority for work branch: pr_branch > existing agent branch > create new
+          if [ -n "$PR_BRANCH" ]; then
+            echo "::notice::Using pr_branch from issue: $PR_BRANCH"
+            WORK_BRANCH="$PR_BRANCH"
+            git checkout -B "$WORK_BRANCH" "origin/$PR_BRANCH"
+          elif git ls-remote --exit-code --heads origin "$AGENT_BRANCH" >/dev/null 2>&1; then
+            echo "::notice::Continuing work on existing branch: $AGENT_BRANCH"
+            WORK_BRANCH="$AGENT_BRANCH"
+            git checkout -B "$WORK_BRANCH" "origin/$AGENT_BRANCH"
           else
+            echo "::notice::Creating new branch $AGENT_BRANCH"
+            WORK_BRANCH="$AGENT_BRANCH"
             if [ -z "$BASE_BRANCH" ]; then
               BASE_BRANCH=$(git remote show origin | grep 'HEAD branch' | awk '{print $NF}')
             fi
-            echo "Creating branch $BRANCH from base branch: $BASE_BRANCH"
-            git checkout -B "$BRANCH" "origin/${BASE_BRANCH}"
+            echo "::notice::Basing work on: $BASE_BRANCH"
+            git checkout -B "$WORK_BRANCH" "origin/$BASE_BRANCH"
           fi
+
+          echo "WORK_BRANCH=$WORK_BRANCH" >> $GITHUB_OUTPUT
 
       - name: Prepare docker-files directories
         run: |
