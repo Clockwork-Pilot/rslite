@@ -129,11 +129,14 @@ jobs:
           mkdir -p "$GITHUB_WORKSPACE/hooks_log"
           : > "$GITHUB_WORKSPACE/hooks_log/hooks.log"
           chmod +x .github/scripts/tail_hooks_log.sh
+          # Tailer's stderr goes to /dev/null so the "Terminated" that bash
+          # prints when the pipeline is SIGTERM'd during cleanup never reaches
+          # the workflow log. Stdout stays attached so hook events are visible.
           setsid bash .github/scripts/tail_hooks_log.sh \
-            "$GITHUB_WORKSPACE/hooks_log/hooks.log" &
+            "$GITHUB_WORKSPACE/hooks_log/hooks.log" 2>/dev/null &
           TAIL_PID=$!
           disown "$TAIL_PID" 2>/dev/null || true
-          trap '{ kill -- -"$TAIL_PID"; wait "$TAIL_PID"; } >/dev/null 2>&1 || true' EXIT
+          trap 'kill -- -"$TAIL_PID" >/dev/null 2>&1 || true' EXIT
 
           echo "::group::Claude Agent Output"
           set +e
