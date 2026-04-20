@@ -309,7 +309,9 @@ clean-c-tests:
 clean:
 	@echo "Cleaning all build artifacts..."
 	cargo clean --manifest-path $(PROJ)/Cargo.toml
+ifdef C2RUST
 	cargo clean --manifest-path $(PROJ)/c2rust/Cargo.toml
+endif
 	cd $(SQLITE_SRC) && $(MAKE) distclean 2>/dev/null || true
 	@echo "✓ All artifacts cleaned"
 
