@@ -20,9 +20,11 @@ TIMEOUT_SECS="${TIMEOUT_SECS:-180}"
 PROXY_WRAPPER=(-e PROXY_WRAPPER_CONFIG=/docker-scripts/proxy_wrapper_config.json)
 [ "${1:-}" = "--allow-git-commit" ] && PROXY_WRAPPER=()
 
+CLAUDE_HOOKS_LOG_FILE=/home/node/.claude/hooks.log
 
 RUN=(timeout "$TIMEOUT_SECS" docker run --rm
   -e CLAUDE_FILE_RULES=/docker-scripts/y2-plugin-deny-file-rules.json
+  -e CLAUDE_HOOKS_LOG_FILE
   "${PROXY_WRAPPER[@]}"
   -e DISABLE_STOP_HOOK=
   -e MODEL
@@ -35,7 +37,7 @@ RUN=(timeout "$TIMEOUT_SECS" docker run --rm
   ${CLAUDE_EXTRA_DOCKER_ARGS:-}
   "$AGENT_IMAGE"
   bash -c '
-    /workspace/.github/scripts/tail-hooks-log.sh /workspace/.claude/hooks.log &
+    /workspace/.github/scripts/tail-hooks-log.sh "$CLAUDE_HOOKS_LOG_FILE" &
     TAIL_PID=$!
     trap "kill $TAIL_PID 2>/dev/null || true" EXIT
     source /docker-scripts/user-entrypoint.sh
