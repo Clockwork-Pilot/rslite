@@ -19,6 +19,12 @@
           "cmd": "for f in $PROJECT_ROOT/.github/workflows/*.yml; do yq '[.jobs[].steps[]? | .uses? | select(. != null) | select(test(\"actions/checkout@\")) | select(. != \"actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd\")] | length' \"$f\" | grep -q '^0$' || { echo \"Non-approved checkout SHA in $f\"; exit 1; }; done",
           "description": "Security: actions/checkout@v6 must be pinned to exactly de0fac2e4500dabe0009e67214ff5f5447ce83dd",
           "fails_count": 1
+        },
+        "no_checkout_v4_in_workflows": {
+          "id": "no_checkout_v4_in_workflows",
+          "cmd": "! grep -rn \"actions/checkout@v4\" \"$PROJECT_ROOT/.github/workflows/\" --include=\"*.yml\"",
+          "description": "Negative: no .github/workflows/*.yml file may reference actions/checkout@v4",
+          "fails_count": 1
         }
       }
     },

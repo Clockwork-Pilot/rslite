@@ -20,6 +20,7 @@ Workflow structure constraints for .github/workflows
       - [parse_issue_cases](#parse_issue_cases)
     - [Feature: workflow_hygiene](#feature-workflow_hygiene)
       - [checkout_pinned_to_approved_sha](#checkout_pinned_to_approved_sha)
+      - [no_checkout_v4_in_workflows](#no_checkout_v4_in_workflows)
 
 ## Features
 
@@ -70,3 +71,6 @@ Workflow structure constraints for .github/workflows
 
 #### checkout_pinned_to_approved_sha
 **Description:** Security: actions/checkout@v6 must be pinned to exactly de0fac2e4500dabe0009e67214ff5f5447ce83dd
+
+#### no_checkout_v4_in_workflows
+**Description:** Negative: no .github/workflows/*.yml file may reference actions/checkout@v4
