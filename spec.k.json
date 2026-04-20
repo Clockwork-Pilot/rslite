@@ -154,6 +154,24 @@
           "fails_count": 1
         }
       }
+    },
+    "forbid_checkout_v4": {
+      "type": "Feature",
+      "model_version": 1,
+      "id": "forbid_checkout_v4",
+      "description": "Forbid actions/checkout@v4 usage in .github/workflows/*.yml files",
+      "goals": [
+        "Workflows must not pin actions/checkout to @v4",
+        "Enforced across all .yml files under .github/workflows"
+      ],
+      "constraints": {
+        "no_checkout_v4_in_workflows": {
+          "id": "no_checkout_v4_in_workflows",
+          "cmd": "! grep -rn \"actions/checkout@v4\" \"$PROJECT_ROOT/.github/workflows/\" --include=\"*.yml\"",
+          "description": "Negative: no .github/workflows/*.yml file may reference actions/checkout@v4",
+          "fails_count": 1
+        }
+      }
     }
   }
 }

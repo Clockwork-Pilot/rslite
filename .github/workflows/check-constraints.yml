@@ -13,15 +13,13 @@ jobs:
     steps:
       - name: Checkout rslite
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
-        with:
-          path: rslite
 
       # No ghcr.io login needed: ghcr.io/clockwork-pilot/rslite-ws is a public package.
       # If it's ever made private again, re-add a docker login step with a PAT.
 
       - name: Get image digest
         id: image-digest
-        run: bash ${{ github.workspace }}/rslite/.github/scripts/get-image-digest.sh
+        run: bash ${{ github.workspace }}/.github/scripts/get-image-digest.sh
 
       - name: Cache Docker image
         id: cache-image
@@ -32,19 +30,19 @@ jobs:
 
       - name: Load cached image
         if: steps.cache-image.outputs.cache-hit == 'true'
-        run: bash ${{ github.workspace }}/rslite/.github/scripts/docker-cache.sh load
+        run: bash ${{ github.workspace }}/.github/scripts/docker-cache.sh load
 
       - name: Pull image and save to cache
         if: steps.cache-image.outputs.cache-hit != 'true'
-        run: bash ${{ github.workspace }}/rslite/.github/scripts/docker-cache.sh save
+        run: bash ${{ github.workspace }}/.github/scripts/docker-cache.sh save
 
       - name: Run constraint checks
         id: constraints
         env:
-          GITHUB_WORKSPACE: ${{ github.workspace }}/rslite
+          GITHUB_WORKSPACE: ${{ github.workspace }}
         run: |
           echo "::group::Constraint Checks"
-          bash ${{ github.workspace }}/rslite/.github/scripts/run-in-docker-no-claude.sh \
+          bash ${{ github.workspace }}/.github/scripts/run-in-docker-no-claude.sh \
             "check_spec_constraints.py || { \
               echo '--- Spec checks results ---'; \
               cat /workspace/spec-checks.k.md; \

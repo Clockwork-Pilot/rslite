@@ -11,6 +11,6 @@ set -uo pipefail
 CMD="${1:?bash command string required}"
 
 docker run --rm \
-  -v "$GITHUB_WORKSPACE:/workspace:Z" \
+  -v "$GITHUB_WORKSPACE:/workspace" \
   ghcr.io/clockwork-pilot/rslite-ws:latest \
   bash -c "source /docker-scripts/user-entrypoint.sh; $CMD"
