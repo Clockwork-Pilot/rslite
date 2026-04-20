@@ -12,41 +12,38 @@ jobs:
 
     steps:
       - name: Checkout rslite
-        uses: actions/checkout@v6
-        with:
-          path: rslite
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
 
       # No ghcr.io login needed: ghcr.io/clockwork-pilot/rslite-ws is a public package.
       # If it's ever made private again, re-add a docker login step with a PAT.
 
       - name: Get image digest
         id: image-digest
-        run: bash ${{ github.workspace }}/rslite/.github/scripts/get-image-digest.sh
+        run: bash ${{ github.workspace }}/.github/scripts/get-image-digest.sh
 
       - name: Cache Docker image
         id: cache-image
-        uses: actions/cache@v4
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830
         with:
           path: /tmp/rslite-ws.tar
           key: docker-rslite-ws-${{ steps.image-digest.outputs.digest }}
 
       - name: Load cached image
         if: steps.cache-image.outputs.cache-hit == 'true'
-        run: bash ${{ github.workspace }}/rslite/.github/scripts/docker-cache.sh load
+        run: bash ${{ github.workspace }}/.github/scripts/docker-cache.sh load
 
       - name: Pull image and save to cache
         if: steps.cache-image.outputs.cache-hit != 'true'
-        run: bash ${{ github.workspace }}/rslite/.github/scripts/docker-cache.sh save
+        run: bash ${{ github.workspace }}/.github/scripts/docker-cache.sh save
 
       - name: Run constraint checks
         id: constraints
+        env:
+          GITHUB_WORKSPACE: ${{ github.workspace }}
         run: |
           echo "::group::Constraint Checks"
-          docker run --rm \
-            -v ${{ github.workspace }}/rslite:/workspace \
-            ghcr.io/clockwork-pilot/rslite-ws:latest \
-            bash -c "source /docker-scripts/user-entrypoint.sh; \
-              python /plugin/constraints_tool/constraints_tool/check_spec_constraints.py || { \
+          bash ${{ github.workspace }}/.github/scripts/run-in-docker-no-claude.sh \
+            "check_spec_constraints.py || { \
               echo '--- Spec checks results ---'; \
               cat /workspace/spec-checks.k.md; \
               echo '--- testrunner failures ---'; \

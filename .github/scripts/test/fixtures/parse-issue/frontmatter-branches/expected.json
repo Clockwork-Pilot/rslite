@@ -1,0 +1,8 @@
+{
+  "agent_branch_default": "agent/12-wire-branches",
+  "agent_task_text": "Do it.",
+  "base_branch": "develop",
+  "model": "claude-haiku-4-5",
+  "pr_branch": "feature/custom",
+  "timeout_secs": "600"
+}

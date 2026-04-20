@@ -13,6 +13,8 @@ Verify c_variadic feature isolation: only in printf_c_variadic.rs
     - [Feature: clippy_checks](#feature-clippy_checks)
       - [clippy_checks](#clippy_checks)
       - [no_forbidden_allows_robust](#no_forbidden_allows_robust)
+    - [Feature: forbid_checkout_v4](#feature-forbid_checkout_v4)
+      - [no_checkout_v4_in_workflows](#no_checkout_v4_in_workflows)
     - [Feature: fts5_no_libc_global](#feature-fts5_no_libc_global)
       - [fts5_no_libc_calls](#fts5_no_libc_calls)
     - [Feature: lib_exports](#feature-lib_exports)
@@ -23,6 +25,8 @@ Verify c_variadic feature isolation: only in printf_c_variadic.rs
       - [rslite_uses_crust_core](#rslite_uses_crust_core)
     - [Feature: toolchain_version](#feature-toolchain_version)
       - [stable_toolchain_or_missing](#stable_toolchain_or_missing)
+    - [Feature: workflow_constraints](#feature-workflow_constraints)
+      - [workflow_spec](#workflow_spec)
 
 ## Features
 
@@ -44,6 +48,16 @@ Verify c_variadic feature isolation: only in printf_c_variadic.rs
 
 #### no_forbidden_allows_robust
 **Description:** Structural: Robust whitespace-tolerant detection of forbidden clippy allows. Detects any formatting of allow() with forbidden lints, ignoring whitespace between allow and (.
+
+### Feature: forbid_checkout_v4
+**Forbid actions/checkout@v4 usage in .github/workflows/*.yml files**
+
+**Goals:**
+- Workflows must not pin actions/checkout to @v4
+- Enforced across all .yml files under .github/workflows
+
+#### no_checkout_v4_in_workflows
+**Description:** Negative: no .github/workflows/*.yml file may reference actions/checkout@v4
 
 ### Feature: fts5_no_libc_global
 **Ensure fts5.rs contains no libc:: calls (only external C FFI allowed)**
@@ -90,3 +104,13 @@ Verify c_variadic feature isolation: only in printf_c_variadic.rs
 
 #### stable_toolchain_or_missing
 **Description:** rust-toolchain.toml must either be missing or use stable channel
+
+### Feature: workflow_constraints
+**Workflow specs exist and constraint checker runs on PRs**
+
+**Goals:**
+- Workflow spec must exist at .github/workflows/spec.k.json
+- A CI workflow must run check_spec_constraints.py against the workflow spec on pull_request
+
+#### workflow_spec
+**Description:** Workflow checks

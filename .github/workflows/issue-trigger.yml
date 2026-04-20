@@ -58,25 +58,18 @@ jobs:
             echo "found=false" >> $GITHUB_OUTPUT
           fi
 
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Parse issue details
-        id: issue
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: bash .github/scripts/get-issue-details.sh ${{ github.event.issue.number }} ${{ github.repository }}
-
       - name: Trigger coding agent workflow
         if: steps.runner_check.outputs.found == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        # Dispatch against the repo default branch so the workflow definition
+        # is always read from the latest merged version. The dispatched
+        # coding-agent job re-parses issue YAML itself to pick the agent's
+        # actual base_branch, so we don't need to parse it here.
         run: |
-          BASE_BRANCH="${{ steps.issue.outputs.base_branch }}"
-          BASE_BRANCH="${BASE_BRANCH:-main}"
           gh workflow run coding-agent.yml \
             --repo ${{ github.repository }} \
-            -r "$BASE_BRANCH" \
+            -r "${{ github.event.repository.default_branch }}" \
             --field runner_label="${{ steps.actor.outputs.username }}" \
             --field issue_number="${{ github.event.issue.number }}"
 

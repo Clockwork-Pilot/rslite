@@ -136,6 +136,42 @@
           "fails_count": 1
         }
       }
+    },
+    "workflow_constraints": {
+      "type": "Feature",
+      "model_version": 1,
+      "id": "workflow_constraints",
+      "description": "Workflow specs exist and constraint checker runs on PRs",
+      "goals": [
+        "Workflow spec must exist at .github/workflows/spec.k.json",
+        "A CI workflow must run check_spec_constraints.py against the workflow spec on pull_request"
+      ],
+      "constraints": {
+        "workflow_spec": {
+          "id": "workflow_spec",
+          "cmd": "check_spec_constraints.py $PROJECT_ROOT/.github/workflows/spec.k.json",
+          "description": "Workflow checks",
+          "fails_count": 1
+        }
+      }
+    },
+    "forbid_checkout_v4": {
+      "type": "Feature",
+      "model_version": 1,
+      "id": "forbid_checkout_v4",
+      "description": "Forbid actions/checkout@v4 usage in .github/workflows/*.yml files",
+      "goals": [
+        "Workflows must not pin actions/checkout to @v4",
+        "Enforced across all .yml files under .github/workflows"
+      ],
+      "constraints": {
+        "no_checkout_v4_in_workflows": {
+          "id": "no_checkout_v4_in_workflows",
+          "cmd": "! grep -rn \"actions/checkout@v4\" \"$PROJECT_ROOT/.github/workflows/\" --include=\"*.yml\"",
+          "description": "Negative: no .github/workflows/*.yml file may reference actions/checkout@v4",
+          "fails_count": 1
+        }
+      }
     }
   }
 }
