@@ -1,11 +1,16 @@
 #!/bin/bash
-# Extract docker image digest with error handling
+# Extract docker image digest and emit a digest-pinned image ref.
+# Outputs (to $GITHUB_OUTPUT):
+#   digest=sha256:...
+#   image=ghcr.io/clockwork-pilot/rslite-ws@sha256:...
 
 set -e
 
+IMAGE_REPO="ghcr.io/clockwork-pilot/rslite-ws"
+
 echo "::group::Image Digest Extraction"
 
-manifest=$(docker manifest inspect ghcr.io/clockwork-pilot/rslite-ws:latest 2>&1)
+manifest=$(docker manifest inspect "${IMAGE_REPO}:latest" 2>&1)
 echo "Manifest received (length: ${#manifest})"
 
 digest=$(echo "$manifest" | python3 -c '
@@ -32,6 +37,9 @@ if [ -z "$digest" ]; then
   exit 1
 fi
 
+pinned="${IMAGE_REPO}@${digest}"
 echo "Extracted digest: $digest"
-echo "digest=$digest" >> $GITHUB_OUTPUT
+echo "Pinned image ref: $pinned"
+echo "digest=$digest" >> "$GITHUB_OUTPUT"
+echo "image=$pinned" >> "$GITHUB_OUTPUT"
 echo "::endgroup::"

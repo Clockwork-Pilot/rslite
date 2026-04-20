@@ -30,16 +30,21 @@ jobs:
 
       - name: Load cached image
         if: steps.cache-image.outputs.cache-hit == 'true'
+        env:
+          AGENT_IMAGE: ${{ steps.image-digest.outputs.image }}
         run: bash ${{ github.workspace }}/.github/scripts/docker-cache.sh load
 
       - name: Pull image and save to cache
         if: steps.cache-image.outputs.cache-hit != 'true'
+        env:
+          AGENT_IMAGE: ${{ steps.image-digest.outputs.image }}
         run: bash ${{ github.workspace }}/.github/scripts/docker-cache.sh save
 
       - name: Run constraint checks
         id: constraints
         env:
           GITHUB_WORKSPACE: ${{ github.workspace }}
+          AGENT_IMAGE: ${{ steps.image-digest.outputs.image }}
         run: |
           echo "::group::Constraint Checks"
           bash ${{ github.workspace }}/.github/scripts/run-in-docker-no-claude.sh \

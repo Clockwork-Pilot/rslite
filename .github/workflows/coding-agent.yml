@@ -199,8 +199,14 @@ jobs:
       # No ghcr.io login needed: ghcr.io/clockwork-pilot/rslite-ws is a public package.
       # If it's ever made private again, re-add a docker login step with a PAT.
 
-      - name: Pull latest agent image
-        run: docker pull ghcr.io/clockwork-pilot/rslite-ws:latest
+      - name: Get image digest
+        id: image-digest
+        run: bash ${{ github.workspace }}/.github/scripts/get-image-digest.sh
+
+      - name: Pull pinned agent image
+        env:
+          AGENT_IMAGE: ${{ steps.image-digest.outputs.image }}
+        run: docker pull "$AGENT_IMAGE"
 
       - name: Run Claude agent in Docker
         id: agent
@@ -208,6 +214,7 @@ jobs:
           MODEL:        ${{ needs.parse-issue.outputs.model }}
           TIMEOUT_SECS: ${{ needs.parse-issue.outputs.timeout_secs }}
           PROMPT:       ${{ needs.parse-issue.outputs.agent_task_text }}
+          AGENT_IMAGE:  ${{ steps.image-digest.outputs.image }}
         run: |
           echo "::group::Claude Agent Output"
           set +e
@@ -220,6 +227,8 @@ jobs:
       - name: Run constraint checks
         id: constraints
         if: always()
+        env:
+          AGENT_IMAGE: ${{ steps.image-digest.outputs.image }}
         run: |
           # stdout → issue comment; exit code gates the commit step.
           set +e
@@ -239,8 +248,9 @@ jobs:
         id: agent-commit
         if: always() && steps.agent.outputs.exit_code == '0' && steps.constraints.outputs.exit_code == '0'
         env:
-          MODEL:  ${{ needs.parse-issue.outputs.model }}
-          PROMPT: commit changes
+          MODEL:       ${{ needs.parse-issue.outputs.model }}
+          PROMPT:      commit changes
+          AGENT_IMAGE: ${{ steps.image-digest.outputs.image }}
         run: bash .github/scripts/run-in-docker-claude.sh || true
 
       - name: Detect new commit

@@ -13,6 +13,7 @@ set -uo pipefail
 : "${PROMPT:?PROMPT required}"
 : "${DOCKER_FILES:?DOCKER_FILES required}"
 : "${GITHUB_WORKSPACE:?GITHUB_WORKSPACE required}"
+: "${AGENT_IMAGE:?AGENT_IMAGE required (digest-pinned ref like repo@sha256:...)}"
 TIMEOUT_SECS="${TIMEOUT_SECS:-0}"
 
 mkdir -p "$GITHUB_WORKSPACE/hooks_log"
@@ -30,7 +31,7 @@ RUN=(docker run --rm
   -v "$DOCKER_FILES/.local:/home/node/.local:Z"
   -v "$GITHUB_WORKSPACE:/workspace:Z"
   ${CLAUDE_EXTRA_DOCKER_ARGS:-}
-  ghcr.io/clockwork-pilot/rslite-ws:latest
+  "$AGENT_IMAGE"
   bash -c '
     tail -F -n 0 /workspace/hooks_log/hooks.log 2>/dev/null | sed -u "s/^/[hook] /" &
     TAIL_PID=$!

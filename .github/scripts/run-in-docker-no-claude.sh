@@ -8,9 +8,10 @@
 set -uo pipefail
 
 : "${GITHUB_WORKSPACE:?GITHUB_WORKSPACE required}"
+: "${AGENT_IMAGE:?AGENT_IMAGE required (digest-pinned ref like repo@sha256:...)}"
 CMD="${1:?bash command string required}"
 
 docker run --rm \
   -v "$GITHUB_WORKSPACE:/workspace" \
-  ghcr.io/clockwork-pilot/rslite-ws:latest \
+  "$AGENT_IMAGE" \
   bash -c "source /docker-scripts/user-entrypoint.sh; $CMD"

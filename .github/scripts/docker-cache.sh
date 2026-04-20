@@ -1,10 +1,11 @@
 #!/bin/bash
-# Docker image cache management: load or save
-# Usage: docker-cache.sh [load|save]
+# Docker image cache management: load or save.
+# Usage: AGENT_IMAGE=<digest-pinned ref> docker-cache.sh [load|save]
 
 set -e
 
 ACTION="${1:-}"
+: "${AGENT_IMAGE:?AGENT_IMAGE required (use a digest-pinned ref like repo@sha256:...)}"
 
 if [ -z "$ACTION" ]; then
   echo "::error::Usage: docker-cache.sh [load|save]"
@@ -13,7 +14,7 @@ fi
 
 case "$ACTION" in
   load)
-    echo "::group::Loading Cached Image"
+    echo "::group::Loading Cached Image ($AGENT_IMAGE)"
     if [ ! -f /tmp/rslite-ws.tar ]; then
       echo "::error::Cache hit reported but /tmp/rslite-ws.tar not found"
       exit 1
@@ -29,13 +30,13 @@ case "$ACTION" in
     ;;
 
   save)
-    echo "::group::Pulling Image and Saving to Cache"
-    echo "Cache miss - fetching fresh image"
-    docker pull ghcr.io/clockwork-pilot/rslite-ws:latest || {
-      echo "::error::Failed to pull docker image"
+    echo "::group::Pulling Image and Saving to Cache ($AGENT_IMAGE)"
+    echo "Cache miss - fetching image by digest"
+    docker pull "$AGENT_IMAGE" || {
+      echo "::error::Failed to pull docker image $AGENT_IMAGE"
       exit 1
     }
-    docker save ghcr.io/clockwork-pilot/rslite-ws:latest > /tmp/rslite-ws.tar || {
+    docker save "$AGENT_IMAGE" > /tmp/rslite-ws.tar || {
       echo "::error::Failed to save docker image to cache"
       exit 1
     }
