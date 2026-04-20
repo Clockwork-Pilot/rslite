@@ -217,18 +217,18 @@ jobs:
           echo "exit_code=$EXIT_CODE" >> "$GITHUB_OUTPUT"
           set -e
 
-      - name: Constraints dry-run
-        id: constraints-check
+      - name: Run constraint checks
+        id: constraints
         if: always()
         run: |
           # stdout → issue comment; exit code gates the commit step.
           set +e
           bash .github/scripts/run-in-docker-no-claude.sh \
-            'python /plugin/constraints_tool/constraints_tool/check_spec_constraints.py --dry-run' \
+            'check_spec_constraints.py --dry-run' \
             > /tmp/constraints.md 2>&1
-          CONSTRAINTS_EXIT=$?
+          EXIT_CODE=$?
           set -e
-          echo "constraints_exit=$CONSTRAINTS_EXIT" >> "$GITHUB_OUTPUT"
+          echo "exit_code=$EXIT_CODE" >> "$GITHUB_OUTPUT"
 
       - name: Record HEAD before commit
         id: head-before
@@ -237,7 +237,7 @@ jobs:
 
       - name: Agent commit
         id: agent-commit
-        if: always() && steps.agent.outputs.exit_code == '0' && steps.constraints-check.outputs.constraints_exit == '0'
+        if: always() && steps.agent.outputs.exit_code == '0' && steps.constraints.outputs.exit_code == '0'
         env:
           MODEL:  ${{ needs.parse-issue.outputs.model }}
           PROMPT: commit changes
