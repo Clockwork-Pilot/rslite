@@ -4,24 +4,26 @@
 # so events stream to docker's stdout (which the workflow captures) without
 # any host-side tailer process.
 #
+# Usage: run-in-docker-claude.sh [--allow-git-commit]
 # Required env: MODEL, PROMPT, DOCKER_FILES, GITHUB_WORKSPACE
 # Optional env: TIMEOUT_SECS (0 or unset = no timeout), CLAUDE_EXTRA_DOCKER_ARGS
 # Returns claude's exit code (or timeout's).
 set -uo pipefail
 
-: "${MODEL:?MODEL required}"
+MODEL="${MODEL:-claude-haiku-4-5}"
 : "${PROMPT:?PROMPT required}"
 : "${DOCKER_FILES:?DOCKER_FILES required}"
 : "${GITHUB_WORKSPACE:?GITHUB_WORKSPACE required}"
 : "${AGENT_IMAGE:?AGENT_IMAGE required (digest-pinned ref like repo@sha256:...)}"
-TIMEOUT_SECS="${TIMEOUT_SECS:-0}"
+TIMEOUT_SECS="${TIMEOUT_SECS:-180}"
 
-mkdir -p "$GITHUB_WORKSPACE/hooks_log"
-: > "$GITHUB_WORKSPACE/hooks_log/hooks.log"
+PROXY_WRAPPER=(-e PROXY_WRAPPER_CONFIG=/docker-scripts/proxy_wrapper_config.json)
+[ "${1:-}" = "--allow-git-commit" ] && PROXY_WRAPPER=()
 
-RUN=(docker run --rm
+
+RUN=(timeout "$TIMEOUT_SECS" docker run --rm
   -e CLAUDE_FILE_RULES=/docker-scripts/y2-plugin-deny-file-rules.json
-  -e PROXY_WRAPPER_CONFIG=/docker-scripts/proxy_wrapper_config.json
+  "${PROXY_WRAPPER[@]}"
   -e DISABLE_STOP_HOOK=
   -e MODEL
   -e PROMPT
@@ -33,7 +35,7 @@ RUN=(docker run --rm
   ${CLAUDE_EXTRA_DOCKER_ARGS:-}
   "$AGENT_IMAGE"
   bash -c '
-    tail -F -n 0 /workspace/hooks_log/hooks.log 2>/dev/null | sed -u "s/^/[hook] /" &
+    /workspace/.github/scripts/tail-hooks-log.sh /workspace/.claude/hooks.log &
     TAIL_PID=$!
     trap "kill $TAIL_PID 2>/dev/null || true" EXIT
     source /docker-scripts/user-entrypoint.sh
@@ -41,8 +43,5 @@ RUN=(docker run --rm
   '
 )
 
-if [ "$TIMEOUT_SECS" != "0" ]; then
-  timeout "$TIMEOUT_SECS" "${RUN[@]}"
-else
-  "${RUN[@]}"
-fi
+"${RUN[@]}"
+

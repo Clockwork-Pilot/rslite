@@ -251,7 +251,7 @@ jobs:
           MODEL:       ${{ needs.parse-issue.outputs.model }}
           PROMPT:      commit changes
           AGENT_IMAGE: ${{ steps.image-digest.outputs.image }}
-        run: bash .github/scripts/run-in-docker-claude.sh || true
+        run: bash .github/scripts/run-in-docker-claude.sh --allow-git-commit || true
 
       - name: Detect new commit
         id: detect-new-commit
