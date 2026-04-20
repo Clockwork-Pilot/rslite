@@ -136,6 +136,24 @@
           "fails_count": 1
         }
       }
+    },
+    "workflow_constraints": {
+      "type": "Feature",
+      "model_version": 1,
+      "id": "workflow_constraints",
+      "description": "Workflow specs exist and constraint checker runs on PRs",
+      "goals": [
+        "Workflow spec must exist at .github/workflows/spec.k.json",
+        "A CI workflow must run check_spec_constraints.py against the workflow spec on pull_request"
+      ],
+      "constraints": {
+        "workflow_spec": {
+          "id": "workflow_spec",
+          "cmd": "check_spec_constraints.py $PROJECT_ROOT/.github/workflows/spec.k.json",
+          "description": "Workflow checks",
+          "fails_count": 1
+        }
+      }
     }
   }
 }

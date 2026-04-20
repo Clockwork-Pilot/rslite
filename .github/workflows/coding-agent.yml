@@ -11,12 +11,92 @@ on:
         description: Issue number to work on
         required: true
         type: string
-      base_branch:
-        description: Branch to base agent work on (defaults to repo default branch)
-        required: false
-        type: string
 
 jobs:
+  fetch-issue:
+    runs-on: ubuntu-latest
+    outputs:
+      title:    ${{ steps.f.outputs.title }}
+      body_raw: ${{ steps.f.outputs.body_raw }}
+    steps:
+      - name: fetch
+        id: f
+        env:
+          GH_TOKEN:     ${{ secrets.GITHUB_TOKEN }}
+          REPO:         ${{ github.repository }}
+          ISSUE_NUMBER: ${{ inputs.issue_number }}
+        run: |
+          J=$(gh api "repos/$REPO/issues/$ISSUE_NUMBER")
+          echo "title=$(echo "$J" | jq -r .title)" >> "$GITHUB_OUTPUT"
+          { echo "body_raw<<EOF_BODY_RAW"; echo "$J" | jq -r '.body // ""'; echo "EOF_BODY_RAW"; } >> "$GITHUB_OUTPUT"
+
+  # Verified by: step_output_checks/parse_issue_output
+  parse-issue:
+    needs: fetch-issue
+    runs-on: ubuntu-latest
+    env:
+      TITLE:        ${{ needs.fetch-issue.outputs.title }}
+      BODY_RAW:     ${{ needs.fetch-issue.outputs.body_raw }}
+      ISSUE_NUMBER: ${{ inputs.issue_number }}
+    outputs:
+      agent_task_text:      ${{ steps.p.outputs.agent_task_text }}
+      pr_branch:            ${{ steps.p.outputs.pr_branch }}
+      base_branch:          ${{ steps.p.outputs.base_branch }}
+      timeout_secs:         ${{ steps.p.outputs.timeout_secs }}
+      model:                ${{ steps.p.outputs.model }}
+      agent_branch_default: ${{ steps.p.outputs.agent_branch_default }}
+    steps:
+      - name: parse
+        id: p
+        run: |
+          TITLE="${TITLE:-}"
+          BODY_RAW="${BODY_RAW:-}"
+          ISSUE_NUMBER_IN="${ISSUE_NUMBER:-}"
+
+          # Strip CR (GitHub issue bodies are CRLF)
+          BODY_RAW=$(printf '%s' "$BODY_RAW" | tr -d '\r')
+
+          BRANCH_SLUG=$(echo "$TITLE" | tr '[:upper:]' '[:lower:]' | tr -cs 'a-z0-9' '-' | sed 's/-\+/-/g;s/^-//;s/-$//' | cut -c1-100)
+
+          # Only strip frontmatter when at least two `---` fences are present;
+          # otherwise sed '0,/---/d' would delete through EOF and wipe the body.
+          DELIM_COUNT=$(printf '%s\n' "$BODY_RAW" | grep -c '^---[[:space:]]*$' || true)
+          if [ "${DELIM_COUNT:-0}" -ge 2 ]; then
+            AGENT_TASK_TEXT=$(printf '%s\n' "$BODY_RAW" | sed '0,/^---[[:space:]]*$/d' | sed '0,/^---[[:space:]]*$/d')
+            YAML_PART=$(printf '%s\n' "$BODY_RAW" | sed -n '/^---[[:space:]]*$/,/^---[[:space:]]*$/p' | sed '1d;$d')
+          else
+            AGENT_TASK_TEXT="$BODY_RAW"
+            YAML_PART=""
+          fi
+          PR_BRANCH=""
+          BASE_BRANCH=""
+          TIMEOUT_MINS=""
+          MODEL=""
+          if [ -n "$YAML_PART" ]; then
+            PR_BRANCH=$(echo "$YAML_PART" | yq -r '.pr_branch // ""')
+            BASE_BRANCH=$(echo "$YAML_PART" | yq -r '.base_branch // ""')
+            TIMEOUT_MINS=$(echo "$YAML_PART" | yq -r '.timeout // ""')
+            MODEL=$(echo "$YAML_PART" | yq -r '.model // ""')
+          fi
+          [ "$PR_BRANCH" = "null" ] && PR_BRANCH=""
+          [ "$BASE_BRANCH" = "null" ] && BASE_BRANCH=""
+          [ "$TIMEOUT_MINS" = "null" ] && TIMEOUT_MINS=""
+          [ "$MODEL" = "null" ] && MODEL=""
+
+          TIMEOUT_SECS=$(( ${TIMEOUT_MINS:-10} * 60 ))
+          MODEL="${MODEL:-claude-haiku-4-5}"
+          AGENT_BRANCH_DEFAULT="agent/${ISSUE_NUMBER_IN}-${BRANCH_SLUG}"
+
+          : "${GITHUB_OUTPUT:?GITHUB_OUTPUT must be set}"
+          echo "pr_branch=$PR_BRANCH" >> "$GITHUB_OUTPUT"
+          echo "base_branch=$BASE_BRANCH" >> "$GITHUB_OUTPUT"
+          echo "timeout_secs=$TIMEOUT_SECS" >> "$GITHUB_OUTPUT"
+          echo "model=$MODEL" >> "$GITHUB_OUTPUT"
+          echo "agent_branch_default=$AGENT_BRANCH_DEFAULT" >> "$GITHUB_OUTPUT"
+          echo "agent_task_text<<EOF_AGENT_TASK_TEXT" >> "$GITHUB_OUTPUT"
+          printf '%s\n' "$AGENT_TASK_TEXT" >> "$GITHUB_OUTPUT"
+          echo "EOF_AGENT_TASK_TEXT" >> "$GITHUB_OUTPUT"
+
   validate-runner:
     runs-on: ubuntu-latest
     steps:
@@ -43,62 +123,69 @@ jobs:
           echo "✓ Found runner(s) with label: $RUNNER_LABEL"
           echo "::endgroup::"
 
+  gather-repo-facts:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN:     ${{ secrets.GITHUB_TOKEN }}
+      REPO:         ${{ github.repository }}
+      ISSUE_NUMBER: ${{ inputs.issue_number }}
+    outputs:
+      existing_agent_branch: ${{ steps.g.outputs.existing_agent_branch }}
+      default_branch:        ${{ steps.g.outputs.default_branch }}
+    steps:
+      - name: gather
+        id: g
+        run: |
+          EXISTING=$(gh api "repos/$REPO/branches" --paginate -q ".[].name" \
+            | grep -E "^agent/$ISSUE_NUMBER(-|$)" | head -1 || true)
+          DEFAULT=$(gh api "repos/$REPO" -q .default_branch)
+          echo "existing_agent_branch=$EXISTING" >> "$GITHUB_OUTPUT"
+          echo "default_branch=$DEFAULT" >> "$GITHUB_OUTPUT"
+
+  # Verified by: step_output_checks/choose_branch_output
+  choose-branch:
+    needs: [parse-issue, gather-repo-facts]
+    runs-on: ubuntu-latest
+    env:
+      PR_BRANCH:             ${{ needs.parse-issue.outputs.pr_branch }}
+      AGENT_BRANCH_DEFAULT:  ${{ needs.parse-issue.outputs.agent_branch_default }}
+      EXISTING_AGENT_BRANCH: ${{ needs.gather-repo-facts.outputs.existing_agent_branch }}
+      BASE_FROM_ISSUE:       ${{ needs.parse-issue.outputs.base_branch }}
+      DEFAULT_BRANCH:        ${{ needs.gather-repo-facts.outputs.default_branch }}
+    outputs:
+      branch:      ${{ steps.c.outputs.branch }}
+      base_branch: ${{ steps.c.outputs.base_branch }}
+    steps:
+      - name: choose
+        id: c
+        run: |
+          BRANCH="${PR_BRANCH:-${EXISTING_AGENT_BRANCH:-$AGENT_BRANCH_DEFAULT}}"
+          BASE="${BASE_FROM_ISSUE:-$DEFAULT_BRANCH}"
+          echo "branch=$BRANCH" >> "$GITHUB_OUTPUT"
+          echo "base_branch=$BASE" >> "$GITHUB_OUTPUT"
+
   run-agent:
-    needs: validate-runner
+    needs: [validate-runner, fetch-issue, parse-issue, choose-branch]
     runs-on: [self-hosted, "${{ inputs.runner_label }}"]
     permissions:
       contents: write
       pull-requests: write
       issues: write
-
     steps:
       - name: Checkout repo into isolated workspace
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
         with:
           fetch-depth: 0
           persist-credentials: true
 
-      - name: Get issue details
-        id: issue
+      - name: Checkout work branch
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: bash .github/scripts/get-issue-details.sh ${{ inputs.issue_number }} ${{ github.repository }}
-
-      - name: Create or checkout branch
+          BRANCH:      ${{ needs.choose-branch.outputs.branch }}
+          BASE_BRANCH: ${{ needs.choose-branch.outputs.base_branch }}
         run: |
           git fetch origin
-          AGENT_BRANCH="${{ steps.issue.outputs.branch }}"
-          PR_BRANCH="${{ steps.issue.outputs.pr_branch }}"
-          BASE_BRANCH="${{ inputs.base_branch }}"
-
-          # Determine work branch: explicit pr_branch or auto-generated agent branch
-          if [ -n "$PR_BRANCH" ]; then
-            WORK_BRANCH="$PR_BRANCH"
-            echo "::notice::Using pr_branch: $WORK_BRANCH"
-          else
-            WORK_BRANCH="$AGENT_BRANCH"
-            echo "::notice::Using auto-generated branch: $WORK_BRANCH"
-          fi
-
-          # Determine base: workflow input > issue YAML > repo default
-          if [ -z "$BASE_BRANCH" ]; then
-            BASE_BRANCH="${{ steps.issue.outputs.base_branch }}"
-          fi
-          if [ -z "$BASE_BRANCH" ]; then
-            BASE_BRANCH=$(git remote show origin | grep 'HEAD branch' | awk '{print $NF}')
-          fi
-
-          # Check/create work branch
-          if git ls-remote --exit-code --heads origin "$WORK_BRANCH" >/dev/null 2>&1; then
-            echo "::notice::Branch exists, checking out from base: $BASE_BRANCH"
-            # Always use specified base_branch (may rebase if branch existed)
-            git checkout -B "$WORK_BRANCH" "origin/$BASE_BRANCH"
-          else
-            echo "::notice::Creating branch $WORK_BRANCH from base: $BASE_BRANCH"
-            git checkout -B "$WORK_BRANCH" "origin/$BASE_BRANCH"
-          fi
-
-          echo "branch=$WORK_BRANCH" >> $GITHUB_OUTPUT
+          echo "::notice::Work branch: $BRANCH (base: $BASE_BRANCH)"
+          git checkout -B "$BRANCH" "origin/$BASE_BRANCH"
 
       - name: Prepare docker-files directories
         run: |
@@ -117,106 +204,61 @@ jobs:
 
       - name: Run Claude agent in Docker
         id: agent
+        env:
+          MODEL:        ${{ needs.parse-issue.outputs.model }}
+          TIMEOUT_SECS: ${{ needs.parse-issue.outputs.timeout_secs }}
+          PROMPT:       ${{ needs.parse-issue.outputs.agent_task_text }}
         run: |
-          MODEL="${{ steps.issue.outputs.model }}"
-          TIMEOUT_SECS="${{ steps.issue.outputs.timeout_secs }}"
-
-          # Surface hook events (Edit/Write paths, prompts, session boundaries)
-          # into the workflow log while `claude -p` runs silently inside Docker.
-          # Truncate first so the tailer doesn't replay events from previous runs.
-          # `setsid` isolates the tailer in its own process group so the EXIT
-          # trap can take it down without signalling this shell.
-          mkdir -p "$GITHUB_WORKSPACE/hooks_log"
-          : > "$GITHUB_WORKSPACE/hooks_log/hooks.log"
-          chmod +x .github/scripts/tail_hooks_log.sh
-          # Tailer's stderr goes to /dev/null so the "Terminated" that bash
-          # prints when the pipeline is SIGTERM'd during cleanup never reaches
-          # the workflow log. Stdout stays attached so hook events are visible.
-          setsid bash .github/scripts/tail_hooks_log.sh \
-            "$GITHUB_WORKSPACE/hooks_log/hooks.log" 2>/dev/null &
-          TAIL_PID=$!
-          disown "$TAIL_PID" 2>/dev/null || true
-          trap 'kill -- -"$TAIL_PID" >/dev/null 2>&1 || true' EXIT
-
           echo "::group::Claude Agent Output"
           set +e
-          timeout "$TIMEOUT_SECS" docker run --rm \
-            -e CLAUDE_FILE_RULES=/docker-scripts/y2-plugin-deny-file-rules.json \
-            -e PROXY_WRAPPER_CONFIG=/docker-scripts/proxy_wrapper_config.json \
-            -e DISABLE_STOP_HOOK= \
-            -e ONESHOT_PROMPT_MESSAGE \
-            -v "$DOCKER_FILES/.cargo:/home/node/.cargo:Z" \
-            -v "$DOCKER_FILES/.credentials:/home/node/.claude:Z" \
-            -v "$DOCKER_FILES/.claude.local.json:/home/node/.claude.json:Z" \
-            -v "$DOCKER_FILES/.local:/home/node/.local:Z" \
-            -v "$GITHUB_WORKSPACE:/workspace:Z" \
-            $CLAUDE_EXTRA_DOCKER_ARGS \
-            ghcr.io/clockwork-pilot/rslite-ws:latest \
-            bash -c "source /docker-scripts/user-entrypoint.sh; \
-              claude --dangerously-skip-permissions \
-                --model $MODEL \
-                --plugin-dir /plugin \
-                -p \"\$ONESHOT_PROMPT_MESSAGE\""
+          bash .github/scripts/run-in-docker-claude.sh
           EXIT_CODE=$?
           echo "::endgroup::"
-          echo "exit_code=$EXIT_CODE" >> $GITHUB_OUTPUT
+          echo "exit_code=$EXIT_CODE" >> "$GITHUB_OUTPUT"
           set -e
 
-      - name: Agent commit + constraints dry-run
-        id: finalize
+      - name: Constraints dry-run
+        id: constraints-check
         if: always()
         run: |
-          EXIT_CODE="${{ steps.agent.outputs.exit_code }}"
-          MODEL="${{ steps.issue.outputs.model }}"
-          HEAD_BEFORE=$(git rev-parse HEAD)
-
-          DOCKER_COMMON=(
-            --rm
-            -e CLAUDE_FILE_RULES=/docker-scripts/y2-plugin-deny-file-rules.json
-            -e PROXY_WRAPPER_CONFIG=/docker-scripts/proxy_wrapper_config.json
-            -e DISABLE_STOP_HOOK=
-            -v "$DOCKER_FILES/.cargo:/home/node/.cargo:Z"
-            -v "$DOCKER_FILES/.credentials:/home/node/.claude:Z"
-            -v "$DOCKER_FILES/.claude.local.json:/home/node/.claude.json:Z"
-            -v "$DOCKER_FILES/.local:/home/node/.local:Z"
-            -v "$GITHUB_WORKSPACE:/workspace:Z"
-          )
-
-          # Run the constraints dry-run FIRST — its stdout becomes the issue
-          # comment, and its exit code gates whether we attempt a commit.
-          # We only commit when constraints pass cleanly (exit 0).
+          # stdout → issue comment; exit code gates the commit step.
           set +e
-          docker run "${DOCKER_COMMON[@]}" \
-            ghcr.io/clockwork-pilot/rslite-ws:latest \
-            bash -c "source /docker-scripts/user-entrypoint.sh; \
-              python /plugin/constraints_tool/constraints_tool/check_spec_constraints.py --dry-run" \
+          bash .github/scripts/run-in-docker-no-claude.sh \
+            'python /plugin/constraints_tool/constraints_tool/check_spec_constraints.py --dry-run' \
             > /tmp/constraints.md 2>&1
           CONSTRAINTS_EXIT=$?
           set -e
-          echo "constraints_exit=$CONSTRAINTS_EXIT" >> $GITHUB_OUTPUT
+          echo "constraints_exit=$CONSTRAINTS_EXIT" >> "$GITHUB_OUTPUT"
 
-          if [ "$EXIT_CODE" = "0" ] && [ "$CONSTRAINTS_EXIT" = "0" ]; then
-            docker run "${DOCKER_COMMON[@]}" $CLAUDE_EXTRA_DOCKER_ARGS \
-              ghcr.io/clockwork-pilot/rslite-ws:latest \
-              bash -c "source /docker-scripts/user-entrypoint.sh; \
-                claude --dangerously-skip-permissions --model $MODEL --plugin-dir /plugin -p 'commit changes'" || true
-          else
-            echo "::notice::Skipping commit (agent exit=$EXIT_CODE, constraints exit=$CONSTRAINTS_EXIT)"
-          fi
+      - name: Record HEAD before commit
+        id: head-before
+        if: always()
+        run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
-          HEAD_AFTER=$(git rev-parse HEAD)
-          if [ "$HEAD_BEFORE" != "$HEAD_AFTER" ]; then
-            echo "has_new_commit=true" >> $GITHUB_OUTPUT
+      - name: Agent commit
+        id: agent-commit
+        if: always() && steps.agent.outputs.exit_code == '0' && steps.constraints-check.outputs.constraints_exit == '0'
+        env:
+          MODEL:  ${{ needs.parse-issue.outputs.model }}
+          PROMPT: commit changes
+        run: bash .github/scripts/run-in-docker-claude.sh || true
+
+      - name: Detect new commit
+        id: detect-new-commit
+        if: always()
+        run: |
+          if [ "${{ steps.head-before.outputs.sha }}" != "$(git rev-parse HEAD)" ]; then
+            echo "has_new_commit=true" >> "$GITHUB_OUTPUT"
           else
-            echo "has_new_commit=false" >> $GITHUB_OUTPUT
+            echo "has_new_commit=false" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Push branch and open PR
-        if: steps.finalize.outputs.has_new_commit == 'true'
+        if: steps.detect-new-commit.outputs.has_new_commit == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          BRANCH="${{ steps.issue.outputs.branch }}"
+          BRANCH="${{ needs.choose-branch.outputs.branch }}"
           git push origin "$BRANCH"
           COMMIT_MSG=$(git log -1 --pretty=%B HEAD)
           {
@@ -225,14 +267,14 @@ jobs:
             echo "$COMMIT_MSG"
           } > /tmp/pr-body.md
           gh pr create \
-            --title "[AGENT] ${{ steps.issue.outputs.title }}" \
+            --title "[AGENT] ${{ needs.fetch-issue.outputs.title }}" \
             --body-file /tmp/pr-body.md \
             --head "$BRANCH" \
             || true   # tolerate 'pr already exists' on re-runs
           gh issue comment "${{ inputs.issue_number }}" --body-file /tmp/constraints.md
 
       - name: Comment on issue (no PR)
-        if: steps.finalize.outputs.has_new_commit != 'true'
+        if: steps.detect-new-commit.outputs.has_new_commit != 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |

@@ -23,6 +23,8 @@ Verify c_variadic feature isolation: only in printf_c_variadic.rs
       - [rslite_uses_crust_core](#rslite_uses_crust_core)
     - [Feature: toolchain_version](#feature-toolchain_version)
       - [stable_toolchain_or_missing](#stable_toolchain_or_missing)
+    - [Feature: workflow_constraints](#feature-workflow_constraints)
+      - [workflow_spec](#workflow_spec)
 
 ## Features
 
@@ -90,3 +92,13 @@ Verify c_variadic feature isolation: only in printf_c_variadic.rs
 
 #### stable_toolchain_or_missing
 **Description:** rust-toolchain.toml must either be missing or use stable channel
+
+### Feature: workflow_constraints
+**Workflow specs exist and constraint checker runs on PRs**
+
+**Goals:**
+- Workflow spec must exist at .github/workflows/spec.k.json
+- A CI workflow must run check_spec_constraints.py against the workflow spec on pull_request
+
+#### workflow_spec
+**Description:** Workflow checks
