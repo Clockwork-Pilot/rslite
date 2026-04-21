@@ -175,13 +175,19 @@ jobs:
           echo "branch=$BRANCH" >> "$GITHUB_OUTPUT"
           echo "base_branch=$BASE" >> "$GITHUB_OUTPUT"
 
+  image-digest:
+    uses: ./.github/workflows/image-digest.yml
+
   run-agent:
-    needs: [validate-runner, fetch-issue, parse-issue, choose-branch]
+    needs: [validate-runner, fetch-issue, parse-issue, choose-branch, image-digest]
     runs-on: [self-hosted, "${{ inputs.runner_label }}"]
+    outputs:
+      has_new_commit:  ${{ steps.detect-new-commit.outputs.has_new_commit }}
+      agent_exit_code: ${{ steps.agent.outputs.exit_code }}
+      constraints_md:  ${{ steps.constraints-out.outputs.body }}
+      commit_msg:      ${{ steps.commit-msg.outputs.body }}
     permissions:
       contents: write
-      pull-requests: write
-      issues: write
     steps:
       - name: Checkout repo into isolated workspace
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
@@ -215,13 +221,9 @@ jobs:
       # No ghcr.io login needed: ghcr.io/clockwork-pilot/rslite-ws is a public package.
       # If it's ever made private again, re-add a docker login step with a PAT.
 
-      - name: Get image digest
-        id: image-digest
-        run: bash ${{ github.workspace }}/.github/scripts/get-image-digest.sh
-
       - name: Pull pinned agent image
         env:
-          AGENT_IMAGE: ${{ steps.image-digest.outputs.image }}
+          AGENT_IMAGE: ${{ needs.image-digest.outputs.image }}
         run: docker pull "$AGENT_IMAGE"
 
       - name: Run Claude agent in Docker
@@ -230,7 +232,7 @@ jobs:
           MODEL:        ${{ needs.parse-issue.outputs.model }}
           TIMEOUT_SECS: ${{ needs.parse-issue.outputs.timeout_secs }}
           PROMPT:       ${{ needs.parse-issue.outputs.agent_task_text }}
-          AGENT_IMAGE:  ${{ steps.image-digest.outputs.image }}
+          AGENT_IMAGE:  ${{ needs.image-digest.outputs.image }}
         run: |
           echo "::group::Claude Agent Output"
           set +e
@@ -244,7 +246,7 @@ jobs:
         id: constraints
         if: always()
         env:
-          AGENT_IMAGE: ${{ steps.image-digest.outputs.image }}
+          AGENT_IMAGE: ${{ needs.image-digest.outputs.image }}
         run: |
           # stdout → issue comment; exit code gates the commit step.
           set +e
@@ -254,6 +256,16 @@ jobs:
           EXIT_CODE=$?
           set -e
           echo "exit_code=$EXIT_CODE" >> "$GITHUB_OUTPUT"
+
+      - name: Export constraints report as job output
+        id: constraints-out
+        if: always()
+        run: |
+          {
+            echo "body<<EOF_CONSTRAINTS_BODY"
+            cat /tmp/constraints.md 2>/dev/null || echo "(no constraints report produced)"
+            echo "EOF_CONSTRAINTS_BODY"
+          } >> "$GITHUB_OUTPUT"
 
       - name: Record HEAD before commit
         id: head-before
@@ -266,7 +278,7 @@ jobs:
         env:
           MODEL:       ${{ needs.parse-issue.outputs.model }}
           PROMPT:      commit changes
-          AGENT_IMAGE: ${{ steps.image-digest.outputs.image }}
+          AGENT_IMAGE: ${{ needs.image-digest.outputs.image }}
         run: bash .github/scripts/run-in-docker-claude.sh --allow-git-commit || true
 
       - name: Detect new commit
@@ -279,55 +291,140 @@ jobs:
             echo "has_new_commit=false" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Push branch and open PR
+      - name: Push branch
         if: steps.detect-new-commit.outputs.has_new_commit == 'true'
-        env:
-          GH_TOKEN:            ${{ secrets.GITHUB_TOKEN }}
-          MERGE_INTO_UPSTREAM: ${{ needs.parse-issue.outputs.merge_into_upstream }}
-        run: |
-          BRANCH="${{ needs.choose-branch.outputs.branch }}"
-          git push origin "$BRANCH"
-          COMMIT_MSG=$(git log -1 --pretty=%B HEAD)
-          {
-            echo "Refs ${{ github.repository }}#${{ inputs.issue_number }}"
-            echo
-            echo "$COMMIT_MSG"
-          } > /tmp/pr-body.md
-          if [ "$MERGE_INTO_UPSTREAM" = "true" ]; then
-            # Cross-repo PR: this repo must be a fork. Resolve the parent
-            # (upstream) repo and open the PR there with owner-qualified head.
-            UPSTREAM=$(gh api "repos/${{ github.repository }}" -q '.parent.full_name // ""')
-            if [ -z "$UPSTREAM" ]; then
-              echo "::error::merge_into_upstream: true but ${{ github.repository }} has no parent (not a fork)"
-              exit 1
-            fi
-            HEAD="${{ github.repository_owner }}:$BRANCH"
-            gh pr create \
-              --repo "$UPSTREAM" \
-              --title "[AGENT] ${{ needs.fetch-issue.outputs.title }}" \
-              --body-file /tmp/pr-body.md \
-              --head "$HEAD" \
-              || true   # tolerate 'pr already exists' on re-runs
-          else
-            gh pr create \
-              --title "[AGENT] ${{ needs.fetch-issue.outputs.title }}" \
-              --body-file /tmp/pr-body.md \
-              --head "$BRANCH" \
-              || true   # tolerate 'pr already exists' on re-runs
-          fi
-          gh issue comment "${{ inputs.issue_number }}" --body-file /tmp/constraints.md
-
-      - name: Comment on issue (no PR)
-        if: steps.detect-new-commit.outputs.has_new_commit != 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          EXIT_CODE="${{ steps.agent.outputs.exit_code }}"
-          if [ "$EXIT_CODE" = "0" ]; then
-            echo "Agent ran successfully but produced no new commit." > /tmp/msg.md
-            echo >> /tmp/msg.md
-            cat /tmp/constraints.md >> /tmp/msg.md
-            gh issue comment "${{ inputs.issue_number }}" --body-file /tmp/msg.md
+          BRANCH="${{ needs.choose-branch.outputs.branch }}"
+          git push origin "$BRANCH"
+
+      - name: Capture last commit message for PR body
+        id: commit-msg
+        if: steps.detect-new-commit.outputs.has_new_commit == 'true'
+        run: |
+          {
+            echo "body<<EOF_COMMIT_BODY"
+            git log -1 --pretty=%B HEAD
+            echo "EOF_COMMIT_BODY"
+          } >> "$GITHUB_OUTPUT"
+
+  # Fork-PR creation and issue commenting split off the self-hosted runner.
+  # Only needs GITHUB_TOKEN; does not require the agent runner or Docker.
+  open-pr:
+    needs: [fetch-issue, parse-issue, choose-branch, run-agent]
+    if: always() && needs.run-agent.result != 'skipped' && needs.run-agent.result != 'cancelled'
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      issues: write
+    steps:
+      - name: Restore constraints report
+        env:
+          BODY: ${{ needs.run-agent.outputs.constraints_md }}
+        run: printf '%s\n' "$BODY" > /tmp/constraints.md
+
+      - name: Open PR inside fork
+        if: needs.run-agent.outputs.has_new_commit == 'true' && needs.parse-issue.outputs.merge_into_upstream != 'true'
+        env:
+          GH_TOKEN:    ${{ secrets.GITHUB_TOKEN }}
+          PR_REPO:     ${{ github.repository }}
+          PR_HEAD:     ${{ needs.choose-branch.outputs.branch }}
+          PR_TITLE:    ${{ needs.fetch-issue.outputs.title }}
+          ISSUE_REF:   ${{ github.repository }}#${{ inputs.issue_number }}
+          COMMIT_BODY: ${{ needs.run-agent.outputs.commit_msg }}
+        # Shared with 'Open PR against upstream' via YAML anchor.
+        # Inputs via env: GH_TOKEN, PR_REPO, PR_HEAD, PR_TITLE, ISSUE_REF, COMMIT_BODY.
+        run: &create_pr |
+          set -e
+          {
+            echo "Refs $ISSUE_REF"
+            echo
+            printf '%s\n' "$COMMIT_BODY"
+          } > /tmp/pr-body.md
+          gh pr create \
+            --repo "$PR_REPO" \
+            --title "[AGENT] $PR_TITLE" \
+            --body-file /tmp/pr-body.md \
+            --head "$PR_HEAD" \
+            || true   # tolerate 'pr already exists' on re-runs
+
+      - name: Comment constraints report on issue
+        if: needs.run-agent.outputs.has_new_commit == 'true'
+        env:
+          GH_TOKEN:     ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ inputs.issue_number }}
+        run: gh issue comment "$ISSUE_NUMBER" --repo "${{ github.repository }}" --body-file /tmp/constraints.md
+
+      - name: Comment on issue (no PR)
+        if: needs.run-agent.outputs.has_new_commit != 'true'
+        env:
+          GH_TOKEN:        ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER:    ${{ inputs.issue_number }}
+          AGENT_EXIT_CODE: ${{ needs.run-agent.outputs.agent_exit_code }}
+        run: |
+          if [ "$AGENT_EXIT_CODE" = "0" ]; then
+            {
+              echo "Agent ran successfully but produced no new commit."
+              echo
+              cat /tmp/constraints.md
+            } > /tmp/msg.md
+            gh issue comment "$ISSUE_NUMBER" --repo "${{ github.repository }}" --body-file /tmp/msg.md
           else
-            gh issue comment "${{ inputs.issue_number }}" --body-file /tmp/constraints.md
+            gh issue comment "$ISSUE_NUMBER" --repo "${{ github.repository }}" --body-file /tmp/constraints.md
           fi
+
+  # Cross-repo PR from fork → upstream. Isolated on a GitHub-hosted runner so
+  # UPSTREAM_PR_TOKEN never enters the self-hosted agent job. The `upstream-pr`
+  # environment must exist in fork settings with UPSTREAM_PR_TOKEN set;
+  # see rslite-ws/README.md "Opening PRs against the upstream repo".
+  open-upstream-pr:
+    needs: [fetch-issue, parse-issue, choose-branch, run-agent]
+    if: needs.run-agent.outputs.has_new_commit == 'true' && needs.parse-issue.outputs.merge_into_upstream == 'true'
+    runs-on: ubuntu-latest
+    environment: upstream-pr
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout pushed agent branch
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          ref: ${{ needs.choose-branch.outputs.branch }}
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Resolve upstream repo
+        id: upstream
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          UPSTREAM=$(gh api "repos/${{ github.repository }}" -q '.parent.full_name // ""')
+          if [ -z "$UPSTREAM" ]; then
+            echo "::error::merge_into_upstream: true but ${{ github.repository }} has no parent (not a fork)"
+            exit 1
+          fi
+          echo "full_name=$UPSTREAM" >> "$GITHUB_OUTPUT"
+
+      - name: Ensure UPSTREAM_PR_TOKEN is configured
+        env:
+          UPSTREAM_PR_TOKEN: ${{ secrets.UPSTREAM_PR_TOKEN }}
+        run: |
+          : "${UPSTREAM_PR_TOKEN:?UPSTREAM_PR_TOKEN is not set in the 'upstream-pr' environment — see rslite-ws/README.md 'Opening PRs against the upstream repo (optional)'}"
+
+      - name: Load commit message into env
+        run: |
+          {
+            echo "COMMIT_BODY<<EOF_COMMIT_BODY"
+            git log -1 --pretty=%B HEAD
+            echo "EOF_COMMIT_BODY"
+          } >> "$GITHUB_ENV"
+
+      - name: Open PR against upstream
+        env:
+          GH_TOKEN:  ${{ secrets.UPSTREAM_PR_TOKEN }}
+          PR_REPO:   ${{ steps.upstream.outputs.full_name }}
+          PR_HEAD:   ${{ github.repository_owner }}:${{ needs.choose-branch.outputs.branch }}
+          PR_TITLE:  ${{ needs.fetch-issue.outputs.title }}
+          ISSUE_REF: ${{ github.repository }}#${{ inputs.issue_number }}
+          # COMMIT_BODY comes from $GITHUB_ENV (set by previous step).
+        run: *create_pr

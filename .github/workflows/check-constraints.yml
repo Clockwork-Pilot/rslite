@@ -7,7 +7,11 @@ on:
   pull_request:
 
 jobs:
+  image-digest:
+    uses: ./.github/workflows/image-digest.yml
+
   check-constraints:
+    needs: [image-digest]
     runs-on: ubuntu-latest
 
     steps:
@@ -17,34 +21,39 @@ jobs:
       # No ghcr.io login needed: ghcr.io/clockwork-pilot/rslite-ws is a public package.
       # If it's ever made private again, re-add a docker login step with a PAT.
 
-      - name: Get image digest
-        id: image-digest
-        run: bash ${{ github.workspace }}/.github/scripts/get-image-digest.sh
-
       - name: Cache Docker image
         id: cache-image
         uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830
         with:
           path: /tmp/rslite-ws.tar
-          key: docker-rslite-ws-${{ steps.image-digest.outputs.digest }}
+          key: docker-rslite-ws-${{ needs.image-digest.outputs.digest }}
 
       - name: Load cached image
         if: steps.cache-image.outputs.cache-hit == 'true'
         env:
-          AGENT_IMAGE: ${{ steps.image-digest.outputs.image }}
-        run: bash ${{ github.workspace }}/.github/scripts/docker-cache.sh load
+          AGENT_IMAGE: ${{ needs.image-digest.outputs.image }}
+        run: |
+          set -e
+          if [ ! -f /tmp/rslite-ws.tar ]; then
+            echo "::error::Cache hit reported but /tmp/rslite-ws.tar not found"
+            exit 1
+          fi
+          docker load < /tmp/rslite-ws.tar
 
       - name: Pull image and save to cache
         if: steps.cache-image.outputs.cache-hit != 'true'
         env:
-          AGENT_IMAGE: ${{ steps.image-digest.outputs.image }}
-        run: bash ${{ github.workspace }}/.github/scripts/docker-cache.sh save
+          AGENT_IMAGE: ${{ needs.image-digest.outputs.image }}
+        run: |
+          set -e
+          docker pull "$AGENT_IMAGE"
+          docker save "$AGENT_IMAGE" > /tmp/rslite-ws.tar
 
       - name: Run constraint checks
         id: constraints
         env:
           GITHUB_WORKSPACE: ${{ github.workspace }}
-          AGENT_IMAGE: ${{ steps.image-digest.outputs.image }}
+          AGENT_IMAGE: ${{ needs.image-digest.outputs.image }}
         run: |
           echo "::group::Constraint Checks"
           bash ${{ github.workspace }}/.github/scripts/run-in-docker-no-claude.sh \
