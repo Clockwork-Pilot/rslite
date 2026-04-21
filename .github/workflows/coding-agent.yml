@@ -45,6 +45,7 @@ jobs:
       timeout_secs:         ${{ steps.p.outputs.timeout_secs }}
       model:                ${{ steps.p.outputs.model }}
       agent_branch_default: ${{ steps.p.outputs.agent_branch_default }}
+      merge_into_upstream:  ${{ steps.p.outputs.merge_into_upstream }}
     steps:
       - name: parse
         id: p
@@ -72,16 +73,25 @@ jobs:
           BASE_BRANCH=""
           TIMEOUT_MINS=""
           MODEL=""
+          MERGE_INTO_UPSTREAM=""
           if [ -n "$YAML_PART" ]; then
             PR_BRANCH=$(echo "$YAML_PART" | yq -r '.pr_branch // ""')
             BASE_BRANCH=$(echo "$YAML_PART" | yq -r '.base_branch // ""')
             TIMEOUT_MINS=$(echo "$YAML_PART" | yq -r '.timeout // ""')
             MODEL=$(echo "$YAML_PART" | yq -r '.model // ""')
+            MERGE_INTO_UPSTREAM=$(echo "$YAML_PART" | yq -r '.merge_into_upstream // ""')
           fi
           [ "$PR_BRANCH" = "null" ] && PR_BRANCH=""
           [ "$BASE_BRANCH" = "null" ] && BASE_BRANCH=""
           [ "$TIMEOUT_MINS" = "null" ] && TIMEOUT_MINS=""
           [ "$MODEL" = "null" ] && MODEL=""
+          [ "$MERGE_INTO_UPSTREAM" = "null" ] && MERGE_INTO_UPSTREAM=""
+          # Normalize to "true" / "" — only the literal true enables upstream PR.
+          if [ "$MERGE_INTO_UPSTREAM" = "true" ]; then
+            MERGE_INTO_UPSTREAM="true"
+          else
+            MERGE_INTO_UPSTREAM=""
+          fi
 
           TIMEOUT_SECS=$(( ${TIMEOUT_MINS:-10} * 60 ))
           MODEL="${MODEL:-claude-haiku-4-5}"
@@ -93,6 +103,7 @@ jobs:
           echo "timeout_secs=$TIMEOUT_SECS" >> "$GITHUB_OUTPUT"
           echo "model=$MODEL" >> "$GITHUB_OUTPUT"
           echo "agent_branch_default=$AGENT_BRANCH_DEFAULT" >> "$GITHUB_OUTPUT"
+          echo "merge_into_upstream=$MERGE_INTO_UPSTREAM" >> "$GITHUB_OUTPUT"
           echo "agent_task_text<<EOF_AGENT_TASK_TEXT" >> "$GITHUB_OUTPUT"
           printf '%s\n' "$AGENT_TASK_TEXT" >> "$GITHUB_OUTPUT"
           echo "EOF_AGENT_TASK_TEXT" >> "$GITHUB_OUTPUT"
@@ -271,21 +282,39 @@ jobs:
       - name: Push branch and open PR
         if: steps.detect-new-commit.outputs.has_new_commit == 'true'
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN:            ${{ secrets.GITHUB_TOKEN }}
+          MERGE_INTO_UPSTREAM: ${{ needs.parse-issue.outputs.merge_into_upstream }}
         run: |
           BRANCH="${{ needs.choose-branch.outputs.branch }}"
           git push origin "$BRANCH"
           COMMIT_MSG=$(git log -1 --pretty=%B HEAD)
           {
-            echo "Refs #${{ inputs.issue_number }}"
+            echo "Refs ${{ github.repository }}#${{ inputs.issue_number }}"
             echo
             echo "$COMMIT_MSG"
           } > /tmp/pr-body.md
-          gh pr create \
-            --title "[AGENT] ${{ needs.fetch-issue.outputs.title }}" \
-            --body-file /tmp/pr-body.md \
-            --head "$BRANCH" \
-            || true   # tolerate 'pr already exists' on re-runs
+          if [ "$MERGE_INTO_UPSTREAM" = "true" ]; then
+            # Cross-repo PR: this repo must be a fork. Resolve the parent
+            # (upstream) repo and open the PR there with owner-qualified head.
+            UPSTREAM=$(gh api "repos/${{ github.repository }}" -q '.parent.full_name // ""')
+            if [ -z "$UPSTREAM" ]; then
+              echo "::error::merge_into_upstream: true but ${{ github.repository }} has no parent (not a fork)"
+              exit 1
+            fi
+            HEAD="${{ github.repository_owner }}:$BRANCH"
+            gh pr create \
+              --repo "$UPSTREAM" \
+              --title "[AGENT] ${{ needs.fetch-issue.outputs.title }}" \
+              --body-file /tmp/pr-body.md \
+              --head "$HEAD" \
+              || true   # tolerate 'pr already exists' on re-runs
+          else
+            gh pr create \
+              --title "[AGENT] ${{ needs.fetch-issue.outputs.title }}" \
+              --body-file /tmp/pr-body.md \
+              --head "$BRANCH" \
+              || true   # tolerate 'pr already exists' on re-runs
+          fi
           gh issue comment "${{ inputs.issue_number }}" --body-file /tmp/constraints.md
 
       - name: Comment on issue (no PR)
