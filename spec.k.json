@@ -119,6 +119,12 @@
           "cmd": "! grep -rE \"allow[[:space:]]*\\\\(.*clippy::non_camel_case_types\" \"$PROJECT_ROOT/crates\" --include=\"*.rs\" 2>/dev/null",
           "description": "Structural: Forbid allow() attributes for clippy::non_camel_case_types rule. Types must follow camelCase naming convention.",
           "fails_count": 1
+        },
+        "forbid_non_camel_case_types_allow_robust": {
+          "id": "forbid_non_camel_case_types_allow_robust",
+          "cmd": "! grep -rE \"allow[[:space:]]*\\\\(.*clippy::non_camel_case_types\" \"$PROJECT_ROOT/crates\" --include=\"*.rs\" 2>/dev/null",
+          "description": "Structural: Robust whitespace-tolerant detection of forbidden clippy::non_camel_case_types allow. Forbids any formatting of allow() with this single lint, ignoring whitespace between allow and (.",
+          "fails_count": 1
         }
       }
     },
