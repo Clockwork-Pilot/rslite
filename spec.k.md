@@ -14,6 +14,7 @@ Verify c_variadic feature isolation: only in printf_c_variadic.rs
       - [clippy_checks](#clippy_checks)
       - [forbid_non_camel_case_types_allow](#forbid_non_camel_case_types_allow)
       - [forbid_non_camel_case_types_allow_robust](#forbid_non_camel_case_types_allow_robust)
+      - [forbid_non_camel_case_types_with_warnings_robust](#forbid_non_camel_case_types_with_warnings_robust)
       - [no_forbidden_allows_robust](#no_forbidden_allows_robust)
     - [Feature: fts5_no_libc_global](#feature-fts5_no_libc_global)
       - [fts5_no_libc_calls](#fts5_no_libc_calls)
@@ -51,6 +52,9 @@ Verify c_variadic feature isolation: only in printf_c_variadic.rs
 
 #### forbid_non_camel_case_types_allow_robust
 **Description:** Structural: Robust whitespace-tolerant detection of forbidden clippy::non_camel_case_types allow. Forbids any formatting of allow() with this single lint, ignoring whitespace between allow and (.
+
+#### forbid_non_camel_case_types_with_warnings_robust
+**Description:** Structural: Robust whitespace-tolerant detection of forbidden clippy::non_camel_case_types and warnings allows. Forbids any formatting of allow() with non_camel_case_types or warnings, ignoring whitespace between allow and (.
 
 #### no_forbidden_allows_robust
 **Description:** Structural: Robust whitespace-tolerant detection of forbidden clippy allows. Detects any formatting of allow() with forbidden lints, ignoring whitespace between allow and (.
