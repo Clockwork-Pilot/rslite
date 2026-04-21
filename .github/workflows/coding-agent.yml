@@ -184,8 +184,13 @@ jobs:
           BASE_BRANCH: ${{ needs.choose-branch.outputs.base_branch }}
         run: |
           git fetch origin
-          echo "::notice::Work branch: $BRANCH (base: $BASE_BRANCH)"
-          git checkout -B "$BRANCH" "origin/$BASE_BRANCH"
+          if git show-ref --verify --quiet "refs/remotes/origin/$BRANCH"; then
+            echo "::notice::Resuming existing work branch: $BRANCH"
+            git checkout -B "$BRANCH" "origin/$BRANCH"
+          else
+            echo "::notice::Creating new work branch: $BRANCH (base: $BASE_BRANCH)"
+            git checkout -B "$BRANCH" "origin/$BASE_BRANCH"
+          fi
 
       - name: Prepare docker-files directories
         run: |
