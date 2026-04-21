@@ -35,6 +35,7 @@ jobs:
           compact=$(echo "$manifest" | python3 -c 'import sys,json; print(json.dumps(json.load(sys.stdin)))')
           echo "manifest_json=$compact" >> "$GITHUB_OUTPUT"
 
+  # Verified by: step_output_checks/parse_digest_cases
   parse-digest:
     needs: [fetch-manifest]
     runs-on: ubuntu-latest

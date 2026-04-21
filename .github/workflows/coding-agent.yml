@@ -313,66 +313,43 @@ jobs:
   # Only needs GITHUB_TOKEN; does not require the agent runner or Docker.
   open-pr:
     needs: [fetch-issue, parse-issue, choose-branch, run-agent]
-    if: always() && needs.run-agent.result != 'skipped' && needs.run-agent.result != 'cancelled'
+    # Handles: (a) fork-PR flow end-to-end, and (b) issue commenting for the
+    # upstream-no-commit case (where open-upstream-pr is gated off). The
+    # upstream-with-commit case is owned by open-upstream-pr.
+    if: |
+      always() && needs.run-agent.result != 'skipped' && needs.run-agent.result != 'cancelled'
+      && (needs.parse-issue.outputs.merge_into_upstream != 'true'
+          || needs.run-agent.outputs.has_new_commit != 'true')
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
       issues: write
     steps:
-      - name: Restore constraints report
-        env:
-          BODY: ${{ needs.run-agent.outputs.constraints_md }}
-        run: printf '%s\n' "$BODY" > /tmp/constraints.md
+      - name: Check out repo (for composite actions)
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          persist-credentials: false
 
       - name: Open PR inside fork
         if: needs.run-agent.outputs.has_new_commit == 'true' && needs.parse-issue.outputs.merge_into_upstream != 'true'
-        env:
-          GH_TOKEN:    ${{ secrets.GITHUB_TOKEN }}
-          PR_REPO:     ${{ github.repository }}
-          PR_HEAD:     ${{ needs.choose-branch.outputs.branch }}
-          PR_TITLE:    ${{ needs.fetch-issue.outputs.title }}
-          ISSUE_REF:   ${{ github.repository }}#${{ inputs.issue_number }}
-          COMMIT_BODY: ${{ needs.run-agent.outputs.commit_msg }}
-        # Shared with 'Open PR against upstream' via YAML anchor.
-        # Inputs via env: GH_TOKEN, PR_REPO, PR_HEAD, PR_TITLE, ISSUE_REF, COMMIT_BODY.
-        run: &create_pr |
-          set -e
-          {
-            echo "Refs $ISSUE_REF"
-            echo
-            printf '%s\n' "$COMMIT_BODY"
-          } > /tmp/pr-body.md
-          gh pr create \
-            --repo "$PR_REPO" \
-            --title "[AGENT] $PR_TITLE" \
-            --body-file /tmp/pr-body.md \
-            --head "$PR_HEAD" \
-            || true   # tolerate 'pr already exists' on re-runs
+        uses: ./.github/actions/create-pr
+        with:
+          gh-token:    ${{ secrets.GITHUB_TOKEN }}
+          pr-repo:     ${{ github.repository }}
+          pr-head:     ${{ needs.choose-branch.outputs.branch }}
+          pr-title:    ${{ needs.fetch-issue.outputs.title }}
+          issue-ref:   ${{ github.repository }}#${{ inputs.issue_number }}
+          commit-body: ${{ needs.run-agent.outputs.commit_msg }}
 
-      - name: Comment constraints report on issue
-        if: needs.run-agent.outputs.has_new_commit == 'true'
-        env:
-          GH_TOKEN:     ${{ secrets.GITHUB_TOKEN }}
-          ISSUE_NUMBER: ${{ inputs.issue_number }}
-        run: gh issue comment "$ISSUE_NUMBER" --repo "${{ github.repository }}" --body-file /tmp/constraints.md
-
-      - name: Comment on issue (no PR)
-        if: needs.run-agent.outputs.has_new_commit != 'true'
-        env:
-          GH_TOKEN:        ${{ secrets.GITHUB_TOKEN }}
-          ISSUE_NUMBER:    ${{ inputs.issue_number }}
-          AGENT_EXIT_CODE: ${{ needs.run-agent.outputs.agent_exit_code }}
-        run: |
-          if [ "$AGENT_EXIT_CODE" = "0" ]; then
-            {
-              echo "Agent ran successfully but produced no new commit."
-              echo
-              cat /tmp/constraints.md
-            } > /tmp/msg.md
-            gh issue comment "$ISSUE_NUMBER" --repo "${{ github.repository }}" --body-file /tmp/msg.md
-          else
-            gh issue comment "$ISSUE_NUMBER" --repo "${{ github.repository }}" --body-file /tmp/constraints.md
-          fi
+      - name: Comment agent result on issue
+        uses: ./.github/actions/comment-agent-result
+        with:
+          gh-token:        ${{ secrets.GITHUB_TOKEN }}
+          repo:            ${{ github.repository }}
+          issue-number:    ${{ inputs.issue_number }}
+          constraints-md:  ${{ needs.run-agent.outputs.constraints_md }}
+          has-new-commit:  ${{ needs.run-agent.outputs.has_new_commit }}
+          agent-exit-code: ${{ needs.run-agent.outputs.agent_exit_code }}
 
   # Cross-repo PR from fork → upstream. Isolated on a GitHub-hosted runner so
   # UPSTREAM_PR_TOKEN never enters the self-hosted agent job. The `upstream-pr`
@@ -385,12 +362,11 @@ jobs:
     environment: upstream-pr
     permissions:
       contents: read
+      issues: write
     steps:
-      - name: Checkout pushed agent branch
+      - name: Check out repo (for composite actions)
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
         with:
-          ref: ${{ needs.choose-branch.outputs.branch }}
-          fetch-depth: 1
           persist-credentials: false
 
       - name: Resolve upstream repo
@@ -411,20 +387,22 @@ jobs:
         run: |
           : "${UPSTREAM_PR_TOKEN:?UPSTREAM_PR_TOKEN is not set in the 'upstream-pr' environment — see rslite-ws/README.md 'Opening PRs against the upstream repo (optional)'}"
 
-      - name: Load commit message into env
-        run: |
-          {
-            echo "COMMIT_BODY<<EOF_COMMIT_BODY"
-            git log -1 --pretty=%B HEAD
-            echo "EOF_COMMIT_BODY"
-          } >> "$GITHUB_ENV"
-
       - name: Open PR against upstream
-        env:
-          GH_TOKEN:  ${{ secrets.UPSTREAM_PR_TOKEN }}
-          PR_REPO:   ${{ steps.upstream.outputs.full_name }}
-          PR_HEAD:   ${{ github.repository_owner }}:${{ needs.choose-branch.outputs.branch }}
-          PR_TITLE:  ${{ needs.fetch-issue.outputs.title }}
-          ISSUE_REF: ${{ github.repository }}#${{ inputs.issue_number }}
-          # COMMIT_BODY comes from $GITHUB_ENV (set by previous step).
-        run: *create_pr
+        uses: ./.github/actions/create-pr
+        with:
+          gh-token:    ${{ secrets.UPSTREAM_PR_TOKEN }}
+          pr-repo:     ${{ steps.upstream.outputs.full_name }}
+          pr-head:     ${{ github.repository_owner }}:${{ needs.choose-branch.outputs.branch }}
+          pr-title:    ${{ needs.fetch-issue.outputs.title }}
+          issue-ref:   ${{ github.repository }}#${{ inputs.issue_number }}
+          commit-body: ${{ needs.run-agent.outputs.commit_msg }}
+
+      - name: Comment agent result on issue
+        uses: ./.github/actions/comment-agent-result
+        with:
+          gh-token:        ${{ secrets.GITHUB_TOKEN }}
+          repo:            ${{ github.repository }}
+          issue-number:    ${{ inputs.issue_number }}
+          constraints-md:  ${{ needs.run-agent.outputs.constraints_md }}
+          has-new-commit:  ${{ needs.run-agent.outputs.has_new_commit }}
+          agent-exit-code: ${{ needs.run-agent.outputs.agent_exit_code }}
