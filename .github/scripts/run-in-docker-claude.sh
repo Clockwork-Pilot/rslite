@@ -20,7 +20,7 @@ TIMEOUT_SECS="${TIMEOUT_SECS:-180}"
 PROXY_WRAPPER=(-e PROXY_WRAPPER_CONFIG=/docker-scripts/proxy_wrapper_config.json)
 [ "${1:-}" = "--allow-git-commit" ] && PROXY_WRAPPER=()
 
-CLAUDE_HOOKS_LOG_FILE=/home/node/.claude/hooks.log
+export CLAUDE_HOOKS_LOG_FILE=/home/node/.claude/hooks.log
 
 RUN=(timeout "$TIMEOUT_SECS" docker run --rm
   -e CLAUDE_FILE_RULES=/docker-scripts/y2-plugin-deny-file-rules.json
