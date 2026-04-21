@@ -10,7 +10,11 @@ IMAGE_REPO="ghcr.io/clockwork-pilot/rslite-ws"
 
 echo "::group::Image Digest Extraction"
 
-manifest=$(docker manifest inspect "${IMAGE_REPO}:latest" 2>&1)
+if ! manifest=$(docker manifest inspect "${IMAGE_REPO}:latest" 2>&1); then
+  echo "::error::docker manifest inspect ${IMAGE_REPO}:latest failed:"
+  echo "$manifest"
+  exit 1
+fi
 echo "Manifest received (length: ${#manifest})"
 
 digest=$(echo "$manifest" | python3 -c '
