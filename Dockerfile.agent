@@ -87,6 +87,11 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs \
 # entrypoint only re-chowns /home/node and $WORKSPACE_ROOT, so /sqlite stays
 # owned by the original node UID and would otherwise be unwritable to the
 # rebranded user (e.g. config.log on a fresh ./configure).
+#
+# Ephemeral by design: /sqlite is *not* bind-mounted from the host. It lives
+# in the container's writable layer, so any artifacts produced there
+# (configure output, build products, edits to main.mk, etc.) are discarded
+# when the container exits. Persistent work belongs under $WORKSPACE_ROOT.
 RUN mkdir -p /sqlite && chown -R node:node /sqlite
 
 USER node
