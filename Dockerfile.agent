@@ -81,7 +81,12 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs \
     && rustup default stable \
     && chmod -R go+rwX "$RUSTUP_HOME" "$CARGO_HOME"
 
-# Sqlite workspace at /sqlite, owned by node so it can configure/make
+# Sqlite workspace at /sqlite, owned by node so it can configure/make.
+# `chmod -R go+rwX` (applied after the build below) keeps the tree writable
+# after the autopilot-ws entrypoint rebrands node's UID at runtime — the
+# entrypoint only re-chowns /home/node and $WORKSPACE_ROOT, so /sqlite stays
+# owned by the original node UID and would otherwise be unwritable to the
+# rebranded user (e.g. config.log on a fresh ./configure).
 RUN mkdir -p /sqlite && chown -R node:node /sqlite
 
 USER node
@@ -99,7 +104,8 @@ RUN cd /sqlite && \
     mv /sqlite/sqlite-src-3510200/* /sqlite/ && \
     rm -rf /sqlite/sqlite-src-3510200 && \
     cd /sqlite && \
-    ./configure --all --disable-amalgamation && make && rm *.o
+    ./configure --all --disable-amalgamation && make && rm *.o && \
+    chmod -R go+rwX /sqlite
 
 # Switch back so the base image's entrypoint (which expects USER root for
 # its chown + gosu drop) keeps working.
