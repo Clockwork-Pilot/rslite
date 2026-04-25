@@ -2,6 +2,8 @@
 /workspace/.github/workflows/spec-checks.k.md
 /workspace/.github/workflows/spec.k.json
 /workspace/.github/workflows/spec.k.md
+/workspace/autopilot/spec-checks.k.json
+/workspace/autopilot/spec-checks.k.md
 /workspace/spec-checks.k.json
 /workspace/spec-checks.k.md
 /workspace/spec.k.json

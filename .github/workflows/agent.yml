@@ -1,0 +1,48 @@
+name: Agent
+
+# Consumer caller: two-job shape where image preparation is hoisted into
+# its own visible job (ensure-docker-image.yml building Dockerfile.agent)
+# and its output is handed to coding-agent.yml as a pre-built ref. Both
+# reusable workflows' self-hosted jobs share runner_label so the local
+# docker tag is visible across jobs (assumes one runner per label; see
+# autopilot/README.md → Private repositories).
+#
+# PR testing loop: flip the `@main` refs to `@<pr-branch>` to smoke-test
+# against an in-flight autopilot PR, then flip back on merge.
+
+on:
+  workflow_dispatch:
+    inputs:
+      runner_label:
+        description: GitHub username (matches self-hosted runner label)
+        required: true
+        type: string
+      issue_number:
+        description: Issue number to work on
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  image:
+    uses: Clockwork-Pilot/autopilot/.github/workflows/ensure-docker-image.yml@main
+    with:
+      runner_label:     ${{ inputs.runner_label }}
+      base_image:       ghcr.io/clockwork-pilot/autopilot-ws:latest
+      dockerfile:       Dockerfile.agent
+      tag:              autopilot-agent
+      tag_prefix:       ${{ github.repository }}-agent-img
+
+  run:
+    needs: image
+    uses: Clockwork-Pilot/autopilot/.github/workflows/coding-agent.yml@main
+    with:
+      runner_label: ${{ inputs.runner_label }}
+      issue_number: ${{ inputs.issue_number }}
+      docker_image: ${{ needs.image.outputs.docker_image }}
+    secrets:
+      UPSTREAM_PR_TOKEN: ${{ secrets.UPSTREAM_PR_TOKEN }}

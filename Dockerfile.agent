@@ -1,0 +1,106 @@
+# Project-specific stack on top of an autopilot-ws-compatible base.
+#
+# Used in two contexts off the same file:
+#   - CI: ${{ Clockwork-Pilot/autopilot/.github/actions/ensure-docker-image }}
+#         pulls $BASE_IMAGE (the published default below) and builds this
+#         layer on top.
+#   - Local dev: in autopilot-ws/, run
+#         ./build-docker-workspace.sh ../rslite/Dockerfile.agent
+#     which builds autopilot-ws-base locally and forwards
+#     `--build-arg BASE_IMAGE=autopilot-ws-base` so the local base is used
+#     instead of pulling from ghcr.
+#
+# Do NOT end with `USER node` — the base image's entrypoint requires
+# USER root so it can chown the bind-mounted workspace and gosu-drop
+# to the host UID itself.
+
+ARG BASE_IMAGE=ghcr.io/clockwork-pilot/autopilot-ws:latest
+FROM ${BASE_IMAGE}
+
+# Editors, networking, debugging, general dev tools
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      aggregate \
+      build-essential \
+      gdb \
+      gnupg2 \
+      libicu-dev \
+      lsb-release \
+      man-db \
+      pinentry-curses \
+      nano \
+      vim \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      clang \
+      cmake \
+      libclang-dev \
+      libncurses-dev \
+      libreadline-dev \
+      libssl-dev \
+      llvm-dev \
+      pkg-config \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Tcl headers — sqlite testfixture build expects them in non-versioned paths
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      tcl tcl-dev tcllib \
+      tcl8.6 tcl8.6-dev tcl8.6-tdbc tcl8.6-tdbc-sqlite3 \
+    && apt-get clean && rm -rf /var/lib/apt/lists/* \
+    && ln -s /usr/include/tcl/tcl.h /usr/include/tcl.h \
+    && ln -s /usr/include/tcl/tclOODecls.h /usr/include/tclOODecls.h \
+    && ln -s /usr/include/tcl/tclPlatDecls.h /usr/include/tclPlatDecls.h \
+    && ln -s /usr/include/tcl/tclDecls.h /usr/include/tclDecls.h \
+    && ln -s /usr/include/tcl/tclTomMath.h /usr/include/tclTomMath.h \
+    && ln -s /usr/include/tcl/tclTomMathDecls.h /usr/include/tclTomMathDecls.h \
+    && ln -s /usr/lib/tclConfig.sh /usr/lib64/tclConfig.sh
+
+# Valgrind for native debugging
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      valgrind \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Rust toolchain — installed system-wide (matches the layout used by the
+# official `rust:bookworm` image). RUSTUP_HOME and CARGO_HOME live under
+# /usr/local so cargo/rustup/rustc are reachable from any UID at runtime,
+# regardless of how the autopilot-ws entrypoint rebrands the node user.
+# `chmod -R go+rwX` grants the dropped user write access to the registry
+# and toolchain caches under CARGO_HOME.
+ENV RUSTUP_HOME=/usr/local/rustup \
+    CARGO_HOME=/usr/local/cargo \
+    PATH=/usr/local/cargo/bin:$PATH
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs \
+      | sh -s -- -y --no-modify-path --default-toolchain none --profile minimal \
+    && rustup install nightly-2026-03-26-x86_64-unknown-linux-gnu \
+    && rustup component add --toolchain nightly-2026-03-26-x86_64-unknown-linux-gnu \
+       rustfmt rust-analyzer clippy \
+    && rustup toolchain install nightly --profile minimal \
+    && rustup component add --toolchain nightly rustfmt rust-analyzer clippy \
+    && rustup toolchain install stable \
+    && rustup component add --toolchain stable rustfmt rust-analyzer clippy \
+    && rustup default stable \
+    && chmod -R go+rwX "$RUSTUP_HOME" "$CARGO_HOME"
+
+# Sqlite workspace at /sqlite, owned by node so it can configure/make
+RUN mkdir -p /sqlite && chown -R node:node /sqlite
+
+USER node
+
+# uv — fast Python package manager. Installed under $HOME/.local/bin so
+# the PATH addition stays traversable for the node user.
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh
+ENV PATH="/home/node/.local/bin:$PATH"
+
+RUN cd /sqlite && \
+    wget https://sqlite.org/2026/sqlite-src-3510200.zip && \
+    ls /sqlite && \
+    unzip /sqlite/sqlite-src-3510200.zip -d /sqlite && \
+    rm /sqlite/sqlite-src-3510200.zip && \
+    mv /sqlite/sqlite-src-3510200/* /sqlite/ && \
+    rm -rf /sqlite/sqlite-src-3510200 && \
+    cd /sqlite && \
+    ./configure --all --disable-amalgamation && make && rm *.o
+
+# Switch back so the base image's entrypoint (which expects USER root for
+# its chown + gosu drop) keeps working.
+USER root
