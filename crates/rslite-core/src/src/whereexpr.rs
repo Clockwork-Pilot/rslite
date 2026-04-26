@@ -415,9 +415,7 @@ unsafe extern "C" fn exprCommute(
         __pExpr_ref.flags ^=
             crate::src::headers::sqliteInt_h::EP_Commuted as crate::src::ext::rtree::rtree::U32_0;
     }
-    let t: *mut crate::src::headers::sqliteInt_h::Expr = __pExpr_ref.pRight;
-    __pExpr_ref.pRight = __pExpr_ref.pLeft;
-    __pExpr_ref.pLeft = t;
+    std::mem::swap(&mut __pExpr_ref.pRight, &mut __pExpr_ref.pLeft);
     if __pExpr_ref.op as ::core::ffi::c_int >= crate::src::parse::TK_GT_1 {
         __pExpr_ref.op = (((__pExpr_ref.op as ::core::ffi::c_int - crate::src::parse::TK_GT_1) ^ 2 as ::core::ffi::c_int)
             + crate::src::parse::TK_GT_1)
@@ -805,9 +803,7 @@ unsafe extern "C" fn isAuxiliaryVtabOperator(
                     == crate::src::headers::sqliteInt_h::TABTYP_VTAB)
         {
             res += 1;
-            let t: *mut crate::src::headers::sqliteInt_h::Expr = pLeft;
-            pLeft = pRight;
-            pRight = t;
+            std::mem::swap(&mut pLeft, &mut pRight);
         }
         *ppLeft = pLeft;
         *ppRight = pRight;
@@ -2177,9 +2173,7 @@ unsafe extern "C" fn exprAnalyze(
                     as crate::src::fts5::U16_0;
                 (*pNewTerm_0).prereqAll = (*pTerm).prereqAll;
             }
-            let t: *mut crate::src::headers::sqliteInt_h::Expr = pLeft_3;
-            pLeft_3 = pRight_1;
-            pRight_1 = t;
+            std::mem::swap(&mut pLeft_3, &mut pRight_1);
         }
     }
     pTerm = __pWC_ref.a.offset(idxTerm as isize) as *mut crate::src::headers::whereInt_h::WhereTerm;

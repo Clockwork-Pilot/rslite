@@ -1474,7 +1474,7 @@ unsafe extern "C" fn jsonAppendSqlValue(
             } else {
                 // Use exponential notation if exponent is outside [-4, 15) range
                 let log10_abs = v.abs().log10();
-                let use_exp = log10_abs < -4.0 || log10_abs >= 15.0;
+                let use_exp = !(-4.0..15.0).contains(&log10_abs);
 
                 let mut result = if use_exp {
                     // Exponential format with 14 decimal places = 15 significant figures
@@ -1500,7 +1500,7 @@ unsafe extern "C" fn jsonAppendSqlValue(
 
                     if is_exp {
                         // For exponential notation, find and strip zeros before the exponent
-                        if let Some(e_pos) = result.find(|c| c == 'e' || c == 'E') {
+                        if let Some(e_pos) = result.find(['e', 'E']) {
                             let mut mantissa = result[..e_pos].to_string();
                             let mut exponent = result[e_pos..].to_string();
 

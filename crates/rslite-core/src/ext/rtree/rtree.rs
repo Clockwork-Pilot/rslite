@@ -1457,12 +1457,8 @@ pub mod geopoly_c {
             return;
         }
         if x0 > x1 {
-            let mut t: crate::geopoly_c::GeoCoord = x0;
-            x0 = x1;
-            x1 = t;
-            t = y0;
-            y0 = y1;
-            y1 = t;
+            std::mem::swap(&mut x0, &mut x1);
+            std::mem::swap(&mut y0, &mut y1);
         }
         let __p_ref = { &mut *p };
         let pSeg: *mut crate::geopoly_c::GeoSegment = __p_ref.aSegment.offset(__p_ref.nSegment as isize);
@@ -4456,9 +4452,7 @@ unsafe extern "C" fn rtreeSearchPointSwap(
             nodeRelease(__p_ref.base.pVtab as *mut Rtree, __p_ref.aNode[i as usize]);
             __p_ref.aNode[i as usize] = ::core::ptr::null_mut::<RtreeNode>();
         } else {
-            let pTemp: *mut RtreeNode = __p_ref.aNode[i as usize];
-            __p_ref.aNode[i as usize] = __p_ref.aNode[j as usize];
-            __p_ref.aNode[j as usize] = pTemp;
+            __p_ref.aNode.swap(i as usize, j as usize);
         }
     }
 }

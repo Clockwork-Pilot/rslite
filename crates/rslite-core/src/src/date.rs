@@ -551,7 +551,7 @@ unsafe extern "C" fn setDateTimeToCurrent(
 unsafe extern "C" fn setRawDateNumber(p: *mut DateTime, r: ::core::ffi::c_double) {
     (*p).s = r;
     (*p).set_rawS(1 as ::core::ffi::c_uint as ::core::ffi::c_uint);
-    if r >= 0.0f64 && r < 5373484.5f64 {
+    if (0.0f64..5373484.5f64).contains(&r) {
         (*p).iJD = (r * 86400000.0f64 + 0.5f64) as crate::src::headers::sqlite3_h::Sqlite3Int64;
         (*p).validJD = 1 as ::core::ffi::c_char;
     }
@@ -945,7 +945,7 @@ unsafe extern "C" fn parseModifier(
                     return 1 as ::core::ffi::c_int;
                 }
                 r = (*p).s * 1000.0f64 + 210866760000000.0f64;
-                if r >= 0.0f64 && r < 464269060800000.0f64 {
+                if (0.0f64..464269060800000.0f64).contains(&r) {
                     clearYMD_HMS_TZ(p);
                     let __p_ref = { &mut *p };
                     __p_ref.iJD = (r + 0.5f64) as crate::src::headers::sqlite3_h::Sqlite3Int64;
@@ -1016,8 +1016,7 @@ unsafe extern "C" fn parseModifier(
                     crate::src::headers::sqlite3_h::SQLITE_UTF8
                         as crate::src::ext::rtree::rtree::U8_0,
                 ) > 0 as ::core::ffi::c_int
-                && r >= 0.0f64
-                && r < 7.0f64
+                && (0.0f64..7.0f64).contains(&r)
                 && {
                     n = r as ::core::ffi::c_int;
                     n as ::core::ffi::c_double == r

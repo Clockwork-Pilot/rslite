@@ -2651,9 +2651,7 @@ pub unsafe extern "C" fn sqlite3_wal_checkpoint_v2(
     if !pnCkpt.is_null() {
         *pnCkpt = -(1 as ::core::ffi::c_int);
     }
-    if eMode < crate::src::headers::sqlite3_h::SQLITE_CHECKPOINT_PASSIVE
-        || eMode > crate::src::headers::sqlite3_h::SQLITE_CHECKPOINT_TRUNCATE
-    {
+    if !(crate::src::headers::sqlite3_h::SQLITE_CHECKPOINT_PASSIVE..=crate::src::headers::sqlite3_h::SQLITE_CHECKPOINT_TRUNCATE).contains(&eMode) {
         return sqlite3MisuseError(2564 as ::core::ffi::c_int);
     }
     let __db_ref = unsafe { &mut *db };
@@ -2998,9 +2996,7 @@ unsafe extern "C" fn createCollation(
     {
         enc2 = crate::src::headers::sqliteInt_h::SQLITE_UTF16NATIVE;
     }
-    if enc2 < crate::src::headers::sqlite3_h::SQLITE_UTF8
-        || enc2 > crate::src::headers::sqlite3_h::SQLITE_UTF16BE
-    {
+    if !(crate::src::headers::sqlite3_h::SQLITE_UTF8..=crate::src::headers::sqlite3_h::SQLITE_UTF16BE).contains(&enc2) {
         return sqlite3MisuseError(2859 as ::core::ffi::c_int);
     }
     pColl = crate::src::src::callback::sqlite3FindCollSeq(

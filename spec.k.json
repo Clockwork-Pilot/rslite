@@ -185,6 +185,12 @@
           "cmd": "! { grep -rE \"allow[[:space:]]*\\\\([^)]*\\\\b(clippy::)?(collapsible_if|if_same_then_else|single_match|short_circuit_statement|while_immutable_condition|needless_else|wildcard_in_or_patterns|redundant_pattern_matching|precedence)\\\\b\" \"$PROJECT_ROOT/crates\" --include=\"*.rs\" 2>/dev/null; grep -rE \"^[[:space:]]*(clippy::)?(collapsible_if|if_same_then_else|single_match|short_circuit_statement|while_immutable_condition|needless_else|wildcard_in_or_patterns|redundant_pattern_matching|precedence)[[:space:]]*=[[:space:]]*\\\"allow\\\"\" \"$PROJECT_ROOT\" --include=\"Cargo.toml\" 2>/dev/null; } | grep -q .",
           "description": "Structural: Forbid any allow() attribute (inner #![...] or outer #[...], bare or clippy:: prefix, alone or combined, arbitrary whitespace) for control-flow simplification lints clippy::collapsible_if, if_same_then_else, single_match, short_circuit_statement, while_immutable_condition, needless_else, wildcard_in_or_patterns, redundant_pattern_matching, precedence across crates/**/*.rs. Also forbid equivalent suppressions in any Cargo.toml across the workspace under [lints.rust] / [lints.clippy] / [workspace.lints.rust] / [workspace.lints.clippy] (e.g. `single_match = \"allow\"`). Word boundaries prevent false positives on longer identifiers.",
           "fails_count": 1
+        },
+        "forbid_manual_clippy_lints_any": {
+          "id": "forbid_manual_clippy_lints_any",
+          "cmd": "! { grep -rE \"allow[[:space:]]*\\([^)]*\\b(clippy::)?(manual_swap|manual_range_contains|manual_range_patterns|manual_pattern_char_comparison)\\b\" \"$PROJECT_ROOT/crates\" --include=\"*.rs\" 2>/dev/null; grep -rE \"^[[:space:]]*(clippy::)?(manual_swap|manual_range_contains|manual_range_patterns|manual_pattern_char_comparison)[[:space:]]*=[[:space:]]*\\\"allow\\\"\" \"$PROJECT_ROOT\" --include=\"Cargo.toml\" 2>/dev/null; } | grep -q .",
+          "description": "Structural: Forbid any allow() attribute (inner #![...] or outer #[...], bare or clippy:: prefix, alone or combined, arbitrary whitespace) for manual-pattern clippy lints clippy::manual_swap, manual_range_contains, manual_range_patterns, manual_pattern_char_comparison across crates/**/*.rs. Also forbid equivalent suppressions in any Cargo.toml across the workspace under [lints.rust] / [lints.clippy] / [workspace.lints.rust] / [workspace.lints.clippy] (e.g. `manual_swap = \"allow\"`). Word boundaries prevent false positives on longer identifiers.",
+          "fails_count": 1
         }
       }
     },

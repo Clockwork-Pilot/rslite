@@ -13089,7 +13089,7 @@ unsafe extern "C" fn fts5yy_destructor(
 ) {
     let mut _pParse: *mut Fts5Parse = (*fts5yypParser).pParse;
     match fts5yymajor as ::core::ffi::c_int {
-        17 | 18 | 19 => {
+        17..=19 => {
             sqlite3Fts5ParseNodeFree((*fts5yypminor).fts5yy24);
         }
         20 | 21 => {
@@ -24278,9 +24278,7 @@ unsafe extern "C" fn fts5SegIterReverse(p: *mut Fts5Index, pIter: *mut Fts5SegIt
                     let bTermless: ::core::ffi::c_int = ((*pNew).szLeaf >= (*pNew).nn) as ::core::ffi::c_int;
                     if iRowid != 0 {
                         
-                        let tmp: *mut Fts5Data = pNew;
-                        pNew = pLast;
-                        pLast = tmp;
+                        std::mem::swap(&mut pNew, &mut pLast);
                         pgnoLast = pgno;
                     }
                     fts5DataRelease(pNew);
@@ -31619,9 +31617,7 @@ unsafe extern "C" fn fts5DoclistIterInit(
 }
 
 unsafe extern "C" fn fts5BufferSwap(p1: *mut Fts5Buffer, p2: *mut Fts5Buffer) {
-    let tmp: Fts5Buffer = *p1;
-    *p1 = *p2;
-    *p2 = tmp;
+    core::ptr::swap(p1, p2);
 }
 
 unsafe extern "C" fn fts5NextRowid(
@@ -32073,9 +32069,7 @@ unsafe extern "C" fn fts5TokendataIterSortMap(
                 i1 = (i1 as I64_0 + nHalf * 2 as I64_0) as ::core::ffi::c_int;
             }
             
-            let tmp: *mut Fts5TokenDataMap = a1;
-            a1 = a2;
-            a2 = tmp;
+            std::mem::swap(&mut a1, &mut a2);
             nHalf *= 2 as I64_0;
         }
         if a1 != __pT_ref.aMap {

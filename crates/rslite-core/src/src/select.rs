@@ -8942,9 +8942,7 @@ unsafe extern "C" fn havingToWhereExprCb(
                 ) as *mut crate::src::headers::sqliteInt_h::Expr;
             if !pNew.is_null() {
                 let pWhere: *mut crate::src::headers::sqliteInt_h::Expr = (*pS).pWhere;
-                let t: crate::src::headers::sqliteInt_h::Expr = *pNew;
-                *pNew = *pExpr;
-                *pExpr = t;
+                core::ptr::swap(pNew, pExpr);
                 pNew = crate::src::src::expr::sqlite3ExprAnd(
                     (*pWalker).pParse as *mut crate::src::headers::sqliteInt_h::Parse,
                     pWhere as *mut crate::src::headers::sqliteInt_h::Expr,

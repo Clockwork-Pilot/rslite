@@ -963,7 +963,7 @@ unsafe extern "C" fn roundFunc(
     r = crate::src::src::vdbeapi::sqlite3_value_double(
         *argv.offset(0_isize) as *mut crate::src::headers::vdbeInt_h::sqlite3_value
     );
-    if !(r < -4503599627370496.0f64 || r > 4503599627370496.0f64) {
+    if (-4503599627370496.0f64..=4503599627370496.0f64).contains(&r) {
         if n == 0 as crate::src::ext::rtree::rtree::I64_0 {
             r = (r
                 + (if r < 0 as ::core::ffi::c_int as ::core::ffi::c_double {
@@ -3975,7 +3975,7 @@ unsafe extern "C" fn percentSameValue(
     b: ::core::ffi::c_double,
 ) -> ::core::ffi::c_int {
     a -= b;
-    (a >= -0.001f64 && a <= 0.001f64) as ::core::ffi::c_int
+    (-0.001f64..=0.001f64).contains(&a) as ::core::ffi::c_int
 }
 
 unsafe extern "C" fn percentBinarySearch(
@@ -4037,8 +4037,7 @@ unsafe extern "C" fn percentStep(
         ) / mxFrac;
         if eType != crate::src::headers::sqlite3_h::SQLITE_INTEGER_1
             && eType != crate::src::headers::sqlite3_h::SQLITE_FLOAT_1
-            || rPct < 0.0f64
-            || rPct > 1.0f64
+            || !(0.0f64..=1.0f64).contains(&rPct)
         {
             let fname = crate::src::src::vdbeaux::sqlite3VdbeFuncName(
                 pCtx as *const crate::src::headers::vdbeInt_h::sqlite3_context,
