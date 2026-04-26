@@ -757,11 +757,10 @@ pub unsafe extern "C" fn sqlite3FtsUnicodeIsdiacritic(
         return 0 as ::core::ffi::c_int;
     }
     (if c < 768 as ::core::ffi::c_int + 32 as ::core::ffi::c_int {
-        mask0 & (1 as ::core::ffi::c_int as ::core::ffi::c_uint) << c - 768 as ::core::ffi::c_int
+        mask0 & (1 as ::core::ffi::c_int as ::core::ffi::c_uint) << (c - 768 as ::core::ffi::c_int)
     } else {
         mask1
-            & (1 as ::core::ffi::c_int as ::core::ffi::c_uint)
-                << c - 768 as ::core::ffi::c_int - 32 as ::core::ffi::c_int
+            & (1 as ::core::ffi::c_int as ::core::ffi::c_uint) << (c - 768 as ::core::ffi::c_int - 32 as ::core::ffi::c_int)
     }) as ::core::ffi::c_int
 }
 
@@ -1698,9 +1697,8 @@ pub unsafe extern "C" fn sqlite3FtsUnicodeFold(
                     & (*p).flags as ::core::ffi::c_int
                     & ((*p).iCode as ::core::ffi::c_int ^ c)
         {
-            ret = c + aiOff[((*p).flags as ::core::ffi::c_int >> 1 as ::core::ffi::c_int) as usize]
-                as ::core::ffi::c_int
-                & 0xffff as ::core::ffi::c_int;
+            ret = (c + aiOff[((*p).flags as ::core::ffi::c_int >> 1 as ::core::ffi::c_int) as usize]
+                as ::core::ffi::c_int) & 0xffff as ::core::ffi::c_int;
         }
         if eRemoveDiacritic != 0 {
             ret = remove_diacritic(

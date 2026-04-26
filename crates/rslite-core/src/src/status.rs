@@ -568,31 +568,28 @@ pub unsafe extern "C" fn sqlite3_db_status64(
             current_block_105 = 6406431739208918833;
         }
     }
-    match current_block_105 {
-        2723324002591448311 => {
-            let mut i_1: ::core::ffi::c_int;
-            let mut nRet: crate::src::ext::rtree::rtree::U64_0 =
-                0 as crate::src::ext::rtree::rtree::U64_0;
-            i_1 = 0 as ::core::ffi::c_int;
-            while i_1 < (*db).nDb {
-                if !(*(*db).aDb.offset(i_1 as isize)).pBt.is_null() {
-                    let pPager_0: *mut crate::src::src::pager::Pager =
-                        crate::src::src::btree::sqlite3BtreePager(
-                            (*(*db).aDb.offset(i_1 as isize)).pBt,
-                        ) as *mut crate::src::src::pager::Pager;
-                    crate::src::src::pager::sqlite3PagerCacheStat(
-                        pPager_0,
-                        op,
-                        resetFlag,
-                        &raw mut nRet,
-                    );
-                }
-                i_1 += 1;
+    if current_block_105 == 2723324002591448311 {
+        let mut i_1: ::core::ffi::c_int;
+        let mut nRet: crate::src::ext::rtree::rtree::U64_0 =
+            0 as crate::src::ext::rtree::rtree::U64_0;
+        i_1 = 0 as ::core::ffi::c_int;
+        while i_1 < (*db).nDb {
+            if !(*(*db).aDb.offset(i_1 as isize)).pBt.is_null() {
+                let pPager_0: *mut crate::src::src::pager::Pager =
+                    crate::src::src::btree::sqlite3BtreePager(
+                        (*(*db).aDb.offset(i_1 as isize)).pBt,
+                    ) as *mut crate::src::src::pager::Pager;
+                crate::src::src::pager::sqlite3PagerCacheStat(
+                    pPager_0,
+                    op,
+                    resetFlag,
+                    &raw mut nRet,
+                );
             }
-            *pHighwtr = 0 as crate::src::headers::sqlite3_h::Sqlite3Int64;
-            *pCurrent = nRet as crate::src::headers::sqlite3_h::Sqlite3Int64;
+            i_1 += 1;
         }
-        _ => {}
+        *pHighwtr = 0 as crate::src::headers::sqlite3_h::Sqlite3Int64;
+        *pCurrent = nRet as crate::src::headers::sqlite3_h::Sqlite3Int64;
     }
     crate::src::src::mutex::sqlite3_mutex_leave((*db).mutex);
     rc

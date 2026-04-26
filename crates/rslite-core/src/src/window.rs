@@ -470,23 +470,20 @@ unsafe extern "C" fn nth_valueStepFunc(
                 current_block = 16657086271866010665;
             }
         }
-        match current_block {
-            6937071982253665452 => {
-                if iVal <= 0 as crate::src::ext::rtree::rtree::I64_0 {
-                    current_block = 16657086271866010665;
-                } else {
-                    (*p).nStep += 1;
-                    if iVal == (*p).nStep {
-                        (*p).pValue =
-                            crate::src::src::vdbeapi::sqlite3_value_dup(*apArg.offset(0_isize));
-                        if (*p).pValue.is_null() {
-                            crate::src::src::vdbeapi::sqlite3_result_error_nomem(pCtx);
-                        }
+        if current_block == 6937071982253665452 {
+            if iVal <= 0 as crate::src::ext::rtree::rtree::I64_0 {
+                current_block = 16657086271866010665;
+            } else {
+                (*p).nStep += 1;
+                if iVal == (*p).nStep {
+                    (*p).pValue =
+                        crate::src::src::vdbeapi::sqlite3_value_dup(*apArg.offset(0_isize));
+                    if (*p).pValue.is_null() {
+                        crate::src::src::vdbeapi::sqlite3_result_error_nomem(pCtx);
                     }
-                    current_block = 8831408221741692167;
                 }
+                current_block = 8831408221741692167;
             }
-            _ => {}
         }
         match current_block {
             8831408221741692167 => {}
@@ -1790,92 +1787,89 @@ unsafe extern "C" fn selectWindowRewriteExprCb(
             current_block_46 = 10150597327160359210;
         }
     }
-    match current_block_46 {
-        1109700713171191020 => {
-            let mut iCol: ::core::ffi::c_int = -(1 as ::core::ffi::c_int);
-            let __db_ref = &*(*pParse).db;
-            if __db_ref.mallocFailed != 0 {
-                return crate::src::headers::sqliteInt_h::WRC_Abort;
-            }
-            if !(*p).pSub.is_null() {
-                let mut i_0: ::core::ffi::c_int;
-                i_0 = 0 as ::core::ffi::c_int;
-                while i_0 < (*(*p).pSub).nExpr {
-                    if 0 as ::core::ffi::c_int
-                        == crate::src::src::expr::sqlite3ExprCompare(
-                            ::core::ptr::null::<crate::src::headers::sqliteInt_h::Parse>()
-                                as *const crate::src::headers::sqliteInt_h::Parse,
-                            (*(&raw mut (*(*p).pSub).a
-                                as *mut crate::src::headers::sqliteInt_h::ExprList_item)
-                                .offset(i_0 as isize))
-                            .pExpr
-                                as *const crate::src::headers::sqliteInt_h::Expr,
-                            pExpr as *const crate::src::headers::sqliteInt_h::Expr,
-                            -(1 as ::core::ffi::c_int),
-                        )
-                    {
-                        iCol = i_0;
-                        break;
-                    } else {
-                        i_0 += 1;
-                    }
-                }
-            }
-            if iCol < 0 as ::core::ffi::c_int {
-                let pDup: *mut crate::src::headers::sqliteInt_h::Expr =
-                    crate::src::src::expr::sqlite3ExprDup(
-                        (*pParse).db as *mut crate::src::headers::sqliteInt_h::sqlite3,
+    if current_block_46 == 1109700713171191020 {
+        let mut iCol: ::core::ffi::c_int = -(1 as ::core::ffi::c_int);
+        let __db_ref = &*(*pParse).db;
+        if __db_ref.mallocFailed != 0 {
+            return crate::src::headers::sqliteInt_h::WRC_Abort;
+        }
+        if !(*p).pSub.is_null() {
+            let mut i_0: ::core::ffi::c_int;
+            i_0 = 0 as ::core::ffi::c_int;
+            while i_0 < (*(*p).pSub).nExpr {
+                if 0 as ::core::ffi::c_int
+                    == crate::src::src::expr::sqlite3ExprCompare(
+                        ::core::ptr::null::<crate::src::headers::sqliteInt_h::Parse>()
+                            as *const crate::src::headers::sqliteInt_h::Parse,
+                        (*(&raw mut (*(*p).pSub).a
+                            as *mut crate::src::headers::sqliteInt_h::ExprList_item)
+                            .offset(i_0 as isize))
+                        .pExpr
+                            as *const crate::src::headers::sqliteInt_h::Expr,
                         pExpr as *const crate::src::headers::sqliteInt_h::Expr,
-                        0 as ::core::ffi::c_int,
-                    ) as *mut crate::src::headers::sqliteInt_h::Expr;
-                if !pDup.is_null()
-                    && (*pDup).op as ::core::ffi::c_int == crate::src::parse::TK_AGG_FUNCTION
+                        -(1 as ::core::ffi::c_int),
+                    )
                 {
-                    (*pDup).op =
-                        crate::src::parse::TK_FUNCTION as crate::src::ext::rtree::rtree::U8_0;
-                }
-                (*p).pSub = crate::src::src::expr::sqlite3ExprListAppend(
-                    pParse as *mut crate::src::headers::sqliteInt_h::Parse,
-                    (*p).pSub as *mut crate::src::headers::sqliteInt_h::ExprList,
-                    pDup as *mut crate::src::headers::sqliteInt_h::Expr,
-                ) as *mut crate::src::headers::sqliteInt_h::ExprList;
-            }
-            if !(*p).pSub.is_null() {
-                let __pExpr_ref = unsafe { &mut *pExpr };
-                let f: ::core::ffi::c_int = (__pExpr_ref.flags
-                    & crate::src::headers::sqliteInt_h::EP_Collate
-                        as crate::src::ext::rtree::rtree::U32_0)
-                    as ::core::ffi::c_int;
-                __pExpr_ref.flags |=
-                    0x8000000 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::U32_0;
-                crate::src::src::expr::sqlite3ExprDelete(
-                    (*pParse).db as *mut crate::src::headers::sqliteInt_h::sqlite3,
-                    pExpr as *mut crate::src::headers::sqliteInt_h::Expr,
-                );
-                __pExpr_ref.flags &=
-                    !(0x8000000 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::U32_0);
-                ::libc::memset(
-                    pExpr as *mut ::core::ffi::c_void,
-                    0 as ::core::ffi::c_int,
-                    ::core::mem::size_of::<crate::src::headers::sqliteInt_h::Expr>()
-                        as crate::__stddef_size_t_h::SizeT,
-                );
-                __pExpr_ref.op =
-                    crate::src::parse::TK_COLUMN as crate::src::ext::rtree::rtree::U8_0;
-                __pExpr_ref.iColumn = (if iCol < 0 as ::core::ffi::c_int {
-                    (*(*p).pSub).nExpr - 1 as ::core::ffi::c_int
+                    iCol = i_0;
+                    break;
                 } else {
-                    iCol
-                }) as crate::src::headers::sqliteInt_h::YnVar;
-                __pExpr_ref.iTable = (*(*p).pWin).iEphCsr;
-                __pExpr_ref.y.pTab = (*p).pTab;
-                __pExpr_ref.flags = f as crate::src::ext::rtree::rtree::U32_0;
-            }
-            if __db_ref.mallocFailed != 0 {
-                return crate::src::headers::sqliteInt_h::WRC_Abort;
+                    i_0 += 1;
+                }
             }
         }
-        _ => {}
+        if iCol < 0 as ::core::ffi::c_int {
+            let pDup: *mut crate::src::headers::sqliteInt_h::Expr =
+                crate::src::src::expr::sqlite3ExprDup(
+                    (*pParse).db as *mut crate::src::headers::sqliteInt_h::sqlite3,
+                    pExpr as *const crate::src::headers::sqliteInt_h::Expr,
+                    0 as ::core::ffi::c_int,
+                ) as *mut crate::src::headers::sqliteInt_h::Expr;
+            if !pDup.is_null()
+                && (*pDup).op as ::core::ffi::c_int == crate::src::parse::TK_AGG_FUNCTION
+            {
+                (*pDup).op =
+                    crate::src::parse::TK_FUNCTION as crate::src::ext::rtree::rtree::U8_0;
+            }
+            (*p).pSub = crate::src::src::expr::sqlite3ExprListAppend(
+                pParse as *mut crate::src::headers::sqliteInt_h::Parse,
+                (*p).pSub as *mut crate::src::headers::sqliteInt_h::ExprList,
+                pDup as *mut crate::src::headers::sqliteInt_h::Expr,
+            ) as *mut crate::src::headers::sqliteInt_h::ExprList;
+        }
+        if !(*p).pSub.is_null() {
+            let __pExpr_ref = unsafe { &mut *pExpr };
+            let f: ::core::ffi::c_int = (__pExpr_ref.flags
+                & crate::src::headers::sqliteInt_h::EP_Collate
+                    as crate::src::ext::rtree::rtree::U32_0)
+                as ::core::ffi::c_int;
+            __pExpr_ref.flags |=
+                0x8000000 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::U32_0;
+            crate::src::src::expr::sqlite3ExprDelete(
+                (*pParse).db as *mut crate::src::headers::sqliteInt_h::sqlite3,
+                pExpr as *mut crate::src::headers::sqliteInt_h::Expr,
+            );
+            __pExpr_ref.flags &=
+                !(0x8000000 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::U32_0);
+            ::libc::memset(
+                pExpr as *mut ::core::ffi::c_void,
+                0 as ::core::ffi::c_int,
+                ::core::mem::size_of::<crate::src::headers::sqliteInt_h::Expr>()
+                    as crate::__stddef_size_t_h::SizeT,
+            );
+            __pExpr_ref.op =
+                crate::src::parse::TK_COLUMN as crate::src::ext::rtree::rtree::U8_0;
+            __pExpr_ref.iColumn = (if iCol < 0 as ::core::ffi::c_int {
+                (*(*p).pSub).nExpr - 1 as ::core::ffi::c_int
+            } else {
+                iCol
+            }) as crate::src::headers::sqliteInt_h::YnVar;
+            __pExpr_ref.iTable = (*(*p).pWin).iEphCsr;
+            __pExpr_ref.y.pTab = (*p).pTab;
+            __pExpr_ref.flags = f as crate::src::ext::rtree::rtree::U32_0;
+        }
+        if __db_ref.mallocFailed != 0 {
+            return crate::src::headers::sqliteInt_h::WRC_Abort;
+        }
     }
     crate::src::headers::sqliteInt_h::WRC_Continue
 }

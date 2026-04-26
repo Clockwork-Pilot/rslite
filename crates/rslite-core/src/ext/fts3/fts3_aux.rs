@@ -274,11 +274,10 @@ unsafe extern "C" fn fts3auxBestIndexMethod(
                     iGe = i;
                 }
             }
-            if iCol == 4 as ::core::ffi::c_int {
-                if op == crate::src::headers::sqlite3_h::SQLITE_INDEX_CONSTRAINT_EQ {
+            if iCol == 4 as ::core::ffi::c_int
+                && op == crate::src::headers::sqlite3_h::SQLITE_INDEX_CONSTRAINT_EQ {
                     iLangid = i;
                 }
-            }
         }
         i += 1;
     }
@@ -484,23 +483,20 @@ unsafe extern "C" fn fts3auxNextMethod(
                     current_block_42 = 18435049525520518667;
                 }
             }
-            match current_block_42 {
-                1445032439528402095 => {
-                    if v == 0 as crate::src::headers::sqlite3_h::Sqlite3Int64 {
-                        eState = 0 as ::core::ffi::c_int;
-                    } else if v == 1 as crate::src::headers::sqlite3_h::Sqlite3Int64 {
-                        eState = 3 as ::core::ffi::c_int;
-                    } else {
-                        let fresh2 = &mut (*(*pCsr)
-                            .aStat
-                            .offset((iCol + 1 as ::core::ffi::c_int) as isize))
-                        .nOcc;
-                        *fresh2 += 1;
-                        let fresh3 = &mut (*__pCsr_ref.aStat.offset(0_isize)).nOcc;
-                        *fresh3 += 1;
-                    }
+            if current_block_42 == 1445032439528402095 {
+                if v == 0 as crate::src::headers::sqlite3_h::Sqlite3Int64 {
+                    eState = 0 as ::core::ffi::c_int;
+                } else if v == 1 as crate::src::headers::sqlite3_h::Sqlite3Int64 {
+                    eState = 3 as ::core::ffi::c_int;
+                } else {
+                    let fresh2 = &mut (*(*pCsr)
+                        .aStat
+                        .offset((iCol + 1 as ::core::ffi::c_int) as isize))
+                    .nOcc;
+                    *fresh2 += 1;
+                    let fresh3 = &mut (*__pCsr_ref.aStat.offset(0_isize)).nOcc;
+                    *fresh3 += 1;
                 }
-                _ => {}
             }
         }
         __pCsr_ref.iCol = 0 as ::core::ffi::c_int;

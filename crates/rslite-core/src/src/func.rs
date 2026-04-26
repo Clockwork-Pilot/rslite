@@ -662,41 +662,38 @@ unsafe extern "C" fn instrFunc(
                 }
             }
         }
-        match current_block {
-            1109700713171191020 => {
-                if zNeedle.is_null() || nHaystack != 0 && zHaystack.is_null() {
-                    current_block = 7048750207206689312;
-                } else {
-                    firstChar = *zNeedle.offset(0_isize);
-                    while nNeedle <= nHaystack
-                        && (*zHaystack.offset(0_isize) as ::core::ffi::c_int
-                            != firstChar as ::core::ffi::c_int
-                            || ::libc::memcmp(
-                                zHaystack as *const ::core::ffi::c_void,
-                                zNeedle as *const ::core::ffi::c_void,
-                                nNeedle as crate::__stddef_size_t_h::SizeT,
-                            ) != 0 as ::core::ffi::c_int)
-                    {
-                        N += 1;
-                        loop {
-                            nHaystack -= 1;
-                            zHaystack = zHaystack.offset(1);
-                            if !(isText != 0
-                                && *zHaystack.offset(0_isize) as ::core::ffi::c_int
-                                    & 0xc0 as ::core::ffi::c_int
-                                    == 0x80 as ::core::ffi::c_int)
-                            {
-                                break;
-                            }
+        if current_block == 1109700713171191020 {
+            if zNeedle.is_null() || nHaystack != 0 && zHaystack.is_null() {
+                current_block = 7048750207206689312;
+            } else {
+                firstChar = *zNeedle.offset(0_isize);
+                while nNeedle <= nHaystack
+                    && (*zHaystack.offset(0_isize) as ::core::ffi::c_int
+                        != firstChar as ::core::ffi::c_int
+                        || ::libc::memcmp(
+                            zHaystack as *const ::core::ffi::c_void,
+                            zNeedle as *const ::core::ffi::c_void,
+                            nNeedle as crate::__stddef_size_t_h::SizeT,
+                        ) != 0 as ::core::ffi::c_int)
+                {
+                    N += 1;
+                    loop {
+                        nHaystack -= 1;
+                        zHaystack = zHaystack.offset(1);
+                        if !(isText != 0
+                            && *zHaystack.offset(0_isize) as ::core::ffi::c_int
+                                & 0xc0 as ::core::ffi::c_int
+                                == 0x80 as ::core::ffi::c_int)
+                        {
+                            break;
                         }
                     }
-                    if nNeedle > nHaystack {
-                        N = 0 as ::core::ffi::c_int;
-                    }
-                    current_block = 18377268871191777778;
                 }
+                if nNeedle > nHaystack {
+                    N = 0 as ::core::ffi::c_int;
+                }
+                current_block = 18377268871191777778;
             }
-            _ => {}
         }
         match current_block {
             18377268871191777778 => {}
@@ -710,14 +707,11 @@ unsafe extern "C" fn instrFunc(
     } else {
         current_block = 18377268871191777778;
     }
-    match current_block {
-        18377268871191777778 => {
-            crate::src::src::vdbeapi::sqlite3_result_int(
-                context as *mut crate::src::headers::vdbeInt_h::sqlite3_context,
-                N,
-            );
-        }
-        _ => {}
+    if current_block == 18377268871191777778 {
+        crate::src::src::vdbeapi::sqlite3_result_int(
+            context as *mut crate::src::headers::vdbeInt_h::sqlite3_context,
+            N,
+        );
     }
     crate::src::src::vdbeapi::sqlite3_value_free(
         pC1 as *mut crate::src::headers::vdbeInt_h::sqlite3_value,
@@ -847,14 +841,13 @@ unsafe extern "C" fn substrFunc(
             .aLimit[crate::src::headers::sqlite3_h::SQLITE_LIMIT_LENGTH as usize]
             as crate::src::ext::rtree::rtree::I64_0;
     }
-    if p1 == 0 as crate::src::ext::rtree::rtree::I64_0 {
-        if crate::src::src::vdbeapi::sqlite3_value_type(
+    if p1 == 0 as crate::src::ext::rtree::rtree::I64_0
+        && crate::src::src::vdbeapi::sqlite3_value_type(
             *argv.offset(1_isize) as *mut crate::src::headers::vdbeInt_h::sqlite3_value
         ) == crate::src::headers::sqlite3_h::SQLITE_NULL
         {
             return;
         }
-    }
     if p1 < 0 as crate::src::ext::rtree::rtree::I64_0 {
         p1 += len as crate::src::ext::rtree::rtree::I64_0;
         if p1 < 0 as crate::src::ext::rtree::rtree::I64_0 {
@@ -4710,9 +4703,8 @@ pub unsafe extern "C" fn sqlite3RegisterBuiltinFunctions() {
                 nArg: 1 as crate::src::fts5::I16_0,
                 funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
                     | crate::src::headers::sqliteInt_h::SQLITE_FUNC_CONSTANT
-                    | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | 0 as ::core::ffi::c_int
-                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL)
+                    | crate::src::headers::sqlite3_h::SQLITE_UTF8 | (0 as ::core::ffi::c_int
+                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL))
                     as crate::src::ext::rtree::rtree::U32_0,
                 pUserData: 1 as ::core::ffi::c_int as crate::src::headers::stdlib::IntptrT
                     as *mut ::core::ffi::c_void,
@@ -4739,9 +4731,8 @@ pub unsafe extern "C" fn sqlite3RegisterBuiltinFunctions() {
                 nArg: 2 as crate::src::fts5::I16_0,
                 funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
                     | crate::src::headers::sqliteInt_h::SQLITE_FUNC_CONSTANT
-                    | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | 0 as ::core::ffi::c_int
-                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL)
+                    | crate::src::headers::sqlite3_h::SQLITE_UTF8 | (0 as ::core::ffi::c_int
+                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL))
                     as crate::src::ext::rtree::rtree::U32_0,
                 pUserData: 1 as ::core::ffi::c_int as crate::src::headers::stdlib::IntptrT
                     as *mut ::core::ffi::c_void,
@@ -4768,9 +4759,8 @@ pub unsafe extern "C" fn sqlite3RegisterBuiltinFunctions() {
                 nArg: 1 as crate::src::fts5::I16_0,
                 funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
                     | crate::src::headers::sqliteInt_h::SQLITE_FUNC_CONSTANT
-                    | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | 0 as ::core::ffi::c_int
-                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL)
+                    | crate::src::headers::sqlite3_h::SQLITE_UTF8 | (0 as ::core::ffi::c_int
+                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL))
                     as crate::src::ext::rtree::rtree::U32_0,
                 pUserData: 2 as ::core::ffi::c_int as crate::src::headers::stdlib::IntptrT
                     as *mut ::core::ffi::c_void,
@@ -4797,9 +4787,8 @@ pub unsafe extern "C" fn sqlite3RegisterBuiltinFunctions() {
                 nArg: 2 as crate::src::fts5::I16_0,
                 funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
                     | crate::src::headers::sqliteInt_h::SQLITE_FUNC_CONSTANT
-                    | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | 0 as ::core::ffi::c_int
-                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL)
+                    | crate::src::headers::sqlite3_h::SQLITE_UTF8 | (0 as ::core::ffi::c_int
+                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL))
                     as crate::src::ext::rtree::rtree::U32_0,
                 pUserData: 2 as ::core::ffi::c_int as crate::src::headers::stdlib::IntptrT
                     as *mut ::core::ffi::c_void,
@@ -4826,9 +4815,8 @@ pub unsafe extern "C" fn sqlite3RegisterBuiltinFunctions() {
                 nArg: 1 as crate::src::fts5::I16_0,
                 funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
                     | crate::src::headers::sqliteInt_h::SQLITE_FUNC_CONSTANT
-                    | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | 0 as ::core::ffi::c_int
-                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL)
+                    | crate::src::headers::sqlite3_h::SQLITE_UTF8 | (0 as ::core::ffi::c_int
+                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL))
                     as crate::src::ext::rtree::rtree::U32_0,
                 pUserData: 3 as ::core::ffi::c_int as crate::src::headers::stdlib::IntptrT
                     as *mut ::core::ffi::c_void,
@@ -4855,9 +4843,8 @@ pub unsafe extern "C" fn sqlite3RegisterBuiltinFunctions() {
                 nArg: 2 as crate::src::fts5::I16_0,
                 funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
                     | crate::src::headers::sqliteInt_h::SQLITE_FUNC_CONSTANT
-                    | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | 0 as ::core::ffi::c_int
-                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL)
+                    | crate::src::headers::sqlite3_h::SQLITE_UTF8 | (0 as ::core::ffi::c_int
+                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL))
                     as crate::src::ext::rtree::rtree::U32_0,
                 pUserData: 3 as ::core::ffi::c_int as crate::src::headers::stdlib::IntptrT
                     as *mut ::core::ffi::c_void,
@@ -4884,9 +4871,8 @@ pub unsafe extern "C" fn sqlite3RegisterBuiltinFunctions() {
                 nArg: -(3 as ::core::ffi::c_int) as crate::src::fts5::I16_0,
                 funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
                     | crate::src::headers::sqliteInt_h::SQLITE_FUNC_CONSTANT
-                    | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | 1 as ::core::ffi::c_int
-                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL)
+                    | crate::src::headers::sqlite3_h::SQLITE_UTF8 | (1 as ::core::ffi::c_int
+                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL))
                     as crate::src::ext::rtree::rtree::U32_0,
                 pUserData: ::core::ptr::null::<::core::ffi::c_void>() as *mut ::core::ffi::c_void,
                 pNext: ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>()
@@ -4911,9 +4897,8 @@ pub unsafe extern "C" fn sqlite3RegisterBuiltinFunctions() {
             crate::src::headers::sqliteInt_h::FuncDef {
                 nArg: 1 as crate::src::fts5::I16_0,
                 funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
-                    | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | 1 as ::core::ffi::c_int
-                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL
+                    | crate::src::headers::sqlite3_h::SQLITE_UTF8 | (1 as ::core::ffi::c_int
+                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL)
                     | 0x1000 as ::core::ffi::c_int
                     | 0x8000000 as ::core::ffi::c_int)
                     as crate::src::ext::rtree::rtree::U32_0,
@@ -4951,9 +4936,8 @@ pub unsafe extern "C" fn sqlite3RegisterBuiltinFunctions() {
                 nArg: -(3 as ::core::ffi::c_int) as crate::src::fts5::I16_0,
                 funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
                     | crate::src::headers::sqliteInt_h::SQLITE_FUNC_CONSTANT
-                    | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | 1 as ::core::ffi::c_int
-                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL)
+                    | crate::src::headers::sqlite3_h::SQLITE_UTF8 | (1 as ::core::ffi::c_int
+                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL))
                     as crate::src::ext::rtree::rtree::U32_0,
                 pUserData: 1 as ::core::ffi::c_int as crate::src::headers::stdlib::IntptrT
                     as *mut ::core::ffi::c_void,
@@ -4979,9 +4963,8 @@ pub unsafe extern "C" fn sqlite3RegisterBuiltinFunctions() {
             crate::src::headers::sqliteInt_h::FuncDef {
                 nArg: 1 as crate::src::fts5::I16_0,
                 funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
-                    | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | 1 as ::core::ffi::c_int
-                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL
+                    | crate::src::headers::sqlite3_h::SQLITE_UTF8 | (1 as ::core::ffi::c_int
+                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL)
                     | 0x1000 as ::core::ffi::c_int
                     | 0x8000000 as ::core::ffi::c_int)
                     as crate::src::ext::rtree::rtree::U32_0,
@@ -5020,9 +5003,8 @@ pub unsafe extern "C" fn sqlite3RegisterBuiltinFunctions() {
                 nArg: 1 as crate::src::fts5::I16_0,
                 funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
                     | crate::src::headers::sqliteInt_h::SQLITE_FUNC_CONSTANT
-                    | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | 0 as ::core::ffi::c_int
-                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL
+                    | crate::src::headers::sqlite3_h::SQLITE_UTF8 | (0 as ::core::ffi::c_int
+                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL)
                     | 0x80 as ::core::ffi::c_int)
                     as crate::src::ext::rtree::rtree::U32_0,
                 pUserData: ::core::ptr::null::<::core::ffi::c_void>() as *mut ::core::ffi::c_void,
@@ -5049,9 +5031,8 @@ pub unsafe extern "C" fn sqlite3RegisterBuiltinFunctions() {
                 nArg: 1 as crate::src::fts5::I16_0,
                 funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
                     | crate::src::headers::sqliteInt_h::SQLITE_FUNC_CONSTANT
-                    | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | 0 as ::core::ffi::c_int
-                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL
+                    | crate::src::headers::sqlite3_h::SQLITE_UTF8 | (0 as ::core::ffi::c_int
+                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL)
                     | 0x80 as ::core::ffi::c_int
                     | 0x100000 as ::core::ffi::c_int)
                     as crate::src::ext::rtree::rtree::U32_0,
@@ -5079,9 +5060,8 @@ pub unsafe extern "C" fn sqlite3RegisterBuiltinFunctions() {
                 nArg: 1 as crate::src::fts5::I16_0,
                 funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
                     | crate::src::headers::sqliteInt_h::SQLITE_FUNC_CONSTANT
-                    | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | 0 as ::core::ffi::c_int
-                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL
+                    | crate::src::headers::sqlite3_h::SQLITE_UTF8 | (0 as ::core::ffi::c_int
+                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL)
                     | 0x40 as ::core::ffi::c_int)
                     as crate::src::ext::rtree::rtree::U32_0,
                 pUserData: ::core::ptr::null::<::core::ffi::c_void>() as *mut ::core::ffi::c_void,
@@ -5108,9 +5088,8 @@ pub unsafe extern "C" fn sqlite3RegisterBuiltinFunctions() {
                 nArg: 1 as crate::src::fts5::I16_0,
                 funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
                     | crate::src::headers::sqliteInt_h::SQLITE_FUNC_CONSTANT
-                    | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | 0 as ::core::ffi::c_int
-                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL
+                    | crate::src::headers::sqlite3_h::SQLITE_UTF8 | (0 as ::core::ffi::c_int
+                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL)
                     | 0xc0 as ::core::ffi::c_int)
                     as crate::src::ext::rtree::rtree::U32_0,
                 pUserData: ::core::ptr::null::<::core::ffi::c_void>() as *mut ::core::ffi::c_void,
@@ -5137,9 +5116,8 @@ pub unsafe extern "C" fn sqlite3RegisterBuiltinFunctions() {
                 nArg: 2 as crate::src::fts5::I16_0,
                 funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
                     | crate::src::headers::sqliteInt_h::SQLITE_FUNC_CONSTANT
-                    | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | 0 as ::core::ffi::c_int
-                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL)
+                    | crate::src::headers::sqlite3_h::SQLITE_UTF8 | (0 as ::core::ffi::c_int
+                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL))
                     as crate::src::ext::rtree::rtree::U32_0,
                 pUserData: ::core::ptr::null::<::core::ffi::c_void>() as *mut ::core::ffi::c_void,
                 pNext: ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>()
@@ -5165,9 +5143,8 @@ pub unsafe extern "C" fn sqlite3RegisterBuiltinFunctions() {
                 nArg: -(1 as ::core::ffi::c_int) as crate::src::fts5::I16_0,
                 funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
                     | crate::src::headers::sqliteInt_h::SQLITE_FUNC_CONSTANT
-                    | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | 0 as ::core::ffi::c_int
-                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL)
+                    | crate::src::headers::sqlite3_h::SQLITE_UTF8 | (0 as ::core::ffi::c_int
+                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL))
                     as crate::src::ext::rtree::rtree::U32_0,
                 pUserData: ::core::ptr::null::<::core::ffi::c_void>() as *mut ::core::ffi::c_void,
                 pNext: ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>()
@@ -5193,9 +5170,8 @@ pub unsafe extern "C" fn sqlite3RegisterBuiltinFunctions() {
                 nArg: -(1 as ::core::ffi::c_int) as crate::src::fts5::I16_0,
                 funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
                     | crate::src::headers::sqliteInt_h::SQLITE_FUNC_CONSTANT
-                    | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | 0 as ::core::ffi::c_int
-                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL)
+                    | crate::src::headers::sqlite3_h::SQLITE_UTF8 | (0 as ::core::ffi::c_int
+                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL))
                     as crate::src::ext::rtree::rtree::U32_0,
                 pUserData: ::core::ptr::null::<::core::ffi::c_void>() as *mut ::core::ffi::c_void,
                 pNext: ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>()
@@ -5221,9 +5197,8 @@ pub unsafe extern "C" fn sqlite3RegisterBuiltinFunctions() {
                 nArg: 1 as crate::src::fts5::I16_0,
                 funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
                     | crate::src::headers::sqliteInt_h::SQLITE_FUNC_CONSTANT
-                    | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | 0 as ::core::ffi::c_int
-                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL)
+                    | crate::src::headers::sqlite3_h::SQLITE_UTF8 | (0 as ::core::ffi::c_int
+                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL))
                     as crate::src::ext::rtree::rtree::U32_0,
                 pUserData: ::core::ptr::null::<::core::ffi::c_void>() as *mut ::core::ffi::c_void,
                 pNext: ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>()
@@ -5249,9 +5224,8 @@ pub unsafe extern "C" fn sqlite3RegisterBuiltinFunctions() {
                 nArg: -(1 as ::core::ffi::c_int) as crate::src::fts5::I16_0,
                 funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
                     | crate::src::headers::sqliteInt_h::SQLITE_FUNC_CONSTANT
-                    | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | 0 as ::core::ffi::c_int
-                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL)
+                    | crate::src::headers::sqlite3_h::SQLITE_UTF8 | (0 as ::core::ffi::c_int
+                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL))
                     as crate::src::ext::rtree::rtree::U32_0,
                 pUserData: ::core::ptr::null::<::core::ffi::c_void>() as *mut ::core::ffi::c_void,
                 pNext: ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>()
@@ -5277,9 +5251,8 @@ pub unsafe extern "C" fn sqlite3RegisterBuiltinFunctions() {
                 nArg: 1 as crate::src::fts5::I16_0,
                 funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
                     | crate::src::headers::sqliteInt_h::SQLITE_FUNC_CONSTANT
-                    | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | 0 as ::core::ffi::c_int
-                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL)
+                    | crate::src::headers::sqlite3_h::SQLITE_UTF8 | (0 as ::core::ffi::c_int
+                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL))
                     as crate::src::ext::rtree::rtree::U32_0,
                 pUserData: ::core::ptr::null::<::core::ffi::c_void>() as *mut ::core::ffi::c_void,
                 pNext: ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>()
@@ -5305,9 +5278,8 @@ pub unsafe extern "C" fn sqlite3RegisterBuiltinFunctions() {
                 nArg: 1 as crate::src::fts5::I16_0,
                 funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
                     | crate::src::headers::sqliteInt_h::SQLITE_FUNC_CONSTANT
-                    | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | 0 as ::core::ffi::c_int
-                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL)
+                    | crate::src::headers::sqlite3_h::SQLITE_UTF8 | (0 as ::core::ffi::c_int
+                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL))
                     as crate::src::ext::rtree::rtree::U32_0,
                 pUserData: ::core::ptr::null::<::core::ffi::c_void>() as *mut ::core::ffi::c_void,
                 pNext: ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>()
@@ -5333,9 +5305,8 @@ pub unsafe extern "C" fn sqlite3RegisterBuiltinFunctions() {
                 nArg: 2 as crate::src::fts5::I16_0,
                 funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
                     | crate::src::headers::sqliteInt_h::SQLITE_FUNC_CONSTANT
-                    | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | 0 as ::core::ffi::c_int
-                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL)
+                    | crate::src::headers::sqlite3_h::SQLITE_UTF8 | (0 as ::core::ffi::c_int
+                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL))
                     as crate::src::ext::rtree::rtree::U32_0,
                 pUserData: ::core::ptr::null::<::core::ffi::c_void>() as *mut ::core::ffi::c_void,
                 pNext: ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>()
@@ -5361,9 +5332,8 @@ pub unsafe extern "C" fn sqlite3RegisterBuiltinFunctions() {
                 nArg: 1 as crate::src::fts5::I16_0,
                 funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
                     | crate::src::headers::sqliteInt_h::SQLITE_FUNC_CONSTANT
-                    | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | 0 as ::core::ffi::c_int
-                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL)
+                    | crate::src::headers::sqlite3_h::SQLITE_UTF8 | (0 as ::core::ffi::c_int
+                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL))
                     as crate::src::ext::rtree::rtree::U32_0,
                 pUserData: ::core::ptr::null::<::core::ffi::c_void>() as *mut ::core::ffi::c_void,
                 pNext: ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>()
@@ -5389,9 +5359,8 @@ pub unsafe extern "C" fn sqlite3RegisterBuiltinFunctions() {
                 nArg: 1 as crate::src::fts5::I16_0,
                 funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
                     | crate::src::headers::sqliteInt_h::SQLITE_FUNC_CONSTANT
-                    | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | 0 as ::core::ffi::c_int
-                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL)
+                    | crate::src::headers::sqlite3_h::SQLITE_UTF8 | (0 as ::core::ffi::c_int
+                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL))
                     as crate::src::ext::rtree::rtree::U32_0,
                 pUserData: ::core::ptr::null::<::core::ffi::c_void>() as *mut ::core::ffi::c_void,
                 pNext: ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>()
@@ -5417,9 +5386,8 @@ pub unsafe extern "C" fn sqlite3RegisterBuiltinFunctions() {
                 nArg: 1 as crate::src::fts5::I16_0,
                 funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
                     | crate::src::headers::sqliteInt_h::SQLITE_FUNC_CONSTANT
-                    | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | 0 as ::core::ffi::c_int
-                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL)
+                    | crate::src::headers::sqlite3_h::SQLITE_UTF8 | (0 as ::core::ffi::c_int
+                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL))
                     as crate::src::ext::rtree::rtree::U32_0,
                 pUserData: ::core::ptr::null::<::core::ffi::c_void>() as *mut ::core::ffi::c_void,
                 pNext: ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>()
@@ -5445,9 +5413,8 @@ pub unsafe extern "C" fn sqlite3RegisterBuiltinFunctions() {
                 nArg: 1 as crate::src::fts5::I16_0,
                 funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
                     | crate::src::headers::sqliteInt_h::SQLITE_FUNC_CONSTANT
-                    | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | 0 as ::core::ffi::c_int
-                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL)
+                    | crate::src::headers::sqlite3_h::SQLITE_UTF8 | (0 as ::core::ffi::c_int
+                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL))
                     as crate::src::ext::rtree::rtree::U32_0,
                 pUserData: ::core::ptr::null::<::core::ffi::c_void>() as *mut ::core::ffi::c_void,
                 pNext: ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>()
@@ -5473,9 +5440,8 @@ pub unsafe extern "C" fn sqlite3RegisterBuiltinFunctions() {
                 nArg: 2 as crate::src::fts5::I16_0,
                 funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
                     | crate::src::headers::sqliteInt_h::SQLITE_FUNC_CONSTANT
-                    | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | 0 as ::core::ffi::c_int
-                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL)
+                    | crate::src::headers::sqlite3_h::SQLITE_UTF8 | (0 as ::core::ffi::c_int
+                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL))
                     as crate::src::ext::rtree::rtree::U32_0,
                 pUserData: ::core::ptr::null::<::core::ffi::c_void>() as *mut ::core::ffi::c_void,
                 pNext: ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>()
@@ -5501,9 +5467,8 @@ pub unsafe extern "C" fn sqlite3RegisterBuiltinFunctions() {
                 nArg: -(3 as ::core::ffi::c_int) as crate::src::fts5::I16_0,
                 funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
                     | crate::src::headers::sqliteInt_h::SQLITE_FUNC_CONSTANT
-                    | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | 0 as ::core::ffi::c_int
-                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL)
+                    | crate::src::headers::sqlite3_h::SQLITE_UTF8 | (0 as ::core::ffi::c_int
+                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL))
                     as crate::src::ext::rtree::rtree::U32_0,
                 pUserData: ::core::ptr::null::<::core::ffi::c_void>() as *mut ::core::ffi::c_void,
                 pNext: ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>()
@@ -5529,9 +5494,8 @@ pub unsafe extern "C" fn sqlite3RegisterBuiltinFunctions() {
                 nArg: -(4 as ::core::ffi::c_int) as crate::src::fts5::I16_0,
                 funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
                     | crate::src::headers::sqliteInt_h::SQLITE_FUNC_CONSTANT
-                    | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | 0 as ::core::ffi::c_int
-                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL)
+                    | crate::src::headers::sqlite3_h::SQLITE_UTF8 | (0 as ::core::ffi::c_int
+                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL))
                     as crate::src::ext::rtree::rtree::U32_0,
                 pUserData: ::core::ptr::null::<::core::ffi::c_void>() as *mut ::core::ffi::c_void,
                 pNext: ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>()
@@ -5584,9 +5548,8 @@ pub unsafe extern "C" fn sqlite3RegisterBuiltinFunctions() {
             crate::src::headers::sqliteInt_h::FuncDef {
                 nArg: 0 as crate::src::fts5::I16_0,
                 funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
-                    | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | 0 as ::core::ffi::c_int
-                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL)
+                    | crate::src::headers::sqlite3_h::SQLITE_UTF8 | (0 as ::core::ffi::c_int
+                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL))
                     as crate::src::ext::rtree::rtree::U32_0,
                 pUserData: ::core::ptr::null::<::core::ffi::c_void>() as *mut ::core::ffi::c_void,
                 pNext: ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>()
@@ -5611,9 +5574,8 @@ pub unsafe extern "C" fn sqlite3RegisterBuiltinFunctions() {
             crate::src::headers::sqliteInt_h::FuncDef {
                 nArg: 1 as crate::src::fts5::I16_0,
                 funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
-                    | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | 0 as ::core::ffi::c_int
-                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL)
+                    | crate::src::headers::sqlite3_h::SQLITE_UTF8 | (0 as ::core::ffi::c_int
+                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL))
                     as crate::src::ext::rtree::rtree::U32_0,
                 pUserData: ::core::ptr::null::<::core::ffi::c_void>() as *mut ::core::ffi::c_void,
                 pNext: ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>()
@@ -5639,9 +5601,8 @@ pub unsafe extern "C" fn sqlite3RegisterBuiltinFunctions() {
                 nArg: 2 as crate::src::fts5::I16_0,
                 funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
                     | crate::src::headers::sqliteInt_h::SQLITE_FUNC_CONSTANT
-                    | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | 1 as ::core::ffi::c_int
-                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL)
+                    | crate::src::headers::sqlite3_h::SQLITE_UTF8 | (1 as ::core::ffi::c_int
+                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL))
                     as crate::src::ext::rtree::rtree::U32_0,
                 pUserData: ::core::ptr::null::<::core::ffi::c_void>() as *mut ::core::ffi::c_void,
                 pNext: ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>()
@@ -5719,9 +5680,8 @@ pub unsafe extern "C" fn sqlite3RegisterBuiltinFunctions() {
                 nArg: 2 as crate::src::fts5::I16_0,
                 funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
                     | crate::src::headers::sqliteInt_h::SQLITE_FUNC_CONSTANT
-                    | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | 0 as ::core::ffi::c_int
-                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL)
+                    | crate::src::headers::sqlite3_h::SQLITE_UTF8 | (0 as ::core::ffi::c_int
+                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL))
                     as crate::src::ext::rtree::rtree::U32_0,
                 pUserData: ::core::ptr::null::<::core::ffi::c_void>() as *mut ::core::ffi::c_void,
                 pNext: ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>()
@@ -5747,9 +5707,8 @@ pub unsafe extern "C" fn sqlite3RegisterBuiltinFunctions() {
                 nArg: 1 as crate::src::fts5::I16_0,
                 funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
                     | crate::src::headers::sqliteInt_h::SQLITE_FUNC_CONSTANT
-                    | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | 0 as ::core::ffi::c_int
-                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL)
+                    | crate::src::headers::sqlite3_h::SQLITE_UTF8 | (0 as ::core::ffi::c_int
+                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL))
                     as crate::src::ext::rtree::rtree::U32_0,
                 pUserData: ::core::ptr::null::<::core::ffi::c_void>() as *mut ::core::ffi::c_void,
                 pNext: ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>()
@@ -5775,9 +5734,8 @@ pub unsafe extern "C" fn sqlite3RegisterBuiltinFunctions() {
                 nArg: 1 as crate::src::fts5::I16_0,
                 funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
                     | crate::src::headers::sqliteInt_h::SQLITE_FUNC_CONSTANT
-                    | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | 0 as ::core::ffi::c_int
-                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL)
+                    | crate::src::headers::sqlite3_h::SQLITE_UTF8 | (0 as ::core::ffi::c_int
+                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL))
                     as crate::src::ext::rtree::rtree::U32_0,
                 pUserData: ::core::ptr::null::<::core::ffi::c_void>() as *mut ::core::ffi::c_void,
                 pNext: ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>()
@@ -5803,9 +5761,8 @@ pub unsafe extern "C" fn sqlite3RegisterBuiltinFunctions() {
                 nArg: 1 as crate::src::fts5::I16_0,
                 funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
                     | crate::src::headers::sqliteInt_h::SQLITE_FUNC_CONSTANT
-                    | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | 0 as ::core::ffi::c_int
-                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL)
+                    | crate::src::headers::sqlite3_h::SQLITE_UTF8 | (0 as ::core::ffi::c_int
+                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL))
                     as crate::src::ext::rtree::rtree::U32_0,
                 pUserData: 1 as ::core::ffi::c_int as crate::src::headers::stdlib::IntptrT
                     as *mut ::core::ffi::c_void,
@@ -5831,9 +5788,8 @@ pub unsafe extern "C" fn sqlite3RegisterBuiltinFunctions() {
             crate::src::headers::sqliteInt_h::FuncDef {
                 nArg: 0 as crate::src::fts5::I16_0,
                 funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
-                    | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | 0 as ::core::ffi::c_int
-                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL)
+                    | crate::src::headers::sqlite3_h::SQLITE_UTF8 | (0 as ::core::ffi::c_int
+                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL))
                     as crate::src::ext::rtree::rtree::U32_0,
                 pUserData: ::core::ptr::null::<::core::ffi::c_void>() as *mut ::core::ffi::c_void,
                 pNext: ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>()
@@ -5858,9 +5814,8 @@ pub unsafe extern "C" fn sqlite3RegisterBuiltinFunctions() {
             crate::src::headers::sqliteInt_h::FuncDef {
                 nArg: 0 as crate::src::fts5::I16_0,
                 funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
-                    | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | 0 as ::core::ffi::c_int
-                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL)
+                    | crate::src::headers::sqlite3_h::SQLITE_UTF8 | (0 as ::core::ffi::c_int
+                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL))
                     as crate::src::ext::rtree::rtree::U32_0,
                 pUserData: ::core::ptr::null::<::core::ffi::c_void>() as *mut ::core::ffi::c_void,
                 pNext: ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>()
@@ -5885,9 +5840,8 @@ pub unsafe extern "C" fn sqlite3RegisterBuiltinFunctions() {
             crate::src::headers::sqliteInt_h::FuncDef {
                 nArg: 0 as crate::src::fts5::I16_0,
                 funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
-                    | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | 0 as ::core::ffi::c_int
-                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL)
+                    | crate::src::headers::sqlite3_h::SQLITE_UTF8 | (0 as ::core::ffi::c_int
+                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL))
                     as crate::src::ext::rtree::rtree::U32_0,
                 pUserData: ::core::ptr::null::<::core::ffi::c_void>() as *mut ::core::ffi::c_void,
                 pNext: ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>()
@@ -5913,9 +5867,8 @@ pub unsafe extern "C" fn sqlite3RegisterBuiltinFunctions() {
                 nArg: 3 as crate::src::fts5::I16_0,
                 funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
                     | crate::src::headers::sqliteInt_h::SQLITE_FUNC_CONSTANT
-                    | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | 0 as ::core::ffi::c_int
-                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL)
+                    | crate::src::headers::sqlite3_h::SQLITE_UTF8 | (0 as ::core::ffi::c_int
+                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL))
                     as crate::src::ext::rtree::rtree::U32_0,
                 pUserData: ::core::ptr::null::<::core::ffi::c_void>() as *mut ::core::ffi::c_void,
                 pNext: ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>()
@@ -5941,9 +5894,8 @@ pub unsafe extern "C" fn sqlite3RegisterBuiltinFunctions() {
                 nArg: 1 as crate::src::fts5::I16_0,
                 funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
                     | crate::src::headers::sqliteInt_h::SQLITE_FUNC_CONSTANT
-                    | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | 0 as ::core::ffi::c_int
-                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL)
+                    | crate::src::headers::sqlite3_h::SQLITE_UTF8 | (0 as ::core::ffi::c_int
+                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL))
                     as crate::src::ext::rtree::rtree::U32_0,
                 pUserData: ::core::ptr::null::<::core::ffi::c_void>() as *mut ::core::ffi::c_void,
                 pNext: ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>()
@@ -5969,9 +5921,8 @@ pub unsafe extern "C" fn sqlite3RegisterBuiltinFunctions() {
                 nArg: 2 as crate::src::fts5::I16_0,
                 funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
                     | crate::src::headers::sqliteInt_h::SQLITE_FUNC_CONSTANT
-                    | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | 0 as ::core::ffi::c_int
-                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL)
+                    | crate::src::headers::sqlite3_h::SQLITE_UTF8 | (0 as ::core::ffi::c_int
+                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL))
                     as crate::src::ext::rtree::rtree::U32_0,
                 pUserData: ::core::ptr::null::<::core::ffi::c_void>() as *mut ::core::ffi::c_void,
                 pNext: ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>()
@@ -5997,9 +5948,8 @@ pub unsafe extern "C" fn sqlite3RegisterBuiltinFunctions() {
                 nArg: 3 as crate::src::fts5::I16_0,
                 funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
                     | crate::src::headers::sqliteInt_h::SQLITE_FUNC_CONSTANT
-                    | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | 0 as ::core::ffi::c_int
-                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL)
+                    | crate::src::headers::sqlite3_h::SQLITE_UTF8 | (0 as ::core::ffi::c_int
+                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL))
                     as crate::src::ext::rtree::rtree::U32_0,
                 pUserData: ::core::ptr::null::<::core::ffi::c_void>() as *mut ::core::ffi::c_void,
                 pNext: ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>()
@@ -6025,9 +5975,8 @@ pub unsafe extern "C" fn sqlite3RegisterBuiltinFunctions() {
                 nArg: 2 as crate::src::fts5::I16_0,
                 funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
                     | crate::src::headers::sqliteInt_h::SQLITE_FUNC_CONSTANT
-                    | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | 0 as ::core::ffi::c_int
-                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL)
+                    | crate::src::headers::sqlite3_h::SQLITE_UTF8 | (0 as ::core::ffi::c_int
+                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL))
                     as crate::src::ext::rtree::rtree::U32_0,
                 pUserData: ::core::ptr::null::<::core::ffi::c_void>() as *mut ::core::ffi::c_void,
                 pNext: ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>()
@@ -6053,9 +6002,8 @@ pub unsafe extern "C" fn sqlite3RegisterBuiltinFunctions() {
                 nArg: 3 as crate::src::fts5::I16_0,
                 funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
                     | crate::src::headers::sqliteInt_h::SQLITE_FUNC_CONSTANT
-                    | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | 0 as ::core::ffi::c_int
-                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL)
+                    | crate::src::headers::sqlite3_h::SQLITE_UTF8 | (0 as ::core::ffi::c_int
+                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL))
                     as crate::src::ext::rtree::rtree::U32_0,
                 pUserData: ::core::ptr::null::<::core::ffi::c_void>() as *mut ::core::ffi::c_void,
                 pNext: ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>()
@@ -6080,9 +6028,8 @@ pub unsafe extern "C" fn sqlite3RegisterBuiltinFunctions() {
             crate::src::headers::sqliteInt_h::FuncDef {
                 nArg: 1 as crate::src::fts5::I16_0,
                 funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
-                    | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | 0 as ::core::ffi::c_int
-                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL
+                    | crate::src::headers::sqlite3_h::SQLITE_UTF8 | (0 as ::core::ffi::c_int
+                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL)
                     | 0 as ::core::ffi::c_int)
                     as crate::src::ext::rtree::rtree::U32_0,
                 pUserData: ::core::ptr::null::<::core::ffi::c_void>() as *mut ::core::ffi::c_void,
@@ -6125,9 +6072,8 @@ pub unsafe extern "C" fn sqlite3RegisterBuiltinFunctions() {
             crate::src::headers::sqliteInt_h::FuncDef {
                 nArg: 1 as crate::src::fts5::I16_0,
                 funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
-                    | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | 0 as ::core::ffi::c_int
-                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL
+                    | crate::src::headers::sqlite3_h::SQLITE_UTF8 | (0 as ::core::ffi::c_int
+                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL)
                     | 0 as ::core::ffi::c_int)
                     as crate::src::ext::rtree::rtree::U32_0,
                 pUserData: ::core::ptr::null::<::core::ffi::c_void>() as *mut ::core::ffi::c_void,
@@ -6170,9 +6116,8 @@ pub unsafe extern "C" fn sqlite3RegisterBuiltinFunctions() {
             crate::src::headers::sqliteInt_h::FuncDef {
                 nArg: 1 as crate::src::fts5::I16_0,
                 funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
-                    | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | 0 as ::core::ffi::c_int
-                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL
+                    | crate::src::headers::sqlite3_h::SQLITE_UTF8 | (0 as ::core::ffi::c_int
+                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL)
                     | 0 as ::core::ffi::c_int)
                     as crate::src::ext::rtree::rtree::U32_0,
                 pUserData: ::core::ptr::null::<::core::ffi::c_void>() as *mut ::core::ffi::c_void,
@@ -6215,9 +6160,8 @@ pub unsafe extern "C" fn sqlite3RegisterBuiltinFunctions() {
             crate::src::headers::sqliteInt_h::FuncDef {
                 nArg: 0 as crate::src::fts5::I16_0,
                 funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
-                    | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | 0 as ::core::ffi::c_int
-                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL
+                    | crate::src::headers::sqlite3_h::SQLITE_UTF8 | (0 as ::core::ffi::c_int
+                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL)
                     | 0x100 as ::core::ffi::c_int
                     | 0x8000000 as ::core::ffi::c_int)
                     as crate::src::ext::rtree::rtree::U32_0,
@@ -6261,9 +6205,8 @@ pub unsafe extern "C" fn sqlite3RegisterBuiltinFunctions() {
             crate::src::headers::sqliteInt_h::FuncDef {
                 nArg: 1 as crate::src::fts5::I16_0,
                 funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
-                    | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | 0 as ::core::ffi::c_int
-                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL
+                    | crate::src::headers::sqlite3_h::SQLITE_UTF8 | (0 as ::core::ffi::c_int
+                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL)
                     | 0x8000000 as ::core::ffi::c_int)
                     as crate::src::ext::rtree::rtree::U32_0,
                 pUserData: ::core::ptr::null::<::core::ffi::c_void>() as *mut ::core::ffi::c_void,
@@ -6306,9 +6249,8 @@ pub unsafe extern "C" fn sqlite3RegisterBuiltinFunctions() {
             crate::src::headers::sqliteInt_h::FuncDef {
                 nArg: 1 as crate::src::fts5::I16_0,
                 funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
-                    | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | 0 as ::core::ffi::c_int
-                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL
+                    | crate::src::headers::sqlite3_h::SQLITE_UTF8 | (0 as ::core::ffi::c_int
+                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL)
                     | 0 as ::core::ffi::c_int)
                     as crate::src::ext::rtree::rtree::U32_0,
                 pUserData: ::core::ptr::null::<::core::ffi::c_void>() as *mut ::core::ffi::c_void,
@@ -6351,9 +6293,8 @@ pub unsafe extern "C" fn sqlite3RegisterBuiltinFunctions() {
             crate::src::headers::sqliteInt_h::FuncDef {
                 nArg: 2 as crate::src::fts5::I16_0,
                 funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
-                    | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | 0 as ::core::ffi::c_int
-                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL
+                    | crate::src::headers::sqlite3_h::SQLITE_UTF8 | (0 as ::core::ffi::c_int
+                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL)
                     | 0 as ::core::ffi::c_int)
                     as crate::src::ext::rtree::rtree::U32_0,
                 pUserData: ::core::ptr::null::<::core::ffi::c_void>() as *mut ::core::ffi::c_void,
@@ -6396,9 +6337,8 @@ pub unsafe extern "C" fn sqlite3RegisterBuiltinFunctions() {
             crate::src::headers::sqliteInt_h::FuncDef {
                 nArg: 2 as crate::src::fts5::I16_0,
                 funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
-                    | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | 0 as ::core::ffi::c_int
-                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL
+                    | crate::src::headers::sqlite3_h::SQLITE_UTF8 | (0 as ::core::ffi::c_int
+                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL)
                     | 0 as ::core::ffi::c_int)
                     as crate::src::ext::rtree::rtree::U32_0,
                 pUserData: ::core::ptr::null::<::core::ffi::c_void>() as *mut ::core::ffi::c_void,
@@ -6441,9 +6381,8 @@ pub unsafe extern "C" fn sqlite3RegisterBuiltinFunctions() {
             crate::src::headers::sqliteInt_h::FuncDef {
                 nArg: 1 as crate::src::fts5::I16_0,
                 funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
-                    | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | 0 as ::core::ffi::c_int
-                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL
+                    | crate::src::headers::sqlite3_h::SQLITE_UTF8 | (0 as ::core::ffi::c_int
+                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL)
                     | 0x200000 as ::core::ffi::c_int
                     | 0x2000000 as ::core::ffi::c_int)
                     as crate::src::ext::rtree::rtree::U32_0,
@@ -6487,9 +6426,8 @@ pub unsafe extern "C" fn sqlite3RegisterBuiltinFunctions() {
             crate::src::headers::sqliteInt_h::FuncDef {
                 nArg: 2 as crate::src::fts5::I16_0,
                 funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
-                    | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | 0 as ::core::ffi::c_int
-                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL
+                    | crate::src::headers::sqlite3_h::SQLITE_UTF8 | (0 as ::core::ffi::c_int
+                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL)
                     | 0x200000 as ::core::ffi::c_int
                     | 0x2000000 as ::core::ffi::c_int)
                     as crate::src::ext::rtree::rtree::U32_0,
@@ -6534,9 +6472,8 @@ pub unsafe extern "C" fn sqlite3RegisterBuiltinFunctions() {
             crate::src::headers::sqliteInt_h::FuncDef {
                 nArg: 2 as crate::src::fts5::I16_0,
                 funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
-                    | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | 0 as ::core::ffi::c_int
-                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL
+                    | crate::src::headers::sqlite3_h::SQLITE_UTF8 | (0 as ::core::ffi::c_int
+                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL)
                     | 0x200000 as ::core::ffi::c_int
                     | 0x2000000 as ::core::ffi::c_int)
                     as crate::src::ext::rtree::rtree::U32_0,
@@ -6580,9 +6517,8 @@ pub unsafe extern "C" fn sqlite3RegisterBuiltinFunctions() {
             crate::src::headers::sqliteInt_h::FuncDef {
                 nArg: 2 as crate::src::fts5::I16_0,
                 funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
-                    | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | 0 as ::core::ffi::c_int
-                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL
+                    | crate::src::headers::sqlite3_h::SQLITE_UTF8 | (0 as ::core::ffi::c_int
+                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL)
                     | 0x200000 as ::core::ffi::c_int
                     | 0x2000000 as ::core::ffi::c_int)
                     as crate::src::ext::rtree::rtree::U32_0,
@@ -6835,9 +6771,8 @@ pub unsafe extern "C" fn sqlite3RegisterBuiltinFunctions() {
                 nArg: 1 as crate::src::fts5::I16_0,
                 funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
                     | crate::src::headers::sqliteInt_h::SQLITE_FUNC_CONSTANT
-                    | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | 0 as ::core::ffi::c_int
-                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL)
+                    | crate::src::headers::sqlite3_h::SQLITE_UTF8 | (0 as ::core::ffi::c_int
+                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL))
                     as crate::src::ext::rtree::rtree::U32_0,
                 pUserData: ::core::ptr::null::<::core::ffi::c_void>() as *mut ::core::ffi::c_void,
                 pNext: ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>()
@@ -6863,9 +6798,8 @@ pub unsafe extern "C" fn sqlite3RegisterBuiltinFunctions() {
                 nArg: 1 as crate::src::fts5::I16_0,
                 funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
                     | crate::src::headers::sqliteInt_h::SQLITE_FUNC_CONSTANT
-                    | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | 0 as ::core::ffi::c_int
-                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL)
+                    | crate::src::headers::sqlite3_h::SQLITE_UTF8 | (0 as ::core::ffi::c_int
+                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL))
                     as crate::src::ext::rtree::rtree::U32_0,
                 pUserData: 1 as ::core::ffi::c_int as crate::src::headers::stdlib::IntptrT
                     as *mut ::core::ffi::c_void,
@@ -6892,9 +6826,8 @@ pub unsafe extern "C" fn sqlite3RegisterBuiltinFunctions() {
                 nArg: 1 as crate::src::fts5::I16_0,
                 funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
                     | crate::src::headers::sqliteInt_h::SQLITE_FUNC_CONSTANT
-                    | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | 0 as ::core::ffi::c_int
-                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL)
+                    | crate::src::headers::sqlite3_h::SQLITE_UTF8 | (0 as ::core::ffi::c_int
+                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL))
                     as crate::src::ext::rtree::rtree::U32_0,
                 pUserData: 1 as ::core::ffi::c_int as crate::src::headers::stdlib::IntptrT
                     as *mut ::core::ffi::c_void,
@@ -6921,9 +6854,8 @@ pub unsafe extern "C" fn sqlite3RegisterBuiltinFunctions() {
                 nArg: 1 as crate::src::fts5::I16_0,
                 funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
                     | crate::src::headers::sqliteInt_h::SQLITE_FUNC_CONSTANT
-                    | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | 0 as ::core::ffi::c_int
-                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL)
+                    | crate::src::headers::sqlite3_h::SQLITE_UTF8 | (0 as ::core::ffi::c_int
+                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL))
                     as crate::src::ext::rtree::rtree::U32_0,
                 pUserData: 2 as ::core::ffi::c_int as crate::src::headers::stdlib::IntptrT
                     as *mut ::core::ffi::c_void,
@@ -6950,9 +6882,8 @@ pub unsafe extern "C" fn sqlite3RegisterBuiltinFunctions() {
                 nArg: 2 as crate::src::fts5::I16_0,
                 funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
                     | crate::src::headers::sqliteInt_h::SQLITE_FUNC_CONSTANT
-                    | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | 0 as ::core::ffi::c_int
-                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL)
+                    | crate::src::headers::sqlite3_h::SQLITE_UTF8 | (0 as ::core::ffi::c_int
+                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL))
                     as crate::src::ext::rtree::rtree::U32_0,
                 pUserData: ::core::ptr::null::<::core::ffi::c_void>() as *mut ::core::ffi::c_void,
                 pNext: ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>()
@@ -7664,9 +7595,8 @@ pub unsafe extern "C" fn sqlite3RegisterBuiltinFunctions() {
                 nArg: 1 as crate::src::fts5::I16_0,
                 funcFlags: (crate::src::headers::sqliteInt_h::SQLITE_FUNC_BUILTIN
                     | crate::src::headers::sqliteInt_h::SQLITE_FUNC_CONSTANT
-                    | crate::src::headers::sqlite3_h::SQLITE_UTF8
-                    | 0 as ::core::ffi::c_int
-                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL)
+                    | crate::src::headers::sqlite3_h::SQLITE_UTF8 | (0 as ::core::ffi::c_int
+                        * crate::src::headers::sqliteInt_h::SQLITE_FUNC_NEEDCOLL))
                     as crate::src::ext::rtree::rtree::U32_0,
                 pUserData: ::core::ptr::null::<::core::ffi::c_void>() as *mut ::core::ffi::c_void,
                 pNext: ::core::ptr::null::<crate::src::headers::sqliteInt_h::FuncDef>()

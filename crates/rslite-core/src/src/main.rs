@@ -2149,17 +2149,14 @@ unsafe extern "C" fn createFunctionApi(
     } else {
         current_block = 7815301370352969686;
     }
-    match current_block {
-        7815301370352969686 => {
-            rc = sqlite3CreateFunc(
-                db, zFunc, nArg, enc, p, xSFunc, xStep, xFinal, xValue, xInverse, pArg,
-            );
-            if !pArg.is_null() && (*pArg).nRef == 0 as ::core::ffi::c_int {
-                xDestroy.expect("non-null function pointer")(p);
-                crate::src::src::malloc::sqlite3_free(pArg as *mut ::core::ffi::c_void);
-            }
+    if current_block == 7815301370352969686 {
+        rc = sqlite3CreateFunc(
+            db, zFunc, nArg, enc, p, xSFunc, xStep, xFinal, xValue, xInverse, pArg,
+        );
+        if !pArg.is_null() && (*pArg).nRef == 0 as ::core::ffi::c_int {
+            xDestroy.expect("non-null function pointer")(p);
+            crate::src::src::malloc::sqlite3_free(pArg as *mut ::core::ffi::c_void);
         }
-        _ => {}
     }
     rc = crate::src::src::malloc::sqlite3ApiExit(
         db as *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -3483,16 +3480,13 @@ pub unsafe extern "C" fn sqlite3ParseUri(
         flags &= !crate::src::headers::sqlite3_h::SQLITE_OPEN_URI as ::core::ffi::c_uint;
         current_block = 12027283704867122503;
     }
-    match current_block {
-        12027283704867122503 => {
-            *ppVfs = crate::src::src::os::sqlite3_vfs_find(zVfs)
-                as *mut crate::src::headers::sqlite3_h::sqlite3_vfs;
-            if (*ppVfs).is_null() {
-                *pzErrMsg = crate::sqlite_printf!("no such vfs: %s", zVfs);
-                rc = crate::src::headers::sqlite3_h::SQLITE_ERROR;
-            }
+    if current_block == 12027283704867122503 {
+        *ppVfs = crate::src::src::os::sqlite3_vfs_find(zVfs)
+            as *mut crate::src::headers::sqlite3_h::sqlite3_vfs;
+        if (*ppVfs).is_null() {
+            *pzErrMsg = crate::sqlite_printf!("no such vfs: %s", zVfs);
+            rc = crate::src::headers::sqlite3_h::SQLITE_ERROR;
         }
-        _ => {}
     }
     if rc != crate::src::headers::sqlite3_h::SQLITE_OK {
         sqlite3_free_filename(zFile as *const ::core::ffi::c_char);
@@ -3545,10 +3539,8 @@ unsafe extern "C" fn openDatabase(
     }
     if crate::src::src::global::sqlite3Config.bCoreMutex as ::core::ffi::c_int
         == 0 as ::core::ffi::c_int
-    {
-        isThreadsafe = 0 as ::core::ffi::c_int;
-    } else if flags & crate::src::headers::sqlite3_h::SQLITE_OPEN_NOMUTEX as ::core::ffi::c_uint
-        != 0
+        || flags & crate::src::headers::sqlite3_h::SQLITE_OPEN_NOMUTEX as ::core::ffi::c_uint
+            != 0
     {
         isThreadsafe = 0 as ::core::ffi::c_int;
     } else if flags & crate::src::headers::sqlite3_h::SQLITE_OPEN_FULLMUTEX as ::core::ffi::c_uint

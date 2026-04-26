@@ -349,14 +349,12 @@ pub unsafe extern "C" fn sqlite3_complete(
                                     b"temp\0" as *const u8 as *const ::core::ffi::c_char,
                                     4 as ::core::ffi::c_int,
                                 ) == 0 as ::core::ffi::c_int
-                            {
-                                token = tkTEMP as crate::src::ext::rtree::rtree::U8_0;
-                            } else if nId == 9 as ::core::ffi::c_int
-                                && crate::src::src::util::sqlite3_strnicmp(
-                                    zSql,
-                                    b"temporary\0" as *const u8 as *const ::core::ffi::c_char,
-                                    9 as ::core::ffi::c_int,
-                                ) == 0 as ::core::ffi::c_int
+                                || nId == 9 as ::core::ffi::c_int
+                                    && crate::src::src::util::sqlite3_strnicmp(
+                                        zSql,
+                                        b"temporary\0" as *const u8 as *const ::core::ffi::c_char,
+                                        9 as ::core::ffi::c_int,
+                                    ) == 0 as ::core::ffi::c_int
                             {
                                 token = tkTEMP as crate::src::ext::rtree::rtree::U8_0;
                             } else {
@@ -395,19 +393,16 @@ pub unsafe extern "C" fn sqlite3_complete(
                 current_block_65 = 10512632378975961025;
             }
         }
-        match current_block_65 {
-            4775909272756257391 => {
-                let c: ::core::ffi::c_int = *zSql as ::core::ffi::c_int;
+        if current_block_65 == 4775909272756257391 {
+            let c: ::core::ffi::c_int = *zSql as ::core::ffi::c_int;
+            zSql = zSql.offset(1);
+            while *zSql as ::core::ffi::c_int != 0 && *zSql as ::core::ffi::c_int != c {
                 zSql = zSql.offset(1);
-                while *zSql as ::core::ffi::c_int != 0 && *zSql as ::core::ffi::c_int != c {
-                    zSql = zSql.offset(1);
-                }
-                if *zSql as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
-                    return 0 as ::core::ffi::c_int;
-                }
-                token = tkOTHER as crate::src::ext::rtree::rtree::U8_0;
             }
-            _ => {}
+            if *zSql as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
+                return 0 as ::core::ffi::c_int;
+            }
+            token = tkOTHER as crate::src::ext::rtree::rtree::U8_0;
         }
         state = trans[state as usize][token as usize];
         zSql = zSql.offset(1);

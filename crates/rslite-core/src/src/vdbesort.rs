@@ -1877,8 +1877,7 @@ pub unsafe extern "C" fn sqlite3VdbeSorterWrite(
             .offset(__pSorter_ref.iMemory as isize)
             as *mut crate::src::ext::rtree::rtree::U8_0 as *mut SorterRecord;
         __pSorter_ref.iMemory = (__pSorter_ref.iMemory as crate::src::ext::rtree::rtree::I64_0
-            + (nReq + 7 as crate::src::ext::rtree::rtree::I64_0
-                & !(7 as ::core::ffi::c_int) as crate::src::ext::rtree::rtree::I64_0))
+            + ((nReq + 7 as crate::src::ext::rtree::rtree::I64_0) & !(7 as ::core::ffi::c_int) as crate::src::ext::rtree::rtree::I64_0))
             as ::core::ffi::c_int;
         if !__pSorter_ref.list.pList.is_null() {
             (*pNew).u.iNext = (__pSorter_ref.list.pList as *mut crate::src::ext::rtree::rtree::U8_0)

@@ -254,8 +254,8 @@ unsafe extern "C" fn dbpageBestIndex(
         let p = &*(__pIdxInfo_ref.aConstraint.offset(i as isize)
             as *mut crate::src::headers::sqlite3_h::sqlite3_index_constraint);
 
-        if (p.iColumn == DBPAGE_COLUMN_SCHEMA) {
-            if (p.op as ::core::ffi::c_int == crate::src::headers::sqlite3_h::SQLITE_INDEX_CONSTRAINT_EQ)
+        if (p.iColumn == DBPAGE_COLUMN_SCHEMA)
+            && (p.op as ::core::ffi::c_int == crate::src::headers::sqlite3_h::SQLITE_INDEX_CONSTRAINT_EQ)
             {
                 if p.usable == 0 {
                     return crate::src::headers::sqlite3_h::SQLITE_CONSTRAINT;
@@ -267,7 +267,6 @@ unsafe extern "C" fn dbpageBestIndex(
                     1 as ::core::ffi::c_uchar;
                 break;
             }
-        }
         i += 1;
     }
     __pIdxInfo_ref.estimatedCost = 1.0e6f64;

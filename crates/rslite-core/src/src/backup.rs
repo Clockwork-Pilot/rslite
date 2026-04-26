@@ -945,28 +945,25 @@ pub unsafe extern "C" fn sqlite3BtreeCopyFile(
     } else {
         current_block = 17216689946888361452;
     }
-    match current_block {
-        17216689946888361452 => {
-            b.pSrcDb = (*pFrom).db;
-            b.pSrc = pFrom;
-            b.pDest = pTo;
-            b.iNext = 1 as crate::src::src::pager::Pgno;
-            sqlite3_backup_step(&raw mut b, 0x7fffffff as ::core::ffi::c_int);
-            rc = sqlite3_backup_finish(&raw mut b);
-            if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
-                let __pBt_ref = &mut *(*pTo).pBt;
-                __pBt_ref.btsFlags = (__pBt_ref.btsFlags as ::core::ffi::c_int
-                    & !crate::src::headers::btreeInt_h::BTS_PAGESIZE_FIXED)
-                    as crate::src::fts5::U16_0;
-            } else {
-                crate::src::src::pager::sqlite3PagerClearCache(
-                    crate::src::src::btree::sqlite3BtreePager(
-                        b.pDest as *mut crate::src::headers::btreeInt_h::Btree,
-                    ) as *mut crate::src::src::pager::Pager,
-                );
-            }
+    if current_block == 17216689946888361452 {
+        b.pSrcDb = (*pFrom).db;
+        b.pSrc = pFrom;
+        b.pDest = pTo;
+        b.iNext = 1 as crate::src::src::pager::Pgno;
+        sqlite3_backup_step(&raw mut b, 0x7fffffff as ::core::ffi::c_int);
+        rc = sqlite3_backup_finish(&raw mut b);
+        if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
+            let __pBt_ref = &mut *(*pTo).pBt;
+            __pBt_ref.btsFlags = (__pBt_ref.btsFlags as ::core::ffi::c_int
+                & !crate::src::headers::btreeInt_h::BTS_PAGESIZE_FIXED)
+                as crate::src::fts5::U16_0;
+        } else {
+            crate::src::src::pager::sqlite3PagerClearCache(
+                crate::src::src::btree::sqlite3BtreePager(
+                    b.pDest as *mut crate::src::headers::btreeInt_h::Btree,
+                ) as *mut crate::src::src::pager::Pager,
+            );
         }
-        _ => {}
     }
     crate::src::src::btmutex::sqlite3BtreeLeave(
         pFrom as *mut crate::src::headers::btreeInt_h::Btree,

@@ -600,11 +600,9 @@ unsafe extern "C" fn fts3SnippetDetails(
             {
                 let mut j: ::core::ffi::c_int;
                 let mPhrase: crate::src::ext::rtree::rtree::U64_0 = (1 as ::core::ffi::c_int
-                    as crate::src::ext::rtree::rtree::U64_0)
-                    << i % 64 as ::core::ffi::c_int;
+                    as crate::src::ext::rtree::rtree::U64_0) << (i % 64 as ::core::ffi::c_int);
                 let mPos: crate::src::ext::rtree::rtree::U64_0 = (1 as ::core::ffi::c_int
-                    as crate::src::ext::rtree::rtree::U64_0)
-                    << iCsr - iStart as crate::src::ext::rtree::rtree::I64_0;
+                    as crate::src::ext::rtree::rtree::U64_0) << (iCsr - iStart as crate::src::ext::rtree::rtree::I64_0);
                 if (mCover | mCovered) & mPhrase != 0 {
                     iScore += 1;
                 } else {
@@ -720,8 +718,7 @@ unsafe extern "C" fn fts3BestSnippet(
         i = 0 as ::core::ffi::c_int;
         while i < nList {
             if !(*sIter.aPhrase.offset(i as isize)).pHead.is_null() {
-                *pmSeen |= (1 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::U64_0)
-                    << i % 64 as ::core::ffi::c_int;
+                *pmSeen |= (1 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::U64_0) << (i % 64 as ::core::ffi::c_int);
             }
             i += 1;
         }
@@ -809,8 +806,7 @@ unsafe extern "C" fn fts3SnippetShift(
         }
         nRight = 0 as ::core::ffi::c_int;
         while hlmask
-            & (1 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::U64_0)
-                << nSnippet - 1 as ::core::ffi::c_int - nRight
+            & (1 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::U64_0) << (nSnippet - 1 as ::core::ffi::c_int - nRight)
             == 0
         {
             nRight += 1;
@@ -980,8 +976,7 @@ unsafe extern "C" fn fts3SnippetText(
                 break;
             } else {
                 isHighlight = (hlmask
-                    & (1 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::U64_0)
-                        << iCurrent - iPos
+                    & (1 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::U64_0) << (iCurrent - iPos)
                     != 0 as crate::src::ext::rtree::rtree::U64_0)
                     as ::core::ffi::c_int;
                 if iCurrent > iPos {
@@ -1821,26 +1816,23 @@ pub unsafe extern "C" fn sqlite3Fts3Snippet(
         }
         nSnippet += 1;
     }
-    match current_block {
-        1538046216550696469 => {
-            i = 0 as ::core::ffi::c_int;
-            while i < nSnippet && rc == crate::src::headers::sqlite3_h::SQLITE_OK {
-                rc = fts3SnippetText(
-                    pCsr,
-                    (&raw mut aSnippet as *mut SnippetFragment).offset(i as isize)
-                        as *mut SnippetFragment,
-                    i,
-                    (i == nSnippet - 1 as ::core::ffi::c_int) as ::core::ffi::c_int,
-                    nFToken,
-                    zStart,
-                    zEnd,
-                    zEllipsis,
-                    &raw mut res,
-                );
-                i += 1;
-            }
+    if current_block == 1538046216550696469 {
+        i = 0 as ::core::ffi::c_int;
+        while i < nSnippet && rc == crate::src::headers::sqlite3_h::SQLITE_OK {
+            rc = fts3SnippetText(
+                pCsr,
+                (&raw mut aSnippet as *mut SnippetFragment).offset(i as isize)
+                    as *mut SnippetFragment,
+                i,
+                (i == nSnippet - 1 as ::core::ffi::c_int) as ::core::ffi::c_int,
+                nFToken,
+                zStart,
+                zEnd,
+                zEllipsis,
+                &raw mut res,
+            );
+            i += 1;
         }
-        _ => {}
     }
     crate::src::ext::fts3::fts3_write::sqlite3Fts3SegmentsClose(
         pTab as *mut crate::fts3Int_h::Fts3Table,

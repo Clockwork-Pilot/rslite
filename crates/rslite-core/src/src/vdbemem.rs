@@ -1189,8 +1189,7 @@ pub unsafe extern "C" fn sqlite3VdbeMemCopy(
     if __pTo_ref.flags as ::core::ffi::c_int
         & (crate::src::headers::vdbeInt_h::MEM_Str | crate::src::headers::vdbeInt_h::MEM_Blob)
         != 0
-    {
-        if 0 as ::core::ffi::c_int
+        && 0 as ::core::ffi::c_int
             == (*pFrom).flags as ::core::ffi::c_int & crate::src::headers::vdbeInt_h::MEM_Static
         {
             __pTo_ref.flags = (__pTo_ref.flags as ::core::ffi::c_int
@@ -1198,7 +1197,6 @@ pub unsafe extern "C" fn sqlite3VdbeMemCopy(
                 as crate::src::fts5::U16_0;
             rc = sqlite3VdbeMemMakeWriteable(pTo);
         }
-    }
     rc
 }
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
@@ -1452,13 +1450,11 @@ unsafe extern "C" fn valueToText(
             && 1 as ::core::ffi::c_int
                 == 1 as ::core::ffi::c_int
                     & __pVal_ref.z as crate::src::headers::stdlib::IntptrT as ::core::ffi::c_int
-        {
-            if sqlite3VdbeMemMakeWriteable(pVal as *mut crate::src::src::vdbe::Mem)
+            && sqlite3VdbeMemMakeWriteable(pVal as *mut crate::src::src::vdbe::Mem)
                 != crate::src::headers::sqlite3_h::SQLITE_OK
             {
                 return ::core::ptr::null::<::core::ffi::c_void>();
             }
-        }
         sqlite3VdbeMemNulTerminate(pVal as *mut crate::src::src::vdbe::Mem);
     } else {
         sqlite3VdbeMemStringify(

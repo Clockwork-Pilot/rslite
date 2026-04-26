@@ -354,8 +354,8 @@ unsafe extern "C" fn porter_stemmer(
     );
     z = (&raw mut zReverse as *mut ::core::ffi::c_char)
         .offset((j + 1 as ::core::ffi::c_int) as isize) as *mut ::core::ffi::c_char;
-    if *z.offset(0_isize) as ::core::ffi::c_int == 's' as i32 {
-        if stem(
+    if *z.offset(0_isize) as ::core::ffi::c_int == 's' as i32
+        && stem(
             &raw mut z,
             b"sess\0" as *const u8 as *const ::core::ffi::c_char,
             b"ss\0" as *const u8 as *const ::core::ffi::c_char,
@@ -376,7 +376,6 @@ unsafe extern "C" fn porter_stemmer(
         {
             z = z.offset(1);
         }
-    }
     let z2: *mut ::core::ffi::c_char = z;
     if (stem(
         &raw mut z,
@@ -384,8 +383,7 @@ unsafe extern "C" fn porter_stemmer(
         b"ee\0" as *const u8 as *const ::core::ffi::c_char,
         Some(m_gt_0 as unsafe extern "C" fn(*const ::core::ffi::c_char) -> ::core::ffi::c_int),
     ) == 0)
-    {
-        if (stem(
+        && (stem(
             &raw mut z,
             b"gni\0" as *const u8 as *const ::core::ffi::c_char,
             b"\0" as *const u8 as *const ::core::ffi::c_char,
@@ -403,8 +401,7 @@ unsafe extern "C" fn porter_stemmer(
                 ),
             ) != 0)
             && z != z2
-        {
-            if !(stem(
+            && !(stem(
                 &raw mut z,
                 b"ta\0" as *const u8 as *const ::core::ffi::c_char,
                 b"ate\0" as *const u8 as *const ::core::ffi::c_char,
@@ -434,8 +431,6 @@ unsafe extern "C" fn porter_stemmer(
                     *z = 'e' as i32 as ::core::ffi::c_char;
                 }
             }
-        }
-    }
     if *z.offset(0_isize) as ::core::ffi::c_int == 'y' as i32
         && hasVowel(z.offset(1_isize)) != 0
     {
@@ -822,8 +817,8 @@ unsafe extern "C" fn porter_stemmer(
                     if m_gt_1(z.offset(3_isize)) != 0 {
                         z = z.offset(3_isize);
                     }
-                } else if *z.offset(2_isize) as ::core::ffi::c_int == 'e' as i32 {
-                    if stem(
+                } else if *z.offset(2_isize) as ::core::ffi::c_int == 'e' as i32
+                    && stem(
                         &raw mut z,
                         b"tneme\0" as *const u8 as *const ::core::ffi::c_char,
                         b"\0" as *const u8 as *const ::core::ffi::c_char,
@@ -861,7 +856,6 @@ unsafe extern "C" fn porter_stemmer(
                             ),
                         );
                     }
-                }
             }
         111 => {
             if *z.offset(0_isize) as ::core::ffi::c_int == 'u' as i32 {
@@ -932,12 +926,11 @@ unsafe extern "C" fn porter_stemmer(
             }
         _ => {}
     }
-    if *z.offset(0_isize) as ::core::ffi::c_int == 'e' as i32 {
-        if m_gt_1(z.offset(1_isize)) != 0 {
-            z = z.offset(1);
-        } else if m_eq_1(z.offset(1_isize)) != 0 && star_oh(z.offset(1_isize)) == 0 {
-            z = z.offset(1);
-        }
+    if *z.offset(0_isize) as ::core::ffi::c_int == 'e' as i32
+        && (m_gt_1(z.offset(1_isize)) != 0
+            || m_eq_1(z.offset(1_isize)) != 0 && star_oh(z.offset(1_isize)) == 0)
+    {
+        z = z.offset(1);
     }
     if m_gt_1(z) != 0
         && *z.offset(0_isize) as ::core::ffi::c_int == 'l' as i32

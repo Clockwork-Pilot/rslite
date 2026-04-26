@@ -466,8 +466,7 @@ pub unsafe extern "C" fn sqlite3AlterRenameTable(
                         )],
                     );
                 } else if (crate::src::headers::sqlite3_h::SQLITE_OK == isAlterableTable(pParse, pTab))
-                {
-                    if (crate::src::headers::sqlite3_h::SQLITE_OK == crate::src::src::build::sqlite3CheckObjectName(
+                    && (crate::src::headers::sqlite3_h::SQLITE_OK == crate::src::src::build::sqlite3CheckObjectName(
                             pParse as *mut crate::src::headers::sqliteInt_h::Parse,
                             zName,
                             b"table\0" as *const u8 as *const ::core::ffi::c_char,
@@ -492,8 +491,7 @@ pub unsafe extern "C" fn sqlite3AlterRenameTable(
                             (*pTab).zName,
                             ::core::ptr::null::<::core::ffi::c_char>(),
                         ) == 0)
-                        {
-                            if (crate::src::src::build::sqlite3ViewGetColumnNames(
+                            && (crate::src::src::build::sqlite3ViewGetColumnNames(
                                 pParse as *mut crate::src::headers::sqliteInt_h::Parse,
                                 pTab as *mut crate::src::headers::sqliteInt_h::Table,
                             ) == 0)
@@ -599,9 +597,7 @@ pub unsafe extern "C" fn sqlite3AlterRenameTable(
                                     );
                                 }
                             }
-                        }
                     }
-                }
             }
         }
     }
@@ -1039,9 +1035,9 @@ pub unsafe extern "C" fn sqlite3AlterRenameColumn(
             as *mut crate::src::headers::sqliteInt_h::SrcItem
             as *mut crate::src::headers::sqliteInt_h::SrcItem,
     ) as *mut crate::src::headers::sqliteInt_h::Table;
-    if !pTab.is_null() {
-        if (crate::src::headers::sqlite3_h::SQLITE_OK == isAlterableTable(pParse, pTab)) {
-            if (crate::src::headers::sqlite3_h::SQLITE_OK == isRealTable(pParse, pTab, 0 as ::core::ffi::c_int))
+    if !pTab.is_null()
+        && (crate::src::headers::sqlite3_h::SQLITE_OK == isAlterableTable(pParse, pTab))
+            && (crate::src::headers::sqlite3_h::SQLITE_OK == isRealTable(pParse, pTab, 0 as ::core::ffi::c_int))
             {
                 iSchema = crate::src::src::prepare::sqlite3SchemaToIndex(
                     db as *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -1145,8 +1141,6 @@ pub unsafe extern "C" fn sqlite3AlterRenameColumn(
                     }
                 }
             }
-        }
-    }
     crate::src::src::build::sqlite3SrcListDelete(
         db as *mut crate::src::headers::sqliteInt_h::sqlite3,
         pSrc as *mut crate::src::headers::sqliteInt_h::SrcList,
@@ -1551,19 +1545,13 @@ unsafe extern "C" fn renameColumnExprCb(
     if __pExpr_ref.op as ::core::ffi::c_int == crate::src::parse::TK_TRIGGER
         && __pExpr_ref.iColumn as ::core::ffi::c_int == __p_ref.iCol
         && (*(*pWalker).pParse).pTriggerTab == __p_ref.pTab
-    {
-        renameTokenFind(
-            (*pWalker).pParse,
-            p as *mut RenameCtx,
-            pExpr as *mut ::core::ffi::c_void,
-        );
-    } else if __pExpr_ref.op as ::core::ffi::c_int == crate::src::parse::TK_COLUMN
-        && __pExpr_ref.iColumn as ::core::ffi::c_int == __p_ref.iCol
-        && __pExpr_ref.flags
-            & (0x1000000 as ::core::ffi::c_int | 0x2000000 as ::core::ffi::c_int)
-                as crate::src::ext::rtree::rtree::U32_0
-            == 0 as crate::src::ext::rtree::rtree::U32_0
-        && __p_ref.pTab == __pExpr_ref.y.pTab
+        || __pExpr_ref.op as ::core::ffi::c_int == crate::src::parse::TK_COLUMN
+            && __pExpr_ref.iColumn as ::core::ffi::c_int == __p_ref.iCol
+            && __pExpr_ref.flags
+                & (0x1000000 as ::core::ffi::c_int | 0x2000000 as ::core::ffi::c_int)
+                    as crate::src::ext::rtree::rtree::U32_0
+                == 0 as crate::src::ext::rtree::rtree::U32_0
+            && __p_ref.pTab == __pExpr_ref.y.pTab
     {
         renameTokenFind(
             (*pWalker).pParse,
@@ -3282,9 +3270,9 @@ pub unsafe extern "C" fn sqlite3AlterDropColumn(
                 .offset(0_isize) as *mut crate::src::headers::sqliteInt_h::SrcItem
                 as *mut crate::src::headers::sqliteInt_h::SrcItem,
         ) as *mut crate::src::headers::sqliteInt_h::Table;
-        if !pTab.is_null() {
-            if (crate::src::headers::sqlite3_h::SQLITE_OK == isAlterableTable(pParse, pTab)) {
-                if (crate::src::headers::sqlite3_h::SQLITE_OK == isRealTable(pParse, pTab, 1 as ::core::ffi::c_int))
+        if !pTab.is_null()
+            && (crate::src::headers::sqlite3_h::SQLITE_OK == isAlterableTable(pParse, pTab))
+                && (crate::src::headers::sqlite3_h::SQLITE_OK == isRealTable(pParse, pTab, 1 as ::core::ffi::c_int))
                 {
                     zCol = crate::src::src::build::sqlite3NameFromToken(
                         db as *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -3569,8 +3557,6 @@ pub unsafe extern "C" fn sqlite3AlterDropColumn(
                         }
                     }
                 }
-            }
-        }
     }
     crate::src::src::malloc::sqlite3DbFree(
         db as *mut crate::src::headers::sqliteInt_h::sqlite3,

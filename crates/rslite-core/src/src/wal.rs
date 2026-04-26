@@ -789,7 +789,7 @@ unsafe extern "C" fn walHash(
 }
 
 unsafe extern "C" fn walNextHash(iPriorHash: ::core::ffi::c_int) -> ::core::ffi::c_int {
-    iPriorHash + 1 as ::core::ffi::c_int & HASHTABLE_NSLOT - 1 as ::core::ffi::c_int
+    (iPriorHash + 1 as ::core::ffi::c_int) & (HASHTABLE_NSLOT - 1 as ::core::ffi::c_int)
 }
 
 unsafe extern "C" fn walHashGet(
@@ -1005,7 +1005,7 @@ unsafe extern "C" fn walIndexRecover(pWal: *mut Wal) -> ::core::ffi::c_int {
                 ) as ::core::ffi::c_int;
                 if magic & 0xfffffffe as crate::src::ext::rtree::rtree::U32_0
                     != WAL_MAGIC as crate::src::ext::rtree::rtree::U32_0
-                    || szPage & szPage - 1 as ::core::ffi::c_int != 0
+                    || szPage & (szPage - 1 as ::core::ffi::c_int) != 0
                     || szPage > crate::sqliteLimit_h::SQLITE_MAX_PAGE_SIZE
                     || szPage < 512 as ::core::ffi::c_int
                 {
@@ -3251,31 +3251,28 @@ unsafe extern "C" fn walFrames(
         } else {
             current_block_67 = 14220266465818359136;
         }
-        match current_block_67 {
-            14220266465818359136 => {
-                iFrame = iFrame.wrapping_add(1);
-                let __p_ref = unsafe { &mut *p };
-                nDbSize = (if isCommit != 0 && __p_ref.pDirty.is_null() {
-                    nTruncate
-                } else {
-                    0 as crate::src::src::pager::Pgno
-                }) as ::core::ffi::c_int;
-                rc = walWriteOneFrame(
-                    &raw mut w,
-                    p,
-                    nDbSize,
-                    iOffset as crate::src::headers::sqlite3_h::Sqlite3Int64,
-                );
-                if rc != 0 {
-                    return rc;
-                }
-                pLast = p;
-                iOffset += szFrame as crate::src::ext::rtree::rtree::I64_0;
-                __p_ref.flags = (__p_ref.flags as ::core::ffi::c_int
-                    | crate::src::src::pcache::PGHDR_WAL_APPEND)
-                    as crate::src::fts5::U16_0;
+        if current_block_67 == 14220266465818359136 {
+            iFrame = iFrame.wrapping_add(1);
+            let __p_ref = unsafe { &mut *p };
+            nDbSize = (if isCommit != 0 && __p_ref.pDirty.is_null() {
+                nTruncate
+            } else {
+                0 as crate::src::src::pager::Pgno
+            }) as ::core::ffi::c_int;
+            rc = walWriteOneFrame(
+                &raw mut w,
+                p,
+                nDbSize,
+                iOffset as crate::src::headers::sqlite3_h::Sqlite3Int64,
+            );
+            if rc != 0 {
+                return rc;
             }
-            _ => {}
+            pLast = p;
+            iOffset += szFrame as crate::src::ext::rtree::rtree::I64_0;
+            __p_ref.flags = (__p_ref.flags as ::core::ffi::c_int
+                | crate::src::src::pcache::PGHDR_WAL_APPEND)
+                as crate::src::fts5::U16_0;
         }
         p = (*p).pDirty;
     }

@@ -186,114 +186,111 @@ unsafe extern "C" fn sqlite3_get_table_cb(
     } else {
         current_block = 11812396948646013369;
     }
-    match current_block {
-        11812396948646013369 => {
-            if __p_ref.nRow == 0 as crate::src::ext::rtree::rtree::U32_0 {
-                __p_ref.nColumn = nCol as crate::src::ext::rtree::rtree::U32_0;
-                i = 0 as ::core::ffi::c_int;
-                loop {
-                    if (i >= nCol) {
-                        current_block = 12147880666119273379;
-                        break;
-                    }
-                    let col_str = *colv.offset(i as isize);
-                    let len = unsafe { libc::strlen(col_str as *const ::core::ffi::c_char) };
-                    let ptr =
-                        crate::src::src::malloc::sqlite3_malloc((len + 1) as ::core::ffi::c_int);
-                    if !ptr.is_null() {
-                        unsafe {
-                            libc::strcpy(ptr as *mut ::core::ffi::c_char, col_str);
-                        }
-                    }
-                    z = ptr as *mut ::core::ffi::c_char;
-                    if z.is_null() {
-                        current_block = 6187690635698806885;
-                        break;
-                    }
-                    let fresh2 = __p_ref.nData;
-                    __p_ref.nData = __p_ref.nData.wrapping_add(1);
-                    let fresh3 = &mut *__p_ref.azResult.offset(fresh2 as isize);
-                    *fresh3 = z;
-                    i += 1;
+    if current_block == 11812396948646013369 {
+        if __p_ref.nRow == 0 as crate::src::ext::rtree::rtree::U32_0 {
+            __p_ref.nColumn = nCol as crate::src::ext::rtree::rtree::U32_0;
+            i = 0 as ::core::ffi::c_int;
+            loop {
+                if (i >= nCol) {
+                    current_block = 12147880666119273379;
+                    break;
                 }
-            } else {
-                if __p_ref.nColumn as ::core::ffi::c_int != nCol {
-                    crate::src::src::malloc::sqlite3_free(
-                        __p_ref.zErrMsg as *mut ::core::ffi::c_void,
-                    );
-                    let err_msg =
-                        b"sqlite3_get_table() called with two or more incompatible queries\0";
-                    let len = err_msg.len() - 1;
-                    let ptr =
-                        crate::src::src::malloc::sqlite3_malloc(len as ::core::ffi::c_int + 1);
-                    if !ptr.is_null() {
-                        unsafe {
-                            libc::strcpy(
-                                ptr as *mut ::core::ffi::c_char,
-                                err_msg.as_ptr() as *const ::core::ffi::c_char,
-                            );
-                        }
+                let col_str = *colv.offset(i as isize);
+                let len = unsafe { libc::strlen(col_str as *const ::core::ffi::c_char) };
+                let ptr =
+                    crate::src::src::malloc::sqlite3_malloc((len + 1) as ::core::ffi::c_int);
+                if !ptr.is_null() {
+                    unsafe {
+                        libc::strcpy(ptr as *mut ::core::ffi::c_char, col_str);
                     }
-                    __p_ref.zErrMsg = ptr as *mut ::core::ffi::c_char;
-                    __p_ref.rc = crate::src::headers::sqlite3_h::SQLITE_ERROR;
-                    return 1 as ::core::ffi::c_int;
                 }
-                current_block = 12147880666119273379;
+                z = ptr as *mut ::core::ffi::c_char;
+                if z.is_null() {
+                    current_block = 6187690635698806885;
+                    break;
+                }
+                let fresh2 = __p_ref.nData;
+                __p_ref.nData = __p_ref.nData.wrapping_add(1);
+                let fresh3 = &mut *__p_ref.azResult.offset(fresh2 as isize);
+                *fresh3 = z;
+                i += 1;
             }
-            match current_block {
-                6187690635698806885 => {}
-                _ => {
-                    if !argv.is_null() {
-                        i = 0 as ::core::ffi::c_int;
-                        loop {
-                            if (i >= nCol) {
-                                current_block = 11932355480408055363;
+        } else {
+            if __p_ref.nColumn as ::core::ffi::c_int != nCol {
+                crate::src::src::malloc::sqlite3_free(
+                    __p_ref.zErrMsg as *mut ::core::ffi::c_void,
+                );
+                let err_msg =
+                    b"sqlite3_get_table() called with two or more incompatible queries\0";
+                let len = err_msg.len() - 1;
+                let ptr =
+                    crate::src::src::malloc::sqlite3_malloc(len as ::core::ffi::c_int + 1);
+                if !ptr.is_null() {
+                    unsafe {
+                        libc::strcpy(
+                            ptr as *mut ::core::ffi::c_char,
+                            err_msg.as_ptr() as *const ::core::ffi::c_char,
+                        );
+                    }
+                }
+                __p_ref.zErrMsg = ptr as *mut ::core::ffi::c_char;
+                __p_ref.rc = crate::src::headers::sqlite3_h::SQLITE_ERROR;
+                return 1 as ::core::ffi::c_int;
+            }
+            current_block = 12147880666119273379;
+        }
+        match current_block {
+            6187690635698806885 => {}
+            _ => {
+                if !argv.is_null() {
+                    i = 0 as ::core::ffi::c_int;
+                    loop {
+                        if (i >= nCol) {
+                            current_block = 11932355480408055363;
+                            break;
+                        }
+                        if (*argv.offset(i as isize)).is_null() {
+                            z = ::core::ptr::null_mut::<::core::ffi::c_char>();
+                        } else {
+                            let n: ::core::ffi::c_int =
+                                crate::src::src::util::sqlite3Strlen30(
+                                    *argv.offset(i as isize),
+                                ) + 1 as ::core::ffi::c_int;
+                            z = crate::src::src::malloc::sqlite3_malloc64(
+                                n as crate::src::headers::sqlite3_h::Sqlite3Uint64,
+                            ) as *mut ::core::ffi::c_char;
+                            if z.is_null() {
+                                current_block = 6187690635698806885;
                                 break;
                             }
-                            if (*argv.offset(i as isize)).is_null() {
-                                z = ::core::ptr::null_mut::<::core::ffi::c_char>();
-                            } else {
-                                let n: ::core::ffi::c_int =
-                                    crate::src::src::util::sqlite3Strlen30(
-                                        *argv.offset(i as isize),
-                                    ) + 1 as ::core::ffi::c_int;
-                                z = crate::src::src::malloc::sqlite3_malloc64(
-                                    n as crate::src::headers::sqlite3_h::Sqlite3Uint64,
-                                ) as *mut ::core::ffi::c_char;
-                                if z.is_null() {
-                                    current_block = 6187690635698806885;
-                                    break;
-                                }
-                                ::core::ptr::copy_nonoverlapping(
-                                    *argv.offset(i as isize) as *const u8,
-                                    z as *mut u8,
-                                    n as usize,
-                                );
-                            }
-                            let fresh4 = __p_ref.nData;
-                            __p_ref.nData = __p_ref.nData.wrapping_add(1);
-                            let fresh5 = &mut *__p_ref.azResult.offset(fresh4 as isize);
-                            *fresh5 = z;
-                            i += 1;
+                            ::core::ptr::copy_nonoverlapping(
+                                *argv.offset(i as isize) as *const u8,
+                                z as *mut u8,
+                                n as usize,
+                            );
                         }
-                        match current_block {
-                            6187690635698806885 => {}
-                            _ => {
-                                __p_ref.nRow = __p_ref.nRow.wrapping_add(1);
-                                current_block = 15897653523371991391;
-                            }
-                        }
-                    } else {
-                        current_block = 15897653523371991391;
+                        let fresh4 = __p_ref.nData;
+                        __p_ref.nData = __p_ref.nData.wrapping_add(1);
+                        let fresh5 = &mut *__p_ref.azResult.offset(fresh4 as isize);
+                        *fresh5 = z;
+                        i += 1;
                     }
                     match current_block {
                         6187690635698806885 => {}
-                        _ => return 0 as ::core::ffi::c_int,
+                        _ => {
+                            __p_ref.nRow = __p_ref.nRow.wrapping_add(1);
+                            current_block = 15897653523371991391;
+                        }
                     }
+                } else {
+                    current_block = 15897653523371991391;
+                }
+                match current_block {
+                    6187690635698806885 => {}
+                    _ => return 0 as ::core::ffi::c_int,
                 }
             }
         }
-        _ => {}
     }
     __p_ref.rc = crate::src::headers::sqliteInt_h::SQLITE_NOMEM_BKPT;
     1 as ::core::ffi::c_int

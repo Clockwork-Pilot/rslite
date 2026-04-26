@@ -66,7 +66,7 @@ unsafe extern "C" fn sqlite3MemRealloc(
 }
 
 unsafe extern "C" fn sqlite3MemRoundup(n: ::core::ffi::c_int) -> ::core::ffi::c_int {
-    n + 7 as ::core::ffi::c_int & !(7 as ::core::ffi::c_int)
+    (n + 7 as ::core::ffi::c_int) & !(7 as ::core::ffi::c_int)
 }
 
 unsafe extern "C" fn sqlite3MemInit(mut _NotUsed: *mut ::core::ffi::c_void) -> ::core::ffi::c_int {

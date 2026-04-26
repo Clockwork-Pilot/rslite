@@ -557,8 +557,8 @@ pub unsafe extern "C" fn sqlite3VdbeMemTranslate(
                         ((*fresh22 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int)
                             as ::core::ffi::c_uint,
                     );
-                    if c >= 0xd800 as ::core::ffi::c_uint && c < 0xe000 as ::core::ffi::c_uint {
-                        if zIn < zTerm {
+                    if c >= 0xd800 as ::core::ffi::c_uint && c < 0xe000 as ::core::ffi::c_uint
+                        && zIn < zTerm {
                             let fresh23 = zIn;
                             zIn = zIn.offset(1);
                             let mut c2: ::core::ffi::c_int = *fresh23 as ::core::ffi::c_int;
@@ -575,7 +575,6 @@ pub unsafe extern "C" fn sqlite3VdbeMemTranslate(
                                         << 10 as ::core::ffi::c_int,
                                 );
                         }
-                    }
                     if c < 0x80 as ::core::ffi::c_uint {
                         let fresh25 = z;
                         z = z.offset(1);
@@ -659,8 +658,8 @@ pub unsafe extern "C" fn sqlite3VdbeMemTranslate(
                     let fresh36 = zIn;
                     zIn = zIn.offset(1);
                     c = c.wrapping_add(*fresh36 as ::core::ffi::c_uint);
-                    if c >= 0xd800 as ::core::ffi::c_uint && c < 0xe000 as ::core::ffi::c_uint {
-                        if zIn < zTerm {
+                    if c >= 0xd800 as ::core::ffi::c_uint && c < 0xe000 as ::core::ffi::c_uint
+                        && zIn < zTerm {
                             let fresh37 = zIn;
                             zIn = zIn.offset(1);
                             let mut c2_0: ::core::ffi::c_int =
@@ -678,7 +677,6 @@ pub unsafe extern "C" fn sqlite3VdbeMemTranslate(
                                         << 10 as ::core::ffi::c_int,
                                 );
                         }
-                    }
                     if c < 0x80 as ::core::ffi::c_uint {
                         let fresh39 = z;
                         z = z.offset(1);

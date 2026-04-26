@@ -330,16 +330,16 @@ pub const WO_IN: ::core::ffi::c_int = 0x1 as ::core::ffi::c_int;
 pub const WO_EQ: ::core::ffi::c_int = 0x2 as ::core::ffi::c_int;
 
 pub const WO_LT: ::core::ffi::c_int =
-    crate::src::headers::whereInt_h::WO_EQ << crate::src::parse::TK_LT_1 - crate::src::parse::TK_EQ;
+    crate::src::headers::whereInt_h::WO_EQ << (crate::src::parse::TK_LT_1 - crate::src::parse::TK_EQ);
 
 pub const WO_LE: ::core::ffi::c_int =
-    crate::src::headers::whereInt_h::WO_EQ << crate::src::parse::TK_LE - crate::src::parse::TK_EQ;
+    crate::src::headers::whereInt_h::WO_EQ << (crate::src::parse::TK_LE - crate::src::parse::TK_EQ);
 
 pub const WO_GT: ::core::ffi::c_int =
-    crate::src::headers::whereInt_h::WO_EQ << crate::src::parse::TK_GT_1 - crate::src::parse::TK_EQ;
+    crate::src::headers::whereInt_h::WO_EQ << (crate::src::parse::TK_GT_1 - crate::src::parse::TK_EQ);
 
 pub const WO_GE: ::core::ffi::c_int =
-    crate::src::headers::whereInt_h::WO_EQ << crate::src::parse::TK_GE - crate::src::parse::TK_EQ;
+    crate::src::headers::whereInt_h::WO_EQ << (crate::src::parse::TK_GE - crate::src::parse::TK_EQ);
 
 pub const WO_AUX: ::core::ffi::c_int = 0x40 as ::core::ffi::c_int;
 

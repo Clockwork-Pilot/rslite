@@ -515,7 +515,7 @@ pub unsafe extern "C" fn sqlite3BitvecBuiltinTest(
                         *aOp.offset((pc + 2 as ::core::ffi::c_int) as isize) +=
                             *aOp.offset((pc + 3 as ::core::ffi::c_int) as isize);
                     }
-                    3 | 4 | _ => {
+                    _ => {
                         nx = 2 as ::core::ffi::c_int;
                         crate::src::src::random::sqlite3_randomness(
                             ::core::mem::size_of::<::core::ffi::c_int>() as ::core::ffi::c_int,
@@ -533,11 +533,11 @@ pub unsafe extern "C" fn sqlite3BitvecBuiltinTest(
                 if op & 1 as ::core::ffi::c_int != 0 as ::core::ffi::c_int {
                     if !pV.is_null() {
                         let fresh3 = &mut *pV.offset(
-                            (i + 1 as ::core::ffi::c_int >> 3 as ::core::ffi::c_int) as isize,
+                            ((i + 1 as ::core::ffi::c_int) >> 3 as ::core::ffi::c_int) as isize,
                         );
                         *fresh3 = (*fresh3 as ::core::ffi::c_int
                             | (1 as ::core::ffi::c_int)
-                                << (i + 1 as ::core::ffi::c_int & 7 as ::core::ffi::c_int))
+                                << ((i + 1 as ::core::ffi::c_int) & 7 as ::core::ffi::c_int))
                             as ::core::ffi::c_uchar;
                     }
                     if (op == 5 as ::core::ffi::c_int) {
@@ -554,11 +554,11 @@ pub unsafe extern "C" fn sqlite3BitvecBuiltinTest(
                 } else {
                     if !pV.is_null() {
                         let fresh4 = &mut *pV.offset(
-                            (i + 1 as ::core::ffi::c_int >> 3 as ::core::ffi::c_int) as isize,
+                            ((i + 1 as ::core::ffi::c_int) >> 3 as ::core::ffi::c_int) as isize,
                         );
                         *fresh4 = (*fresh4 as ::core::ffi::c_int
                             & !(((1 as ::core::ffi::c_int)
-                                << (i + 1 as ::core::ffi::c_int & 7 as ::core::ffi::c_int))
+                                << ((i + 1 as ::core::ffi::c_int) & 7 as ::core::ffi::c_int))
                                 as crate::src::ext::rtree::rtree::U8_0
                                 as ::core::ffi::c_int))
                             as ::core::ffi::c_uchar;

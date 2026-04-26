@@ -759,8 +759,8 @@ unsafe extern "C" fn queryTokenizer(
         -(1 as ::core::ffi::c_int),
         crate::src::headers::sqlite3_h::SQLITE_STATIC,
     );
-    if crate::src::headers::sqlite3_h::SQLITE_ROW == crate::src::src::vdbeapi::sqlite3_step(pStmt) {
-        if crate::src::src::vdbeapi::sqlite3_column_type(pStmt, 0 as ::core::ffi::c_int)
+    if crate::src::headers::sqlite3_h::SQLITE_ROW == crate::src::src::vdbeapi::sqlite3_step(pStmt)
+        && crate::src::src::vdbeapi::sqlite3_column_type(pStmt, 0 as ::core::ffi::c_int)
             == crate::src::headers::sqlite3_h::SQLITE_BLOB
             && crate::src::src::vdbeapi::sqlite3_column_bytes(pStmt, 0 as ::core::ffi::c_int)
                 as usize
@@ -776,7 +776,6 @@ unsafe extern "C" fn queryTokenizer(
                 >() as crate::__stddef_size_t_h::SizeT,
             );
         }
-    }
     crate::src::src::vdbeapi::sqlite3_finalize(pStmt)
 }
 

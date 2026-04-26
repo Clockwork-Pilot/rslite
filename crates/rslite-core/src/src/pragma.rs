@@ -1789,8 +1789,8 @@ unsafe extern "C" fn pragmaFunclistLine(
             b"utf16le\0" as *const u8 as *const ::core::ffi::c_char,
             b"utf16be\0" as *const u8 as *const ::core::ffi::c_char,
         ];
-        if (*p).xSFunc.is_some() {
-            if !((*p).funcFlags
+        if (*p).xSFunc.is_some()
+            && !((*p).funcFlags
                 & crate::src::headers::sqliteInt_h::SQLITE_FUNC_INTERNAL
                     as crate::src::ext::rtree::rtree::U32_0
                 != 0 as crate::src::ext::rtree::rtree::U32_0
@@ -1834,7 +1834,6 @@ unsafe extern "C" fn pragmaFunclistLine(
                     ],
                 );
             }
-        }
         p = (*p).pNext;
     }
 }
@@ -2775,14 +2774,13 @@ pub unsafe extern "C" fn sqlite3Pragma(
                                         &[],
                                     );
                                 } else if iDb != 1 as ::core::ffi::c_int {
-                                    let mut iLevel: ::core::ffi::c_int = getSafetyLevel(
+                                    let mut iLevel: ::core::ffi::c_int = (getSafetyLevel(
                                         zRight,
                                         0 as ::core::ffi::c_int,
                                         1 as crate::src::ext::rtree::rtree::U8_0,
                                     )
                                         as ::core::ffi::c_int
-                                        + 1 as ::core::ffi::c_int
-                                        & crate::src::src::pager::PAGER_SYNCHRONOUS_MASK;
+                                        + 1 as ::core::ffi::c_int) & crate::src::src::pager::PAGER_SYNCHRONOUS_MASK;
                                     if iLevel == 0 as ::core::ffi::c_int {
                                         iLevel = 1 as ::core::ffi::c_int;
                                     }
@@ -2927,64 +2925,61 @@ pub unsafe extern "C" fn sqlite3Pragma(
                                             } else {
                                                 current_block_303 = 4839309778395429725;
                                             }
-                                            match current_block_303 {
-                                                4839309778395429725 => {
-                                                    let __pCol_ref = { &mut *pCol };
-                                                    if __pCol_ref.colFlags as ::core::ffi::c_int
-                                                        & crate::src::headers::sqliteInt_h::COLFLAG_PRIMKEY
-                                                        == 0 as ::core::ffi::c_int
-                                                    {
-                                                        k = 0 as ::core::ffi::c_int;
-                                                    } else if pPk.is_null() {
-                                                        k = 1 as ::core::ffi::c_int;
-                                                    } else {
-                                                        k = 1 as ::core::ffi::c_int;
-                                                        while k
-                                                            <= (*pTab).nCol as ::core::ffi::c_int
-                                                            && *(*pPk).aiColumn.offset(
-                                                                (k - 1 as ::core::ffi::c_int)
-                                                                    as isize,
-                                                            )
-                                                                as ::core::ffi::c_int
-                                                                != i
-                                                        {
-                                                            k += 1;
-                                                        }
-                                                    }
-                                                    pColExpr =  crate::src::src::build::sqlite3ColumnExpr(pTab as *mut crate::src::headers::sqliteInt_h::Table,  pCol as *mut crate::src::headers::sqliteInt_h::Column) as
-    *mut crate::src::headers::sqliteInt_h::Expr;
-                                                    crate::src::src::vdbeaux::sqlite3VdbeMultiLoad_args(
-                                                        v,
-                                                        1 as ::core::ffi::c_int,
-                                                        if __pPragma_ref.iArg != 0 {
-                                                            b"issisii\0" as *const u8
-                                                                as *const ::core::ffi::c_char
-                                                        } else {
-                                                            b"issisi\0" as *const u8
-                                                                as *const ::core::ffi::c_char
-                                                        },
-                                                        &[
-                                                            crate::src::src::printf::PrintfArg::Int((i - nHidden) as crate::src::ext::rtree::rtree::I64_0),
-                                                            crate::src::src::printf::PrintfArg::Str(__pCol_ref.zCnName as *mut ::core::ffi::c_char),
-                                                            crate::src::src::printf::PrintfArg::Str(crate::src::src::util::sqlite3ColumnType(
-                                                                pCol as *mut crate::src::headers::sqliteInt_h::Column,
-                                                                b"\0" as *const u8
-                                                                    as *const ::core::ffi::c_char
-                                                                    as *mut ::core::ffi::c_char,
-                                                            )),
-                                                            crate::src::src::printf::PrintfArg::Int(if __pCol_ref.notNull() as ::core::ffi::c_int != 0 { 1i64 } else { 0i64 }),
-                                                            crate::src::src::printf::PrintfArg::Str(if isHidden >= 2 as ::core::ffi::c_int || pColExpr.is_null() {
-                                                                ::core::ptr::null_mut::<::core::ffi::c_char>()
-                                                            } else {
-                                                                (*pColExpr).u.zToken
-                                                            }),
-                                                            crate::src::src::printf::PrintfArg::Int(k as crate::src::ext::rtree::rtree::I64_0),
-                                                            crate::src::src::printf::PrintfArg::Int(isHidden as crate::src::ext::rtree::rtree::I64_0),
-                                                        ],
-                                                    );
-                                                }
-                                                _ => {}
-                                            }
+                                            if current_block_303 == 4839309778395429725 {
+                                                                                            let __pCol_ref = { &mut *pCol };
+                                                                                            if __pCol_ref.colFlags as ::core::ffi::c_int
+                                                                                                & crate::src::headers::sqliteInt_h::COLFLAG_PRIMKEY
+                                                                                                == 0 as ::core::ffi::c_int
+                                                                                            {
+                                                                                                k = 0 as ::core::ffi::c_int;
+                                                                                            } else if pPk.is_null() {
+                                                                                                k = 1 as ::core::ffi::c_int;
+                                                                                            } else {
+                                                                                                k = 1 as ::core::ffi::c_int;
+                                                                                                while k
+                                                                                                    <= (*pTab).nCol as ::core::ffi::c_int
+                                                                                                    && *(*pPk).aiColumn.offset(
+                                                                                                        (k - 1 as ::core::ffi::c_int)
+                                                                                                            as isize,
+                                                                                                    )
+                                                                                                        as ::core::ffi::c_int
+                                                                                                        != i
+                                                                                                {
+                                                                                                    k += 1;
+                                                                                                }
+                                                                                            }
+                                                                                            pColExpr =  crate::src::src::build::sqlite3ColumnExpr(pTab as *mut crate::src::headers::sqliteInt_h::Table,  pCol as *mut crate::src::headers::sqliteInt_h::Column) as
+                                            *mut crate::src::headers::sqliteInt_h::Expr;
+                                                                                            crate::src::src::vdbeaux::sqlite3VdbeMultiLoad_args(
+                                                                                                v,
+                                                                                                1 as ::core::ffi::c_int,
+                                                                                                if __pPragma_ref.iArg != 0 {
+                                                                                                    b"issisii\0" as *const u8
+                                                                                                        as *const ::core::ffi::c_char
+                                                                                                } else {
+                                                                                                    b"issisi\0" as *const u8
+                                                                                                        as *const ::core::ffi::c_char
+                                                                                                },
+                                                                                                &[
+                                                                                                    crate::src::src::printf::PrintfArg::Int((i - nHidden) as crate::src::ext::rtree::rtree::I64_0),
+                                                                                                    crate::src::src::printf::PrintfArg::Str(__pCol_ref.zCnName as *mut ::core::ffi::c_char),
+                                                                                                    crate::src::src::printf::PrintfArg::Str(crate::src::src::util::sqlite3ColumnType(
+                                                                                                        pCol as *mut crate::src::headers::sqliteInt_h::Column,
+                                                                                                        b"\0" as *const u8
+                                                                                                            as *const ::core::ffi::c_char
+                                                                                                            as *mut ::core::ffi::c_char,
+                                                                                                    )),
+                                                                                                    crate::src::src::printf::PrintfArg::Int(if __pCol_ref.notNull() as ::core::ffi::c_int != 0 { 1i64 } else { 0i64 }),
+                                                                                                    crate::src::src::printf::PrintfArg::Str(if isHidden >= 2 as ::core::ffi::c_int || pColExpr.is_null() {
+                                                                                                        ::core::ptr::null_mut::<::core::ffi::c_char>()
+                                                                                                    } else {
+                                                                                                        (*pColExpr).u.zToken
+                                                                                                    }),
+                                                                                                    crate::src::src::printf::PrintfArg::Int(k as crate::src::ext::rtree::rtree::I64_0),
+                                                                                                    crate::src::src::printf::PrintfArg::Int(isHidden as crate::src::ext::rtree::rtree::I64_0),
+                                                                                                ],
+                                                                                            );
+                                                                                        }
                                             i += 1;
                                             pCol = pCol.offset(1);
                                         }
@@ -3864,8 +3859,7 @@ pub unsafe extern "C" fn sqlite3Pragma(
                                     let mut cnt: ::core::ffi::c_int;
                                     if !(crate::src::headers::sqliteInt_h::OMIT_TEMPDB != 0
                                         && i_8 == 1 as ::core::ffi::c_int)
-                                    {
-                                        if !(iDb >= 0 as ::core::ffi::c_int && i_8 != iDb) {
+                                        && !(iDb >= 0 as ::core::ffi::c_int && i_8 != iDb) {
                                             crate::src::src::build::sqlite3CodeVerifySchema(
                                                 pParse
                                                     as *mut crate::src::headers::sqliteInt_h::Parse,
@@ -4099,8 +4093,7 @@ pub unsafe extern "C" fn sqlite3Pragma(
                                                     let r2: ::core::ffi::c_int;
                                                     let mut mxCol: ::core::ffi::c_int;
                                                     if (tableSkipIntegrityCheck(pTab_9, pObjTab) == 0)
-                                                    {
-                                                        if (*pTab_9).eTabType as ::core::ffi::c_int
+                                                        && (*pTab_9).eTabType as ::core::ffi::c_int
                                                             == crate::src::headers::sqliteInt_h::TABTYP_NORM
                                                         {
                                                             let __pTab_9_ref = { &mut *pTab_9 };
@@ -4225,8 +4218,8 @@ pub unsafe extern "C" fn sqlite3Pragma(
                                                                     3 as ::core::ffi::c_int,
                                                                 );
                                                             }
-                                                            if isQuick == 0 {
-                                                                if !pPk_0.is_null() {
+                                                            if isQuick == 0
+                                                                && !pPk_0.is_null() {
                                                                     
                                                                     
                                                                     let a1: ::core::ffi::c_int = crate::src::src::vdbeaux::sqlite3VdbeAddOp4Int(
@@ -4280,7 +4273,6 @@ pub unsafe extern "C" fn sqlite3Pragma(
                                                                         j_3 += 1;
                                                                     }
                                                                 }
-                                                            }
                                                             bStrict = (__pTab_9_ref.tabFlags
                                                                 & crate::src::headers::sqliteInt_h::TF_Strict as crate::src::ext::rtree::rtree::U32_0
                                                                 != 0 as crate::src::ext::rtree::rtree::U32_0)
@@ -4939,7 +4931,6 @@ pub unsafe extern "C" fn sqlite3Pragma(
                                                                 );
                                                             }
                                                         }
-                                                    }
                                                     x_1 = (*x_1).next;
                                                 }
                                                 let mut current_block_842: u64;
@@ -4950,11 +4941,9 @@ pub unsafe extern "C" fn sqlite3Pragma(
                                                     let pVTab: *mut crate::src::headers::sqlite3_h::sqlite3_vtab;
                                                     let a1_0: ::core::ffi::c_int;
                                                     if (tableSkipIntegrityCheck(pTab_10, pObjTab) == 0)
-                                                    {
-                                                        if ((*pTab_10).eTabType
+                                                        && ((*pTab_10).eTabType
                                                             as ::core::ffi::c_int != crate::src::headers::sqliteInt_h::TABTYP_NORM)
-                                                        {
-                                                            if (*pTab_10).eTabType
+                                                            && (*pTab_10).eTabType
                                                                 as ::core::ffi::c_int
                                                                 == crate::src::headers::sqliteInt_h::TABTYP_VTAB
                                                             {
@@ -5002,14 +4991,12 @@ pub unsafe extern "C" fn sqlite3Pragma(
                                                                                 .vtab
                                                                                 .p)
                                                                                 .pVtab;
-                                                                            if !pVTab.is_null() {
-                                                                                if !(*pVTab)
+                                                                            if !pVTab.is_null()
+                                                                                && !(*pVTab)
                                                                                     .pModule
                                                                                     .is_null()
-                                                                                {
-                                                                                    if ((*(*pVTab).pModule).iVersion >= 4 as ::core::ffi::c_int)
-                                                                                    {
-                                                                                        if (*(*pVTab).pModule).xIntegrity.is_some() {
+                                                                                    && ((*(*pVTab).pModule).iVersion >= 4 as ::core::ffi::c_int)
+                                                                                        && (*(*pVTab).pModule).xIntegrity.is_some() {
                                                                                             crate::src::src::vdbeaux::sqlite3VdbeAddOp3(
                                                                                                 v,
                                                                                                 crate::src::headers::opcodes_h::OP_VCheck,
@@ -5031,20 +5018,14 @@ pub unsafe extern "C" fn sqlite3Pragma(
                                                                                             integrityCheckResultRow(v);
                                                                                             crate::src::src::vdbeaux::sqlite3VdbeJumpHere(v, a1_0);
                                                                                         }
-                                                                                    }
-                                                                                }
-                                                                            }
                                                                         }
                                                                     }
                                                                 }
                                                             }
-                                                        }
-                                                    }
                                                     x_1 = (*x_1).next;
                                                 }
                                             }
                                         }
-                                    }
                                     i_8 += 1;
                                 }
                                 static mut iLn_1: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
@@ -5515,11 +5496,10 @@ pub unsafe extern "C" fn sqlite3Pragma(
                                         let __db_ref = { &mut *db };
                                         if opMask & 0x10 as crate::src::ext::rtree::rtree::U32_0
                                             == 0 as crate::src::ext::rtree::rtree::U32_0
-                                        {
-                                            nLimit = 0 as ::core::ffi::c_int;
-                                        } else if __db_ref.nAnalysisLimit > 0 as ::core::ffi::c_int
-                                            && __db_ref.nAnalysisLimit
-                                                < SQLITE_DEFAULT_OPTIMIZE_LIMIT
+                                            || __db_ref.nAnalysisLimit
+                                                > 0 as ::core::ffi::c_int
+                                                && __db_ref.nAnalysisLimit
+                                                    < SQLITE_DEFAULT_OPTIMIZE_LIMIT
                                         {
                                             nLimit = 0 as ::core::ffi::c_int;
                                         } else {
@@ -5545,8 +5525,7 @@ pub unsafe extern "C" fn sqlite3Pragma(
                                                     pTab_11 = (*k_3).data as *mut crate::src::headers::sqliteInt_h::Table;
                                                     if (*pTab_11).eTabType as ::core::ffi::c_int
                                                         == crate::src::headers::sqliteInt_h::TABTYP_NORM
-                                                    {
-                                                        if (0 as ::core::ffi::c_int != crate::src::src::util::sqlite3_strnicmp(
+                                                        && (0 as ::core::ffi::c_int != crate::src::src::util::sqlite3_strnicmp(
                                                                 (*pTab_11).zName,
                                                                 b"sqlite_\0" as *const u8
                                                                     as *const ::core::ffi::c_char,
@@ -5569,17 +5548,11 @@ pub unsafe extern "C" fn sqlite3Pragma(
                                                             if __pTab_11_ref.tabFlags
                                                                 & crate::src::headers::sqliteInt_h::TF_MaybeReanalyze as crate::src::ext::rtree::rtree::U32_0
                                                                 != 0 as crate::src::ext::rtree::rtree::U32_0
-                                                            {
-                                                                current_block_966 =
-                                                                    3733147086002097443;
-                                                            } else if opMask & 0x10000 as crate::src::ext::rtree::rtree::U32_0 != 0
-                                                            {
-                                                                current_block_966 =
-                                                                    3733147086002097443;
-                                                            } else if !__pTab_11_ref.pIndex.is_null()
-                                                                && (szThreshold
-                                                                    as ::core::ffi::c_int)
-                                                                    < 0 as ::core::ffi::c_int
+                                                                || opMask & 0x10000 as crate::src::ext::rtree::rtree::U32_0 != 0
+                                                                || !__pTab_11_ref.pIndex.is_null()
+                                                                    && (szThreshold
+                                                                        as ::core::ffi::c_int)
+                                                                        < 0 as ::core::ffi::c_int
                                                             {
                                                                 current_block_966 =
                                                                     3733147086002097443;
@@ -5693,7 +5666,6 @@ pub unsafe extern "C" fn sqlite3Pragma(
                                                                 }
                                                             }
                                                         }
-                                                    }
                                                     k_3 = (*k_3).next;
                                                 }
                                             }
@@ -5904,10 +5876,8 @@ pub unsafe extern "C" fn sqlite3Pragma(
                         match current_block {
                             9454828942646539263 => {}
                             _ => {
-                                __pPragma_ref.mPragFlg as ::core::ffi::c_int
-                                    & crate::src::src::pragma::PragFlg_NoColumns1
-                                    != 0
-                                    && !zRight.is_null();
+                                if __pPragma_ref.mPragFlg as ::core::ffi::c_int
+                                    & crate::src::src::pragma::PragFlg_NoColumns1 != 0 { !zRight.is_null(); }
                             }
                         }
                     }
@@ -6082,8 +6052,8 @@ unsafe extern "C" fn pragmaVtabBestIndex(
     seen[1 as ::core::ffi::c_int as usize] = 0 as ::core::ffi::c_int;
     i = 0 as ::core::ffi::c_int;
     while i < __pIdxInfo_ref.nConstraint {
-        if ((*pConstraint).iColumn >= pTab.iHidden as ::core::ffi::c_int) {
-            if ((*pConstraint).op as ::core::ffi::c_int == crate::src::headers::sqlite3_h::SQLITE_INDEX_CONSTRAINT_EQ)
+        if ((*pConstraint).iColumn >= pTab.iHidden as ::core::ffi::c_int)
+            && ((*pConstraint).op as ::core::ffi::c_int == crate::src::headers::sqlite3_h::SQLITE_INDEX_CONSTRAINT_EQ)
             {
                 if (*pConstraint).usable as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
                     return crate::src::headers::sqlite3_h::SQLITE_CONSTRAINT;
@@ -6091,7 +6061,6 @@ unsafe extern "C" fn pragmaVtabBestIndex(
                 j = (*pConstraint).iColumn - pTab.iHidden as ::core::ffi::c_int;
                 seen[j as usize] = i + 1 as ::core::ffi::c_int;
             }
-        }
         i += 1;
         pConstraint = pConstraint.offset(1);
     }

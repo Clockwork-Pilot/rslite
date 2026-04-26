@@ -272,7 +272,7 @@ unsafe extern "C" fn fts3Rehash(
     while !elem.is_null() {
         let h: ::core::ffi::c_int = xHash.expect("non-null function pointer")(
             (*elem).pKey, (*elem).nKey
-        ) & new_size - 1 as ::core::ffi::c_int;
+        ) & (new_size - 1 as ::core::ffi::c_int);
         next_elem = (*elem).next;
         fts3HashInsertElement(
             pH,
@@ -376,7 +376,7 @@ pub unsafe extern "C" fn sqlite3Fts3HashFindElem(
     let h: ::core::ffi::c_int = xHash.expect("non-null function pointer")(
         pKey, nKey,
     );
-    fts3FindElementByHash(pH, pKey, nKey, h & (*pH).htsize - 1 as ::core::ffi::c_int)
+    fts3FindElementByHash(pH, pKey, nKey, h & ((*pH).htsize - 1 as ::core::ffi::c_int))
 }
 
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
@@ -413,7 +413,7 @@ pub unsafe extern "C" fn sqlite3Fts3HashInsert(
     let hraw: ::core::ffi::c_int = xHash.expect("non-null function pointer")(
         pKey, nKey,
     );
-    h = hraw & __pH_ref.htsize - 1 as ::core::ffi::c_int;
+    h = hraw & (__pH_ref.htsize - 1 as ::core::ffi::c_int);
     let elem: *mut crate::src::ext::fts3::fts3_hash::Fts3HashElem = fts3FindElementByHash(pH, pKey, nKey, h);
     if !elem.is_null() {
         let old_data: *mut ::core::ffi::c_void = (*elem).data;
@@ -458,7 +458,7 @@ pub unsafe extern "C" fn sqlite3Fts3HashInsert(
     }
     (*new_elem).nKey = nKey;
     __pH_ref.count += 1;
-    h = hraw & __pH_ref.htsize - 1 as ::core::ffi::c_int;
+    h = hraw & (__pH_ref.htsize - 1 as ::core::ffi::c_int);
     fts3HashInsertElement(
         pH,
         __pH_ref.ht.offset(h as isize) as *mut crate::src::ext::fts3::fts3_hash::_fts3ht,

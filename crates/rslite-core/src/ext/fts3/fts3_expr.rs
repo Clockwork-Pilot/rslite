@@ -550,8 +550,8 @@ unsafe extern "C" fn getNextNode(
                 let mut nNear: ::core::ffi::c_int = SQLITE_FTS3_DEFAULT_NEAR_PARAM;
                 let mut nKey: ::core::ffi::c_int = __pKey_ref.n as ::core::ffi::c_int;
                 
-                if __pKey_ref.eType as ::core::ffi::c_int == crate::fts3Int_h::FTSQUERY_NEAR {
-                    if *zInput.offset(4_isize) as ::core::ffi::c_int == '/' as i32
+                if __pKey_ref.eType as ::core::ffi::c_int == crate::fts3Int_h::FTSQUERY_NEAR
+                    && *zInput.offset(4_isize) as ::core::ffi::c_int == '/' as i32
                         && *zInput.offset(5_isize) as ::core::ffi::c_int >= '0' as i32
                         && *zInput.offset(5_isize) as ::core::ffi::c_int <= '9' as i32
                     {
@@ -562,7 +562,6 @@ unsafe extern "C" fn getNextNode(
                                 &raw mut nNear,
                             );
                     }
-                }
                 let cNext: ::core::ffi::c_char = *zInput.offset(nKey as isize);
                 if fts3isspace(cNext) != 0
                     || cNext as ::core::ffi::c_int == '"' as i32
@@ -722,8 +721,8 @@ unsafe extern "C" fn fts3ExprParse(
             ::core::ptr::null_mut::<crate::fts3Int_h::Fts3Expr>();
         let mut nByte: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
         rc = getNextNode(pParse, zIn, nIn, &raw mut p, &raw mut nByte);
-        if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
-            if !p.is_null() {
+        if rc == crate::src::headers::sqlite3_h::SQLITE_OK
+            && !p.is_null() {
                 let isPhrase: ::core::ffi::c_int;
                 if sqlite3_fts3_enable_parentheses == 0
                     && (*p).eType == crate::fts3Int_h::FTSQUERY_PHRASE
@@ -806,37 +805,33 @@ unsafe extern "C" fn fts3ExprParse(
                 }
                 pPrev = p;
             }
-        }
         nIn -= nByte;
         zIn = zIn.offset(nByte as isize);
     }
-    match current_block {
-        1434579379687443766 => {
-            if rc == crate::src::headers::sqlite3_h::SQLITE_DONE
-                && !pRet.is_null()
-                && isRequirePhrase != 0
-            {
-                rc = crate::src::headers::sqlite3_h::SQLITE_ERROR;
-            }
-            if rc == crate::src::headers::sqlite3_h::SQLITE_DONE {
-                rc = crate::src::headers::sqlite3_h::SQLITE_OK;
-                if sqlite3_fts3_enable_parentheses == 0 && !pNotBranch.is_null() {
-                    if pRet.is_null() {
-                        rc = crate::src::headers::sqlite3_h::SQLITE_ERROR;
-                    } else {
-                        let mut pIter: *mut crate::fts3Int_h::Fts3Expr = pNotBranch;
-                        while !(*pIter).pLeft.is_null() {
-                            pIter = (*pIter).pLeft;
-                        }
-                        (*pIter).pLeft = pRet;
-                        (*pRet).pParent = pIter;
-                        pRet = pNotBranch;
+    if current_block == 1434579379687443766 {
+        if rc == crate::src::headers::sqlite3_h::SQLITE_DONE
+            && !pRet.is_null()
+            && isRequirePhrase != 0
+        {
+            rc = crate::src::headers::sqlite3_h::SQLITE_ERROR;
+        }
+        if rc == crate::src::headers::sqlite3_h::SQLITE_DONE {
+            rc = crate::src::headers::sqlite3_h::SQLITE_OK;
+            if sqlite3_fts3_enable_parentheses == 0 && !pNotBranch.is_null() {
+                if pRet.is_null() {
+                    rc = crate::src::headers::sqlite3_h::SQLITE_ERROR;
+                } else {
+                    let mut pIter: *mut crate::fts3Int_h::Fts3Expr = pNotBranch;
+                    while !(*pIter).pLeft.is_null() {
+                        pIter = (*pIter).pLeft;
                     }
+                    (*pIter).pLeft = pRet;
+                    (*pRet).pParent = pIter;
+                    pRet = pNotBranch;
                 }
             }
-            *pnConsumed = n - nIn;
         }
-        _ => {}
+        *pnConsumed = n - nIn;
     }
     if rc != crate::src::headers::sqlite3_h::SQLITE_OK {
         sqlite3Fts3ExprFree(pRet);

@@ -2595,11 +2595,10 @@ unsafe extern "C" fn sqlite3Fts5UnicodeIsdiacritic(
         return 0 as ::core::ffi::c_int;
     }
     (if c < 768 as ::core::ffi::c_int + 32 as ::core::ffi::c_int {
-        mask0 & (1 as ::core::ffi::c_int as ::core::ffi::c_uint) << c - 768 as ::core::ffi::c_int
+        mask0 & (1 as ::core::ffi::c_int as ::core::ffi::c_uint) << (c - 768 as ::core::ffi::c_int)
     } else {
         mask1
-            & (1 as ::core::ffi::c_int as ::core::ffi::c_uint)
-                << c - 768 as ::core::ffi::c_int - 32 as ::core::ffi::c_int
+            & (1 as ::core::ffi::c_int as ::core::ffi::c_uint) << (c - 768 as ::core::ffi::c_int - 32 as ::core::ffi::c_int)
     }) as ::core::ffi::c_int
 }
 
@@ -3803,9 +3802,8 @@ unsafe extern "C" fn sqlite3Fts5UnicodeFold(
                     & (*p).flags as ::core::ffi::c_int
                     & ((*p).iCode as ::core::ffi::c_int ^ c)
         {
-            ret = c + aiOff[((*p).flags as ::core::ffi::c_int >> 1 as ::core::ffi::c_int) as usize]
-                as ::core::ffi::c_int
-                & 0xffff as ::core::ffi::c_int;
+            ret = (c + aiOff[((*p).flags as ::core::ffi::c_int >> 1 as ::core::ffi::c_int) as usize]
+                as ::core::ffi::c_int) & 0xffff as ::core::ffi::c_int;
         }
         if eRemoveDiacritic != 0 {
             ret = fts5_remove_diacritic(
@@ -4169,7 +4167,7 @@ unsafe extern "C" fn sqlite3Fts5PoslistNext64(
         } else {
             *piOff = (iOff
                 & (0x7fffffff as ::core::ffi::c_int as I64_0) << 32 as ::core::ffi::c_int)
-                + (iOff + iVal.wrapping_sub(2 as U32_0) as I64_0 & 0x7fffffff as I64_0);
+                + ((iOff + iVal.wrapping_sub(2 as U32_0) as I64_0) & 0x7fffffff as I64_0);
         }
         *pi = i;
         0 as ::core::ffi::c_int
@@ -5802,8 +5800,8 @@ unsafe extern "C" fn fts5VocabBestIndexMethod(
         let p: *mut crate::src::headers::sqlite3_h::sqlite3_index_constraint =
             __pInfo_ref.aConstraint.offset(i as isize)
                 as *mut crate::src::headers::sqlite3_h::sqlite3_index_constraint;
-        if ((*p).usable as ::core::ffi::c_int != 0 as ::core::ffi::c_int) {
-            if (*p).iColumn == 0 as ::core::ffi::c_int {
+        if ((*p).usable as ::core::ffi::c_int != 0 as ::core::ffi::c_int)
+            && (*p).iColumn == 0 as ::core::ffi::c_int {
                 let __p_ref = { &*p };
                 if __p_ref.op as ::core::ffi::c_int
                     == crate::src::headers::sqlite3_h::SQLITE_INDEX_CONSTRAINT_EQ
@@ -5831,7 +5829,6 @@ unsafe extern "C" fn fts5VocabBestIndexMethod(
                     iTermGe = i;
                 }
             }
-        }
         i += 1;
     }
     if iTermEq >= 0 as ::core::ffi::c_int {
@@ -10826,8 +10823,7 @@ unsafe extern "C" fn fts5ExprSynonymList(
         let pIter: *mut Fts5IndexIter = (*p).pIter;
         if (*pIter).bEof as ::core::ffi::c_int == 0 as ::core::ffi::c_int
             && (*pIter).iRowid == iRowid
-        {
-            if ((*pIter).nData != 0 as ::core::ffi::c_int) {
+            && ((*pIter).nData != 0 as ::core::ffi::c_int) {
                 if nIter == nAlloc {
                     let nByte: crate::src::headers::sqlite3_h::Sqlite3Int64 =
                         (std::mem::size_of::<Fts5PoslistReader>() as usize)
@@ -10867,64 +10863,60 @@ unsafe extern "C" fn fts5ExprSynonymList(
                 );
                 nIter += 1;
             }
-        }
         p = (*p).pSynonym;
     }
-    match current_block {
-        17833034027772472439 => {
-            if nIter == 1 as ::core::ffi::c_int {
-                *pa = (*aIter.offset(0_isize)).a as *mut U8_0;
-                *pn = (*aIter.offset(0_isize)).n;
-            } else {
-                let mut writer: Fts5PoslistWriter = { std::mem::zeroed() };
-                let mut iPrev: I64_0 = -(1 as ::core::ffi::c_int) as I64_0;
-                sqlite3Fts5BufferZero(pBuf);
-                loop {
-                    let mut i: ::core::ffi::c_int;
-                    let mut iMin: I64_0 = FTS5_LARGEST_INT64;
-                    let mut current_block_18: u64;
-                    i = 0 as ::core::ffi::c_int;
-                    while i < nIter {
-                        if (*aIter.offset(i as isize)).bEof as ::core::ffi::c_int
-                            == 0 as ::core::ffi::c_int
-                        {
-                            if (*aIter.offset(i as isize)).iPos == iPrev {
-                                if sqlite3Fts5PoslistReaderNext(
-                                    aIter.offset(i as isize) as *mut Fts5PoslistReader
-                                ) != 0
-                                {
-                                    current_block_18 = 10043043949733653460;
-                                } else {
-                                    current_block_18 = 14648156034262866959;
-                                }
+    if current_block == 17833034027772472439 {
+        if nIter == 1 as ::core::ffi::c_int {
+            *pa = (*aIter.offset(0_isize)).a as *mut U8_0;
+            *pn = (*aIter.offset(0_isize)).n;
+        } else {
+            let mut writer: Fts5PoslistWriter = { std::mem::zeroed() };
+            let mut iPrev: I64_0 = -(1 as ::core::ffi::c_int) as I64_0;
+            sqlite3Fts5BufferZero(pBuf);
+            loop {
+                let mut i: ::core::ffi::c_int;
+                let mut iMin: I64_0 = FTS5_LARGEST_INT64;
+                let mut current_block_18: u64;
+                i = 0 as ::core::ffi::c_int;
+                while i < nIter {
+                    if (*aIter.offset(i as isize)).bEof as ::core::ffi::c_int
+                        == 0 as ::core::ffi::c_int
+                    {
+                        if (*aIter.offset(i as isize)).iPos == iPrev {
+                            if sqlite3Fts5PoslistReaderNext(
+                                aIter.offset(i as isize) as *mut Fts5PoslistReader
+                            ) != 0
+                            {
+                                current_block_18 = 10043043949733653460;
                             } else {
                                 current_block_18 = 14648156034262866959;
                             }
-                            match current_block_18 {
-                                10043043949733653460 => {}
-                                _ => {
-                                    if (*aIter.offset(i as isize)).iPos < iMin {
-                                        iMin = (*aIter.offset(i as isize)).iPos;
-                                    }
+                        } else {
+                            current_block_18 = 14648156034262866959;
+                        }
+                        match current_block_18 {
+                            10043043949733653460 => {}
+                            _ => {
+                                if (*aIter.offset(i as isize)).iPos < iMin {
+                                    iMin = (*aIter.offset(i as isize)).iPos;
                                 }
                             }
                         }
-                        i += 1;
                     }
-                    if iMin == FTS5_LARGEST_INT64 || rc != crate::src::headers::sqlite3_h::SQLITE_OK
-                    {
-                        break;
-                    }
-                    rc = sqlite3Fts5PoslistWriterAppend(pBuf, &raw mut writer, iMin);
-                    iPrev = iMin;
+                    i += 1;
                 }
-                if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
-                    *pa = (*pBuf).p;
-                    *pn = (*pBuf).n;
+                if iMin == FTS5_LARGEST_INT64 || rc != crate::src::headers::sqlite3_h::SQLITE_OK
+                {
+                    break;
                 }
+                rc = sqlite3Fts5PoslistWriterAppend(pBuf, &raw mut writer, iMin);
+                iPrev = iMin;
+            }
+            if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
+                *pa = (*pBuf).p;
+                *pn = (*pBuf).n;
             }
         }
-        _ => {}
     }
     if aIter != &raw mut aStatic as *mut Fts5PoslistReader {
         crate::src::src::malloc::sqlite3_free(aIter as *mut ::core::ffi::c_void);
@@ -13111,7 +13103,7 @@ unsafe extern "C" fn fts5yy_destructor(
         24 => {
             sqlite3Fts5ParsePhraseFree((*fts5yypminor).fts5yy53);
         }
-        16 | _ => {}
+        _ => {}
     };
 }
 
@@ -13261,10 +13253,9 @@ unsafe extern "C" fn fts5BestIndexMethod(
                         (*__pInfo_ref.aConstraintUsage.offset(i as isize)).argvIndex = iCons;
                         bSeenLt = 1 as ::core::ffi::c_int;
                     }
-                } else if op == crate::src::headers::sqlite3_h::SQLITE_INDEX_CONSTRAINT_GT_1
-                    || op == crate::src::headers::sqlite3_h::SQLITE_INDEX_CONSTRAINT_GE_1
-                {
-                    if (bSeenGt == 0) {
+                } else if (op == crate::src::headers::sqlite3_h::SQLITE_INDEX_CONSTRAINT_GT_1
+                    || op == crate::src::headers::sqlite3_h::SQLITE_INDEX_CONSTRAINT_GE_1)
+                    && (bSeenGt == 0) {
                         let fresh181 = iIdxStr;
                         iIdxStr += 1;
                         *idxStr.offset(fresh181 as isize) = '>' as i32 as ::core::ffi::c_char;
@@ -13272,7 +13263,6 @@ unsafe extern "C" fn fts5BestIndexMethod(
                         (*__pInfo_ref.aConstraintUsage.offset(i as isize)).argvIndex = iCons;
                         bSeenGt = 1 as ::core::ffi::c_int;
                     }
-                }
             }
             i += 1;
         }
@@ -13442,7 +13432,10 @@ unsafe extern "C" fn fts5ExprPhraseIsMatch(
                         let iAdj: I64_0 = iPos + i as I64_0;
                         if (*pPos).iPos != iAdj {
                             bMatch = 0 as ::core::ffi::c_int;
-                            while (*pPos).iPos < iAdj {
+                            loop {
+                                if !((*pPos).iPos < iAdj) {
+                                    break;
+                                }
                                 if sqlite3Fts5PoslistReaderNext(pPos) != 0 {
                                     current_block = 5168995775973936431;
                                     continue 's_116;
@@ -14309,8 +14302,7 @@ unsafe extern "C" fn sqlite3Fts5UnicodeCategory(iCode: U32_0) -> ::core::ffi::c_
     if ret != 30 as ::core::ffi::c_int {
         return ret;
     }
-    if iKey as ::core::ffi::c_int - aFts5UnicodeMap[iRes as usize] as ::core::ffi::c_int
-        & 0x1 as ::core::ffi::c_int
+    if (iKey as ::core::ffi::c_int - aFts5UnicodeMap[iRes as usize] as ::core::ffi::c_int) & 0x1 as ::core::ffi::c_int
         != 0
     {
         5 as ::core::ffi::c_int
@@ -14410,8 +14402,7 @@ unsafe extern "C" fn fts5ExprNearIsMatch(
                 .wrapping_mul(__pNear_ref.nPhrase as usize)
                 as crate::src::headers::sqlite3_h::Sqlite3Int64;
         a = sqlite3Fts5MallocZero(&raw mut rc, nByte) as *mut Fts5NearTrimmer;
-    } else {
-    }
+    } 
     if rc != crate::src::headers::sqlite3_h::SQLITE_OK {
         *pRc = rc;
         return 0 as ::core::ffi::c_int;
@@ -14447,7 +14438,10 @@ unsafe extern "C" fn fts5ExprNearIsMatch(
                     - __pNear_ref.nNear as I64_0;
                 if (*pPos).iPos < iMin || (*pPos).iPos > iMax {
                     bMatch = 0 as ::core::ffi::c_int;
-                    while (*pPos).iPos < iMin {
+                    loop {
+                        if !((*pPos).iPos < iMin) {
+                            break;
+                        }
                         if fts5LookaheadReaderNext(pPos) != 0 {
                             break 's_80;
                         }
@@ -14542,11 +14536,9 @@ unsafe extern "C" fn fts5PorterStep4(
                             as *const ::core::ffi::c_void,
                         4,
                     )
-            {
-                if fts5Porter_MGt1(aBuf, nBuf - 4 as ::core::ffi::c_int) != 0 {
+                && fts5Porter_MGt1(aBuf, nBuf - 4 as ::core::ffi::c_int) != 0 {
                     *pnBuf = nBuf - 4 as ::core::ffi::c_int;
                 }
-            }
         }
         101
             if nBuf > 2 as ::core::ffi::c_int
@@ -14601,11 +14593,9 @@ unsafe extern "C" fn fts5PorterStep4(
                             as *const ::core::ffi::c_void,
                         4,
                     )
-            {
-                if fts5Porter_MGt1(aBuf, nBuf - 4 as ::core::ffi::c_int) != 0 {
+                && fts5Porter_MGt1(aBuf, nBuf - 4 as ::core::ffi::c_int) != 0 {
                     *pnBuf = nBuf - 4 as ::core::ffi::c_int;
                 }
-            }
         }
         110 => {
             if nBuf > 3 as ::core::ffi::c_int
@@ -14660,11 +14650,9 @@ unsafe extern "C" fn fts5PorterStep4(
                             as *const ::core::ffi::c_void,
                         3,
                     )
-            {
-                if fts5Porter_MGt1(aBuf, nBuf - 3 as ::core::ffi::c_int) != 0 {
+                && fts5Porter_MGt1(aBuf, nBuf - 3 as ::core::ffi::c_int) != 0 {
                     *pnBuf = nBuf - 3 as ::core::ffi::c_int;
                 }
-            }
         }
         111 => {
             if nBuf > 3 as ::core::ffi::c_int
@@ -14691,11 +14679,9 @@ unsafe extern "C" fn fts5PorterStep4(
                             as *const ::core::ffi::c_void,
                         2,
                     )
-            {
-                if fts5Porter_MGt1(aBuf, nBuf - 2 as ::core::ffi::c_int) != 0 {
+                && fts5Porter_MGt1(aBuf, nBuf - 2 as ::core::ffi::c_int) != 0 {
                     *pnBuf = nBuf - 2 as ::core::ffi::c_int;
                 }
-            }
         }
         115
             if nBuf > 3 as ::core::ffi::c_int
@@ -14736,11 +14722,9 @@ unsafe extern "C" fn fts5PorterStep4(
                             as *const ::core::ffi::c_void,
                         3,
                     )
-            {
-                if fts5Porter_MGt1(aBuf, nBuf - 3 as ::core::ffi::c_int) != 0 {
+                && fts5Porter_MGt1(aBuf, nBuf - 3 as ::core::ffi::c_int) != 0 {
                     *pnBuf = nBuf - 3 as ::core::ffi::c_int;
                 }
-            }
         }
         117
             if nBuf > 3 as ::core::ffi::c_int
@@ -15694,7 +15678,10 @@ unsafe extern "C" fn fts5CloseMethod(
 unsafe extern "C" fn fts5yyStackOverflow(fts5yypParser: *mut fts5yyParser) {
     let __fts5yypParser_ref = { &mut *fts5yypParser };
     let pParse: *mut Fts5Parse = __fts5yypParser_ref.pParse;
-    while __fts5yypParser_ref.fts5yytos > __fts5yypParser_ref.fts5yystack {
+    loop {
+        if !(__fts5yypParser_ref.fts5yytos > __fts5yypParser_ref.fts5yystack) {
+            break;
+        }
         fts5yy_pop_parser_stack(fts5yypParser);
     }
     sqlite3Fts5ParseError(pParse, sqlite_printf!("fts5: parser stack overflow"));
@@ -15947,11 +15934,10 @@ unsafe extern "C" fn fts5ExprNearTest(
             as *mut Fts5ExprTerm;
         while !pTerm.is_null() {
             let pIter: *mut Fts5IndexIter = (*pTerm).pIter;
-            if (*pIter).bEof as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
-                if (*pIter).iRowid == (*pNode).iRowid && (*pIter).nData > 0 as ::core::ffi::c_int {
+            if (*pIter).bEof as ::core::ffi::c_int == 0 as ::core::ffi::c_int
+                && (*pIter).iRowid == (*pNode).iRowid && (*pIter).nData > 0 as ::core::ffi::c_int {
                     __pPhrase_ref.poslist.n = 1 as ::core::ffi::c_int;
                 }
-            }
             pTerm = (*pTerm).pSynonym;
         }
         __pPhrase_ref.poslist.n
@@ -16075,8 +16061,7 @@ unsafe extern "C" fn fts5PorterStep2(
                             as *const ::core::ffi::c_void,
                         6,
                     )
-            {
-                if fts5Porter_MGt0(aBuf, nBuf - 6 as ::core::ffi::c_int) != 0 {
+                && fts5Porter_MGt0(aBuf, nBuf - 6 as ::core::ffi::c_int) != 0 {
                     std::ptr::copy_nonoverlapping(
                         b"tion\0" as *const u8 as *const ::core::ffi::c_char,
                         aBuf.offset((nBuf - 6 as ::core::ffi::c_int) as isize)
@@ -16085,7 +16070,6 @@ unsafe extern "C" fn fts5PorterStep2(
                     );
                     *pnBuf = nBuf - 6 as ::core::ffi::c_int + 4 as ::core::ffi::c_int;
                 }
-            }
         }
         99 => {
             if nBuf > 4 as ::core::ffi::c_int
@@ -16118,8 +16102,7 @@ unsafe extern "C" fn fts5PorterStep2(
                             as *const ::core::ffi::c_void,
                         4,
                     )
-            {
-                if fts5Porter_MGt0(aBuf, nBuf - 4 as ::core::ffi::c_int) != 0 {
+                && fts5Porter_MGt0(aBuf, nBuf - 4 as ::core::ffi::c_int) != 0 {
                     std::ptr::copy_nonoverlapping(
                         b"ance\0" as *const u8 as *const ::core::ffi::c_char,
                         aBuf.offset((nBuf - 4 as ::core::ffi::c_int) as isize)
@@ -16128,7 +16111,6 @@ unsafe extern "C" fn fts5PorterStep2(
                     );
                     *pnBuf = nBuf - 4 as ::core::ffi::c_int + 4 as ::core::ffi::c_int;
                 }
-            }
         }
         101
             if nBuf > 4 as ::core::ffi::c_int
@@ -16261,8 +16243,7 @@ unsafe extern "C" fn fts5PorterStep2(
                             as *const ::core::ffi::c_void,
                         5,
                     )
-            {
-                if fts5Porter_MGt0(aBuf, nBuf - 5 as ::core::ffi::c_int) != 0 {
+                && fts5Porter_MGt0(aBuf, nBuf - 5 as ::core::ffi::c_int) != 0 {
                     std::ptr::copy_nonoverlapping(
                         b"ous\0" as *const u8 as *const ::core::ffi::c_char,
                         aBuf.offset((nBuf - 5 as ::core::ffi::c_int) as isize)
@@ -16271,7 +16252,6 @@ unsafe extern "C" fn fts5PorterStep2(
                     );
                     *pnBuf = nBuf - 5 as ::core::ffi::c_int + 3 as ::core::ffi::c_int;
                 }
-            }
         }
         111 => {
             if nBuf > 7 as ::core::ffi::c_int
@@ -16324,8 +16304,7 @@ unsafe extern "C" fn fts5PorterStep2(
                             as *const ::core::ffi::c_void,
                         4,
                     )
-            {
-                if fts5Porter_MGt0(aBuf, nBuf - 4 as ::core::ffi::c_int) != 0 {
+                && fts5Porter_MGt0(aBuf, nBuf - 4 as ::core::ffi::c_int) != 0 {
                     std::ptr::copy_nonoverlapping(
                         b"ate\0" as *const u8 as *const ::core::ffi::c_char,
                         aBuf.offset((nBuf - 4 as ::core::ffi::c_int) as isize)
@@ -16334,7 +16313,6 @@ unsafe extern "C" fn fts5PorterStep2(
                     );
                     *pnBuf = nBuf - 4 as ::core::ffi::c_int + 3 as ::core::ffi::c_int;
                 }
-            }
         }
         115 => {
             if nBuf > 5 as ::core::ffi::c_int
@@ -16407,8 +16385,7 @@ unsafe extern "C" fn fts5PorterStep2(
                             as *const ::core::ffi::c_void,
                         7,
                     )
-            {
-                if fts5Porter_MGt0(aBuf, nBuf - 7 as ::core::ffi::c_int) != 0 {
+                && fts5Porter_MGt0(aBuf, nBuf - 7 as ::core::ffi::c_int) != 0 {
                     std::ptr::copy_nonoverlapping(
                         b"ous\0" as *const u8 as *const ::core::ffi::c_char,
                         aBuf.offset((nBuf - 7 as ::core::ffi::c_int) as isize)
@@ -16417,7 +16394,6 @@ unsafe extern "C" fn fts5PorterStep2(
                     );
                     *pnBuf = nBuf - 7 as ::core::ffi::c_int + 3 as ::core::ffi::c_int;
                 }
-            }
         }
         116 => {
             if nBuf > 5 as ::core::ffi::c_int
@@ -16470,8 +16446,7 @@ unsafe extern "C" fn fts5PorterStep2(
                             as *const ::core::ffi::c_void,
                         6,
                     )
-            {
-                if fts5Porter_MGt0(aBuf, nBuf - 6 as ::core::ffi::c_int) != 0 {
+                && fts5Porter_MGt0(aBuf, nBuf - 6 as ::core::ffi::c_int) != 0 {
                     std::ptr::copy_nonoverlapping(
                         b"ble\0" as *const u8 as *const ::core::ffi::c_char,
                         aBuf.offset((nBuf - 6 as ::core::ffi::c_int) as isize)
@@ -16480,7 +16455,6 @@ unsafe extern "C" fn fts5PorterStep2(
                     );
                     *pnBuf = nBuf - 6 as ::core::ffi::c_int + 3 as ::core::ffi::c_int;
                 }
-            }
         }
         _ => {}
     }
@@ -16697,13 +16671,12 @@ unsafe extern "C" fn sqlite3Fts5ConfigSetValue(
 
 unsafe extern "C" fn fts5LeafRead(p: *mut Fts5Index, iRowid: I64_0) -> *mut Fts5Data {
     let mut pRet: *mut Fts5Data = fts5DataRead(p, iRowid);
-    if !pRet.is_null() {
-        if (*pRet).nn < 4 as ::core::ffi::c_int || (*pRet).szLeaf > (*pRet).nn {
+    if !pRet.is_null()
+        && ((*pRet).nn < 4 as ::core::ffi::c_int || (*pRet).szLeaf > (*pRet).nn) {
             fts5IndexCorruptRowid(p, iRowid);
             fts5DataRelease(pRet);
             pRet = std::ptr::null_mut::<Fts5Data>();
         }
-    }
     pRet
 }
 
@@ -17187,29 +17160,25 @@ unsafe extern "C" fn fts5DataRemoveSegment(
     pSeg: *mut Fts5StructureSegment,
 ) {
     let iSegid: ::core::ffi::c_int = (*pSeg).iSegid;
-    let iFirst: I64_0 = ((iSegid as I64_0)
-        << FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B + FTS5_DATA_DLI_B)
-        + ((0 as ::core::ffi::c_int as I64_0) << FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B)
+    let iFirst: I64_0 = ((iSegid as I64_0) << (FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B + FTS5_DATA_DLI_B))
+        + ((0 as ::core::ffi::c_int as I64_0) << (FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B))
         + ((0 as ::core::ffi::c_int as I64_0) << 31 as ::core::ffi::c_int)
         + 0 as ::core::ffi::c_int as I64_0;
-    let iLast: I64_0 = (((iSegid + 1 as ::core::ffi::c_int) as I64_0)
-        << FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B + FTS5_DATA_DLI_B)
-        + ((0 as ::core::ffi::c_int as I64_0) << FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B)
+    let iLast: I64_0 = (((iSegid + 1 as ::core::ffi::c_int) as I64_0) << (FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B + FTS5_DATA_DLI_B))
+        + ((0 as ::core::ffi::c_int as I64_0) << (FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B))
         + ((0 as ::core::ffi::c_int as I64_0) << 31 as ::core::ffi::c_int)
         + 0 as ::core::ffi::c_int as I64_0
         - 1 as I64_0;
     fts5DataDelete(p, iFirst, iLast);
     if (*pSeg).nPgTombstone != 0 {
         let iTomb1: I64_0 = (((iSegid + ((1 as ::core::ffi::c_int) << 16 as ::core::ffi::c_int))
-            as I64_0)
-            << FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B + FTS5_DATA_DLI_B)
-            + ((0 as ::core::ffi::c_int as I64_0) << FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B)
+            as I64_0) << (FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B + FTS5_DATA_DLI_B))
+            + ((0 as ::core::ffi::c_int as I64_0) << (FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B))
             + ((0 as ::core::ffi::c_int as I64_0) << 31 as ::core::ffi::c_int)
             + 0 as ::core::ffi::c_int as I64_0;
         let iTomb2: I64_0 = (((iSegid + ((1 as ::core::ffi::c_int) << 16 as ::core::ffi::c_int))
-            as I64_0)
-            << FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B + FTS5_DATA_DLI_B)
-            + ((0 as ::core::ffi::c_int as I64_0) << FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B)
+            as I64_0) << (FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B + FTS5_DATA_DLI_B))
+            + ((0 as ::core::ffi::c_int as I64_0) << (FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B))
             + ((0 as ::core::ffi::c_int as I64_0) << 31 as ::core::ffi::c_int)
             + ((*pSeg).nPgTombstone - 1 as ::core::ffi::c_int) as I64_0;
         fts5DataDelete(p, iTomb1, iTomb2);
@@ -17987,8 +17956,7 @@ unsafe extern "C" fn fts5PorterStep3(
                             as *const ::core::ffi::c_void,
                         5,
                     )
-            {
-                if fts5Porter_MGt0(aBuf, nBuf - 5 as ::core::ffi::c_int) != 0 {
+                && fts5Porter_MGt0(aBuf, nBuf - 5 as ::core::ffi::c_int) != 0 {
                     std::ptr::copy_nonoverlapping(
                         b"ic\0" as *const u8 as *const ::core::ffi::c_char,
                         aBuf.offset((nBuf - 5 as ::core::ffi::c_int) as isize)
@@ -17997,7 +17965,6 @@ unsafe extern "C" fn fts5PorterStep3(
                     );
                     *pnBuf = nBuf - 5 as ::core::ffi::c_int + 2 as ::core::ffi::c_int;
                 }
-            }
         }
         117
             if nBuf > 3 as ::core::ffi::c_int
@@ -18488,12 +18455,10 @@ unsafe extern "C" fn fts5PorterStep1B(
                             as *const ::core::ffi::c_void,
                         2,
                     )
-            {
-                if fts5Porter_Vowel(aBuf, nBuf - 2 as ::core::ffi::c_int) != 0 {
+                && fts5Porter_Vowel(aBuf, nBuf - 2 as ::core::ffi::c_int) != 0 {
                     *pnBuf = nBuf - 2 as ::core::ffi::c_int;
                     ret = 1 as ::core::ffi::c_int;
                 }
-            }
         }
         110
             if nBuf > 3 as ::core::ffi::c_int
@@ -18842,8 +18807,8 @@ unsafe extern "C" fn fts5PorterCb(
         nBuf = nToken;
         std::ptr::copy_nonoverlapping(pToken as *const u8, aBuf as *mut u8, nBuf as usize);
         fts5PorterStep1A(aBuf, &raw mut nBuf);
-        if fts5PorterStep1B(aBuf, &raw mut nBuf) != 0 {
-            if fts5PorterStep1B2(aBuf, &raw mut nBuf) == 0 as ::core::ffi::c_int {
+        if fts5PorterStep1B(aBuf, &raw mut nBuf) != 0
+            && fts5PorterStep1B2(aBuf, &raw mut nBuf) == 0 as ::core::ffi::c_int {
                 let c: ::core::ffi::c_char =
                     *aBuf.offset((nBuf - 1 as ::core::ffi::c_int) as isize);
                 if fts5PorterIsVowel(c, 0 as ::core::ffi::c_int) == 0 as ::core::ffi::c_int
@@ -18861,7 +18826,6 @@ unsafe extern "C" fn fts5PorterCb(
                     *aBuf.offset(fresh121 as isize) = 'e' as i32 as ::core::ffi::c_char;
                 }
             }
-        }
         if *aBuf.offset((nBuf - 1 as ::core::ffi::c_int) as isize) as ::core::ffi::c_int
             == 'y' as i32
             && fts5Porter_Vowel(aBuf, nBuf - 1 as ::core::ffi::c_int) != 0
@@ -18874,14 +18838,12 @@ unsafe extern "C" fn fts5PorterCb(
         fts5PorterStep4(aBuf, &raw mut nBuf);
         if *aBuf.offset((nBuf - 1 as ::core::ffi::c_int) as isize) as ::core::ffi::c_int
             == 'e' as i32
-        {
-            if fts5Porter_MGt1(aBuf, nBuf - 1 as ::core::ffi::c_int) != 0
+            && (fts5Porter_MGt1(aBuf, nBuf - 1 as ::core::ffi::c_int) != 0
                 || fts5Porter_MEq1(aBuf, nBuf - 1 as ::core::ffi::c_int) != 0
-                    && fts5Porter_Ostar(aBuf, nBuf - 1 as ::core::ffi::c_int) == 0
+                    && fts5Porter_Ostar(aBuf, nBuf - 1 as ::core::ffi::c_int) == 0)
             {
                 nBuf -= 1;
             }
-        }
         if nBuf > 1 as ::core::ffi::c_int
             && *aBuf.offset((nBuf - 1 as ::core::ffi::c_int) as isize) as ::core::ffi::c_int
                 == 'l' as i32
@@ -19526,10 +19488,10 @@ unsafe extern "C" fn fts5ExprNodeNext_OR(
     while i < (*pNode).nChild {
         let p1: *mut Fts5ExprNode =
             *(&raw mut (*pNode).apChild as *mut *mut Fts5ExprNode).offset(i as isize);
-        if (*p1).bEof == 0 as ::core::ffi::c_int {
-            if (*p1).iRowid == iLast
+        if (*p1).bEof == 0 as ::core::ffi::c_int
+            && ((*p1).iRowid == iLast
                 || bFromValid != 0
-                    && fts5RowidCmp(pExpr, (*p1).iRowid, iFrom) < 0 as ::core::ffi::c_int
+                    && fts5RowidCmp(pExpr, (*p1).iRowid, iFrom) < 0 as ::core::ffi::c_int)
             {
                 let rc: ::core::ffi::c_int =
                     (*p1).xNext.expect("non-null function pointer")(pExpr, p1, bFromValid, iFrom);
@@ -19538,7 +19500,6 @@ unsafe extern "C" fn fts5ExprNodeNext_OR(
                     return rc;
                 }
             }
-        }
         i += 1;
     }
     fts5ExprNodeTest_OR(pExpr, pNode);
@@ -19983,12 +19944,10 @@ unsafe extern "C" fn sqlite3Fts5Parser(
                 (fts5yyact as ::core::ffi::c_int - fts5YY_MIN_REDUCE) as ::core::ffi::c_uint;
             if fts5yyRuleInfoNRhs[fts5yyruleno as usize] as ::core::ffi::c_int
                 == 0 as ::core::ffi::c_int
-            {
-                if (*fts5yypParser).fts5yytos >= (*fts5yypParser).fts5yystackEnd {
+                && (*fts5yypParser).fts5yytos >= (*fts5yypParser).fts5yystackEnd {
                     fts5yyStackOverflow(fts5yypParser);
                     break;
                 }
-            }
             fts5yyact = fts5yy_reduce(fts5yypParser, fts5yyruleno, fts5yymajor, fts5yyminor);
         } else if fts5yyact as ::core::ffi::c_int <= fts5YY_MAX_SHIFTREDUCE {
             fts5yy_shift(
@@ -20488,101 +20447,98 @@ unsafe extern "C" fn fts5FilterMethod(
         }
         i += 1;
     }
-    match current_block {
-        8835654301469918283 => {
-            bOrderByRank = if idxNum & FTS5_BI_ORDER_RANK != 0 {
-                1 as ::core::ffi::c_int
-            } else {
-                0 as ::core::ffi::c_int
-            };
-            bDesc = if idxNum & FTS5_BI_ORDER_DESC != 0 {
-                1 as ::core::ffi::c_int
-            } else {
-                0 as ::core::ffi::c_int
-            };
-            (*pCsr).bDesc = bDesc;
-            if !pRowidEq.is_null() {
-                pRowidGe = pRowidEq;
-                pRowidLe = pRowidGe;
-            }
-            if bDesc != 0 {
-                (*pCsr).iFirstRowid = fts5GetRowidLimit(pRowidLe, LARGEST_INT64);
-                (*pCsr).iLastRowid = fts5GetRowidLimit(pRowidGe, SMALLEST_INT64);
-            } else {
-                (*pCsr).iLastRowid = fts5GetRowidLimit(pRowidLe, LARGEST_INT64);
-                (*pCsr).iFirstRowid = fts5GetRowidLimit(pRowidGe, SMALLEST_INT64);
-            }
-            rc = sqlite3Fts5IndexLoadConfig((*pTab).p.pIndex);
-            if (rc == crate::src::headers::sqlite3_h::SQLITE_OK) {
-                if !(*pTab).pSortCsr.is_null() {
-                    let __pSortCsr_ref = &*(*pTab).pSortCsr;
-                    if __pSortCsr_ref.bDesc != 0 {
-                        (*pCsr).iLastRowid = __pSortCsr_ref.iFirstRowid;
-                        (*pCsr).iFirstRowid = __pSortCsr_ref.iLastRowid;
-                    } else {
-                        (*pCsr).iLastRowid = __pSortCsr_ref.iLastRowid;
-                        (*pCsr).iFirstRowid = __pSortCsr_ref.iFirstRowid;
-                    }
-                    (*pCsr).ePlan = FTS5_PLAN_SOURCE;
-                    (*pCsr).pExpr = __pSortCsr_ref.pExpr;
-                    rc = fts5CursorFirst(pTab, pCsr, bDesc);
-                } else if !(*pCsr).pExpr.is_null() {
-                    rc = fts5CursorParseRank(pConfig, pCsr, pRank);
-                    if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
-                        if bOrderByRank != 0 {
-                            (*pCsr).ePlan = FTS5_PLAN_SORTED_MATCH;
-                            rc = fts5CursorFirstSorted(pTab, pCsr, bDesc);
-                        } else {
-                            (*pCsr).ePlan = FTS5_PLAN_MATCH;
-                            rc = fts5CursorFirst(pTab, pCsr, bDesc);
-                        }
-                    }
-                } else if __pConfig_ref.zContent.is_null() {
-                    fts5SetVtabError(
-                        pTab,
-                        sqlite_printf!("%s: table does not support scanning", __pConfig_ref.zName),
-                    );
-                    rc = crate::src::headers::sqlite3_h::SQLITE_ERROR;
+    if current_block == 8835654301469918283 {
+        bOrderByRank = if idxNum & FTS5_BI_ORDER_RANK != 0 {
+            1 as ::core::ffi::c_int
+        } else {
+            0 as ::core::ffi::c_int
+        };
+        bDesc = if idxNum & FTS5_BI_ORDER_DESC != 0 {
+            1 as ::core::ffi::c_int
+        } else {
+            0 as ::core::ffi::c_int
+        };
+        (*pCsr).bDesc = bDesc;
+        if !pRowidEq.is_null() {
+            pRowidGe = pRowidEq;
+            pRowidLe = pRowidGe;
+        }
+        if bDesc != 0 {
+            (*pCsr).iFirstRowid = fts5GetRowidLimit(pRowidLe, LARGEST_INT64);
+            (*pCsr).iLastRowid = fts5GetRowidLimit(pRowidGe, SMALLEST_INT64);
+        } else {
+            (*pCsr).iLastRowid = fts5GetRowidLimit(pRowidLe, LARGEST_INT64);
+            (*pCsr).iFirstRowid = fts5GetRowidLimit(pRowidGe, SMALLEST_INT64);
+        }
+        rc = sqlite3Fts5IndexLoadConfig((*pTab).p.pIndex);
+        if (rc == crate::src::headers::sqlite3_h::SQLITE_OK) {
+            if !(*pTab).pSortCsr.is_null() {
+                let __pSortCsr_ref = &*(*pTab).pSortCsr;
+                if __pSortCsr_ref.bDesc != 0 {
+                    (*pCsr).iLastRowid = __pSortCsr_ref.iFirstRowid;
+                    (*pCsr).iFirstRowid = __pSortCsr_ref.iLastRowid;
                 } else {
-                    (*pCsr).ePlan = if !pRowidEq.is_null() {
-                        FTS5_PLAN_ROWID
+                    (*pCsr).iLastRowid = __pSortCsr_ref.iLastRowid;
+                    (*pCsr).iFirstRowid = __pSortCsr_ref.iFirstRowid;
+                }
+                (*pCsr).ePlan = FTS5_PLAN_SOURCE;
+                (*pCsr).pExpr = __pSortCsr_ref.pExpr;
+                rc = fts5CursorFirst(pTab, pCsr, bDesc);
+            } else if !(*pCsr).pExpr.is_null() {
+                rc = fts5CursorParseRank(pConfig, pCsr, pRank);
+                if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
+                    if bOrderByRank != 0 {
+                        (*pCsr).ePlan = FTS5_PLAN_SORTED_MATCH;
+                        rc = fts5CursorFirstSorted(pTab, pCsr, bDesc);
                     } else {
-                        FTS5_PLAN_SCAN
-                    };
-                    rc = sqlite3Fts5StorageStmt(
-                        (*pTab).pStorage,
-                        fts5StmtType(pCsr),
-                        &raw mut (*pCsr).pStmt,
-                        &raw mut (*pTab).p.base.zErrMsg,
-                    );
-                    if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
-                        if !pRowidEq.is_null() {
-                            crate::src::src::vdbeapi::sqlite3_bind_value(
-                                (*pCsr).pStmt,
-                                1 as ::core::ffi::c_int,
-                                pRowidEq,
-                            );
-                        } else {
-                            let __pCsr_ref = { &*pCsr };
-                            crate::src::src::vdbeapi::sqlite3_bind_int64(
-                                __pCsr_ref.pStmt,
-                                1 as ::core::ffi::c_int,
-                                __pCsr_ref.iFirstRowid
-                                    as crate::src::headers::sqlite3_h::Sqlite3Int64,
-                            );
-                            crate::src::src::vdbeapi::sqlite3_bind_int64(
-                                __pCsr_ref.pStmt,
-                                2 as ::core::ffi::c_int,
-                                __pCsr_ref.iLastRowid
-                                    as crate::src::headers::sqlite3_h::Sqlite3Int64,
-                            );
-                        }
-                        rc = fts5NextMethod(pCursor);
+                        (*pCsr).ePlan = FTS5_PLAN_MATCH;
+                        rc = fts5CursorFirst(pTab, pCsr, bDesc);
                     }
+                }
+            } else if __pConfig_ref.zContent.is_null() {
+                fts5SetVtabError(
+                    pTab,
+                    sqlite_printf!("%s: table does not support scanning", __pConfig_ref.zName),
+                );
+                rc = crate::src::headers::sqlite3_h::SQLITE_ERROR;
+            } else {
+                (*pCsr).ePlan = if !pRowidEq.is_null() {
+                    FTS5_PLAN_ROWID
+                } else {
+                    FTS5_PLAN_SCAN
+                };
+                rc = sqlite3Fts5StorageStmt(
+                    (*pTab).pStorage,
+                    fts5StmtType(pCsr),
+                    &raw mut (*pCsr).pStmt,
+                    &raw mut (*pTab).p.base.zErrMsg,
+                );
+                if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
+                    if !pRowidEq.is_null() {
+                        crate::src::src::vdbeapi::sqlite3_bind_value(
+                            (*pCsr).pStmt,
+                            1 as ::core::ffi::c_int,
+                            pRowidEq,
+                        );
+                    } else {
+                        let __pCsr_ref = { &*pCsr };
+                        crate::src::src::vdbeapi::sqlite3_bind_int64(
+                            __pCsr_ref.pStmt,
+                            1 as ::core::ffi::c_int,
+                            __pCsr_ref.iFirstRowid
+                                as crate::src::headers::sqlite3_h::Sqlite3Int64,
+                        );
+                        crate::src::src::vdbeapi::sqlite3_bind_int64(
+                            __pCsr_ref.pStmt,
+                            2 as ::core::ffi::c_int,
+                            __pCsr_ref.iLastRowid
+                                as crate::src::headers::sqlite3_h::Sqlite3Int64,
+                        );
+                    }
+                    rc = fts5NextMethod(pCursor);
                 }
             }
         }
-        _ => {}
     }
     sqlite3Fts5ExprFree(pExpr);
     __pConfig_ref.pzErrmsg = pzErrmsg;
@@ -21265,8 +21221,8 @@ unsafe extern "C" fn fts5DlidxIterNextR(
 ) -> ::core::ffi::c_int {
     let pLvl: *mut Fts5DlidxLvl =
         (&raw mut (*pIter).aLvl as *mut Fts5DlidxLvl).offset(iLvl as isize) as *mut Fts5DlidxLvl;
-    if fts5DlidxLvlNext(pLvl) != 0 {
-        if (iLvl + 1 as ::core::ffi::c_int) < (*pIter).nLvl {
+    if fts5DlidxLvlNext(pLvl) != 0
+        && (iLvl + 1 as ::core::ffi::c_int) < (*pIter).nLvl {
             fts5DlidxIterNextR(p, pIter, iLvl + 1 as ::core::ffi::c_int);
             if (*pLvl.offset(1_isize)).bEof == 0 as ::core::ffi::c_int {
                 let __pLvl_ref = { &mut *pLvl };
@@ -21278,10 +21234,8 @@ unsafe extern "C" fn fts5DlidxIterNextR(
                 );
                 __pLvl_ref.pData = fts5DataRead(
                     p,
-                    (((*pIter).iSegid as I64_0)
-                        << FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B + FTS5_DATA_DLI_B)
-                        + ((1 as ::core::ffi::c_int as I64_0)
-                            << FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B)
+                    (((*pIter).iSegid as I64_0) << (FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B + FTS5_DATA_DLI_B))
+                        + ((1 as ::core::ffi::c_int as I64_0) << (FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B))
                         + ((iLvl as I64_0) << 31 as ::core::ffi::c_int)
                         + (*pLvl.offset(1_isize)).iLeafPgno as I64_0,
                 );
@@ -21290,7 +21244,6 @@ unsafe extern "C" fn fts5DlidxIterNextR(
                 }
             }
         }
-    }
     (*(&raw mut (*pIter).aLvl as *mut Fts5DlidxLvl).offset(0_isize)).bEof
 }
 
@@ -21494,9 +21447,8 @@ unsafe extern "C" fn fts5DlidxIterLast(p: *mut Fts5Index, pIter: *mut Fts5DlidxI
             );
             (*pChild).pData = fts5DataRead(
                 p,
-                (((*pIter).iSegid as I64_0)
-                    << FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B + FTS5_DATA_DLI_B)
-                    + ((1 as ::core::ffi::c_int as I64_0) << FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B)
+                (((*pIter).iSegid as I64_0) << (FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B + FTS5_DATA_DLI_B))
+                    + ((1 as ::core::ffi::c_int as I64_0) << (FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B))
                     + (((i - 1 as ::core::ffi::c_int) as I64_0) << 31 as ::core::ffi::c_int)
                     + (*pLvl).iLeafPgno as I64_0,
             );
@@ -21605,8 +21557,8 @@ unsafe extern "C" fn fts5DlidxIterPrevR(
 ) -> ::core::ffi::c_int {
     let pLvl: *mut Fts5DlidxLvl =
         (&raw mut (*pIter).aLvl as *mut Fts5DlidxLvl).offset(iLvl as isize) as *mut Fts5DlidxLvl;
-    if fts5DlidxLvlPrev(pLvl) != 0 {
-        if (iLvl + 1 as ::core::ffi::c_int) < (*pIter).nLvl {
+    if fts5DlidxLvlPrev(pLvl) != 0
+        && (iLvl + 1 as ::core::ffi::c_int) < (*pIter).nLvl {
             fts5DlidxIterPrevR(p, pIter, iLvl + 1 as ::core::ffi::c_int);
             if (*pLvl.offset(1_isize)).bEof == 0 as ::core::ffi::c_int {
                 let __pLvl_ref = { &mut *pLvl };
@@ -21618,10 +21570,8 @@ unsafe extern "C" fn fts5DlidxIterPrevR(
                 );
                 __pLvl_ref.pData = fts5DataRead(
                     p,
-                    (((*pIter).iSegid as I64_0)
-                        << FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B + FTS5_DATA_DLI_B)
-                        + ((1 as ::core::ffi::c_int as I64_0)
-                            << FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B)
+                    (((*pIter).iSegid as I64_0) << (FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B + FTS5_DATA_DLI_B))
+                        + ((1 as ::core::ffi::c_int as I64_0) << (FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B))
                         + ((iLvl as I64_0) << 31 as ::core::ffi::c_int)
                         + (*pLvl.offset(1_isize)).iLeafPgno as I64_0,
                 );
@@ -21631,7 +21581,6 @@ unsafe extern "C" fn fts5DlidxIterPrevR(
                 }
             }
         }
-    }
     (*(&raw mut (*pIter).aLvl as *mut Fts5DlidxLvl).offset(0_isize)).bEof
 }
 
@@ -21909,9 +21858,8 @@ unsafe extern "C" fn fts5DlidxIterInit(
         if pNew.is_null() {
             __p_ref.rc = crate::src::headers::sqlite3_h::SQLITE_NOMEM;
         } else {
-            let iRowid: I64_0 = ((iSegid as I64_0)
-                << FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B + FTS5_DATA_DLI_B)
-                + ((1 as ::core::ffi::c_int as I64_0) << FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B)
+            let iRowid: I64_0 = ((iSegid as I64_0) << (FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B + FTS5_DATA_DLI_B))
+                + ((1 as ::core::ffi::c_int as I64_0) << (FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B))
                 + ((i as I64_0) << 31 as ::core::ffi::c_int)
                 + iLeafPg as I64_0;
             let pLvl: *mut Fts5DlidxLvl = (&raw mut (*pNew).aLvl as *mut Fts5DlidxLvl)
@@ -22010,8 +21958,8 @@ unsafe extern "C" fn fts5SegIterNextPage(p: *mut Fts5Index, pIter: *mut Fts5SegI
     } else if __pIter_ref.iLeafPgno <= (*pSeg).pgnoLast {
         __pIter_ref.pLeaf = fts5LeafRead(
             p,
-            (((*pSeg).iSegid as I64_0) << FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B + FTS5_DATA_DLI_B)
-                + ((0 as ::core::ffi::c_int as I64_0) << FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B)
+            (((*pSeg).iSegid as I64_0) << (FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B + FTS5_DATA_DLI_B))
+                + ((0 as ::core::ffi::c_int as I64_0) << (FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B))
                 + ((0 as ::core::ffi::c_int as I64_0) << 31 as ::core::ffi::c_int)
                 + __pIter_ref.iLeafPgno as I64_0,
         );
@@ -23133,9 +23081,8 @@ unsafe extern "C" fn fts5SegIterReverseNewPage(p: *mut Fts5Index, pIter: *mut Ft
         __pIter_ref.iLeafPgno -= 1;
         let pNew: *mut Fts5Data = fts5DataRead(
             p,
-            (((*__pIter_ref.pSeg).iSegid as I64_0)
-                << FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B + FTS5_DATA_DLI_B)
-                + ((0 as ::core::ffi::c_int as I64_0) << FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B)
+            (((*__pIter_ref.pSeg).iSegid as I64_0) << (FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B + FTS5_DATA_DLI_B))
+                + ((0 as ::core::ffi::c_int as I64_0) << (FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B))
                 + ((0 as ::core::ffi::c_int as I64_0) << 31 as ::core::ffi::c_int)
                 + __pIter_ref.iLeafPgno as I64_0,
         );
@@ -24287,8 +24234,8 @@ unsafe extern "C" fn fts5SegIterReverse(p: *mut Fts5Index, pIter: *mut Fts5SegIt
         pgnoLast = fts5DlidxIterPgno(pDlidx);
         pLast = fts5LeafRead(
             p,
-            ((iSegid as I64_0) << FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B + FTS5_DATA_DLI_B)
-                + ((0 as ::core::ffi::c_int as I64_0) << FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B)
+            ((iSegid as I64_0) << (FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B + FTS5_DATA_DLI_B))
+                + ((0 as ::core::ffi::c_int as I64_0) << (FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B))
                 + ((0 as ::core::ffi::c_int as I64_0) << 31 as ::core::ffi::c_int)
                 + pgnoLast as I64_0,
         );
@@ -24319,9 +24266,8 @@ unsafe extern "C" fn fts5SegIterReverse(p: *mut Fts5Index, pIter: *mut Fts5SegIt
             let pSeg: *mut Fts5StructureSegment = __pIter_ref.pSeg;
             pgno = __pIter_ref.iLeafPgno + 1 as ::core::ffi::c_int;
             while (*p).rc == 0 && pgno <= (*pSeg).pgnoLast {
-                let iAbs: I64_0 = (((*pSeg).iSegid as I64_0)
-                    << FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B + FTS5_DATA_DLI_B)
-                    + ((0 as ::core::ffi::c_int as I64_0) << FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B)
+                let iAbs: I64_0 = (((*pSeg).iSegid as I64_0) << (FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B + FTS5_DATA_DLI_B))
+                    + ((0 as ::core::ffi::c_int as I64_0) << (FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B))
                     + ((0 as ::core::ffi::c_int as I64_0) << 31 as ::core::ffi::c_int)
                     + pgno as I64_0;
                 let mut pNew: *mut Fts5Data = fts5LeafRead(p, iAbs);
@@ -24803,46 +24749,43 @@ unsafe extern "C" fn fts5LeafSeek(
             }
         }
     }
-    match current_block {
-        14715265129466113671 => {
-            if bGe == 0 as ::core::ffi::c_int {
-                fts5DataRelease(__pIter_ref.pLeaf);
-                __pIter_ref.pLeaf = std::ptr::null_mut::<Fts5Data>();
-                return;
-            } else if bEndOfPage != 0 {
-                loop {
-                    fts5SegIterNextPage(p, pIter);
-                    if __pIter_ref.pLeaf.is_null() {
-                        return;
-                    }
-                    a = (*__pIter_ref.pLeaf).p;
-                    if (((*__pIter_ref.pLeaf).szLeaf >= (*__pIter_ref.pLeaf).nn)
-                        as ::core::ffi::c_int != 0 as ::core::ffi::c_int)
-                    {
-                        continue;
-                    }
-                    iPgidx = (*__pIter_ref.pLeaf).szLeaf as U32_0;
-                    iPgidx = iPgidx.wrapping_add(sqlite3Fts5GetVarint32(
-                        (*__pIter_ref.pLeaf).p.offset(iPgidx as isize) as *mut U8_0,
-                        &raw mut iOff,
+    if current_block == 14715265129466113671 {
+        if bGe == 0 as ::core::ffi::c_int {
+            fts5DataRelease(__pIter_ref.pLeaf);
+            __pIter_ref.pLeaf = std::ptr::null_mut::<Fts5Data>();
+            return;
+        } else if bEndOfPage != 0 {
+            loop {
+                fts5SegIterNextPage(p, pIter);
+                if __pIter_ref.pLeaf.is_null() {
+                    return;
+                }
+                a = (*__pIter_ref.pLeaf).p;
+                if (((*__pIter_ref.pLeaf).szLeaf >= (*__pIter_ref.pLeaf).nn)
+                    as ::core::ffi::c_int != 0 as ::core::ffi::c_int)
+                {
+                    continue;
+                }
+                iPgidx = (*__pIter_ref.pLeaf).szLeaf as U32_0;
+                iPgidx = iPgidx.wrapping_add(sqlite3Fts5GetVarint32(
+                    (*__pIter_ref.pLeaf).p.offset(iPgidx as isize) as *mut U8_0,
+                    &raw mut iOff,
+                ) as U32_0);
+                if iOff < 4 as U32_0 || iOff as I64_0 >= (*__pIter_ref.pLeaf).szLeaf as I64_0 {
+                    fts5IndexCorruptIter(p, pIter);
+                    return;
+                } else {
+                    nKeep = 0 as U32_0;
+                    iTermOff = iOff;
+                    n = (*__pIter_ref.pLeaf).nn as U32_0;
+                    iOff = iOff.wrapping_add(sqlite3Fts5GetVarint32(
+                        a.offset(iOff as isize) as *const ::core::ffi::c_uchar,
+                        &raw mut nNew,
                     ) as U32_0);
-                    if iOff < 4 as U32_0 || iOff as I64_0 >= (*__pIter_ref.pLeaf).szLeaf as I64_0 {
-                        fts5IndexCorruptIter(p, pIter);
-                        return;
-                    } else {
-                        nKeep = 0 as U32_0;
-                        iTermOff = iOff;
-                        n = (*__pIter_ref.pLeaf).nn as U32_0;
-                        iOff = iOff.wrapping_add(sqlite3Fts5GetVarint32(
-                            a.offset(iOff as isize) as *const ::core::ffi::c_uchar,
-                            &raw mut nNew,
-                        ) as U32_0);
-                        break;
-                    }
+                    break;
                 }
             }
         }
-        _ => {}
     }
     if iOff as I64_0 + nNew as I64_0 > n as I64_0 || nNew < 1 as U32_0 {
         fts5IndexCorruptIter(p, pIter);
@@ -26565,12 +26508,11 @@ unsafe extern "C" fn fts5ColumnMethod(
         let __pCsr_ref = { &mut *pCsr };
         if __pCsr_ref.ePlan == FTS5_PLAN_SOURCE {
             fts5PoslistBlob(pCtx, pCsr);
-        } else if __pCsr_ref.ePlan == FTS5_PLAN_MATCH || __pCsr_ref.ePlan == FTS5_PLAN_SORTED_MATCH
-        {
-            if !__pCsr_ref.pRank.is_null() || {
+        } else if (__pCsr_ref.ePlan == FTS5_PLAN_MATCH || __pCsr_ref.ePlan == FTS5_PLAN_SORTED_MATCH)
+            && (!__pCsr_ref.pRank.is_null() || {
                 rc = fts5FindRankFunction(pCsr);
                 crate::src::headers::sqlite3_h::SQLITE_OK == rc
-            } {
+            }) {
                 fts5ApiInvoke(
                     __pCsr_ref.pRank,
                     pCsr,
@@ -26579,7 +26521,6 @@ unsafe extern "C" fn fts5ColumnMethod(
                     __pCsr_ref.apRankArg,
                 );
             }
-        }
     } else if crate::src::src::vdbeapi::sqlite3_vtab_nochange(pCtx) == 0
         && __pConfig_ref.eContent != FTS5_CONTENT_NONE
     {
@@ -26857,7 +26798,10 @@ unsafe extern "C" fn fts5SegIterGotoPage(
         fts5DataRelease(__pIter_ref.pNextLeaf);
         __pIter_ref.pNextLeaf = std::ptr::null_mut::<Fts5Data>();
         __pIter_ref.iLeafPgno = iLeafPgno - 1 as ::core::ffi::c_int;
-        while (*p).rc == crate::src::headers::sqlite3_h::SQLITE_OK {
+        loop {
+            if !((*p).rc == crate::src::headers::sqlite3_h::SQLITE_OK) {
+                break;
+            }
             let mut iOff: ::core::ffi::c_int;
             fts5SegIterNextPage(p, pIter);
             if __pIter_ref.pLeaf.is_null() {
@@ -27558,9 +27502,8 @@ unsafe extern "C" fn fts5MultiIterIsDeleted(pIter: *mut Fts5Iter) -> ::core::ffi
             *fresh25 = fts5DataRead(
                 (*pIter).pIndex,
                 ((((*(*pSeg).pSeg).iSegid + ((1 as ::core::ffi::c_int) << 16 as ::core::ffi::c_int))
-                    as I64_0)
-                    << FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B + FTS5_DATA_DLI_B)
-                    + ((0 as ::core::ffi::c_int as I64_0) << FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B)
+                    as I64_0) << (FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B + FTS5_DATA_DLI_B))
+                    + ((0 as ::core::ffi::c_int as I64_0) << (FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B))
                     + ((0 as ::core::ffi::c_int as I64_0) << 31 as ::core::ffi::c_int)
                     + iPg as I64_0,
             );
@@ -27698,7 +27641,10 @@ unsafe extern "C" fn fts5MultiIterNext(
     iFrom: I64_0,
 ) {
     let mut bUseFrom: ::core::ffi::c_int = bFrom;
-    while (*p).rc == crate::src::headers::sqlite3_h::SQLITE_OK {
+    loop {
+        if !((*p).rc == crate::src::headers::sqlite3_h::SQLITE_OK) {
+            break;
+        }
         let __pIter_ref = { &mut *pIter };
         let iFirst: ::core::ffi::c_int =
             (*__pIter_ref.aFirst.offset(1_isize)).iFirst as ::core::ffi::c_int;
@@ -28280,9 +28226,8 @@ unsafe extern "C" fn fts5ChunkIterate(
             pgno += 1;
             pData = fts5LeafRead(
                 p,
-                (((*__pSeg_ref.pSeg).iSegid as I64_0)
-                    << FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B + FTS5_DATA_DLI_B)
-                    + ((0 as ::core::ffi::c_int as I64_0) << FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B)
+                (((*__pSeg_ref.pSeg).iSegid as I64_0) << (FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B + FTS5_DATA_DLI_B))
+                    + ((0 as ::core::ffi::c_int as I64_0) << (FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B))
                     + ((0 as ::core::ffi::c_int as I64_0) << 31 as ::core::ffi::c_int)
                     + pgno as I64_0,
             );
@@ -29481,8 +29426,7 @@ unsafe extern "C" fn fts5AllocateSegid(
                     .iSegid;
                     if iId <= FTS5_MAX_SEGMENT && iId > 0 as ::core::ffi::c_int {
                         aUsed[((iId - 1 as ::core::ffi::c_int) / 32 as ::core::ffi::c_int)
-                            as usize] |= (1 as ::core::ffi::c_int as U32_0)
-                            << (iId - 1 as ::core::ffi::c_int) % 32 as ::core::ffi::c_int;
+                            as usize] |= (1 as ::core::ffi::c_int as U32_0) << ((iId - 1 as ::core::ffi::c_int) % 32 as ::core::ffi::c_int);
                     }
                     iSeg += 1;
                 }
@@ -29549,9 +29493,8 @@ unsafe extern "C" fn fts5WriteDlidxClear(
         if bFlush != 0 {
             fts5DataWrite(
                 p,
-                (((*pWriter).iSegid as I64_0)
-                    << FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B + FTS5_DATA_DLI_B)
-                    + ((1 as ::core::ffi::c_int as I64_0) << FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B)
+                (((*pWriter).iSegid as I64_0) << (FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B + FTS5_DATA_DLI_B))
+                    + ((1 as ::core::ffi::c_int as I64_0) << (FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B))
                     + ((i as I64_0) << 31 as ::core::ffi::c_int)
                     + __pDlidx_ref.pgno as I64_0,
                 __pDlidx_ref.buf.p,
@@ -29711,9 +29654,8 @@ unsafe extern "C" fn fts5WriteDlidxAppend(
             *(*pDlidx).buf.p.offset(0_isize) = 0x1 as U8_0;
             fts5DataWrite(
                 p,
-                (((*pWriter).iSegid as I64_0)
-                    << FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B + FTS5_DATA_DLI_B)
-                    + ((1 as ::core::ffi::c_int as I64_0) << FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B)
+                (((*pWriter).iSegid as I64_0) << (FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B + FTS5_DATA_DLI_B))
+                    + ((1 as ::core::ffi::c_int as I64_0) << (FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B))
                     + ((i as I64_0) << 31 as ::core::ffi::c_int)
                     + (*pDlidx).pgno as I64_0,
                 (*pDlidx).buf.p,
@@ -29800,9 +29742,8 @@ unsafe extern "C" fn fts5WriteFlushLeaf(p: *mut Fts5Index, pWriter: *mut Fts5Seg
             __pPage_ref.pgidx.p,
         );
     }
-    let iRowid: I64_0 = ((__pWriter_ref.iSegid as I64_0)
-        << FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B + FTS5_DATA_DLI_B)
-        + ((0 as ::core::ffi::c_int as I64_0) << FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B)
+    let iRowid: I64_0 = ((__pWriter_ref.iSegid as I64_0) << (FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B + FTS5_DATA_DLI_B))
+        + ((0 as ::core::ffi::c_int as I64_0) << (FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B))
         + ((0 as ::core::ffi::c_int as I64_0) << 31 as ::core::ffi::c_int)
         + __pPage_ref.pgno as I64_0;
     fts5DataWrite(p, iRowid, __pPage_ref.buf.p, __pPage_ref.buf.n);
@@ -30078,9 +30019,8 @@ unsafe extern "C" fn fts5TrimSegments(p: *mut Fts5Index, pIter: *mut Fts5Iter) {
                     0 as ::core::ffi::c_int as U8_0,
                     0 as ::core::ffi::c_int as U8_0,
                 ];
-                let iLeafRowid: I64_0 = ((iId as I64_0)
-                    << FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B + FTS5_DATA_DLI_B)
-                    + ((0 as ::core::ffi::c_int as I64_0) << FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B)
+                let iLeafRowid: I64_0 = ((iId as I64_0) << (FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B + FTS5_DATA_DLI_B))
+                    + ((0 as ::core::ffi::c_int as I64_0) << (FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B))
                     + ((0 as ::core::ffi::c_int as I64_0) << 31 as ::core::ffi::c_int)
                     + __pSeg_ref.iTermLeafPgno as I64_0;
                 let pData: *mut Fts5Data = fts5LeafRead(p, iLeafRowid);
@@ -30153,10 +30093,8 @@ unsafe extern "C" fn fts5TrimSegments(p: *mut Fts5Index, pIter: *mut Fts5Iter) {
                         (*__pSeg_ref.pSeg).pgnoFirst = __pSeg_ref.iTermLeafPgno;
                         fts5DataDelete(
                             p,
-                            ((iId as I64_0)
-                                << FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B + FTS5_DATA_DLI_B)
-                                + ((0 as ::core::ffi::c_int as I64_0)
-                                    << FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B)
+                            ((iId as I64_0) << (FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B + FTS5_DATA_DLI_B))
+                                + ((0 as ::core::ffi::c_int as I64_0) << (FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B))
                                 + ((0 as ::core::ffi::c_int as I64_0) << 31 as ::core::ffi::c_int)
                                 + 1 as ::core::ffi::c_int as I64_0,
                             iLeafRowid,
@@ -30620,9 +30558,8 @@ unsafe extern "C" fn fts5SecureDeleteOverflow(
     *pbLastInDoclist = 1 as ::core::ffi::c_int;
     pgno = iPgno;
     while (*p).rc == crate::src::headers::sqlite3_h::SQLITE_OK && pgno <= (*pSeg).pgnoLast {
-        let iRowid: I64_0 = (((*pSeg).iSegid as I64_0)
-            << FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B + FTS5_DATA_DLI_B)
-            + ((0 as ::core::ffi::c_int as I64_0) << FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B)
+        let iRowid: I64_0 = (((*pSeg).iSegid as I64_0) << (FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B + FTS5_DATA_DLI_B))
+            + ((0 as ::core::ffi::c_int as I64_0) << (FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B))
             + ((0 as ::core::ffi::c_int as I64_0) << 31 as ::core::ffi::c_int)
             + pgno as I64_0;
         let mut iNext: ::core::ffi::c_int;
@@ -30956,8 +30893,8 @@ unsafe extern "C" fn fts5DoSecureDelete(p: *mut Fts5Index, pSeg: *mut Fts5SegIte
         while iPgno > __pSeg_ref.iTermLeafPgno {
             let pPg: *mut Fts5Data = fts5DataRead(
                 p,
-                ((iSegid as I64_0) << FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B + FTS5_DATA_DLI_B)
-                    + ((0 as ::core::ffi::c_int as I64_0) << FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B)
+                ((iSegid as I64_0) << (FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B + FTS5_DATA_DLI_B))
+                    + ((0 as ::core::ffi::c_int as I64_0) << (FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B))
                     + ((0 as ::core::ffi::c_int as I64_0) << 31 as ::core::ffi::c_int)
                     + iPgno as I64_0,
             );
@@ -30970,9 +30907,8 @@ unsafe extern "C" fn fts5DoSecureDelete(p: *mut Fts5Index, pSeg: *mut Fts5SegIte
             iPgno -= 1;
         }
         if iPgno == __pSeg_ref.iTermLeafPgno {
-            let iId: I64_0 = ((iSegid as I64_0)
-                << FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B + FTS5_DATA_DLI_B)
-                + ((0 as ::core::ffi::c_int as I64_0) << FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B)
+            let iId: I64_0 = ((iSegid as I64_0) << (FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B + FTS5_DATA_DLI_B))
+                + ((0 as ::core::ffi::c_int as I64_0) << (FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B))
                 + ((0 as ::core::ffi::c_int as I64_0) << 31 as ::core::ffi::c_int)
                 + __pSeg_ref.iTermLeafPgno as I64_0;
             let pTerm: *mut Fts5Data = fts5DataRead(p, iId);
@@ -31056,8 +30992,8 @@ unsafe extern "C" fn fts5DoSecureDelete(p: *mut Fts5Index, pSeg: *mut Fts5SegIte
         }
         fts5DataWrite(
             p,
-            ((iSegid as I64_0) << FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B + FTS5_DATA_DLI_B)
-                + ((0 as ::core::ffi::c_int as I64_0) << FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B)
+            ((iSegid as I64_0) << (FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B + FTS5_DATA_DLI_B))
+                + ((0 as ::core::ffi::c_int as I64_0) << (FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B))
                 + ((0 as ::core::ffi::c_int as I64_0) << 31 as ::core::ffi::c_int)
                 + __pSeg_ref.iLeafPgno as I64_0,
             aPg,
@@ -31224,15 +31160,13 @@ unsafe extern "C" fn fts5FlushOneHash(p: *mut Fts5Index) {
                                 & 0x1 as ::core::ffi::c_int
                                 != 0
                                 && fts5FlushSecureDelete(p, pStruct, zTerm, nTerm, iRowid) == 0
-                            {
-                                if __p_ref.rc != crate::src::headers::sqlite3_h::SQLITE_OK
+                                && (__p_ref.rc != crate::src::headers::sqlite3_h::SQLITE_OK
                                     || *pDoclist.offset(iOff as isize) as ::core::ffi::c_int
-                                        == 0x1 as ::core::ffi::c_int
+                                        == 0x1 as ::core::ffi::c_int)
                                 {
                                     iOff += 1;
                                     continue;
                                 }
-                            }
                         }
                         if __p_ref.rc == crate::src::headers::sqlite3_h::SQLITE_OK
                             && bTermWritten == 0 as ::core::ffi::c_int
@@ -31322,7 +31256,12 @@ unsafe extern "C" fn fts5FlushOneHash(p: *mut Fts5Index) {
                                 let pPoslist: *const U8_0 =
                                     pDoclist.offset(iOff as isize) as *const U8_0;
                                 let mut iPos: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
-                                while __p_ref.rc == crate::src::headers::sqlite3_h::SQLITE_OK {
+                                loop {
+                                    if !(__p_ref.rc
+                                        == crate::src::headers::sqlite3_h::SQLITE_OK)
+                                    {
+                                        break;
+                                    }
                                     let __pBuf_ref = { &mut *pBuf };
                                     let nSpace: ::core::ffi::c_int =
                                         pgsz - __pBuf_ref.n - (*pPgidx).n;
@@ -31571,11 +31510,10 @@ unsafe extern "C" fn sqlite3Fts5IndexMerge(
                 nMerge * -(1 as ::core::ffi::c_int)
             };
         }
-        if !pStruct.is_null() && (*pStruct).nLevel != 0 {
-            if fts5IndexMerge(p, &raw mut pStruct, nMerge, nMin) != 0 {
+        if !pStruct.is_null() && (*pStruct).nLevel != 0
+            && fts5IndexMerge(p, &raw mut pStruct, nMerge, nMin) != 0 {
                 fts5StructureWrite(p, pStruct);
             }
-        }
         fts5StructureRelease(pStruct);
     }
     fts5IndexReturn(p)
@@ -32748,8 +32686,8 @@ unsafe extern "C" fn fts5AppendTokendataIter(
     pAppend: *mut Fts5Iter,
 ) -> *mut Fts5TokenDataIter {
     let mut pRet: *mut Fts5TokenDataIter = pIn;
-    if (*p).rc == crate::src::headers::sqlite3_h::SQLITE_OK {
-        if pIn.is_null() || (*pIn).nIter == (*pIn).nIterAlloc {
+    if (*p).rc == crate::src::headers::sqlite3_h::SQLITE_OK
+        && (pIn.is_null() || (*pIn).nIter == (*pIn).nIterAlloc) {
             let nAlloc: ::core::ffi::c_int = if !pIn.is_null() {
                 (*pIn).nIterAlloc * 2 as ::core::ffi::c_int
             } else {
@@ -32776,7 +32714,6 @@ unsafe extern "C" fn fts5AppendTokendataIter(
                 (*pNew).nIterAlloc = nAlloc;
             }
         }
-    }
     if (*p).rc != 0 {
         fts5IterClose(pAppend as *mut Fts5IndexIter);
     } else {
@@ -32908,12 +32845,11 @@ unsafe extern "C" fn fts5IterSetOutputsTokendata(pIter: *mut Fts5Iter) {
                     let pReader =
                         &*(__pT_ref.aPoslistReader.offset(ii as isize) as *mut Fts5PoslistReader);
 
-                    if pReader.bEof as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
-                        if pReader.iPos < iMinPos {
+                    if pReader.bEof as ::core::ffi::c_int == 0 as ::core::ffi::c_int
+                        && pReader.iPos < iMinPos {
                             iMinPos = pReader.iPos;
                             iMin = ii;
                         }
-                    }
                     ii += 1;
                 }
                 if iMinPos == LARGEST_INT64 {
@@ -32955,11 +32891,14 @@ unsafe extern "C" fn fts5TokendataIterNext(
                 || bFrom != 0 && __p_ref.base.iRowid < iFrom)
         {
             fts5MultiIterNext(pIndex, p, bFrom, iFrom);
-            while bFrom != 0
-                && __p_ref.base.bEof as ::core::ffi::c_int == 0 as ::core::ffi::c_int
-                && __p_ref.base.iRowid < iFrom
-                && (*pIndex).rc == crate::src::headers::sqlite3_h::SQLITE_OK
-            {
+            loop {
+                if !(bFrom != 0
+                    && __p_ref.base.bEof as ::core::ffi::c_int == 0 as ::core::ffi::c_int
+                    && __p_ref.base.iRowid < iFrom
+                    && (*pIndex).rc == crate::src::headers::sqlite3_h::SQLITE_OK)
+                {
+                    break;
+                }
                 fts5MultiIterNext(pIndex, p, 0 as ::core::ffi::c_int, 0 as I64_0);
             }
         }
@@ -33746,9 +33685,8 @@ unsafe extern "C" fn fts5IndexTombstoneRehash(
             pData = fts5DataRead(
                 p,
                 ((((*pSeg).iSegid + ((1 as ::core::ffi::c_int) << 16 as ::core::ffi::c_int))
-                    as I64_0)
-                    << FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B + FTS5_DATA_DLI_B)
-                    + ((0 as ::core::ffi::c_int as I64_0) << FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B)
+                    as I64_0) << (FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B + FTS5_DATA_DLI_B))
+                    + ((0 as ::core::ffi::c_int as I64_0) << (FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B))
                     + ((0 as ::core::ffi::c_int as I64_0) << 31 as ::core::ffi::c_int)
                     + ii as I64_0,
             );
@@ -33903,9 +33841,8 @@ unsafe extern "C" fn fts5IndexTombstoneAdd(
         pPg = fts5DataRead(
             p,
             (((__pSeg_ref.iSegid + ((1 as ::core::ffi::c_int) << 16 as ::core::ffi::c_int))
-                as I64_0)
-                << FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B + FTS5_DATA_DLI_B)
-                + ((0 as ::core::ffi::c_int as I64_0) << FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B)
+                as I64_0) << (FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B + FTS5_DATA_DLI_B))
+                + ((0 as ::core::ffi::c_int as I64_0) << (FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B))
                 + ((0 as ::core::ffi::c_int as I64_0) << 31 as ::core::ffi::c_int)
                 + iPg as I64_0,
         );
@@ -33923,9 +33860,8 @@ unsafe extern "C" fn fts5IndexTombstoneAdd(
             fts5DataWrite(
                 p,
                 (((__pSeg_ref.iSegid + ((1 as ::core::ffi::c_int) << 16 as ::core::ffi::c_int))
-                    as I64_0)
-                    << FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B + FTS5_DATA_DLI_B)
-                    + ((0 as ::core::ffi::c_int as I64_0) << FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B)
+                    as I64_0) << (FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B + FTS5_DATA_DLI_B))
+                    + ((0 as ::core::ffi::c_int as I64_0) << (FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B))
                     + ((0 as ::core::ffi::c_int as I64_0) << 31 as ::core::ffi::c_int)
                     + iPg as I64_0,
                 (*pPg).p,
@@ -33960,9 +33896,8 @@ unsafe extern "C" fn fts5IndexTombstoneAdd(
         while ii < nHash {
             let iTombstoneRowid: I64_0 = ((((*pSeg).iSegid
                 + ((1 as ::core::ffi::c_int) << 16 as ::core::ffi::c_int))
-                as I64_0)
-                << FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B + FTS5_DATA_DLI_B)
-                + ((0 as ::core::ffi::c_int as I64_0) << FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B)
+                as I64_0) << (FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B + FTS5_DATA_DLI_B))
+                + ((0 as ::core::ffi::c_int as I64_0) << (FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B))
                 + ((0 as ::core::ffi::c_int as I64_0) << 31 as ::core::ffi::c_int)
                 + ii as I64_0;
             fts5DataWrite(
@@ -34058,8 +33993,8 @@ unsafe extern "C" fn fts5IndexIntegrityCheckEmpty(
     while (*p).rc == crate::src::headers::sqlite3_h::SQLITE_OK && i <= iLast {
         let pLeaf: *mut Fts5Data = fts5DataRead(
             p,
-            (((*pSeg).iSegid as I64_0) << FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B + FTS5_DATA_DLI_B)
-                + ((0 as ::core::ffi::c_int as I64_0) << FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B)
+            (((*pSeg).iSegid as I64_0) << (FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B + FTS5_DATA_DLI_B))
+                + ((0 as ::core::ffi::c_int as I64_0) << (FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B))
                 + ((0 as ::core::ffi::c_int as I64_0) << 31 as ::core::ffi::c_int)
                 + i as I64_0,
         );
@@ -34071,12 +34006,10 @@ unsafe extern "C" fn fts5IndexIntegrityCheckEmpty(
             {
                 fts5IndexCorruptRowid(
                     p,
-                    (((*pSeg).iSegid as I64_0)
-                        << 31 as ::core::ffi::c_int
+                    (((*pSeg).iSegid as I64_0) << (31 as ::core::ffi::c_int
                             + 5 as ::core::ffi::c_int
-                            + 1 as ::core::ffi::c_int)
-                        + ((0 as ::core::ffi::c_int as I64_0)
-                            << 31 as ::core::ffi::c_int + 5 as ::core::ffi::c_int)
+                            + 1 as ::core::ffi::c_int))
+                        + ((0 as ::core::ffi::c_int as I64_0) << (31 as ::core::ffi::c_int + 5 as ::core::ffi::c_int))
                         + ((0 as ::core::ffi::c_int as I64_0) << 31 as ::core::ffi::c_int)
                         + i as I64_0,
                 );
@@ -34207,9 +34140,8 @@ unsafe extern "C" fn fts5IndexIntegrityCheckSegment(
         if iIdxLeaf < __pSeg_ref.pgnoFirst {
             continue;
         }
-        let iRow: I64_0 = ((__pSeg_ref.iSegid as I64_0)
-            << FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B + FTS5_DATA_DLI_B)
-            + ((0 as ::core::ffi::c_int as I64_0) << FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B)
+        let iRow: I64_0 = ((__pSeg_ref.iSegid as I64_0) << (FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B + FTS5_DATA_DLI_B))
+            + ((0 as ::core::ffi::c_int as I64_0) << (FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B))
             + ((0 as ::core::ffi::c_int as I64_0) << 31 as ::core::ffi::c_int)
             + iIdxLeaf as I64_0;
         pLeaf = fts5LeafRead(p, iRow);
@@ -34283,10 +34215,8 @@ unsafe extern "C" fn fts5IndexIntegrityCheckSegment(
             while fts5DlidxIterEof(p, pDlidx) == 0 as ::core::ffi::c_int {
                 iPg = iPrevLeaf + 1 as ::core::ffi::c_int;
                 while iPg < fts5DlidxIterPgno(pDlidx) {
-                    iKey = ((iSegid as I64_0)
-                        << FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B + FTS5_DATA_DLI_B)
-                        + ((0 as ::core::ffi::c_int as I64_0)
-                            << FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B)
+                    iKey = ((iSegid as I64_0) << (FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B + FTS5_DATA_DLI_B))
+                        + ((0 as ::core::ffi::c_int as I64_0) << (FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B))
                         + ((0 as ::core::ffi::c_int as I64_0) << 31 as ::core::ffi::c_int)
                         + iPg as I64_0;
                     pLeaf = fts5DataRead(p, iKey);
@@ -34299,9 +34229,8 @@ unsafe extern "C" fn fts5IndexIntegrityCheckSegment(
                     iPg += 1;
                 }
                 iPrevLeaf = fts5DlidxIterPgno(pDlidx);
-                iKey = ((iSegid as I64_0)
-                    << FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B + FTS5_DATA_DLI_B)
-                    + ((0 as ::core::ffi::c_int as I64_0) << FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B)
+                iKey = ((iSegid as I64_0) << (FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B + FTS5_DATA_DLI_B))
+                    + ((0 as ::core::ffi::c_int as I64_0) << (FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B))
                     + ((0 as ::core::ffi::c_int as I64_0) << 31 as ::core::ffi::c_int)
                     + iPrevLeaf as I64_0;
                 pLeaf = fts5DataRead(p, iKey);
@@ -34466,15 +34395,15 @@ unsafe extern "C" fn fts5DecodeRowid(
     piHeight: *mut ::core::ffi::c_int,
     piPgno: *mut ::core::ffi::c_int,
 ) {
-    *piPgno = (iRowid & ((1 as ::core::ffi::c_int as I64_0) << FTS5_DATA_PAGE_B) - 1 as I64_0)
+    *piPgno = (iRowid & (((1 as ::core::ffi::c_int as I64_0) << FTS5_DATA_PAGE_B) - 1 as I64_0))
         as ::core::ffi::c_int;
     iRowid >>= FTS5_DATA_PAGE_B;
-    *piHeight = (iRowid & ((1 as ::core::ffi::c_int as I64_0) << FTS5_DATA_HEIGHT_B) - 1 as I64_0)
+    *piHeight = (iRowid & (((1 as ::core::ffi::c_int as I64_0) << FTS5_DATA_HEIGHT_B) - 1 as I64_0))
         as ::core::ffi::c_int;
     iRowid >>= FTS5_DATA_HEIGHT_B;
     *pbDlidx = (iRowid & 0x1 as I64_0) as ::core::ffi::c_int;
     iRowid >>= FTS5_DATA_DLI_B;
-    *piSegid = (iRowid & ((1 as ::core::ffi::c_int as I64_0) << FTS5_DATA_ID_B) - 1 as I64_0)
+    *piSegid = (iRowid & (((1 as ::core::ffi::c_int as I64_0) << FTS5_DATA_ID_B) - 1 as I64_0))
         as ::core::ffi::c_int;
     iRowid >>= FTS5_DATA_ID_B;
     *pbTombstone = (iRowid & 0x1 as I64_0) as ::core::ffi::c_int;
@@ -35148,9 +35077,8 @@ unsafe extern "C" fn fts5RowidFunction(
             } else {
                 segid = crate::src::src::vdbeapi::sqlite3_value_int(*apVal.offset(1_isize));
                 pgno = crate::src::src::vdbeapi::sqlite3_value_int(*apVal.offset(2_isize));
-                iRowid = ((segid as I64_0)
-                    << FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B + FTS5_DATA_DLI_B)
-                    + ((0 as ::core::ffi::c_int as I64_0) << FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B)
+                iRowid = ((segid as I64_0) << (FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B + FTS5_DATA_DLI_B))
+                    + ((0 as ::core::ffi::c_int as I64_0) << (FTS5_DATA_PAGE_B + FTS5_DATA_HEIGHT_B))
                     + ((0 as ::core::ffi::c_int as I64_0) << 31 as ::core::ffi::c_int)
                     + pgno as I64_0;
                 crate::src::src::vdbeapi::sqlite3_result_int64(
@@ -35208,8 +35136,8 @@ unsafe extern "C" fn fts5structBestIndexMethod(
     i = 0 as ::core::ffi::c_int;
     p = __pIdxInfo_ref.aConstraint as *mut crate::src::headers::sqlite3_h::sqlite3_index_constraint;
     while i < __pIdxInfo_ref.nConstraint {
-        if ((*p).usable as ::core::ffi::c_int != 0 as ::core::ffi::c_int) {
-            if (*p).op as ::core::ffi::c_int
+        if ((*p).usable as ::core::ffi::c_int != 0 as ::core::ffi::c_int)
+            && (*p).op as ::core::ffi::c_int
                 == crate::src::headers::sqlite3_h::SQLITE_INDEX_CONSTRAINT_EQ
                 && (*p).iColumn == 11 as ::core::ffi::c_int
             {
@@ -35220,7 +35148,6 @@ unsafe extern "C" fn fts5structBestIndexMethod(
                     1 as ::core::ffi::c_int;
                 break;
             }
-        }
         i += 1;
         p = p.offset(1);
     }

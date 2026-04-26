@@ -1112,65 +1112,62 @@ pub mod geopoly_c {
                 current_block = 6717214610478484138;
             }
         }
-        match current_block {
-            11512789485770614175 => {
-                pOut = crate::src::src::malloc::sqlite3_realloc64(
-                    p as *mut ::core::ffi::c_void,
-                    (::core::mem::size_of::<crate::geopoly_c::GeoPoly>() as usize).wrapping_add(
-                        (::core::mem::size_of::<crate::geopoly_c::GeoCoord>() as usize)
-                            .wrapping_mul(2_usize)
-                            .wrapping_mul(
-                                (4 as ::core::ffi::c_int - 4 as ::core::ffi::c_int) as usize,
-                            ),
-                    ) as crate::src::headers::sqlite3_h::Sqlite3Uint64,
-                ) as *mut crate::geopoly_c::GeoPoly;
-                if pOut.is_null() {
-                    crate::src::src::malloc::sqlite3_free(p as *mut ::core::ffi::c_void);
-                    if !context.is_null() {
-                        crate::src::src::vdbeapi::sqlite3_result_error_nomem(context);
-                    }
-                    if !pRc.is_null() {
-                        *pRc = crate::src::headers::sqlite3_h::SQLITE_NOMEM;
-                    }
-                    return ::core::ptr::null_mut::<crate::geopoly_c::GeoPoly>();
+        if current_block == 11512789485770614175 {
+            pOut = crate::src::src::malloc::sqlite3_realloc64(
+                p as *mut ::core::ffi::c_void,
+                (::core::mem::size_of::<crate::geopoly_c::GeoPoly>() as usize).wrapping_add(
+                    (::core::mem::size_of::<crate::geopoly_c::GeoCoord>() as usize)
+                        .wrapping_mul(2_usize)
+                        .wrapping_mul(
+                            (4 as ::core::ffi::c_int - 4 as ::core::ffi::c_int) as usize,
+                        ),
+                ) as crate::src::headers::sqlite3_h::Sqlite3Uint64,
+            ) as *mut crate::geopoly_c::GeoPoly;
+            if pOut.is_null() {
+                crate::src::src::malloc::sqlite3_free(p as *mut ::core::ffi::c_void);
+                if !context.is_null() {
+                    crate::src::src::vdbeapi::sqlite3_result_error_nomem(context);
                 }
-                (*pOut).nVertex = 4 as ::core::ffi::c_int;
-                ii = 1 as ::core::ffi::c_int;
-                (*pOut).hdr[0 as ::core::ffi::c_int as usize] =
-                    *(&raw mut ii as *mut ::core::ffi::c_uchar);
-                (*pOut).hdr[1 as ::core::ffi::c_int as usize] = 0 as ::core::ffi::c_uchar;
-                (*pOut).hdr[2 as ::core::ffi::c_int as usize] = 0 as ::core::ffi::c_uchar;
-                (*pOut).hdr[3 as ::core::ffi::c_int as usize] = 4 as ::core::ffi::c_uchar;
-                *(&raw mut (*pOut).a as *mut crate::geopoly_c::GeoCoord)
-                    .offset((0 as ::core::ffi::c_int * 2 as ::core::ffi::c_int) as isize) =
-                    mnX as crate::geopoly_c::GeoCoord;
-                *(&raw mut (*pOut).a as *mut crate::geopoly_c::GeoCoord).offset(
-                    (0 as ::core::ffi::c_int * 2 as ::core::ffi::c_int + 1 as ::core::ffi::c_int)
-                        as isize,
-                ) = mnY as crate::geopoly_c::GeoCoord;
-                *(&raw mut (*pOut).a as *mut crate::geopoly_c::GeoCoord)
-                    .offset((1 as ::core::ffi::c_int * 2 as ::core::ffi::c_int) as isize) =
-                    mxX as crate::geopoly_c::GeoCoord;
-                *(&raw mut (*pOut).a as *mut crate::geopoly_c::GeoCoord).offset(
-                    (1 as ::core::ffi::c_int * 2 as ::core::ffi::c_int + 1 as ::core::ffi::c_int)
-                        as isize,
-                ) = mnY as crate::geopoly_c::GeoCoord;
-                *(&raw mut (*pOut).a as *mut crate::geopoly_c::GeoCoord)
-                    .offset((2 as ::core::ffi::c_int * 2 as ::core::ffi::c_int) as isize) =
-                    mxX as crate::geopoly_c::GeoCoord;
-                *(&raw mut (*pOut).a as *mut crate::geopoly_c::GeoCoord).offset(
-                    (2 as ::core::ffi::c_int * 2 as ::core::ffi::c_int + 1 as ::core::ffi::c_int)
-                        as isize,
-                ) = mxY as crate::geopoly_c::GeoCoord;
-                *(&raw mut (*pOut).a as *mut crate::geopoly_c::GeoCoord)
-                    .offset((3 as ::core::ffi::c_int * 2 as ::core::ffi::c_int) as isize) =
-                    mnX as crate::geopoly_c::GeoCoord;
-                *(&raw mut (*pOut).a as *mut crate::geopoly_c::GeoCoord).offset(
-                    (3 as ::core::ffi::c_int * 2 as ::core::ffi::c_int + 1 as ::core::ffi::c_int)
-                        as isize,
-                ) = mxY as crate::geopoly_c::GeoCoord;
+                if !pRc.is_null() {
+                    *pRc = crate::src::headers::sqlite3_h::SQLITE_NOMEM;
+                }
+                return ::core::ptr::null_mut::<crate::geopoly_c::GeoPoly>();
             }
-            _ => {}
+            (*pOut).nVertex = 4 as ::core::ffi::c_int;
+            ii = 1 as ::core::ffi::c_int;
+            (*pOut).hdr[0 as ::core::ffi::c_int as usize] =
+                *(&raw mut ii as *mut ::core::ffi::c_uchar);
+            (*pOut).hdr[1 as ::core::ffi::c_int as usize] = 0 as ::core::ffi::c_uchar;
+            (*pOut).hdr[2 as ::core::ffi::c_int as usize] = 0 as ::core::ffi::c_uchar;
+            (*pOut).hdr[3 as ::core::ffi::c_int as usize] = 4 as ::core::ffi::c_uchar;
+            *(&raw mut (*pOut).a as *mut crate::geopoly_c::GeoCoord)
+                .offset((0 as ::core::ffi::c_int * 2 as ::core::ffi::c_int) as isize) =
+                mnX as crate::geopoly_c::GeoCoord;
+            *(&raw mut (*pOut).a as *mut crate::geopoly_c::GeoCoord).offset(
+                (0 as ::core::ffi::c_int * 2 as ::core::ffi::c_int + 1 as ::core::ffi::c_int)
+                    as isize,
+            ) = mnY as crate::geopoly_c::GeoCoord;
+            *(&raw mut (*pOut).a as *mut crate::geopoly_c::GeoCoord)
+                .offset((1 as ::core::ffi::c_int * 2 as ::core::ffi::c_int) as isize) =
+                mxX as crate::geopoly_c::GeoCoord;
+            *(&raw mut (*pOut).a as *mut crate::geopoly_c::GeoCoord).offset(
+                (1 as ::core::ffi::c_int * 2 as ::core::ffi::c_int + 1 as ::core::ffi::c_int)
+                    as isize,
+            ) = mnY as crate::geopoly_c::GeoCoord;
+            *(&raw mut (*pOut).a as *mut crate::geopoly_c::GeoCoord)
+                .offset((2 as ::core::ffi::c_int * 2 as ::core::ffi::c_int) as isize) =
+                mxX as crate::geopoly_c::GeoCoord;
+            *(&raw mut (*pOut).a as *mut crate::geopoly_c::GeoCoord).offset(
+                (2 as ::core::ffi::c_int * 2 as ::core::ffi::c_int + 1 as ::core::ffi::c_int)
+                    as isize,
+            ) = mxY as crate::geopoly_c::GeoCoord;
+            *(&raw mut (*pOut).a as *mut crate::geopoly_c::GeoCoord)
+                .offset((3 as ::core::ffi::c_int * 2 as ::core::ffi::c_int) as isize) =
+                mnX as crate::geopoly_c::GeoCoord;
+            *(&raw mut (*pOut).a as *mut crate::geopoly_c::GeoCoord).offset(
+                (3 as ::core::ffi::c_int * 2 as ::core::ffi::c_int + 1 as ::core::ffi::c_int)
+                    as isize,
+            ) = mxY as crate::geopoly_c::GeoCoord;
         }
         pOut
     }
@@ -1401,7 +1398,7 @@ pub mod geopoly_c {
         }
         if v == 2 as ::core::ffi::c_int {
             crate::src::src::vdbeapi::sqlite3_result_int(context, 1 as ::core::ffi::c_int);
-        } else if v + cnt & 1 as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
+        } else if (v + cnt) & 1 as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
             crate::src::src::vdbeapi::sqlite3_result_int(context, 0 as ::core::ffi::c_int);
         } else {
             crate::src::src::vdbeapi::sqlite3_result_int(context, 2 as ::core::ffi::c_int);
@@ -1724,11 +1721,10 @@ pub mod geopoly_c {
                 }
                 pSeg = pActive;
                 while !pSeg.is_null() {
-                    if !pPrev.is_null() {
-                        if (*pPrev).y != (*pSeg).y {
+                    if !pPrev.is_null()
+                        && (*pPrev).y != (*pSeg).y {
                             aOverlap[iMask as usize] = 1 as ::core::ffi::c_uchar;
                         }
-                    }
                     iMask ^= (*pSeg).side as ::core::ffi::c_int;
                     pPrev = pSeg;
                     pSeg = (*pSeg).pNext;
@@ -1786,35 +1782,32 @@ pub mod geopoly_c {
             }
             pThisEvent = (*pThisEvent).pNext;
         }
-        match current_block {
-            6072622540298447352 => {
-                if aOverlap[3 as ::core::ffi::c_int as usize] as ::core::ffi::c_int
+        if current_block == 6072622540298447352 {
+            if aOverlap[3 as ::core::ffi::c_int as usize] as ::core::ffi::c_int
+                == 0 as ::core::ffi::c_int
+            {
+                rc = 0 as ::core::ffi::c_int;
+            } else if aOverlap[1 as ::core::ffi::c_int as usize] as ::core::ffi::c_int
+                != 0 as ::core::ffi::c_int
+                && aOverlap[2 as ::core::ffi::c_int as usize] as ::core::ffi::c_int
                     == 0 as ::core::ffi::c_int
-                {
-                    rc = 0 as ::core::ffi::c_int;
-                } else if aOverlap[1 as ::core::ffi::c_int as usize] as ::core::ffi::c_int
+            {
+                rc = 3 as ::core::ffi::c_int;
+            } else if aOverlap[1 as ::core::ffi::c_int as usize] as ::core::ffi::c_int
+                == 0 as ::core::ffi::c_int
+                && aOverlap[2 as ::core::ffi::c_int as usize] as ::core::ffi::c_int
                     != 0 as ::core::ffi::c_int
-                    && aOverlap[2 as ::core::ffi::c_int as usize] as ::core::ffi::c_int
-                        == 0 as ::core::ffi::c_int
-                {
-                    rc = 3 as ::core::ffi::c_int;
-                } else if aOverlap[1 as ::core::ffi::c_int as usize] as ::core::ffi::c_int
+            {
+                rc = 2 as ::core::ffi::c_int;
+            } else if aOverlap[1 as ::core::ffi::c_int as usize] as ::core::ffi::c_int
+                == 0 as ::core::ffi::c_int
+                && aOverlap[2 as ::core::ffi::c_int as usize] as ::core::ffi::c_int
                     == 0 as ::core::ffi::c_int
-                    && aOverlap[2 as ::core::ffi::c_int as usize] as ::core::ffi::c_int
-                        != 0 as ::core::ffi::c_int
-                {
-                    rc = 2 as ::core::ffi::c_int;
-                } else if aOverlap[1 as ::core::ffi::c_int as usize] as ::core::ffi::c_int
-                    == 0 as ::core::ffi::c_int
-                    && aOverlap[2 as ::core::ffi::c_int as usize] as ::core::ffi::c_int
-                        == 0 as ::core::ffi::c_int
-                {
-                    rc = 4 as ::core::ffi::c_int;
-                } else {
-                    rc = 1 as ::core::ffi::c_int;
-                }
+            {
+                rc = 4 as ::core::ffi::c_int;
+            } else {
+                rc = 1 as ::core::ffi::c_int;
             }
-            _ => {}
         }
         crate::src::src::malloc::sqlite3_free(p as *mut ::core::ffi::c_void);
         rc
@@ -2393,115 +2386,112 @@ pub mod geopoly_c {
         } else {
             current_block = 7056779235015430508;
         }
-        match current_block {
-            7056779235015430508 => {
-                if rc == crate::src::headers::sqlite3_h::SQLITE_OK
-                    && (nData == 1 as ::core::ffi::c_int || coordChange != 0 && oldRowidValid != 0)
-                {
-                    rc = rtreeDeleteRowid(
+        if current_block == 7056779235015430508 {
+            if rc == crate::src::headers::sqlite3_h::SQLITE_OK
+                && (nData == 1 as ::core::ffi::c_int || coordChange != 0 && oldRowidValid != 0)
+            {
+                rc = rtreeDeleteRowid(
+                    pRtree,
+                    oldRowid as crate::src::headers::sqlite3_h::Sqlite3Int64,
+                );
+            }
+            if rc == crate::src::headers::sqlite3_h::SQLITE_OK
+                && nData > 1 as ::core::ffi::c_int
+                && coordChange != 0
+            {
+                let mut pLeaf: *mut RtreeNode = ::core::ptr::null_mut::<RtreeNode>();
+                if newRowidValid == 0 {
+                    rc = rtreeNewRowid(pRtree, &raw mut cell.iRowid);
+                }
+                *pRowid = cell.iRowid as crate::src::headers::sqlite3_h::SqliteInt64;
+                if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
+                    rc = ChooseLeaf(
                         pRtree,
-                        oldRowid as crate::src::headers::sqlite3_h::Sqlite3Int64,
+                        &raw mut cell,
+                        0 as ::core::ffi::c_int,
+                        &raw mut pLeaf,
                     );
                 }
-                if rc == crate::src::headers::sqlite3_h::SQLITE_OK
-                    && nData > 1 as ::core::ffi::c_int
-                    && coordChange != 0
-                {
-                    let mut pLeaf: *mut RtreeNode = ::core::ptr::null_mut::<RtreeNode>();
-                    if newRowidValid == 0 {
-                        rc = rtreeNewRowid(pRtree, &raw mut cell.iRowid);
-                    }
-                    *pRowid = cell.iRowid as crate::src::headers::sqlite3_h::SqliteInt64;
+                if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
+                    
+                    rc = rtreeInsertCell(pRtree, pLeaf, &raw mut cell, 0 as ::core::ffi::c_int);
+                    let rc2: ::core::ffi::c_int = nodeRelease(pRtree, pLeaf);
                     if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
-                        rc = ChooseLeaf(
-                            pRtree,
-                            &raw mut cell,
-                            0 as ::core::ffi::c_int,
-                            &raw mut pLeaf,
-                        );
-                    }
-                    if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
-                        
-                        rc = rtreeInsertCell(pRtree, pLeaf, &raw mut cell, 0 as ::core::ffi::c_int);
-                        let rc2: ::core::ffi::c_int = nodeRelease(pRtree, pLeaf);
-                        if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
-                            rc = rc2;
-                        }
-                    }
-                }
-                if rc == crate::src::headers::sqlite3_h::SQLITE_OK
-                    && nData > 1 as ::core::ffi::c_int
-                {
-                    let pUp: *mut crate::src::headers::sqlite3_h::Sqlite3Stmt =
-                        (*pRtree).pWriteAux;
-                    let mut jj: ::core::ffi::c_int;
-                    let mut nChange: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
-                    crate::src::src::vdbeapi::sqlite3_bind_int64(
-                        pUp,
-                        1 as ::core::ffi::c_int,
-                        cell.iRowid as crate::src::headers::sqlite3_h::Sqlite3Int64,
-                    );
-                    if crate::src::src::vdbeapi::sqlite3_value_nochange(*aData.offset(2_isize))
-                        != 0
-                    {
-                        crate::src::src::vdbeapi::sqlite3_bind_null(pUp, 2 as ::core::ffi::c_int);
-                    } else {
-                        let mut p: *mut crate::geopoly_c::GeoPoly =
-                            ::core::ptr::null_mut::<crate::geopoly_c::GeoPoly>();
-                        if crate::src::src::vdbeapi::sqlite3_value_type(*aData.offset(2_isize))
-                            == crate::src::headers::sqlite3_h::SQLITE_TEXT
-                            && {
-                                p = geopolyFuncParam(
-                                    ::core::ptr::null_mut::<
-                                        crate::src::headers::vdbeInt_h::sqlite3_context,
-                                    >(),
-                                    *aData.offset(2_isize),
-                                    &raw mut rc,
-                                );
-                                !p.is_null()
-                            }
-                            && rc == crate::src::headers::sqlite3_h::SQLITE_OK
-                        {
-                            crate::src::src::vdbeapi::sqlite3_bind_blob(
-                                pUp,
-                                2 as ::core::ffi::c_int,
-                                &raw mut (*p).hdr as *mut ::core::ffi::c_uchar
-                                    as *const ::core::ffi::c_void,
-                                4 as ::core::ffi::c_int + 8 as ::core::ffi::c_int * (*p).nVertex,
-                                ::core::mem::transmute::<
-                                    crate::src::headers::stdlib::IntptrT,
-                                    Option<unsafe extern "C" fn(*mut ::core::ffi::c_void) -> ()>,
-                                >(
-                                    -(1 as ::core::ffi::c_int) as crate::src::headers::stdlib::IntptrT
-                                ),
-                            );
-                        } else {
-                            crate::src::src::vdbeapi::sqlite3_bind_value(
-                                pUp,
-                                2 as ::core::ffi::c_int,
-                                *aData.offset(2_isize),
-                            );
-                        }
-                        crate::src::src::malloc::sqlite3_free(p as *mut ::core::ffi::c_void);
-                        nChange = 1 as ::core::ffi::c_int;
-                    }
-                    jj = 1 as ::core::ffi::c_int;
-                    while jj < nData - 2 as ::core::ffi::c_int {
-                        nChange += 1;
-                        crate::src::src::vdbeapi::sqlite3_bind_value(
-                            pUp,
-                            jj + 2 as ::core::ffi::c_int,
-                            *aData.offset((jj + 2 as ::core::ffi::c_int) as isize),
-                        );
-                        jj += 1;
-                    }
-                    if nChange != 0 {
-                        crate::src::src::vdbeapi::sqlite3_step(pUp);
-                        rc = crate::src::src::vdbeapi::sqlite3_reset(pUp);
+                        rc = rc2;
                     }
                 }
             }
-            _ => {}
+            if rc == crate::src::headers::sqlite3_h::SQLITE_OK
+                && nData > 1 as ::core::ffi::c_int
+            {
+                let pUp: *mut crate::src::headers::sqlite3_h::Sqlite3Stmt =
+                    (*pRtree).pWriteAux;
+                let mut jj: ::core::ffi::c_int;
+                let mut nChange: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
+                crate::src::src::vdbeapi::sqlite3_bind_int64(
+                    pUp,
+                    1 as ::core::ffi::c_int,
+                    cell.iRowid as crate::src::headers::sqlite3_h::Sqlite3Int64,
+                );
+                if crate::src::src::vdbeapi::sqlite3_value_nochange(*aData.offset(2_isize))
+                    != 0
+                {
+                    crate::src::src::vdbeapi::sqlite3_bind_null(pUp, 2 as ::core::ffi::c_int);
+                } else {
+                    let mut p: *mut crate::geopoly_c::GeoPoly =
+                        ::core::ptr::null_mut::<crate::geopoly_c::GeoPoly>();
+                    if crate::src::src::vdbeapi::sqlite3_value_type(*aData.offset(2_isize))
+                        == crate::src::headers::sqlite3_h::SQLITE_TEXT
+                        && {
+                            p = geopolyFuncParam(
+                                ::core::ptr::null_mut::<
+                                    crate::src::headers::vdbeInt_h::sqlite3_context,
+                                >(),
+                                *aData.offset(2_isize),
+                                &raw mut rc,
+                            );
+                            !p.is_null()
+                        }
+                        && rc == crate::src::headers::sqlite3_h::SQLITE_OK
+                    {
+                        crate::src::src::vdbeapi::sqlite3_bind_blob(
+                            pUp,
+                            2 as ::core::ffi::c_int,
+                            &raw mut (*p).hdr as *mut ::core::ffi::c_uchar
+                                as *const ::core::ffi::c_void,
+                            4 as ::core::ffi::c_int + 8 as ::core::ffi::c_int * (*p).nVertex,
+                            ::core::mem::transmute::<
+                                crate::src::headers::stdlib::IntptrT,
+                                Option<unsafe extern "C" fn(*mut ::core::ffi::c_void) -> ()>,
+                            >(
+                                -(1 as ::core::ffi::c_int) as crate::src::headers::stdlib::IntptrT
+                            ),
+                        );
+                    } else {
+                        crate::src::src::vdbeapi::sqlite3_bind_value(
+                            pUp,
+                            2 as ::core::ffi::c_int,
+                            *aData.offset(2_isize),
+                        );
+                    }
+                    crate::src::src::malloc::sqlite3_free(p as *mut ::core::ffi::c_void);
+                    nChange = 1 as ::core::ffi::c_int;
+                }
+                jj = 1 as ::core::ffi::c_int;
+                while jj < nData - 2 as ::core::ffi::c_int {
+                    nChange += 1;
+                    crate::src::src::vdbeapi::sqlite3_bind_value(
+                        pUp,
+                        jj + 2 as ::core::ffi::c_int,
+                        *aData.offset((jj + 2 as ::core::ffi::c_int) as isize),
+                    );
+                    jj += 1;
+                }
+                if nChange != 0 {
+                    crate::src::src::vdbeapi::sqlite3_step(pUp);
+                    rc = crate::src::src::vdbeapi::sqlite3_reset(pUp);
+                }
+            }
         }
         rtreeRelease(pRtree);
         rc
@@ -3684,14 +3674,13 @@ unsafe extern "C" fn nodeAcquire(
             rc = crate::src::headers::sqlite3_h::SQLITE_CORRUPT_VTAB;
         }
     }
-    if !pNode.is_null() && rc == crate::src::headers::sqlite3_h::SQLITE_OK {
-        if readInt16((*pNode).zData.offset(2_isize) as *mut U8_0)
+    if !pNode.is_null() && rc == crate::src::headers::sqlite3_h::SQLITE_OK
+        && readInt16((*pNode).zData.offset(2_isize) as *mut U8_0)
             > (__pRtree_ref.iNodeSize - 4 as ::core::ffi::c_int)
                 / __pRtree_ref.nBytesPerCell as ::core::ffi::c_int
         {
             rc = crate::src::headers::sqlite3_h::SQLITE_CORRUPT_VTAB;
         }
-    }
     if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
         if !pNode.is_null() {
             nodeReference(pParent);
@@ -4117,40 +4106,31 @@ unsafe extern "C" fn rtreeCallbackConstraint(
                 current_block_25 = 17345315872032947249;
             }
         }
-        match current_block_25 {
-            17245806410740177172 => {
-                readCoord(pCellData.offset(28_isize), &raw mut c);
-                aCoord[7 as ::core::ffi::c_int as usize] =
-                    c.f as crate::src::headers::sqlite3_h::Sqlite3RtreeDbl;
-                readCoord(pCellData.offset(24_isize), &raw mut c);
-                aCoord[6 as ::core::ffi::c_int as usize] =
-                    c.f as crate::src::headers::sqlite3_h::Sqlite3RtreeDbl;
-                current_block_25 = 6238933575658261055;
-            }
-            _ => {}
+        if current_block_25 == 17245806410740177172 {
+            readCoord(pCellData.offset(28_isize), &raw mut c);
+            aCoord[7 as ::core::ffi::c_int as usize] =
+                c.f as crate::src::headers::sqlite3_h::Sqlite3RtreeDbl;
+            readCoord(pCellData.offset(24_isize), &raw mut c);
+            aCoord[6 as ::core::ffi::c_int as usize] =
+                c.f as crate::src::headers::sqlite3_h::Sqlite3RtreeDbl;
+            current_block_25 = 6238933575658261055;
         }
-        match current_block_25 {
-            6238933575658261055 => {
-                readCoord(pCellData.offset(20_isize), &raw mut c);
-                aCoord[5 as ::core::ffi::c_int as usize] =
-                    c.f as crate::src::headers::sqlite3_h::Sqlite3RtreeDbl;
-                readCoord(pCellData.offset(16_isize), &raw mut c);
-                aCoord[4 as ::core::ffi::c_int as usize] =
-                    c.f as crate::src::headers::sqlite3_h::Sqlite3RtreeDbl;
-                current_block_25 = 14661562966503102838;
-            }
-            _ => {}
+        if current_block_25 == 6238933575658261055 {
+            readCoord(pCellData.offset(20_isize), &raw mut c);
+            aCoord[5 as ::core::ffi::c_int as usize] =
+                c.f as crate::src::headers::sqlite3_h::Sqlite3RtreeDbl;
+            readCoord(pCellData.offset(16_isize), &raw mut c);
+            aCoord[4 as ::core::ffi::c_int as usize] =
+                c.f as crate::src::headers::sqlite3_h::Sqlite3RtreeDbl;
+            current_block_25 = 14661562966503102838;
         }
-        match current_block_25 {
-            14661562966503102838 => {
-                readCoord(pCellData.offset(12_isize), &raw mut c);
-                aCoord[3 as ::core::ffi::c_int as usize] =
-                    c.f as crate::src::headers::sqlite3_h::Sqlite3RtreeDbl;
-                readCoord(pCellData.offset(8_isize), &raw mut c);
-                aCoord[2 as ::core::ffi::c_int as usize] =
-                    c.f as crate::src::headers::sqlite3_h::Sqlite3RtreeDbl;
-            }
-            _ => {}
+        if current_block_25 == 14661562966503102838 {
+            readCoord(pCellData.offset(12_isize), &raw mut c);
+            aCoord[3 as ::core::ffi::c_int as usize] =
+                c.f as crate::src::headers::sqlite3_h::Sqlite3RtreeDbl;
+            readCoord(pCellData.offset(8_isize), &raw mut c);
+            aCoord[2 as ::core::ffi::c_int as usize] =
+                c.f as crate::src::headers::sqlite3_h::Sqlite3RtreeDbl;
         }
         readCoord(pCellData.offset(4_isize), &raw mut c);
         aCoord[1 as ::core::ffi::c_int as usize] =
@@ -4183,40 +4163,31 @@ unsafe extern "C" fn rtreeCallbackConstraint(
                 current_block_47 = 12071572069003698848;
             }
         }
-        match current_block_47 {
-            6970119114131639077 => {
-                readCoord(pCellData.offset(28_isize), &raw mut c);
-                aCoord[7 as ::core::ffi::c_int as usize] =
-                    c.i as crate::src::headers::sqlite3_h::Sqlite3RtreeDbl;
-                readCoord(pCellData.offset(24_isize), &raw mut c);
-                aCoord[6 as ::core::ffi::c_int as usize] =
-                    c.i as crate::src::headers::sqlite3_h::Sqlite3RtreeDbl;
-                current_block_47 = 9261908759940751603;
-            }
-            _ => {}
+        if current_block_47 == 6970119114131639077 {
+            readCoord(pCellData.offset(28_isize), &raw mut c);
+            aCoord[7 as ::core::ffi::c_int as usize] =
+                c.i as crate::src::headers::sqlite3_h::Sqlite3RtreeDbl;
+            readCoord(pCellData.offset(24_isize), &raw mut c);
+            aCoord[6 as ::core::ffi::c_int as usize] =
+                c.i as crate::src::headers::sqlite3_h::Sqlite3RtreeDbl;
+            current_block_47 = 9261908759940751603;
         }
-        match current_block_47 {
-            9261908759940751603 => {
-                readCoord(pCellData.offset(20_isize), &raw mut c);
-                aCoord[5 as ::core::ffi::c_int as usize] =
-                    c.i as crate::src::headers::sqlite3_h::Sqlite3RtreeDbl;
-                readCoord(pCellData.offset(16_isize), &raw mut c);
-                aCoord[4 as ::core::ffi::c_int as usize] =
-                    c.i as crate::src::headers::sqlite3_h::Sqlite3RtreeDbl;
-                current_block_47 = 14392866125239670488;
-            }
-            _ => {}
+        if current_block_47 == 9261908759940751603 {
+            readCoord(pCellData.offset(20_isize), &raw mut c);
+            aCoord[5 as ::core::ffi::c_int as usize] =
+                c.i as crate::src::headers::sqlite3_h::Sqlite3RtreeDbl;
+            readCoord(pCellData.offset(16_isize), &raw mut c);
+            aCoord[4 as ::core::ffi::c_int as usize] =
+                c.i as crate::src::headers::sqlite3_h::Sqlite3RtreeDbl;
+            current_block_47 = 14392866125239670488;
         }
-        match current_block_47 {
-            14392866125239670488 => {
-                readCoord(pCellData.offset(12_isize), &raw mut c);
-                aCoord[3 as ::core::ffi::c_int as usize] =
-                    c.i as crate::src::headers::sqlite3_h::Sqlite3RtreeDbl;
-                readCoord(pCellData.offset(8_isize), &raw mut c);
-                aCoord[2 as ::core::ffi::c_int as usize] =
-                    c.i as crate::src::headers::sqlite3_h::Sqlite3RtreeDbl;
-            }
-            _ => {}
+        if current_block_47 == 14392866125239670488 {
+            readCoord(pCellData.offset(12_isize), &raw mut c);
+            aCoord[3 as ::core::ffi::c_int as usize] =
+                c.i as crate::src::headers::sqlite3_h::Sqlite3RtreeDbl;
+            readCoord(pCellData.offset(8_isize), &raw mut c);
+            aCoord[2 as ::core::ffi::c_int as usize] =
+                c.i as crate::src::headers::sqlite3_h::Sqlite3RtreeDbl;
         }
         readCoord(pCellData.offset(4_isize), &raw mut c);
         aCoord[1 as ::core::ffi::c_int as usize] =
@@ -5277,7 +5248,7 @@ unsafe extern "C" fn rtreeBestIndex(
             (iIdx + 1 as ::core::ffi::c_int) as usize,
         );
     }
-    let nRow: I64_0 = pRtree.nRowEst >> iIdx / 2 as ::core::ffi::c_int;
+    let nRow: I64_0 = pRtree.nRowEst >> (iIdx / 2 as ::core::ffi::c_int);
     __pIdxInfo_ref.estimatedCost = 6.0f64 * nRow as ::core::ffi::c_double;
     __pIdxInfo_ref.estimatedRows = nRow as crate::src::headers::sqlite3_h::Sqlite3Int64;
     rc
@@ -5307,31 +5278,22 @@ unsafe extern "C" fn cellArea(pRtree: *mut Rtree, p: *mut RtreeCell) -> RtreeDVa
                 current_block_5 = 16329828092235511802;
             }
         }
-        match current_block_5 {
-            6269710938687375737 => {
-                area *= ((*p).aCoord[7 as ::core::ffi::c_int as usize].f
-                    - (*p).aCoord[6 as ::core::ffi::c_int as usize].f)
-                    as RtreeDValue;
-                current_block_5 = 13605341943804237952;
-            }
-            _ => {}
+        if current_block_5 == 6269710938687375737 {
+            area *= ((*p).aCoord[7 as ::core::ffi::c_int as usize].f
+                - (*p).aCoord[6 as ::core::ffi::c_int as usize].f)
+                as RtreeDValue;
+            current_block_5 = 13605341943804237952;
         }
-        match current_block_5 {
-            13605341943804237952 => {
-                area *= ((*p).aCoord[5 as ::core::ffi::c_int as usize].f
-                    - (*p).aCoord[4 as ::core::ffi::c_int as usize].f)
-                    as RtreeDValue;
-                current_block_5 = 3848145320424515447;
-            }
-            _ => {}
+        if current_block_5 == 13605341943804237952 {
+            area *= ((*p).aCoord[5 as ::core::ffi::c_int as usize].f
+                - (*p).aCoord[4 as ::core::ffi::c_int as usize].f)
+                as RtreeDValue;
+            current_block_5 = 3848145320424515447;
         }
-        match current_block_5 {
-            3848145320424515447 => {
-                area *= ((*p).aCoord[3 as ::core::ffi::c_int as usize].f
-                    - (*p).aCoord[2 as ::core::ffi::c_int as usize].f)
-                    as RtreeDValue;
-            }
-            _ => {}
+        if current_block_5 == 3848145320424515447 {
+            area *= ((*p).aCoord[3 as ::core::ffi::c_int as usize].f
+                - (*p).aCoord[2 as ::core::ffi::c_int as usize].f)
+                as RtreeDValue;
         }
         area *= ((*p).aCoord[1 as ::core::ffi::c_int as usize].f
             - (*p).aCoord[0 as ::core::ffi::c_int as usize].f) as RtreeDValue;
@@ -5357,31 +5319,22 @@ unsafe extern "C" fn cellArea(pRtree: *mut Rtree, p: *mut RtreeCell) -> RtreeDVa
                 current_block_12 = 13221271166207665853;
             }
         }
-        match current_block_12 {
-            4804969265056275772 => {
-                area *= ((*p).aCoord[7 as ::core::ffi::c_int as usize].i as I64_0
-                    - (*p).aCoord[6 as ::core::ffi::c_int as usize].i as I64_0)
-                    as RtreeDValue;
-                current_block_12 = 10117027413191050543;
-            }
-            _ => {}
+        if current_block_12 == 4804969265056275772 {
+            area *= ((*p).aCoord[7 as ::core::ffi::c_int as usize].i as I64_0
+                - (*p).aCoord[6 as ::core::ffi::c_int as usize].i as I64_0)
+                as RtreeDValue;
+            current_block_12 = 10117027413191050543;
         }
-        match current_block_12 {
-            10117027413191050543 => {
-                area *= ((*p).aCoord[5 as ::core::ffi::c_int as usize].i as I64_0
-                    - (*p).aCoord[4 as ::core::ffi::c_int as usize].i as I64_0)
-                    as RtreeDValue;
-                current_block_12 = 12112996543100875946;
-            }
-            _ => {}
+        if current_block_12 == 10117027413191050543 {
+            area *= ((*p).aCoord[5 as ::core::ffi::c_int as usize].i as I64_0
+                - (*p).aCoord[4 as ::core::ffi::c_int as usize].i as I64_0)
+                as RtreeDValue;
+            current_block_12 = 12112996543100875946;
         }
-        match current_block_12 {
-            12112996543100875946 => {
-                area *= ((*p).aCoord[3 as ::core::ffi::c_int as usize].i as I64_0
-                    - (*p).aCoord[2 as ::core::ffi::c_int as usize].i as I64_0)
-                    as RtreeDValue;
-            }
-            _ => {}
+        if current_block_12 == 12112996543100875946 {
+            area *= ((*p).aCoord[3 as ::core::ffi::c_int as usize].i as I64_0
+                - (*p).aCoord[2 as ::core::ffi::c_int as usize].i as I64_0)
+                as RtreeDValue;
         }
         area *= ((*p).aCoord[1 as ::core::ffi::c_int as usize].i as I64_0
             - (*p).aCoord[0 as ::core::ffi::c_int as usize].i as I64_0)
@@ -6822,68 +6775,65 @@ unsafe extern "C" fn rtreeUpdate(
     } else {
         current_block = 14434620278749266018;
     }
-    match current_block {
-        14434620278749266018 => {
-            if crate::src::src::vdbeapi::sqlite3_value_type(*aData.offset(0_isize))
-                != crate::src::headers::sqlite3_h::SQLITE_NULL
-            {
-                rc = rtreeDeleteRowid(
+    if current_block == 14434620278749266018 {
+        if crate::src::src::vdbeapi::sqlite3_value_type(*aData.offset(0_isize))
+            != crate::src::headers::sqlite3_h::SQLITE_NULL
+        {
+            rc = rtreeDeleteRowid(
+                pRtree,
+                crate::src::src::vdbeapi::sqlite3_value_int64(*aData.offset(0_isize)),
+            );
+        }
+        if rc == crate::src::headers::sqlite3_h::SQLITE_OK && nData > 1 as ::core::ffi::c_int {
+            let mut pLeaf: *mut RtreeNode = ::core::ptr::null_mut::<RtreeNode>();
+            if bHaveRowid == 0 as ::core::ffi::c_int {
+                rc = rtreeNewRowid(pRtree, &raw mut cell.iRowid);
+            }
+            *pRowid = cell.iRowid as crate::src::headers::sqlite3_h::SqliteInt64;
+            if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
+                rc = ChooseLeaf(
                     pRtree,
-                    crate::src::src::vdbeapi::sqlite3_value_int64(*aData.offset(0_isize)),
+                    &raw mut cell,
+                    0 as ::core::ffi::c_int,
+                    &raw mut pLeaf,
                 );
             }
-            if rc == crate::src::headers::sqlite3_h::SQLITE_OK && nData > 1 as ::core::ffi::c_int {
-                let mut pLeaf: *mut RtreeNode = ::core::ptr::null_mut::<RtreeNode>();
-                if bHaveRowid == 0 as ::core::ffi::c_int {
-                    rc = rtreeNewRowid(pRtree, &raw mut cell.iRowid);
-                }
-                *pRowid = cell.iRowid as crate::src::headers::sqlite3_h::SqliteInt64;
+            if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
+                
+                rc = rtreeInsertCell(pRtree, pLeaf, &raw mut cell, 0 as ::core::ffi::c_int);
+                let rc2: ::core::ffi::c_int = nodeRelease(pRtree, pLeaf);
                 if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
-                    rc = ChooseLeaf(
-                        pRtree,
-                        &raw mut cell,
-                        0 as ::core::ffi::c_int,
-                        &raw mut pLeaf,
-                    );
-                }
-                if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
-                    
-                    rc = rtreeInsertCell(pRtree, pLeaf, &raw mut cell, 0 as ::core::ffi::c_int);
-                    let rc2: ::core::ffi::c_int = nodeRelease(pRtree, pLeaf);
-                    if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
-                        rc = rc2;
-                    }
-                }
-                if rc == crate::src::headers::sqlite3_h::SQLITE_OK
-                    && (*pRtree).nAux as ::core::ffi::c_int != 0
-                {
-                    let pUp: *mut crate::src::headers::sqlite3_h::Sqlite3Stmt =
-                        (*pRtree).pWriteAux;
-                    let mut jj: ::core::ffi::c_int;
-                    crate::src::src::vdbeapi::sqlite3_bind_int64(
-                        pUp,
-                        1 as ::core::ffi::c_int,
-                        *pRowid,
-                    );
-                    jj = 0 as ::core::ffi::c_int;
-                    while jj < (*pRtree).nAux as ::core::ffi::c_int {
-                        crate::src::src::vdbeapi::sqlite3_bind_value(
-                            pUp,
-                            jj + 2 as ::core::ffi::c_int,
-                            *aData.offset(
-                                ((*pRtree).nDim2 as ::core::ffi::c_int
-                                    + 3 as ::core::ffi::c_int
-                                    + jj) as isize,
-                            ),
-                        );
-                        jj += 1;
-                    }
-                    crate::src::src::vdbeapi::sqlite3_step(pUp);
-                    rc = crate::src::src::vdbeapi::sqlite3_reset(pUp);
+                    rc = rc2;
                 }
             }
+            if rc == crate::src::headers::sqlite3_h::SQLITE_OK
+                && (*pRtree).nAux as ::core::ffi::c_int != 0
+            {
+                let pUp: *mut crate::src::headers::sqlite3_h::Sqlite3Stmt =
+                    (*pRtree).pWriteAux;
+                let mut jj: ::core::ffi::c_int;
+                crate::src::src::vdbeapi::sqlite3_bind_int64(
+                    pUp,
+                    1 as ::core::ffi::c_int,
+                    *pRowid,
+                );
+                jj = 0 as ::core::ffi::c_int;
+                while jj < (*pRtree).nAux as ::core::ffi::c_int {
+                    crate::src::src::vdbeapi::sqlite3_bind_value(
+                        pUp,
+                        jj + 2 as ::core::ffi::c_int,
+                        *aData.offset(
+                            ((*pRtree).nDim2 as ::core::ffi::c_int
+                                + 3 as ::core::ffi::c_int
+                                + jj) as isize,
+                        ),
+                    );
+                    jj += 1;
+                }
+                crate::src::src::vdbeapi::sqlite3_step(pUp);
+                rc = crate::src::src::vdbeapi::sqlite3_reset(pUp);
+            }
         }
-        _ => {}
     }
     rtreeRelease(pRtree);
     rc

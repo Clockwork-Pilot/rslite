@@ -1360,8 +1360,8 @@ unsafe extern "C" fn robust_open(
             }
         }
     }
-    if fd >= 0 as ::core::ffi::c_int {
-        if m != 0 as crate::src::headers::stdlib::ModeT {
+    if fd >= 0 as ::core::ffi::c_int
+        && m != 0 as crate::src::headers::stdlib::ModeT {
             let mut statbuf: crate::src::headers::stdlib::stat = { ::core::mem::zeroed() };
             if ::core::mem::transmute::<
                 crate::src::headers::sqlite3_h::Sqlite3SyscallPtr,
@@ -1389,7 +1389,6 @@ unsafe extern "C" fn robust_open(
                 .expect("non-null function pointer")(fd, m);
             }
         }
-    }
     fd
 }
 
@@ -1982,9 +1981,8 @@ unsafe extern "C" fn unixLock(
                 } else {
                     if eFileLock == crate::src::src::os::EXCLUSIVE_LOCK
                         && (*pInode).nShared > 1 as ::core::ffi::c_int
+                        || unixIsSharingShmNode(pFile) != 0
                     {
-                        rc = crate::src::headers::sqlite3_h::SQLITE_BUSY;
-                    } else if unixIsSharingShmNode(pFile) != 0 {
                         rc = crate::src::headers::sqlite3_h::SQLITE_BUSY;
                     } else {
                         lock.l_type = ::libc::F_WRLCK as ::core::ffi::c_short;
@@ -2734,8 +2732,8 @@ unsafe extern "C" fn openDirectory(
         ::libc::O_RDONLY | O_BINARY,
         0 as crate::src::headers::stdlib::ModeT,
     );
-    if fd >= 0 as ::core::ffi::c_int {
-        if crate::src::src::main::sqlite3OSTrace != 0 {
+    if fd >= 0 as ::core::ffi::c_int
+        && crate::src::src::main::sqlite3OSTrace != 0 {
             crate::src::printf_c_variadic::sqlite3DebugPrintf_args(
                 b"OPENDIR %-3d %s\n\0" as *const u8 as *const ::core::ffi::c_char,
                 &[
@@ -2748,7 +2746,6 @@ unsafe extern "C" fn openDirectory(
                 ],
             );
         }
-    }
     *pFd = fd;
     if fd >= 0 as ::core::ffi::c_int {
         return crate::src::headers::sqlite3_h::SQLITE_OK;
@@ -2994,8 +2991,8 @@ unsafe extern "C" fn fcntlSizeHint(
         && nByte > __pFile_ref.mmapSize
     {
         
-        if __pFile_ref.szChunk <= 0 as ::core::ffi::c_int {
-            if robust_ftruncate(
+        if __pFile_ref.szChunk <= 0 as ::core::ffi::c_int
+            && robust_ftruncate(
                 __pFile_ref.h,
                 nByte as crate::src::headers::sqlite3_h::Sqlite3Int64,
             ) != 0
@@ -3008,7 +3005,6 @@ unsafe extern "C" fn fcntlSizeHint(
                     4100 as ::core::ffi::c_int,
                 );
             }
-        }
         let rc: ::core::ffi::c_int = unixMapfile(pFile, nByte);
         return rc;
     }
@@ -3600,173 +3596,170 @@ unsafe extern "C" fn unixShmMap(
     } else {
         current_block = 4166486009154926805;
     }
-    match current_block {
-        4166486009154926805 => {
-            nReqRegion = (iRegion + nShmPerMap) / nShmPerMap * nShmPerMap;
-            if ((*pShmNode).nRegion as ::core::ffi::c_int) < nReqRegion {
-                let apNew: *mut *mut ::core::ffi::c_char;
-                let nByte: ::core::ffi::c_int = nReqRegion * szRegion;
-                let mut sStat: crate::src::headers::stdlib::stat = { ::core::mem::zeroed() };
-                (*pShmNode).szRegion = szRegion;
-                if (*pShmNode).hShm >= 0 as ::core::ffi::c_int {
-                    if ::core::mem::transmute::<
-                        crate::src::headers::sqlite3_h::Sqlite3SyscallPtr,
-                        Option<
-                            unsafe extern "C" fn(
-                                ::core::ffi::c_int,
-                                *mut crate::src::headers::stdlib::stat,
-                            ) -> ::core::ffi::c_int,
-                        >,
-                    >(aSyscall[5 as ::core::ffi::c_int as usize].pCurrent)
-                    .expect("non-null function pointer")(
-                        (*pShmNode).hShm, &raw mut sStat
-                    ) != 0
-                    {
-                        rc = crate::src::headers::sqlite3_h::SQLITE_IOERR_SHMSIZE_1;
+    if current_block == 4166486009154926805 {
+        nReqRegion = (iRegion + nShmPerMap) / nShmPerMap * nShmPerMap;
+        if ((*pShmNode).nRegion as ::core::ffi::c_int) < nReqRegion {
+            let apNew: *mut *mut ::core::ffi::c_char;
+            let nByte: ::core::ffi::c_int = nReqRegion * szRegion;
+            let mut sStat: crate::src::headers::stdlib::stat = { ::core::mem::zeroed() };
+            (*pShmNode).szRegion = szRegion;
+            if (*pShmNode).hShm >= 0 as ::core::ffi::c_int {
+                if ::core::mem::transmute::<
+                    crate::src::headers::sqlite3_h::Sqlite3SyscallPtr,
+                    Option<
+                        unsafe extern "C" fn(
+                            ::core::ffi::c_int,
+                            *mut crate::src::headers::stdlib::stat,
+                        ) -> ::core::ffi::c_int,
+                    >,
+                >(aSyscall[5 as ::core::ffi::c_int as usize].pCurrent)
+                .expect("non-null function pointer")(
+                    (*pShmNode).hShm, &raw mut sStat
+                ) != 0
+                {
+                    rc = crate::src::headers::sqlite3_h::SQLITE_IOERR_SHMSIZE_1;
+                    current_block = 3940646464161370556;
+                } else if sStat.st_size < nByte as crate::src::headers::stdlib::OffT {
+                    if bExtend == 0 {
                         current_block = 3940646464161370556;
-                    } else if sStat.st_size < nByte as crate::src::headers::stdlib::OffT {
-                        if bExtend == 0 {
-                            current_block = 3940646464161370556;
-                        } else {
-                            static mut pgsz: ::core::ffi::c_int = 4096 as ::core::ffi::c_int;
-                            let mut iPg: ::core::ffi::c_int;
-                            iPg = (sStat.st_size / pgsz as crate::src::headers::stdlib::OffT)
-                                as ::core::ffi::c_int;
-                            loop {
-                                if (iPg >= nByte / pgsz) {
-                                    current_block = 8693738493027456495;
-                                    break;
-                                }
-                                let mut x: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
-                                if seekAndWriteFd(
-                                    (*pShmNode).hShm,
-                                    (iPg * pgsz + pgsz - 1 as ::core::ffi::c_int)
-                                        as crate::src::ext::rtree::rtree::I64_0,
-                                    b"\0" as *const u8 as *const ::core::ffi::c_char
-                                        as *const ::core::ffi::c_void,
-                                    1 as ::core::ffi::c_int,
-                                    &raw mut x,
-                                ) != 1 as ::core::ffi::c_int
-                                {
-                                    let zFile: *const ::core::ffi::c_char =
-                                        (*pShmNode).zFilename;
-                                    rc = unixLogErrorAtLine(
-                                        10 as ::core::ffi::c_int
-                                            | (19 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int,
-                                        b"write\0" as *const u8 as *const ::core::ffi::c_char,
-                                        zFile,
-                                        5184 as ::core::ffi::c_int,
-                                    );
-                                    current_block = 3940646464161370556;
-                                    break;
-                                } else {
-                                    iPg += 1;
-                                }
+                    } else {
+                        static mut pgsz: ::core::ffi::c_int = 4096 as ::core::ffi::c_int;
+                        let mut iPg: ::core::ffi::c_int;
+                        iPg = (sStat.st_size / pgsz as crate::src::headers::stdlib::OffT)
+                            as ::core::ffi::c_int;
+                        loop {
+                            if (iPg >= nByte / pgsz) {
+                                current_block = 8693738493027456495;
+                                break;
+                            }
+                            let mut x: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
+                            if seekAndWriteFd(
+                                (*pShmNode).hShm,
+                                (iPg * pgsz + pgsz - 1 as ::core::ffi::c_int)
+                                    as crate::src::ext::rtree::rtree::I64_0,
+                                b"\0" as *const u8 as *const ::core::ffi::c_char
+                                    as *const ::core::ffi::c_void,
+                                1 as ::core::ffi::c_int,
+                                &raw mut x,
+                            ) != 1 as ::core::ffi::c_int
+                            {
+                                let zFile: *const ::core::ffi::c_char =
+                                    (*pShmNode).zFilename;
+                                rc = unixLogErrorAtLine(
+                                    10 as ::core::ffi::c_int
+                                        | (19 as ::core::ffi::c_int) << 8 as ::core::ffi::c_int,
+                                    b"write\0" as *const u8 as *const ::core::ffi::c_char,
+                                    zFile,
+                                    5184 as ::core::ffi::c_int,
+                                );
+                                current_block = 3940646464161370556;
+                                break;
+                            } else {
+                                iPg += 1;
                             }
                         }
-                    } else {
-                        current_block = 8693738493027456495;
                     }
                 } else {
                     current_block = 8693738493027456495;
                 }
-                match current_block {
-                    3940646464161370556 => {}
-                    _ => {
-                        apNew = crate::src::src::malloc::sqlite3_realloc(
-                            (*pShmNode).apRegion as *mut ::core::ffi::c_void,
-                            (nReqRegion as usize)
-                                .wrapping_mul(
-                                    ::core::mem::size_of::<*mut ::core::ffi::c_char>() as usize
-                                ) as ::core::ffi::c_int,
-                        ) as *mut *mut ::core::ffi::c_char;
-                        if apNew.is_null() {
-                            rc = crate::src::headers::sqliteInt_h::SQLITE_IOERR_NOMEM_BKPT;
-                        } else {
-                            (*pShmNode).apRegion = apNew;
-                            while ((*pShmNode).nRegion as ::core::ffi::c_int) < nReqRegion {
-                                let nMap: ::core::ffi::c_int = szRegion * nShmPerMap;
-                                let mut i: ::core::ffi::c_int;
-                                let pMem: *mut ::core::ffi::c_void;
-                                let __pShmNode_ref = { &mut *pShmNode };
-                                if __pShmNode_ref.hShm >= 0 as ::core::ffi::c_int {
-                                    pMem = ::core::mem::transmute::<
-                                        crate::src::headers::sqlite3_h::Sqlite3SyscallPtr,
-                                        Option<
-                                            unsafe extern "C" fn(
-                                                *mut ::core::ffi::c_void,
-                                                crate::__stddef_size_t_h::SizeT,
-                                                ::core::ffi::c_int,
-                                                ::core::ffi::c_int,
-                                                ::core::ffi::c_int,
-                                                crate::src::headers::stdlib::OffT,
-                                            )
-                                                -> *mut ::core::ffi::c_void,
-                                        >,
-                                    >(
-                                        aSyscall[22 as ::core::ffi::c_int as usize].pCurrent
-                                    )
-                                    .expect("non-null function pointer")(
-                                        ::core::ptr::null_mut::<::core::ffi::c_void>(),
-                                        nMap as crate::__stddef_size_t_h::SizeT,
-                                        if __pShmNode_ref.isReadonly as ::core::ffi::c_int != 0 {
-                                            ::libc::PROT_READ
-                                        } else {
-                                            ::libc::PROT_READ | ::libc::PROT_WRITE
-                                        },
-                                        ::libc::MAP_SHARED,
-                                        __pShmNode_ref.hShm,
-                                        (szRegion as crate::src::ext::rtree::rtree::I64_0
-                                            * __pShmNode_ref.nRegion
-                                                as crate::src::ext::rtree::rtree::I64_0)
-                                            as crate::src::headers::stdlib::OffT,
-                                    );
-                                    if pMem == ::libc::MAP_FAILED {
-                                        rc = unixLogErrorAtLine(
-                                            10 as ::core::ffi::c_int
-                                                | (21 as ::core::ffi::c_int)
-                                                    << 8 as ::core::ffi::c_int,
-                                            b"mmap\0" as *const u8 as *const ::core::ffi::c_char,
-                                            __pShmNode_ref.zFilename,
-                                            5211 as ::core::ffi::c_int,
-                                        );
-                                        break;
-                                    }
-                                } else {
-                                    pMem = crate::src::src::malloc::sqlite3_malloc64(
-                                        nMap as crate::src::headers::sqlite3_h::Sqlite3Uint64,
-                                    );
-                                    if pMem.is_null() {
-                                        rc = crate::src::headers::sqliteInt_h::SQLITE_NOMEM_BKPT;
-                                        break;
+            } else {
+                current_block = 8693738493027456495;
+            }
+            match current_block {
+                3940646464161370556 => {}
+                _ => {
+                    apNew = crate::src::src::malloc::sqlite3_realloc(
+                        (*pShmNode).apRegion as *mut ::core::ffi::c_void,
+                        (nReqRegion as usize)
+                            .wrapping_mul(
+                                ::core::mem::size_of::<*mut ::core::ffi::c_char>() as usize
+                            ) as ::core::ffi::c_int,
+                    ) as *mut *mut ::core::ffi::c_char;
+                    if apNew.is_null() {
+                        rc = crate::src::headers::sqliteInt_h::SQLITE_IOERR_NOMEM_BKPT;
+                    } else {
+                        (*pShmNode).apRegion = apNew;
+                        while ((*pShmNode).nRegion as ::core::ffi::c_int) < nReqRegion {
+                            let nMap: ::core::ffi::c_int = szRegion * nShmPerMap;
+                            let mut i: ::core::ffi::c_int;
+                            let pMem: *mut ::core::ffi::c_void;
+                            let __pShmNode_ref = { &mut *pShmNode };
+                            if __pShmNode_ref.hShm >= 0 as ::core::ffi::c_int {
+                                pMem = ::core::mem::transmute::<
+                                    crate::src::headers::sqlite3_h::Sqlite3SyscallPtr,
+                                    Option<
+                                        unsafe extern "C" fn(
+                                            *mut ::core::ffi::c_void,
+                                            crate::__stddef_size_t_h::SizeT,
+                                            ::core::ffi::c_int,
+                                            ::core::ffi::c_int,
+                                            ::core::ffi::c_int,
+                                            crate::src::headers::stdlib::OffT,
+                                        )
+                                            -> *mut ::core::ffi::c_void,
+                                    >,
+                                >(
+                                    aSyscall[22 as ::core::ffi::c_int as usize].pCurrent
+                                )
+                                .expect("non-null function pointer")(
+                                    ::core::ptr::null_mut::<::core::ffi::c_void>(),
+                                    nMap as crate::__stddef_size_t_h::SizeT,
+                                    if __pShmNode_ref.isReadonly as ::core::ffi::c_int != 0 {
+                                        ::libc::PROT_READ
                                     } else {
-                                        ::libc::memset(
-                                            pMem,
-                                            0 as ::core::ffi::c_int,
-                                            nMap as crate::__stddef_size_t_h::SizeT,
-                                        );
-                                    }
-                                }
-                                i = 0 as ::core::ffi::c_int;
-                                while i < nShmPerMap {
-                                    let fresh18 = &mut *__pShmNode_ref.apRegion.offset(
-                                        (__pShmNode_ref.nRegion as ::core::ffi::c_int + i) as isize,
+                                        ::libc::PROT_READ | ::libc::PROT_WRITE
+                                    },
+                                    ::libc::MAP_SHARED,
+                                    __pShmNode_ref.hShm,
+                                    (szRegion as crate::src::ext::rtree::rtree::I64_0
+                                        * __pShmNode_ref.nRegion
+                                            as crate::src::ext::rtree::rtree::I64_0)
+                                        as crate::src::headers::stdlib::OffT,
+                                );
+                                if pMem == ::libc::MAP_FAILED {
+                                    rc = unixLogErrorAtLine(
+                                        10 as ::core::ffi::c_int
+                                            | (21 as ::core::ffi::c_int)
+                                                << 8 as ::core::ffi::c_int,
+                                        b"mmap\0" as *const u8 as *const ::core::ffi::c_char,
+                                        __pShmNode_ref.zFilename,
+                                        5211 as ::core::ffi::c_int,
                                     );
-                                    *fresh18 = (pMem as *mut ::core::ffi::c_char)
-                                        .offset((szRegion * i) as isize)
-                                        as *mut ::core::ffi::c_char;
-                                    i += 1;
+                                    break;
                                 }
-                                __pShmNode_ref.nRegion =
-                                    (__pShmNode_ref.nRegion as ::core::ffi::c_int + nShmPerMap)
-                                        as crate::src::fts5::U16_0;
+                            } else {
+                                pMem = crate::src::src::malloc::sqlite3_malloc64(
+                                    nMap as crate::src::headers::sqlite3_h::Sqlite3Uint64,
+                                );
+                                if pMem.is_null() {
+                                    rc = crate::src::headers::sqliteInt_h::SQLITE_NOMEM_BKPT;
+                                    break;
+                                } else {
+                                    ::libc::memset(
+                                        pMem,
+                                        0 as ::core::ffi::c_int,
+                                        nMap as crate::__stddef_size_t_h::SizeT,
+                                    );
+                                }
                             }
+                            i = 0 as ::core::ffi::c_int;
+                            while i < nShmPerMap {
+                                let fresh18 = &mut *__pShmNode_ref.apRegion.offset(
+                                    (__pShmNode_ref.nRegion as ::core::ffi::c_int + i) as isize,
+                                );
+                                *fresh18 = (pMem as *mut ::core::ffi::c_char)
+                                    .offset((szRegion * i) as isize)
+                                    as *mut ::core::ffi::c_char;
+                                i += 1;
+                            }
+                            __pShmNode_ref.nRegion =
+                                (__pShmNode_ref.nRegion as ::core::ffi::c_int + nShmPerMap)
+                                    as crate::src::fts5::U16_0;
                         }
                     }
                 }
             }
         }
-        _ => {}
     }
     if (*pShmNode).nRegion as ::core::ffi::c_int > iRegion {
         *pp = *(*pShmNode).apRegion.offset(iRegion as isize) as *mut ::core::ffi::c_void;
@@ -3792,7 +3785,7 @@ unsafe extern "C" fn unixShmLock(
     
     
     let mut rc: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_OK;
-    let mask: crate::src::fts5::U16_0 = (((1 as ::core::ffi::c_int) << ofst + n)
+    let mask: crate::src::fts5::U16_0 = (((1 as ::core::ffi::c_int) << (ofst + n))
         - ((1 as ::core::ffi::c_int) << ofst))
         as crate::src::fts5::U16_0;
     
@@ -3822,8 +3815,8 @@ unsafe extern "C" fn unixShmLock(
         if rc == 0 as ::core::ffi::c_int {
             if flags & crate::src::headers::sqlite3_h::SQLITE_SHM_UNLOCK != 0 {
                 let mut bUnlock: ::core::ffi::c_int = 1 as ::core::ffi::c_int;
-                if flags & crate::src::headers::sqlite3_h::SQLITE_SHM_SHARED != 0 {
-                    if *aLock.offset(ofst as isize) > 1 as ::core::ffi::c_int {
+                if flags & crate::src::headers::sqlite3_h::SQLITE_SHM_SHARED != 0
+                    && *aLock.offset(ofst as isize) > 1 as ::core::ffi::c_int {
                         bUnlock = 0 as ::core::ffi::c_int;
                         let fresh5 = &mut *aLock.offset(ofst as isize);
                         *fresh5 -= 1;
@@ -3831,7 +3824,6 @@ unsafe extern "C" fn unixShmLock(
                             & !(mask as ::core::ffi::c_int))
                             as crate::src::fts5::U16_0;
                     }
-                }
                 if bUnlock != 0 {
                     rc = unixShmSystemLock(
                         pDbFd,
@@ -5193,45 +5185,42 @@ unsafe extern "C" fn unixOpen(
     } else {
         current_block = 6281126495347172768;
     }
-    match current_block {
-        6281126495347172768 => {
-            if !pOutFlags.is_null() {
-                *pOutFlags = flags;
-            }
-            if !(*p).pPreallocatedUnused.is_null() {
-                let __pPreallocatedUnused_ref = &mut *(*p).pPreallocatedUnused;
-                __pPreallocatedUnused_ref.fd = fd;
-                __pPreallocatedUnused_ref.flags = flags
-                    & (crate::src::headers::sqlite3_h::SQLITE_OPEN_READONLY
-                        | crate::src::headers::sqlite3_h::SQLITE_OPEN_READWRITE);
-            }
-            if isDelete != 0 {
-                ::core::mem::transmute::<
-                    crate::src::headers::sqlite3_h::Sqlite3SyscallPtr,
-                    Option<unsafe extern "C" fn(*const ::core::ffi::c_char) -> ::core::ffi::c_int>,
-                >(aSyscall[16 as ::core::ffi::c_int as usize].pCurrent)
-                .expect("non-null function pointer")(zName);
-            }
-            if isDelete != 0 {
-                ctrlFlags |= UNIXFILE_DELETE;
-            }
-            if isReadonly != 0 {
-                ctrlFlags |= UNIXFILE_RDONLY;
-            }
-            noLock = (eType != crate::src::headers::sqlite3_h::SQLITE_OPEN_MAIN_DB)
-                as ::core::ffi::c_int;
-            if noLock != 0 {
-                ctrlFlags |= UNIXFILE_NOLOCK;
-            }
-            if isNewJrnl != 0 {
-                ctrlFlags |= UNIXFILE_DIRSYNC;
-            }
-            if flags & crate::src::headers::sqlite3_h::SQLITE_OPEN_URI != 0 {
-                ctrlFlags |= UNIXFILE_URI;
-            }
-            rc = fillInUnixFile(pVfs, fd, pFile, zPath, ctrlFlags);
+    if current_block == 6281126495347172768 {
+        if !pOutFlags.is_null() {
+            *pOutFlags = flags;
         }
-        _ => {}
+        if !(*p).pPreallocatedUnused.is_null() {
+            let __pPreallocatedUnused_ref = &mut *(*p).pPreallocatedUnused;
+            __pPreallocatedUnused_ref.fd = fd;
+            __pPreallocatedUnused_ref.flags = flags
+                & (crate::src::headers::sqlite3_h::SQLITE_OPEN_READONLY
+                    | crate::src::headers::sqlite3_h::SQLITE_OPEN_READWRITE);
+        }
+        if isDelete != 0 {
+            ::core::mem::transmute::<
+                crate::src::headers::sqlite3_h::Sqlite3SyscallPtr,
+                Option<unsafe extern "C" fn(*const ::core::ffi::c_char) -> ::core::ffi::c_int>,
+            >(aSyscall[16 as ::core::ffi::c_int as usize].pCurrent)
+            .expect("non-null function pointer")(zName);
+        }
+        if isDelete != 0 {
+            ctrlFlags |= UNIXFILE_DELETE;
+        }
+        if isReadonly != 0 {
+            ctrlFlags |= UNIXFILE_RDONLY;
+        }
+        noLock = (eType != crate::src::headers::sqlite3_h::SQLITE_OPEN_MAIN_DB)
+            as ::core::ffi::c_int;
+        if noLock != 0 {
+            ctrlFlags |= UNIXFILE_NOLOCK;
+        }
+        if isNewJrnl != 0 {
+            ctrlFlags |= UNIXFILE_DIRSYNC;
+        }
+        if flags & crate::src::headers::sqlite3_h::SQLITE_OPEN_URI != 0 {
+            ctrlFlags |= UNIXFILE_URI;
+        }
+        rc = fillInUnixFile(pVfs, fd, pFile, zPath, ctrlFlags);
     }
     if rc != crate::src::headers::sqlite3_h::SQLITE_OK {
         crate::src::src::malloc::sqlite3_free((*p).pPreallocatedUnused as *mut ::core::ffi::c_void);

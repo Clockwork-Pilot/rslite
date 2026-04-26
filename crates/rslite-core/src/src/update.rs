@@ -699,8 +699,7 @@ pub unsafe extern "C" fn sqlite3Update(
                 pParse as *mut crate::src::headers::sqliteInt_h::Parse,
                 pTab as *mut crate::src::headers::sqliteInt_h::Table,
             ) == 0)
-            {
-                if (crate::src::src::delete::sqlite3IsReadOnly(
+                && (crate::src::src::delete::sqlite3IsReadOnly(
                     pParse as *mut crate::src::headers::sqliteInt_h::Parse,
                     pTab as *mut crate::src::headers::sqliteInt_h::Table,
                     pTrigger as *mut crate::src::headers::sqliteInt_h::Trigger,
@@ -905,12 +904,10 @@ pub unsafe extern "C" fn sqlite3Update(
                                             i = 0 as ::core::ffi::c_int;
                                             while i < __pTab_ref.nCol as ::core::ffi::c_int {
                                                 if (*aXRef.offset(i as isize) < 0 as ::core::ffi::c_int)
-                                                {
-                                                    if ((*__pTab_ref.aCol.offset(i as isize)).colFlags
+                                                    && ((*__pTab_ref.aCol.offset(i as isize)).colFlags
                                                         as ::core::ffi::c_int
                                                         & crate::src::headers::sqliteInt_h::COLFLAG_GENERATED != 0 as ::core::ffi::c_int)
-                                                    {
-                                                        if crate::src::src::insert::sqlite3ExprReferencesUpdatedColumn(
+                                                        && crate::src::src::insert::sqlite3ExprReferencesUpdatedColumn(
                                                             
                                                             crate::src::src::build::sqlite3ColumnExpr(
                                                                 
@@ -929,8 +926,6 @@ pub unsafe extern "C" fn sqlite3Update(
                                                                 99999 as ::core::ffi::c_int;
                                                             bProgress = 1 as ::core::ffi::c_int;
                                                         }
-                                                    }
-                                                }
                                                 i += 1;
                                             }
                                             if (bProgress == 0) {
@@ -2036,7 +2031,6 @@ pub unsafe extern "C" fn sqlite3Update(
                         }
                     }
                 }
-            }
         }
     }
     crate::src::src::auth::sqlite3AuthContextPop(
