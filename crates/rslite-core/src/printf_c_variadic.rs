@@ -208,7 +208,10 @@ pub unsafe fn sqlite3_log_args(
     zFormat: *const ::core::ffi::c_char,
     args: &[crate::src::src::printf::PrintfArg],
 ) {
-    if crate::src::src::global::sqlite3Config.xLog.is_some() {
+    if (&raw const crate::src::src::global::sqlite3Config.xLog)
+        .read()
+        .is_some()
+    {
         crate::src::src::printf::renderLogMsg_args(iErrCode, zFormat, args);
     }
 }
@@ -372,7 +375,10 @@ pub unsafe extern "C" fn rs_config_dispatch(
             crate::src::src::global::sqlite3Config.m = *p;
         }
         ConfigOp::GetMalloc(p) => {
-            if crate::src::src::global::sqlite3Config.m.xMalloc.is_none() {
+            if (&raw const crate::src::src::global::sqlite3Config.m.xMalloc)
+                .read()
+                .is_none()
+            {
                 crate::src::src::mem1::sqlite3MemSetDefault();
             }
             *p = crate::src::src::global::sqlite3Config.m;
@@ -402,9 +408,8 @@ pub unsafe extern "C" fn rs_config_dispatch(
             crate::src::src::global::sqlite3Config.pcache2 = *p;
         }
         ConfigOp::GetPcache2(p) => {
-            if crate::src::src::global::sqlite3Config
-                .pcache2
-                .xInit
+            if (&raw const crate::src::src::global::sqlite3Config.pcache2.xInit)
+                .read()
                 .is_none()
             {
                 crate::src::src::pcache1::sqlite3PCacheSetDefault();

@@ -701,12 +701,12 @@ unsafe extern "C" fn osLocaltime(
 ) -> ::core::ffi::c_int {
     let mut rc: ::core::ffi::c_int = 0;
     if crate::src::src::global::sqlite3Config.bLocaltimeFault != 0 {
-        if crate::src::src::global::sqlite3Config
-            .xAltLocaltime
+        if (&raw const crate::src::src::global::sqlite3Config.xAltLocaltime)
+            .read()
             .is_some()
         {
-            return crate::src::src::global::sqlite3Config
-                .xAltLocaltime
+            return (&raw const crate::src::src::global::sqlite3Config.xAltLocaltime)
+                .read()
                 .expect("non-null function pointer")(
                 t as *const ::core::ffi::c_void,
                 pTm as *mut ::core::ffi::c_void,

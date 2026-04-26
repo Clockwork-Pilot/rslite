@@ -161,9 +161,8 @@ unsafe extern "C" fn numberOfCachePages(mut p: *mut PCache) -> ::core::ffi::c_in
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PcacheInitialize() -> ::core::ffi::c_int {
-    if crate::src::src::global::sqlite3Config
-        .pcache2
-        .xInit
+    if (&raw const crate::src::src::global::sqlite3Config.pcache2.xInit)
+        .read()
         .is_none()
     {
         crate::src::src::pcache1::sqlite3PCacheSetDefault();
@@ -176,14 +175,12 @@ pub unsafe extern "C" fn sqlite3PcacheInitialize() -> ::core::ffi::c_int {
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PcacheShutdown() {
-    if crate::src::src::global::sqlite3Config
-        .pcache2
-        .xShutdown
+    if (&raw const crate::src::src::global::sqlite3Config.pcache2.xShutdown)
+        .read()
         .is_some()
     {
-        crate::src::src::global::sqlite3Config
-            .pcache2
-            .xShutdown
+        (&raw const crate::src::src::global::sqlite3Config.pcache2.xShutdown)
+            .read()
             .expect("non-null function pointer")(
             crate::src::src::global::sqlite3Config.pcache2.pArg,
         );

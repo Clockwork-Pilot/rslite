@@ -21,16 +21,18 @@ pub unsafe extern "C" fn sqlite3BenignMallocHooks(
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3BeginBenignMalloc() {
-    if sqlite3Hooks.xBenignBegin.is_some() {
-        sqlite3Hooks
-            .xBenignBegin
+    if (&raw const sqlite3Hooks.xBenignBegin).read().is_some() {
+        (&raw const sqlite3Hooks.xBenignBegin)
+            .read()
             .expect("non-null function pointer")();
     }
 }
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3EndBenignMalloc() {
-    if sqlite3Hooks.xBenignEnd.is_some() {
-        sqlite3Hooks.xBenignEnd.expect("non-null function pointer")();
+    if (&raw const sqlite3Hooks.xBenignEnd).read().is_some() {
+        (&raw const sqlite3Hooks.xBenignEnd)
+            .read()
+            .expect("non-null function pointer")();
     }
 }

@@ -3872,7 +3872,7 @@ unsafe extern "C" fn openDatabase(
                                 i = 0 as ::core::ffi::c_int;
                                 while rc == crate::src::headers::sqlite3_h::SQLITE_OK
                                     && i
-                                        < ::core::mem::size_of_val(&sqlite3BuiltinExtensions)
+                                        < ::core::mem::size_of_val(unsafe { &*&raw const sqlite3BuiltinExtensions })
                                             .wrapping_div(::core::mem::size_of::<
                                                 Option<BuiltinExtFn>,
                                             >(

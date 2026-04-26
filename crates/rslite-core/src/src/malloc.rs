@@ -268,7 +268,10 @@ pub unsafe extern "C" fn sqlite3_hard_heap_limit64(
 
 pub unsafe extern "C" fn sqlite3MallocInit() -> ::core::ffi::c_int {
     let mut rc: ::core::ffi::c_int = 0;
-    if crate::src::src::global::sqlite3Config.m.xMalloc.is_none() {
+    if (&raw const crate::src::src::global::sqlite3Config.m.xMalloc)
+        .read()
+        .is_none()
+    {
         crate::src::src::mem1::sqlite3MemSetDefault();
     }
     mem0.mutex = crate::src::src::mutex::sqlite3MutexAlloc(
@@ -306,10 +309,12 @@ pub unsafe extern "C" fn sqlite3HeapNearlyFull() -> ::core::ffi::c_int {
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3MallocEnd() {
-    if crate::src::src::global::sqlite3Config.m.xShutdown.is_some() {
-        crate::src::src::global::sqlite3Config
-            .m
-            .xShutdown
+    if (&raw const crate::src::src::global::sqlite3Config.m.xShutdown)
+        .read()
+        .is_some()
+    {
+        (&raw const crate::src::src::global::sqlite3Config.m.xShutdown)
+            .read()
             .expect("non-null function pointer")(
             crate::src::src::global::sqlite3Config.m.pAppData
         );
