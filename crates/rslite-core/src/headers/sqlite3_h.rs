@@ -1,5 +1,11 @@
 use crate::src::ext::rtree::rtree::U64_0;
 
+pub type SqliteFuncFn = unsafe extern "C" fn(
+    *mut crate::src::headers::vdbeInt_h::sqlite3_context,
+    ::core::ffi::c_int,
+    *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
+) -> ();
+
 pub type Sqlite3Stmt = crate::src::headers::vdbeInt_h::Vdbe;
 
 pub type Sqlite3Blob = *mut std::ffi::c_void;
@@ -1199,13 +1205,7 @@ pub struct sqlite3_module {
             *mut crate::src::headers::sqlite3_h::sqlite3_vtab,
             ::core::ffi::c_int,
             *const ::core::ffi::c_char,
-            *mut Option<
-                unsafe extern "C" fn(
-                    *mut crate::src::headers::vdbeInt_h::sqlite3_context,
-                    ::core::ffi::c_int,
-                    *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
-                ) -> (),
-            >,
+            *mut Option<SqliteFuncFn>,
             *mut *mut ::core::ffi::c_void,
         ) -> ::core::ffi::c_int,
     >,

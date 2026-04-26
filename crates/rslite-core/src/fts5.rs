@@ -1,3 +1,12 @@
+pub type Fts5TokenCallbackFn = unsafe extern "C" fn(
+    *mut ::core::ffi::c_void,
+    ::core::ffi::c_int,
+    *const ::core::ffi::c_char,
+    ::core::ffi::c_int,
+    ::core::ffi::c_int,
+    ::core::ffi::c_int,
+) -> ::core::ffi::c_int;
+
 pub use crate::__stddef_size_t_h::SizeT;
 pub use crate::internal::BuiltinVaList;
 pub use crate::internal::VaListTag;
@@ -179,16 +188,7 @@ pub struct Fts5Tokenizer {
             ::core::ffi::c_int,
             *const ::core::ffi::c_char,
             ::core::ffi::c_int,
-            Option<
-                unsafe extern "C" fn(
-                    *mut ::core::ffi::c_void,
-                    ::core::ffi::c_int,
-                    *const ::core::ffi::c_char,
-                    ::core::ffi::c_int,
-                    ::core::ffi::c_int,
-                    ::core::ffi::c_int,
-                ) -> ::core::ffi::c_int,
-            >,
+            Option<Fts5TokenCallbackFn>,
         ) -> ::core::ffi::c_int,
     >,
 }
@@ -217,16 +217,7 @@ pub struct Fts5ExtensionApi {
             *const ::core::ffi::c_char,
             ::core::ffi::c_int,
             *mut ::core::ffi::c_void,
-            Option<
-                unsafe extern "C" fn(
-                    *mut ::core::ffi::c_void,
-                    ::core::ffi::c_int,
-                    *const ::core::ffi::c_char,
-                    ::core::ffi::c_int,
-                    ::core::ffi::c_int,
-                    ::core::ffi::c_int,
-                ) -> ::core::ffi::c_int,
-            >,
+            Option<Fts5TokenCallbackFn>,
         ) -> ::core::ffi::c_int,
     >,
     pub xPhraseCount: Option<unsafe extern "C" fn(*mut Fts5Context) -> ::core::ffi::c_int>,
@@ -348,16 +339,7 @@ pub struct Fts5ExtensionApi {
             *const ::core::ffi::c_char,
             ::core::ffi::c_int,
             *mut ::core::ffi::c_void,
-            Option<
-                unsafe extern "C" fn(
-                    *mut ::core::ffi::c_void,
-                    ::core::ffi::c_int,
-                    *const ::core::ffi::c_char,
-                    ::core::ffi::c_int,
-                    ::core::ffi::c_int,
-                    ::core::ffi::c_int,
-                ) -> ::core::ffi::c_int,
-            >,
+            Option<Fts5TokenCallbackFn>,
         ) -> ::core::ffi::c_int,
     >,
 }
@@ -399,16 +381,7 @@ pub struct fts5_tokenizer_v2 {
             ::core::ffi::c_int,
             *const ::core::ffi::c_char,
             ::core::ffi::c_int,
-            Option<
-                unsafe extern "C" fn(
-                    *mut ::core::ffi::c_void,
-                    ::core::ffi::c_int,
-                    *const ::core::ffi::c_char,
-                    ::core::ffi::c_int,
-                    ::core::ffi::c_int,
-                    ::core::ffi::c_int,
-                ) -> ::core::ffi::c_int,
-            >,
+            Option<Fts5TokenCallbackFn>,
         ) -> ::core::ffi::c_int,
     >,
 }
@@ -431,16 +404,7 @@ pub struct fts5_tokenizer {
             ::core::ffi::c_int,
             *const ::core::ffi::c_char,
             ::core::ffi::c_int,
-            Option<
-                unsafe extern "C" fn(
-                    *mut ::core::ffi::c_void,
-                    ::core::ffi::c_int,
-                    *const ::core::ffi::c_char,
-                    ::core::ffi::c_int,
-                    ::core::ffi::c_int,
-                    ::core::ffi::c_int,
-                ) -> ::core::ffi::c_int,
-            >,
+            Option<Fts5TokenCallbackFn>,
         ) -> ::core::ffi::c_int,
     >,
 }
@@ -13969,7 +13933,7 @@ unsafe extern "C" fn fts5Bm25Function(
                                         + b * D / data.avgdl)));
                         i += 1;
                     }
-                    crate::src::src::vdbeapi::sqlite3_result_double(pCtx, -1.0f64 * score);
+                    crate::src::src::vdbeapi::sqlite3_result_double(pCtx, -score);
                 } else {
                     crate::src::src::vdbeapi::sqlite3_result_error_code(pCtx, rc);
                 }
@@ -24939,7 +24903,7 @@ unsafe extern "C" fn fts5ApiGetAuxdata(
 }
 
 unsafe extern "C" fn fts5ExprPrintTcl(
-    pConfig: *mut Fts5Config,
+    _pConfig: *mut Fts5Config,
     zNearsetCmd: *const ::core::ffi::c_char,
     pExpr: *mut Fts5ExprNode,
 ) -> *mut ::core::ffi::c_char {
@@ -25044,7 +25008,7 @@ unsafe extern "C" fn fts5ExprPrintTcl(
         i_0 = 0 as ::core::ffi::c_int;
         while !zRet.is_null() && i_0 < __pExpr_ref.nChild {
             let z: *mut ::core::ffi::c_char = fts5ExprPrintTcl(
-                pConfig,
+                _pConfig,
                 zNearsetCmd,
                 *(&raw mut __pExpr_ref.apChild as *mut *mut Fts5ExprNode).offset(i_0 as isize),
             );

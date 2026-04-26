@@ -167,9 +167,7 @@ unsafe impl Sync for Sqlite3Mutex {}
 // Static mutex table — const-initialized, no heap, valid at DT_INIT time
 // ---------------------------------------------------------------------------
 
-const SQLITE3_MUTEX_CONST: Sqlite3Mutex = Sqlite3Mutex::new();
-
-static STATIC_MUTEXES: [Sqlite3Mutex; NUM_STATIC] = [SQLITE3_MUTEX_CONST; NUM_STATIC];
+static STATIC_MUTEXES: [Sqlite3Mutex; NUM_STATIC] = [const { Sqlite3Mutex::new() }; NUM_STATIC];
 
 fn static_ptr(kind: i32) -> *mut Sqlite3Mutex {
     // SAFETY: ReentrantMutex uses UnsafeCell internally (interior mutability).

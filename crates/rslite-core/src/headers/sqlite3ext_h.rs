@@ -1,3 +1,101 @@
+pub type SqliteExtCollationFn = unsafe extern "C" fn(
+    *mut ::core::ffi::c_void,
+    ::core::ffi::c_int,
+    *const ::core::ffi::c_void,
+    ::core::ffi::c_int,
+    *const ::core::ffi::c_void,
+) -> ::core::ffi::c_int;
+
+pub type SqliteExtFuncFn = unsafe extern "C" fn(
+    *mut crate::src::headers::vdbeInt_h::sqlite3_context,
+    ::core::ffi::c_int,
+    *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
+) -> ();
+
+pub type SqliteExtFinalFn =
+    unsafe extern "C" fn(*mut crate::src::headers::vdbeInt_h::sqlite3_context) -> ();
+
+pub type SqliteExtDestructorFn = unsafe extern "C" fn(*mut ::core::ffi::c_void) -> ();
+
+pub type SqliteCreateFunctionFn = unsafe extern "C" fn(
+    *mut crate::src::headers::sqliteInt_h::sqlite3,
+    *const ::core::ffi::c_char,
+    ::core::ffi::c_int,
+    ::core::ffi::c_int,
+    *mut ::core::ffi::c_void,
+    Option<SqliteExtFuncFn>,
+    Option<SqliteExtFuncFn>,
+    Option<SqliteExtFinalFn>,
+) -> ::core::ffi::c_int;
+
+pub type SqliteCreateFunction16Fn = unsafe extern "C" fn(
+    *mut crate::src::headers::sqliteInt_h::sqlite3,
+    *const ::core::ffi::c_void,
+    ::core::ffi::c_int,
+    ::core::ffi::c_int,
+    *mut ::core::ffi::c_void,
+    Option<SqliteExtFuncFn>,
+    Option<SqliteExtFuncFn>,
+    Option<SqliteExtFinalFn>,
+) -> ::core::ffi::c_int;
+
+pub type SqliteAuthorizerCallbackFn = unsafe extern "C" fn(
+    *mut ::core::ffi::c_void,
+    ::core::ffi::c_int,
+    *const ::core::ffi::c_char,
+    *const ::core::ffi::c_char,
+    *const ::core::ffi::c_char,
+    *const ::core::ffi::c_char,
+) -> ::core::ffi::c_int;
+
+pub type SqliteUpdateHookCallbackFn = unsafe extern "C" fn(
+    *mut ::core::ffi::c_void,
+    ::core::ffi::c_int,
+    *const ::core::ffi::c_char,
+    *const ::core::ffi::c_char,
+    crate::src::headers::sqlite3_h::SqliteInt64,
+) -> ();
+
+pub type SqliteCreateFunctionV2Fn = unsafe extern "C" fn(
+    *mut crate::src::headers::sqliteInt_h::sqlite3,
+    *const ::core::ffi::c_char,
+    ::core::ffi::c_int,
+    ::core::ffi::c_int,
+    *mut ::core::ffi::c_void,
+    Option<SqliteExtFuncFn>,
+    Option<SqliteExtFuncFn>,
+    Option<SqliteExtFinalFn>,
+    Option<SqliteExtDestructorFn>,
+) -> ::core::ffi::c_int;
+
+pub type SqliteTraceV2CallbackFn = unsafe extern "C" fn(
+    ::core::ffi::c_uint,
+    *mut ::core::ffi::c_void,
+    *mut ::core::ffi::c_void,
+    *mut ::core::ffi::c_void,
+) -> ::core::ffi::c_int;
+
+pub type SqliteCreateWindowFunctionFn = unsafe extern "C" fn(
+    *mut crate::src::headers::sqliteInt_h::sqlite3,
+    *const ::core::ffi::c_char,
+    ::core::ffi::c_int,
+    ::core::ffi::c_int,
+    *mut ::core::ffi::c_void,
+    Option<SqliteExtFuncFn>,
+    Option<SqliteExtFinalFn>,
+    Option<SqliteExtFinalFn>,
+    Option<SqliteExtFuncFn>,
+    Option<SqliteExtDestructorFn>,
+) -> ::core::ffi::c_int;
+
+pub type SqliteAutovacuumPagesCallbackFn = unsafe extern "C" fn(
+    *mut ::core::ffi::c_void,
+    *const ::core::ffi::c_char,
+    ::core::ffi::c_uint,
+    ::core::ffi::c_uint,
+    ::core::ffi::c_uint,
+) -> ::core::ffi::c_uint;
+
 #[derive(Copy, Clone)]
 #[repr(C)]
 pub struct sqlite3_api_routines {
@@ -18,7 +116,7 @@ pub struct sqlite3_api_routines {
             ::core::ffi::c_int,
             *const ::core::ffi::c_void,
             ::core::ffi::c_int,
-            Option<unsafe extern "C" fn(*mut ::core::ffi::c_void) -> ()>,
+            Option<SqliteExtDestructorFn>,
         ) -> ::core::ffi::c_int,
     >,
     pub bind_double: Option<
@@ -71,7 +169,7 @@ pub struct sqlite3_api_routines {
             ::core::ffi::c_int,
             *const ::core::ffi::c_char,
             ::core::ffi::c_int,
-            Option<unsafe extern "C" fn(*mut ::core::ffi::c_void) -> ()>,
+            Option<SqliteExtDestructorFn>,
         ) -> ::core::ffi::c_int,
     >,
     pub bind_text16: Option<
@@ -80,7 +178,7 @@ pub struct sqlite3_api_routines {
             ::core::ffi::c_int,
             *const ::core::ffi::c_void,
             ::core::ffi::c_int,
-            Option<unsafe extern "C" fn(*mut ::core::ffi::c_void) -> ()>,
+            Option<SqliteExtDestructorFn>,
         ) -> ::core::ffi::c_int,
     >,
     pub bind_value: Option<
@@ -282,15 +380,7 @@ pub struct sqlite3_api_routines {
             *const ::core::ffi::c_char,
             ::core::ffi::c_int,
             *mut ::core::ffi::c_void,
-            Option<
-                unsafe extern "C" fn(
-                    *mut ::core::ffi::c_void,
-                    ::core::ffi::c_int,
-                    *const ::core::ffi::c_void,
-                    ::core::ffi::c_int,
-                    *const ::core::ffi::c_void,
-                ) -> ::core::ffi::c_int,
-            >,
+            Option<SqliteExtCollationFn>,
         ) -> ::core::ffi::c_int,
     >,
     pub create_collation16: Option<
@@ -299,65 +389,11 @@ pub struct sqlite3_api_routines {
             *const ::core::ffi::c_void,
             ::core::ffi::c_int,
             *mut ::core::ffi::c_void,
-            Option<
-                unsafe extern "C" fn(
-                    *mut ::core::ffi::c_void,
-                    ::core::ffi::c_int,
-                    *const ::core::ffi::c_void,
-                    ::core::ffi::c_int,
-                    *const ::core::ffi::c_void,
-                ) -> ::core::ffi::c_int,
-            >,
+            Option<SqliteExtCollationFn>,
         ) -> ::core::ffi::c_int,
     >,
-    pub create_function: Option<
-        unsafe extern "C" fn(
-            *mut crate::src::headers::sqliteInt_h::sqlite3,
-            *const ::core::ffi::c_char,
-            ::core::ffi::c_int,
-            ::core::ffi::c_int,
-            *mut ::core::ffi::c_void,
-            Option<
-                unsafe extern "C" fn(
-                    *mut crate::src::headers::vdbeInt_h::sqlite3_context,
-                    ::core::ffi::c_int,
-                    *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
-                ) -> (),
-            >,
-            Option<
-                unsafe extern "C" fn(
-                    *mut crate::src::headers::vdbeInt_h::sqlite3_context,
-                    ::core::ffi::c_int,
-                    *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
-                ) -> (),
-            >,
-            Option<unsafe extern "C" fn(*mut crate::src::headers::vdbeInt_h::sqlite3_context) -> ()>,
-        ) -> ::core::ffi::c_int,
-    >,
-    pub create_function16: Option<
-        unsafe extern "C" fn(
-            *mut crate::src::headers::sqliteInt_h::sqlite3,
-            *const ::core::ffi::c_void,
-            ::core::ffi::c_int,
-            ::core::ffi::c_int,
-            *mut ::core::ffi::c_void,
-            Option<
-                unsafe extern "C" fn(
-                    *mut crate::src::headers::vdbeInt_h::sqlite3_context,
-                    ::core::ffi::c_int,
-                    *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
-                ) -> (),
-            >,
-            Option<
-                unsafe extern "C" fn(
-                    *mut crate::src::headers::vdbeInt_h::sqlite3_context,
-                    ::core::ffi::c_int,
-                    *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
-                ) -> (),
-            >,
-            Option<unsafe extern "C" fn(*mut crate::src::headers::vdbeInt_h::sqlite3_context) -> ()>,
-        ) -> ::core::ffi::c_int,
-    >,
+    pub create_function: Option<SqliteCreateFunctionFn>,
+    pub create_function16: Option<SqliteCreateFunction16Fn>,
     pub create_module: Option<
         unsafe extern "C" fn(
             *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -415,7 +451,7 @@ pub struct sqlite3_api_routines {
             *mut crate::src::headers::sqlite3_h::Sqlite3Stmt,
         ) -> ::core::ffi::c_int,
     >,
-    pub free: Option<unsafe extern "C" fn(*mut ::core::ffi::c_void) -> ()>,
+    pub free: Option<SqliteExtDestructorFn>,
     pub free_table: Option<unsafe extern "C" fn(*mut *mut ::core::ffi::c_char) -> ()>,
     pub get_autocommit: Option<
         unsafe extern "C" fn(*mut crate::src::headers::sqliteInt_h::sqlite3) -> ::core::ffi::c_int,
@@ -516,7 +552,7 @@ pub struct sqlite3_api_routines {
             *mut crate::src::headers::vdbeInt_h::sqlite3_context,
             *const ::core::ffi::c_void,
             ::core::ffi::c_int,
-            Option<unsafe extern "C" fn(*mut ::core::ffi::c_void) -> ()>,
+            Option<SqliteExtDestructorFn>,
         ) -> (),
     >,
     pub result_double: Option<
@@ -552,13 +588,13 @@ pub struct sqlite3_api_routines {
         ) -> (),
     >,
     pub result_null:
-        Option<unsafe extern "C" fn(*mut crate::src::headers::vdbeInt_h::sqlite3_context) -> ()>,
+        Option<SqliteExtFinalFn>,
     pub result_text: Option<
         unsafe extern "C" fn(
             *mut crate::src::headers::vdbeInt_h::sqlite3_context,
             *const ::core::ffi::c_char,
             ::core::ffi::c_int,
-            Option<unsafe extern "C" fn(*mut ::core::ffi::c_void) -> ()>,
+            Option<SqliteExtDestructorFn>,
         ) -> (),
     >,
     pub result_text16: Option<
@@ -566,7 +602,7 @@ pub struct sqlite3_api_routines {
             *mut crate::src::headers::vdbeInt_h::sqlite3_context,
             *const ::core::ffi::c_void,
             ::core::ffi::c_int,
-            Option<unsafe extern "C" fn(*mut ::core::ffi::c_void) -> ()>,
+            Option<SqliteExtDestructorFn>,
         ) -> (),
     >,
     pub result_text16be: Option<
@@ -574,7 +610,7 @@ pub struct sqlite3_api_routines {
             *mut crate::src::headers::vdbeInt_h::sqlite3_context,
             *const ::core::ffi::c_void,
             ::core::ffi::c_int,
-            Option<unsafe extern "C" fn(*mut ::core::ffi::c_void) -> ()>,
+            Option<SqliteExtDestructorFn>,
         ) -> (),
     >,
     pub result_text16le: Option<
@@ -582,7 +618,7 @@ pub struct sqlite3_api_routines {
             *mut crate::src::headers::vdbeInt_h::sqlite3_context,
             *const ::core::ffi::c_void,
             ::core::ffi::c_int,
-            Option<unsafe extern "C" fn(*mut ::core::ffi::c_void) -> ()>,
+            Option<SqliteExtDestructorFn>,
         ) -> (),
     >,
     pub result_value: Option<
@@ -594,23 +630,14 @@ pub struct sqlite3_api_routines {
     pub rollback_hook: Option<
         unsafe extern "C" fn(
             *mut crate::src::headers::sqliteInt_h::sqlite3,
-            Option<unsafe extern "C" fn(*mut ::core::ffi::c_void) -> ()>,
+            Option<SqliteExtDestructorFn>,
             *mut ::core::ffi::c_void,
         ) -> *mut ::core::ffi::c_void,
     >,
     pub set_authorizer: Option<
         unsafe extern "C" fn(
             *mut crate::src::headers::sqliteInt_h::sqlite3,
-            Option<
-                unsafe extern "C" fn(
-                    *mut ::core::ffi::c_void,
-                    ::core::ffi::c_int,
-                    *const ::core::ffi::c_char,
-                    *const ::core::ffi::c_char,
-                    *const ::core::ffi::c_char,
-                    *const ::core::ffi::c_char,
-                ) -> ::core::ffi::c_int,
-            >,
+            Option<SqliteAuthorizerCallbackFn>,
             *mut ::core::ffi::c_void,
         ) -> ::core::ffi::c_int,
     >,
@@ -619,7 +646,7 @@ pub struct sqlite3_api_routines {
             *mut crate::src::headers::vdbeInt_h::sqlite3_context,
             ::core::ffi::c_int,
             *mut ::core::ffi::c_void,
-            Option<unsafe extern "C" fn(*mut ::core::ffi::c_void) -> ()>,
+            Option<SqliteExtDestructorFn>,
         ) -> (),
     >,
     pub xsnprintf: Option<
@@ -668,15 +695,7 @@ pub struct sqlite3_api_routines {
     pub update_hook: Option<
         unsafe extern "C" fn(
             *mut crate::src::headers::sqliteInt_h::sqlite3,
-            Option<
-                unsafe extern "C" fn(
-                    *mut ::core::ffi::c_void,
-                    ::core::ffi::c_int,
-                    *const ::core::ffi::c_char,
-                    *const ::core::ffi::c_char,
-                    crate::src::headers::sqlite3_h::SqliteInt64,
-                ) -> (),
-            >,
+            Option<SqliteUpdateHookCallbackFn>,
             *mut ::core::ffi::c_void,
         ) -> *mut ::core::ffi::c_void,
     >,
@@ -787,7 +806,7 @@ pub struct sqlite3_api_routines {
             *const ::core::ffi::c_char,
             *const crate::src::headers::sqlite3_h::sqlite3_module,
             *mut ::core::ffi::c_void,
-            Option<unsafe extern "C" fn(*mut ::core::ffi::c_void) -> ()>,
+            Option<SqliteExtDestructorFn>,
         ) -> ::core::ffi::c_int,
     >,
     pub bind_zeroblob: Option<
@@ -840,16 +859,8 @@ pub struct sqlite3_api_routines {
             *const ::core::ffi::c_char,
             ::core::ffi::c_int,
             *mut ::core::ffi::c_void,
-            Option<
-                unsafe extern "C" fn(
-                    *mut ::core::ffi::c_void,
-                    ::core::ffi::c_int,
-                    *const ::core::ffi::c_void,
-                    ::core::ffi::c_int,
-                    *const ::core::ffi::c_void,
-                ) -> ::core::ffi::c_int,
-            >,
-            Option<unsafe extern "C" fn(*mut ::core::ffi::c_void) -> ()>,
+            Option<SqliteExtCollationFn>,
+            Option<SqliteExtDestructorFn>,
         ) -> ::core::ffi::c_int,
     >,
     pub file_control: Option<
@@ -887,9 +898,9 @@ pub struct sqlite3_api_routines {
     >,
     pub release_memory: Option<unsafe extern "C" fn(::core::ffi::c_int) -> ::core::ffi::c_int>,
     pub result_error_nomem:
-        Option<unsafe extern "C" fn(*mut crate::src::headers::vdbeInt_h::sqlite3_context) -> ()>,
+        Option<SqliteExtFinalFn>,
     pub result_error_toobig:
-        Option<unsafe extern "C" fn(*mut crate::src::headers::vdbeInt_h::sqlite3_context) -> ()>,
+        Option<SqliteExtFinalFn>,
     pub sleep: Option<unsafe extern "C" fn(::core::ffi::c_int) -> ::core::ffi::c_int>,
     pub soft_heap_limit: Option<unsafe extern "C" fn(::core::ffi::c_int) -> ()>,
     pub vfs_find: Option<
@@ -988,31 +999,7 @@ pub struct sqlite3_api_routines {
         Option<unsafe extern "C" fn(::core::ffi::c_int) -> *const ::core::ffi::c_char>,
     pub compileoption_used:
         Option<unsafe extern "C" fn(*const ::core::ffi::c_char) -> ::core::ffi::c_int>,
-    pub create_function_v2: Option<
-        unsafe extern "C" fn(
-            *mut crate::src::headers::sqliteInt_h::sqlite3,
-            *const ::core::ffi::c_char,
-            ::core::ffi::c_int,
-            ::core::ffi::c_int,
-            *mut ::core::ffi::c_void,
-            Option<
-                unsafe extern "C" fn(
-                    *mut crate::src::headers::vdbeInt_h::sqlite3_context,
-                    ::core::ffi::c_int,
-                    *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
-                ) -> (),
-            >,
-            Option<
-                unsafe extern "C" fn(
-                    *mut crate::src::headers::vdbeInt_h::sqlite3_context,
-                    ::core::ffi::c_int,
-                    *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
-                ) -> (),
-            >,
-            Option<unsafe extern "C" fn(*mut crate::src::headers::vdbeInt_h::sqlite3_context) -> ()>,
-            Option<unsafe extern "C" fn(*mut ::core::ffi::c_void) -> ()>,
-        ) -> ::core::ffi::c_int,
-    >,
+    pub create_function_v2: Option<SqliteCreateFunctionV2Fn>,
     pub db_config: Option<
         unsafe extern "C" fn(
             *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -1188,7 +1175,7 @@ pub struct sqlite3_api_routines {
             ::core::ffi::c_int,
             *const ::core::ffi::c_void,
             crate::src::headers::sqlite3_h::Sqlite3Uint64,
-            Option<unsafe extern "C" fn(*mut ::core::ffi::c_void) -> ()>,
+            Option<SqliteExtDestructorFn>,
         ) -> ::core::ffi::c_int,
     >,
     pub bind_text64: Option<
@@ -1197,7 +1184,7 @@ pub struct sqlite3_api_routines {
             ::core::ffi::c_int,
             *const ::core::ffi::c_char,
             crate::src::headers::sqlite3_h::Sqlite3Uint64,
-            Option<unsafe extern "C" fn(*mut ::core::ffi::c_void) -> ()>,
+            Option<SqliteExtDestructorFn>,
             ::core::ffi::c_uchar,
         ) -> ::core::ffi::c_int,
     >,
@@ -1233,7 +1220,7 @@ pub struct sqlite3_api_routines {
             *mut crate::src::headers::vdbeInt_h::sqlite3_context,
             *const ::core::ffi::c_void,
             crate::src::headers::sqlite3_h::Sqlite3Uint64,
-            Option<unsafe extern "C" fn(*mut ::core::ffi::c_void) -> ()>,
+            Option<SqliteExtDestructorFn>,
         ) -> (),
     >,
     pub result_text64: Option<
@@ -1241,7 +1228,7 @@ pub struct sqlite3_api_routines {
             *mut crate::src::headers::vdbeInt_h::sqlite3_context,
             *const ::core::ffi::c_char,
             crate::src::headers::sqlite3_h::Sqlite3Uint64,
-            Option<unsafe extern "C" fn(*mut ::core::ffi::c_void) -> ()>,
+            Option<SqliteExtDestructorFn>,
             ::core::ffi::c_uchar,
         ) -> (),
     >,
@@ -1307,14 +1294,7 @@ pub struct sqlite3_api_routines {
         unsafe extern "C" fn(
             *mut crate::src::headers::sqliteInt_h::sqlite3,
             ::core::ffi::c_uint,
-            Option<
-                unsafe extern "C" fn(
-                    ::core::ffi::c_uint,
-                    *mut ::core::ffi::c_void,
-                    *mut ::core::ffi::c_void,
-                    *mut ::core::ffi::c_void,
-                ) -> ::core::ffi::c_int,
-            >,
+            Option<SqliteTraceV2CallbackFn>,
             *mut ::core::ffi::c_void,
         ) -> ::core::ffi::c_int,
     >,
@@ -1355,7 +1335,7 @@ pub struct sqlite3_api_routines {
             ::core::ffi::c_int,
             *mut ::core::ffi::c_void,
             *const ::core::ffi::c_char,
-            Option<unsafe extern "C" fn(*mut ::core::ffi::c_void) -> ()>,
+            Option<SqliteExtDestructorFn>,
         ) -> ::core::ffi::c_int,
     >,
     pub result_pointer: Option<
@@ -1363,7 +1343,7 @@ pub struct sqlite3_api_routines {
             *mut crate::src::headers::vdbeInt_h::sqlite3_context,
             *mut ::core::ffi::c_void,
             *const ::core::ffi::c_char,
-            Option<unsafe extern "C" fn(*mut ::core::ffi::c_void) -> ()>,
+            Option<SqliteExtDestructorFn>,
         ) -> (),
     >,
     pub value_pointer: Option<
@@ -1460,32 +1440,7 @@ pub struct sqlite3_api_routines {
             *mut crate::src::headers::sqliteInt_h::sqlite3_str,
         ) -> *mut ::core::ffi::c_char,
     >,
-    pub create_window_function: Option<
-        unsafe extern "C" fn(
-            *mut crate::src::headers::sqliteInt_h::sqlite3,
-            *const ::core::ffi::c_char,
-            ::core::ffi::c_int,
-            ::core::ffi::c_int,
-            *mut ::core::ffi::c_void,
-            Option<
-                unsafe extern "C" fn(
-                    *mut crate::src::headers::vdbeInt_h::sqlite3_context,
-                    ::core::ffi::c_int,
-                    *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
-                ) -> (),
-            >,
-            Option<unsafe extern "C" fn(*mut crate::src::headers::vdbeInt_h::sqlite3_context) -> ()>,
-            Option<unsafe extern "C" fn(*mut crate::src::headers::vdbeInt_h::sqlite3_context) -> ()>,
-            Option<
-                unsafe extern "C" fn(
-                    *mut crate::src::headers::vdbeInt_h::sqlite3_context,
-                    ::core::ffi::c_int,
-                    *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
-                ) -> (),
-            >,
-            Option<unsafe extern "C" fn(*mut ::core::ffi::c_void) -> ()>,
-        ) -> ::core::ffi::c_int,
-    >,
+    pub create_window_function: Option<SqliteCreateWindowFunctionFn>,
     pub normalized_sql: Option<
         unsafe extern "C" fn(
             *mut crate::src::headers::sqlite3_h::Sqlite3Stmt,
@@ -1558,17 +1513,9 @@ pub struct sqlite3_api_routines {
     pub autovacuum_pages: Option<
         unsafe extern "C" fn(
             *mut crate::src::headers::sqliteInt_h::sqlite3,
-            Option<
-                unsafe extern "C" fn(
-                    *mut ::core::ffi::c_void,
-                    *const ::core::ffi::c_char,
-                    ::core::ffi::c_uint,
-                    ::core::ffi::c_uint,
-                    ::core::ffi::c_uint,
-                ) -> ::core::ffi::c_uint,
-            >,
+            Option<SqliteAutovacuumPagesCallbackFn>,
             *mut ::core::ffi::c_void,
-            Option<unsafe extern "C" fn(*mut ::core::ffi::c_void) -> ()>,
+            Option<SqliteExtDestructorFn>,
         ) -> ::core::ffi::c_int,
     >,
     pub error_offset: Option<
@@ -1654,7 +1601,7 @@ pub struct sqlite3_api_routines {
             *mut crate::src::headers::sqliteInt_h::sqlite3,
             *const ::core::ffi::c_char,
             *mut ::core::ffi::c_void,
-            Option<unsafe extern "C" fn(*mut ::core::ffi::c_void) -> ()>,
+            Option<SqliteExtDestructorFn>,
         ) -> ::core::ffi::c_int,
     >,
     pub setlk_timeout: Option<

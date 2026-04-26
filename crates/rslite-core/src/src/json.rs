@@ -1489,7 +1489,7 @@ unsafe extern "C" fn jsonAppendSqlValue(
                         1
                     };
 
-                    let decimal_places = if int_digits < 15 { 15 - int_digits } else { 0 };
+                    let decimal_places = 15_usize.saturating_sub(int_digits);
 
                     let formatted = format!("{:.prec$}", v, prec = decimal_places);
                     formatted

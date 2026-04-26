@@ -11,7 +11,6 @@
 #![allow(clippy::if_same_then_else)]
 #![allow(clippy::cmp_null)]
 #![allow(clippy::ptr_offset_with_cast)]
-#![allow(clippy::type_complexity)]
 #![allow(clippy::useless_transmute)]
 #![allow(clippy::missing_transmute_annotations)]
 #![allow(clippy::manual_c_str_literals)]
@@ -21,12 +20,7 @@
 #![allow(clippy::manual_range_contains)]
 #![allow(clippy::manual_range_patterns)]
 #![allow(clippy::manual_pattern_char_comparison)]
-#![allow(clippy::only_used_in_recursion)]
-#![allow(clippy::module_inception)]
-#![allow(clippy::declare_interior_mutable_const)]
 #![allow(clippy::needless_else)]
-#![allow(clippy::implicit_saturating_sub)]
-#![allow(clippy::neg_multiply)]
 #![allow(clippy::useless_vec)]
 #![allow(clippy::manual_swap)]
 #![allow(clippy::undocumented_unsafe_blocks)]
@@ -662,7 +656,9 @@ pub(crate) mod src {
     pub mod ext {
         #[cfg(feature = "fts3")]
         pub mod fts3 {
-            pub mod fts3;
+            #[path = "fts3.rs"]
+            pub mod core;
+            pub use core as fts3;
             pub mod fts3_aux;
             pub mod fts3_expr;
             pub mod fts3_hash;
@@ -677,7 +673,9 @@ pub(crate) mod src {
             pub mod fts3_write;
         } // mod fts3
         pub mod icu {
-            pub mod icu;
+            #[path = "icu.rs"]
+            pub mod core;
+            pub use core as icu;
         } // mod icu
         pub mod misc {
             pub mod stmt;
@@ -686,7 +684,9 @@ pub(crate) mod src {
             pub mod sqlite3rbu;
         } // mod rbu
         pub mod rtree {
-            pub mod rtree;
+            #[path = "rtree.rs"]
+            pub mod core;
+            pub use core as rtree;
         } // mod rtree
         pub mod session {
             pub mod sqlite3session;
@@ -697,7 +697,8 @@ pub(crate) mod src {
     pub mod opcodes;
     pub mod parse;
     pub mod printf_c_variadic;
-    pub mod src {
+    #[path = "src"]
+    pub mod core {
         pub mod alter;
         pub mod analyze;
         pub mod attach;
@@ -778,7 +779,8 @@ pub(crate) mod src {
         pub mod wherecode;
         pub mod whereexpr;
         pub mod window;
-    } // mod src
+    } // mod core
+    pub use core as src;
 } // mod src
 
 // ── Public API re-exports (stable C API, matching the rslite-raw surface) ────
