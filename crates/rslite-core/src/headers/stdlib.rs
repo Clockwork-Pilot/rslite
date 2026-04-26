@@ -741,7 +741,7 @@ pub const F_SETLK64: ::core::ffi::c_int = 6 as ::core::ffi::c_int;
 pub const __O_NOFOLLOW: ::core::ffi::c_int = 0o400000 as ::core::ffi::c_int;
 
 pub const __O_CLOEXEC: ::core::ffi::c_int = 0o2000000 as ::core::ffi::c_int;
-pub const M_PI: ::core::ffi::c_double = 3.14159265358979323846f64;
+pub const M_PI: ::core::ffi::c_double = 3.141_592_653_589_793_f64;
 pub type C2RustUnnamed1 = ::core::ffi::c_uint;
 
 pub const PTHREAD_MUTEX_TIMED_NP: crate::src::headers::stdlib::C2RustUnnamed1 = 0;

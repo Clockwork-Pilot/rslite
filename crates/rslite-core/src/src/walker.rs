@@ -331,10 +331,10 @@ pub unsafe extern "C" fn sqlite3WalkSelectFrom(
     pWalker: *mut crate::src::headers::sqliteInt_h::Walker,
     p: *mut crate::src::headers::sqliteInt_h::Select,
 ) -> ::core::ffi::c_int {
-    let pSrc: *mut crate::src::headers::sqliteInt_h::SrcList;
+    
     let mut i: ::core::ffi::c_int;
     let mut pItem: *mut crate::src::headers::sqliteInt_h::SrcItem;
-    pSrc = (*p).pSrc;
+    let pSrc: *mut crate::src::headers::sqliteInt_h::SrcList = (*p).pSrc;
     if !pSrc.is_null() {
         i = (*pSrc).nSrc;
         pItem = &raw mut (*pSrc).a as *mut crate::src::headers::sqliteInt_h::SrcItem;

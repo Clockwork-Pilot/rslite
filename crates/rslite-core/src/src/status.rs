@@ -237,8 +237,8 @@ pub unsafe extern "C" fn sqlite3StatusDown(op: ::core::ffi::c_int, N: ::core::ff
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub extern "C" fn sqlite3StatusHighwater(op: ::core::ffi::c_int, X: ::core::ffi::c_int) {
-    let newValue: Sqlite3StatValueType;
-    newValue = X as Sqlite3StatValueType;
+    
+    let newValue: Sqlite3StatValueType = X as Sqlite3StatValueType;
     unsafe {
         if newValue > sqlite3Stat.mxValue[op as usize] {
             sqlite3Stat.mxValue[op as usize] = newValue;
@@ -252,7 +252,7 @@ pub unsafe extern "C" fn sqlite3_status64(
     pHighwater: *mut crate::src::headers::sqlite3_h::Sqlite3Int64,
     resetFlag: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
-    let pMutex: *mut crate::src::src::mutex_unix::sqlite3_mutex;
+    
     if op < 0 as ::core::ffi::c_int
         || op
             >= (::core::mem::size_of::<[Sqlite3StatValueType; 10]>() as usize)
@@ -261,7 +261,7 @@ pub unsafe extern "C" fn sqlite3_status64(
     {
         return crate::src::src::main::sqlite3MisuseError(143 as ::core::ffi::c_int);
     }
-    pMutex = if statMutex[op as usize] as ::core::ffi::c_int != 0 {
+    let pMutex: *mut crate::src::src::mutex_unix::sqlite3_mutex = if statMutex[op as usize] as ::core::ffi::c_int != 0 {
         crate::src::src::pcache1::sqlite3Pcache1Mutex()
     } else {
         crate::src::src::malloc::sqlite3MallocMutex()
@@ -286,8 +286,8 @@ pub unsafe extern "C" fn sqlite3_status(
         0 as crate::src::headers::sqlite3_h::Sqlite3Int64;
     let mut iHwtr: crate::src::headers::sqlite3_h::Sqlite3Int64 =
         0 as crate::src::headers::sqlite3_h::Sqlite3Int64;
-    let rc: ::core::ffi::c_int;
-    rc = sqlite3_status64(op, &raw mut iCur, &raw mut iHwtr, resetFlag);
+    
+    let rc: ::core::ffi::c_int = sqlite3_status64(op, &raw mut iCur, &raw mut iHwtr, resetFlag);
     if rc == 0 as ::core::ffi::c_int {
         *pCurrent = iCur as ::core::ffi::c_int;
         *pHighwater = iHwtr as ::core::ffi::c_int;
@@ -532,9 +532,9 @@ pub unsafe extern "C" fn sqlite3_db_status64(
         crate::src::headers::sqlite3_h::SQLITE_DBSTATUS_TEMPBUF_SPILL => {
             let mut nRet_0: crate::src::ext::rtree::rtree::U64_0 =
                 0 as crate::src::ext::rtree::rtree::U64_0;
-            if !(*(*db).aDb.offset(1 as isize)).pBt.is_null() {
+            if !(*(*db).aDb.offset(1_isize)).pBt.is_null() {
                 let pPager_1: *mut crate::src::src::pager::Pager =
-                    crate::src::src::btree::sqlite3BtreePager((*(*db).aDb.offset(1 as isize)).pBt)
+                    crate::src::src::btree::sqlite3BtreePager((*(*db).aDb.offset(1_isize)).pBt)
                         as *mut crate::src::src::pager::Pager;
                 crate::src::src::pager::sqlite3PagerCacheStat(
                     pPager_1,
@@ -543,7 +543,7 @@ pub unsafe extern "C" fn sqlite3_db_status64(
                     &raw mut nRet_0,
                 );
                 nRet_0 = nRet_0.wrapping_mul(crate::src::src::btree::sqlite3BtreeGetPageSize(
-                    (*(*db).aDb.offset(1 as isize)).pBt,
+                    (*(*db).aDb.offset(1_isize)).pBt,
                 )
                     as crate::src::ext::rtree::rtree::U64_0);
             }
@@ -609,8 +609,8 @@ pub unsafe extern "C" fn sqlite3_db_status(
         0 as crate::src::headers::sqlite3_h::Sqlite3Int64;
     let mut H: crate::src::headers::sqlite3_h::Sqlite3Int64 =
         0 as crate::src::headers::sqlite3_h::Sqlite3Int64;
-    let rc: ::core::ffi::c_int;
-    rc = sqlite3_db_status64(db, op, &raw mut C, &raw mut H, resetFlag);
+    
+    let rc: ::core::ffi::c_int = sqlite3_db_status64(db, op, &raw mut C, &raw mut H, resetFlag);
     if rc == 0 as ::core::ffi::c_int {
         *pCurrent =
             (C & 0x7fffffff as crate::src::headers::sqlite3_h::Sqlite3Int64) as ::core::ffi::c_int;

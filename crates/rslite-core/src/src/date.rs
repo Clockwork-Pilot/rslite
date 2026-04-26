@@ -271,7 +271,7 @@ unsafe extern "C" fn parseTimezone(
     let mut sgn: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
     let mut nHr: ::core::ffi::c_int = 0;
     let mut nMn: ::core::ffi::c_int = 0;
-    let c: ::core::ffi::c_int;
+    
     while *(&raw const crate::src::src::global::sqlite3CtypeMap as *const ::core::ffi::c_uchar)
         .offset(*zDate as ::core::ffi::c_uchar as isize) as ::core::ffi::c_int
         & 0x1 as ::core::ffi::c_int
@@ -280,7 +280,7 @@ unsafe extern "C" fn parseTimezone(
         zDate = zDate.offset(1);
     }
     (*p).tz = 0 as ::core::ffi::c_int;
-    c = *zDate as ::core::ffi::c_int;
+    let c: ::core::ffi::c_int = *zDate as ::core::ffi::c_int;
     if c == '-' as i32 {
         sgn = -(1 as ::core::ffi::c_int);
         current_block = 3512920355445576850;
@@ -308,7 +308,7 @@ unsafe extern "C" fn parseTimezone(
             {
                 return 1 as ::core::ffi::c_int;
             }
-            zDate = zDate.offset(5 as isize);
+            zDate = zDate.offset(5_isize);
             (*p).tz = sgn * (nMn + nHr * 60 as ::core::ffi::c_int);
             if (*p).tz == 0 as ::core::ffi::c_int {
                 (*p).set_isLocal(0 as ::core::ffi::c_uint as ::core::ffi::c_uint);
@@ -343,7 +343,7 @@ unsafe extern "C" fn parseHhMmSs(
     {
         return 1 as ::core::ffi::c_int;
     }
-    zDate = zDate.offset(5 as isize);
+    zDate = zDate.offset(5_isize);
     if *zDate as ::core::ffi::c_int == ':' as i32 {
         zDate = zDate.offset(1);
         if getDigits_args(
@@ -354,10 +354,10 @@ unsafe extern "C" fn parseHhMmSs(
         {
             return 1 as ::core::ffi::c_int;
         }
-        zDate = zDate.offset(2 as isize);
+        zDate = zDate.offset(2_isize);
         if *zDate as ::core::ffi::c_int == '.' as i32
             && *(&raw const crate::src::src::global::sqlite3CtypeMap as *const ::core::ffi::c_uchar)
-                .offset(*zDate.offset(1 as isize) as ::core::ffi::c_uchar as isize)
+                .offset(*zDate.offset(1_isize) as ::core::ffi::c_uchar as isize)
                 as ::core::ffi::c_int
                 & 0x4 as ::core::ffi::c_int
                 != 0
@@ -410,10 +410,10 @@ unsafe extern "C" fn computeJD(p: *mut DateTime) {
     let mut Y: ::core::ffi::c_int;
     let mut M: ::core::ffi::c_int;
     let D: ::core::ffi::c_int;
-    let A: ::core::ffi::c_int;
-    let B: ::core::ffi::c_int;
-    let X1: ::core::ffi::c_int;
-    let X2: ::core::ffi::c_int;
+    
+    
+    
+    
     let __p_ref = { &mut *p };
     if __p_ref.validJD != 0 {
         return;
@@ -438,10 +438,10 @@ unsafe extern "C" fn computeJD(p: *mut DateTime) {
         Y -= 1;
         M += 12 as ::core::ffi::c_int;
     }
-    A = (Y + 4800 as ::core::ffi::c_int) / 100 as ::core::ffi::c_int;
-    B = 38 as ::core::ffi::c_int - A + A / 4 as ::core::ffi::c_int;
-    X1 = 36525 as ::core::ffi::c_int * (Y + 4716 as ::core::ffi::c_int) / 100 as ::core::ffi::c_int;
-    X2 = 306001 as ::core::ffi::c_int * (M + 1 as ::core::ffi::c_int) / 10000 as ::core::ffi::c_int;
+    let A: ::core::ffi::c_int = (Y + 4800 as ::core::ffi::c_int) / 100 as ::core::ffi::c_int;
+    let B: ::core::ffi::c_int = 38 as ::core::ffi::c_int - A + A / 4 as ::core::ffi::c_int;
+    let X1: ::core::ffi::c_int = 36525 as ::core::ffi::c_int * (Y + 4716 as ::core::ffi::c_int) / 100 as ::core::ffi::c_int;
+    let X2: ::core::ffi::c_int = 306001 as ::core::ffi::c_int * (M + 1 as ::core::ffi::c_int) / 10000 as ::core::ffi::c_int;
     __p_ref.iJD = (((X1 + X2 + D + B) as ::core::ffi::c_double - 1524.5f64)
         * 86400000 as ::core::ffi::c_int as ::core::ffi::c_double)
         as crate::src::headers::sqlite3_h::Sqlite3Int64;
@@ -491,7 +491,7 @@ unsafe extern "C" fn parseYyyyMmDd(
     let mut M: ::core::ffi::c_int = 0;
     let mut D: ::core::ffi::c_int = 0;
     let neg: ::core::ffi::c_int;
-    if *zDate.offset(0 as isize) as ::core::ffi::c_int == '-' as i32 {
+    if *zDate.offset(0_isize) as ::core::ffi::c_int == '-' as i32 {
         zDate = zDate.offset(1);
         neg = 1 as ::core::ffi::c_int;
     } else {
@@ -505,7 +505,7 @@ unsafe extern "C" fn parseYyyyMmDd(
     {
         return 1 as ::core::ffi::c_int;
     }
-    zDate = zDate.offset(10 as isize);
+    zDate = zDate.offset(10_isize);
     while *(&raw const crate::src::src::global::sqlite3CtypeMap as *const ::core::ffi::c_uchar)
         .offset(*zDate as ::core::ffi::c_uchar as isize) as ::core::ffi::c_int
         & 0x1 as ::core::ffi::c_int
@@ -515,7 +515,7 @@ unsafe extern "C" fn parseYyyyMmDd(
         zDate = zDate.offset(1);
     }
     let __p_ref = { &mut *p };
-    if !(parseHhMmSs(zDate, p) == 0 as ::core::ffi::c_int) {
+    if (parseHhMmSs(zDate, p) != 0 as ::core::ffi::c_int) {
         if *zDate as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
             __p_ref.validHMS = 0 as ::core::ffi::c_char;
         } else {
@@ -545,10 +545,10 @@ unsafe extern "C" fn setDateTimeToCurrent(
         __p_ref.set_isUtc(1 as ::core::ffi::c_uint as ::core::ffi::c_uint);
         __p_ref.set_isLocal(0 as ::core::ffi::c_uint as ::core::ffi::c_uint);
         clearYMD_HMS_TZ(p);
-        return 0 as ::core::ffi::c_int;
+        0 as ::core::ffi::c_int
     } else {
-        return 1 as ::core::ffi::c_int;
-    };
+        1 as ::core::ffi::c_int
+    }
 }
 
 unsafe extern "C" fn setRawDateNumber(p: *mut DateTime, r: ::core::ffi::c_double) {
@@ -665,18 +665,18 @@ unsafe extern "C" fn computeYMD(p: *mut DateTime) {
 }
 
 unsafe extern "C" fn computeHMS(p: *mut DateTime) {
-    let day_ms: ::core::ffi::c_int;
-    let day_min: ::core::ffi::c_int;
+    
+    
     let __p_ref = { &mut *p };
     if __p_ref.validHMS != 0 {
         return;
     }
     computeJD(p);
-    day_ms = ((__p_ref.iJD + 43200000 as crate::src::headers::sqlite3_h::Sqlite3Int64)
+    let day_ms: ::core::ffi::c_int = ((__p_ref.iJD + 43200000 as crate::src::headers::sqlite3_h::Sqlite3Int64)
         % 86400000 as crate::src::headers::sqlite3_h::Sqlite3Int64)
         as ::core::ffi::c_int;
     __p_ref.s = (day_ms % 60000 as ::core::ffi::c_int) as ::core::ffi::c_double / 1000.0f64;
-    day_min = day_ms / 60000 as ::core::ffi::c_int;
+    let day_min: ::core::ffi::c_int = day_ms / 60000 as ::core::ffi::c_int;
     __p_ref.m = day_min % 60 as ::core::ffi::c_int;
     __p_ref.h = day_min / 60 as ::core::ffi::c_int;
     __p_ref.set_rawS(0 as ::core::ffi::c_uint as ::core::ffi::c_uint);
@@ -699,7 +699,7 @@ unsafe extern "C" fn osLocaltime(
     t: *mut crate::src::headers::stdlib::TimeT,
     pTm: *mut ::libc::tm,
 ) -> ::core::ffi::c_int {
-    let rc: ::core::ffi::c_int;
+    
     if crate::src::src::global::sqlite3Config.bLocaltimeFault != 0 {
         if (&raw const crate::src::src::global::sqlite3Config.xAltLocaltime)
             .read()
@@ -715,7 +715,7 @@ unsafe extern "C" fn osLocaltime(
             return 1 as ::core::ffi::c_int;
         }
     }
-    rc = (::libc::localtime_r(t, pTm as *mut ::libc::tm) as *mut ::libc::tm
+    let rc: ::core::ffi::c_int = (::libc::localtime_r(t, pTm as *mut ::libc::tm) as *mut ::libc::tm
         == ::core::ptr::null_mut::<::libc::tm>()) as ::core::ffi::c_int;
     rc
 }
@@ -868,53 +868,50 @@ unsafe extern "C" fn parseModifier(
     let mut r: ::core::ffi::c_double = 0.;
     let mut current_block_175: u64;
     match *(&raw const crate::src::src::global::sqlite3UpperToLower as *const ::core::ffi::c_uchar)
-        .offset(*z.offset(0 as isize) as crate::src::ext::rtree::rtree::U8_0 as isize)
+        .offset(*z.offset(0_isize) as crate::src::ext::rtree::rtree::U8_0 as isize)
         as ::core::ffi::c_int
     {
-        97 => {
+        97
             if crate::src::src::util::sqlite3_stricmp(
                 z,
                 b"auto\0" as *const u8 as *const ::core::ffi::c_char,
             ) == 0 as ::core::ffi::c_int
-            {
+            => {
                 if idx > 1 as ::core::ffi::c_int {
                     return 1 as ::core::ffi::c_int;
                 }
                 autoAdjustDate(p);
                 rc = 0 as ::core::ffi::c_int;
             }
-        }
-        99 => {
+        99
             if crate::src::src::util::sqlite3_stricmp(
                 z,
                 b"ceiling\0" as *const u8 as *const ::core::ffi::c_char,
             ) == 0 as ::core::ffi::c_int
-            {
+            => {
                 computeJD(p);
                 clearYMD_HMS_TZ(p);
                 rc = 0 as ::core::ffi::c_int;
                 (*p).nFloor = 0 as ::core::ffi::c_char;
             }
-        }
-        102 => {
+        102
             if crate::src::src::util::sqlite3_stricmp(
                 z,
                 b"floor\0" as *const u8 as *const ::core::ffi::c_char,
             ) == 0 as ::core::ffi::c_int
-            {
+            => {
                 computeJD(p);
                 (*p).iJD -= ((*p).nFloor as ::core::ffi::c_int * 86400000 as ::core::ffi::c_int)
                     as crate::src::headers::sqlite3_h::Sqlite3Int64;
                 clearYMD_HMS_TZ(p);
                 rc = 0 as ::core::ffi::c_int;
             }
-        }
-        106 => {
+        106
             if crate::src::src::util::sqlite3_stricmp(
                 z,
                 b"julianday\0" as *const u8 as *const ::core::ffi::c_char,
             ) == 0 as ::core::ffi::c_int
-            {
+            => {
                 if idx > 1 as ::core::ffi::c_int {
                     return 1 as ::core::ffi::c_int;
                 }
@@ -924,14 +921,13 @@ unsafe extern "C" fn parseModifier(
                     (*p).set_rawS(0 as ::core::ffi::c_uint as ::core::ffi::c_uint);
                 }
             }
-        }
-        108 => {
+        108
             if crate::src::src::util::sqlite3_stricmp(
                 z,
                 b"localtime\0" as *const u8 as *const ::core::ffi::c_char,
             ) == 0 as ::core::ffi::c_int
                 && crate::src::src::vdbeaux::sqlite3NotPureFunc(pCtx) != 0
-            {
+            => {
                 let __p_ref = { &mut *p };
                 rc = if __p_ref.isLocal() as ::core::ffi::c_int != 0 {
                     crate::src::headers::sqlite3_h::SQLITE_OK
@@ -941,7 +937,6 @@ unsafe extern "C" fn parseModifier(
                 __p_ref.set_isUtc(0 as ::core::ffi::c_uint as ::core::ffi::c_uint);
                 __p_ref.set_isLocal(1 as ::core::ffi::c_uint as ::core::ffi::c_uint);
             }
-        }
         117 => {
             if crate::src::src::util::sqlite3_stricmp(
                 z,
@@ -968,13 +963,13 @@ unsafe extern "C" fn parseModifier(
                 && crate::src::src::vdbeaux::sqlite3NotPureFunc(pCtx) != 0
             {
                 if (*p).isUtc() as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
-                    let iOrigJD: crate::src::ext::rtree::rtree::I64_0;
+                    
                     let mut iGuess: crate::src::ext::rtree::rtree::I64_0;
                     let mut cnt: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
                     let mut iErr: crate::src::ext::rtree::rtree::I64_0;
                     computeJD(p);
                     let __p_ref = { &mut *p };
-                    iOrigJD = __p_ref.iJD as crate::src::ext::rtree::rtree::I64_0;
+                    let iOrigJD: crate::src::ext::rtree::rtree::I64_0 = __p_ref.iJD as crate::src::ext::rtree::rtree::I64_0;
                     iGuess = iOrigJD;
                     iErr = 0 as crate::src::ext::rtree::rtree::I64_0;
                     loop {
@@ -1009,17 +1004,17 @@ unsafe extern "C" fn parseModifier(
                 rc = crate::src::headers::sqlite3_h::SQLITE_OK;
             }
         }
-        119 => {
+        119
             if crate::src::src::util::sqlite3_strnicmp(
                 z,
                 b"weekday \0" as *const u8 as *const ::core::ffi::c_char,
                 8 as ::core::ffi::c_int,
             ) == 0 as ::core::ffi::c_int
                 && crate::src::src::util::sqlite3AtoF(
-                    z.offset(8 as isize) as *const ::core::ffi::c_char,
+                    z.offset(8_isize) as *const ::core::ffi::c_char,
                     &raw mut r,
                     crate::src::src::util::sqlite3Strlen30(
-                        z.offset(8 as isize) as *const ::core::ffi::c_char
+                        z.offset(8_isize) as *const ::core::ffi::c_char
                     ),
                     crate::src::headers::sqlite3_h::SQLITE_UTF8
                         as crate::src::ext::rtree::rtree::U8_0,
@@ -1030,7 +1025,7 @@ unsafe extern "C" fn parseModifier(
                     n = r as ::core::ffi::c_int;
                     n as ::core::ffi::c_double == r
                 }
-            {
+            => {
                 let mut Z: crate::src::headers::sqlite3_h::Sqlite3Int64;
                 computeYMD_HMS(p);
                 let __p_ref = { &mut *p };
@@ -1048,7 +1043,6 @@ unsafe extern "C" fn parseModifier(
                 clearYMD_HMS_TZ(p);
                 rc = 0 as ::core::ffi::c_int;
             }
-        }
         115 => {
             let __p_ref = { &mut *p };
             if crate::src::src::util::sqlite3_strnicmp(
@@ -1070,7 +1064,7 @@ unsafe extern "C" fn parseModifier(
                     rc = 0 as ::core::ffi::c_int;
                 }
             } else if !(__p_ref.validJD == 0 && __p_ref.validYMD == 0 && __p_ref.validHMS == 0) {
-                z = z.offset(9 as isize);
+                z = z.offset(9_isize);
                 computeYMD(p);
                 __p_ref.validHMS = 1 as ::core::ffi::c_char;
                 __p_ref.m = 0 as ::core::ffi::c_int;
@@ -1113,7 +1107,7 @@ unsafe extern "C" fn parseModifier(
             let mut m: ::core::ffi::c_int = 0;
             let mut x: ::core::ffi::c_int;
             let mut z2: *const ::core::ffi::c_char = z;
-            let z0: ::core::ffi::c_char = *z.offset(0 as isize);
+            let z0: ::core::ffi::c_char = *z.offset(0_isize);
             n = 1 as ::core::ffi::c_int;
             while *z.offset(n as isize) != 0 {
                 if *z.offset(n as isize) as ::core::ffi::c_int == ':' as i32 {
@@ -1131,7 +1125,7 @@ unsafe extern "C" fn parseModifier(
                 if *z.offset(n as isize) as ::core::ffi::c_int == '-' as i32 {
                     if n == 5 as ::core::ffi::c_int
                         && getDigits_args(
-                            z.offset(1 as isize) as *const ::core::ffi::c_char,
+                            z.offset(1_isize) as *const ::core::ffi::c_char,
                             b"40f\0" as *const u8 as *const ::core::ffi::c_char,
                             &[&raw mut Y],
                         ) == 1 as ::core::ffi::c_int
@@ -1140,7 +1134,7 @@ unsafe extern "C" fn parseModifier(
                     }
                     if n == 6 as ::core::ffi::c_int
                         && getDigits_args(
-                            z.offset(1 as isize) as *const ::core::ffi::c_char,
+                            z.offset(1_isize) as *const ::core::ffi::c_char,
                             b"50f\0" as *const u8 as *const ::core::ffi::c_char,
                             &[&raw mut Y],
                         ) == 1 as ::core::ffi::c_int
@@ -1150,12 +1144,12 @@ unsafe extern "C" fn parseModifier(
                 }
                 n += 1;
             }
-            if !(crate::src::src::util::sqlite3AtoF(
+            if (crate::src::src::util::sqlite3AtoF(
                 z,
                 &raw mut r,
                 n,
                 crate::src::headers::sqlite3_h::SQLITE_UTF8 as crate::src::ext::rtree::rtree::U8_0,
-            ) <= 0 as ::core::ffi::c_int)
+            ) > 0 as ::core::ffi::c_int)
             {
                 if *z.offset(n as isize) as ::core::ffi::c_int == '-' as i32 {
                     if z0 as ::core::ffi::c_int != '+' as i32
@@ -1165,7 +1159,7 @@ unsafe extern "C" fn parseModifier(
                     } else {
                         if n == 5 as ::core::ffi::c_int {
                             if getDigits_args(
-                                z.offset(1 as isize) as *const ::core::ffi::c_char,
+                                z.offset(1_isize) as *const ::core::ffi::c_char,
                                 b"40f-20a-20d\0" as *const u8 as *const ::core::ffi::c_char,
                                 &[&raw mut Y, &raw mut M, &raw mut D],
                             ) != 3 as ::core::ffi::c_int
@@ -1175,7 +1169,7 @@ unsafe extern "C" fn parseModifier(
                                 current_block_175 = 3024367268842933116;
                             }
                         } else if getDigits_args(
-                            z.offset(1 as isize) as *const ::core::ffi::c_char,
+                            z.offset(1_isize) as *const ::core::ffi::c_char,
                             b"50f-20a-20d\0" as *const u8 as *const ::core::ffi::c_char,
                             &[&raw mut Y, &raw mut M, &raw mut D],
                         ) != 3 as ::core::ffi::c_int
@@ -1220,7 +1214,7 @@ unsafe extern "C" fn parseModifier(
                                     __p_ref.iJD += (D as crate::src::ext::rtree::rtree::I64_0
                                         * 86400000 as crate::src::ext::rtree::rtree::I64_0)
                                         as crate::src::headers::sqlite3_h::SqliteInt64;
-                                    if *z.offset(11 as isize) as ::core::ffi::c_int
+                                    if *z.offset(11_isize) as ::core::ffi::c_int
                                         == 0 as ::core::ffi::c_int
                                     {
                                         rc = 0 as ::core::ffi::c_int;
@@ -1228,18 +1222,18 @@ unsafe extern "C" fn parseModifier(
                                     } else if *(&raw const crate::src::src::global::sqlite3CtypeMap
                                         as *const ::core::ffi::c_uchar)
                                         .offset(
-                                            *z.offset(11 as isize) as ::core::ffi::c_uchar as isize
+                                            *z.offset(11_isize) as ::core::ffi::c_uchar as isize
                                         )
                                         as ::core::ffi::c_int
                                         & 0x1 as ::core::ffi::c_int
                                         != 0
                                         && getDigits_args(
-                                            z.offset(12 as isize) as *const ::core::ffi::c_char,
+                                            z.offset(12_isize) as *const ::core::ffi::c_char,
                                             b"20c:20e\0" as *const u8 as *const ::core::ffi::c_char,
                                             &[&raw mut h, &raw mut m],
                                         ) == 2 as ::core::ffi::c_int
                                     {
-                                        z2 = z.offset(12 as isize) as *const ::core::ffi::c_char;
+                                        z2 = z.offset(12_isize) as *const ::core::ffi::c_char;
                                         n = 2 as ::core::ffi::c_int;
                                         current_block_175 = 6897179874198677617;
                                     } else {
@@ -1267,7 +1261,7 @@ unsafe extern "C" fn parseModifier(
                             {
                                 z2 = z2.offset(1);
                             }
-                            if !(parseHhMmSs(z2, &raw mut tx) != 0) {
+                            if (parseHhMmSs(z2, &raw mut tx) == 0) {
                                 computeJD(&raw mut tx);
                                 tx.iJD -= 43200000 as crate::src::headers::sqlite3_h::Sqlite3Int64;
                                 day = tx.iJD
@@ -1400,7 +1394,7 @@ unsafe extern "C" fn isDate(
     let mut i: ::core::ffi::c_int;
     let mut n: ::core::ffi::c_int;
     let mut z: *const ::core::ffi::c_uchar;
-    let eType: ::core::ffi::c_int;
+    
     ::libc::memset(
         p as *mut ::core::ffi::c_void,
         0 as ::core::ffi::c_int,
@@ -1412,16 +1406,16 @@ unsafe extern "C" fn isDate(
         }
         return setDateTimeToCurrent(context, p);
     }
-    eType = crate::src::src::vdbeapi::sqlite3_value_type(*argv.offset(0 as isize));
+    let eType: ::core::ffi::c_int = crate::src::src::vdbeapi::sqlite3_value_type(*argv.offset(0_isize));
     if eType == crate::src::headers::sqlite3_h::SQLITE_FLOAT
         || eType == crate::src::headers::sqlite3_h::SQLITE_INTEGER
     {
         setRawDateNumber(
             p,
-            crate::src::src::vdbeapi::sqlite3_value_double(*argv.offset(0 as isize)),
+            crate::src::src::vdbeapi::sqlite3_value_double(*argv.offset(0_isize)),
         );
     } else {
-        z = crate::src::src::vdbeapi::sqlite3_value_text(*argv.offset(0 as isize));
+        z = crate::src::src::vdbeapi::sqlite3_value_text(*argv.offset(0_isize));
         if z.is_null() || parseDateOrTime(context, z as *mut ::core::ffi::c_char, p) != 0 {
             return 1 as ::core::ffi::c_int;
         }
@@ -1633,7 +1627,7 @@ unsafe extern "C" fn datetimeFunc(
         } else {
             crate::src::src::vdbeapi::sqlite3_result_text(
                 context,
-                (&raw mut zBuf as *mut ::core::ffi::c_char).offset(1 as isize)
+                (&raw mut zBuf as *mut ::core::ffi::c_char).offset(1_isize)
                     as *mut ::core::ffi::c_char,
                 n - 1 as ::core::ffi::c_int,
                 ::core::mem::transmute::<
@@ -1791,7 +1785,7 @@ unsafe extern "C" fn dateFunc(
         } else {
             crate::src::src::vdbeapi::sqlite3_result_text(
                 context,
-                (&raw mut zBuf as *mut ::core::ffi::c_char).offset(1 as isize)
+                (&raw mut zBuf as *mut ::core::ffi::c_char).offset(1_isize)
                     as *mut ::core::ffi::c_char,
                 10 as ::core::ffi::c_int,
                 ::core::mem::transmute::<
@@ -1848,8 +1842,8 @@ unsafe extern "C" fn strftimeFunc(
     };
     let mut i: crate::__stddef_size_t_h::SizeT;
     let mut j: crate::__stddef_size_t_h::SizeT;
-    let db: *mut crate::src::headers::sqliteInt_h::sqlite3;
-    let zFmt: *const ::core::ffi::c_char;
+    
+    
     let mut sRes: crate::src::headers::sqliteInt_h::sqlite3_str =
         crate::src::headers::sqliteInt_h::sqlite3_str {
             db: ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::sqlite3>(),
@@ -1863,19 +1857,19 @@ unsafe extern "C" fn strftimeFunc(
     if argc == 0 as ::core::ffi::c_int {
         return;
     }
-    zFmt = crate::src::src::vdbeapi::sqlite3_value_text(*argv.offset(0 as isize))
+    let zFmt: *const ::core::ffi::c_char = crate::src::src::vdbeapi::sqlite3_value_text(*argv.offset(0_isize))
         as *const ::core::ffi::c_char;
     if zFmt.is_null()
         || isDate(
             context,
             argc - 1 as ::core::ffi::c_int,
-            argv.offset(1 as isize),
+            argv.offset(1_isize),
             &raw mut x,
         ) != 0
     {
         return;
     }
-    db = crate::src::src::vdbeapi::sqlite3_context_db_handle(context)
+    let db: *mut crate::src::headers::sqliteInt_h::sqlite3 = crate::src::src::vdbeapi::sqlite3_context_db_handle(context)
         as *mut crate::src::headers::sqliteInt_h::sqlite3;
     crate::src::src::printf::sqlite3StrAccumInit(
         &raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
@@ -1891,7 +1885,7 @@ unsafe extern "C" fn strftimeFunc(
     i = j;
     while *zFmt.offset(i as isize) != 0 {
         let cf: ::core::ffi::c_char;
-        if !(*zFmt.offset(i as isize) as ::core::ffi::c_int != '%' as i32) {
+        if (*zFmt.offset(i as isize) as ::core::ffi::c_int == '%' as i32) {
             if j < i {
                 crate::src::src::printf::sqlite3_str_append(
                     &raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
@@ -2289,7 +2283,7 @@ unsafe extern "C" fn timediffFunc(
     if isDate(
         context,
         1 as ::core::ffi::c_int,
-        argv.offset(0 as isize) as *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
+        argv.offset(0_isize) as *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
         &raw mut d1,
     ) != 0
     {
@@ -2298,7 +2292,7 @@ unsafe extern "C" fn timediffFunc(
     if isDate(
         context,
         1 as ::core::ffi::c_int,
-        argv.offset(1 as isize) as *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
+        argv.offset(1_isize) as *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
         &raw mut d2,
     ) != 0
     {

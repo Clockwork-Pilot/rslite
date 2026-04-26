@@ -63,7 +63,7 @@ pub unsafe extern "C" fn sqlite3HashClear(pH: *mut crate::src::src::hash::Hash) 
 
 unsafe extern "C" fn strHash(mut z: *const ::core::ffi::c_char) -> ::core::ffi::c_uint {
     let mut h: ::core::ffi::c_uint = 0 as ::core::ffi::c_uint;
-    while *z.offset(0 as isize) != 0 {
+    while *z.offset(0_isize) != 0 {
         let fresh0 = z;
         z = z.offset(1);
         h = h.wrapping_add(
@@ -118,7 +118,7 @@ unsafe extern "C" fn rehash(
     pH: *mut crate::src::src::hash::Hash,
     mut new_size: ::core::ffi::c_uint,
 ) -> ::core::ffi::c_int {
-    let new_ht: *mut crate::src::src::hash::_ht;
+    
     let mut elem: *mut crate::src::src::hash::HashElem;
     let mut next_elem: *mut crate::src::src::hash::HashElem;
     if (new_size as usize)
@@ -134,7 +134,7 @@ unsafe extern "C" fn rehash(
         return 0 as ::core::ffi::c_int;
     }
     crate::src::src::fault::sqlite3BeginBenignMalloc();
-    new_ht = crate::src::src::malloc::sqlite3Malloc(
+    let new_ht: *mut crate::src::src::hash::_ht = crate::src::src::malloc::sqlite3Malloc(
         (new_size as usize)
             .wrapping_mul(::core::mem::size_of::<crate::src::src::hash::_ht>() as usize)
             as crate::src::ext::rtree::rtree::U64_0,
@@ -179,7 +179,7 @@ unsafe extern "C" fn findElementWithHash(
 ) -> *mut crate::src::src::hash::HashElem {
     let mut elem: *mut crate::src::src::hash::HashElem;
     let mut count: ::core::ffi::c_uint;
-    let h: ::core::ffi::c_uint;
+    
     static mut nullElement: crate::src::src::hash::HashElem = crate::src::src::hash::HashElem {
         next: ::core::ptr::null::<crate::src::src::hash::HashElem>()
             as *mut crate::src::src::hash::HashElem,
@@ -189,10 +189,10 @@ unsafe extern "C" fn findElementWithHash(
         pKey: ::core::ptr::null::<::core::ffi::c_char>(),
         h: 0 as ::core::ffi::c_uint,
     };
-    h = strHash(pKey);
+    let h: ::core::ffi::c_uint = strHash(pKey);
     if !(*pH).ht.is_null() {
-        let pEntry: *mut crate::src::src::hash::_ht;
-        pEntry = (*pH).ht.offset(h.wrapping_rem((*pH).htsize) as isize)
+        
+        let pEntry: *mut crate::src::src::hash::_ht = (*pH).ht.offset(h.wrapping_rem((*pH).htsize) as isize)
             as *mut crate::src::src::hash::_ht as *mut crate::src::src::hash::_ht;
         elem = (*pEntry).chain;
         count = (*pEntry).count;
@@ -261,9 +261,9 @@ pub unsafe extern "C" fn sqlite3HashInsert(
     data: *mut ::core::ffi::c_void,
 ) -> *mut ::core::ffi::c_void {
     let mut h: ::core::ffi::c_uint = 0;
-    let elem: *mut crate::src::src::hash::HashElem;
-    let new_elem: *mut crate::src::src::hash::HashElem;
-    elem = findElementWithHash(pH, pKey, &raw mut h);
+    
+    
+    let elem: *mut crate::src::src::hash::HashElem = findElementWithHash(pH, pKey, &raw mut h);
     if !(*elem).data.is_null() {
         let old_data: *mut ::core::ffi::c_void = (*elem).data;
         if data.is_null() {
@@ -277,7 +277,7 @@ pub unsafe extern "C" fn sqlite3HashInsert(
     if data.is_null() {
         return ::core::ptr::null_mut::<::core::ffi::c_void>();
     }
-    new_elem = crate::src::src::malloc::sqlite3Malloc(::core::mem::size_of::<
+    let new_elem: *mut crate::src::src::hash::HashElem = crate::src::src::malloc::sqlite3Malloc(::core::mem::size_of::<
         crate::src::src::hash::HashElem,
     >()
         as crate::src::ext::rtree::rtree::U64_0)

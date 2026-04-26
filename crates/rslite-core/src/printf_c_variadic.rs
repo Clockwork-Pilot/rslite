@@ -50,10 +50,10 @@ pub unsafe extern "C" fn rs_vtab_config_dispatch(
     args: *const u64,
 ) -> ::core::ffi::c_int {
     let mut rc: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_OK;
-    let p: *mut crate::src::src::vtab::VtabCtx;
+    
     let __db_ref = unsafe { &*db };
     crate::src::src::mutex::sqlite3_mutex_enter(__db_ref.mutex);
-    p = __db_ref.pVtabCtx;
+    let p: *mut crate::src::src::vtab::VtabCtx = __db_ref.pVtabCtx;
     if p.is_null() {
         rc = crate::src::src::main::sqlite3MisuseError(1346 as ::core::ffi::c_int);
     } else {
@@ -124,11 +124,11 @@ pub unsafe fn sqlite3ErrorMsg_args(
     zFormat: *const ::core::ffi::c_char,
     args: &[crate::src::src::printf::PrintfArg],
 ) {
-    let zMsg: *mut ::core::ffi::c_char;
+    
     let db: *mut crate::src::headers::sqliteInt_h::sqlite3 = (*pParse).db;
     let __db_ref = &mut *db;
     __db_ref.errByteOffset = -(2 as ::core::ffi::c_int);
-    zMsg = crate::src::src::printf::sqlite3VMPrintf_args(db, zFormat, args);
+    let zMsg: *mut ::core::ffi::c_char = crate::src::src::printf::sqlite3VMPrintf_args(db, zFormat, args);
     if __db_ref.errByteOffset < -(1 as ::core::ffi::c_int) {
         __db_ref.errByteOffset = -(1 as ::core::ffi::c_int);
     }
@@ -501,7 +501,7 @@ pub unsafe extern "C" fn rs_db_config_dispatch(
 
     match cfg {
         SqliteDbConfig::MAINDBNAME => {
-            let ref mut fresh0 = (*(*db).aDb.offset(0 as isize)).zDbSName;
+            let fresh0 = &mut (*(*db).aDb.offset(0_isize)).zDbSName;
             *fresh0 = *args.offset(0) as usize as *mut ::core::ffi::c_char;
             rc = crate::src::headers::sqlite3_h::SQLITE_OK;
         }
@@ -726,7 +726,7 @@ pub unsafe extern "C" fn rs_test_control_dispatch(
         TestControlOp::PrngSeed(mut x, db) => {
             let y: ::core::ffi::c_int;
             if !db.is_null() && {
-                y = (*(*(*db).aDb.offset(0 as isize)).pSchema).schema_cookie;
+                y = (*(*(*db).aDb.offset(0_isize)).pSchema).schema_cookie;
                 y != 0 as ::core::ffi::c_int
             } {
                 x = y;

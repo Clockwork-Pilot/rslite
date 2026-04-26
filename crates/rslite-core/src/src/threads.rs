@@ -28,10 +28,10 @@ pub unsafe extern "C" fn sqlite3ThreadCreate(
     xTask: Option<unsafe extern "C" fn(*mut ::core::ffi::c_void) -> *mut ::core::ffi::c_void>,
     pIn: *mut ::core::ffi::c_void,
 ) -> ::core::ffi::c_int {
-    let p: *mut SQLiteThread;
+    
     let rc: ::core::ffi::c_int;
     *ppThread = ::core::ptr::null_mut::<SQLiteThread>();
-    p = crate::src::src::malloc::sqlite3Malloc(
+    let p: *mut SQLiteThread = crate::src::src::malloc::sqlite3Malloc(
         ::core::mem::size_of::<SQLiteThread>() as crate::src::ext::rtree::rtree::U64_0
     ) as *mut SQLiteThread;
     if p.is_null() {

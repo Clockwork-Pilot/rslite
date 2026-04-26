@@ -68,8 +68,8 @@ unsafe extern "C" fn stmtConnect(
     mut _pzErr: *mut *mut ::core::ffi::c_char,
 ) -> ::core::ffi::c_int {
     let pNew: *mut stmt_vtab;
-    let rc: ::core::ffi::c_int;
-    rc = crate::src::src::vtab::sqlite3_declare_vtab(
+    
+    let rc: ::core::ffi::c_int = crate::src::src::vtab::sqlite3_declare_vtab(
         db,
         b"CREATE TABLE x(sql,ncol,ro,busy,nscan,nsort,naidx,nstep,reprep,run,mem)\0" as *const u8
             as *const ::core::ffi::c_char,
@@ -125,8 +125,8 @@ unsafe extern "C" fn stmtOpen(
     p: *mut crate::src::headers::sqlite3_h::sqlite3_vtab,
     ppCursor: *mut *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
 ) -> ::core::ffi::c_int {
-    let pCur: *mut stmt_cursor;
-    pCur = crate::src::src::malloc::sqlite3_malloc64(
+    
+    let pCur: *mut stmt_cursor = crate::src::src::malloc::sqlite3_malloc64(
         ::core::mem::size_of::<stmt_cursor>() as crate::src::headers::sqlite3_h::Sqlite3Uint64
     ) as *mut stmt_cursor;
     if pCur.is_null() {
@@ -252,7 +252,7 @@ unsafe extern "C" fn stmtFilter(
         );
         let __pNew_ref = { &mut *pNew };
         if !zSql.is_null() {
-            __pNew_ref.zSql = pNew.offset(1 as isize) as *mut StmtRow as *mut ::core::ffi::c_char;
+            __pNew_ref.zSql = pNew.offset(1_isize) as *mut StmtRow as *mut ::core::ffi::c_char;
             ::core::ptr::copy_nonoverlapping(
                 zSql as *const u8,
                 __pNew_ref.zSql as *mut u8,
@@ -417,8 +417,8 @@ static mut stmtModule: crate::src::headers::sqlite3_h::sqlite3_module = {
 pub unsafe extern "C" fn sqlite3StmtVtabInit(
     db: *mut crate::src::headers::sqliteInt_h::sqlite3,
 ) -> ::core::ffi::c_int {
-    let rc: ::core::ffi::c_int;
-    rc = crate::src::src::vtab::sqlite3_create_module(
+    
+    let rc: ::core::ffi::c_int = crate::src::src::vtab::sqlite3_create_module(
         db,
         b"sqlite_stmt\0" as *const u8 as *const ::core::ffi::c_char,
         &raw mut stmtModule as *mut _ as *const crate::src::headers::sqlite3_h::sqlite3_module,

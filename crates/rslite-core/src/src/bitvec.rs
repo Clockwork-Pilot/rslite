@@ -150,7 +150,7 @@ pub const BITVEC_SZ: ::core::ffi::c_int = 512 as ::core::ffi::c_int;
 
 pub const BITVEC_USIZE: usize = (BITVEC_SZ as usize)
     .wrapping_sub(
-        (3 as usize)
+        3_usize
             .wrapping_mul(::core::mem::size_of::<crate::src::ext::rtree::rtree::U32_0>() as usize),
     )
     .wrapping_div(::core::mem::size_of::<*mut Bitvec>() as usize)
@@ -166,7 +166,7 @@ pub const BITVEC_NBIT: usize = BITVEC_NELEM.wrapping_mul(BITVEC_SZELEM as usize)
 pub const BITVEC_NINT: usize = BITVEC_USIZE
     .wrapping_div(::core::mem::size_of::<crate::src::ext::rtree::rtree::U32_0>() as usize);
 
-pub const BITVEC_MXHASH: usize = BITVEC_NINT.wrapping_div(2 as usize);
+pub const BITVEC_MXHASH: usize = BITVEC_NINT.wrapping_div(2_usize);
 
 
 pub const BITVEC_NPTR: crate::src::ext::rtree::rtree::U32_0 = BITVEC_USIZE
@@ -176,8 +176,8 @@ pub const BITVEC_NPTR: crate::src::ext::rtree::rtree::U32_0 = BITVEC_USIZE
 pub unsafe extern "C" fn sqlite3BitvecCreate(
     iSize: crate::src::ext::rtree::rtree::U32_0,
 ) -> *mut Bitvec {
-    let p: *mut Bitvec;
-    p = crate::src::src::malloc::sqlite3MallocZero(
+    
+    let p: *mut Bitvec = crate::src::src::malloc::sqlite3MallocZero(
         ::core::mem::size_of::<Bitvec>() as crate::src::ext::rtree::rtree::U64_0
     ) as *mut Bitvec;
     if !p.is_null() {
@@ -204,14 +204,14 @@ pub unsafe extern "C" fn sqlite3BitvecTestNotNull(
         }
     }
     if (*p).iSize as usize <= BITVEC_NBIT {
-        return ((*p).u.aBitmap
+        ((*p).u.aBitmap
             [i.wrapping_div(BITVEC_SZELEM as crate::src::ext::rtree::rtree::U32_0) as usize]
             as ::core::ffi::c_int
             & (1 as ::core::ffi::c_int)
                 << (i
                     & (BITVEC_SZELEM - 1 as ::core::ffi::c_int)
                         as crate::src::ext::rtree::rtree::U32_0)
-            != 0 as ::core::ffi::c_int) as ::core::ffi::c_int;
+            != 0 as ::core::ffi::c_int) as ::core::ffi::c_int
     } else {
         let fresh0 = i;
         i = i.wrapping_add(1);
@@ -225,8 +225,8 @@ pub unsafe extern "C" fn sqlite3BitvecTestNotNull(
             h = (h.wrapping_add(1 as crate::src::ext::rtree::rtree::U32_0) as usize)
                 .wrapping_rem(BITVEC_NINT) as crate::src::ext::rtree::rtree::U32_0;
         }
-        return 0 as ::core::ffi::c_int;
-    };
+        0 as ::core::ffi::c_int
+    }
 }
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
@@ -277,7 +277,7 @@ pub unsafe extern "C" fn sqlite3BitvecSet(
     h = (fresh1.wrapping_mul(1 as crate::src::ext::rtree::rtree::U32_0) as usize)
         .wrapping_rem(BITVEC_NINT) as crate::src::ext::rtree::rtree::U32_0;
     if (*p).u.aHash[h as usize] == 0 {
-        if ((*p).nSet as usize) < BITVEC_NINT.wrapping_sub(1 as usize) {
+        if ((*p).nSet as usize) < BITVEC_NINT.wrapping_sub(1_usize) {
             current_block = 5096924339591931197;
         } else {
             current_block = 810581434665164779;
@@ -291,15 +291,15 @@ pub unsafe extern "C" fn sqlite3BitvecSet(
             if h as usize >= BITVEC_NINT {
                 h = 0 as crate::src::ext::rtree::rtree::U32_0;
             }
-            if !((*p).u.aHash[h as usize] != 0) {
+            if ((*p).u.aHash[h as usize] == 0) {
                 break;
             }
         }
         current_block = 810581434665164779;
     }
     match current_block {
-        810581434665164779 => {
-            if (*p).nSet as usize >= BITVEC_MXHASH {
+        810581434665164779
+            if (*p).nSet as usize >= BITVEC_MXHASH => {
                 let mut j: ::core::ffi::c_uint;
                 let mut rc: ::core::ffi::c_int;
                 let aiValues: *mut crate::src::ext::rtree::rtree::U32_0 =
@@ -351,7 +351,6 @@ pub unsafe extern "C" fn sqlite3BitvecSet(
                     return rc;
                 }
             }
-        }
         _ => {}
     }
     (*p).nSet = (*p).nSet.wrapping_add(1);
@@ -467,7 +466,7 @@ pub unsafe extern "C" fn sqlite3BitvecBuiltinTest(
     let mut nx: ::core::ffi::c_int;
     let mut pc: ::core::ffi::c_int;
     let mut op: ::core::ffi::c_int;
-    let pTmpSpace: *mut ::core::ffi::c_void;
+    
     if sz <= 0 as ::core::ffi::c_int {
         pBitvec = sqlite3BitvecCreate(
             (2 as crate::src::ext::rtree::rtree::U32_0)
@@ -484,7 +483,7 @@ pub unsafe extern "C" fn sqlite3BitvecBuiltinTest(
                 as crate::src::ext::rtree::rtree::U64_0,
         ) as *mut ::core::ffi::c_uchar;
     }
-    pTmpSpace = crate::src::src::malloc::sqlite3_malloc64(
+    let pTmpSpace: *mut ::core::ffi::c_void = crate::src::src::malloc::sqlite3_malloc64(
         BITVEC_SZ as crate::src::headers::sqlite3_h::Sqlite3Uint64,
     );
     if !(pBitvec.is_null() || pTmpSpace.is_null() || pV.is_null() && sz > 0 as ::core::ffi::c_int) {
@@ -501,7 +500,7 @@ pub unsafe extern "C" fn sqlite3BitvecBuiltinTest(
         pc = i;
         loop {
             op = *aOp.offset(pc as isize);
-            if !(op != 0 as ::core::ffi::c_int) {
+            if (op == 0 as ::core::ffi::c_int) {
                 current_block = 3275366147856559585;
                 break;
             }
@@ -524,7 +523,7 @@ pub unsafe extern "C" fn sqlite3BitvecBuiltinTest(
                         );
                     }
                 }
-                let ref mut fresh2 = *aOp.offset((pc + 1 as ::core::ffi::c_int) as isize);
+                let fresh2 = &mut *aOp.offset((pc + 1 as ::core::ffi::c_int) as isize);
                 *fresh2 -= 1;
                 if *fresh2 > 0 as ::core::ffi::c_int {
                     nx = 0 as ::core::ffi::c_int;
@@ -533,7 +532,7 @@ pub unsafe extern "C" fn sqlite3BitvecBuiltinTest(
                 i = (i & 0x7fffffff as ::core::ffi::c_int) % sz;
                 if op & 1 as ::core::ffi::c_int != 0 as ::core::ffi::c_int {
                     if !pV.is_null() {
-                        let ref mut fresh3 = *pV.offset(
+                        let fresh3 = &mut *pV.offset(
                             (i + 1 as ::core::ffi::c_int >> 3 as ::core::ffi::c_int) as isize,
                         );
                         *fresh3 = (*fresh3 as ::core::ffi::c_int
@@ -541,7 +540,7 @@ pub unsafe extern "C" fn sqlite3BitvecBuiltinTest(
                                 << (i + 1 as ::core::ffi::c_int & 7 as ::core::ffi::c_int))
                             as ::core::ffi::c_uchar;
                     }
-                    if !(op != 5 as ::core::ffi::c_int) {
+                    if (op == 5 as ::core::ffi::c_int) {
                         continue;
                     }
                     if sqlite3BitvecSet(
@@ -554,7 +553,7 @@ pub unsafe extern "C" fn sqlite3BitvecBuiltinTest(
                     }
                 } else {
                     if !pV.is_null() {
-                        let ref mut fresh4 = *pV.offset(
+                        let fresh4 = &mut *pV.offset(
                             (i + 1 as ::core::ffi::c_int >> 3 as ::core::ffi::c_int) as isize,
                         );
                         *fresh4 = (*fresh4 as ::core::ffi::c_int

@@ -20,7 +20,7 @@ pub use crate::src::src::mutex_unix::sqlite3_mutex;
 pub use crate::src::src::mutex_unix::sqlite3DefaultMutex;
 pub use crate::src::src::mutex_unix::sqlite3MemoryBarrier;
 pub unsafe extern "C" fn sqlite3MutexInit() -> ::core::ffi::c_int {
-    let rc: ::core::ffi::c_int;
+    
     if (&raw const crate::src::src::global::sqlite3Config.mutex.xMutexAlloc)
         .read()
         .is_none()
@@ -47,7 +47,7 @@ pub unsafe extern "C" fn sqlite3MutexInit() -> ::core::ffi::c_int {
         crate::src::src::mutex_unix::sqlite3MemoryBarrier();
         __pTo_ref.xMutexAlloc = (*pFrom).xMutexAlloc;
     }
-    rc = crate::src::src::global::sqlite3Config
+    let rc: ::core::ffi::c_int = crate::src::src::global::sqlite3Config
         .mutex
         .xMutexInit
         .expect("non-null function pointer")();

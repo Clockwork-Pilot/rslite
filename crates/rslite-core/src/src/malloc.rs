@@ -198,15 +198,15 @@ pub unsafe extern "C" fn sqlite3_memory_alarm(
 pub unsafe extern "C" fn sqlite3_soft_heap_limit64(
     mut n: crate::src::headers::sqlite3_h::Sqlite3Int64,
 ) -> crate::src::headers::sqlite3_h::Sqlite3Int64 {
-    let priorLimit: crate::src::headers::sqlite3_h::Sqlite3Int64;
-    let excess: crate::src::headers::sqlite3_h::Sqlite3Int64;
-    let nUsed: crate::src::headers::sqlite3_h::Sqlite3Int64;
+    
+    
+    
     let rc: ::core::ffi::c_int = crate::src::src::main::sqlite3_initialize();
     if rc != 0 {
         return -(1 as ::core::ffi::c_int) as crate::src::headers::sqlite3_h::Sqlite3Int64;
     }
     crate::src::src::mutex::sqlite3_mutex_enter(mem0.mutex);
-    priorLimit = mem0.alarmThreshold;
+    let priorLimit: crate::src::headers::sqlite3_h::Sqlite3Int64 = mem0.alarmThreshold;
     if n < 0 as crate::src::headers::sqlite3_h::Sqlite3Int64 {
         crate::src::src::mutex::sqlite3_mutex_leave(mem0.mutex);
         return priorLimit;
@@ -217,7 +217,7 @@ pub unsafe extern "C" fn sqlite3_soft_heap_limit64(
         n = mem0.hardLimit;
     }
     mem0.alarmThreshold = n;
-    nUsed = crate::src::src::status::sqlite3StatusValue(
+    let nUsed: crate::src::headers::sqlite3_h::Sqlite3Int64 = crate::src::src::status::sqlite3StatusValue(
         crate::src::headers::sqlite3_h::SQLITE_STATUS_MEMORY_USED,
     );
     (*((&raw mut mem0.nearlyFull) as *mut std::sync::atomic::AtomicI32)).store(
@@ -226,7 +226,7 @@ pub unsafe extern "C" fn sqlite3_soft_heap_limit64(
         std::sync::atomic::Ordering::Relaxed,
     );
     crate::src::src::mutex::sqlite3_mutex_leave(mem0.mutex);
-    excess = sqlite3_memory_used() - n;
+    let excess: crate::src::headers::sqlite3_h::Sqlite3Int64 = sqlite3_memory_used() - n;
     if excess > 0 as crate::src::headers::sqlite3_h::Sqlite3Int64 {
         sqlite3_release_memory(
             (excess & 0x7fffffff as crate::src::headers::sqlite3_h::Sqlite3Int64)
@@ -246,13 +246,13 @@ pub unsafe extern "C" fn sqlite3_soft_heap_limit(mut n: ::core::ffi::c_int) {
 pub unsafe extern "C" fn sqlite3_hard_heap_limit64(
     n: crate::src::headers::sqlite3_h::Sqlite3Int64,
 ) -> crate::src::headers::sqlite3_h::Sqlite3Int64 {
-    let priorLimit: crate::src::headers::sqlite3_h::Sqlite3Int64;
+    
     let rc: ::core::ffi::c_int = crate::src::src::main::sqlite3_initialize();
     if rc != 0 {
         return -(1 as ::core::ffi::c_int) as crate::src::headers::sqlite3_h::Sqlite3Int64;
     }
     crate::src::src::mutex::sqlite3_mutex_enter(mem0.mutex);
-    priorLimit = mem0.hardLimit;
+    let priorLimit: crate::src::headers::sqlite3_h::Sqlite3Int64 = mem0.hardLimit;
     if n >= 0 as crate::src::headers::sqlite3_h::Sqlite3Int64 {
         mem0.hardLimit = n;
         if n < mem0.alarmThreshold
@@ -267,7 +267,7 @@ pub unsafe extern "C" fn sqlite3_hard_heap_limit64(
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3MallocInit() -> ::core::ffi::c_int {
-    let rc: ::core::ffi::c_int;
+    
     if (&raw const crate::src::src::global::sqlite3Config.m.xMalloc)
         .read()
         .is_none()
@@ -285,7 +285,7 @@ pub unsafe extern "C" fn sqlite3MallocInit() -> ::core::ffi::c_int {
             ::core::ptr::null_mut::<::core::ffi::c_void>();
         crate::src::src::global::sqlite3Config.szPage = 0 as ::core::ffi::c_int;
     }
-    rc = crate::src::src::global::sqlite3Config
+    let rc: ::core::ffi::c_int = crate::src::src::global::sqlite3Config
         .m
         .xInit
         .expect("non-null function pointer")(
@@ -365,7 +365,7 @@ unsafe extern "C" fn mallocWithAlarm(
     n: ::core::ffi::c_int,
     pp: *mut *mut ::core::ffi::c_void,
 ) {
-    let p: *mut ::core::ffi::c_void;
+    
     let mut nFull: ::core::ffi::c_int;
     nFull = crate::src::src::global::sqlite3Config
         .m
@@ -403,7 +403,7 @@ unsafe extern "C" fn mallocWithAlarm(
             );
         }
     }
-    p = crate::src::src::global::sqlite3Config
+    let p: *mut ::core::ffi::c_void = crate::src::src::global::sqlite3Config
         .m
         .xMalloc
         .expect("non-null function pointer")(nFull);
@@ -652,7 +652,7 @@ pub unsafe extern "C" fn sqlite3Realloc(
     pOld: *mut ::core::ffi::c_void,
     nBytes: crate::src::ext::rtree::rtree::U64_0,
 ) -> *mut ::core::ffi::c_void {
-    let nOld: ::core::ffi::c_int;
+    
     let mut nNew: ::core::ffi::c_int;
     let nDiff: ::core::ffi::c_int;
     let pNew: *mut ::core::ffi::c_void;
@@ -666,7 +666,7 @@ pub unsafe extern "C" fn sqlite3Realloc(
     if nBytes >= 0x7fffff00 as crate::src::ext::rtree::rtree::U64_0 {
         return ::core::ptr::null_mut::<::core::ffi::c_void>();
     }
-    nOld = sqlite3MallocSize(pOld);
+    let nOld: ::core::ffi::c_int = sqlite3MallocSize(pOld);
     nNew = crate::src::src::global::sqlite3Config
         .m
         .xRoundup
@@ -759,8 +759,8 @@ pub unsafe extern "C" fn sqlite3DbMallocZero(
     db: *mut crate::src::headers::sqliteInt_h::sqlite3,
     n: crate::src::ext::rtree::rtree::U64_0,
 ) -> *mut ::core::ffi::c_void {
-    let p: *mut ::core::ffi::c_void;
-    p = sqlite3DbMallocRaw(db, n);
+    
+    let p: *mut ::core::ffi::c_void = sqlite3DbMallocRaw(db, n);
     if !p.is_null() {
         ::libc::memset(
             p,
@@ -775,8 +775,8 @@ unsafe extern "C" fn dbMallocRawFinish(
     db: *mut crate::src::headers::sqliteInt_h::sqlite3,
     n: crate::src::ext::rtree::rtree::U64_0,
 ) -> *mut ::core::ffi::c_void {
-    let p: *mut ::core::ffi::c_void;
-    p = sqlite3Malloc(n);
+    
+    let p: *mut ::core::ffi::c_void = sqlite3Malloc(n);
     if p.is_null() {
         sqlite3OomFault(db);
     }
@@ -788,11 +788,11 @@ pub unsafe extern "C" fn sqlite3DbMallocRaw(
     db: *mut crate::src::headers::sqliteInt_h::sqlite3,
     n: crate::src::ext::rtree::rtree::U64_0,
 ) -> *mut ::core::ffi::c_void {
-    let p: *mut ::core::ffi::c_void;
+    
     if !db.is_null() {
         return sqlite3DbMallocRawNN(db, n);
     }
-    p = sqlite3Malloc(n);
+    let p: *mut ::core::ffi::c_void = sqlite3Malloc(n);
     p
 }
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
@@ -919,8 +919,8 @@ pub unsafe extern "C" fn sqlite3DbReallocOrFree(
     p: *mut ::core::ffi::c_void,
     n: crate::src::ext::rtree::rtree::U64_0,
 ) -> *mut ::core::ffi::c_void {
-    let pNew: *mut ::core::ffi::c_void;
-    pNew = sqlite3DbRealloc(db, p, n);
+    
+    let pNew: *mut ::core::ffi::c_void = sqlite3DbRealloc(db, p, n);
     if pNew.is_null() {
         sqlite3DbFree(db, p);
     }
@@ -932,13 +932,13 @@ pub unsafe extern "C" fn sqlite3DbStrDup(
     db: *mut crate::src::headers::sqliteInt_h::sqlite3,
     z: *const ::core::ffi::c_char,
 ) -> *mut ::core::ffi::c_char {
-    let zNew: *mut ::core::ffi::c_char;
-    let n: crate::__stddef_size_t_h::SizeT;
+    
+    
     if z.is_null() {
         return ::core::ptr::null_mut::<::core::ffi::c_char>();
     }
-    n = ::libc::strlen(z).wrapping_add(1 as crate::__stddef_size_t_h::SizeT);
-    zNew = sqlite3DbMallocRaw(db, n as crate::src::ext::rtree::rtree::U64_0)
+    let n: crate::__stddef_size_t_h::SizeT = ::libc::strlen(z).wrapping_add(1 as crate::__stddef_size_t_h::SizeT);
+    let zNew: *mut ::core::ffi::c_char = sqlite3DbMallocRaw(db, n as crate::src::ext::rtree::rtree::U64_0)
         as *mut ::core::ffi::c_char;
     if !zNew.is_null() {
         ::core::ptr::copy_nonoverlapping(z as *const u8, zNew as *mut u8, (n) as usize);
@@ -952,8 +952,8 @@ pub unsafe extern "C" fn sqlite3DbStrNDup(
     z: *const ::core::ffi::c_char,
     n: crate::src::ext::rtree::rtree::U64_0,
 ) -> *mut ::core::ffi::c_char {
-    let zNew: *mut ::core::ffi::c_char;
-    zNew = (if !z.is_null() {
+    
+    let zNew: *mut ::core::ffi::c_char = (if !z.is_null() {
         sqlite3DbMallocRawNN(
             db,
             n.wrapping_add(1 as crate::src::ext::rtree::rtree::U64_0),
@@ -976,7 +976,7 @@ pub unsafe extern "C" fn sqlite3DbSpanDup(
 ) -> *mut ::core::ffi::c_char {
     let mut n: ::core::ffi::c_int;
     while *(&raw const crate::src::src::global::sqlite3CtypeMap as *const ::core::ffi::c_uchar)
-        .offset(*zStart.offset(0 as isize) as ::core::ffi::c_uchar as isize)
+        .offset(*zStart.offset(0_isize) as ::core::ffi::c_uchar as isize)
         as ::core::ffi::c_int
         & 0x1 as ::core::ffi::c_int
         != 0

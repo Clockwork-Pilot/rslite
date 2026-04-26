@@ -505,7 +505,7 @@ unsafe extern "C" fn printfTempBuf(
     pAccum: *mut crate::src::headers::sqliteInt_h::sqlite3_str,
     n: crate::src::headers::sqlite3_h::Sqlite3Int64,
 ) -> *mut ::core::ffi::c_char {
-    let z: *mut ::core::ffi::c_char;
+    
     let __pAccum_ref = unsafe { &*pAccum };
     if __pAccum_ref.accError != 0 {
         return ::core::ptr::null_mut::<::core::ffi::c_char>();
@@ -519,7 +519,7 @@ unsafe extern "C" fn printfTempBuf(
         );
         return ::core::ptr::null_mut::<::core::ffi::c_char>();
     }
-    z = crate::src::src::malloc::sqlite3DbMallocRaw(
+    let z: *mut ::core::ffi::c_char = crate::src::src::malloc::sqlite3DbMallocRaw(
         __pAccum_ref.db as *mut crate::src::headers::sqliteInt_h::sqlite3,
         n as crate::src::ext::rtree::rtree::U64_0,
     ) as *mut ::core::ffi::c_char;
@@ -544,24 +544,24 @@ pub unsafe extern "C" fn sqlite3RecordErrorByteOffset(
     db: *mut crate::src::headers::sqliteInt_h::sqlite3,
     z: *const ::core::ffi::c_char,
 ) {
-    let pParse: *const crate::src::headers::sqliteInt_h::Parse;
-    let zText: *const ::core::ffi::c_char;
-    let zEnd: *const ::core::ffi::c_char;
+    
+    
+    
     if db.is_null() {
         return;
     }
     if (*db).errByteOffset != -(2 as ::core::ffi::c_int) {
         return;
     }
-    pParse = (*db).pParse;
+    let pParse: *const crate::src::headers::sqliteInt_h::Parse = (*db).pParse;
     if pParse.is_null() {
         return;
     }
-    zText = (*pParse).zTail;
+    let zText: *const ::core::ffi::c_char = (*pParse).zTail;
     if zText.is_null() {
         return;
     }
-    zEnd = zText.offset((::libc::strlen
+    let zEnd: *const ::core::ffi::c_char = zText.offset((::libc::strlen
         as unsafe extern "C" fn(*const ::core::ffi::c_char) -> crate::__stddef_size_t_h::SizeT)(
         zText,
     ) as isize) as *const ::core::ffi::c_char;
@@ -661,9 +661,8 @@ pub unsafe extern "C" fn sqlite3StrAccumEnlarge(
             ) as *mut ::core::ffi::c_char;
         }
         if !zNew.is_null() {
-            if !(__p_ref.printfFlags as ::core::ffi::c_int
-                & crate::src::headers::sqliteInt_h::SQLITE_PRINTF_MALLOCED
-                != 0 as ::core::ffi::c_int)
+            if (__p_ref.printfFlags as ::core::ffi::c_int
+                & crate::src::headers::sqliteInt_h::SQLITE_PRINTF_MALLOCED == 0 as ::core::ffi::c_int)
                 && __p_ref.nChar > 0 as crate::src::ext::rtree::rtree::U32_0
             {
                 ::core::ptr::copy_nonoverlapping(
@@ -713,7 +712,7 @@ pub unsafe extern "C" fn sqlite3_str_appendchar(
     loop {
         let fresh38 = N;
         N -= 1;
-        if !(fresh38 > 0 as ::core::ffi::c_int) {
+        if (fresh38 <= 0 as ::core::ffi::c_int) {
             break;
         }
         let __p_ref = unsafe { &mut *p };
@@ -1361,9 +1360,9 @@ pub unsafe fn unpack_printf_args(
 unsafe extern "C" fn strAccumFinishRealloc(
     p: *mut crate::src::headers::sqliteInt_h::StrAccum,
 ) -> *mut ::core::ffi::c_char {
-    let zText: *mut ::core::ffi::c_char;
+    
     let __p_ref = unsafe { &mut *p };
-    zText = crate::src::src::malloc::sqlite3DbMallocRaw(
+    let zText: *mut ::core::ffi::c_char = crate::src::src::malloc::sqlite3DbMallocRaw(
         __p_ref.db as *mut crate::src::headers::sqliteInt_h::sqlite3,
         (1 as crate::src::ext::rtree::rtree::U64_0)
             .wrapping_add(__p_ref.nChar as crate::src::ext::rtree::rtree::U64_0),
@@ -1396,9 +1395,8 @@ pub unsafe extern "C" fn sqlite3StrAccumFinish(
         let __p_ref = unsafe { &mut *p };
         *__p_ref.zText.offset(__p_ref.nChar as isize) = 0 as ::core::ffi::c_char;
         if __p_ref.mxAlloc > 0 as crate::src::ext::rtree::rtree::U32_0
-            && !(__p_ref.printfFlags as ::core::ffi::c_int
-                & crate::src::headers::sqliteInt_h::SQLITE_PRINTF_MALLOCED
-                != 0 as ::core::ffi::c_int)
+            && (__p_ref.printfFlags as ::core::ffi::c_int
+                & crate::src::headers::sqliteInt_h::SQLITE_PRINTF_MALLOCED == 0 as ::core::ffi::c_int)
         {
             return strAccumFinishRealloc(p);
         }
@@ -1701,7 +1699,7 @@ pub unsafe extern "C" fn sqlite3RCStrNew(
         return ::core::ptr::null_mut::<::core::ffi::c_char>();
     }
     (*p).nRCRef = 1 as crate::src::ext::rtree::rtree::U64_0;
-    p.offset(1 as isize) as *mut crate::src::headers::sqliteInt_h::RCStr as *mut ::core::ffi::c_char
+    p.offset(1_isize) as *mut crate::src::headers::sqliteInt_h::RCStr as *mut ::core::ffi::c_char
 }
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
@@ -1711,9 +1709,9 @@ pub unsafe extern "C" fn sqlite3RCStrResize(
 ) -> *mut ::core::ffi::c_char {
     let mut p: *mut crate::src::headers::sqliteInt_h::RCStr =
         z as *mut crate::src::headers::sqliteInt_h::RCStr;
-    let pNew: *mut crate::src::headers::sqliteInt_h::RCStr;
+    
     p = p.offset(-1);
-    pNew = crate::src::src::malloc::sqlite3_realloc64(
+    let pNew: *mut crate::src::headers::sqliteInt_h::RCStr = crate::src::src::malloc::sqlite3_realloc64(
         p as *mut ::core::ffi::c_void,
         (N as crate::src::headers::sqlite3_h::Sqlite3Uint64)
             .wrapping_add(
@@ -1724,11 +1722,11 @@ pub unsafe extern "C" fn sqlite3RCStrResize(
     ) as *mut crate::src::headers::sqliteInt_h::RCStr;
     if pNew.is_null() {
         crate::src::src::malloc::sqlite3_free(p as *mut ::core::ffi::c_void);
-        return ::core::ptr::null_mut::<::core::ffi::c_char>();
+        ::core::ptr::null_mut::<::core::ffi::c_char>()
     } else {
-        return pNew.offset(1 as isize) as *mut crate::src::headers::sqliteInt_h::RCStr
-            as *mut ::core::ffi::c_char;
-    };
+        pNew.offset(1_isize) as *mut crate::src::headers::sqliteInt_h::RCStr
+            as *mut ::core::ffi::c_char
+    }
 }
 
 pub unsafe fn sqlite3_str_vappendf2<T: PrintfArgs>(
@@ -1943,7 +1941,7 @@ pub unsafe fn sqlite3_str_vappendf2<T: PrintfArgs>(
                     (&raw const fmtinfo as *const et_info).offset(idx as isize) as *const et_info;
                 xtype = (*infop).type_0;
             } else {
-                infop = (&raw const fmtinfo as *const et_info).offset(0 as isize) as *const et_info;
+                infop = (&raw const fmtinfo as *const et_info).offset(0_isize) as *const et_info;
                 xtype = etINVALID as EtByte;
             }
             match xtype as ::core::ffi::c_int {
@@ -2009,7 +2007,7 @@ pub unsafe fn sqlite3_str_vappendf2<T: PrintfArgs>(
                             length = crate::src::src::util::sqlite3Strlen30(bufpt);
                             current_block = 11068715555910905014;
                         } else if flag_zeropad != 0 {
-                            *s.z.offset(0 as isize) = '9' as i32 as ::core::ffi::c_char;
+                            *s.z.offset(0_isize) = '9' as i32 as ::core::ffi::c_char;
                             s.iDP = 1000 as ::core::ffi::c_int;
                             s.n = 1 as ::core::ffi::c_int;
                             current_block = 12252098823794565961;
@@ -2017,10 +2015,10 @@ pub unsafe fn sqlite3_str_vappendf2<T: PrintfArgs>(
                             ::core::ptr::copy_nonoverlapping(
                                 b"-Inf\0" as *const u8 as *const ::core::ffi::c_char,
                                 &raw mut buf as *mut ::core::ffi::c_char,
-                                5 as usize,
+                                5_usize,
                             );
                             bufpt = &raw mut buf as *mut ::core::ffi::c_char;
-                            if !(s.sign as ::core::ffi::c_int == '-' as i32) {
+                            if (s.sign as ::core::ffi::c_int != '-' as i32) {
                                 if flag_prefix != 0 {
                                     buf[0 as ::core::ffi::c_int as usize] =
                                         flag_prefix as ::core::ffi::c_char;
@@ -2155,7 +2153,7 @@ pub unsafe fn sqlite3_str_vappendf2<T: PrintfArgs>(
                             loop {
                                 let fresh7 = precision;
                                 precision -= 1;
-                                if !(fresh7 > 0 as ::core::ffi::c_int) {
+                                if (fresh7 <= 0 as ::core::ffi::c_int) {
                                     break;
                                 }
                                 let fresh9 = bufpt;
@@ -2243,7 +2241,7 @@ pub unsafe fn sqlite3_str_vappendf2<T: PrintfArgs>(
                                 loop {
                                     let fresh17 = nPad;
                                     nPad -= 1;
-                                    if !(fresh17 != 0) {
+                                    if (fresh17 == 0) {
                                         break;
                                     }
                                     let fresh18 = i;
@@ -2285,7 +2283,7 @@ pub unsafe fn sqlite3_str_vappendf2<T: PrintfArgs>(
                             buf[0 as ::core::ffi::c_int as usize] = c as ::core::ffi::c_char;
                             if c & 0xc0 as ::core::ffi::c_int == 0xc0 as ::core::ffi::c_int {
                                 while length < 4 as ::core::ffi::c_int
-                                    && *bufpt.offset(0 as isize) as ::core::ffi::c_int
+                                    && *bufpt.offset(0_isize) as ::core::ffi::c_int
                                         & 0xc0 as ::core::ffi::c_int
                                         == 0x80 as ::core::ffi::c_int
                                 {
@@ -2325,7 +2323,7 @@ pub unsafe fn sqlite3_str_vappendf2<T: PrintfArgs>(
                         );
                         precision -= 1;
                         while precision > 1 as ::core::ffi::c_int {
-                            let nCopyBytes: crate::src::ext::rtree::rtree::I64_0;
+                            
                             if nPrior
                                 > (precision - 1 as ::core::ffi::c_int)
                                     as crate::src::ext::rtree::rtree::I64_0
@@ -2333,7 +2331,7 @@ pub unsafe fn sqlite3_str_vappendf2<T: PrintfArgs>(
                                 nPrior = (precision - 1 as ::core::ffi::c_int)
                                     as crate::src::ext::rtree::rtree::I64_0;
                             }
-                            nCopyBytes = length as crate::src::ext::rtree::rtree::I64_0 * nPrior;
+                            let nCopyBytes: crate::src::ext::rtree::rtree::I64_0 = length as crate::src::ext::rtree::rtree::I64_0 * nPrior;
                             let __pAccum_ref = unsafe { &mut *pAccum };
                             if nCopyBytes
                                 + __pAccum_ref.nChar as crate::src::ext::rtree::rtree::I64_0
@@ -2415,7 +2413,7 @@ pub unsafe fn sqlite3_str_vappendf2<T: PrintfArgs>(
                                         let fresh22 = precision;
                                         precision -= 1;
                                         if !(fresh22 > 0 as ::core::ffi::c_int
-                                            && *z.offset(0 as isize) as ::core::ffi::c_int != 0)
+                                            && *z.offset(0_isize) as ::core::ffi::c_int != 0)
                                         {
                                             break;
                                         }
@@ -2552,7 +2550,7 @@ pub unsafe fn sqlite3_str_vappendf2<T: PrintfArgs>(
                             ::core::ptr::copy_nonoverlapping(
                                 b"unistr('\0" as *const u8 as *const ::core::ffi::c_char,
                                 bufpt.offset(j_0 as isize) as *mut ::core::ffi::c_char,
-                                8 as usize,
+                                8_usize,
                             );
                             j_0 += 8 as crate::src::ext::rtree::rtree::I64_0;
                         } else {
@@ -2653,10 +2651,9 @@ pub unsafe fn sqlite3_str_vappendf2<T: PrintfArgs>(
                         let pExpr: *mut crate::src::headers::sqliteInt_h::Expr =
                             cursor.get_expr();
                         if !pExpr.is_null()
-                            && !((*pExpr).flags
+                            && ((*pExpr).flags
                                 & 0x800 as ::core::ffi::c_int
-                                    as crate::src::ext::rtree::rtree::U32_0
-                                != 0 as crate::src::ext::rtree::rtree::U32_0)
+                                    as crate::src::ext::rtree::rtree::U32_0 == 0 as crate::src::ext::rtree::rtree::U32_0)
                         {
                             sqlite3_str_appendall(
                                 pAccum,
@@ -2682,14 +2679,14 @@ pub unsafe fn sqlite3_str_vappendf2<T: PrintfArgs>(
                     current_block = 11068715555910905014;
                 }
                 etSRCITEM => {
-                    let pItem: *mut crate::src::headers::sqliteInt_h::SrcItem;
+                    
                     if (*pAccum).printfFlags as ::core::ffi::c_int
                         & crate::src::headers::sqliteInt_h::SQLITE_PRINTF_INTERNAL
                         == 0 as ::core::ffi::c_int
                     {
                         return;
                     }
-                    pItem = cursor.get_srcitem();
+                    let pItem: *mut crate::src::headers::sqliteInt_h::SrcItem = cursor.get_srcitem();
                     if !(*pItem).zAlias.is_null() && flag_altform2 == 0 {
                         sqlite3_str_appendall(pAccum, (*pItem).zAlias);
                     } else if !(*pItem).zName.is_null() {
@@ -2865,7 +2862,7 @@ pub unsafe fn sqlite3_str_vappendf2<T: PrintfArgs>(
                         );
                         longvalue = longvalue
                             .wrapping_div(base as crate::src::headers::sqlite3_h::SqliteUint64);
-                        if !(longvalue > 0 as crate::src::headers::sqlite3_h::SqliteUint64) {
+                        if (longvalue <= 0 as crate::src::headers::sqlite3_h::SqliteUint64) {
                             break;
                         }
                     }
@@ -2912,7 +2909,7 @@ pub unsafe fn sqlite3_str_vappendf2<T: PrintfArgs>(
                             as *const ::core::ffi::c_char;
                         loop {
                             x_0 = *pre;
-                            if !(x_0 as ::core::ffi::c_int != 0 as ::core::ffi::c_int) {
+                            if (x_0 as ::core::ffi::c_int == 0 as ::core::ffi::c_int) {
                                 break;
                             }
                             bufpt = bufpt.offset(-1);

@@ -41,7 +41,7 @@ unsafe extern "C" fn chacha_block(
     ::core::ptr::copy_nonoverlapping(
         in_0 as *const u8,
         &raw mut x as *mut crate::src::ext::rtree::rtree::U32_0 as *mut u8,
-        64 as usize,
+        64_usize,
     );
     i = 0 as ::core::ffi::c_int;
     while i < 10 as ::core::ffi::c_int {
@@ -283,11 +283,11 @@ pub unsafe extern "C" fn sqlite3_randomness(
     pBuf: *mut ::core::ffi::c_void,
 ) {
     let mut zBuf: *mut ::core::ffi::c_uchar = pBuf as *mut ::core::ffi::c_uchar;
-    let mutex: *mut crate::src::src::mutex_unix::sqlite3_mutex;
+    
     if crate::src::src::main::sqlite3_initialize() != 0 {
         return;
     }
-    mutex = crate::src::src::mutex::sqlite3MutexAlloc(
+    let mutex: *mut crate::src::src::mutex_unix::sqlite3_mutex = crate::src::src::mutex::sqlite3MutexAlloc(
         crate::src::headers::sqlite3_h::SQLITE_MUTEX_STATIC_PRNG,
     );
     crate::src::src::mutex::sqlite3_mutex_enter(mutex);
@@ -309,14 +309,14 @@ pub unsafe extern "C" fn sqlite3_randomness(
         ];
         ::core::ptr::copy_nonoverlapping(
             &raw const chacha20_init as *const crate::src::ext::rtree::rtree::U32_0 as *const u8,
-            (&raw mut sqlite3Prng.s as *mut crate::src::ext::rtree::rtree::U32_0).offset(0 as isize)
+            (&raw mut sqlite3Prng.s as *mut crate::src::ext::rtree::rtree::U32_0).offset(0_isize)
                 as *mut crate::src::ext::rtree::rtree::U32_0 as *mut u8,
-            16 as usize,
+            16_usize,
         );
         if pVfs.is_null() {
             ::libc::memset(
                 (&raw mut sqlite3Prng.s as *mut crate::src::ext::rtree::rtree::U32_0)
-                    .offset(4 as isize) as *mut crate::src::ext::rtree::rtree::U32_0
+                    .offset(4_isize) as *mut crate::src::ext::rtree::rtree::U32_0
                     as *mut ::core::ffi::c_void,
                 0 as ::core::ffi::c_int,
                 44 as crate::__stddef_size_t_h::SizeT,
@@ -326,7 +326,7 @@ pub unsafe extern "C" fn sqlite3_randomness(
                 pVfs as *mut crate::src::headers::sqlite3_h::sqlite3_vfs,
                 44 as ::core::ffi::c_int,
                 (&raw mut sqlite3Prng.s as *mut crate::src::ext::rtree::rtree::U32_0)
-                    .offset(4 as isize) as *mut crate::src::ext::rtree::rtree::U32_0
+                    .offset(4_isize) as *mut crate::src::ext::rtree::rtree::U32_0
                     as *mut ::core::ffi::c_char,
             );
         }

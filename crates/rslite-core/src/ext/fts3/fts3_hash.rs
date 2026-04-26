@@ -135,7 +135,7 @@ unsafe extern "C" fn fts3BinHash(
     loop {
         let fresh0 = nKey;
         nKey -= 1;
-        if !(fresh0 > 0 as ::core::ffi::c_int) {
+        if (fresh0 <= 0 as ::core::ffi::c_int) {
             break;
         }
         let fresh1 = z;
@@ -163,22 +163,22 @@ unsafe extern "C" fn ftsHashFunction(
     unsafe extern "C" fn(*const ::core::ffi::c_void, ::core::ffi::c_int) -> ::core::ffi::c_int,
 > {
     if keyClass == crate::src::ext::fts3::fts3_hash::FTS3_HASH_STRING {
-        return Some(
+        Some(
             fts3StrHash
                 as unsafe extern "C" fn(
                     *const ::core::ffi::c_void,
                     ::core::ffi::c_int,
                 ) -> ::core::ffi::c_int,
-        );
+        )
     } else {
-        return Some(
+        Some(
             fts3BinHash
                 as unsafe extern "C" fn(
                     *const ::core::ffi::c_void,
                     ::core::ffi::c_int,
                 ) -> ::core::ffi::c_int,
-        );
-    };
+        )
+    }
 }
 
 unsafe extern "C" fn ftsCompareFunction(
@@ -192,7 +192,7 @@ unsafe extern "C" fn ftsCompareFunction(
     ) -> ::core::ffi::c_int,
 > {
     if keyClass == crate::src::ext::fts3::fts3_hash::FTS3_HASH_STRING {
-        return Some(
+        Some(
             fts3StrCompare
                 as unsafe extern "C" fn(
                     *const ::core::ffi::c_void,
@@ -200,9 +200,9 @@ unsafe extern "C" fn ftsCompareFunction(
                     *const ::core::ffi::c_void,
                     ::core::ffi::c_int,
                 ) -> ::core::ffi::c_int,
-        );
+        )
     } else {
-        return Some(
+        Some(
             fts3BinCompare
                 as unsafe extern "C" fn(
                     *const ::core::ffi::c_void,
@@ -210,8 +210,8 @@ unsafe extern "C" fn ftsCompareFunction(
                     *const ::core::ffi::c_void,
                     ::core::ffi::c_int,
                 ) -> ::core::ffi::c_int,
-        );
-    };
+        )
+    }
 }
 
 unsafe extern "C" fn fts3HashInsertElement(
@@ -219,9 +219,9 @@ unsafe extern "C" fn fts3HashInsertElement(
     pEntry: *mut crate::src::ext::fts3::fts3_hash::_fts3ht,
     pNew: *mut crate::src::ext::fts3::fts3_hash::Fts3HashElem,
 ) {
-    let pHead: *mut crate::src::ext::fts3::fts3_hash::Fts3HashElem;
+    
     let __pEntry_ref = unsafe { &mut *pEntry };
-    pHead = __pEntry_ref.chain;
+    let pHead: *mut crate::src::ext::fts3::fts3_hash::Fts3HashElem = __pEntry_ref.chain;
     if !pHead.is_null() {
         (*pNew).next = pHead;
         let __pHead_ref = unsafe { &mut *pHead };
@@ -249,14 +249,11 @@ unsafe extern "C" fn fts3Rehash(
     pH: *mut crate::src::ext::fts3::fts3_hash::Fts3Hash,
     new_size: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
-    let new_ht: *mut crate::src::ext::fts3::fts3_hash::_fts3ht;
+    
     let mut elem: *mut crate::src::ext::fts3::fts3_hash::Fts3HashElem;
     let mut next_elem: *mut crate::src::ext::fts3::fts3_hash::Fts3HashElem;
-    let xHash: Option<
-        unsafe extern "C" fn(*const ::core::ffi::c_void, ::core::ffi::c_int) -> ::core::ffi::c_int,
-    >;
-    new_ht =
-        fts3HashMalloc((new_size as usize).wrapping_mul(::core::mem::size_of::<
+    
+    let new_ht: *mut crate::src::ext::fts3::fts3_hash::_fts3ht = fts3HashMalloc((new_size as usize).wrapping_mul(::core::mem::size_of::<
             crate::src::ext::fts3::fts3_hash::_fts3ht,
         >() as usize) as crate::src::headers::sqlite3_h::Sqlite3Int64)
             as *mut crate::src::ext::fts3::fts3_hash::_fts3ht;
@@ -267,12 +264,13 @@ unsafe extern "C" fn fts3Rehash(
     fts3HashFree(__pH_ref.ht as *mut ::core::ffi::c_void);
     __pH_ref.ht = new_ht as *mut crate::src::ext::fts3::fts3_hash::_fts3ht;
     __pH_ref.htsize = new_size;
-    xHash = ftsHashFunction(__pH_ref.keyClass as ::core::ffi::c_int);
+    let xHash: Option<
+        unsafe extern "C" fn(*const ::core::ffi::c_void, ::core::ffi::c_int) -> ::core::ffi::c_int,
+    > = ftsHashFunction(__pH_ref.keyClass as ::core::ffi::c_int);
     elem = __pH_ref.first;
     __pH_ref.first = ::core::ptr::null_mut::<crate::src::ext::fts3::fts3_hash::Fts3HashElem>();
     while !elem.is_null() {
-        let h: ::core::ffi::c_int = Some(xHash.expect("non-null function pointer"))
-            .expect("non-null function pointer")(
+        let h: ::core::ffi::c_int = xHash.expect("non-null function pointer")(
             (*elem).pKey, (*elem).nKey
         ) & new_size - 1 as ::core::ffi::c_int;
         next_elem = (*elem).next;
@@ -314,8 +312,7 @@ unsafe extern "C" fn fts3FindElementByHash(
             if !(fresh3 != 0 && !elem.is_null()) {
                 break;
             }
-            if Some(xCompare.expect("non-null function pointer"))
-                .expect("non-null function pointer")(
+            if xCompare.expect("non-null function pointer")(
                 (*elem).pKey, (*elem).nKey, pKey, nKey
             ) == 0 as ::core::ffi::c_int
             {
@@ -332,7 +329,7 @@ unsafe extern "C" fn fts3RemoveElementByHash(
     elem: *mut crate::src::ext::fts3::fts3_hash::Fts3HashElem,
     h: ::core::ffi::c_int,
 ) {
-    let pEntry: *mut crate::src::ext::fts3::fts3_hash::_fts3ht;
+    
     let __pH_ref = unsafe { &mut *pH };
     let __elem_ref = unsafe { &mut *elem };
     if !__elem_ref.prev.is_null() {
@@ -343,7 +340,7 @@ unsafe extern "C" fn fts3RemoveElementByHash(
     if !__elem_ref.next.is_null() {
         (*__elem_ref.next).prev = __elem_ref.prev;
     }
-    pEntry = __pH_ref.ht.offset(h as isize) as *mut crate::src::ext::fts3::fts3_hash::_fts3ht
+    let pEntry: *mut crate::src::ext::fts3::fts3_hash::_fts3ht = __pH_ref.ht.offset(h as isize) as *mut crate::src::ext::fts3::fts3_hash::_fts3ht
         as *mut crate::src::ext::fts3::fts3_hash::_fts3ht;
     if (*pEntry).chain == elem {
         (*pEntry).chain = __elem_ref.next;
@@ -368,15 +365,15 @@ pub unsafe extern "C" fn sqlite3Fts3HashFindElem(
     pKey: *const ::core::ffi::c_void,
     nKey: ::core::ffi::c_int,
 ) -> *mut crate::src::ext::fts3::fts3_hash::Fts3HashElem {
-    let h: ::core::ffi::c_int;
-    let xHash: Option<
-        unsafe extern "C" fn(*const ::core::ffi::c_void, ::core::ffi::c_int) -> ::core::ffi::c_int,
-    >;
+    
+    
     if pH.is_null() || (*pH).ht.is_null() {
         return ::core::ptr::null_mut::<crate::src::ext::fts3::fts3_hash::Fts3HashElem>();
     }
-    xHash = ftsHashFunction((*pH).keyClass as ::core::ffi::c_int);
-    h = Some(xHash.expect("non-null function pointer")).expect("non-null function pointer")(
+    let xHash: Option<
+        unsafe extern "C" fn(*const ::core::ffi::c_void, ::core::ffi::c_int) -> ::core::ffi::c_int,
+    > = ftsHashFunction((*pH).keyClass as ::core::ffi::c_int);
+    let h: ::core::ffi::c_int = xHash.expect("non-null function pointer")(
         pKey, nKey,
     );
     fts3FindElementByHash(pH, pKey, nKey, h & (*pH).htsize - 1 as ::core::ffi::c_int)
@@ -388,8 +385,8 @@ pub unsafe extern "C" fn sqlite3Fts3HashFind(
     pKey: *const ::core::ffi::c_void,
     nKey: ::core::ffi::c_int,
 ) -> *mut ::core::ffi::c_void {
-    let pElem: *mut crate::src::ext::fts3::fts3_hash::Fts3HashElem;
-    pElem = sqlite3Fts3HashFindElem(pH, pKey, nKey);
+    
+    let pElem: *mut crate::src::ext::fts3::fts3_hash::Fts3HashElem = sqlite3Fts3HashFindElem(pH, pKey, nKey);
     if !pElem.is_null() {
         (*pElem).data
     } else {
@@ -404,20 +401,20 @@ pub unsafe extern "C" fn sqlite3Fts3HashInsert(
     nKey: ::core::ffi::c_int,
     data: *mut ::core::ffi::c_void,
 ) -> *mut ::core::ffi::c_void {
-    let hraw: ::core::ffi::c_int;
+    
     let mut h: ::core::ffi::c_int;
-    let elem: *mut crate::src::ext::fts3::fts3_hash::Fts3HashElem;
-    let new_elem: *mut crate::src::ext::fts3::fts3_hash::Fts3HashElem;
+    
+    
+    
+    let __pH_ref = unsafe { &mut *pH };
     let xHash: Option<
         unsafe extern "C" fn(*const ::core::ffi::c_void, ::core::ffi::c_int) -> ::core::ffi::c_int,
-    >;
-    let __pH_ref = unsafe { &mut *pH };
-    xHash = ftsHashFunction(__pH_ref.keyClass as ::core::ffi::c_int);
-    hraw = Some(xHash.expect("non-null function pointer")).expect("non-null function pointer")(
+    > = ftsHashFunction(__pH_ref.keyClass as ::core::ffi::c_int);
+    let hraw: ::core::ffi::c_int = xHash.expect("non-null function pointer")(
         pKey, nKey,
     );
     h = hraw & __pH_ref.htsize - 1 as ::core::ffi::c_int;
-    elem = fts3FindElementByHash(pH, pKey, nKey, h);
+    let elem: *mut crate::src::ext::fts3::fts3_hash::Fts3HashElem = fts3FindElementByHash(pH, pKey, nKey, h);
     if !elem.is_null() {
         let old_data: *mut ::core::ffi::c_void = (*elem).data;
         if data.is_null() {
@@ -437,7 +434,7 @@ pub unsafe extern "C" fn sqlite3Fts3HashInsert(
         __pH_ref.count = 0 as ::core::ffi::c_int;
         return data;
     }
-    new_elem = fts3HashMalloc(
+    let new_elem: *mut crate::src::ext::fts3::fts3_hash::Fts3HashElem = fts3HashMalloc(
         ::core::mem::size_of::<crate::src::ext::fts3::fts3_hash::Fts3HashElem>()
             as crate::src::headers::sqlite3_h::Sqlite3Int64,
     ) as *mut crate::src::ext::fts3::fts3_hash::Fts3HashElem;

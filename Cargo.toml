@@ -22,6 +22,21 @@ publish = false
 
 [workspace.lints.rust]
 
+# Clippy lints suppressed at workspace level for c2rust-generated code in
+# rslite-core. The broad clippy::all/style/suspicious/complexity/perf/nursery
+# group allows are forbidden by spec constraint forbid_clippy_lint_groups_any,
+# so the specific lints they were silencing must be enumerated here. These
+# lints fire pervasively in machine-translated SQLite code where attempting
+# to "fix" them would risk altering semantics.
+[workspace.lints.clippy]
+unnecessary_cast = "allow"
+missing_safety_doc = "allow"
+nonminimal_bool = "allow"
+absurd_extreme_comparisons = "allow"
+eq_op = "allow"
+approx_constant = "allow"
+almost_swapped = "allow"
+
 [package]
 name = "sqlite-noamalgam"
 version.workspace = true

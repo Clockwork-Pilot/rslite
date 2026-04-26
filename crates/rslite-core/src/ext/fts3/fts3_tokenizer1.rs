@@ -50,8 +50,8 @@ unsafe extern "C" fn simpleCreate(
     argv: *const *const ::core::ffi::c_char,
     ppTokenizer: *mut *mut crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer,
 ) -> ::core::ffi::c_int {
-    let t: *mut simple_tokenizer;
-    t = crate::src::src::malloc::sqlite3_malloc(
+    
+    let t: *mut simple_tokenizer = crate::src::src::malloc::sqlite3_malloc(
         ::core::mem::size_of::<simple_tokenizer>() as ::core::ffi::c_int
     ) as *mut simple_tokenizer;
     if t.is_null() {
@@ -65,11 +65,11 @@ unsafe extern "C" fn simpleCreate(
     if argc > 1 as ::core::ffi::c_int {
         let mut i: ::core::ffi::c_int;
         let n: ::core::ffi::c_int =
-            ::libc::strlen(*argv.offset(1 as isize)) as ::core::ffi::c_int;
+            ::libc::strlen(*argv.offset(1_isize)) as ::core::ffi::c_int;
         i = 0 as ::core::ffi::c_int;
         while i < n {
             let ch: ::core::ffi::c_uchar =
-                *(*argv.offset(1 as isize)).offset(i as isize) as ::core::ffi::c_uchar;
+                *(*argv.offset(1_isize)).offset(i as isize) as ::core::ffi::c_uchar;
             if ch as ::core::ffi::c_int >= 0x80 as ::core::ffi::c_int {
                 crate::src::src::malloc::sqlite3_free(t as *mut ::core::ffi::c_void);
                 return crate::src::headers::sqlite3_h::SQLITE_ERROR;
@@ -106,8 +106,8 @@ unsafe extern "C" fn simpleOpen(
     nBytes: ::core::ffi::c_int,
     ppCursor: *mut *mut crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_cursor,
 ) -> ::core::ffi::c_int {
-    let c: *mut simple_tokenizer_cursor;
-    c = crate::src::src::malloc::sqlite3_malloc(
+    
+    let c: *mut simple_tokenizer_cursor = crate::src::src::malloc::sqlite3_malloc(
         ::core::mem::size_of::<simple_tokenizer_cursor>() as ::core::ffi::c_int
     ) as *mut simple_tokenizer_cursor;
     if c.is_null() {
@@ -151,13 +151,13 @@ unsafe extern "C" fn simpleNext(
     let __c_ref = { &mut *c };
     let p: *mut ::core::ffi::c_uchar = __c_ref.pInput as *mut ::core::ffi::c_uchar;
     while __c_ref.iOffset < __c_ref.nBytes {
-        let iStartOffset: ::core::ffi::c_int;
+        
         while __c_ref.iOffset < __c_ref.nBytes
             && simpleDelim(t, *p.offset(__c_ref.iOffset as isize)) != 0
         {
             __c_ref.iOffset += 1;
         }
-        iStartOffset = __c_ref.iOffset;
+        let iStartOffset: ::core::ffi::c_int = __c_ref.iOffset;
         while __c_ref.iOffset < __c_ref.nBytes
             && simpleDelim(t, *p.offset(__c_ref.iOffset as isize)) == 0
         {
@@ -167,9 +167,9 @@ unsafe extern "C" fn simpleNext(
             let mut i: ::core::ffi::c_int;
             let n: ::core::ffi::c_int = __c_ref.iOffset - iStartOffset;
             if n > __c_ref.nTokenAllocated {
-                let pNew: *mut ::core::ffi::c_char;
+                
                 __c_ref.nTokenAllocated = n + 20 as ::core::ffi::c_int;
-                pNew = crate::src::src::malloc::sqlite3_realloc64(
+                let pNew: *mut ::core::ffi::c_char = crate::src::src::malloc::sqlite3_realloc64(
                     __c_ref.pToken as *mut ::core::ffi::c_void,
                     __c_ref.nTokenAllocated as crate::src::headers::sqlite3_h::Sqlite3Uint64,
                 ) as *mut ::core::ffi::c_char;

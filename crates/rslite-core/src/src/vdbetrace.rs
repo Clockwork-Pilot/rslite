@@ -174,7 +174,7 @@ unsafe extern "C" fn findNextHostParameter(
         0 as crate::src::ext::rtree::rtree::I64_0;
     let mut n: crate::src::ext::rtree::rtree::I64_0;
     *pnToken = 0 as crate::src::ext::rtree::rtree::I64_0;
-    while *zSql.offset(0 as isize) != 0 {
+    while *zSql.offset(0_isize) != 0 {
         n = crate::src::src::tokenize::sqlite3GetToken(
             zSql as *mut crate::src::ext::rtree::rtree::U8_0,
             &raw mut tokenType,
@@ -195,7 +195,7 @@ pub unsafe extern "C" fn sqlite3VdbeExpandSql(
     p: *mut crate::src::headers::vdbeInt_h::Vdbe,
     mut zRawSql: *const ::core::ffi::c_char,
 ) -> *mut ::core::ffi::c_char {
-    let db: *mut crate::src::headers::sqliteInt_h::sqlite3;
+    
     let mut idx: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
     let mut nextIndex: ::core::ffi::c_int = 1 as ::core::ffi::c_int;
     let mut n: crate::src::ext::rtree::rtree::I64_0;
@@ -213,7 +213,7 @@ pub unsafe extern "C" fn sqlite3VdbeExpandSql(
             printfFlags: 0,
         };
     let mut utf8: crate::src::src::vdbe::Mem = unsafe { ::core::mem::zeroed() };
-    db = (*p).db;
+    let db: *mut crate::src::headers::sqliteInt_h::sqlite3 = (*p).db;
     crate::src::src::printf::sqlite3StrAccumInit(
         &raw mut out as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
         ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::sqlite3>()
@@ -252,7 +252,7 @@ pub unsafe extern "C" fn sqlite3VdbeExpandSql(
             crate::src::src::util::sqlite3Strlen30(zRawSql),
         );
     } else {
-        while *zRawSql.offset(0 as isize) != 0 {
+        while *zRawSql.offset(0_isize) != 0 {
             n = findNextHostParameter(zRawSql, &raw mut nToken);
             crate::src::src::printf::sqlite3_str_append(
                 &raw mut out as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
@@ -263,10 +263,10 @@ pub unsafe extern "C" fn sqlite3VdbeExpandSql(
             if nToken == 0 as crate::src::ext::rtree::rtree::I64_0 {
                 break;
             }
-            if *zRawSql.offset(0 as isize) as ::core::ffi::c_int == '?' as i32 {
+            if *zRawSql.offset(0_isize) as ::core::ffi::c_int == '?' as i32 {
                 if nToken > 1 as crate::src::ext::rtree::rtree::I64_0 {
                     crate::src::src::util::sqlite3GetInt32(
-                        zRawSql.offset(1 as isize) as *const ::core::ffi::c_char,
+                        zRawSql.offset(1_isize) as *const ::core::ffi::c_char,
                         &raw mut idx,
                     );
                 } else {
@@ -314,7 +314,7 @@ pub unsafe extern "C" fn sqlite3VdbeExpandSql(
             } else if (*pVar).flags as ::core::ffi::c_int & crate::src::headers::vdbeInt_h::MEM_Str
                 != 0
             {
-                let nOut: ::core::ffi::c_int;
+                
                 let enc: crate::src::ext::rtree::rtree::U8_0 = (*db).enc;
                 if enc as ::core::ffi::c_int != crate::src::headers::sqlite3_h::SQLITE_UTF8 {
                     utf8.db = db;
@@ -339,7 +339,7 @@ pub unsafe extern "C" fn sqlite3VdbeExpandSql(
                     }
                     pVar = &raw mut utf8;
                 }
-                nOut = (*pVar).n;
+                let nOut: ::core::ffi::c_int = (*pVar).n;
                 sqlite3_str_vappendf2(
                     &raw mut out as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
                     "'%.*q'",
@@ -357,16 +357,16 @@ pub unsafe extern "C" fn sqlite3VdbeExpandSql(
                 sqlite3_str_vappendf2(
                     &raw mut out as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
                     "zeroblob(%d)",
-                    printf_args!((*pVar).u.nZero as i32),
+                    printf_args!((*pVar).u.nZero),
                 );
             } else {
-                let nOut_0: ::core::ffi::c_int;
+                
                 crate::src::src::printf::sqlite3_str_append(
                     &raw mut out as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
                     b"x'\0" as *const u8 as *const ::core::ffi::c_char,
                     2 as ::core::ffi::c_int,
                 );
-                nOut_0 = (*pVar).n;
+                let nOut_0: ::core::ffi::c_int = (*pVar).n;
                 i = 0 as ::core::ffi::c_int;
                 while i < nOut_0 {
                     sqlite3_str_vappendf2(

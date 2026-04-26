@@ -183,11 +183,11 @@ pub unsafe extern "C" fn sqlite3AuthReadCol(
     let db: *mut crate::src::headers::sqliteInt_h::sqlite3 = (*pParse).db;
     let __db_ref = unsafe { &mut *db };
     let zDb: *mut ::core::ffi::c_char = (*__db_ref.aDb.offset(iDb as isize)).zDbSName;
-    let rc: ::core::ffi::c_int;
+    
     if __db_ref.init.busy != 0 {
         return crate::src::headers::sqlite3_h::SQLITE_OK;
     }
-    rc = __db_ref.xAuth.expect("non-null function pointer")(
+    let rc: ::core::ffi::c_int = __db_ref.xAuth.expect("non-null function pointer")(
         __db_ref.pAuthArg,
         crate::src::headers::sqlite3_h::SQLITE_READ,
         zTab,
@@ -225,9 +225,9 @@ pub unsafe extern "C" fn sqlite3AuthRead(
         ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::Table>();
     let zCol: *const ::core::ffi::c_char;
     let mut iSrc: ::core::ffi::c_int;
-    let iDb: ::core::ffi::c_int;
-    let iCol: ::core::ffi::c_int;
-    iDb = crate::src::src::prepare::sqlite3SchemaToIndex(
+    
+    
+    let iDb: ::core::ffi::c_int = crate::src::src::prepare::sqlite3SchemaToIndex(
         (*pParse).db as *mut crate::src::headers::sqliteInt_h::sqlite3,
         pSchema as *mut crate::src::headers::sqliteInt_h::Schema,
     );
@@ -254,7 +254,7 @@ pub unsafe extern "C" fn sqlite3AuthRead(
             }
         }
     }
-    iCol = (*pExpr).iColumn as ::core::ffi::c_int;
+    let iCol: ::core::ffi::c_int = (*pExpr).iColumn as ::core::ffi::c_int;
     if pTab.is_null() {
         return;
     }

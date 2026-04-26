@@ -178,7 +178,7 @@ pub unsafe extern "C" fn sqlite3_exec(
         crate::src::headers::sqlite3_h::SQLITE_OK,
     );
     's_32: while rc == crate::src::headers::sqlite3_h::SQLITE_OK
-        && *zSql.offset(0 as isize) as ::core::ffi::c_int != 0
+        && *zSql.offset(0_isize) as ::core::ffi::c_int != 0
     {
         let mut nCol: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
         let mut azVals: *mut *mut ::core::ffi::c_char =
@@ -225,7 +225,7 @@ pub unsafe extern "C" fn sqlite3_exec(
                         }
                         i = 0 as ::core::ffi::c_int;
                         while i < nCol {
-                            let ref mut fresh0 = *azCols.offset(i as isize);
+                            let fresh0 = &mut *azCols.offset(i as isize);
                             *fresh0 = crate::src::src::vdbeapi::sqlite3_column_name(pStmt, i)
                                 as *mut ::core::ffi::c_char;
                             i += 1;
@@ -236,7 +236,7 @@ pub unsafe extern "C" fn sqlite3_exec(
                         azVals = azCols.offset(nCol as isize) as *mut *mut ::core::ffi::c_char;
                         i = 0 as ::core::ffi::c_int;
                         while i < nCol {
-                            let ref mut fresh1 = *azVals.offset(i as isize);
+                            let fresh1 = &mut *azVals.offset(i as isize);
                             *fresh1 = crate::src::src::vdbeapi::sqlite3_column_text(pStmt, i)
                                 as *mut ::core::ffi::c_char;
                             if (*azVals.offset(i as isize)).is_null()
@@ -251,7 +251,7 @@ pub unsafe extern "C" fn sqlite3_exec(
                                 i += 1;
                             }
                         }
-                        let ref mut fresh2 = *azVals.offset(i as isize);
+                        let fresh2 = &mut *azVals.offset(i as isize);
                         *fresh2 = ::core::ptr::null_mut::<::core::ffi::c_char>();
                     }
                     if xCallback.expect("non-null function pointer")(pArg, nCol, azVals, azCols)
@@ -270,7 +270,7 @@ pub unsafe extern "C" fn sqlite3_exec(
                         break 's_32;
                     }
                 }
-                if !(rc != crate::src::headers::sqlite3_h::SQLITE_ROW) {
+                if (rc == crate::src::headers::sqlite3_h::SQLITE_ROW) {
                     continue;
                 }
                 rc = crate::src::src::vdbeaux::sqlite3VdbeFinalize(
@@ -280,7 +280,7 @@ pub unsafe extern "C" fn sqlite3_exec(
                 zSql = zLeftover;
                 while *(&raw const crate::src::src::global::sqlite3CtypeMap
                     as *const ::core::ffi::c_uchar)
-                    .offset(*zSql.offset(0 as isize) as ::core::ffi::c_uchar as isize)
+                    .offset(*zSql.offset(0_isize) as ::core::ffi::c_uchar as isize)
                     as ::core::ffi::c_int
                     & 0x1 as ::core::ffi::c_int
                     != 0

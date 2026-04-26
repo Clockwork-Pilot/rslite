@@ -31,15 +31,18 @@
 #![allow(clippy::manual_swap)]
 #![allow(clippy::undocumented_unsafe_blocks)]
 #![allow(clippy::redundant_pattern_matching)]
+#![allow(clippy::needless_late_init)]
+#![allow(clippy::collapsible_match)]
+#![allow(clippy::upper_case_acronyms)]
+#![allow(clippy::unnecessary_unwrap)]
+#![allow(clippy::unnecessary_literal_unwrap)]
+#![allow(clippy::needless_ifs)]
+#![allow(clippy::enum_variant_names)]
+#![allow(clippy::duplicated_attributes)]
+#![allow(clippy::deref_addrof)]
 #![allow(dead_code)]
 #![allow(unused_imports)]
 #![allow(unused_variables)]
-#![allow(clippy::style)]
-#![allow(clippy::suspicious)]
-#![allow(clippy::complexity)]
-#![allow(clippy::perf)]
-#![allow(clippy::nursery)]
-#![allow(clippy::all)]
 #![allow(unused_must_use)]
 #![allow(unpredictable_function_pointer_comparisons)]
 #![allow(unused_parens)]
@@ -288,7 +291,7 @@ pub(crate) mod geopoly_c {
         pub a: *mut crate::geopoly_c::GeoCoord,
     }
 
-    pub const GEOPOLY_PI: ::core::ffi::c_double = 3.1415926535897932385f64;
+    pub const GEOPOLY_PI: ::core::ffi::c_double = 3.141_592_653_589_793_f64;
 
     #[derive(Copy, Clone)]
     #[repr(C)]

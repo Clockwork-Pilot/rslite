@@ -13,6 +13,7 @@ Verify c_variadic feature isolation: only in printf_c_variadic.rs
     - [Feature: clippy_checks](#feature-clippy_checks)
       - [clippy_checks](#clippy_checks)
       - [forbid_clippy_comparison_numeric_lints_any](#forbid_clippy_comparison_numeric_lints_any)
+      - [forbid_clippy_lint_groups_any](#forbid_clippy_lint_groups_any)
       - [forbid_clippy_stylistic_lints_any](#forbid_clippy_stylistic_lints_any)
       - [forbid_non_camel_case_types_allow](#forbid_non_camel_case_types_allow)
       - [forbid_non_camel_case_types_allow_robust](#forbid_non_camel_case_types_allow_robust)
@@ -53,6 +54,9 @@ Verify c_variadic feature isolation: only in printf_c_variadic.rs
 
 #### forbid_clippy_comparison_numeric_lints_any
 **Description:** Structural: Forbid any allow() attribute (inner #![...] or outer #[...], bare or clippy:: prefix, alone or combined, arbitrary whitespace) for clippy::absurd_extreme_comparisons, almost_swapped, approx_constant, eq_op, excessive_precision, nonminimal_bool across crates/**/*.rs. Also forbid equivalent suppressions in crates/rslite-core/Cargo.toml under [lints.rust] / [lints.clippy] (e.g. `eq_op = "allow"`). Word boundaries prevent false positives on longer identifiers.
+
+#### forbid_clippy_lint_groups_any
+**Description:** Structural: Forbid any allow() attribute (inner #![...] or outer #[...], alone or combined, arbitrary whitespace) for the broad clippy lint groups clippy::style, clippy::suspicious, clippy::complexity, clippy::perf, clippy::nursery, clippy::all across crates/**/*.rs. Also forbid equivalent suppressions in any Cargo.toml across the workspace under [lints.clippy] / [workspace.lints.clippy] (e.g. `clippy::all = "allow"`). These broad groups silence dozens of lints at once and must never be allowed.
 
 #### forbid_clippy_stylistic_lints_any
 **Description:** Structural: Forbid any allow() attribute (inner #![...] or outer #[...], bare or clippy:: prefix, alone or combined, arbitrary whitespace) for clippy::empty_line_after_outer_attr and clippy::toplevel_ref_arg across crates/**/*.rs. Also forbid equivalent suppressions in crates/rslite-core/Cargo.toml under [lints.rust] / [lints.clippy] (e.g. `toplevel_ref_arg = "allow"`). Word boundaries prevent false positives on longer identifiers.

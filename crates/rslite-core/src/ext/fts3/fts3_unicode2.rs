@@ -435,7 +435,7 @@ pub unsafe extern "C" fn sqlite3FtsUnicodeIsalnum(c: ::core::ffi::c_int) -> ::co
         let mut iHi: ::core::ffi::c_int =
             (::core::mem::size_of::<[::core::ffi::c_uint; 406]>() as usize)
                 .wrapping_div(::core::mem::size_of::<::core::ffi::c_uint>() as usize)
-                .wrapping_sub(1 as usize) as ::core::ffi::c_int;
+                .wrapping_sub(1_usize) as ::core::ffi::c_int;
         let mut iLo: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
         while iHi >= iLo {
             let iTest: ::core::ffi::c_int = (iHi + iLo) / 2 as ::core::ffi::c_int;
@@ -720,7 +720,7 @@ unsafe extern "C" fn remove_diacritic(
     let mut iHi: ::core::ffi::c_int = (::core::mem::size_of::<[::core::ffi::c_ushort; 126]>()
         as usize)
         .wrapping_div(::core::mem::size_of::<::core::ffi::c_ushort>() as usize)
-        .wrapping_sub(1 as usize) as ::core::ffi::c_int;
+        .wrapping_sub(1_usize) as ::core::ffi::c_int;
     let mut iLo: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
     while iHi >= iLo {
         let iTest: ::core::ffi::c_int = (iHi + iLo) / 2 as ::core::ffi::c_int;
@@ -1672,10 +1672,10 @@ pub unsafe extern "C" fn sqlite3FtsUnicodeFold(
             ret = c + ('a' as i32 - 'A' as i32);
         }
     } else if c < 65536 as ::core::ffi::c_int {
-        let p: *const TableEntry;
+        
         let mut iHi: ::core::ffi::c_int = (::core::mem::size_of::<[TableEntry; 163]>() as usize)
             .wrapping_div(::core::mem::size_of::<TableEntry>() as usize)
-            .wrapping_sub(1 as usize)
+            .wrapping_sub(1_usize)
             as ::core::ffi::c_int;
         let mut iLo: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
         let mut iRes: ::core::ffi::c_int = -(1 as ::core::ffi::c_int);
@@ -1690,7 +1690,7 @@ pub unsafe extern "C" fn sqlite3FtsUnicodeFold(
                 iHi = iTest - 1 as ::core::ffi::c_int;
             }
         }
-        p = (&raw const aEntry as *const TableEntry).offset(iRes as isize) as *const TableEntry
+        let p: *const TableEntry = (&raw const aEntry as *const TableEntry).offset(iRes as isize) as *const TableEntry
             as *const TableEntry;
         if c < (*p).iCode as ::core::ffi::c_int + (*p).nRange as ::core::ffi::c_int
             && 0 as ::core::ffi::c_int

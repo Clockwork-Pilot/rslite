@@ -166,22 +166,22 @@ unsafe extern "C" fn fts3TokenizerFunc(
     argc: ::core::ffi::c_int,
     argv: *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
 ) {
-    let pHash: *mut crate::src::ext::fts3::fts3_hash::Fts3Hash;
+    
     let mut pPtr: *mut ::core::ffi::c_void = ::core::ptr::null_mut::<::core::ffi::c_void>();
-    let zName: *const ::core::ffi::c_uchar;
-    let nName: ::core::ffi::c_int;
-    pHash = crate::src::src::vdbeapi::sqlite3_user_data(context)
+    
+    
+    let pHash: *mut crate::src::ext::fts3::fts3_hash::Fts3Hash = crate::src::src::vdbeapi::sqlite3_user_data(context)
         as *mut crate::src::ext::fts3::fts3_hash::Fts3Hash;
-    zName = crate::src::src::vdbeapi::sqlite3_value_text(*argv.offset(0 as isize));
-    nName = crate::src::src::vdbeapi::sqlite3_value_bytes(*argv.offset(0 as isize))
+    let zName: *const ::core::ffi::c_uchar = crate::src::src::vdbeapi::sqlite3_value_text(*argv.offset(0_isize));
+    let nName: ::core::ffi::c_int = crate::src::src::vdbeapi::sqlite3_value_bytes(*argv.offset(0_isize))
         + 1 as ::core::ffi::c_int;
     if argc == 2 as ::core::ffi::c_int {
         if fts3TokenizerEnabled(context) != 0
-            || crate::src::src::vdbeapi::sqlite3_value_frombind(*argv.offset(1 as isize)) != 0
+            || crate::src::src::vdbeapi::sqlite3_value_frombind(*argv.offset(1_isize)) != 0
         {
-            let pOld: *mut ::core::ffi::c_void;
+            
             let n: ::core::ffi::c_int =
-                crate::src::src::vdbeapi::sqlite3_value_bytes(*argv.offset(1 as isize));
+                crate::src::src::vdbeapi::sqlite3_value_bytes(*argv.offset(1_isize));
             if zName.is_null()
                 || n as usize != ::core::mem::size_of::<*mut ::core::ffi::c_void>() as usize
             {
@@ -192,9 +192,9 @@ unsafe extern "C" fn fts3TokenizerFunc(
                 );
                 return;
             }
-            pPtr = *(crate::src::src::vdbeapi::sqlite3_value_blob(*argv.offset(1 as isize))
+            pPtr = *(crate::src::src::vdbeapi::sqlite3_value_blob(*argv.offset(1_isize))
                 as *mut *mut ::core::ffi::c_void);
-            pOld = crate::src::ext::fts3::fts3_hash::sqlite3Fts3HashInsert(
+            let pOld: *mut ::core::ffi::c_void = crate::src::ext::fts3::fts3_hash::sqlite3Fts3HashInsert(
                 pHash as *mut crate::src::ext::fts3::fts3_hash::Fts3Hash,
                 zName as *mut ::core::ffi::c_void,
                 nName,
@@ -236,7 +236,7 @@ unsafe extern "C" fn fts3TokenizerFunc(
         }
     }
     if fts3TokenizerEnabled(context) != 0
-        || crate::src::src::vdbeapi::sqlite3_value_frombind(*argv.offset(0 as isize)) != 0
+        || crate::src::src::vdbeapi::sqlite3_value_frombind(*argv.offset(0_isize)) != 0
     {
         crate::src::src::vdbeapi::sqlite3_result_blob(
             context,
@@ -414,9 +414,9 @@ pub unsafe extern "C" fn sqlite3Fts3NextToken(
                 }
             }
             91 => {
-                z2 = z1.offset(1 as isize) as *const ::core::ffi::c_char;
+                z2 = z1.offset(1_isize) as *const ::core::ffi::c_char;
                 while *z2 as ::core::ffi::c_int != 0
-                    && *z2.offset(0 as isize) as ::core::ffi::c_int != ']' as i32
+                    && *z2.offset(0_isize) as ::core::ffi::c_int != ']' as i32
                 {
                     z2 = z2.offset(1);
                 }
@@ -426,7 +426,7 @@ pub unsafe extern "C" fn sqlite3Fts3NextToken(
             }
             _ => {
                 if sqlite3Fts3IsIdChar(*z1) != 0 {
-                    z2 = z1.offset(1 as isize) as *const ::core::ffi::c_char;
+                    z2 = z1.offset(1_isize) as *const ::core::ffi::c_char;
                     while sqlite3Fts3IsIdChar(*z2) != 0 {
                         z2 = z2.offset(1);
                     }
@@ -450,14 +450,14 @@ pub unsafe extern "C" fn sqlite3Fts3InitTokenizer(
     let rc: ::core::ffi::c_int;
     let mut z: *mut ::core::ffi::c_char;
     let mut n: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
-    let zCopy: *mut ::core::ffi::c_char;
-    let zEnd: *mut ::core::ffi::c_char;
-    let m: *mut crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_module;
-    zCopy = crate::sqlite_printf!("%s", zArg);
+    
+    
+    
+    let zCopy: *mut ::core::ffi::c_char = crate::sqlite_printf!("%s", zArg);
     if zCopy.is_null() {
         return crate::src::headers::sqlite3_h::SQLITE_NOMEM;
     }
-    zEnd = zCopy.offset((::libc::strlen
+    let zEnd: *mut ::core::ffi::c_char = zCopy.offset((::libc::strlen
         as unsafe extern "C" fn(*const ::core::ffi::c_char) -> crate::__stddef_size_t_h::SizeT)(
         zCopy,
     ) as isize) as *mut ::core::ffi::c_char;
@@ -467,7 +467,7 @@ pub unsafe extern "C" fn sqlite3Fts3InitTokenizer(
     }
     *z.offset(n as isize) = '\0' as i32 as ::core::ffi::c_char;
     crate::src::ext::fts3::fts3::sqlite3Fts3Dequote(z);
-    m = crate::src::ext::fts3::fts3_hash::sqlite3Fts3HashFind(
+    let m: *mut crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_module = crate::src::ext::fts3::fts3_hash::sqlite3Fts3HashFind(
         pHash as *const crate::src::ext::fts3::fts3_hash::Fts3Hash,
         z as *const ::core::ffi::c_void,
         ::libc::strlen(z) as ::core::ffi::c_int + 1 as ::core::ffi::c_int,
@@ -507,7 +507,7 @@ pub unsafe extern "C" fn sqlite3Fts3InitTokenizer(
             aArg = aNew;
             let fresh1 = iArg;
             iArg += 1;
-            let ref mut fresh2 = *aArg.offset(fresh1 as isize);
+            let fresh2 = &mut *aArg.offset(fresh1 as isize);
             *fresh2 = z;
             *z.offset(n as isize) = '\0' as i32 as ::core::ffi::c_char;
             crate::src::ext::fts3::fts3::sqlite3Fts3Dequote(z);
@@ -535,17 +535,17 @@ unsafe extern "C" fn testFunc(
     argc: ::core::ffi::c_int,
     argv: *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
 ) {
-    let pHash: *mut crate::src::ext::fts3::fts3_hash::Fts3Hash;
-    let p: *mut crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_module;
+    
+    
     let mut pTokenizer: *mut crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer =
         ::core::ptr::null_mut::<crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer>();
     let mut pCsr: *mut crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_cursor =
         ::core::ptr::null_mut::<crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_cursor>();
     let mut zErr: *const ::core::ffi::c_char = ::core::ptr::null::<::core::ffi::c_char>();
-    let zName: *const ::core::ffi::c_char;
-    let nName: ::core::ffi::c_int;
-    let zInput: *const ::core::ffi::c_char;
-    let nInput: ::core::ffi::c_int;
+    
+    
+    
+    
     let mut azArg: [*const ::core::ffi::c_char; 64] =
         [::core::ptr::null::<::core::ffi::c_char>(); 64];
     let mut zToken: *const ::core::ffi::c_char = ::core::ptr::null::<::core::ffi::c_char>();
@@ -554,7 +554,7 @@ unsafe extern "C" fn testFunc(
     let mut iEnd: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
     let mut iPos: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
     let mut i: ::core::ffi::c_int;
-    let pRet: *mut crate::src::headers::stdlib::Tcl_Obj;
+    
     if argc < 2 as ::core::ffi::c_int {
         crate::src::src::vdbeapi::sqlite3_result_error(
             context,
@@ -563,18 +563,18 @@ unsafe extern "C" fn testFunc(
         );
         return;
     }
-    nName = crate::src::src::vdbeapi::sqlite3_value_bytes(*argv.offset(0 as isize));
-    zName = crate::src::src::vdbeapi::sqlite3_value_text(*argv.offset(0 as isize))
+    let nName: ::core::ffi::c_int = crate::src::src::vdbeapi::sqlite3_value_bytes(*argv.offset(0_isize));
+    let zName: *const ::core::ffi::c_char = crate::src::src::vdbeapi::sqlite3_value_text(*argv.offset(0_isize))
         as *const ::core::ffi::c_char;
-    nInput = crate::src::src::vdbeapi::sqlite3_value_bytes(
+    let nInput: ::core::ffi::c_int = crate::src::src::vdbeapi::sqlite3_value_bytes(
         *argv.offset((argc - 1 as ::core::ffi::c_int) as isize),
     );
-    zInput = crate::src::src::vdbeapi::sqlite3_value_text(
+    let zInput: *const ::core::ffi::c_char = crate::src::src::vdbeapi::sqlite3_value_text(
         *argv.offset((argc - 1 as ::core::ffi::c_int) as isize),
     ) as *const ::core::ffi::c_char;
-    pHash = crate::src::src::vdbeapi::sqlite3_user_data(context)
+    let pHash: *mut crate::src::ext::fts3::fts3_hash::Fts3Hash = crate::src::src::vdbeapi::sqlite3_user_data(context)
         as *mut crate::src::ext::fts3::fts3_hash::Fts3Hash;
-    p = crate::src::ext::fts3::fts3_hash::sqlite3Fts3HashFind(
+    let p: *mut crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_module = crate::src::ext::fts3::fts3_hash::sqlite3Fts3HashFind(
         pHash as *const crate::src::ext::fts3::fts3_hash::Fts3Hash,
         zName as *const ::core::ffi::c_void,
         nName + 1 as ::core::ffi::c_int,
@@ -586,7 +586,7 @@ unsafe extern "C" fn testFunc(
         crate::src::src::malloc::sqlite3_free(zErr2 as *mut ::core::ffi::c_void);
         return;
     }
-    pRet = crate::src::headers::stdlib::Tcl_NewObj();
+    let pRet: *mut crate::src::headers::stdlib::Tcl_Obj = crate::src::headers::stdlib::Tcl_NewObj();
     (*pRet).refCount += 1;
     i = 1 as ::core::ffi::c_int;
     while i < argc - 1 as ::core::ffi::c_int {
@@ -693,14 +693,14 @@ unsafe extern "C" fn registerTokenizer(
     zName: *mut ::core::ffi::c_char,
     mut p: *const crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_module,
 ) -> ::core::ffi::c_int {
-    let rc: ::core::ffi::c_int;
+    
     let mut pStmt: *mut crate::src::headers::sqlite3_h::Sqlite3Stmt =
         ::core::ptr::null_mut::<crate::src::headers::sqlite3_h::Sqlite3Stmt>();
     let zSql: [::core::ffi::c_char; 28] = ::core::mem::transmute::<
         [u8; 28],
         [::core::ffi::c_char; 28],
     >(*b"SELECT fts3_tokenizer(?, ?)\0");
-    rc = crate::src::src::prepare::sqlite3_prepare_v2(
+    let rc: ::core::ffi::c_int = crate::src::src::prepare::sqlite3_prepare_v2(
         db,
         &raw const zSql as *const ::core::ffi::c_char,
         -(1 as ::core::ffi::c_int),
@@ -734,7 +734,7 @@ unsafe extern "C" fn queryTokenizer(
     zName: *mut ::core::ffi::c_char,
     pp: *mut *const crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_module,
 ) -> ::core::ffi::c_int {
-    let rc: ::core::ffi::c_int;
+    
     let mut pStmt: *mut crate::src::headers::sqlite3_h::Sqlite3Stmt =
         ::core::ptr::null_mut::<crate::src::headers::sqlite3_h::Sqlite3Stmt>();
     let zSql: [::core::ffi::c_char; 25] = ::core::mem::transmute::<
@@ -742,7 +742,7 @@ unsafe extern "C" fn queryTokenizer(
         [::core::ffi::c_char; 25],
     >(*b"SELECT fts3_tokenizer(?)\0");
     *pp = ::core::ptr::null::<crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_module>();
-    rc = crate::src::src::prepare::sqlite3_prepare_v2(
+    let rc: ::core::ffi::c_int = crate::src::src::prepare::sqlite3_prepare_v2(
         db,
         &raw const zSql as *const ::core::ffi::c_char,
         -(1 as ::core::ffi::c_int),
@@ -824,11 +824,11 @@ pub unsafe extern "C" fn sqlite3Fts3InitHashTable(
     let p: *mut ::core::ffi::c_void = pHash as *mut ::core::ffi::c_void;
     let any: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_UTF8
         | crate::src::headers::sqlite3_h::SQLITE_DIRECTONLY;
-    let zTest: *mut ::core::ffi::c_char;
-    let zTest2: *mut ::core::ffi::c_char;
+    
+    
     let pdb: *mut ::core::ffi::c_void = db as *mut ::core::ffi::c_void;
-    zTest = crate::sqlite_printf!("%s_test", zName);
-    zTest2 = crate::sqlite_printf!("%s_internal_test", zName);
+    let zTest: *mut ::core::ffi::c_char = crate::sqlite_printf!("%s_test", zName);
+    let zTest2: *mut ::core::ffi::c_char = crate::sqlite_printf!("%s_internal_test", zName);
     if zTest.is_null() || zTest2.is_null() {
         rc = crate::src::headers::sqlite3_h::SQLITE_NOMEM;
     }

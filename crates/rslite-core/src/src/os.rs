@@ -452,7 +452,7 @@ pub unsafe extern "C" fn sqlite3OsOpen(
     flags: ::core::ffi::c_int,
     pFlagsOut: *mut ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
-    let rc: ::core::ffi::c_int;
+    
     if sqlite3_memdebug_vfs_oom_test != 0
         && (0 as ::core::ffi::c_int == 0
             || crate::src::src::memjournal::sqlite3JournalIsInMemory(::core::ptr::null_mut::<
@@ -468,7 +468,7 @@ pub unsafe extern "C" fn sqlite3OsOpen(
         }
         crate::src::src::malloc::sqlite3_free(pTstAlloc);
     }
-    rc = (*pVfs).xOpen.expect("non-null function pointer")(
+    let rc: ::core::ffi::c_int = (*pVfs).xOpen.expect("non-null function pointer")(
         pVfs,
         zPath as crate::src::headers::sqlite3_h::Sqlite3Filename,
         pFile,
@@ -553,7 +553,7 @@ pub unsafe extern "C" fn sqlite3OsFullPathname(
         }
         crate::src::src::malloc::sqlite3_free(pTstAlloc);
     }
-    *zPathOut.offset(0 as isize) = 0 as ::core::ffi::c_char;
+    *zPathOut.offset(0_isize) = 0 as ::core::ffi::c_char;
     (*pVfs).xFullPathname.expect("non-null function pointer")(pVfs, zPath, nPathOut, zPathOut)
 }
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
@@ -611,10 +611,10 @@ pub unsafe extern "C" fn sqlite3OsRandomness(
             zBufOut as *mut u8,
             nByte as usize,
         );
-        return crate::src::headers::sqlite3_h::SQLITE_OK;
+        crate::src::headers::sqlite3_h::SQLITE_OK
     } else {
-        return (*pVfs).xRandomness.expect("non-null function pointer")(pVfs, nByte, zBufOut);
-    };
+        (*pVfs).xRandomness.expect("non-null function pointer")(pVfs, nByte, zBufOut)
+    }
 }
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
@@ -667,8 +667,8 @@ pub unsafe extern "C" fn sqlite3OsOpenMalloc(
     pOutFlags: *mut ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
     let rc: ::core::ffi::c_int;
-    let pFile: *mut crate::src::headers::sqlite3_h::sqlite3_file;
-    pFile = crate::src::src::malloc::sqlite3MallocZero(
+    
+    let pFile: *mut crate::src::headers::sqlite3_h::sqlite3_file = crate::src::src::malloc::sqlite3MallocZero(
         (*pVfs).szOsFile as crate::src::ext::rtree::rtree::U64_0,
     ) as *mut crate::src::headers::sqlite3_h::sqlite3_file;
     if !pFile.is_null() {
@@ -711,12 +711,12 @@ pub unsafe extern "C" fn sqlite3_vfs_find(
     zVfs: *const ::core::ffi::c_char,
 ) -> *mut crate::src::headers::sqlite3_h::sqlite3_vfs {
     let mut pVfs: *mut crate::src::headers::sqlite3_h::sqlite3_vfs;
-    let mutex: *mut crate::src::src::mutex_unix::sqlite3_mutex;
+    
     let rc: ::core::ffi::c_int = crate::src::src::main::sqlite3_initialize();
     if rc != 0 {
         return ::core::ptr::null_mut::<crate::src::headers::sqlite3_h::sqlite3_vfs>();
     }
-    mutex = crate::src::src::mutex::sqlite3MutexAlloc(
+    let mutex: *mut crate::src::src::mutex_unix::sqlite3_mutex = crate::src::src::mutex::sqlite3MutexAlloc(
         crate::src::headers::sqlite3_h::SQLITE_MUTEX_STATIC_MAIN,
     );
     crate::src::src::mutex::sqlite3_mutex_enter(mutex);
@@ -754,12 +754,12 @@ pub unsafe extern "C" fn sqlite3_vfs_register(
     pVfs: *mut crate::src::headers::sqlite3_h::sqlite3_vfs,
     makeDflt: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
-    let mutex: *mut crate::src::src::mutex_unix::sqlite3_mutex;
+    
     let rc: ::core::ffi::c_int = crate::src::src::main::sqlite3_initialize();
     if rc != 0 {
         return rc;
     }
-    mutex = crate::src::src::mutex::sqlite3MutexAlloc(2 as ::core::ffi::c_int);
+    let mutex: *mut crate::src::src::mutex_unix::sqlite3_mutex = crate::src::src::mutex::sqlite3MutexAlloc(2 as ::core::ffi::c_int);
     crate::src::src::mutex::sqlite3_mutex_enter(mutex);
     vfsUnlink(pVfs);
     if makeDflt != 0 || vfsList.is_null() {
@@ -776,12 +776,12 @@ pub unsafe extern "C" fn sqlite3_vfs_register(
 pub unsafe extern "C" fn sqlite3_vfs_unregister(
     pVfs: *mut crate::src::headers::sqlite3_h::sqlite3_vfs,
 ) -> ::core::ffi::c_int {
-    let mutex: *mut crate::src::src::mutex_unix::sqlite3_mutex;
+    
     let rc: ::core::ffi::c_int = crate::src::src::main::sqlite3_initialize();
     if rc != 0 {
         return rc;
     }
-    mutex = crate::src::src::mutex::sqlite3MutexAlloc(2 as ::core::ffi::c_int);
+    let mutex: *mut crate::src::src::mutex_unix::sqlite3_mutex = crate::src::src::mutex::sqlite3MutexAlloc(2 as ::core::ffi::c_int);
     crate::src::src::mutex::sqlite3_mutex_enter(mutex);
     vfsUnlink(pVfs);
     crate::src::src::mutex::sqlite3_mutex_leave(mutex);

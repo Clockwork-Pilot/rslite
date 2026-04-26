@@ -145,7 +145,7 @@ unsafe extern "C" fn pcacheUnpin(p: *mut crate::src::src::pcache::PgHdr) {
 
 unsafe extern "C" fn numberOfCachePages(p: *mut PCache) -> ::core::ffi::c_int {
     if (*p).szCache >= 0 as ::core::ffi::c_int {
-        return (*p).szCache;
+        (*p).szCache
     } else {
         let mut n: crate::src::ext::rtree::rtree::I64_0;
         let __p_ref = unsafe { &*p };
@@ -155,8 +155,8 @@ unsafe extern "C" fn numberOfCachePages(p: *mut PCache) -> ::core::ffi::c_int {
         if n > 1000000000 as crate::src::ext::rtree::rtree::I64_0 {
             n = 1000000000 as crate::src::ext::rtree::rtree::I64_0;
         }
-        return n as ::core::ffi::c_int;
-    };
+        n as ::core::ffi::c_int
+    }
 }
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
@@ -227,16 +227,16 @@ pub unsafe extern "C" fn sqlite3PcacheSetPageSize(
     szPage: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
     if (*pCache).szPage != 0 {
-        let pNew: *mut crate::src::headers::sqlite3_h::Sqlite3Pcache;
+        
         let __pCache_ref = unsafe { &mut *pCache };
-        pNew = crate::src::src::global::sqlite3Config
+        let pNew: *mut crate::src::headers::sqlite3_h::Sqlite3Pcache = crate::src::src::global::sqlite3Config
             .pcache2
             .xCreate
             .expect("non-null function pointer")(
             szPage,
             (__pCache_ref.szExtra as usize).wrapping_add(
                 (::core::mem::size_of::<crate::src::src::pcache::PgHdr>() as usize)
-                    .wrapping_add(7 as usize)
+                    .wrapping_add(7_usize)
                     & !(7 as ::core::ffi::c_int) as usize,
             ) as ::core::ffi::c_int,
             __pCache_ref.bPurgeable as ::core::ffi::c_int,
@@ -266,10 +266,10 @@ pub unsafe extern "C" fn sqlite3PcacheFetch(
     pgno: crate::src::src::pager::Pgno,
     createFlag: ::core::ffi::c_int,
 ) -> *mut crate::src::headers::sqlite3_h::sqlite3_pcache_page {
-    let eCreate: ::core::ffi::c_int;
-    let pRes: *mut crate::src::headers::sqlite3_h::sqlite3_pcache_page;
-    eCreate = createFlag & (*pCache).eCreate as ::core::ffi::c_int;
-    pRes = crate::src::src::global::sqlite3Config
+    
+    
+    let eCreate: ::core::ffi::c_int = createFlag & (*pCache).eCreate as ::core::ffi::c_int;
+    let pRes: *mut crate::src::headers::sqlite3_h::sqlite3_pcache_page = crate::src::src::global::sqlite3Config
         .pcache2
         .xFetch
         .expect("non-null function pointer")(
@@ -308,9 +308,8 @@ pub unsafe extern "C" fn sqlite3PcacheFetchStress(
             }
         }
         if !pPg.is_null() {
-            let rc: ::core::ffi::c_int;
-            rc =
-                __pCache_ref.xStress.expect("non-null function pointer")(__pCache_ref.pStress, pPg);
+            
+            let rc: ::core::ffi::c_int = __pCache_ref.xStress.expect("non-null function pointer")(__pCache_ref.pStress, pPg);
             if rc != crate::src::headers::sqlite3_h::SQLITE_OK
                 && rc != crate::src::headers::sqlite3_h::SQLITE_BUSY
             {
@@ -338,8 +337,8 @@ unsafe extern "C" fn pcacheFetchFinishWithInit(
     pgno: crate::src::src::pager::Pgno,
     pPage: *mut crate::src::headers::sqlite3_h::sqlite3_pcache_page,
 ) -> *mut crate::src::src::pcache::PgHdr {
-    let pPgHdr: *mut crate::src::src::pcache::PgHdr;
-    pPgHdr = (*pPage).pExtra as *mut crate::src::src::pcache::PgHdr;
+    
+    let pPgHdr: *mut crate::src::src::pcache::PgHdr = (*pPage).pExtra as *mut crate::src::src::pcache::PgHdr;
     ::libc::memset(
         &raw mut (*pPgHdr).pDirty as *mut ::core::ffi::c_void,
         0 as ::core::ffi::c_int,
@@ -349,7 +348,7 @@ unsafe extern "C" fn pcacheFetchFinishWithInit(
     );
     (*pPgHdr).pPage = pPage;
     (*pPgHdr).pData = (*pPage).pBuf;
-    (*pPgHdr).pExtra = pPgHdr.offset(1 as isize) as *mut crate::src::src::pcache::PgHdr
+    (*pPgHdr).pExtra = pPgHdr.offset(1_isize) as *mut crate::src::src::pcache::PgHdr
         as *mut ::core::ffi::c_void;
     ::libc::memset(
         (*pPgHdr).pExtra,
@@ -368,8 +367,8 @@ pub unsafe extern "C" fn sqlite3PcacheFetchFinish(
     pgno: crate::src::src::pager::Pgno,
     pPage: *mut crate::src::headers::sqlite3_h::sqlite3_pcache_page,
 ) -> *mut crate::src::src::pcache::PgHdr {
-    let pPgHdr: *mut crate::src::src::pcache::PgHdr;
-    pPgHdr = (*pPage).pExtra as *mut crate::src::src::pcache::PgHdr;
+    
+    let pPgHdr: *mut crate::src::src::pcache::PgHdr = (*pPage).pExtra as *mut crate::src::src::pcache::PgHdr;
     if (*pPgHdr).pPage.is_null() {
         return pcacheFetchFinishWithInit(pCache, pgno, pPage);
     }
@@ -509,8 +508,8 @@ pub unsafe extern "C" fn sqlite3PcacheMove(
 ) {
     let __p_ref = unsafe { &mut *p };
     let pCache: *mut PCache = __p_ref.pCache;
-    let pOther: *mut crate::src::headers::sqlite3_h::sqlite3_pcache_page;
-    pOther = crate::src::src::global::sqlite3Config
+    
+    let pOther: *mut crate::src::headers::sqlite3_h::sqlite3_pcache_page = crate::src::src::global::sqlite3Config
         .pcache2
         .xFetch
         .expect("non-null function pointer")(
@@ -563,8 +562,8 @@ pub unsafe extern "C" fn sqlite3PcacheTruncate(
             p = pNext;
         }
         if pgno == 0 as crate::src::src::pager::Pgno && __pCache_ref.nRefSum != 0 {
-            let pPage1: *mut crate::src::headers::sqlite3_h::sqlite3_pcache_page;
-            pPage1 = crate::src::src::global::sqlite3Config
+            
+            let pPage1: *mut crate::src::headers::sqlite3_h::sqlite3_pcache_page = crate::src::src::global::sqlite3Config
                 .pcache2
                 .xFetch
                 .expect("non-null function pointer")(
@@ -755,7 +754,7 @@ pub unsafe extern "C" fn sqlite3PcacheShrink(pCache: *mut PCache) {
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3HeaderSizePcache() -> ::core::ffi::c_int {
-    ((::core::mem::size_of::<crate::src::src::pcache::PgHdr>() as usize).wrapping_add(7 as usize)
+    ((::core::mem::size_of::<crate::src::src::pcache::PgHdr>() as usize).wrapping_add(7_usize)
         & !(7 as ::core::ffi::c_int) as usize) as ::core::ffi::c_int
 }
 #[cfg_attr(feature = "test", unsafe(no_mangle))]

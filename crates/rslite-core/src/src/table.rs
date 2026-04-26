@@ -166,12 +166,12 @@ unsafe extern "C" fn sqlite3_get_table_cb(
         .wrapping_add(need as crate::src::ext::rtree::rtree::U32_0)
         > __p_ref.nAlloc
     {
-        let azNew: *mut *mut ::core::ffi::c_char;
+        
         __p_ref.nAlloc = (*p)
             .nAlloc
             .wrapping_mul(2 as crate::src::ext::rtree::rtree::U32_0)
             .wrapping_add(need as crate::src::ext::rtree::rtree::U32_0);
-        azNew = crate::src::src::malloc::sqlite3Realloc(
+        let azNew: *mut *mut ::core::ffi::c_char = crate::src::src::malloc::sqlite3Realloc(
             __p_ref.azResult as *mut ::core::ffi::c_void,
             (::core::mem::size_of::<*mut ::core::ffi::c_char>() as usize)
                 .wrapping_mul(__p_ref.nAlloc as usize)
@@ -192,7 +192,7 @@ unsafe extern "C" fn sqlite3_get_table_cb(
                 __p_ref.nColumn = nCol as crate::src::ext::rtree::rtree::U32_0;
                 i = 0 as ::core::ffi::c_int;
                 loop {
-                    if !(i < nCol) {
+                    if (i >= nCol) {
                         current_block = 12147880666119273379;
                         break;
                     }
@@ -212,7 +212,7 @@ unsafe extern "C" fn sqlite3_get_table_cb(
                     }
                     let fresh2 = __p_ref.nData;
                     __p_ref.nData = __p_ref.nData.wrapping_add(1);
-                    let ref mut fresh3 = *__p_ref.azResult.offset(fresh2 as isize);
+                    let fresh3 = &mut *__p_ref.azResult.offset(fresh2 as isize);
                     *fresh3 = z;
                     i += 1;
                 }
@@ -246,7 +246,7 @@ unsafe extern "C" fn sqlite3_get_table_cb(
                     if !argv.is_null() {
                         i = 0 as ::core::ffi::c_int;
                         loop {
-                            if !(i < nCol) {
+                            if (i >= nCol) {
                                 current_block = 11932355480408055363;
                                 break;
                             }
@@ -272,7 +272,7 @@ unsafe extern "C" fn sqlite3_get_table_cb(
                             }
                             let fresh4 = __p_ref.nData;
                             __p_ref.nData = __p_ref.nData.wrapping_add(1);
-                            let ref mut fresh5 = *__p_ref.azResult.offset(fresh4 as isize);
+                            let fresh5 = &mut *__p_ref.azResult.offset(fresh4 as isize);
                             *fresh5 = z;
                             i += 1;
                         }
@@ -307,7 +307,7 @@ pub unsafe extern "C" fn sqlite3_get_table(
     pnColumn: *mut ::core::ffi::c_int,
     pzErrMsg: *mut *mut ::core::ffi::c_char,
 ) -> ::core::ffi::c_int {
-    let rc: ::core::ffi::c_int;
+    
     let mut res: TabResult = unsafe { ::core::mem::zeroed() };
     *pazResult = ::core::ptr::null_mut::<*mut ::core::ffi::c_char>();
     if !pnColumn.is_null() {
@@ -334,9 +334,9 @@ pub unsafe extern "C" fn sqlite3_get_table(
         (*db).errCode = crate::src::headers::sqlite3_h::SQLITE_NOMEM;
         return crate::src::headers::sqliteInt_h::SQLITE_NOMEM_BKPT;
     }
-    let ref mut fresh0 = *res.azResult.offset(0 as isize);
+    let fresh0 = &mut *res.azResult.offset(0_isize);
     *fresh0 = ::core::ptr::null_mut::<::core::ffi::c_char>();
-    rc = crate::src::src::legacy::sqlite3_exec(
+    let rc: ::core::ffi::c_int = crate::src::src::legacy::sqlite3_exec(
         db as *mut crate::src::headers::sqliteInt_h::sqlite3,
         zSql,
         Some(
@@ -351,11 +351,11 @@ pub unsafe extern "C" fn sqlite3_get_table(
         &raw mut res as *mut ::core::ffi::c_void,
         pzErrMsg,
     );
-    let ref mut fresh1 = *res.azResult.offset(0 as isize);
+    let fresh1 = &mut *res.azResult.offset(0_isize);
     *fresh1 = res.nData as crate::src::headers::stdlib::IntptrT as *mut ::core::ffi::c_void
         as *mut ::core::ffi::c_char;
     if rc & 0xff as ::core::ffi::c_int == crate::src::headers::sqlite3_h::SQLITE_ABORT {
-        sqlite3_free_table(res.azResult.offset(1 as isize) as *mut *mut ::core::ffi::c_char);
+        sqlite3_free_table(res.azResult.offset(1_isize) as *mut *mut ::core::ffi::c_char);
         if !res.zErrMsg.is_null() {
             if !pzErrMsg.is_null() {
                 crate::src::src::malloc::sqlite3_free(*pzErrMsg as *mut ::core::ffi::c_void);
@@ -375,25 +375,25 @@ pub unsafe extern "C" fn sqlite3_get_table(
     }
     crate::src::src::malloc::sqlite3_free(res.zErrMsg as *mut ::core::ffi::c_void);
     if rc != crate::src::headers::sqlite3_h::SQLITE_OK {
-        sqlite3_free_table(res.azResult.offset(1 as isize) as *mut *mut ::core::ffi::c_char);
+        sqlite3_free_table(res.azResult.offset(1_isize) as *mut *mut ::core::ffi::c_char);
         return rc;
     }
     if res.nAlloc > res.nData {
-        let azNew: *mut *mut ::core::ffi::c_char;
-        azNew = crate::src::src::malloc::sqlite3Realloc(
+        
+        let azNew: *mut *mut ::core::ffi::c_char = crate::src::src::malloc::sqlite3Realloc(
             res.azResult as *mut ::core::ffi::c_void,
             (::core::mem::size_of::<*mut ::core::ffi::c_char>() as usize)
                 .wrapping_mul(res.nData as usize)
                 as crate::src::ext::rtree::rtree::U64_0,
         ) as *mut *mut ::core::ffi::c_char;
         if azNew.is_null() {
-            sqlite3_free_table(res.azResult.offset(1 as isize) as *mut *mut ::core::ffi::c_char);
+            sqlite3_free_table(res.azResult.offset(1_isize) as *mut *mut ::core::ffi::c_char);
             (*db).errCode = crate::src::headers::sqlite3_h::SQLITE_NOMEM;
             return crate::src::headers::sqliteInt_h::SQLITE_NOMEM_BKPT;
         }
         res.azResult = azNew;
     }
-    *pazResult = res.azResult.offset(1 as isize) as *mut *mut ::core::ffi::c_char;
+    *pazResult = res.azResult.offset(1_isize) as *mut *mut ::core::ffi::c_char;
     if !pnColumn.is_null() {
         *pnColumn = res.nColumn as ::core::ffi::c_int;
     }
@@ -406,9 +406,9 @@ pub unsafe extern "C" fn sqlite3_get_table(
 pub unsafe extern "C" fn sqlite3_free_table(mut azResult: *mut *mut ::core::ffi::c_char) {
     if !azResult.is_null() {
         let mut i: ::core::ffi::c_int;
-        let n: ::core::ffi::c_int;
+        
         azResult = azResult.offset(-1);
-        n = *azResult.offset(0 as isize) as crate::src::headers::stdlib::IntptrT
+        let n: ::core::ffi::c_int = *azResult.offset(0_isize) as crate::src::headers::stdlib::IntptrT
             as ::core::ffi::c_int;
         i = 1 as ::core::ffi::c_int;
         while i < n {

@@ -167,6 +167,12 @@
           "cmd": "! { grep -rE \"allow[[:space:]]*\\([^)]*\\b(clippy::)?(unused_mut|unused_assignments)\\b\" \"$PROJECT_ROOT/crates\" --include=\"*.rs\" 2>/dev/null; grep -rE \"^[[:space:]]*(clippy::)?(unused_mut|unused_assignments)[[:space:]]*=[[:space:]]*\\\"allow\\\"\" \"$PROJECT_ROOT\" --include=\"Cargo.toml\" 2>/dev/null; } | grep -q .",
           "description": "Structural: Forbid any allow() attribute (inner #![...] or outer #[...], bare or clippy:: prefix, alone or combined, arbitrary whitespace) for unused_mut and unused_assignments across crates/**/*.rs. Also forbid equivalent suppressions in any Cargo.toml across the workspace under [lints.rust] / [lints.clippy] / [workspace.lints.rust] / [workspace.lints.clippy] (e.g. `unused_mut = \"allow\"` at workspace root). Word boundaries prevent false positives on longer identifiers.",
           "fails_count": 1
+        },
+        "forbid_clippy_lint_groups_any": {
+          "id": "forbid_clippy_lint_groups_any",
+          "cmd": "! { grep -rE \"allow[[:space:]]*\\([^)]*\\bclippy::(style|suspicious|complexity|perf|nursery|all)\\b\" \"$PROJECT_ROOT/crates\" --include=\"*.rs\" 2>/dev/null; grep -rE \"^[[:space:]]*clippy::(style|suspicious|complexity|perf|nursery|all)[[:space:]]*=[[:space:]]*\\\"allow\\\"\" \"$PROJECT_ROOT\" --include=\"Cargo.toml\" 2>/dev/null; } | grep -q .",
+          "description": "Structural: Forbid any allow() attribute (inner #![...] or outer #[...], alone or combined, arbitrary whitespace) for the broad clippy lint groups clippy::style, clippy::suspicious, clippy::complexity, clippy::perf, clippy::nursery, clippy::all across crates/**/*.rs. Also forbid equivalent suppressions in any Cargo.toml across the workspace under [lints.clippy] / [workspace.lints.clippy] (e.g. `clippy::all = \"allow\"`). These broad groups silence dozens of lints at once and must never be allowed.",
+          "fails_count": 1
         }
       }
     },

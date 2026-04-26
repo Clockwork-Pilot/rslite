@@ -255,8 +255,8 @@ pub unsafe extern "C" fn sqlite3UpsertNew(
     pWhere: *mut crate::src::headers::sqliteInt_h::Expr,
     pNext: *mut crate::src::headers::sqliteInt_h::Upsert,
 ) -> *mut crate::src::headers::sqliteInt_h::Upsert {
-    let pNew: *mut crate::src::headers::sqliteInt_h::Upsert;
-    pNew = crate::src::src::malloc::sqlite3DbMallocZero(
+    
+    let pNew: *mut crate::src::headers::sqliteInt_h::Upsert = crate::src::src::malloc::sqlite3DbMallocZero(
         db as *mut crate::src::headers::sqliteInt_h::sqlite3,
         ::core::mem::size_of::<crate::src::headers::sqliteInt_h::Upsert>()
             as crate::src::ext::rtree::rtree::U64_0,
@@ -328,11 +328,11 @@ pub unsafe extern "C" fn sqlite3UpsertAnalyzeTarget(
             return rc;
         }
         pTab = (*(&raw mut (*pTabList).a as *mut crate::src::headers::sqliteInt_h::SrcItem)
-            .offset(0 as isize))
+            .offset(0_isize))
         .pSTab;
         pTarget = (*pUpsert).pUpsertTarget;
         iCursor = (*(&raw mut (*pTabList).a as *mut crate::src::headers::sqliteInt_h::SrcItem)
-            .offset(0 as isize))
+            .offset(0_isize))
         .iCursor;
         if !((*pTab).tabFlags
             & crate::src::headers::sqliteInt_h::TF_WithoutRowid
@@ -342,7 +342,7 @@ pub unsafe extern "C" fn sqlite3UpsertAnalyzeTarget(
             && {
                 pTerm = (*(&raw mut (*pTarget).a
                     as *mut crate::src::headers::sqliteInt_h::ExprList_item)
-                    .offset(0 as isize))
+                    .offset(0_isize))
                 .pExpr;
                 (*pTerm).op as ::core::ffi::c_int == crate::src::parse::TK_COLUMN
             }
@@ -351,13 +351,13 @@ pub unsafe extern "C" fn sqlite3UpsertAnalyzeTarget(
             sCol[0 as ::core::ffi::c_int as usize].op =
                 crate::src::parse::TK_COLLATE as crate::src::ext::rtree::rtree::U8_0;
             sCol[0 as ::core::ffi::c_int as usize].pLeft =
-                (&raw mut sCol as *mut crate::src::headers::sqliteInt_h::Expr).offset(1 as isize)
+                (&raw mut sCol as *mut crate::src::headers::sqliteInt_h::Expr).offset(1_isize)
                     as *mut crate::src::headers::sqliteInt_h::Expr;
             sCol[1 as ::core::ffi::c_int as usize].op =
                 crate::src::parse::TK_COLUMN as crate::src::ext::rtree::rtree::U8_0;
             sCol[1 as ::core::ffi::c_int as usize].iTable = (*(&raw mut (*pTabList).a
                 as *mut crate::src::headers::sqliteInt_h::SrcItem)
-                .offset(0 as isize))
+                .offset(0_isize))
             .iCursor;
             let mut current_block_46: u64;
             pIdx = (*pTab).pIndex;
@@ -368,7 +368,7 @@ pub unsafe extern "C" fn sqlite3UpsertAnalyzeTarget(
                 if (*pIdx).onError as ::core::ffi::c_int
                     != crate::src::headers::sqliteInt_h::OE_None
                 {
-                    if !((*pTarget).nExpr != (*pIdx).nKeyCol as ::core::ffi::c_int) {
+                    if ((*pTarget).nExpr == (*pIdx).nKeyCol as ::core::ffi::c_int) {
                         if !(*pIdx).pPartIdxWhere.is_null() {
                             if (*pUpsert).pUpsertTargetWhere.is_null() {
                                 current_block_46 = 26972500619410423;
@@ -411,21 +411,21 @@ pub unsafe extern "C" fn sqlite3UpsertAnalyzeTarget(
                                             sCol[0 as ::core::ffi::c_int as usize].pLeft = pExpr;
                                             pExpr = (&raw mut sCol
                                                 as *mut crate::src::headers::sqliteInt_h::Expr)
-                                                .offset(0 as isize)
+                                                .offset(0_isize)
                                                 as *mut crate::src::headers::sqliteInt_h::Expr;
                                         }
                                     } else {
                                         sCol[0 as ::core::ffi::c_int as usize].pLeft =
                                             (&raw mut sCol
                                                 as *mut crate::src::headers::sqliteInt_h::Expr)
-                                                .offset(1 as isize)
+                                                .offset(1_isize)
                                                 as *mut crate::src::headers::sqliteInt_h::Expr;
                                         sCol[1 as ::core::ffi::c_int as usize].iColumn =
                                             *(*pIdx).aiColumn.offset(ii as isize)
                                                 as crate::src::headers::sqliteInt_h::YnVar;
                                         pExpr = (&raw mut sCol
                                             as *mut crate::src::headers::sqliteInt_h::Expr)
-                                            .offset(0 as isize)
+                                            .offset(0_isize)
                                             as *mut crate::src::headers::sqliteInt_h::Expr;
                                     }
                                     jj = 0 as ::core::ffi::c_int;
@@ -452,7 +452,7 @@ pub unsafe extern "C" fn sqlite3UpsertAnalyzeTarget(
                                     }
                                     ii += 1;
                                 }
-                                if !(ii < nn) {
+                                if (ii >= nn) {
                                     (*pUpsert).pUpsertIdx = pIdx;
                                     if sqlite3UpsertOfIndex(pAll, pIdx) != pUpsert {
                                         (*pUpsert).isDup = 1 as crate::src::ext::rtree::rtree::U8_0;
@@ -542,11 +542,11 @@ pub unsafe extern "C" fn sqlite3UpsertDoUpdate(
 ) {
     let v: *mut crate::src::headers::vdbeInt_h::Vdbe = (*pParse).pVdbe;
     let db: *mut crate::src::headers::sqliteInt_h::sqlite3 = (*pParse).db;
-    let pSrc: *mut crate::src::headers::sqliteInt_h::SrcList;
-    let iDataCur: ::core::ffi::c_int;
+    
+    
     let mut i: ::core::ffi::c_int;
     let pTop: *mut crate::src::headers::sqliteInt_h::Upsert = pUpsert;
-    iDataCur = (*pUpsert).iDataCur;
+    let iDataCur: ::core::ffi::c_int = (*pUpsert).iDataCur;
     pUpsert = sqlite3UpsertOfIndex(pTop, pIdx);
     if !pIdx.is_null() && iCur != iDataCur {
         if (*pTab).tabFlags
@@ -584,8 +584,8 @@ pub unsafe extern "C" fn sqlite3UpsertDoUpdate(
             (*pParse).nMem += nPk;
             i = 0 as ::core::ffi::c_int;
             while i < nPk {
-                let k: ::core::ffi::c_int;
-                k = crate::src::src::build::sqlite3TableColumnToIndex(
+                
+                let k: ::core::ffi::c_int = crate::src::src::build::sqlite3TableColumnToIndex(
                     pIdx as *mut crate::src::headers::sqliteInt_h::Index,
                     *(*pPk).aiColumn.offset(i as isize) as ::core::ffi::c_int,
                 );
@@ -621,7 +621,7 @@ pub unsafe extern "C" fn sqlite3UpsertDoUpdate(
             crate::src::src::vdbeaux::sqlite3VdbeJumpHere(v, i);
         }
     }
-    pSrc = crate::src::src::expr::sqlite3SrcListDup(
+    let pSrc: *mut crate::src::headers::sqliteInt_h::SrcList = crate::src::src::expr::sqlite3SrcListDup(
         db as *mut crate::src::headers::sqliteInt_h::sqlite3,
         (*pTop).pUpsertSrc as *const crate::src::headers::sqliteInt_h::SrcList,
         0 as ::core::ffi::c_int,

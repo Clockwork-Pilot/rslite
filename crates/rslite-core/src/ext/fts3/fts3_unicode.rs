@@ -162,10 +162,10 @@ unsafe extern "C" fn unicodeAddExceptions(
         }
     }
     if nEntry != 0 {
-        let aNew: *mut ::core::ffi::c_int;
+        
         let mut nNew: ::core::ffi::c_int;
         let __p_ref = { &mut *p };
-        aNew = crate::src::src::malloc::sqlite3_realloc64(
+        let aNew: *mut ::core::ffi::c_int = crate::src::src::malloc::sqlite3_realloc64(
             __p_ref.aiException as *mut ::core::ffi::c_void,
             ((__p_ref.nException + nEntry) as usize)
                 .wrapping_mul(::core::mem::size_of::<::core::ffi::c_int>() as usize)
@@ -321,7 +321,7 @@ unsafe extern "C" fn unicodeCreate(
             rc = unicodeAddExceptions(
                 pNew,
                 1 as ::core::ffi::c_int,
-                z.offset(11 as isize) as *const ::core::ffi::c_char,
+                z.offset(11_isize) as *const ::core::ffi::c_char,
                 n - 11 as ::core::ffi::c_int,
             );
         } else if n >= 11 as ::core::ffi::c_int
@@ -335,7 +335,7 @@ unsafe extern "C" fn unicodeCreate(
             rc = unicodeAddExceptions(
                 pNew,
                 0 as ::core::ffi::c_int,
-                z.offset(11 as isize) as *const ::core::ffi::c_char,
+                z.offset(11_isize) as *const ::core::ffi::c_char,
                 n - 11 as ::core::ffi::c_int,
             );
         } else {
@@ -357,8 +357,8 @@ unsafe extern "C" fn unicodeOpen(
     nInput: ::core::ffi::c_int,
     pp: *mut *mut crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_cursor,
 ) -> ::core::ffi::c_int {
-    let pCsr: *mut unicode_cursor;
-    pCsr = crate::src::src::malloc::sqlite3_malloc(
+    
+    let pCsr: *mut unicode_cursor = crate::src::src::malloc::sqlite3_malloc(
         ::core::mem::size_of::<unicode_cursor>() as ::core::ffi::c_int
     ) as *mut unicode_cursor;
     if pCsr.is_null() {
@@ -446,7 +446,7 @@ unsafe extern "C" fn unicodeNext(
     }
     zOut = __pCsr_ref.zToken;
     loop {
-        let iOut: ::core::ffi::c_int;
+        
         if zOut.offset_from(__pCsr_ref.zToken) as ::core::ffi::c_long
             >= (__pCsr_ref.nAlloc - 4 as ::core::ffi::c_int) as ::core::ffi::c_long
         {
@@ -464,7 +464,7 @@ unsafe extern "C" fn unicodeNext(
             __pCsr_ref.nAlloc += 64 as ::core::ffi::c_int;
         }
         zEnd = z;
-        iOut = crate::src::ext::fts3::fts3_unicode2::sqlite3FtsUnicodeFold(
+        let iOut: ::core::ffi::c_int = crate::src::ext::fts3::fts3_unicode2::sqlite3FtsUnicodeFold(
             iCode as ::core::ffi::c_int,
             (*p).eRemoveDiacritic,
         );

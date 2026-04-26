@@ -2553,8 +2553,8 @@ unsafe extern "C" fn sqlite3LoadExtension(
     } else {
         b"sqlite3_extension_init\0" as *const u8 as *const ::core::ffi::c_char
     };
-    if !(nMsg > crate::src::src::os::SQLITE_MAX_PATHLEN as crate::src::ext::rtree::rtree::U64_0) {
-        if !(nMsg == 0 as crate::src::ext::rtree::rtree::U64_0) {
+    if (nMsg <= crate::src::src::os::SQLITE_MAX_PATHLEN as crate::src::ext::rtree::rtree::U64_0) {
+        if (nMsg != 0 as crate::src::ext::rtree::rtree::U64_0) {
             handle = crate::src::src::os::sqlite3OsDlOpen(
                 pVfs as *mut crate::src::headers::sqlite3_h::sqlite3_vfs,
                 zFile,
@@ -2627,11 +2627,11 @@ unsafe extern "C" fn sqlite3LoadExtension(
                     ::core::ptr::copy_nonoverlapping(
                         b"sqlite3_\0" as *const u8 as *const ::core::ffi::c_char as *const u8,
                         zAltEntry as *mut u8,
-                        8 as usize,
+                        8_usize,
                     );
                     iFile = ncFile - 1 as ::core::ffi::c_int;
                     while iFile >= 0 as ::core::ffi::c_int
-                        && !(*zFile.offset(iFile as isize) as ::core::ffi::c_int == '/' as i32)
+                        && (*zFile.offset(iFile as isize) as ::core::ffi::c_int != '/' as i32)
                     {
                         iFile -= 1;
                     }
@@ -2670,7 +2670,7 @@ unsafe extern "C" fn sqlite3LoadExtension(
                     ::core::ptr::copy_nonoverlapping(
                         b"_init\0" as *const u8 as *const ::core::ffi::c_char as *const u8,
                         zAltEntry.offset(iEntry as isize) as *mut u8,
-                        6 as usize,
+                        6_usize,
                     );
                     zEntry = zAltEntry;
                     xInit = ::core::mem::transmute::<
@@ -2779,7 +2779,7 @@ unsafe extern "C" fn sqlite3LoadExtension(
                 __db_ref.aExtension = aHandle;
                 let fresh1 = __db_ref.nExtension;
                 __db_ref.nExtension += 1;
-                let ref mut fresh2 = *__db_ref.aExtension.offset(fresh1 as isize);
+                let fresh2 = &mut *__db_ref.aExtension.offset(fresh1 as isize);
                 *fresh2 = handle;
                 return crate::src::headers::sqlite3_h::SQLITE_OK;
             }
@@ -2875,7 +2875,7 @@ pub unsafe extern "C" fn sqlite3_auto_extension(
     let mut rc: ::core::ffi::c_int;
     rc = crate::src::src::main::sqlite3_initialize();
     if rc != 0 {
-        return rc;
+        rc
     } else {
         let mut i: crate::src::ext::rtree::rtree::U32_0;
         let mutex: *mut crate::src::src::mutex_unix::sqlite3_mutex =
@@ -2899,8 +2899,8 @@ pub unsafe extern "C" fn sqlite3_auto_extension(
                     ::core::mem::size_of::<Option<unsafe extern "C" fn() -> ()>>() as usize,
                 )
                 as crate::src::ext::rtree::rtree::U64_0;
-            let aNew: *mut Option<unsafe extern "C" fn() -> ()>;
-            aNew = crate::src::src::malloc::sqlite3_realloc64(
+            
+            let aNew: *mut Option<unsafe extern "C" fn() -> ()> = crate::src::src::malloc::sqlite3_realloc64(
                 sqlite3Autoext.aExt as *mut ::core::ffi::c_void,
                 nByte as crate::src::headers::sqlite3_h::Sqlite3Uint64,
             ) as *mut Option<unsafe extern "C" fn() -> ()>;
@@ -2908,14 +2908,14 @@ pub unsafe extern "C" fn sqlite3_auto_extension(
                 rc = crate::src::headers::sqliteInt_h::SQLITE_NOMEM_BKPT;
             } else {
                 sqlite3Autoext.aExt = aNew;
-                let ref mut fresh4 = *sqlite3Autoext.aExt.offset(sqlite3Autoext.nExt as isize);
+                let fresh4 = &mut *sqlite3Autoext.aExt.offset(sqlite3Autoext.nExt as isize);
                 *fresh4 = xInit;
                 sqlite3Autoext.nExt = sqlite3Autoext.nExt.wrapping_add(1);
             }
         }
         crate::src::src::mutex::sqlite3_mutex_leave(mutex);
-        return rc;
-    };
+        rc
+    }
 }
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn sqlite3_cancel_auto_extension(
@@ -2932,7 +2932,7 @@ pub unsafe extern "C" fn sqlite3_cancel_auto_extension(
     while i >= 0 as ::core::ffi::c_int {
         if *sqlite3Autoext.aExt.offset(i as isize) == xInit {
             sqlite3Autoext.nExt = sqlite3Autoext.nExt.wrapping_sub(1);
-            let ref mut fresh3 = *sqlite3Autoext.aExt.offset(i as isize);
+            let fresh3 = &mut *sqlite3Autoext.aExt.offset(i as isize);
             *fresh3 = *sqlite3Autoext.aExt.offset(sqlite3Autoext.nExt as isize);
             n += 1;
             break;

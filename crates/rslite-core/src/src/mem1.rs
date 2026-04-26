@@ -12,7 +12,7 @@ unsafe extern "C" fn sqlite3MemMalloc(nByte: ::core::ffi::c_int) -> *mut ::core:
     p = ::libc::malloc((nByte + 8 as ::core::ffi::c_int) as crate::__stddef_size_t_h::SizeT)
         as *mut crate::src::headers::sqlite3_h::Sqlite3Int64;
     if !p.is_null() {
-        *p.offset(0 as isize) = nByte as crate::src::headers::sqlite3_h::Sqlite3Int64;
+        *p.offset(0_isize) = nByte as crate::src::headers::sqlite3_h::Sqlite3Int64;
         p = p.offset(1);
     } else {
         crate::src::printf_c_variadic::sqlite3_log_args(
@@ -35,7 +35,7 @@ unsafe extern "C" fn sqlite3MemSize(pPrior: *mut ::core::ffi::c_void) -> ::core:
     let mut p: *mut crate::src::headers::sqlite3_h::Sqlite3Int64;
     p = pPrior as *mut crate::src::headers::sqlite3_h::Sqlite3Int64;
     p = p.offset(-1);
-    *p.offset(0 as isize) as ::core::ffi::c_int
+    *p.offset(0_isize) as ::core::ffi::c_int
 }
 
 unsafe extern "C" fn sqlite3MemRealloc(
@@ -50,7 +50,7 @@ unsafe extern "C" fn sqlite3MemRealloc(
         (nByte + 8 as ::core::ffi::c_int) as crate::__stddef_size_t_h::SizeT,
     ) as *mut crate::src::headers::sqlite3_h::Sqlite3Int64;
     if !p.is_null() {
-        *p.offset(0 as isize) = nByte as crate::src::headers::sqlite3_h::Sqlite3Int64;
+        *p.offset(0_isize) = nByte as crate::src::headers::sqlite3_h::Sqlite3Int64;
         p = p.offset(1);
     } else {
         crate::src::printf_c_variadic::sqlite3_log_args(

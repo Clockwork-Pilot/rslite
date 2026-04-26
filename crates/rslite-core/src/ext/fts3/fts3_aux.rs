@@ -119,7 +119,7 @@ unsafe extern "C" fn fts3auxConnectMethod(
     let rc: ::core::ffi::c_int;
     let p: *mut Fts3auxTable;
     if !(argc != 4 as ::core::ffi::c_int && argc != 5 as ::core::ffi::c_int) {
-        zDb = *argv.offset(1 as isize);
+        zDb = *argv.offset(1_isize);
         nDb = ::libc::strlen(zDb) as ::core::ffi::c_int;
         if argc == 5 as ::core::ffi::c_int {
             if nDb == 4 as ::core::ffi::c_int
@@ -130,15 +130,15 @@ unsafe extern "C" fn fts3auxConnectMethod(
                         4 as ::core::ffi::c_int,
                     )
             {
-                zDb = *argv.offset(3 as isize);
+                zDb = *argv.offset(3_isize);
                 nDb = ::libc::strlen(zDb) as ::core::ffi::c_int;
-                zFts3 = *argv.offset(4 as isize);
+                zFts3 = *argv.offset(4_isize);
                 current_block = 1856101646708284338;
             } else {
                 current_block = 10728627893248296414;
             }
         } else {
-            zFts3 = *argv.offset(3 as isize);
+            zFts3 = *argv.offset(3_isize);
             current_block = 1856101646708284338;
         }
         match current_block {
@@ -153,7 +153,7 @@ unsafe extern "C" fn fts3auxConnectMethod(
                     .wrapping_add(::core::mem::size_of::<crate::fts3Int_h::Fts3Table>() as usize)
                     .wrapping_add(nDb as usize)
                     .wrapping_add(nFts3 as usize)
-                    .wrapping_add(2 as usize)
+                    .wrapping_add(2_usize)
                     as crate::src::headers::sqlite3_h::Sqlite3Int64;
                 p = crate::src::src::malloc::sqlite3_malloc64(
                     nByte as crate::src::headers::sqlite3_h::Sqlite3Uint64,
@@ -167,8 +167,8 @@ unsafe extern "C" fn fts3auxConnectMethod(
                     nByte as crate::__stddef_size_t_h::SizeT,
                 );
                 (*p).pFts3Tab =
-                    p.offset(1 as isize) as *mut Fts3auxTable as *mut crate::fts3Int_h::Fts3Table;
-                (*(*p).pFts3Tab).zDb = (*p).pFts3Tab.offset(1 as isize)
+                    p.offset(1_isize) as *mut Fts3auxTable as *mut crate::fts3Int_h::Fts3Table;
+                (*(*p).pFts3Tab).zDb = (*p).pFts3Tab.offset(1_isize)
                     as *mut crate::fts3Int_h::Fts3Table
                     as *mut ::core::ffi::c_char;
                 (*(*p).pFts3Tab).zName = (*(*p).pFts3Tab)
@@ -244,8 +244,8 @@ unsafe extern "C" fn fts3auxBestIndexMethod(
     let mut iNext: ::core::ffi::c_int = 1 as ::core::ffi::c_int;
     let __pInfo_ref = unsafe { &mut *pInfo };
     if __pInfo_ref.nOrderBy == 1 as ::core::ffi::c_int
-        && (*__pInfo_ref.aOrderBy.offset(0 as isize)).iColumn == 0 as ::core::ffi::c_int
-        && (*__pInfo_ref.aOrderBy.offset(0 as isize)).desc as ::core::ffi::c_int
+        && (*__pInfo_ref.aOrderBy.offset(0_isize)).iColumn == 0 as ::core::ffi::c_int
+        && (*__pInfo_ref.aOrderBy.offset(0_isize)).desc as ::core::ffi::c_int
             == 0 as ::core::ffi::c_int
     {
         __pInfo_ref.orderByConsumed = 1 as ::core::ffi::c_int;
@@ -318,8 +318,8 @@ unsafe extern "C" fn fts3auxOpenMethod(
     mut _pVTab: *mut crate::src::headers::sqlite3_h::sqlite3_vtab,
     ppCsr: *mut *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
 ) -> ::core::ffi::c_int {
-    let pCsr: *mut Fts3auxCursor;
-    pCsr = crate::src::src::malloc::sqlite3_malloc(
+    
+    let pCsr: *mut Fts3auxCursor = crate::src::src::malloc::sqlite3_malloc(
         ::core::mem::size_of::<Fts3auxCursor>() as ::core::ffi::c_int
     ) as *mut Fts3auxCursor;
     if pCsr.is_null() {
@@ -359,9 +359,9 @@ unsafe extern "C" fn fts3auxGrowStatArray(
     nSize: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
     if nSize > (*pCsr).nStat {
-        let aNew: *mut Fts3auxColstats;
+        
         let __pCsr_ref = unsafe { &mut *pCsr };
-        aNew = crate::src::src::malloc::sqlite3_realloc64(
+        let aNew: *mut Fts3auxColstats = crate::src::src::malloc::sqlite3_realloc64(
             __pCsr_ref.aStat as *mut ::core::ffi::c_void,
             (::core::mem::size_of::<Fts3auxColstats>() as usize).wrapping_mul(nSize as usize)
                 as crate::src::headers::sqlite3_h::Sqlite3Uint64,
@@ -449,7 +449,7 @@ unsafe extern "C" fn fts3auxNextMethod(
             let current_block_42: u64;
             match eState {
                 0 => {
-                    let ref mut fresh0 = (*__pCsr_ref.aStat.offset(0 as isize)).nDoc;
+                    let fresh0 = &mut (*__pCsr_ref.aStat.offset(0_isize)).nDoc;
                     *fresh0 += 1;
                     eState = 1 as ::core::ffi::c_int;
                     iCol = 0 as ::core::ffi::c_int;
@@ -457,7 +457,7 @@ unsafe extern "C" fn fts3auxNextMethod(
                 }
                 1 => {
                     if v > 1 as crate::src::headers::sqlite3_h::Sqlite3Int64 {
-                        let ref mut fresh1 = (*__pCsr_ref.aStat.offset(1 as isize)).nDoc;
+                        let fresh1 = &mut (*__pCsr_ref.aStat.offset(1_isize)).nDoc;
                         *fresh1 += 1;
                     }
                     eState = 2 as ::core::ffi::c_int;
@@ -474,7 +474,7 @@ unsafe extern "C" fn fts3auxNextMethod(
                         if fts3auxGrowStatArray(pCsr, iCol + 2 as ::core::ffi::c_int) != 0 {
                             return crate::src::headers::sqlite3_h::SQLITE_NOMEM;
                         }
-                        let ref mut fresh4 = (*(*pCsr)
+                        let fresh4 = &mut (*(*pCsr)
                             .aStat
                             .offset((iCol + 1 as ::core::ffi::c_int) as isize))
                         .nDoc;
@@ -491,12 +491,12 @@ unsafe extern "C" fn fts3auxNextMethod(
                     } else if v == 1 as crate::src::headers::sqlite3_h::Sqlite3Int64 {
                         eState = 3 as ::core::ffi::c_int;
                     } else {
-                        let ref mut fresh2 = (*(*pCsr)
+                        let fresh2 = &mut (*(*pCsr)
                             .aStat
                             .offset((iCol + 1 as ::core::ffi::c_int) as isize))
                         .nOcc;
                         *fresh2 += 1;
-                        let ref mut fresh3 = (*__pCsr_ref.aStat.offset(0 as isize)).nOcc;
+                        let fresh3 = &mut (*__pCsr_ref.aStat.offset(0_isize)).nOcc;
                         *fresh3 += 1;
                     }
                 }
@@ -559,7 +559,7 @@ unsafe extern "C" fn fts3auxFilterMethod(
     ::libc::memset(
         &raw mut __pCsr_ref.csr as *mut ::core::ffi::c_void,
         0 as ::core::ffi::c_int,
-        (pCsr.offset(1 as isize) as *mut Fts3auxCursor as *mut crate::src::ext::rtree::rtree::U8_0)
+        (pCsr.offset(1_isize) as *mut Fts3auxCursor as *mut crate::src::ext::rtree::rtree::U8_0)
             .offset_from(&raw mut __pCsr_ref.csr as *mut crate::src::ext::rtree::rtree::U8_0)
             as ::core::ffi::c_long as crate::__stddef_size_t_h::SizeT,
     );
@@ -570,7 +570,7 @@ unsafe extern "C" fn fts3auxFilterMethod(
     }
     if iEq >= 0 as ::core::ffi::c_int || iGe >= 0 as ::core::ffi::c_int {
         let zStr: *const ::core::ffi::c_uchar =
-            crate::src::src::vdbeapi::sqlite3_value_text(*apVal.offset(0 as isize));
+            crate::src::src::vdbeapi::sqlite3_value_text(*apVal.offset(0_isize));
         if !zStr.is_null() {
             __pCsr_ref.filter.zTerm =
                 crate::sqlite_printf!("%s", zStr as *const ::core::ffi::c_char);
@@ -800,8 +800,8 @@ pub unsafe extern "C" fn sqlite3Fts3InitAux(
             xShadowName: None,
             xIntegrity: None,
         };
-    let rc: ::core::ffi::c_int;
-    rc = crate::src::src::vtab::sqlite3_create_module(
+    
+    let rc: ::core::ffi::c_int = crate::src::src::vtab::sqlite3_create_module(
         db,
         b"fts4aux\0" as *const u8 as *const ::core::ffi::c_char,
         &raw const fts3aux_module as *const _

@@ -249,17 +249,17 @@ pub unsafe extern "C" fn sqlite3_complete(
                 current_block_65 = 10512632378975961025;
             }
             47 => {
-                if *zSql.offset(1 as isize) as ::core::ffi::c_int != '*' as i32 {
+                if *zSql.offset(1_isize) as ::core::ffi::c_int != '*' as i32 {
                     token = tkOTHER as crate::src::ext::rtree::rtree::U8_0;
                 } else {
-                    zSql = zSql.offset(2 as isize);
-                    while *zSql.offset(0 as isize) as ::core::ffi::c_int != 0
-                        && (*zSql.offset(0 as isize) as ::core::ffi::c_int != '*' as i32
-                            || *zSql.offset(1 as isize) as ::core::ffi::c_int != '/' as i32)
+                    zSql = zSql.offset(2_isize);
+                    while *zSql.offset(0_isize) as ::core::ffi::c_int != 0
+                        && (*zSql.offset(0_isize) as ::core::ffi::c_int != '*' as i32
+                            || *zSql.offset(1_isize) as ::core::ffi::c_int != '/' as i32)
                     {
                         zSql = zSql.offset(1);
                     }
-                    if *zSql.offset(0 as isize) as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
+                    if *zSql.offset(0_isize) as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
                         return 0 as ::core::ffi::c_int;
                     }
                     zSql = zSql.offset(1);
@@ -268,7 +268,7 @@ pub unsafe extern "C" fn sqlite3_complete(
                 current_block_65 = 10512632378975961025;
             }
             45 => {
-                if *zSql.offset(1 as isize) as ::core::ffi::c_int != '-' as i32 {
+                if *zSql.offset(1_isize) as ::core::ffi::c_int != '-' as i32 {
                     token = tkOTHER as crate::src::ext::rtree::rtree::U8_0;
                 } else {
                     while *zSql as ::core::ffi::c_int != 0
@@ -324,19 +324,16 @@ pub unsafe extern "C" fn sqlite3_complete(
                         nId += 1;
                     }
                     match *zSql as ::core::ffi::c_int {
-                        99 | 67 => {
+                        99 | 67
                             if nId == 6 as ::core::ffi::c_int
                                 && crate::src::src::util::sqlite3_strnicmp(
                                     zSql,
                                     b"create\0" as *const u8 as *const ::core::ffi::c_char,
                                     6 as ::core::ffi::c_int,
                                 ) == 0 as ::core::ffi::c_int
-                            {
+                            => {
                                 token = tkCREATE as crate::src::ext::rtree::rtree::U8_0;
-                            } else {
-                                token = tkOTHER as crate::src::ext::rtree::rtree::U8_0;
                             }
-                        }
                         116 | 84 => {
                             if nId == 7 as ::core::ffi::c_int
                                 && crate::src::src::util::sqlite3_strnicmp(
@@ -421,14 +418,14 @@ pub unsafe extern "C" fn sqlite3_complete(
 pub unsafe extern "C" fn sqlite3_complete16(
     zSql: *const ::core::ffi::c_void,
 ) -> ::core::ffi::c_int {
-    let pVal: *mut crate::src::headers::vdbeInt_h::sqlite3_value;
-    let zSql8: *const ::core::ffi::c_char;
+    
+    
     let mut rc: ::core::ffi::c_int;
     rc = crate::src::src::main::sqlite3_initialize();
     if rc != 0 {
         return rc;
     }
-    pVal = crate::src::src::vdbemem::sqlite3ValueNew(::core::ptr::null_mut::<
+    let pVal: *mut crate::src::headers::vdbeInt_h::sqlite3_value = crate::src::src::vdbemem::sqlite3ValueNew(::core::ptr::null_mut::<
         crate::src::headers::sqliteInt_h::sqlite3,
     >()
         as *mut crate::src::headers::sqliteInt_h::sqlite3);
@@ -439,7 +436,7 @@ pub unsafe extern "C" fn sqlite3_complete16(
         crate::src::headers::sqliteInt_h::SQLITE_UTF16NATIVE as crate::src::ext::rtree::rtree::U8_0,
         crate::src::headers::sqlite3_h::SQLITE_STATIC,
     );
-    zSql8 = crate::src::src::vdbemem::sqlite3ValueText(
+    let zSql8: *const ::core::ffi::c_char = crate::src::src::vdbemem::sqlite3ValueText(
         pVal,
         crate::src::headers::sqlite3_h::SQLITE_UTF8 as crate::src::ext::rtree::rtree::U8_0,
     ) as *const ::core::ffi::c_char;

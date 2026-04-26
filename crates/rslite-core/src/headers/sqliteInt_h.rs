@@ -107,7 +107,7 @@ pub type Bitmask = crate::src::ext::rtree::rtree::U64_0;
 
 pub const BMS: ::core::ffi::c_int =
     (::core::mem::size_of::<crate::src::headers::sqliteInt_h::Bitmask>() as usize)
-        .wrapping_mul(8 as usize) as ::core::ffi::c_int;
+        .wrapping_mul(8_usize) as ::core::ffi::c_int;
 
 pub const ALLBITS: crate::src::headers::sqliteInt_h::Bitmask =
     -(1 as ::core::ffi::c_int) as crate::src::headers::sqliteInt_h::Bitmask;
@@ -1350,7 +1350,7 @@ pub struct SrcList {
     pub a: [crate::src::headers::sqliteInt_h::SrcItem; 0],
 }
 
-pub const SZ_SRCLIST_1: usize = (8 as usize)
+pub const SZ_SRCLIST_1: usize = 8_usize
     .wrapping_add(::core::mem::size_of::<crate::src::headers::sqliteInt_h::SrcItem>() as usize);
 
 pub const JT_INNER: ::core::ffi::c_int = 0x1 as ::core::ffi::c_int;

@@ -181,12 +181,12 @@ pub unsafe extern "C" fn sqlite3RowSetInit(
         __p_ref.pLast = ::core::ptr::null_mut::<RowSetEntry>();
         __p_ref.pForest = ::core::ptr::null_mut::<RowSetEntry>();
         __p_ref.pFresh = (p as *mut ::core::ffi::c_char).offset(
-            ((::core::mem::size_of::<RowSet>() as usize).wrapping_add(7 as usize)
+            ((::core::mem::size_of::<RowSet>() as usize).wrapping_add(7_usize)
                 & !(7 as ::core::ffi::c_int) as usize) as isize,
         ) as *mut RowSetEntry;
         __p_ref.nFresh = (N as usize)
             .wrapping_sub(
-                (::core::mem::size_of::<RowSet>() as usize).wrapping_add(7 as usize)
+                (::core::mem::size_of::<RowSet>() as usize).wrapping_add(7_usize)
                     & !(7 as ::core::ffi::c_int) as usize,
             )
             .wrapping_div(::core::mem::size_of::<RowSetEntry>() as usize)
@@ -232,8 +232,8 @@ pub unsafe extern "C" fn sqlite3RowSetDelete(pArg: *mut ::core::ffi::c_void) {
 unsafe extern "C" fn rowSetEntryAlloc(p: *mut RowSet) -> *mut RowSetEntry {
     let __p_ref = unsafe { &mut *p };
     if __p_ref.nFresh as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
-        let pNew: *mut RowSetChunk;
-        pNew = crate::src::src::malloc::sqlite3DbMallocRawNN(
+        
+        let pNew: *mut RowSetChunk = crate::src::src::malloc::sqlite3DbMallocRawNN(
             __p_ref.db as *mut crate::src::headers::sqliteInt_h::sqlite3,
             ::core::mem::size_of::<RowSetChunk>() as crate::src::ext::rtree::rtree::U64_0,
         ) as *mut RowSetChunk;
@@ -256,15 +256,15 @@ pub unsafe extern "C" fn sqlite3RowSetInsert(
     p: *mut RowSet,
     rowid: crate::src::ext::rtree::rtree::I64_0,
 ) {
-    let pEntry: *mut RowSetEntry;
-    let pLast: *mut RowSetEntry;
-    pEntry = rowSetEntryAlloc(p);
+    
+    
+    let pEntry: *mut RowSetEntry = rowSetEntryAlloc(p);
     if pEntry.is_null() {
         return;
     }
     (*pEntry).v = rowid;
     (*pEntry).pRight = ::core::ptr::null_mut::<RowSetEntry>();
-    pLast = (*p).pLast;
+    let pLast: *mut RowSetEntry = (*p).pLast;
     if !pLast.is_null() {
         if rowid <= (*pLast).v {
             (*p).rsFlags =
@@ -430,10 +430,10 @@ pub unsafe extern "C" fn sqlite3RowSetNext(
         if __p_ref.pEntry.is_null() {
             sqlite3RowSetClear(p as *mut ::core::ffi::c_void);
         }
-        return 1 as ::core::ffi::c_int;
+        1 as ::core::ffi::c_int
     } else {
-        return 0 as ::core::ffi::c_int;
-    };
+        0 as ::core::ffi::c_int
+    }
 }
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
