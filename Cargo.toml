@@ -20,6 +20,10 @@ version = "0.0.0"
 edition = "2024"
 publish = false
 
+[workspace.lints.rust]
+unused_mut = "allow"
+unused_assignments = "allow"
+
 [package]
 name = "sqlite-noamalgam"
 version.workspace = true

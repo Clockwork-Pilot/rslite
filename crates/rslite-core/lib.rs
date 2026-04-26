@@ -1,7 +1,5 @@
 #![allow(non_snake_case)]
 #![allow(non_upper_case_globals)]
-#![allow(unused_assignments)]
-#![allow(unused_mut)]
 #![allow(unsafe_op_in_unsafe_fn)]
 #![allow(clippy::ptr_eq)]
 #![allow(clippy::no_effect)]

@@ -30,3 +30,6 @@ test = ["default"]
 fts3 = []
 fts4 = ["fts3"]
 update_delete_limit = []
+
+[lints]
+workspace = true
