@@ -12,6 +12,7 @@ Verify c_variadic feature isolation: only in printf_c_variadic.rs
       - [constraint_build_all](#constraint_build_all)
     - [Feature: clippy_checks](#feature-clippy_checks)
       - [clippy_checks](#clippy_checks)
+      - [forbid_clippy_comparison_numeric_lints_any](#forbid_clippy_comparison_numeric_lints_any)
       - [forbid_non_camel_case_types_allow](#forbid_non_camel_case_types_allow)
       - [forbid_non_camel_case_types_allow_robust](#forbid_non_camel_case_types_allow_robust)
       - [forbid_non_camel_case_types_any](#forbid_non_camel_case_types_any)
@@ -27,8 +28,6 @@ Verify c_variadic feature isolation: only in printf_c_variadic.rs
       - [rslite_uses_crust_core](#rslite_uses_crust_core)
     - [Feature: toolchain_version](#feature-toolchain_version)
       - [stable_toolchain_or_missing](#stable_toolchain_or_missing)
-    - [Feature: workflow_constraints](#feature-workflow_constraints)
-      - [workflow_spec](#workflow_spec)
 
 ## Features
 
@@ -47,6 +46,9 @@ Verify c_variadic feature isolation: only in printf_c_variadic.rs
 
 #### clippy_checks
 **Description:** Run cargo clippy and ensure no warnings reported
+
+#### forbid_clippy_comparison_numeric_lints_any
+**Description:** Structural: Forbid any allow() attribute (inner #![...] or outer #[...], bare or clippy:: prefix, alone or combined, arbitrary whitespace) for clippy::absurd_extreme_comparisons, almost_swapped, approx_constant, eq_op, excessive_precision, nonminimal_bool across crates/**/*.rs. Also forbid equivalent suppressions in crates/rslite-core/Cargo.toml under [lints.rust] / [lints.clippy] (e.g. `eq_op = "allow"`). Word boundaries prevent false positives on longer identifiers.
 
 #### forbid_non_camel_case_types_allow
 **Description:** Structural: Forbid allow() attributes for clippy::non_camel_case_types rule. Types must follow camelCase naming convention.
@@ -108,13 +110,3 @@ Verify c_variadic feature isolation: only in printf_c_variadic.rs
 
 #### stable_toolchain_or_missing
 **Description:** rust-toolchain.toml must either be missing or use stable channel
-
-### Feature: workflow_constraints
-**Workflow specs exist and constraint checker runs on PRs**
-
-**Goals:**
-- Workflow spec must exist at .github/workflows/spec.k.json
-- A CI workflow must run check_spec_constraints.py against the workflow spec on pull_request
-
-#### workflow_spec
-**Description:** Workflow checks
