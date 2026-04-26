@@ -24,12 +24,12 @@ pub struct SQLiteThread {
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3ThreadCreate(
-    mut ppThread: *mut *mut SQLiteThread,
-    mut xTask: Option<unsafe extern "C" fn(*mut ::core::ffi::c_void) -> *mut ::core::ffi::c_void>,
-    mut pIn: *mut ::core::ffi::c_void,
+    ppThread: *mut *mut SQLiteThread,
+    xTask: Option<unsafe extern "C" fn(*mut ::core::ffi::c_void) -> *mut ::core::ffi::c_void>,
+    pIn: *mut ::core::ffi::c_void,
 ) -> ::core::ffi::c_int {
-    let mut p: *mut SQLiteThread = ::core::ptr::null_mut::<SQLiteThread>();
-    let mut rc: ::core::ffi::c_int = 0;
+    let p: *mut SQLiteThread;
+    let rc: ::core::ffi::c_int;
     *ppThread = ::core::ptr::null_mut::<SQLiteThread>();
     p = crate::src::src::malloc::sqlite3Malloc(
         ::core::mem::size_of::<SQLiteThread>() as crate::src::ext::rtree::rtree::U64_0
@@ -64,10 +64,10 @@ pub unsafe extern "C" fn sqlite3ThreadCreate(
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3ThreadJoin(
-    mut p: *mut SQLiteThread,
-    mut ppOut: *mut *mut ::core::ffi::c_void,
+    p: *mut SQLiteThread,
+    ppOut: *mut *mut ::core::ffi::c_void,
 ) -> ::core::ffi::c_int {
-    let mut rc: ::core::ffi::c_int = 0;
+    let rc: ::core::ffi::c_int;
     if p.is_null() {
         return crate::src::headers::sqliteInt_h::SQLITE_NOMEM_BKPT;
     }

@@ -897,8 +897,8 @@ pub const JSON_EDITABLE: ::core::ffi::c_int = 0x1 as ::core::ffi::c_int;
 
 pub const JSON_KEEPERROR: ::core::ffi::c_int = 0x2 as ::core::ffi::c_int;
 
-unsafe extern "C" fn jsonCacheDelete(mut p: *mut JsonCache) {
-    let mut i: ::core::ffi::c_int = 0;
+unsafe extern "C" fn jsonCacheDelete(p: *mut JsonCache) {
+    let mut i: ::core::ffi::c_int;
     i = 0 as ::core::ffi::c_int;
     while i < (*p).nUsed {
         jsonParseFree((*p).a[i as usize]);
@@ -910,18 +910,18 @@ unsafe extern "C" fn jsonCacheDelete(mut p: *mut JsonCache) {
     );
 }
 
-unsafe extern "C" fn jsonCacheDeleteGeneric(mut p: *mut ::core::ffi::c_void) {
+unsafe extern "C" fn jsonCacheDeleteGeneric(p: *mut ::core::ffi::c_void) {
     jsonCacheDelete(p as *mut JsonCache);
 }
 
 unsafe extern "C" fn jsonCacheInsert(
-    mut ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
-    mut pParse: *mut JsonParse,
+    ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
+    pParse: *mut JsonParse,
 ) -> ::core::ffi::c_int {
-    let mut p: *mut JsonCache = ::core::ptr::null_mut::<JsonCache>();
+    let mut p: *mut JsonCache;
     p = crate::src::src::vdbeapi::sqlite3_get_auxdata(ctx, JSON_CACHE_ID) as *mut JsonCache;
     if p.is_null() {
-        let mut db: *mut crate::src::headers::sqliteInt_h::sqlite3 =
+        let db: *mut crate::src::headers::sqliteInt_h::sqlite3 =
             crate::src::src::vdbeapi::sqlite3_context_db_handle(ctx)
                 as *mut crate::src::headers::sqliteInt_h::sqlite3;
         p = crate::src::src::malloc::sqlite3DbMallocZero(
@@ -967,13 +967,13 @@ unsafe extern "C" fn jsonCacheInsert(
 }
 
 unsafe extern "C" fn jsonCacheSearch(
-    mut ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
-    mut pArg: *mut crate::src::headers::vdbeInt_h::sqlite3_value,
+    ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
+    pArg: *mut crate::src::headers::vdbeInt_h::sqlite3_value,
 ) -> *mut JsonParse {
-    let mut p: *mut JsonCache = ::core::ptr::null_mut::<JsonCache>();
-    let mut i: ::core::ffi::c_int = 0;
-    let mut zJson: *const ::core::ffi::c_char = ::core::ptr::null::<::core::ffi::c_char>();
-    let mut nJson: ::core::ffi::c_int = 0;
+    let p: *mut JsonCache;
+    let mut i: ::core::ffi::c_int;
+    let zJson: *const ::core::ffi::c_char;
+    let nJson: ::core::ffi::c_int;
     if crate::src::src::vdbeapi::sqlite3_value_type(pArg)
         != crate::src::headers::sqlite3_h::SQLITE_TEXT_1
     {
@@ -1014,7 +1014,7 @@ unsafe extern "C" fn jsonCacheSearch(
     if i < (*p).nUsed {
         if i < (*p).nUsed - 1 as ::core::ffi::c_int {
             let __p_ref = { &mut *p };
-            let mut tmp: *mut JsonParse = __p_ref.a[i as usize];
+            let tmp: *mut JsonParse = __p_ref.a[i as usize];
             ::core::ptr::copy(
                 (&raw mut __p_ref.a as *mut *mut JsonParse)
                     .offset((i + 1 as ::core::ffi::c_int) as isize)
@@ -1035,7 +1035,7 @@ unsafe extern "C" fn jsonCacheSearch(
     };
 }
 
-unsafe extern "C" fn jsonStringZero(mut p: *mut JsonString) {
+unsafe extern "C" fn jsonStringZero(p: *mut JsonString) {
     let __p_ref = { &mut *p };
     __p_ref.zBuf = &raw mut __p_ref.zSpace as *mut ::core::ffi::c_char;
     __p_ref.nAlloc = ::core::mem::size_of::<[::core::ffi::c_char; 100]>()
@@ -1045,22 +1045,22 @@ unsafe extern "C" fn jsonStringZero(mut p: *mut JsonString) {
 }
 
 unsafe extern "C" fn jsonStringInit(
-    mut p: *mut JsonString,
-    mut pCtx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
+    p: *mut JsonString,
+    pCtx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
 ) {
     (*p).pCtx = pCtx;
     (*p).eErr = 0 as crate::src::ext::rtree::rtree::U8_0;
     jsonStringZero(p);
 }
 
-unsafe extern "C" fn jsonStringReset(mut p: *mut JsonString) {
+unsafe extern "C" fn jsonStringReset(p: *mut JsonString) {
     if (*p).bStatic == 0 {
         crate::src::src::printf::sqlite3RCStrUnref((*p).zBuf as *mut ::core::ffi::c_void);
     }
     jsonStringZero(p);
 }
 
-unsafe extern "C" fn jsonStringOom(mut p: *mut JsonString) {
+unsafe extern "C" fn jsonStringOom(p: *mut JsonString) {
     let __p_ref = { &mut *p };
     __p_ref.eErr =
         (__p_ref.eErr as ::core::ffi::c_int | JSTRING_OOM) as crate::src::ext::rtree::rtree::U8_0;
@@ -1071,11 +1071,11 @@ unsafe extern "C" fn jsonStringOom(mut p: *mut JsonString) {
 }
 
 pub unsafe extern "C" fn jsonStringGrow(
-    mut p: *mut JsonString,
-    mut N: crate::src::ext::rtree::rtree::U32_0,
+    p: *mut JsonString,
+    N: crate::src::ext::rtree::rtree::U32_0,
 ) -> ::core::ffi::c_int {
     let __p_ref = { &mut *p };
-    let mut nTotal: crate::src::ext::rtree::rtree::U64_0 =
+    let nTotal: crate::src::ext::rtree::rtree::U64_0 =
         if (N as crate::src::ext::rtree::rtree::U64_0) < __p_ref.nAlloc {
             __p_ref
                 .nAlloc
@@ -1086,7 +1086,7 @@ pub unsafe extern "C" fn jsonStringGrow(
                 .wrapping_add(N as crate::src::ext::rtree::rtree::U64_0)
                 .wrapping_add(10 as crate::src::ext::rtree::rtree::U64_0)
         };
-    let mut zNew: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
+    let zNew: *mut ::core::ffi::c_char;
     if __p_ref.bStatic != 0 {
         if __p_ref.eErr != 0 {
             return 1 as ::core::ffi::c_int;
@@ -1117,9 +1117,9 @@ pub unsafe extern "C" fn jsonStringGrow(
 }
 #[inline(never)]
 unsafe extern "C" fn jsonStringExpandAndAppend(
-    mut p: *mut JsonString,
-    mut zIn: *const ::core::ffi::c_char,
-    mut N: crate::src::ext::rtree::rtree::U32_0,
+    p: *mut JsonString,
+    zIn: *const ::core::ffi::c_char,
+    N: crate::src::ext::rtree::rtree::U32_0,
 ) {
     if jsonStringGrow(p, N) != 0 {
         return;
@@ -1136,9 +1136,9 @@ unsafe extern "C" fn jsonStringExpandAndAppend(
 }
 
 unsafe extern "C" fn jsonAppendRaw(
-    mut p: *mut JsonString,
-    mut zIn: *const ::core::ffi::c_char,
-    mut N: crate::src::ext::rtree::rtree::U32_0,
+    p: *mut JsonString,
+    zIn: *const ::core::ffi::c_char,
+    N: crate::src::ext::rtree::rtree::U32_0,
 ) {
     if N == 0 as crate::src::ext::rtree::rtree::U32_0 {
         return;
@@ -1159,9 +1159,9 @@ unsafe extern "C" fn jsonAppendRaw(
 }
 
 unsafe extern "C" fn jsonAppendRawNZ(
-    mut p: *mut JsonString,
-    mut zIn: *const ::core::ffi::c_char,
-    mut N: crate::src::ext::rtree::rtree::U32_0,
+    p: *mut JsonString,
+    zIn: *const ::core::ffi::c_char,
+    N: crate::src::ext::rtree::rtree::U32_0,
 ) {
     if (N as crate::src::ext::rtree::rtree::U64_0).wrapping_add((*p).nUsed) >= (*p).nAlloc {
         jsonStringExpandAndAppend(p, zIn, N);
@@ -1178,7 +1178,7 @@ unsafe extern "C" fn jsonAppendRawNZ(
     };
 }
 #[inline(never)]
-unsafe extern "C" fn jsonAppendCharExpand(mut p: *mut JsonString, mut c: ::core::ffi::c_char) {
+unsafe extern "C" fn jsonAppendCharExpand(p: *mut JsonString, c: ::core::ffi::c_char) {
     if jsonStringGrow(p, 1 as crate::src::ext::rtree::rtree::U32_0) != 0 {
         return;
     }
@@ -1188,7 +1188,7 @@ unsafe extern "C" fn jsonAppendCharExpand(mut p: *mut JsonString, mut c: ::core:
     *__p_ref.zBuf.offset(fresh3 as isize) = c;
 }
 
-unsafe extern "C" fn jsonAppendChar(mut p: *mut JsonString, mut c: ::core::ffi::c_char) {
+unsafe extern "C" fn jsonAppendChar(p: *mut JsonString, c: ::core::ffi::c_char) {
     if (*p).nUsed >= (*p).nAlloc {
         jsonAppendCharExpand(p, c);
     } else {
@@ -1199,20 +1199,20 @@ unsafe extern "C" fn jsonAppendChar(mut p: *mut JsonString, mut c: ::core::ffi::
     };
 }
 
-unsafe extern "C" fn jsonStringTrimOneChar(mut p: *mut JsonString) {
+unsafe extern "C" fn jsonStringTrimOneChar(p: *mut JsonString) {
     if (*p).eErr as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
         (*p).nUsed = (*p).nUsed.wrapping_sub(1);
     }
 }
 
-unsafe extern "C" fn jsonStringTerminate(mut p: *mut JsonString) -> ::core::ffi::c_int {
+unsafe extern "C" fn jsonStringTerminate(p: *mut JsonString) -> ::core::ffi::c_int {
     jsonAppendChar(p, 0 as ::core::ffi::c_char);
     jsonStringTrimOneChar(p);
     ((*p).eErr as ::core::ffi::c_int == 0 as ::core::ffi::c_int) as ::core::ffi::c_int
 }
 
-unsafe extern "C" fn jsonAppendSeparator(mut p: *mut JsonString) {
-    let mut c: ::core::ffi::c_char = 0;
+unsafe extern "C" fn jsonAppendSeparator(p: *mut JsonString) {
+    let c: ::core::ffi::c_char;
     let __p_ref = { &mut *p };
     if __p_ref.nUsed == 0 as crate::src::ext::rtree::rtree::U64_0 {
         return;
@@ -1229,8 +1229,8 @@ unsafe extern "C" fn jsonAppendSeparator(mut p: *mut JsonString) {
 }
 
 unsafe extern "C" fn jsonAppendControlChar(
-    mut p: *mut JsonString,
-    mut c: crate::src::ext::rtree::rtree::U8_0,
+    p: *mut JsonString,
+    c: crate::src::ext::rtree::rtree::U8_0,
 ) {
     static mut aSpecial: [::core::ffi::c_char; 32] = [
         0 as ::core::ffi::c_int as ::core::ffi::c_char,
@@ -1314,12 +1314,12 @@ unsafe extern "C" fn jsonAppendControlChar(
 }
 
 unsafe extern "C" fn jsonAppendString(
-    mut p: *mut JsonString,
-    mut zIn: *const ::core::ffi::c_char,
+    p: *mut JsonString,
+    zIn: *const ::core::ffi::c_char,
     mut N: crate::src::ext::rtree::rtree::U32_0,
 ) {
-    let mut k: crate::src::ext::rtree::rtree::U32_0 = 0;
-    let mut c: crate::src::ext::rtree::rtree::U8_0 = 0;
+    let mut k: crate::src::ext::rtree::rtree::U32_0;
+    let mut c: crate::src::ext::rtree::rtree::U8_0;
     let mut z: *const crate::src::ext::rtree::rtree::U8_0 =
         zIn as *const crate::src::ext::rtree::rtree::U8_0;
     if z.is_null() {
@@ -1448,8 +1448,8 @@ unsafe extern "C" fn jsonAppendString(
 }
 
 unsafe extern "C" fn jsonAppendSqlValue(
-    mut p: *mut JsonString,
-    mut pValue: *mut crate::src::headers::vdbeInt_h::sqlite3_value,
+    p: *mut JsonString,
+    pValue: *mut crate::src::headers::vdbeInt_h::sqlite3_value,
 ) {
     match crate::src::src::vdbeapi::sqlite3_value_type(pValue) {
         crate::src::headers::sqlite3_h::SQLITE_NULL_1 => {
@@ -1462,7 +1462,7 @@ unsafe extern "C" fn jsonAppendSqlValue(
         crate::src::headers::sqlite3_h::SQLITE_FLOAT_1 => {
             let v = crate::src::src::vdbeapi::sqlite3_value_double(pValue);
             // Format float using SQLite's %!0.15g format (15 significant digits, strip trailing zeros)
-            let mut s = if v.is_nan() {
+            let s = if v.is_nan() {
                 "nan".to_string()
             } else if v.is_infinite() {
                 if v.is_sign_positive() {
@@ -1544,17 +1544,17 @@ unsafe extern "C" fn jsonAppendSqlValue(
             );
         }
         crate::src::headers::sqlite3_h::SQLITE_INTEGER_1 => {
-            let mut z: *const ::core::ffi::c_char =
+            let z: *const ::core::ffi::c_char =
                 crate::src::src::vdbeapi::sqlite3_value_text(pValue) as *const ::core::ffi::c_char;
-            let mut n: crate::src::ext::rtree::rtree::U32_0 =
+            let n: crate::src::ext::rtree::rtree::U32_0 =
                 crate::src::src::vdbeapi::sqlite3_value_bytes(pValue)
                     as crate::src::ext::rtree::rtree::U32_0;
             jsonAppendRaw(p, z, n);
         }
         crate::src::headers::sqlite3_h::SQLITE_TEXT_1 => {
-            let mut z_0: *const ::core::ffi::c_char =
+            let z_0: *const ::core::ffi::c_char =
                 crate::src::src::vdbeapi::sqlite3_value_text(pValue) as *const ::core::ffi::c_char;
-            let mut n_0: crate::src::ext::rtree::rtree::U32_0 =
+            let n_0: crate::src::ext::rtree::rtree::U32_0 =
                 crate::src::src::vdbeapi::sqlite3_value_bytes(pValue)
                     as crate::src::ext::rtree::rtree::U32_0;
             if crate::src::src::vdbeapi::sqlite3_value_subtype(pValue)
@@ -1583,13 +1583,13 @@ unsafe extern "C" fn jsonAppendSqlValue(
 }
 
 unsafe extern "C" fn jsonReturnString(
-    mut p: *mut JsonString,
-    mut pParse: *mut JsonParse,
-    mut ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
+    p: *mut JsonString,
+    pParse: *mut JsonParse,
+    ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
 ) {
     let __p_ref = { &*p };
     if __p_ref.eErr as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
-        let mut flags: ::core::ffi::c_int =
+        let flags: ::core::ffi::c_int =
             crate::src::src::vdbeapi::sqlite3_user_data(__p_ref.pCtx)
                 as crate::src::headers::stdlib::IntptrT as ::core::ffi::c_int;
         if flags & JSON_BLOB != 0 {
@@ -1610,7 +1610,7 @@ unsafe extern "C" fn jsonReturnString(
                 && (*pParse).bJsonIsRCStr as ::core::ffi::c_int == 0 as ::core::ffi::c_int
                 && (*pParse).nBlobAlloc > 0 as crate::src::ext::rtree::rtree::U32_0
             {
-                let mut rc: ::core::ffi::c_int = 0;
+                let rc: ::core::ffi::c_int;
                 let __pParse_ref = { &mut *pParse };
                 __pParse_ref.zJson = crate::src::src::printf::sqlite3RCStrRef(__p_ref.zBuf);
                 __pParse_ref.nJson = __p_ref.nUsed as ::core::ffi::c_int;
@@ -1647,7 +1647,7 @@ unsafe extern "C" fn jsonReturnString(
     jsonStringReset(p);
 }
 
-unsafe extern "C" fn jsonParseReset(mut pParse: *mut JsonParse) {
+unsafe extern "C" fn jsonParseReset(pParse: *mut JsonParse) {
     if (*pParse).bJsonIsRCStr != 0 {
         let __pParse_ref = { &mut *pParse };
         crate::src::src::printf::sqlite3RCStrUnref(__pParse_ref.zJson as *mut ::core::ffi::c_void);
@@ -1667,7 +1667,7 @@ unsafe extern "C" fn jsonParseReset(mut pParse: *mut JsonParse) {
     }
 }
 
-unsafe extern "C" fn jsonParseFree(mut pParse: *mut JsonParse) {
+unsafe extern "C" fn jsonParseFree(pParse: *mut JsonParse) {
     if !pParse.is_null() {
         if (*pParse).nJPRef > 1 as crate::src::ext::rtree::rtree::U32_0 {
             (*pParse).nJPRef = (*pParse).nJPRef.wrapping_sub(1);
@@ -1689,9 +1689,9 @@ unsafe extern "C" fn jsonHexToInt(
 }
 
 unsafe extern "C" fn jsonHexToInt4(
-    mut z: *const ::core::ffi::c_char,
+    z: *const ::core::ffi::c_char,
 ) -> crate::src::ext::rtree::rtree::U32_0 {
-    let mut v: crate::src::ext::rtree::rtree::U32_0 = 0;
+    let v: crate::src::ext::rtree::rtree::U32_0;
     v = (((jsonHexToInt(*z.offset(0 as isize) as ::core::ffi::c_int) as ::core::ffi::c_int)
         << 12 as ::core::ffi::c_int)
         + ((jsonHexToInt(*z.offset(1 as isize) as ::core::ffi::c_int) as ::core::ffi::c_int)
@@ -1703,7 +1703,7 @@ unsafe extern "C" fn jsonHexToInt4(
     v
 }
 
-unsafe extern "C" fn jsonIs2Hex(mut z: *const ::core::ffi::c_char) -> ::core::ffi::c_int {
+unsafe extern "C" fn jsonIs2Hex(z: *const ::core::ffi::c_char) -> ::core::ffi::c_int {
     (*(&raw const crate::src::src::global::sqlite3CtypeMap as *const ::core::ffi::c_uchar)
         .offset(*z.offset(0 as isize) as ::core::ffi::c_uchar as isize) as ::core::ffi::c_int
         & 0x8 as ::core::ffi::c_int
@@ -1715,14 +1715,14 @@ unsafe extern "C" fn jsonIs2Hex(mut z: *const ::core::ffi::c_char) -> ::core::ff
             != 0) as ::core::ffi::c_int
 }
 
-unsafe extern "C" fn jsonIs4Hex(mut z: *const ::core::ffi::c_char) -> ::core::ffi::c_int {
+unsafe extern "C" fn jsonIs4Hex(z: *const ::core::ffi::c_char) -> ::core::ffi::c_int {
     (jsonIs2Hex(z) != 0 && jsonIs2Hex(z.offset(2 as isize) as *const ::core::ffi::c_char) != 0)
         as ::core::ffi::c_int
 }
 
-unsafe extern "C" fn json5Whitespace(mut zIn: *const ::core::ffi::c_char) -> ::core::ffi::c_int {
+unsafe extern "C" fn json5Whitespace(zIn: *const ::core::ffi::c_char) -> ::core::ffi::c_int {
     let mut n: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
-    let mut z: *const crate::src::ext::rtree::rtree::U8_0 =
+    let z: *const crate::src::ext::rtree::rtree::U8_0 =
         zIn as *mut crate::src::ext::rtree::rtree::U8_0;
     's_8: loop {
         match *z.offset(n as isize) as ::core::ffi::c_int {
@@ -1735,7 +1735,7 @@ unsafe extern "C" fn json5Whitespace(mut zIn: *const ::core::ffi::c_char) -> ::c
                     && *z.offset((n + 2 as ::core::ffi::c_int) as isize) as ::core::ffi::c_int
                         != 0 as ::core::ffi::c_int
                 {
-                    let mut j: ::core::ffi::c_int = 0;
+                    let mut j: ::core::ffi::c_int;
                     j = n + 3 as ::core::ffi::c_int;
                     while *z.offset(j as isize) as ::core::ffi::c_int != '/' as i32
                         || *z.offset((j - 1 as ::core::ffi::c_int) as isize) as ::core::ffi::c_int
@@ -1753,8 +1753,8 @@ unsafe extern "C" fn json5Whitespace(mut zIn: *const ::core::ffi::c_char) -> ::c
                     {
                         break;
                     }
-                    let mut j_0: ::core::ffi::c_int = 0;
-                    let mut c: ::core::ffi::c_char = 0;
+                    let mut j_0: ::core::ffi::c_int;
+                    let mut c: ::core::ffi::c_char;
                     j_0 = n + 2 as ::core::ffi::c_int;
                     loop {
                         c = *z.offset(j_0 as isize) as ::core::ffi::c_char;
@@ -1812,7 +1812,7 @@ unsafe extern "C" fn json5Whitespace(mut zIn: *const ::core::ffi::c_char) -> ::c
                 if *z.offset((n + 1 as ::core::ffi::c_int) as isize) as ::core::ffi::c_int
                     == 0x80 as ::core::ffi::c_int
                 {
-                    let mut c_0: crate::src::ext::rtree::rtree::U8_0 =
+                    let c_0: crate::src::ext::rtree::rtree::U8_0 =
                         *z.offset((n + 2 as ::core::ffi::c_int) as isize);
                     if (c_0 as ::core::ffi::c_int) < 0x80 as ::core::ffi::c_int {
                         break;
@@ -1914,22 +1914,21 @@ static mut aNanInfName: [NanInfName; 5] = [
 ];
 
 unsafe extern "C" fn jsonWrongNumArgs(
-    mut pCtx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
-    mut zFuncName: *const ::core::ffi::c_char,
+    pCtx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
+    zFuncName: *const ::core::ffi::c_char,
 ) {
-    let mut zMsg: *mut ::core::ffi::c_char =
+    let zMsg: *mut ::core::ffi::c_char =
         crate::sqlite_printf!("json_%s() needs an odd number of arguments", zFuncName);
     crate::src::src::vdbeapi::sqlite3_result_error(pCtx, zMsg, -(1 as ::core::ffi::c_int));
     crate::src::src::malloc::sqlite3_free(zMsg as *mut ::core::ffi::c_void);
 }
 
 unsafe extern "C" fn jsonBlobExpand(
-    mut pParse: *mut JsonParse,
-    mut N: crate::src::ext::rtree::rtree::U32_0,
+    pParse: *mut JsonParse,
+    N: crate::src::ext::rtree::rtree::U32_0,
 ) -> ::core::ffi::c_int {
-    let mut aNew: *mut crate::src::ext::rtree::rtree::U8_0 =
-        ::core::ptr::null_mut::<crate::src::ext::rtree::rtree::U8_0>();
-    let mut t: crate::src::ext::rtree::rtree::U64_0 = 0;
+    let aNew: *mut crate::src::ext::rtree::rtree::U8_0;
+    let mut t: crate::src::ext::rtree::rtree::U64_0;
     let __pParse_ref = { &mut *pParse };
     if __pParse_ref.nBlobAlloc == 0 as crate::src::ext::rtree::rtree::U32_0 {
         t = 100 as crate::src::ext::rtree::rtree::U64_0;
@@ -1958,12 +1957,11 @@ unsafe extern "C" fn jsonBlobExpand(
 }
 
 unsafe extern "C" fn jsonBlobMakeEditable(
-    mut pParse: *mut JsonParse,
-    mut nExtra: crate::src::ext::rtree::rtree::U32_0,
+    pParse: *mut JsonParse,
+    nExtra: crate::src::ext::rtree::rtree::U32_0,
 ) -> ::core::ffi::c_int {
-    let mut aOld: *mut crate::src::ext::rtree::rtree::U8_0 =
-        ::core::ptr::null_mut::<crate::src::ext::rtree::rtree::U8_0>();
-    let mut nSize: crate::src::ext::rtree::rtree::U32_0 = 0;
+    let aOld: *mut crate::src::ext::rtree::rtree::U8_0;
+    let nSize: crate::src::ext::rtree::rtree::U32_0;
     let __pParse_ref = { &mut *pParse };
     if __pParse_ref.oom != 0 {
         return 0 as ::core::ffi::c_int;
@@ -1986,8 +1984,8 @@ unsafe extern "C" fn jsonBlobMakeEditable(
 }
 #[inline(never)]
 unsafe extern "C" fn jsonBlobExpandAndAppendOneByte(
-    mut pParse: *mut JsonParse,
-    mut c: crate::src::ext::rtree::rtree::U8_0,
+    pParse: *mut JsonParse,
+    c: crate::src::ext::rtree::rtree::U8_0,
 ) {
     jsonBlobExpand(
         pParse,
@@ -2004,8 +2002,8 @@ unsafe extern "C" fn jsonBlobExpandAndAppendOneByte(
 }
 
 unsafe extern "C" fn jsonBlobAppendOneByte(
-    mut pParse: *mut JsonParse,
-    mut c: crate::src::ext::rtree::rtree::U8_0,
+    pParse: *mut JsonParse,
+    c: crate::src::ext::rtree::rtree::U8_0,
 ) {
     if (*pParse).nBlob >= (*pParse).nBlobAlloc {
         jsonBlobExpandAndAppendOneByte(pParse, c);
@@ -2018,10 +2016,10 @@ unsafe extern "C" fn jsonBlobAppendOneByte(
 }
 #[inline(never)]
 unsafe extern "C" fn jsonBlobExpandAndAppendNode(
-    mut pParse: *mut JsonParse,
-    mut eType: crate::src::ext::rtree::rtree::U8_0,
-    mut szPayload: crate::src::ext::rtree::rtree::U32_0,
-    mut aPayload: *const ::core::ffi::c_void,
+    pParse: *mut JsonParse,
+    eType: crate::src::ext::rtree::rtree::U8_0,
+    szPayload: crate::src::ext::rtree::rtree::U32_0,
+    aPayload: *const ::core::ffi::c_void,
 ) {
     if jsonBlobExpand(
         pParse,
@@ -2037,13 +2035,12 @@ unsafe extern "C" fn jsonBlobExpandAndAppendNode(
 }
 
 unsafe extern "C" fn jsonBlobAppendNode(
-    mut pParse: *mut JsonParse,
-    mut eType: crate::src::ext::rtree::rtree::U8_0,
-    mut szPayload: crate::src::ext::rtree::rtree::U32_0,
-    mut aPayload: *const ::core::ffi::c_void,
+    pParse: *mut JsonParse,
+    eType: crate::src::ext::rtree::rtree::U8_0,
+    szPayload: crate::src::ext::rtree::rtree::U32_0,
+    aPayload: *const ::core::ffi::c_void,
 ) {
-    let mut a: *mut crate::src::ext::rtree::rtree::U8_0 =
-        ::core::ptr::null_mut::<crate::src::ext::rtree::rtree::U8_0>();
+    let a: *mut crate::src::ext::rtree::rtree::U8_0;
     let __pParse_ref = { &mut *pParse };
     if (*pParse)
         .nBlob
@@ -2114,16 +2111,15 @@ unsafe extern "C" fn jsonBlobAppendNode(
 }
 
 unsafe extern "C" fn jsonBlobChangePayloadSize(
-    mut pParse: *mut JsonParse,
-    mut i: crate::src::ext::rtree::rtree::U32_0,
-    mut szPayload: crate::src::ext::rtree::rtree::U32_0,
+    pParse: *mut JsonParse,
+    i: crate::src::ext::rtree::rtree::U32_0,
+    szPayload: crate::src::ext::rtree::rtree::U32_0,
 ) -> ::core::ffi::c_int {
-    let mut a: *mut crate::src::ext::rtree::rtree::U8_0 =
-        ::core::ptr::null_mut::<crate::src::ext::rtree::rtree::U8_0>();
-    let mut szType: crate::src::ext::rtree::rtree::U8_0 = 0;
-    let mut nExtra: crate::src::ext::rtree::rtree::U8_0 = 0;
-    let mut nNeeded: crate::src::ext::rtree::rtree::U8_0 = 0;
-    let mut delta: ::core::ffi::c_int = 0;
+    let mut a: *mut crate::src::ext::rtree::rtree::U8_0;
+    let szType: crate::src::ext::rtree::rtree::U8_0;
+    let nExtra: crate::src::ext::rtree::rtree::U8_0;
+    let nNeeded: crate::src::ext::rtree::rtree::U8_0;
+    let delta: ::core::ffi::c_int;
     if (*pParse).oom != 0 {
         return 0 as ::core::ffi::c_int;
     }
@@ -2152,7 +2148,7 @@ unsafe extern "C" fn jsonBlobChangePayloadSize(
     }
     delta = nNeeded as ::core::ffi::c_int - nExtra as ::core::ffi::c_int;
     if delta != 0 {
-        let mut newSize: crate::src::ext::rtree::rtree::U32_0 = (*pParse)
+        let newSize: crate::src::ext::rtree::rtree::U32_0 = (*pParse)
             .nBlob
             .wrapping_add(delta as crate::src::ext::rtree::rtree::U32_0);
         if delta > 0 as ::core::ffi::c_int {
@@ -2224,8 +2220,8 @@ unsafe extern "C" fn jsonBlobChangePayloadSize(
 }
 
 unsafe extern "C" fn jsonIs4HexB(
-    mut z: *const ::core::ffi::c_char,
-    mut pOp: *mut ::core::ffi::c_int,
+    z: *const ::core::ffi::c_char,
+    pOp: *mut ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
     if *z.offset(0 as isize) as ::core::ffi::c_int != 'u' as i32 {
         return 0 as ::core::ffi::c_int;
@@ -2238,18 +2234,17 @@ unsafe extern "C" fn jsonIs4HexB(
 }
 
 unsafe extern "C" fn jsonbValidityCheck(
-    mut pParse: *const JsonParse,
-    mut i: crate::src::ext::rtree::rtree::U32_0,
-    mut iEnd: crate::src::ext::rtree::rtree::U32_0,
-    mut iDepth: crate::src::ext::rtree::rtree::U32_0,
+    pParse: *const JsonParse,
+    i: crate::src::ext::rtree::rtree::U32_0,
+    iEnd: crate::src::ext::rtree::rtree::U32_0,
+    iDepth: crate::src::ext::rtree::rtree::U32_0,
 ) -> crate::src::ext::rtree::rtree::U32_0 {
-    let mut n: crate::src::ext::rtree::rtree::U32_0 = 0;
-    let mut sz: crate::src::ext::rtree::rtree::U32_0 = 0;
-    let mut j: crate::src::ext::rtree::rtree::U32_0 = 0;
-    let mut k: crate::src::ext::rtree::rtree::U32_0 = 0;
-    let mut z: *const crate::src::ext::rtree::rtree::U8_0 =
-        ::core::ptr::null::<crate::src::ext::rtree::rtree::U8_0>();
-    let mut x: crate::src::ext::rtree::rtree::U8_0 = 0;
+    let mut n: crate::src::ext::rtree::rtree::U32_0;
+    let mut sz: crate::src::ext::rtree::rtree::U32_0;
+    let mut j: crate::src::ext::rtree::rtree::U32_0;
+    let k: crate::src::ext::rtree::rtree::U32_0;
+    let z: *const crate::src::ext::rtree::rtree::U8_0;
+    let mut x: crate::src::ext::rtree::rtree::U8_0;
     if iDepth > JSON_MAX_DEPTH as crate::src::ext::rtree::rtree::U32_0 {
         return i.wrapping_add(1 as crate::src::ext::rtree::rtree::U32_0);
     }
@@ -2509,7 +2504,7 @@ unsafe extern "C" fn jsonbValidityCheck(
                         return j.wrapping_add(1 as crate::src::ext::rtree::rtree::U32_0);
                     } else {
                         let mut c: crate::src::ext::rtree::rtree::U32_0 = 0 as crate::src::ext::rtree::rtree::U32_0;
-                        let mut szC: crate::src::ext::rtree::rtree::U32_0 = jsonUnescapeOneChar(
+                        let szC: crate::src::ext::rtree::rtree::U32_0 = jsonUnescapeOneChar(
                             z.offset(j as isize) as *const crate::src::ext::rtree::rtree::U8_0 as *const ::core::ffi::c_char,
                             k.wrapping_sub(j),
                             &raw mut c,
@@ -2526,7 +2521,7 @@ unsafe extern "C" fn jsonbValidityCheck(
         }
         JSONB_TEXTRAW => return 0 as crate::src::ext::rtree::rtree::U32_0,
         JSONB_ARRAY => {
-            let mut sub: crate::src::ext::rtree::rtree::U32_0 = 0;
+            let mut sub: crate::src::ext::rtree::rtree::U32_0;
             j = i.wrapping_add(n);
             k = j.wrapping_add(sz);
             while j < k {
@@ -2554,7 +2549,7 @@ unsafe extern "C" fn jsonbValidityCheck(
         JSONB_OBJECT => {
             let mut cnt: crate::src::ext::rtree::rtree::U32_0 =
                 0 as crate::src::ext::rtree::rtree::U32_0;
-            let mut sub_0: crate::src::ext::rtree::rtree::U32_0 = 0;
+            let mut sub_0: crate::src::ext::rtree::rtree::U32_0;
             j = i.wrapping_add(n);
             k = j.wrapping_add(sz);
             while j < k {
@@ -2601,20 +2596,20 @@ unsafe extern "C" fn jsonbValidityCheck(
 }
 
 unsafe extern "C" fn jsonTranslateTextToBlob(
-    mut pParse: *mut JsonParse,
+    pParse: *mut JsonParse,
     mut i: crate::src::ext::rtree::rtree::U32_0,
 ) -> ::core::ffi::c_int {
     let mut opcode: crate::src::ext::rtree::rtree::U8_0 = 0;
-    let mut cDelim: ::core::ffi::c_char = 0;
-    let mut seenE: crate::src::ext::rtree::rtree::U8_0 = 0;
+    let cDelim: ::core::ffi::c_char;
+    let mut seenE: crate::src::ext::rtree::rtree::U8_0;
     let mut current_block: u64;
-    let mut c: ::core::ffi::c_char = 0;
+    let mut c: ::core::ffi::c_char;
     let mut j: crate::src::ext::rtree::rtree::U32_0 = 0;
-    let mut iThis: crate::src::ext::rtree::rtree::U32_0 = 0;
-    let mut iStart: crate::src::ext::rtree::rtree::U32_0 = 0;
-    let mut x: ::core::ffi::c_int = 0;
+    let iThis: crate::src::ext::rtree::rtree::U32_0;
+    let iStart: crate::src::ext::rtree::rtree::U32_0;
+    let mut x: ::core::ffi::c_int;
     let mut t: crate::src::ext::rtree::rtree::U8_0 = 0;
-    let mut z: *const ::core::ffi::c_char = (*pParse).zJson;
+    let z: *const ::core::ffi::c_char = (*pParse).zJson;
     loop {
         match *z.offset(i as isize) as crate::src::ext::rtree::rtree::U8_0 as ::core::ffi::c_int {
             123 => {
@@ -2635,10 +2630,10 @@ unsafe extern "C" fn jsonTranslateTextToBlob(
                 let mut current_block_60: u64;
                 j = i.wrapping_add(1 as crate::src::ext::rtree::rtree::U32_0);
                 loop {
-                    let mut iBlob: crate::src::ext::rtree::rtree::U32_0 = __pParse_ref.nBlob;
+                    let iBlob: crate::src::ext::rtree::rtree::U32_0 = __pParse_ref.nBlob;
                     x = jsonTranslateTextToBlob(pParse, j);
                     if x <= 0 as ::core::ffi::c_int {
-                        let mut op: ::core::ffi::c_int = 0;
+                        let mut op: ::core::ffi::c_int;
                         if x == -(2 as ::core::ffi::c_int) {
                             j = __pParse_ref.iErr;
                             if __pParse_ref.nBlob != iStart {
@@ -2913,8 +2908,6 @@ unsafe extern "C" fn jsonTranslateTextToBlob(
                     as ::core::ffi::c_int;
             }
             39 => {
-                opcode = 0;
-                cDelim = 0;
                 (*pParse).hasNonstd = 1 as crate::src::ext::rtree::rtree::U8_0;
                 opcode = JSONB_TEXT as crate::src::ext::rtree::rtree::U8_0;
                 current_block = 15071141405144894119;
@@ -2976,7 +2969,6 @@ unsafe extern "C" fn jsonTranslateTextToBlob(
                 return -(1 as ::core::ffi::c_int);
             }
             43 => {
-                seenE = 0;
                 (*pParse).hasNonstd = 1 as crate::src::ext::rtree::rtree::U8_0;
                 t = 0 as crate::src::ext::rtree::rtree::U8_0;
                 current_block = 13620982312116426922;
@@ -3071,8 +3063,8 @@ unsafe extern "C" fn jsonTranslateTextToBlob(
     }
     match current_block {
         4290398628317314629 => {
-            let mut k_0: crate::src::ext::rtree::rtree::U32_0 = 0;
-            let mut nn: ::core::ffi::c_int = 0;
+            let mut k_0: crate::src::ext::rtree::rtree::U32_0;
+            let mut nn: ::core::ffi::c_int;
             c = *z.offset(i as isize);
             k_0 = 0 as crate::src::ext::rtree::rtree::U32_0;
             while (k_0 as usize)
@@ -3541,11 +3533,11 @@ unsafe extern "C" fn jsonTranslateTextToBlob(
 }
 
 unsafe extern "C" fn jsonConvertTextToBlob(
-    mut pParse: *mut JsonParse,
-    mut pCtx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
+    pParse: *mut JsonParse,
+    pCtx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
 ) -> ::core::ffi::c_int {
-    let mut i: ::core::ffi::c_int = 0;
-    let mut zJson: *const ::core::ffi::c_char = (*pParse).zJson;
+    let mut i: ::core::ffi::c_int;
+    let zJson: *const ::core::ffi::c_char = (*pParse).zJson;
     i = jsonTranslateTextToBlob(pParse, 0 as crate::src::ext::rtree::rtree::U32_0);
     if (*pParse).oom != 0 {
         i = -(1 as ::core::ffi::c_int);
@@ -3588,7 +3580,7 @@ unsafe extern "C" fn jsonConvertTextToBlob(
     0 as ::core::ffi::c_int
 }
 
-unsafe extern "C" fn jsonReturnStringAsBlob(mut pStr: *mut JsonString) {
+unsafe extern "C" fn jsonReturnStringAsBlob(pStr: *mut JsonString) {
     let mut px: JsonParse = { ::core::mem::zeroed() };
     jsonStringTerminate(pStr);
     let __pStr_ref = { &*pStr };
@@ -3621,13 +3613,13 @@ unsafe extern "C" fn jsonReturnStringAsBlob(mut pStr: *mut JsonString) {
 }
 
 unsafe extern "C" fn jsonbPayloadSize(
-    mut pParse: *const JsonParse,
-    mut i: crate::src::ext::rtree::rtree::U32_0,
-    mut pSz: *mut crate::src::ext::rtree::rtree::U32_0,
+    pParse: *const JsonParse,
+    i: crate::src::ext::rtree::rtree::U32_0,
+    pSz: *mut crate::src::ext::rtree::rtree::U32_0,
 ) -> crate::src::ext::rtree::rtree::U32_0 {
-    let mut x: crate::src::ext::rtree::rtree::U8_0 = 0;
-    let mut sz: crate::src::ext::rtree::rtree::U32_0 = 0;
-    let mut n: crate::src::ext::rtree::rtree::U32_0 = 0;
+    let x: crate::src::ext::rtree::rtree::U8_0;
+    let sz: crate::src::ext::rtree::rtree::U32_0;
+    let n: crate::src::ext::rtree::rtree::U32_0;
     x = (*(*pParse).aBlob.offset(i as isize) as ::core::ffi::c_int >> 4 as ::core::ffi::c_int)
         as crate::src::ext::rtree::rtree::U8_0;
     if x as ::core::ffi::c_int <= 11 as ::core::ffi::c_int {
@@ -3766,15 +3758,15 @@ unsafe extern "C" fn jsonbPayloadSize(
 }
 
 unsafe extern "C" fn jsonTranslateBlobToText(
-    mut pParse: *const JsonParse,
-    mut i: crate::src::ext::rtree::rtree::U32_0,
-    mut pOut: *mut JsonString,
+    pParse: *const JsonParse,
+    i: crate::src::ext::rtree::rtree::U32_0,
+    pOut: *mut JsonString,
 ) -> crate::src::ext::rtree::rtree::U32_0 {
-    let mut current_block: u64;
+    let current_block: u64;
     let mut sz: crate::src::ext::rtree::rtree::U32_0 = 0;
-    let mut n: crate::src::ext::rtree::rtree::U32_0 = 0;
-    let mut j: crate::src::ext::rtree::rtree::U32_0 = 0;
-    let mut iEnd: crate::src::ext::rtree::rtree::U32_0 = 0;
+    let n: crate::src::ext::rtree::rtree::U32_0;
+    let mut j: crate::src::ext::rtree::rtree::U32_0;
+    let iEnd: crate::src::ext::rtree::rtree::U32_0;
     n = jsonbPayloadSize(pParse, i, &raw mut sz);
     if n == 0 as crate::src::ext::rtree::rtree::U32_0 {
         (*pOut).eErr = ((*pOut).eErr as ::core::ffi::c_int | JSTRING_MALFORMED)
@@ -3827,7 +3819,7 @@ unsafe extern "C" fn jsonTranslateBlobToText(
                 2 as crate::src::ext::rtree::rtree::U32_0;
             let mut u: crate::src::headers::sqlite3_h::Sqlite3Uint64 =
                 0 as crate::src::headers::sqlite3_h::Sqlite3Uint64;
-            let mut zIn: *const ::core::ffi::c_char =
+            let zIn: *const ::core::ffi::c_char =
                 (*pParse).aBlob.offset(i.wrapping_add(n) as isize)
                     as *mut crate::src::ext::rtree::rtree::U8_0
                     as *const ::core::ffi::c_char;
@@ -3885,7 +3877,7 @@ unsafe extern "C" fn jsonTranslateBlobToText(
         JSONB_FLOAT5 => {
             let mut k_0: crate::src::ext::rtree::rtree::U32_0 =
                 0 as crate::src::ext::rtree::rtree::U32_0;
-            let mut zIn_0: *const ::core::ffi::c_char =
+            let zIn_0: *const ::core::ffi::c_char =
                 (*pParse).aBlob.offset(i.wrapping_add(n) as isize)
                     as *mut crate::src::ext::rtree::rtree::U8_0
                     as *const ::core::ffi::c_char;
@@ -3959,8 +3951,8 @@ unsafe extern "C" fn jsonTranslateBlobToText(
             current_block = 9180031981464905198;
         }
         JSONB_TEXT5 => {
-            let mut zIn_1: *const ::core::ffi::c_char = ::core::ptr::null::<::core::ffi::c_char>();
-            let mut k_1: crate::src::ext::rtree::rtree::U32_0 = 0;
+            let mut zIn_1: *const ::core::ffi::c_char;
+            let mut k_1: crate::src::ext::rtree::rtree::U32_0;
             let mut sz2: crate::src::ext::rtree::rtree::U32_0 = sz;
             zIn_1 = (*pParse).aBlob.offset(i.wrapping_add(n) as isize)
                 as *mut crate::src::ext::rtree::rtree::U8_0
@@ -4169,8 +4161,8 @@ unsafe extern "C" fn jsonTranslateBlobToText(
     i.wrapping_add(n).wrapping_add(sz)
 }
 
-unsafe extern "C" fn jsonPrettyIndent(mut pPretty: *mut JsonPretty) {
-    let mut jj: crate::src::ext::rtree::rtree::U32_0 = 0;
+unsafe extern "C" fn jsonPrettyIndent(pPretty: *mut JsonPretty) {
+    let mut jj: crate::src::ext::rtree::rtree::U32_0;
     jj = 0 as crate::src::ext::rtree::rtree::U32_0;
     while jj < (*pPretty).nIndent {
         let __pPretty_ref = { &*pPretty };
@@ -4184,15 +4176,15 @@ unsafe extern "C" fn jsonPrettyIndent(mut pPretty: *mut JsonPretty) {
 }
 
 unsafe extern "C" fn jsonTranslateBlobToPrettyText(
-    mut pPretty: *mut JsonPretty,
+    pPretty: *mut JsonPretty,
     mut i: crate::src::ext::rtree::rtree::U32_0,
 ) -> crate::src::ext::rtree::rtree::U32_0 {
     let mut sz: crate::src::ext::rtree::rtree::U32_0 = 0;
-    let mut n: crate::src::ext::rtree::rtree::U32_0 = 0;
-    let mut j: crate::src::ext::rtree::rtree::U32_0 = 0;
-    let mut iEnd: crate::src::ext::rtree::rtree::U32_0 = 0;
-    let mut pParse: *const JsonParse = (*pPretty).pParse;
-    let mut pOut: *mut JsonString = (*pPretty).pOut;
+    let n: crate::src::ext::rtree::rtree::U32_0;
+    let mut j: crate::src::ext::rtree::rtree::U32_0;
+    let iEnd: crate::src::ext::rtree::rtree::U32_0;
+    let pParse: *const JsonParse = (*pPretty).pParse;
+    let pOut: *mut JsonString = (*pPretty).pOut;
     n = jsonbPayloadSize(pParse, i, &raw mut sz);
     if n == 0 as crate::src::ext::rtree::rtree::U32_0 {
         (*pOut).eErr = ((*pOut).eErr as ::core::ffi::c_int | JSTRING_MALFORMED)
@@ -4276,13 +4268,13 @@ unsafe extern "C" fn jsonTranslateBlobToPrettyText(
 }
 
 unsafe extern "C" fn jsonbArrayCount(
-    mut pParse: *mut JsonParse,
-    mut iRoot: crate::src::ext::rtree::rtree::U32_0,
+    pParse: *mut JsonParse,
+    iRoot: crate::src::ext::rtree::rtree::U32_0,
 ) -> crate::src::ext::rtree::rtree::U32_0 {
-    let mut n: crate::src::ext::rtree::rtree::U32_0 = 0;
+    let mut n: crate::src::ext::rtree::rtree::U32_0;
     let mut sz: crate::src::ext::rtree::rtree::U32_0 = 0;
-    let mut i: crate::src::ext::rtree::rtree::U32_0 = 0;
-    let mut iEnd: crate::src::ext::rtree::rtree::U32_0 = 0;
+    let mut i: crate::src::ext::rtree::rtree::U32_0;
+    let iEnd: crate::src::ext::rtree::rtree::U32_0;
     let mut k: crate::src::ext::rtree::rtree::U32_0 = 0 as crate::src::ext::rtree::rtree::U32_0;
     n = jsonbPayloadSize(pParse, iRoot, &raw mut sz);
     iEnd = iRoot.wrapping_add(n).wrapping_add(sz);
@@ -4296,11 +4288,11 @@ unsafe extern "C" fn jsonbArrayCount(
 }
 
 unsafe extern "C" fn jsonAfterEditSizeAdjust(
-    mut pParse: *mut JsonParse,
-    mut iRoot: crate::src::ext::rtree::rtree::U32_0,
+    pParse: *mut JsonParse,
+    iRoot: crate::src::ext::rtree::rtree::U32_0,
 ) {
     let mut sz: crate::src::ext::rtree::rtree::U32_0 = 0 as crate::src::ext::rtree::rtree::U32_0;
-    let mut nBlob: crate::src::ext::rtree::rtree::U32_0 = 0;
+    let nBlob: crate::src::ext::rtree::rtree::U32_0;
     let __pParse_ref = { &mut *pParse };
     nBlob = __pParse_ref.nBlob;
     __pParse_ref.nBlob = __pParse_ref.nBlobAlloc;
@@ -4311,14 +4303,14 @@ unsafe extern "C" fn jsonAfterEditSizeAdjust(
 }
 
 unsafe extern "C" fn jsonBlobOverwrite(
-    mut aOut: *mut crate::src::ext::rtree::rtree::U8_0,
-    mut aIns: *const crate::src::ext::rtree::rtree::U8_0,
-    mut nIns: crate::src::ext::rtree::rtree::U32_0,
-    mut d: crate::src::ext::rtree::rtree::U32_0,
+    aOut: *mut crate::src::ext::rtree::rtree::U8_0,
+    aIns: *const crate::src::ext::rtree::rtree::U8_0,
+    nIns: crate::src::ext::rtree::rtree::U32_0,
+    d: crate::src::ext::rtree::rtree::U32_0,
 ) -> ::core::ffi::c_int {
-    let mut szPayload: crate::src::ext::rtree::rtree::U32_0 = 0;
-    let mut i: crate::src::ext::rtree::rtree::U32_0 = 0;
-    let mut szHdr: crate::src::ext::rtree::rtree::U8_0 = 0;
+    let mut szPayload: crate::src::ext::rtree::rtree::U32_0;
+    let mut i: crate::src::ext::rtree::rtree::U32_0;
+    let szHdr: crate::src::ext::rtree::rtree::U8_0;
     static mut aType: [crate::src::ext::rtree::rtree::U8_0; 8] = [
         0xc0 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::U8_0,
         0xd0 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::U8_0,
@@ -4394,13 +4386,13 @@ unsafe extern "C" fn jsonBlobOverwrite(
 }
 
 unsafe extern "C" fn jsonBlobEdit(
-    mut pParse: *mut JsonParse,
-    mut iDel: crate::src::ext::rtree::rtree::U32_0,
-    mut nDel: crate::src::ext::rtree::rtree::U32_0,
-    mut aIns: *const crate::src::ext::rtree::rtree::U8_0,
-    mut nIns: crate::src::ext::rtree::rtree::U32_0,
+    pParse: *mut JsonParse,
+    iDel: crate::src::ext::rtree::rtree::U32_0,
+    nDel: crate::src::ext::rtree::rtree::U32_0,
+    aIns: *const crate::src::ext::rtree::rtree::U8_0,
+    nIns: crate::src::ext::rtree::rtree::U32_0,
 ) {
-    let mut d: crate::src::ext::rtree::rtree::I64_0 =
+    let d: crate::src::ext::rtree::rtree::I64_0 =
         nIns as crate::src::ext::rtree::rtree::I64_0 - nDel as crate::src::ext::rtree::rtree::I64_0;
     if d < 0 as crate::src::ext::rtree::rtree::I64_0
         && d >= -(8 as ::core::ffi::c_int) as crate::src::ext::rtree::rtree::I64_0
@@ -4451,8 +4443,8 @@ unsafe extern "C" fn jsonBlobEdit(
 }
 
 unsafe extern "C" fn jsonBytesToBypass(
-    mut z: *const ::core::ffi::c_char,
-    mut n: crate::src::ext::rtree::rtree::U32_0,
+    z: *const ::core::ffi::c_char,
+    n: crate::src::ext::rtree::rtree::U32_0,
 ) -> crate::src::ext::rtree::rtree::U32_0 {
     let mut i: crate::src::ext::rtree::rtree::U32_0 = 0 as crate::src::ext::rtree::rtree::U32_0;
     while i.wrapping_add(1 as crate::src::ext::rtree::rtree::U32_0) < n {
@@ -4505,9 +4497,9 @@ unsafe extern "C" fn jsonBytesToBypass(
 }
 
 unsafe extern "C" fn jsonUnescapeOneChar(
-    mut z: *const ::core::ffi::c_char,
-    mut n: crate::src::ext::rtree::rtree::U32_0,
-    mut piOut: *mut crate::src::ext::rtree::rtree::U32_0,
+    z: *const ::core::ffi::c_char,
+    n: crate::src::ext::rtree::rtree::U32_0,
+    piOut: *mut crate::src::ext::rtree::rtree::U32_0,
 ) -> crate::src::ext::rtree::rtree::U32_0 {
     if n < 2 as crate::src::ext::rtree::rtree::U32_0 {
         *piOut = JSON_INVALID_CHAR as crate::src::ext::rtree::rtree::U32_0;
@@ -4515,8 +4507,8 @@ unsafe extern "C" fn jsonUnescapeOneChar(
     }
     match *z.offset(1 as isize) as crate::src::ext::rtree::rtree::U8_0 as ::core::ffi::c_int {
         117 => {
-            let mut v: crate::src::ext::rtree::rtree::U32_0 = 0;
-            let mut vlo: crate::src::ext::rtree::rtree::U32_0 = 0;
+            let v: crate::src::ext::rtree::rtree::U32_0;
+            let vlo: crate::src::ext::rtree::rtree::U32_0;
             if n < 6 as crate::src::ext::rtree::rtree::U32_0 {
                 *piOut = JSON_INVALID_CHAR as crate::src::ext::rtree::rtree::U32_0;
                 return n;
@@ -4599,7 +4591,7 @@ unsafe extern "C" fn jsonUnescapeOneChar(
             return 4 as crate::src::ext::rtree::rtree::U32_0;
         }
         226 | 13 | 10 => {
-            let mut nSkip: crate::src::ext::rtree::rtree::U32_0 = jsonBytesToBypass(z, n);
+            let nSkip: crate::src::ext::rtree::rtree::U32_0 = jsonBytesToBypass(z, n);
             if nSkip == 0 as crate::src::ext::rtree::rtree::U32_0 {
                 *piOut = JSON_INVALID_CHAR as crate::src::ext::rtree::rtree::U32_0;
                 return n;
@@ -4613,7 +4605,7 @@ unsafe extern "C" fn jsonUnescapeOneChar(
                     piOut,
                 ));
             } else {
-                let mut sz: ::core::ffi::c_int = crate::src::src::utf::sqlite3Utf8ReadLimited(
+                let sz: ::core::ffi::c_int = crate::src::src::utf::sqlite3Utf8ReadLimited(
                     z.offset(nSkip as isize) as *const ::core::ffi::c_char
                         as *mut crate::src::ext::rtree::rtree::U8_0,
                     n.wrapping_sub(nSkip) as ::core::ffi::c_int,
@@ -4632,10 +4624,10 @@ unsafe extern "C" fn jsonUnescapeOneChar(
 unsafe extern "C" fn jsonLabelCompareEscaped(
     mut zLeft: *const ::core::ffi::c_char,
     mut nLeft: crate::src::ext::rtree::rtree::U32_0,
-    mut rawLeft: ::core::ffi::c_int,
+    rawLeft: ::core::ffi::c_int,
     mut zRight: *const ::core::ffi::c_char,
     mut nRight: crate::src::ext::rtree::rtree::U32_0,
-    mut rawRight: ::core::ffi::c_int,
+    rawRight: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
     let mut cLeft: crate::src::ext::rtree::rtree::U32_0 = 0;
     let mut cRight: crate::src::ext::rtree::rtree::U32_0 = 0;
@@ -4646,7 +4638,7 @@ unsafe extern "C" fn jsonLabelCompareEscaped(
             cLeft = *(zLeft as *mut crate::src::ext::rtree::rtree::U8_0).offset(0 as isize)
                 as crate::src::ext::rtree::rtree::U32_0;
             if cLeft >= 0xc0 as crate::src::ext::rtree::rtree::U32_0 {
-                let mut sz: ::core::ffi::c_int = crate::src::src::utf::sqlite3Utf8ReadLimited(
+                let sz: ::core::ffi::c_int = crate::src::src::utf::sqlite3Utf8ReadLimited(
                     zLeft as *mut crate::src::ext::rtree::rtree::U8_0,
                     nLeft as ::core::ffi::c_int,
                     &raw mut cLeft,
@@ -4658,7 +4650,7 @@ unsafe extern "C" fn jsonLabelCompareEscaped(
                 nLeft = nLeft.wrapping_sub(1);
             }
         } else {
-            let mut n: crate::src::ext::rtree::rtree::U32_0 =
+            let n: crate::src::ext::rtree::rtree::U32_0 =
                 jsonUnescapeOneChar(zLeft, nLeft, &raw mut cLeft);
             zLeft = zLeft.offset(n as isize);
             nLeft = nLeft.wrapping_sub(n);
@@ -4669,7 +4661,7 @@ unsafe extern "C" fn jsonLabelCompareEscaped(
             cRight = *(zRight as *mut crate::src::ext::rtree::rtree::U8_0).offset(0 as isize)
                 as crate::src::ext::rtree::rtree::U32_0;
             if cRight >= 0xc0 as crate::src::ext::rtree::rtree::U32_0 {
-                let mut sz_0: ::core::ffi::c_int = crate::src::src::utf::sqlite3Utf8ReadLimited(
+                let sz_0: ::core::ffi::c_int = crate::src::src::utf::sqlite3Utf8ReadLimited(
                     zRight as *mut crate::src::ext::rtree::rtree::U8_0,
                     nRight as ::core::ffi::c_int,
                     &raw mut cRight,
@@ -4681,7 +4673,7 @@ unsafe extern "C" fn jsonLabelCompareEscaped(
                 nRight = nRight.wrapping_sub(1);
             }
         } else {
-            let mut n_0: crate::src::ext::rtree::rtree::U32_0 =
+            let n_0: crate::src::ext::rtree::rtree::U32_0 =
                 jsonUnescapeOneChar(zRight, nRight, &raw mut cRight);
             zRight = zRight.offset(n_0 as isize);
             nRight = nRight.wrapping_sub(n_0);
@@ -4696,12 +4688,12 @@ unsafe extern "C" fn jsonLabelCompareEscaped(
 }
 
 unsafe extern "C" fn jsonLabelCompare(
-    mut zLeft: *const ::core::ffi::c_char,
-    mut nLeft: crate::src::ext::rtree::rtree::U32_0,
-    mut rawLeft: ::core::ffi::c_int,
-    mut zRight: *const ::core::ffi::c_char,
-    mut nRight: crate::src::ext::rtree::rtree::U32_0,
-    mut rawRight: ::core::ffi::c_int,
+    zLeft: *const ::core::ffi::c_char,
+    nLeft: crate::src::ext::rtree::rtree::U32_0,
+    rawLeft: ::core::ffi::c_int,
+    zRight: *const ::core::ffi::c_char,
+    nRight: crate::src::ext::rtree::rtree::U32_0,
+    rawRight: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
     if rawLeft != 0 && rawRight != 0 {
         if nLeft != nRight {
@@ -4724,15 +4716,15 @@ pub const JSON_LOOKUP_NOTFOUND: ::core::ffi::c_uint = 0xfffffffe as ::core::ffi:
 pub const JSON_LOOKUP_PATHERROR: ::core::ffi::c_uint = 0xfffffffd as ::core::ffi::c_uint;
 
 unsafe extern "C" fn jsonCreateEditSubstructure(
-    mut pParse: *mut JsonParse,
-    mut pIns: *mut JsonParse,
-    mut zTail: *const ::core::ffi::c_char,
+    pParse: *mut JsonParse,
+    pIns: *mut JsonParse,
+    zTail: *const ::core::ffi::c_char,
 ) -> crate::src::ext::rtree::rtree::U32_0 {
     static mut emptyObject: [crate::src::ext::rtree::rtree::U8_0; 2] = [
         JSONB_ARRAY as crate::src::ext::rtree::rtree::U8_0,
         JSONB_OBJECT as crate::src::ext::rtree::rtree::U8_0,
     ];
-    let mut rc: ::core::ffi::c_int = 0;
+    let rc: ::core::ffi::c_int;
     ::libc::memset(
         pIns as *mut ::core::ffi::c_void,
         0 as ::core::ffi::c_int,
@@ -4770,21 +4762,21 @@ unsafe extern "C" fn jsonCreateEditSubstructure(
 }
 
 unsafe extern "C" fn jsonLookupStep(
-    mut pParse: *mut JsonParse,
+    pParse: *mut JsonParse,
     mut iRoot: crate::src::ext::rtree::rtree::U32_0,
     mut zPath: *const ::core::ffi::c_char,
-    mut iLabel: crate::src::ext::rtree::rtree::U32_0,
+    iLabel: crate::src::ext::rtree::rtree::U32_0,
 ) -> crate::src::ext::rtree::rtree::U32_0 {
-    let mut i: crate::src::ext::rtree::rtree::U32_0 = 0;
-    let mut j: crate::src::ext::rtree::rtree::U32_0 = 0;
-    let mut k: crate::src::ext::rtree::rtree::U32_0 = 0;
-    let mut nKey: crate::src::ext::rtree::rtree::U32_0 = 0;
+    let mut i: crate::src::ext::rtree::rtree::U32_0;
+    let mut j: crate::src::ext::rtree::rtree::U32_0;
+    let mut k: crate::src::ext::rtree::rtree::U32_0;
+    let nKey: crate::src::ext::rtree::rtree::U32_0;
     let mut sz: crate::src::ext::rtree::rtree::U32_0 = 0;
-    let mut n: crate::src::ext::rtree::rtree::U32_0 = 0;
-    let mut iEnd: crate::src::ext::rtree::rtree::U32_0 = 0;
-    let mut rc: crate::src::ext::rtree::rtree::U32_0 = 0;
-    let mut zKey: *const ::core::ffi::c_char = ::core::ptr::null::<::core::ffi::c_char>();
-    let mut x: crate::src::ext::rtree::rtree::U8_0 = 0;
+    let mut n: crate::src::ext::rtree::rtree::U32_0;
+    let iEnd: crate::src::ext::rtree::rtree::U32_0;
+    let rc: crate::src::ext::rtree::rtree::U32_0;
+    let zKey: *const ::core::ffi::c_char;
+    let mut x: crate::src::ext::rtree::rtree::U8_0;
     if *zPath.offset(0 as isize) as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
         let __pParse_ref = { &mut *pParse };
         if __pParse_ref.eEdit as ::core::ffi::c_int != 0
@@ -4864,8 +4856,8 @@ unsafe extern "C" fn jsonLookupStep(
         j = iRoot.wrapping_add(n);
         iEnd = j.wrapping_add(sz);
         while j < iEnd {
-            let mut rawLabel: ::core::ffi::c_int = 0;
-            let mut zLabel: *const ::core::ffi::c_char = ::core::ptr::null::<::core::ffi::c_char>();
+            let rawLabel: ::core::ffi::c_int;
+            let zLabel: *const ::core::ffi::c_char;
             let __pParse_ref = { &mut *pParse };
             x = (*__pParse_ref.aBlob.offset(j as isize) as ::core::ffi::c_int
                 & 0xf as ::core::ffi::c_int) as crate::src::ext::rtree::rtree::U8_0;
@@ -4887,7 +4879,7 @@ unsafe extern "C" fn jsonLookupStep(
                 || x as ::core::ffi::c_int == JSONB_TEXTRAW)
                 as ::core::ffi::c_int;
             if jsonLabelCompare(zKey, nKey, rawKey, zLabel, sz, rawLabel) != 0 {
-                let mut v: crate::src::ext::rtree::rtree::U32_0 = k.wrapping_add(sz);
+                let v: crate::src::ext::rtree::rtree::U32_0 = k.wrapping_add(sz);
                 if *__pParse_ref.aBlob.offset(v as isize) as ::core::ffi::c_int
                     & 0xf as ::core::ffi::c_int
                     > JSONB_OBJECT
@@ -4928,7 +4920,7 @@ unsafe extern "C" fn jsonLookupStep(
             return JSON_LOOKUP_ERROR as crate::src::ext::rtree::rtree::U32_0;
         }
         if (*pParse).eEdit as ::core::ffi::c_int >= JEDIT_INS {
-            let mut nIns: crate::src::ext::rtree::rtree::U32_0 = 0;
+            let nIns: crate::src::ext::rtree::rtree::U32_0;
             let mut v_0: JsonParse = { ::core::mem::zeroed() };
             let mut ix: JsonParse = { ::core::mem::zeroed() };
             let __pParse_ref = { &mut *pParse };
@@ -5124,9 +5116,9 @@ unsafe extern "C" fn jsonLookupStep(
 }
 
 unsafe extern "C" fn jsonReturnTextJsonFromBlob(
-    mut ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
-    mut aBlob: *const crate::src::ext::rtree::rtree::U8_0,
-    mut nBlob: crate::src::ext::rtree::rtree::U32_0,
+    ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
+    aBlob: *const crate::src::ext::rtree::rtree::U8_0,
+    nBlob: crate::src::ext::rtree::rtree::U32_0,
 ) {
     let mut x: JsonParse = { ::core::mem::zeroed() };
     let mut s: JsonString = { ::core::mem::zeroed() };
@@ -5149,18 +5141,18 @@ unsafe extern "C" fn jsonReturnTextJsonFromBlob(
 }
 
 unsafe extern "C" fn jsonReturnFromBlob(
-    mut pParse: *mut JsonParse,
-    mut i: crate::src::ext::rtree::rtree::U32_0,
-    mut pCtx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
+    pParse: *mut JsonParse,
+    i: crate::src::ext::rtree::rtree::U32_0,
+    pCtx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
     mut eMode: ::core::ffi::c_int,
 ) {
     let mut r_0: ::core::ffi::c_double = 0.;
-    let mut z_0: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
+    let z_0: *mut ::core::ffi::c_char;
     let mut current_block: u64;
-    let mut n: crate::src::ext::rtree::rtree::U32_0 = 0;
+    let mut n: crate::src::ext::rtree::rtree::U32_0;
     let mut sz: crate::src::ext::rtree::rtree::U32_0 = 0;
-    let mut rc: ::core::ffi::c_int = 0;
-    let mut db: *mut crate::src::headers::sqliteInt_h::sqlite3 =
+    let mut rc: ::core::ffi::c_int;
+    let db: *mut crate::src::headers::sqliteInt_h::sqlite3 =
         crate::src::src::vdbeapi::sqlite3_context_db_handle(pCtx)
             as *mut crate::src::headers::sqliteInt_h::sqlite3;
     n = jsonbPayloadSize(pParse, i, &raw mut sz);
@@ -5200,9 +5192,9 @@ unsafe extern "C" fn jsonReturnFromBlob(
         JSONB_INT5 | JSONB_INT => {
             let mut iRes: crate::src::headers::sqlite3_h::Sqlite3Int64 =
                 0 as crate::src::headers::sqlite3_h::Sqlite3Int64;
-            let mut z: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
+            let z: *mut ::core::ffi::c_char;
             let mut bNeg: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
-            let mut x: ::core::ffi::c_char = 0;
+            let x: ::core::ffi::c_char;
             if sz == 0 as crate::src::ext::rtree::rtree::U32_0 {
                 current_block = 17501859396465829258;
             } else {
@@ -5239,7 +5231,7 @@ unsafe extern "C" fn jsonReturnFromBlob(
                             );
                             if rc == 0 as ::core::ffi::c_int {
                                 if iRes < 0 as crate::src::headers::sqlite3_h::Sqlite3Int64 {
-                                    let mut r: ::core::ffi::c_double = 0.;
+                                    let r: ::core::ffi::c_double;
                                     r = *(&raw mut iRes
                                         as *mut crate::src::headers::sqlite3_h::Sqlite3Uint64)
                                         as ::core::ffi::c_double;
@@ -5276,7 +5268,6 @@ unsafe extern "C" fn jsonReturnFromBlob(
         }
         JSONB_FLOAT5 | JSONB_FLOAT => {
             r_0 = 0.;
-            z_0 = ::core::ptr::null_mut::<::core::ffi::c_char>();
             if sz == 0 as crate::src::ext::rtree::rtree::U32_0 {
                 current_block = 17501859396465829258;
             } else {
@@ -5298,11 +5289,11 @@ unsafe extern "C" fn jsonReturnFromBlob(
             current_block = 2616667235040759262;
         }
         JSONB_TEXT5 | JSONB_TEXTJ => {
-            let mut iIn: crate::src::ext::rtree::rtree::U32_0 = 0;
-            let mut iOut: crate::src::ext::rtree::rtree::U32_0 = 0;
-            let mut z_1: *const ::core::ffi::c_char = ::core::ptr::null::<::core::ffi::c_char>();
-            let mut zOut: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
-            let mut nOut: crate::src::ext::rtree::rtree::U32_0 = sz;
+            let mut iIn: crate::src::ext::rtree::rtree::U32_0;
+            let mut iOut: crate::src::ext::rtree::rtree::U32_0;
+            let z_1: *const ::core::ffi::c_char;
+            let zOut: *mut ::core::ffi::c_char;
+            let nOut: crate::src::ext::rtree::rtree::U32_0 = sz;
             z_1 = (*pParse).aBlob.offset(i.wrapping_add(n) as isize)
                 as *mut crate::src::ext::rtree::rtree::U8_0
                 as *const ::core::ffi::c_char;
@@ -5317,10 +5308,10 @@ unsafe extern "C" fn jsonReturnFromBlob(
                 iOut = 0 as crate::src::ext::rtree::rtree::U32_0;
                 iIn = iOut;
                 while iIn < sz {
-                    let mut c: ::core::ffi::c_char = *z_1.offset(iIn as isize);
+                    let c: ::core::ffi::c_char = *z_1.offset(iIn as isize);
                     if c as ::core::ffi::c_int == '\\' as i32 {
                         let mut v: crate::src::ext::rtree::rtree::U32_0 = 0;
-                        let mut szEscape: crate::src::ext::rtree::rtree::U32_0 =
+                        let szEscape: crate::src::ext::rtree::rtree::U32_0 =
                             jsonUnescapeOneChar(
                                 z_1.offset(iIn as isize) as *const ::core::ffi::c_char,
                                 sz.wrapping_sub(iIn),
@@ -5503,11 +5494,11 @@ unsafe extern "C" fn jsonReturnFromBlob(
 }
 
 unsafe extern "C" fn jsonFunctionArgToBlob(
-    mut ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
-    mut pArg: *mut crate::src::headers::vdbeInt_h::sqlite3_value,
-    mut pParse: *mut JsonParse,
+    ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
+    pArg: *mut crate::src::headers::vdbeInt_h::sqlite3_value,
+    pParse: *mut JsonParse,
 ) -> ::core::ffi::c_int {
-    let mut eType: ::core::ffi::c_int = crate::src::src::vdbeapi::sqlite3_value_type(pArg);
+    let eType: ::core::ffi::c_int = crate::src::src::vdbeapi::sqlite3_value_type(pArg);
     static mut aNull: [crate::src::ext::rtree::rtree::U8_0; 1] =
         [0 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::U8_0];
     ::libc::memset(
@@ -5529,9 +5520,9 @@ unsafe extern "C" fn jsonFunctionArgToBlob(
             }
         }
         crate::src::headers::sqlite3_h::SQLITE_TEXT_1 => {
-            let mut zJson: *const ::core::ffi::c_char =
+            let zJson: *const ::core::ffi::c_char =
                 crate::src::src::vdbeapi::sqlite3_value_text(pArg) as *const ::core::ffi::c_char;
-            let mut nJson: ::core::ffi::c_int = crate::src::src::vdbeapi::sqlite3_value_bytes(pArg);
+            let nJson: ::core::ffi::c_int = crate::src::src::vdbeapi::sqlite3_value_bytes(pArg);
             if zJson.is_null() {
                 return 1 as ::core::ffi::c_int;
             }
@@ -5567,7 +5558,7 @@ unsafe extern "C" fn jsonFunctionArgToBlob(
             }
         }
         crate::src::headers::sqlite3_h::SQLITE_FLOAT_1 => {
-            let mut r: ::core::ffi::c_double = crate::src::src::vdbeapi::sqlite3_value_double(pArg);
+            let r: ::core::ffi::c_double = crate::src::src::vdbeapi::sqlite3_value_double(pArg);
             if crate::src::src::util::sqlite3IsNaN(r) != 0 {
                 jsonBlobAppendNode(
                     pParse,
@@ -5576,8 +5567,8 @@ unsafe extern "C" fn jsonFunctionArgToBlob(
                     ::core::ptr::null::<::core::ffi::c_void>(),
                 );
             } else {
-                let mut n: ::core::ffi::c_int = crate::src::src::vdbeapi::sqlite3_value_bytes(pArg);
-                let mut z: *const ::core::ffi::c_char =
+                let n: ::core::ffi::c_int = crate::src::src::vdbeapi::sqlite3_value_bytes(pArg);
+                let z: *const ::core::ffi::c_char =
                     crate::src::src::vdbeapi::sqlite3_value_text(pArg)
                         as *const ::core::ffi::c_char;
                 if z.is_null() {
@@ -5612,8 +5603,8 @@ unsafe extern "C" fn jsonFunctionArgToBlob(
             }
         }
         crate::src::headers::sqlite3_h::SQLITE_INTEGER_1 => {
-            let mut n_0: ::core::ffi::c_int = crate::src::src::vdbeapi::sqlite3_value_bytes(pArg);
-            let mut z_0: *const ::core::ffi::c_char =
+            let n_0: ::core::ffi::c_int = crate::src::src::vdbeapi::sqlite3_value_bytes(pArg);
+            let z_0: *const ::core::ffi::c_char =
                 crate::src::src::vdbeapi::sqlite3_value_text(pArg) as *const ::core::ffi::c_char;
             if z_0.is_null() {
                 return 1 as ::core::ffi::c_int;
@@ -5640,10 +5631,10 @@ unsafe extern "C" fn jsonFunctionArgToBlob(
 }
 
 unsafe extern "C" fn jsonBadPathError(
-    mut ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
-    mut zPath: *const ::core::ffi::c_char,
+    ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
+    zPath: *const ::core::ffi::c_char,
 ) -> *mut ::core::ffi::c_char {
-    let mut zMsg: *mut ::core::ffi::c_char = crate::sqlite_printf!("bad JSON path: %Q", zPath);
+    let zMsg: *mut ::core::ffi::c_char = crate::sqlite_printf!("bad JSON path: %Q", zPath);
     if ctx.is_null() {
         return zMsg;
     }
@@ -5657,17 +5648,17 @@ unsafe extern "C" fn jsonBadPathError(
 }
 
 unsafe extern "C" fn jsonInsertIntoBlob(
-    mut ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
-    mut argc: ::core::ffi::c_int,
-    mut argv: *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
-    mut eEdit: ::core::ffi::c_int,
+    ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
+    argc: ::core::ffi::c_int,
+    argv: *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
+    eEdit: ::core::ffi::c_int,
 ) {
-    let mut current_block: u64;
-    let mut i: ::core::ffi::c_int = 0;
+    let current_block: u64;
+    let mut i: ::core::ffi::c_int;
     let mut rc: crate::src::ext::rtree::rtree::U32_0 = 0 as crate::src::ext::rtree::rtree::U32_0;
     let mut zPath: *const ::core::ffi::c_char = ::core::ptr::null::<::core::ffi::c_char>();
-    let mut flgs: ::core::ffi::c_int = 0;
-    let mut p: *mut JsonParse = ::core::ptr::null_mut::<JsonParse>();
+    let flgs: ::core::ffi::c_int;
+    let p: *mut JsonParse;
     let mut ax: JsonParse = { ::core::mem::zeroed() };
     flgs = if argc == 1 as ::core::ffi::c_int {
         0 as ::core::ffi::c_int
@@ -5769,12 +5760,12 @@ unsafe extern "C" fn jsonInsertIntoBlob(
 }
 
 unsafe extern "C" fn jsonArgIsJsonb(
-    mut pArg: *mut crate::src::headers::vdbeInt_h::sqlite3_value,
-    mut p: *mut JsonParse,
+    pArg: *mut crate::src::headers::vdbeInt_h::sqlite3_value,
+    p: *mut JsonParse,
 ) -> ::core::ffi::c_int {
-    let mut n: crate::src::ext::rtree::rtree::U32_0 = 0;
+    let n: crate::src::ext::rtree::rtree::U32_0;
     let mut sz: crate::src::ext::rtree::rtree::U32_0 = 0 as crate::src::ext::rtree::rtree::U32_0;
-    let mut c: crate::src::ext::rtree::rtree::U8_0 = 0;
+    let c: crate::src::ext::rtree::rtree::U8_0;
     if crate::src::src::vdbeapi::sqlite3_value_type(pArg)
         != crate::src::headers::sqlite3_h::SQLITE_BLOB
     {
@@ -5822,17 +5813,16 @@ unsafe extern "C" fn jsonArgIsJsonb(
 }
 
 unsafe extern "C" fn jsonParseFuncArg(
-    mut ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
-    mut pArg: *mut crate::src::headers::vdbeInt_h::sqlite3_value,
-    mut flgs: crate::src::ext::rtree::rtree::U32_0,
+    ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
+    pArg: *mut crate::src::headers::vdbeInt_h::sqlite3_value,
+    flgs: crate::src::ext::rtree::rtree::U32_0,
 ) -> *mut JsonParse {
     let mut nBlob: crate::src::ext::rtree::rtree::U32_0 = 0;
-    let mut current_block: u64;
-    let mut eType: ::core::ffi::c_int = 0;
-    let mut p: *mut JsonParse = ::core::ptr::null_mut::<JsonParse>();
-    let mut pFromCache: *mut JsonParse = ::core::ptr::null_mut::<JsonParse>();
-    let mut db: *mut crate::src::headers::sqliteInt_h::sqlite3 =
-        ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::sqlite3>();
+    let current_block: u64;
+    let eType: ::core::ffi::c_int;
+    let mut p: *mut JsonParse;
+    let mut pFromCache: *mut JsonParse;
+    let db: *mut crate::src::headers::sqliteInt_h::sqlite3;
     eType = crate::src::src::vdbeapi::sqlite3_value_type(pArg);
     if eType == crate::src::headers::sqlite3_h::SQLITE_NULL_1 {
         return ::core::ptr::null_mut::<JsonParse>();
@@ -5930,7 +5920,7 @@ unsafe extern "C" fn jsonParseFuncArg(
                     return ::core::ptr::null_mut::<JsonParse>();
                 }
             } else {
-                let mut isRCStr: ::core::ffi::c_int =
+                let isRCStr: ::core::ffi::c_int =
                     crate::src::src::vdbemem::sqlite3ValueIsOfClass(
                         pArg,
                         Some(
@@ -5938,10 +5928,10 @@ unsafe extern "C" fn jsonParseFuncArg(
                                 as unsafe extern "C" fn(*mut ::core::ffi::c_void) -> (),
                         ),
                     );
-                let mut rc: ::core::ffi::c_int = 0;
+                let rc: ::core::ffi::c_int;
                 if isRCStr == 0 {
                     let __p_ref = { &mut *p };
-                    let mut zNew: *mut ::core::ffi::c_char =
+                    let zNew: *mut ::core::ffi::c_char =
                         crate::src::src::printf::sqlite3RCStrNew(
                             __p_ref.nJson as crate::src::ext::rtree::rtree::U64_0,
                         );
@@ -5967,7 +5957,6 @@ unsafe extern "C" fn jsonParseFuncArg(
                 }
                 if flgs & JSON_EDITABLE as crate::src::ext::rtree::rtree::U32_0 != 0 {
                     pFromCache = p;
-                    p = ::core::ptr::null_mut::<JsonParse>();
                 } else {
                     return p;
                 }
@@ -5999,10 +5988,10 @@ unsafe extern "C" fn jsonParseFuncArg(
 }
 
 unsafe extern "C" fn jsonReturnParse(
-    mut ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
-    mut p: *mut JsonParse,
+    ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
+    p: *mut JsonParse,
 ) {
-    let mut flgs: ::core::ffi::c_int = 0;
+    let flgs: ::core::ffi::c_int;
     if (*p).oom != 0 {
         crate::src::src::vdbeapi::sqlite3_result_error_nomem(ctx);
         return;
@@ -6044,9 +6033,9 @@ unsafe extern "C" fn jsonReturnParse(
 }
 
 unsafe extern "C" fn jsonQuoteFunc(
-    mut ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
+    ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
     mut _argc: ::core::ffi::c_int,
-    mut argv: *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
+    argv: *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
 ) {
     let mut jx: JsonString = { ::core::mem::zeroed() };
     jsonStringInit(&raw mut jx, ctx);
@@ -6060,11 +6049,11 @@ unsafe extern "C" fn jsonQuoteFunc(
 }
 
 unsafe extern "C" fn jsonArrayFunc(
-    mut ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
-    mut argc: ::core::ffi::c_int,
-    mut argv: *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
+    ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
+    argc: ::core::ffi::c_int,
+    argv: *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
 ) {
-    let mut i: ::core::ffi::c_int = 0;
+    let mut i: ::core::ffi::c_int;
     let mut jx: JsonString = { ::core::mem::zeroed() };
     jsonStringInit(&raw mut jx, ctx);
     jsonAppendChar(&raw mut jx, '[' as i32 as ::core::ffi::c_char);
@@ -6084,14 +6073,14 @@ unsafe extern "C" fn jsonArrayFunc(
 }
 
 unsafe extern "C" fn jsonArrayLengthFunc(
-    mut ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
-    mut argc: ::core::ffi::c_int,
-    mut argv: *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
+    ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
+    argc: ::core::ffi::c_int,
+    argv: *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
 ) {
-    let mut p: *mut JsonParse = ::core::ptr::null_mut::<JsonParse>();
+    let p: *mut JsonParse;
     let mut cnt: crate::src::headers::sqlite3_h::Sqlite3Int64 =
         0 as crate::src::headers::sqlite3_h::Sqlite3Int64;
-    let mut i: crate::src::ext::rtree::rtree::U32_0 = 0;
+    let mut i: crate::src::ext::rtree::rtree::U32_0;
     let mut eErr: crate::src::ext::rtree::rtree::U8_0 = 0 as crate::src::ext::rtree::rtree::U8_0;
     p = jsonParseFuncArg(
         ctx,
@@ -6102,7 +6091,7 @@ unsafe extern "C" fn jsonArrayLengthFunc(
         return;
     }
     if argc == 2 as ::core::ffi::c_int {
-        let mut zPath: *const ::core::ffi::c_char =
+        let zPath: *const ::core::ffi::c_char =
             crate::src::src::vdbeapi::sqlite3_value_text(*argv.offset(1 as isize))
                 as *const ::core::ffi::c_char;
         if zPath.is_null() {
@@ -6149,10 +6138,10 @@ unsafe extern "C" fn jsonArrayLengthFunc(
 }
 
 unsafe extern "C" fn jsonAllAlphanum(
-    mut z: *const ::core::ffi::c_char,
-    mut n: ::core::ffi::c_int,
+    z: *const ::core::ffi::c_char,
+    n: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
-    let mut i: ::core::ffi::c_int = 0;
+    let mut i: ::core::ffi::c_int;
     i = 0 as ::core::ffi::c_int;
     while i < n
         && (*(&raw const crate::src::src::global::sqlite3CtypeMap as *const ::core::ffi::c_uchar)
@@ -6168,14 +6157,14 @@ unsafe extern "C" fn jsonAllAlphanum(
 }
 
 unsafe extern "C" fn jsonExtractFunc(
-    mut ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
-    mut argc: ::core::ffi::c_int,
-    mut argv: *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
+    ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
+    argc: ::core::ffi::c_int,
+    argv: *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
 ) {
-    let mut current_block: u64;
-    let mut p: *mut JsonParse = ::core::ptr::null_mut::<JsonParse>();
-    let mut flags: ::core::ffi::c_int = 0;
-    let mut i: ::core::ffi::c_int = 0;
+    let current_block: u64;
+    let p: *mut JsonParse;
+    let flags: ::core::ffi::c_int;
+    let mut i: ::core::ffi::c_int;
     let mut jx: JsonString = { ::core::mem::zeroed() };
     if argc < 2 as ::core::ffi::c_int {
         return;
@@ -6200,11 +6189,11 @@ unsafe extern "C" fn jsonExtractFunc(
             current_block = 2116367355679836638;
             break;
         }
-        let mut zPath: *const ::core::ffi::c_char =
+        let zPath: *const ::core::ffi::c_char =
             crate::src::src::vdbeapi::sqlite3_value_text(*argv.offset(i as isize))
                 as *const ::core::ffi::c_char;
-        let mut nPath: ::core::ffi::c_int = 0;
-        let mut j: crate::src::ext::rtree::rtree::U32_0 = 0;
+        let nPath: ::core::ffi::c_int;
+        let j: crate::src::ext::rtree::rtree::U32_0;
         if zPath.is_null() {
             current_block = 4294975790485540522;
             break;
@@ -6385,19 +6374,19 @@ pub const JSON_MERGE_BADPATCH: ::core::ffi::c_int = 2 as ::core::ffi::c_int;
 pub const JSON_MERGE_OOM: ::core::ffi::c_int = 3 as ::core::ffi::c_int;
 
 unsafe extern "C" fn jsonMergePatch(
-    mut pTarget: *mut JsonParse,
-    mut iTarget: crate::src::ext::rtree::rtree::U32_0,
-    mut pPatch: *const JsonParse,
-    mut iPatch: crate::src::ext::rtree::rtree::U32_0,
+    pTarget: *mut JsonParse,
+    iTarget: crate::src::ext::rtree::rtree::U32_0,
+    pPatch: *const JsonParse,
+    iPatch: crate::src::ext::rtree::rtree::U32_0,
 ) -> ::core::ffi::c_int {
-    let mut x: crate::src::ext::rtree::rtree::U8_0 = 0;
-    let mut n: crate::src::ext::rtree::rtree::U32_0 = 0;
+    let mut x: crate::src::ext::rtree::rtree::U8_0;
+    let mut n: crate::src::ext::rtree::rtree::U32_0;
     let mut sz: crate::src::ext::rtree::rtree::U32_0 = 0 as crate::src::ext::rtree::rtree::U32_0;
-    let mut iTCursor: crate::src::ext::rtree::rtree::U32_0 = 0;
-    let mut iTStart: crate::src::ext::rtree::rtree::U32_0 = 0;
-    let mut iTEndBE: crate::src::ext::rtree::rtree::U32_0 = 0;
-    let mut iTEnd: crate::src::ext::rtree::rtree::U32_0 = 0;
-    let mut eTLabel: crate::src::ext::rtree::rtree::U8_0 = 0;
+    let mut iTCursor: crate::src::ext::rtree::rtree::U32_0;
+    let iTStart: crate::src::ext::rtree::rtree::U32_0;
+    let iTEndBE: crate::src::ext::rtree::rtree::U32_0;
+    let mut iTEnd: crate::src::ext::rtree::rtree::U32_0;
+    let mut eTLabel: crate::src::ext::rtree::rtree::U8_0;
     let mut iTLabel: crate::src::ext::rtree::rtree::U32_0 =
         0 as crate::src::ext::rtree::rtree::U32_0;
     let mut nTLabel: crate::src::ext::rtree::rtree::U32_0 =
@@ -6410,21 +6399,21 @@ unsafe extern "C" fn jsonMergePatch(
         0 as crate::src::ext::rtree::rtree::U32_0;
     let mut szTValue: crate::src::ext::rtree::rtree::U32_0 =
         0 as crate::src::ext::rtree::rtree::U32_0;
-    let mut iPCursor: crate::src::ext::rtree::rtree::U32_0 = 0;
-    let mut iPEnd: crate::src::ext::rtree::rtree::U32_0 = 0;
-    let mut ePLabel: crate::src::ext::rtree::rtree::U8_0 = 0;
-    let mut iPLabel: crate::src::ext::rtree::rtree::U32_0 = 0;
-    let mut nPLabel: crate::src::ext::rtree::rtree::U32_0 = 0;
+    let mut iPCursor: crate::src::ext::rtree::rtree::U32_0;
+    let iPEnd: crate::src::ext::rtree::rtree::U32_0;
+    let mut ePLabel: crate::src::ext::rtree::rtree::U8_0;
+    let mut iPLabel: crate::src::ext::rtree::rtree::U32_0;
+    let mut nPLabel: crate::src::ext::rtree::rtree::U32_0;
     let mut szPLabel: crate::src::ext::rtree::rtree::U32_0 = 0;
-    let mut iPValue: crate::src::ext::rtree::rtree::U32_0 = 0;
-    let mut nPValue: crate::src::ext::rtree::rtree::U32_0 = 0;
+    let mut iPValue: crate::src::ext::rtree::rtree::U32_0;
+    let mut nPValue: crate::src::ext::rtree::rtree::U32_0;
     let mut szPValue: crate::src::ext::rtree::rtree::U32_0 = 0;
     x = (*(*pPatch).aBlob.offset(iPatch as isize) as ::core::ffi::c_int & 0xf as ::core::ffi::c_int)
         as crate::src::ext::rtree::rtree::U8_0;
     let __pTarget_ref = { &mut *pTarget };
     if x as ::core::ffi::c_int != JSONB_OBJECT {
-        let mut szPatch: crate::src::ext::rtree::rtree::U32_0 = 0;
-        let mut szTarget: crate::src::ext::rtree::rtree::U32_0 = 0;
+        let szPatch: crate::src::ext::rtree::rtree::U32_0;
+        let szTarget: crate::src::ext::rtree::rtree::U32_0;
         n = jsonbPayloadSize(pPatch, iPatch, &raw mut sz);
         szPatch = n.wrapping_add(sz);
         sz = 0 as crate::src::ext::rtree::rtree::U32_0;
@@ -6499,7 +6488,7 @@ unsafe extern "C" fn jsonMergePatch(
         iTCursor = iTStart;
         iTEnd = iTEndBE.wrapping_add(__pTarget_ref.delta as crate::src::ext::rtree::rtree::U32_0);
         while iTCursor < iTEnd {
-            let mut isEqual: ::core::ffi::c_int = 0;
+            let isEqual: ::core::ffi::c_int;
             iTLabel = iTCursor;
             eTLabel = (*__pTarget_ref.aBlob.offset(iTCursor as isize) as ::core::ffi::c_int
                 & 0xf as ::core::ffi::c_int)
@@ -6567,8 +6556,8 @@ unsafe extern "C" fn jsonMergePatch(
                     return JSON_MERGE_OOM;
                 }
             } else {
-                let mut rc: ::core::ffi::c_int = 0;
-                let mut savedDelta: ::core::ffi::c_int = __pTarget_ref.delta;
+                let rc: ::core::ffi::c_int;
+                let savedDelta: ::core::ffi::c_int = __pTarget_ref.delta;
                 __pTarget_ref.delta = 0 as ::core::ffi::c_int;
                 rc = jsonMergePatch(pTarget, iTValue, pPatch, iPValue);
                 if rc != 0 {
@@ -6577,7 +6566,7 @@ unsafe extern "C" fn jsonMergePatch(
                 __pTarget_ref.delta += savedDelta;
             }
         } else if x as ::core::ffi::c_int > 0 as ::core::ffi::c_int {
-            let mut szNew: crate::src::ext::rtree::rtree::U32_0 = szPLabel.wrapping_add(nPLabel);
+            let szNew: crate::src::ext::rtree::rtree::U32_0 = szPLabel.wrapping_add(nPLabel);
             if *(*pPatch).aBlob.offset(iPValue as isize) as ::core::ffi::c_int
                 & 0xf as ::core::ffi::c_int
                 != JSONB_OBJECT
@@ -6611,8 +6600,8 @@ unsafe extern "C" fn jsonMergePatch(
                     szPValue.wrapping_add(nPValue) as usize,
                 );
             } else {
-                let mut rc_0: ::core::ffi::c_int = 0;
-                let mut savedDelta_0: ::core::ffi::c_int = 0;
+                let rc_0: ::core::ffi::c_int;
+                let savedDelta_0: ::core::ffi::c_int;
                 jsonBlobEdit(
                     pTarget,
                     iTEnd,
@@ -6656,13 +6645,13 @@ unsafe extern "C" fn jsonMergePatch(
 }
 
 unsafe extern "C" fn jsonPatchFunc(
-    mut ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
+    ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
     mut _argc: ::core::ffi::c_int,
-    mut argv: *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
+    argv: *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
 ) {
-    let mut pTarget: *mut JsonParse = ::core::ptr::null_mut::<JsonParse>();
-    let mut pPatch: *mut JsonParse = ::core::ptr::null_mut::<JsonParse>();
-    let mut rc: ::core::ffi::c_int = 0;
+    let pTarget: *mut JsonParse;
+    let pPatch: *mut JsonParse;
+    let rc: ::core::ffi::c_int;
     pTarget = jsonParseFuncArg(
         ctx,
         *argv.offset(0 as isize),
@@ -6700,14 +6689,14 @@ unsafe extern "C" fn jsonPatchFunc(
 }
 
 unsafe extern "C" fn jsonObjectFunc(
-    mut ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
-    mut argc: ::core::ffi::c_int,
-    mut argv: *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
+    ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
+    argc: ::core::ffi::c_int,
+    argv: *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
 ) {
-    let mut i: ::core::ffi::c_int = 0;
+    let mut i: ::core::ffi::c_int;
     let mut jx: JsonString = { ::core::mem::zeroed() };
-    let mut z: *const ::core::ffi::c_char = ::core::ptr::null::<::core::ffi::c_char>();
-    let mut n: crate::src::ext::rtree::rtree::U32_0 = 0;
+    let mut z: *const ::core::ffi::c_char;
+    let mut n: crate::src::ext::rtree::rtree::U32_0;
     if argc & 1 as ::core::ffi::c_int != 0 {
         crate::src::src::vdbeapi::sqlite3_result_error(
             ctx,
@@ -6755,15 +6744,15 @@ unsafe extern "C" fn jsonObjectFunc(
 }
 
 unsafe extern "C" fn jsonRemoveFunc(
-    mut ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
-    mut argc: ::core::ffi::c_int,
-    mut argv: *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
+    ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
+    argc: ::core::ffi::c_int,
+    argv: *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
 ) {
-    let mut current_block: u64;
-    let mut p: *mut JsonParse = ::core::ptr::null_mut::<JsonParse>();
+    let current_block: u64;
+    let p: *mut JsonParse;
     let mut zPath: *const ::core::ffi::c_char = ::core::ptr::null::<::core::ffi::c_char>();
-    let mut i: ::core::ffi::c_int = 0;
-    let mut rc: crate::src::ext::rtree::rtree::U32_0 = 0;
+    let mut i: ::core::ffi::c_int;
+    let mut rc: crate::src::ext::rtree::rtree::U32_0;
     if argc < 1 as ::core::ffi::c_int {
         return;
     }
@@ -6839,9 +6828,9 @@ unsafe extern "C" fn jsonRemoveFunc(
 }
 
 unsafe extern "C" fn jsonReplaceFunc(
-    mut ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
-    mut argc: ::core::ffi::c_int,
-    mut argv: *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
+    ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
+    argc: ::core::ffi::c_int,
+    argv: *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
 ) {
     if argc < 1 as ::core::ffi::c_int {
         return;
@@ -6854,14 +6843,14 @@ unsafe extern "C" fn jsonReplaceFunc(
 }
 
 unsafe extern "C" fn jsonSetFunc(
-    mut ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
-    mut argc: ::core::ffi::c_int,
-    mut argv: *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
+    ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
+    argc: ::core::ffi::c_int,
+    argv: *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
 ) {
-    let mut flags: ::core::ffi::c_int = crate::src::src::vdbeapi::sqlite3_user_data(ctx)
+    let flags: ::core::ffi::c_int = crate::src::src::vdbeapi::sqlite3_user_data(ctx)
         as crate::src::headers::stdlib::IntptrT
         as ::core::ffi::c_int;
-    let mut bIsSet: ::core::ffi::c_int =
+    let bIsSet: ::core::ffi::c_int =
         (flags & JSON_ISSET != 0 as ::core::ffi::c_int) as ::core::ffi::c_int;
     if argc < 1 as ::core::ffi::c_int {
         return;
@@ -6886,13 +6875,13 @@ unsafe extern "C" fn jsonSetFunc(
 }
 
 unsafe extern "C" fn jsonTypeFunc(
-    mut ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
-    mut argc: ::core::ffi::c_int,
-    mut argv: *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
+    ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
+    argc: ::core::ffi::c_int,
+    argv: *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
 ) {
-    let mut current_block: u64;
-    let mut p: *mut JsonParse = ::core::ptr::null_mut::<JsonParse>();
-    let mut zPath: *const ::core::ffi::c_char = ::core::ptr::null::<::core::ffi::c_char>();
+    let current_block: u64;
+    let p: *mut JsonParse;
+    let zPath: *const ::core::ffi::c_char;
     let mut i: crate::src::ext::rtree::rtree::U32_0 = 0;
     p = jsonParseFuncArg(
         ctx,
@@ -6954,9 +6943,9 @@ unsafe extern "C" fn jsonTypeFunc(
 }
 
 unsafe extern "C" fn jsonPrettyFunc(
-    mut ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
-    mut argc: ::core::ffi::c_int,
-    mut argv: *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
+    ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
+    argc: ::core::ffi::c_int,
+    argv: *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
 ) {
     let mut s: JsonString = { ::core::mem::zeroed() };
     let mut x: JsonPretty = { ::core::mem::zeroed() };
@@ -6990,15 +6979,15 @@ unsafe extern "C" fn jsonPrettyFunc(
 }
 
 unsafe extern "C" fn jsonValidFunc(
-    mut ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
-    mut argc: ::core::ffi::c_int,
-    mut argv: *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
+    ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
+    argc: ::core::ffi::c_int,
+    argv: *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
 ) {
-    let mut p: *mut JsonParse = ::core::ptr::null_mut::<JsonParse>();
+    let p: *mut JsonParse;
     let mut flags: crate::src::ext::rtree::rtree::U8_0 = 1 as crate::src::ext::rtree::rtree::U8_0;
     let mut res: crate::src::ext::rtree::rtree::U8_0 = 0 as crate::src::ext::rtree::rtree::U8_0;
     if argc == 2 as ::core::ffi::c_int {
-        let mut f: crate::src::ext::rtree::rtree::I64_0 =
+        let f: crate::src::ext::rtree::rtree::I64_0 =
             crate::src::src::vdbeapi::sqlite3_value_int64(*argv.offset(1 as isize))
                 as crate::src::ext::rtree::rtree::I64_0;
         if f < 1 as crate::src::ext::rtree::rtree::I64_0
@@ -7015,7 +7004,7 @@ unsafe extern "C" fn jsonValidFunc(
         flags = (f & 0xf as crate::src::ext::rtree::rtree::I64_0)
             as crate::src::ext::rtree::rtree::U8_0;
     }
-    let mut current_block_31: u64;
+    let current_block_31: u64;
     match crate::src::src::vdbeapi::sqlite3_value_type(*argv.offset(0 as isize)) {
         crate::src::headers::sqlite3_h::SQLITE_NULL_1 => return,
         crate::src::headers::sqlite3_h::SQLITE_BLOB => {
@@ -7075,9 +7064,9 @@ unsafe extern "C" fn jsonValidFunc(
 }
 
 unsafe extern "C" fn jsonErrorFunc(
-    mut ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
+    ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
     mut _argc: ::core::ffi::c_int,
-    mut argv: *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
+    argv: *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
 ) {
     let mut iErrPos: crate::src::ext::rtree::rtree::I64_0 =
         0 as crate::src::ext::rtree::rtree::I64_0;
@@ -7106,7 +7095,7 @@ unsafe extern "C" fn jsonErrorFunc(
             if s.oom != 0 {
                 iErrPos = -(1 as ::core::ffi::c_int) as crate::src::ext::rtree::rtree::I64_0;
             } else {
-                let mut k: crate::src::ext::rtree::rtree::U32_0 = 0;
+                let mut k: crate::src::ext::rtree::rtree::U32_0;
                 k = 0 as crate::src::ext::rtree::rtree::U32_0;
                 while k < s.iErr && *s.zJson.offset(k as isize) as ::core::ffi::c_int != 0 {
                     if *s.zJson.offset(k as isize) as ::core::ffi::c_int
@@ -7133,11 +7122,11 @@ unsafe extern "C" fn jsonErrorFunc(
 }
 
 unsafe extern "C" fn jsonArrayStep(
-    mut ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
+    ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
     mut _argc: ::core::ffi::c_int,
-    mut argv: *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
+    argv: *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
 ) {
-    let mut pStr: *mut JsonString = ::core::ptr::null_mut::<JsonString>();
+    let pStr: *mut JsonString;
     pStr = crate::src::src::vdbeapi::sqlite3_aggregate_context(
         ctx,
         ::core::mem::size_of::<JsonString>() as ::core::ffi::c_int,
@@ -7156,14 +7145,14 @@ unsafe extern "C" fn jsonArrayStep(
 }
 
 unsafe extern "C" fn jsonArrayCompute(
-    mut ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
-    mut isFinal: ::core::ffi::c_int,
+    ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
+    isFinal: ::core::ffi::c_int,
 ) {
-    let mut pStr: *mut JsonString = ::core::ptr::null_mut::<JsonString>();
+    let pStr: *mut JsonString;
     pStr = crate::src::src::vdbeapi::sqlite3_aggregate_context(ctx, 0 as ::core::ffi::c_int)
         as *mut JsonString;
     if !pStr.is_null() {
-        let mut flags: ::core::ffi::c_int = 0;
+        let flags: ::core::ffi::c_int;
         (*pStr).pCtx = ctx;
         jsonAppendChar(pStr, ']' as i32 as ::core::ffi::c_char);
         flags = crate::src::src::vdbeapi::sqlite3_user_data(ctx)
@@ -7229,25 +7218,25 @@ unsafe extern "C" fn jsonArrayCompute(
     crate::src::src::vdbeapi::sqlite3_result_subtype(ctx, JSON_SUBTYPE as ::core::ffi::c_uint);
 }
 
-unsafe extern "C" fn jsonArrayValue(mut ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context) {
+unsafe extern "C" fn jsonArrayValue(ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context) {
     jsonArrayCompute(ctx, 0 as ::core::ffi::c_int);
 }
 
-unsafe extern "C" fn jsonArrayFinal(mut ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context) {
+unsafe extern "C" fn jsonArrayFinal(ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context) {
     jsonArrayCompute(ctx, 1 as ::core::ffi::c_int);
 }
 
 unsafe extern "C" fn jsonGroupInverse(
-    mut ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
+    ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
     mut _argc: ::core::ffi::c_int,
     mut _argv: *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
 ) {
-    let mut i: ::core::ffi::c_uint = 0;
+    let mut i: ::core::ffi::c_uint;
     let mut inStr: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
     let mut nNest: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
-    let mut z: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
-    let mut c: ::core::ffi::c_char = 0;
-    let mut pStr: *mut JsonString = ::core::ptr::null_mut::<JsonString>();
+    let z: *mut ::core::ffi::c_char;
+    let mut c: ::core::ffi::c_char;
+    let pStr: *mut JsonString;
     pStr = crate::src::src::vdbeapi::sqlite3_aggregate_context(ctx, 0 as ::core::ffi::c_int)
         as *mut JsonString;
     if pStr.is_null() {
@@ -7292,13 +7281,13 @@ unsafe extern "C" fn jsonGroupInverse(
 }
 
 unsafe extern "C" fn jsonObjectStep(
-    mut ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
+    ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
     mut _argc: ::core::ffi::c_int,
-    mut argv: *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
+    argv: *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
 ) {
-    let mut pStr: *mut JsonString = ::core::ptr::null_mut::<JsonString>();
-    let mut z: *const ::core::ffi::c_char = ::core::ptr::null::<::core::ffi::c_char>();
-    let mut n: crate::src::ext::rtree::rtree::U32_0 = 0;
+    let pStr: *mut JsonString;
+    let z: *const ::core::ffi::c_char;
+    let n: crate::src::ext::rtree::rtree::U32_0;
     pStr = crate::src::src::vdbeapi::sqlite3_aggregate_context(
         ctx,
         ::core::mem::size_of::<JsonString>() as ::core::ffi::c_int,
@@ -7324,14 +7313,14 @@ unsafe extern "C" fn jsonObjectStep(
 }
 
 unsafe extern "C" fn jsonObjectCompute(
-    mut ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
-    mut isFinal: ::core::ffi::c_int,
+    ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
+    isFinal: ::core::ffi::c_int,
 ) {
-    let mut pStr: *mut JsonString = ::core::ptr::null_mut::<JsonString>();
+    let pStr: *mut JsonString;
     pStr = crate::src::src::vdbeapi::sqlite3_aggregate_context(ctx, 0 as ::core::ffi::c_int)
         as *mut JsonString;
     if !pStr.is_null() {
-        let mut flags: ::core::ffi::c_int = 0;
+        let flags: ::core::ffi::c_int;
         jsonAppendChar(pStr, '}' as i32 as ::core::ffi::c_char);
         (*pStr).pCtx = ctx;
         flags = crate::src::src::vdbeapi::sqlite3_user_data(ctx)
@@ -7398,27 +7387,27 @@ unsafe extern "C" fn jsonObjectCompute(
 }
 
 unsafe extern "C" fn jsonObjectValue(
-    mut ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
+    ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
 ) {
     jsonObjectCompute(ctx, 0 as ::core::ffi::c_int);
 }
 
 unsafe extern "C" fn jsonObjectFinal(
-    mut ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
+    ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
 ) {
     jsonObjectCompute(ctx, 1 as ::core::ffi::c_int);
 }
 
 unsafe extern "C" fn jsonEachConnect(
-    mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
+    db: *mut crate::src::headers::sqliteInt_h::sqlite3,
     mut _pAux: *mut ::core::ffi::c_void,
     mut _argc: ::core::ffi::c_int,
-    mut argv: *const *const ::core::ffi::c_char,
-    mut ppVtab: *mut *mut crate::src::headers::sqlite3_h::sqlite3_vtab,
+    argv: *const *const ::core::ffi::c_char,
+    ppVtab: *mut *mut crate::src::headers::sqlite3_h::sqlite3_vtab,
     mut _pzErr: *mut *mut ::core::ffi::c_char,
 ) -> ::core::ffi::c_int {
-    let mut pNew: *mut JsonEachConnection = ::core::ptr::null_mut::<JsonEachConnection>();
-    let mut rc: ::core::ffi::c_int = 0;
+    let pNew: *mut JsonEachConnection;
+    let rc: ::core::ffi::c_int;
     rc = crate::src::src::vtab::sqlite3_declare_vtab(
         db as *mut crate::src::headers::sqliteInt_h::sqlite3,
         b"CREATE TABLE x(key,value,type,atom,id,parent,fullkey,path,json HIDDEN,root HIDDEN)\0"
@@ -7477,9 +7466,9 @@ pub const JEACH_PATH: ::core::ffi::c_int = 7;
 pub const JEACH_JSON: ::core::ffi::c_int = 8;
 
 unsafe extern "C" fn jsonEachDisconnect(
-    mut pVtab: *mut crate::src::headers::sqlite3_h::sqlite3_vtab,
+    pVtab: *mut crate::src::headers::sqlite3_h::sqlite3_vtab,
 ) -> ::core::ffi::c_int {
-    let mut p: *mut JsonEachConnection = pVtab as *mut JsonEachConnection;
+    let p: *mut JsonEachConnection = pVtab as *mut JsonEachConnection;
     crate::src::src::malloc::sqlite3DbFree(
         (*p).db as *mut crate::src::headers::sqliteInt_h::sqlite3,
         pVtab as *mut ::core::ffi::c_void,
@@ -7488,11 +7477,11 @@ unsafe extern "C" fn jsonEachDisconnect(
 }
 
 unsafe extern "C" fn jsonEachOpen(
-    mut p: *mut crate::src::headers::sqlite3_h::sqlite3_vtab,
-    mut ppCursor: *mut *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
+    p: *mut crate::src::headers::sqlite3_h::sqlite3_vtab,
+    ppCursor: *mut *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
 ) -> ::core::ffi::c_int {
-    let mut pVtab: *mut JsonEachConnection = p as *mut JsonEachConnection;
-    let mut pCur: *mut JsonEachCursor = ::core::ptr::null_mut::<JsonEachCursor>();
+    let pVtab: *mut JsonEachConnection = p as *mut JsonEachConnection;
+    let pCur: *mut JsonEachCursor;
     let __pVtab_ref = { &*pVtab };
     pCur = crate::src::src::malloc::sqlite3DbMallocZero(
         __pVtab_ref.db as *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -7509,7 +7498,7 @@ unsafe extern "C" fn jsonEachOpen(
     crate::src::headers::sqlite3_h::SQLITE_OK
 }
 
-unsafe extern "C" fn jsonEachCursorReset(mut p: *mut JsonEachCursor) {
+unsafe extern "C" fn jsonEachCursorReset(p: *mut JsonEachCursor) {
     let __p_ref = { &mut *p };
     jsonParseReset(&raw mut __p_ref.sParse);
     jsonStringReset(&raw mut __p_ref.path);
@@ -7527,9 +7516,9 @@ unsafe extern "C" fn jsonEachCursorReset(mut p: *mut JsonEachCursor) {
 }
 
 unsafe extern "C" fn jsonEachClose(
-    mut cur: *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
+    cur: *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
 ) -> ::core::ffi::c_int {
-    let mut p: *mut JsonEachCursor = cur as *mut JsonEachCursor;
+    let p: *mut JsonEachCursor = cur as *mut JsonEachCursor;
     jsonEachCursorReset(p);
     crate::src::src::malloc::sqlite3DbFree(
         (*p).db as *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -7539,18 +7528,18 @@ unsafe extern "C" fn jsonEachClose(
 }
 
 unsafe extern "C" fn jsonEachEof(
-    mut cur: *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
+    cur: *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
 ) -> ::core::ffi::c_int {
     let p = &*(cur as *mut JsonEachCursor);
     (p.i >= p.iEnd) as ::core::ffi::c_int
 }
 
-unsafe extern "C" fn jsonSkipLabel(mut p: *mut JsonEachCursor) -> ::core::ffi::c_int {
+unsafe extern "C" fn jsonSkipLabel(p: *mut JsonEachCursor) -> ::core::ffi::c_int {
     if (*p).eType as ::core::ffi::c_int == JSONB_OBJECT {
         let mut sz: crate::src::ext::rtree::rtree::U32_0 =
             0 as crate::src::ext::rtree::rtree::U32_0;
         let __p_ref = { &mut *p };
-        let mut n: crate::src::ext::rtree::rtree::U32_0 =
+        let n: crate::src::ext::rtree::rtree::U32_0 =
             jsonbPayloadSize(&raw mut __p_ref.sParse, __p_ref.i, &raw mut sz);
         return __p_ref.i.wrapping_add(n).wrapping_add(sz) as ::core::ffi::c_int;
     } else {
@@ -7558,7 +7547,7 @@ unsafe extern "C" fn jsonSkipLabel(mut p: *mut JsonEachCursor) -> ::core::ffi::c
     };
 }
 
-unsafe extern "C" fn jsonAppendPathName(mut p: *mut JsonEachCursor) {
+unsafe extern "C" fn jsonAppendPathName(p: *mut JsonEachCursor) {
     if (*p).eType as ::core::ffi::c_int == JSONB_ARRAY {
         let __p_ref = { &mut *p };
         let idx = (*(*p).aParent.offset(
@@ -7575,12 +7564,12 @@ unsafe extern "C" fn jsonAppendPathName(mut p: *mut JsonEachCursor) {
             bytes.len() as crate::src::ext::rtree::rtree::U32_0,
         );
     } else {
-        let mut n: crate::src::ext::rtree::rtree::U32_0 = 0;
+        let n: crate::src::ext::rtree::rtree::U32_0;
         let mut sz: crate::src::ext::rtree::rtree::U32_0 =
             0 as crate::src::ext::rtree::rtree::U32_0;
-        let mut k: crate::src::ext::rtree::rtree::U32_0 = 0;
-        let mut i: crate::src::ext::rtree::rtree::U32_0 = 0;
-        let mut z: *const ::core::ffi::c_char = ::core::ptr::null::<::core::ffi::c_char>();
+        let k: crate::src::ext::rtree::rtree::U32_0;
+        let mut i: crate::src::ext::rtree::rtree::U32_0;
+        let z: *const ::core::ffi::c_char;
         let mut needQuote: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
         let __p_ref = { &mut *p };
         n = jsonbPayloadSize(&raw mut __p_ref.sParse, __p_ref.i, &raw mut sz);
@@ -7625,28 +7614,28 @@ unsafe extern "C" fn jsonAppendPathName(mut p: *mut JsonEachCursor) {
 }
 
 unsafe extern "C" fn jsonEachNext(
-    mut cur: *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
+    cur: *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
 ) -> ::core::ffi::c_int {
-    let mut p: *mut JsonEachCursor = cur as *mut JsonEachCursor;
+    let p: *mut JsonEachCursor = cur as *mut JsonEachCursor;
     let mut rc: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_OK;
     let __p_ref = { &mut *p };
     if __p_ref.bRecursive != 0 {
-        let mut x: crate::src::ext::rtree::rtree::U8_0 = 0;
+        let x: crate::src::ext::rtree::rtree::U8_0;
         let mut levelChange: crate::src::ext::rtree::rtree::U8_0 =
             0 as crate::src::ext::rtree::rtree::U8_0;
-        let mut n: crate::src::ext::rtree::rtree::U32_0 = 0;
+        let n: crate::src::ext::rtree::rtree::U32_0;
         let mut sz: crate::src::ext::rtree::rtree::U32_0 =
             0 as crate::src::ext::rtree::rtree::U32_0;
-        let mut i: crate::src::ext::rtree::rtree::U32_0 =
+        let i: crate::src::ext::rtree::rtree::U32_0 =
             jsonSkipLabel(p) as crate::src::ext::rtree::rtree::U32_0;
         x = (*__p_ref.sParse.aBlob.offset(i as isize) as ::core::ffi::c_int
             & 0xf as ::core::ffi::c_int) as crate::src::ext::rtree::rtree::U8_0;
         n = jsonbPayloadSize(&raw mut __p_ref.sParse, i, &raw mut sz);
         if x as ::core::ffi::c_int == JSONB_OBJECT || x as ::core::ffi::c_int == JSONB_ARRAY {
-            let mut pParent: *mut JsonParent = ::core::ptr::null_mut::<JsonParent>();
+            let pParent: *mut JsonParent;
             if __p_ref.nParent >= __p_ref.nParentAlloc {
-                let mut pNew: *mut JsonParent = ::core::ptr::null_mut::<JsonParent>();
-                let mut nNew: crate::src::ext::rtree::rtree::U64_0 = 0;
+                let pNew: *mut JsonParent;
+                let nNew: crate::src::ext::rtree::rtree::U64_0;
                 nNew = (*p)
                     .nParentAlloc
                     .wrapping_mul(2 as crate::src::ext::rtree::rtree::U32_0)
@@ -7699,13 +7688,13 @@ unsafe extern "C" fn jsonEachNext(
         }
         if levelChange != 0 {
             if __p_ref.nParent > 0 as crate::src::ext::rtree::rtree::U32_0 {
-                let mut pParent_0: *mut JsonParent = (*p).aParent.offset(
+                let pParent_0: *mut JsonParent = (*p).aParent.offset(
                     __p_ref
                         .nParent
                         .wrapping_sub(1 as crate::src::ext::rtree::rtree::U32_0)
                         as isize,
                 ) as *mut JsonParent;
-                let mut iVal: crate::src::ext::rtree::rtree::U32_0 = (*pParent_0).iValue;
+                let iVal: crate::src::ext::rtree::rtree::U32_0 = (*pParent_0).iValue;
                 __p_ref.eType = (*__p_ref.sParse.aBlob.offset(iVal as isize) as ::core::ffi::c_int
                     & 0xf as ::core::ffi::c_int)
                     as crate::src::ext::rtree::rtree::U8_0;
@@ -7714,10 +7703,10 @@ unsafe extern "C" fn jsonEachNext(
             }
         }
     } else {
-        let mut n_0: crate::src::ext::rtree::rtree::U32_0 = 0;
+        let n_0: crate::src::ext::rtree::rtree::U32_0;
         let mut sz_0: crate::src::ext::rtree::rtree::U32_0 =
             0 as crate::src::ext::rtree::rtree::U32_0;
-        let mut i_0: crate::src::ext::rtree::rtree::U32_0 =
+        let i_0: crate::src::ext::rtree::rtree::U32_0 =
             jsonSkipLabel(p) as crate::src::ext::rtree::rtree::U32_0;
         n_0 = jsonbPayloadSize(&raw mut __p_ref.sParse, i_0, &raw mut sz_0);
         __p_ref.i = i_0.wrapping_add(n_0).wrapping_add(sz_0);
@@ -7735,11 +7724,11 @@ unsafe extern "C" fn jsonEachNext(
     rc
 }
 
-unsafe extern "C" fn jsonEachPathLength(mut p: *mut JsonEachCursor) -> ::core::ffi::c_int {
+unsafe extern "C" fn jsonEachPathLength(p: *mut JsonEachCursor) -> ::core::ffi::c_int {
     let __p_ref = { &mut *p };
     let mut n: crate::src::ext::rtree::rtree::U32_0 =
         __p_ref.path.nUsed as crate::src::ext::rtree::rtree::U32_0;
-    let mut z: *mut ::core::ffi::c_char = __p_ref.path.zBuf;
+    let z: *mut ::core::ffi::c_char = __p_ref.path.zBuf;
     if __p_ref.iRowid == 0 as crate::src::ext::rtree::rtree::U32_0
         && __p_ref.bRecursive as ::core::ffi::c_int != 0
         && n >= 2 as crate::src::ext::rtree::rtree::U32_0
@@ -7751,10 +7740,10 @@ unsafe extern "C" fn jsonEachPathLength(mut p: *mut JsonEachCursor) -> ::core::f
             {
                 continue;
             }
-            let mut x: crate::src::ext::rtree::rtree::U32_0 = 0;
+            let x: crate::src::ext::rtree::rtree::U32_0;
             let mut sz: crate::src::ext::rtree::rtree::U32_0 =
                 0 as crate::src::ext::rtree::rtree::U32_0;
-            let mut cSaved: ::core::ffi::c_char = *z.offset(n as isize);
+            let cSaved: ::core::ffi::c_char = *z.offset(n as isize);
             *z.offset(n as isize) = 0 as ::core::ffi::c_char;
             x = jsonLookupStep(
                 &raw mut __p_ref.sParse,
@@ -7777,16 +7766,16 @@ unsafe extern "C" fn jsonEachPathLength(mut p: *mut JsonEachCursor) -> ::core::f
 }
 
 unsafe extern "C" fn jsonEachColumn(
-    mut cur: *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
-    mut ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
-    mut iColumn: ::core::ffi::c_int,
+    cur: *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
+    ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
+    iColumn: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
-    let mut p: *mut JsonEachCursor = cur as *mut JsonEachCursor;
+    let p: *mut JsonEachCursor = cur as *mut JsonEachCursor;
     match iColumn {
         JEACH_KEY => {
             if (*p).nParent == 0 as crate::src::ext::rtree::rtree::U32_0 {
-                let mut n: crate::src::ext::rtree::rtree::U32_0 = 0;
-                let mut j: crate::src::ext::rtree::rtree::U32_0 = 0;
+                let n: crate::src::ext::rtree::rtree::U32_0;
+                let j: crate::src::ext::rtree::rtree::U32_0;
                 if !((*p).nRoot == 1 as crate::src::ext::rtree::rtree::U32_0) {
                     j = jsonEachPathLength(p) as crate::src::ext::rtree::rtree::U32_0;
                     n = (*p).nRoot.wrapping_sub(j);
@@ -7862,7 +7851,7 @@ unsafe extern "C" fn jsonEachColumn(
             }
         }
         JEACH_VALUE => {
-            let mut i: crate::src::ext::rtree::rtree::U32_0 =
+            let i: crate::src::ext::rtree::rtree::U32_0 =
                 jsonSkipLabel(p) as crate::src::ext::rtree::rtree::U32_0;
             let __p_ref = { &mut *p };
             jsonReturnFromBlob(
@@ -7882,9 +7871,9 @@ unsafe extern "C" fn jsonEachColumn(
             }
         }
         JEACH_TYPE => {
-            let mut i_0: crate::src::ext::rtree::rtree::U32_0 =
+            let i_0: crate::src::ext::rtree::rtree::U32_0 =
                 jsonSkipLabel(p) as crate::src::ext::rtree::rtree::U32_0;
-            let mut eType: crate::src::ext::rtree::rtree::U8_0 =
+            let eType: crate::src::ext::rtree::rtree::U8_0 =
                 (*(*p).sParse.aBlob.offset(i_0 as isize) as ::core::ffi::c_int
                     & 0xf as ::core::ffi::c_int)
                     as crate::src::ext::rtree::rtree::U8_0;
@@ -7896,7 +7885,7 @@ unsafe extern "C" fn jsonEachColumn(
             );
         }
         JEACH_ATOM => {
-            let mut i_1: crate::src::ext::rtree::rtree::U32_0 =
+            let i_1: crate::src::ext::rtree::rtree::U32_0 =
                 jsonSkipLabel(p) as crate::src::ext::rtree::rtree::U32_0;
             if (*(*p).sParse.aBlob.offset(i_1 as isize) as ::core::ffi::c_int
                 & 0xf as ::core::ffi::c_int)
@@ -7928,7 +7917,7 @@ unsafe extern "C" fn jsonEachColumn(
         }
         JEACH_FULLKEY => {
             let __p_ref = { &mut *p };
-            let mut nBase: crate::src::ext::rtree::rtree::U64_0 = __p_ref.path.nUsed;
+            let nBase: crate::src::ext::rtree::rtree::U64_0 = __p_ref.path.nUsed;
             if __p_ref.nParent != 0 {
                 jsonAppendPathName(p);
             }
@@ -7945,7 +7934,7 @@ unsafe extern "C" fn jsonEachColumn(
             __p_ref.path.nUsed = nBase;
         }
         JEACH_PATH => {
-            let mut n_0: crate::src::ext::rtree::rtree::U32_0 =
+            let n_0: crate::src::ext::rtree::rtree::U32_0 =
                 jsonEachPathLength(p) as crate::src::ext::rtree::rtree::U32_0;
             crate::src::src::vdbeapi::sqlite3_result_text64(
                 ctx,
@@ -7994,8 +7983,8 @@ unsafe extern "C" fn jsonEachColumn(
 }
 
 unsafe extern "C" fn jsonEachRowid(
-    mut cur: *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
-    mut pRowid: *mut crate::src::headers::sqlite3_h::SqliteInt64,
+    cur: *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
+    pRowid: *mut crate::src::headers::sqlite3_h::SqliteInt64,
 ) -> ::core::ffi::c_int {
     let p = &*(cur as *mut JsonEachCursor);
     *pRowid = p.iRowid as crate::src::headers::sqlite3_h::SqliteInt64;
@@ -8004,22 +7993,21 @@ unsafe extern "C" fn jsonEachRowid(
 
 unsafe extern "C" fn jsonEachBestIndex(
     mut _tab: *mut crate::src::headers::sqlite3_h::sqlite3_vtab,
-    mut pIdxInfo: *mut crate::src::headers::sqlite3_h::sqlite3_index_info,
+    pIdxInfo: *mut crate::src::headers::sqlite3_h::sqlite3_index_info,
 ) -> ::core::ffi::c_int {
-    let mut i: ::core::ffi::c_int = 0;
+    let mut i: ::core::ffi::c_int;
     let mut aIdx: [::core::ffi::c_int; 2] = [0; 2];
     let mut unusableMask: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
     let mut idxMask: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
-    let mut pConstraint: *const crate::src::headers::sqlite3_h::sqlite3_index_constraint =
-        ::core::ptr::null::<crate::src::headers::sqlite3_h::sqlite3_index_constraint>();
+    let mut pConstraint: *const crate::src::headers::sqlite3_h::sqlite3_index_constraint;
     aIdx[1 as ::core::ffi::c_int as usize] = -(1 as ::core::ffi::c_int);
     aIdx[0 as ::core::ffi::c_int as usize] = aIdx[1 as ::core::ffi::c_int as usize];
     let __pIdxInfo_ref = { &mut *pIdxInfo };
     pConstraint = __pIdxInfo_ref.aConstraint;
     i = 0 as ::core::ffi::c_int;
     while i < __pIdxInfo_ref.nConstraint {
-        let mut iCol: ::core::ffi::c_int = 0;
-        let mut iMask: ::core::ffi::c_int = 0;
+        let iCol: ::core::ffi::c_int;
+        let iMask: ::core::ffi::c_int;
         if !((*pConstraint).iColumn < JEACH_JSON) {
             let __pConstraint_ref = { &*pConstraint };
             iCol = __pConstraint_ref.iColumn - JEACH_JSON;
@@ -8067,16 +8055,16 @@ unsafe extern "C" fn jsonEachBestIndex(
 }
 
 unsafe extern "C" fn jsonEachFilter(
-    mut cur: *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
-    mut idxNum: ::core::ffi::c_int,
+    cur: *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
+    idxNum: ::core::ffi::c_int,
     mut _idxStr: *const ::core::ffi::c_char,
     mut _argc: ::core::ffi::c_int,
-    mut argv: *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
+    argv: *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
 ) -> ::core::ffi::c_int {
-    let mut p: *mut JsonEachCursor = cur as *mut JsonEachCursor;
-    let mut zRoot: *const ::core::ffi::c_char = ::core::ptr::null::<::core::ffi::c_char>();
-    let mut i: crate::src::ext::rtree::rtree::U32_0 = 0;
-    let mut n: crate::src::ext::rtree::rtree::U32_0 = 0;
+    let p: *mut JsonEachCursor = cur as *mut JsonEachCursor;
+    let zRoot: *const ::core::ffi::c_char;
+    let i: crate::src::ext::rtree::rtree::U32_0;
+    let n: crate::src::ext::rtree::rtree::U32_0;
     let mut sz: crate::src::ext::rtree::rtree::U32_0 = 0;
     jsonEachCursorReset(p);
     if idxNum == 0 as ::core::ffi::c_int {
@@ -9529,10 +9517,10 @@ pub unsafe extern "C" fn sqlite3RegisterJsonFunctions() {
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3JsonVtabRegister(
-    mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
-    mut zName: *const ::core::ffi::c_char,
+    db: *mut crate::src::headers::sqliteInt_h::sqlite3,
+    zName: *const ::core::ffi::c_char,
 ) -> *mut crate::src::headers::sqliteInt_h::Module {
-    let mut i: ::core::ffi::c_uint = 0;
+    let mut i: ::core::ffi::c_uint;
     static mut azModule: [*const ::core::ffi::c_char; 4] = [
         b"json_each\0" as *const u8 as *const ::core::ffi::c_char,
         b"json_tree\0" as *const u8 as *const ::core::ffi::c_char,

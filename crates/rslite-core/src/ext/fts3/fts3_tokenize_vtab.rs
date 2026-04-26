@@ -58,14 +58,13 @@ pub struct Fts3tokTable {
 }
 
 unsafe extern "C" fn fts3tokQueryTokenizer(
-    mut pHash: *mut crate::src::ext::fts3::fts3_hash::Fts3Hash,
-    mut zName: *const ::core::ffi::c_char,
-    mut pp: *mut *const crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_module,
-    mut pzErr: *mut *mut ::core::ffi::c_char,
+    pHash: *mut crate::src::ext::fts3::fts3_hash::Fts3Hash,
+    zName: *const ::core::ffi::c_char,
+    pp: *mut *const crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_module,
+    pzErr: *mut *mut ::core::ffi::c_char,
 ) -> ::core::ffi::c_int {
-    let mut p: *mut crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_module =
-        ::core::ptr::null_mut::<crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_module>();
-    let mut nName: ::core::ffi::c_int = ::libc::strlen(zName) as ::core::ffi::c_int;
+    let p: *mut crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_module;
+    let nName: ::core::ffi::c_int = ::libc::strlen(zName) as ::core::ffi::c_int;
     p = crate::src::ext::fts3::fts3_hash::sqlite3Fts3HashFind(
         pHash as *const crate::src::ext::fts3::fts3_hash::Fts3Hash,
         zName as *const ::core::ffi::c_void,
@@ -86,18 +85,17 @@ unsafe extern "C" fn fts3tokQueryTokenizer(
 }
 
 unsafe extern "C" fn fts3tokDequoteArray(
-    mut argc: ::core::ffi::c_int,
-    mut argv: *const *const ::core::ffi::c_char,
-    mut pazDequote: *mut *mut *mut ::core::ffi::c_char,
+    argc: ::core::ffi::c_int,
+    argv: *const *const ::core::ffi::c_char,
+    pazDequote: *mut *mut *mut ::core::ffi::c_char,
 ) -> ::core::ffi::c_int {
     let mut rc: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_OK;
     if argc == 0 as ::core::ffi::c_int {
         *pazDequote = ::core::ptr::null_mut::<*mut ::core::ffi::c_char>();
     } else {
-        let mut i: ::core::ffi::c_int = 0;
+        let mut i: ::core::ffi::c_int;
         let mut nByte: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
-        let mut azDequote: *mut *mut ::core::ffi::c_char =
-            ::core::ptr::null_mut::<*mut ::core::ffi::c_char>();
+        let azDequote: *mut *mut ::core::ffi::c_char;
         i = 0 as ::core::ffi::c_int;
         while i < argc {
             nByte += ::libc::strlen(*argv.offset(i as isize))
@@ -120,7 +118,7 @@ unsafe extern "C" fn fts3tokDequoteArray(
                 as *mut ::core::ffi::c_char;
             i = 0 as ::core::ffi::c_int;
             while i < argc {
-                let mut n: ::core::ffi::c_int =
+                let n: ::core::ffi::c_int =
                     ::libc::strlen(*argv.offset(i as isize)) as ::core::ffi::c_int;
                 let ref mut fresh0 = *azDequote.offset(i as isize);
                 *fresh0 = pSpace;
@@ -145,22 +143,22 @@ pub const FTS3_TOK_SCHEMA: [::core::ffi::c_char; 51] = unsafe {
 };
 
 unsafe extern "C" fn fts3tokConnectMethod(
-    mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
-    mut pHash: *mut ::core::ffi::c_void,
-    mut argc: ::core::ffi::c_int,
-    mut argv: *const *const ::core::ffi::c_char,
-    mut ppVtab: *mut *mut crate::src::headers::sqlite3_h::sqlite3_vtab,
-    mut pzErr: *mut *mut ::core::ffi::c_char,
+    db: *mut crate::src::headers::sqliteInt_h::sqlite3,
+    pHash: *mut ::core::ffi::c_void,
+    argc: ::core::ffi::c_int,
+    argv: *const *const ::core::ffi::c_char,
+    ppVtab: *mut *mut crate::src::headers::sqlite3_h::sqlite3_vtab,
+    pzErr: *mut *mut ::core::ffi::c_char,
 ) -> ::core::ffi::c_int {
     let mut pTab: *mut Fts3tokTable = ::core::ptr::null_mut::<Fts3tokTable>();
     let mut pMod: *const crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_module =
         ::core::ptr::null::<crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_module>();
     let mut pTok: *mut crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer =
         ::core::ptr::null_mut::<crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer>();
-    let mut rc: ::core::ffi::c_int = 0;
+    let mut rc: ::core::ffi::c_int;
     let mut azDequote: *mut *mut ::core::ffi::c_char =
         ::core::ptr::null_mut::<*mut ::core::ffi::c_char>();
-    let mut nDequote: ::core::ffi::c_int = 0;
+    let nDequote: ::core::ffi::c_int;
     rc = crate::src::src::vtab::sqlite3_declare_vtab(db, FTS3_TOK_SCHEMA.as_ptr());
     if rc != crate::src::headers::sqlite3_h::SQLITE_OK {
         return rc;
@@ -172,7 +170,7 @@ unsafe extern "C" fn fts3tokConnectMethod(
         &raw mut azDequote,
     );
     if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
-        let mut zModule: *const ::core::ffi::c_char = ::core::ptr::null::<::core::ffi::c_char>();
+        let zModule: *const ::core::ffi::c_char;
         if nDequote < 1 as ::core::ffi::c_int {
             zModule = b"simple\0" as *const u8 as *const ::core::ffi::c_char;
         } else {
@@ -228,9 +226,9 @@ unsafe extern "C" fn fts3tokConnectMethod(
 }
 
 unsafe extern "C" fn fts3tokDisconnectMethod(
-    mut pVtab: *mut crate::src::headers::sqlite3_h::sqlite3_vtab,
+    pVtab: *mut crate::src::headers::sqlite3_h::sqlite3_vtab,
 ) -> ::core::ffi::c_int {
-    let mut pTab: *mut Fts3tokTable = pVtab as *mut Fts3tokTable;
+    let pTab: *mut Fts3tokTable = pVtab as *mut Fts3tokTable;
     (*(*pTab).pMod).xDestroy.expect("non-null function pointer")((*pTab).pTok);
     crate::src::src::malloc::sqlite3_free(pTab as *mut ::core::ffi::c_void);
     crate::src::headers::sqlite3_h::SQLITE_OK
@@ -238,9 +236,9 @@ unsafe extern "C" fn fts3tokDisconnectMethod(
 
 unsafe extern "C" fn fts3tokBestIndexMethod(
     mut _pVTab: *mut crate::src::headers::sqlite3_h::sqlite3_vtab,
-    mut pInfo: *mut crate::src::headers::sqlite3_h::sqlite3_index_info,
+    pInfo: *mut crate::src::headers::sqlite3_h::sqlite3_index_info,
 ) -> ::core::ffi::c_int {
-    let mut i: ::core::ffi::c_int = 0;
+    let mut i: ::core::ffi::c_int;
     i = 0 as ::core::ffi::c_int;
     while i < (*pInfo).nConstraint {
         let __pInfo_ref = { &mut *pInfo };
@@ -263,9 +261,9 @@ unsafe extern "C" fn fts3tokBestIndexMethod(
 
 unsafe extern "C" fn fts3tokOpenMethod(
     mut _pVTab: *mut crate::src::headers::sqlite3_h::sqlite3_vtab,
-    mut ppCsr: *mut *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
+    ppCsr: *mut *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
 ) -> ::core::ffi::c_int {
-    let mut pCsr: *mut Fts3tokCursor = ::core::ptr::null_mut::<Fts3tokCursor>();
+    let pCsr: *mut Fts3tokCursor;
     pCsr = crate::src::src::malloc::sqlite3_malloc(
         ::core::mem::size_of::<Fts3tokCursor>() as ::core::ffi::c_int
     ) as *mut Fts3tokCursor;
@@ -281,7 +279,7 @@ unsafe extern "C" fn fts3tokOpenMethod(
     crate::src::headers::sqlite3_h::SQLITE_OK
 }
 
-unsafe extern "C" fn fts3tokResetCursor(mut pCsr: *mut Fts3tokCursor) {
+unsafe extern "C" fn fts3tokResetCursor(pCsr: *mut Fts3tokCursor) {
     let __pCsr_ref = { &mut *pCsr };
     if !__pCsr_ref.pCsr.is_null() {
         let pTab = &*(__pCsr_ref.base.pVtab as *mut Fts3tokTable);
@@ -301,20 +299,20 @@ unsafe extern "C" fn fts3tokResetCursor(mut pCsr: *mut Fts3tokCursor) {
 }
 
 unsafe extern "C" fn fts3tokCloseMethod(
-    mut pCursor: *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
+    pCursor: *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
 ) -> ::core::ffi::c_int {
-    let mut pCsr: *mut Fts3tokCursor = pCursor as *mut Fts3tokCursor;
+    let pCsr: *mut Fts3tokCursor = pCursor as *mut Fts3tokCursor;
     fts3tokResetCursor(pCsr);
     crate::src::src::malloc::sqlite3_free(pCsr as *mut ::core::ffi::c_void);
     crate::src::headers::sqlite3_h::SQLITE_OK
 }
 
 unsafe extern "C" fn fts3tokNextMethod(
-    mut pCursor: *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
+    pCursor: *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
 ) -> ::core::ffi::c_int {
-    let mut pCsr: *mut Fts3tokCursor = pCursor as *mut Fts3tokCursor;
-    let mut pTab: *mut Fts3tokTable = (*pCursor).pVtab as *mut Fts3tokTable;
-    let mut rc: ::core::ffi::c_int = 0;
+    let pCsr: *mut Fts3tokCursor = pCursor as *mut Fts3tokCursor;
+    let pTab: *mut Fts3tokTable = (*pCursor).pVtab as *mut Fts3tokTable;
+    let mut rc: ::core::ffi::c_int;
     let __pCsr_ref = { &mut *pCsr };
     __pCsr_ref.iRowid += 1;
     rc = (*(*pTab).pMod).xNext.expect("non-null function pointer")(
@@ -335,21 +333,21 @@ unsafe extern "C" fn fts3tokNextMethod(
 }
 
 unsafe extern "C" fn fts3tokFilterMethod(
-    mut pCursor: *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
-    mut idxNum: ::core::ffi::c_int,
+    pCursor: *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
+    idxNum: ::core::ffi::c_int,
     mut _idxStr: *const ::core::ffi::c_char,
     mut _nVal: ::core::ffi::c_int,
-    mut apVal: *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
+    apVal: *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
 ) -> ::core::ffi::c_int {
     let mut rc: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_ERROR;
-    let mut pCsr: *mut Fts3tokCursor = pCursor as *mut Fts3tokCursor;
-    let mut pTab: *mut Fts3tokTable = (*pCursor).pVtab as *mut Fts3tokTable;
+    let pCsr: *mut Fts3tokCursor = pCursor as *mut Fts3tokCursor;
+    let pTab: *mut Fts3tokTable = (*pCursor).pVtab as *mut Fts3tokTable;
     fts3tokResetCursor(pCsr);
     if idxNum == 1 as ::core::ffi::c_int {
-        let mut zByte: *const ::core::ffi::c_char =
+        let zByte: *const ::core::ffi::c_char =
             crate::src::src::vdbeapi::sqlite3_value_text(*apVal.offset(0 as isize))
                 as *const ::core::ffi::c_char;
-        let mut nByte: crate::src::headers::sqlite3_h::Sqlite3Int64 =
+        let nByte: crate::src::headers::sqlite3_h::Sqlite3Int64 =
             crate::src::src::vdbeapi::sqlite3_value_bytes(*apVal.offset(0 as isize))
                 as crate::src::headers::sqlite3_h::Sqlite3Int64;
         (*pCsr).zInput = crate::src::src::malloc::sqlite3_malloc64(
@@ -386,18 +384,18 @@ unsafe extern "C" fn fts3tokFilterMethod(
 }
 
 unsafe extern "C" fn fts3tokEofMethod(
-    mut pCursor: *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
+    pCursor: *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
 ) -> ::core::ffi::c_int {
     let pCsr = &*(pCursor as *mut Fts3tokCursor);
     (pCsr.zToken == ::core::ptr::null::<::core::ffi::c_char>()) as ::core::ffi::c_int
 }
 
 unsafe extern "C" fn fts3tokColumnMethod(
-    mut pCursor: *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
-    mut pCtx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
-    mut iCol: ::core::ffi::c_int,
+    pCursor: *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
+    pCtx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
+    iCol: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
-    let mut pCsr: *mut Fts3tokCursor = pCursor as *mut Fts3tokCursor;
+    let pCsr: *mut Fts3tokCursor = pCursor as *mut Fts3tokCursor;
     match iCol {
         0 => {
             crate::src::src::vdbeapi::sqlite3_result_text(
@@ -435,8 +433,8 @@ unsafe extern "C" fn fts3tokColumnMethod(
 }
 
 unsafe extern "C" fn fts3tokRowidMethod(
-    mut pCursor: *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
-    mut pRowid: *mut crate::src::headers::sqlite3_h::SqliteInt64,
+    pCursor: *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
+    pRowid: *mut crate::src::headers::sqlite3_h::SqliteInt64,
 ) -> ::core::ffi::c_int {
     let pCsr = &*(pCursor as *mut Fts3tokCursor);
     *pRowid = pCsr.iRowid as crate::src::headers::sqlite3_h::Sqlite3Int64
@@ -446,9 +444,9 @@ unsafe extern "C" fn fts3tokRowidMethod(
 
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 pub unsafe extern "C" fn sqlite3Fts3InitTok(
-    mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
-    mut pHash: *mut crate::src::ext::fts3::fts3_hash::Fts3Hash,
-    mut xDestroy: Option<unsafe extern "C" fn(*mut ::core::ffi::c_void) -> ()>,
+    db: *mut crate::src::headers::sqliteInt_h::sqlite3,
+    pHash: *mut crate::src::ext::fts3::fts3_hash::Fts3Hash,
+    xDestroy: Option<unsafe extern "C" fn(*mut ::core::ffi::c_void) -> ()>,
 ) -> ::core::ffi::c_int {
     static mut fts3tok_module: crate::src::headers::sqlite3_h::sqlite3_module = {
         crate::src::headers::sqlite3_h::sqlite3_module {
@@ -558,7 +556,7 @@ pub unsafe extern "C" fn sqlite3Fts3InitTok(
             xIntegrity: None,
         }
     };
-    let mut rc: ::core::ffi::c_int = 0;
+    let rc: ::core::ffi::c_int;
     rc = crate::src::src::vtab::sqlite3_create_module_v2(
         db,
         b"fts3tokenize\0" as *const u8 as *const ::core::ffi::c_char,

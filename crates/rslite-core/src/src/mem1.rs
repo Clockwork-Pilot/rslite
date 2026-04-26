@@ -7,9 +7,8 @@ pub use crate::src::headers::sqlite3_h::SqliteInt64;
 pub use crate::src::headers::sqlite3_h::Sqlite3Int64;
 pub use crate::src::headers::sqlite3_h::sqlite3_mem_methods;
 
-unsafe extern "C" fn sqlite3MemMalloc(mut nByte: ::core::ffi::c_int) -> *mut ::core::ffi::c_void {
-    let mut p: *mut crate::src::headers::sqlite3_h::Sqlite3Int64 =
-        ::core::ptr::null_mut::<crate::src::headers::sqlite3_h::Sqlite3Int64>();
+unsafe extern "C" fn sqlite3MemMalloc(nByte: ::core::ffi::c_int) -> *mut ::core::ffi::c_void {
+    let mut p: *mut crate::src::headers::sqlite3_h::Sqlite3Int64;
     p = ::libc::malloc((nByte + 8 as ::core::ffi::c_int) as crate::__stddef_size_t_h::SizeT)
         as *mut crate::src::headers::sqlite3_h::Sqlite3Int64;
     if !p.is_null() {
@@ -25,24 +24,23 @@ unsafe extern "C" fn sqlite3MemMalloc(mut nByte: ::core::ffi::c_int) -> *mut ::c
     p as *mut ::core::ffi::c_void
 }
 
-unsafe extern "C" fn sqlite3MemFree(mut pPrior: *mut ::core::ffi::c_void) {
+unsafe extern "C" fn sqlite3MemFree(pPrior: *mut ::core::ffi::c_void) {
     let mut p: *mut crate::src::headers::sqlite3_h::Sqlite3Int64 =
         pPrior as *mut crate::src::headers::sqlite3_h::Sqlite3Int64;
     p = p.offset(-1);
     ::libc::free(p as *mut ::core::ffi::c_void);
 }
 
-unsafe extern "C" fn sqlite3MemSize(mut pPrior: *mut ::core::ffi::c_void) -> ::core::ffi::c_int {
-    let mut p: *mut crate::src::headers::sqlite3_h::Sqlite3Int64 =
-        ::core::ptr::null_mut::<crate::src::headers::sqlite3_h::Sqlite3Int64>();
+unsafe extern "C" fn sqlite3MemSize(pPrior: *mut ::core::ffi::c_void) -> ::core::ffi::c_int {
+    let mut p: *mut crate::src::headers::sqlite3_h::Sqlite3Int64;
     p = pPrior as *mut crate::src::headers::sqlite3_h::Sqlite3Int64;
     p = p.offset(-1);
     *p.offset(0 as isize) as ::core::ffi::c_int
 }
 
 unsafe extern "C" fn sqlite3MemRealloc(
-    mut pPrior: *mut ::core::ffi::c_void,
-    mut nByte: ::core::ffi::c_int,
+    pPrior: *mut ::core::ffi::c_void,
+    nByte: ::core::ffi::c_int,
 ) -> *mut ::core::ffi::c_void {
     let mut p: *mut crate::src::headers::sqlite3_h::Sqlite3Int64 =
         pPrior as *mut crate::src::headers::sqlite3_h::Sqlite3Int64;
@@ -67,7 +65,7 @@ unsafe extern "C" fn sqlite3MemRealloc(
     p as *mut ::core::ffi::c_void
 }
 
-unsafe extern "C" fn sqlite3MemRoundup(mut n: ::core::ffi::c_int) -> ::core::ffi::c_int {
+unsafe extern "C" fn sqlite3MemRoundup(n: ::core::ffi::c_int) -> ::core::ffi::c_int {
     n + 7 as ::core::ffi::c_int & !(7 as ::core::ffi::c_int)
 }
 

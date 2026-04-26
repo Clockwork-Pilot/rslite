@@ -215,13 +215,13 @@ pub use crate::src::src::vdbeaux::sqlite3VdbeAddOp2;
 pub use crate::src::src::vdbeaux::sqlite3VdbeUsesBtree;
 
 pub unsafe extern "C" fn execSql(
-    mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
-    mut pzErrMsg: *mut *mut ::core::ffi::c_char,
-    mut zSql: *const ::core::ffi::c_char,
+    db: *mut crate::src::headers::sqliteInt_h::sqlite3,
+    pzErrMsg: *mut *mut ::core::ffi::c_char,
+    zSql: *const ::core::ffi::c_char,
 ) -> ::core::ffi::c_int {
     let mut pStmt: *mut crate::src::headers::sqlite3_h::Sqlite3Stmt =
         ::core::ptr::null_mut::<crate::src::headers::sqlite3_h::Sqlite3Stmt>();
-    let mut rc: ::core::ffi::c_int = 0;
+    let mut rc: ::core::ffi::c_int;
     rc = crate::src::src::prepare::sqlite3_prepare_v2(
         db as *mut crate::src::headers::sqliteInt_h::sqlite3,
         zSql,
@@ -237,7 +237,7 @@ pub unsafe extern "C" fn execSql(
         if !(crate::src::headers::sqlite3_h::SQLITE_ROW == rc) {
             break;
         }
-        let mut zSubSql: *const ::core::ffi::c_char =
+        let zSubSql: *const ::core::ffi::c_char =
             crate::src::src::vdbeapi::sqlite3_column_text(pStmt, 0 as ::core::ffi::c_int)
                 as *const ::core::ffi::c_char;
         if !(!zSubSql.is_null()
@@ -278,12 +278,12 @@ pub unsafe extern "C" fn execSql(
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3Vacuum(
-    mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
+    pParse: *mut crate::src::headers::sqliteInt_h::Parse,
     mut pNm: *mut crate::src::headers::sqliteInt_h::Token,
-    mut pInto: *mut crate::src::headers::sqliteInt_h::Expr,
+    pInto: *mut crate::src::headers::sqliteInt_h::Expr,
 ) {
-    let mut current_block: u64;
-    let mut v: *mut crate::src::headers::vdbeInt_h::Vdbe = crate::src::src::select::sqlite3GetVdbe(
+    let current_block: u64;
+    let v: *mut crate::src::headers::vdbeInt_h::Vdbe = crate::src::src::select::sqlite3GetVdbe(
         pParse as *mut crate::src::headers::sqliteInt_h::Parse,
     );
     let mut iDb: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
@@ -352,30 +352,28 @@ pub unsafe extern "C" fn sqlite3Vacuum(
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 #[inline(never)]
 pub unsafe extern "C" fn sqlite3RunVacuum(
-    mut pzErrMsg: *mut *mut ::core::ffi::c_char,
-    mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
-    mut iDb: ::core::ffi::c_int,
-    mut pOut: *mut crate::src::headers::vdbeInt_h::sqlite3_value,
+    pzErrMsg: *mut *mut ::core::ffi::c_char,
+    db: *mut crate::src::headers::sqliteInt_h::sqlite3,
+    iDb: ::core::ffi::c_int,
+    pOut: *mut crate::src::headers::vdbeInt_h::sqlite3_value,
 ) -> ::core::ffi::c_int {
     let mut current_block: u64;
-    let mut rc: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_OK;
-    let mut pMain: *mut crate::src::headers::btreeInt_h::Btree =
-        ::core::ptr::null_mut::<crate::src::headers::btreeInt_h::Btree>();
-    let mut pTemp: *mut crate::src::headers::btreeInt_h::Btree =
-        ::core::ptr::null_mut::<crate::src::headers::btreeInt_h::Btree>();
-    let mut saved_mDbFlags: crate::src::ext::rtree::rtree::U32_0 = 0;
-    let mut saved_flags: crate::src::ext::rtree::rtree::U64_0 = 0;
-    let mut saved_nChange: crate::src::ext::rtree::rtree::I64_0 = 0;
-    let mut saved_nTotalChange: crate::src::ext::rtree::rtree::I64_0 = 0;
-    let mut saved_openFlags: crate::src::ext::rtree::rtree::U32_0 = 0;
-    let mut saved_mTrace: crate::src::ext::rtree::rtree::U8_0 = 0;
+    let mut rc: ::core::ffi::c_int;
+    let pMain: *mut crate::src::headers::btreeInt_h::Btree;
+    let pTemp: *mut crate::src::headers::btreeInt_h::Btree;
+    let saved_mDbFlags: crate::src::ext::rtree::rtree::U32_0;
+    let saved_flags: crate::src::ext::rtree::rtree::U64_0;
+    let saved_nChange: crate::src::ext::rtree::rtree::I64_0;
+    let saved_nTotalChange: crate::src::ext::rtree::rtree::I64_0;
+    let saved_openFlags: crate::src::ext::rtree::rtree::U32_0;
+    let saved_mTrace: crate::src::ext::rtree::rtree::U8_0;
     let mut pDb: *mut crate::src::headers::sqliteInt_h::Db =
         ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::Db>();
-    let mut isMemDb: ::core::ffi::c_int = 0;
-    let mut nRes: ::core::ffi::c_int = 0;
-    let mut nDb: ::core::ffi::c_int = 0;
-    let mut zDbMain: *const ::core::ffi::c_char = ::core::ptr::null::<::core::ffi::c_char>();
-    let mut zOut: *const ::core::ffi::c_char = ::core::ptr::null::<::core::ffi::c_char>();
+    let isMemDb: ::core::ffi::c_int;
+    let mut nRes: ::core::ffi::c_int;
+    let nDb: ::core::ffi::c_int;
+    let zDbMain: *const ::core::ffi::c_char;
+    let zOut: *const ::core::ffi::c_char;
     let mut pgflags: crate::src::ext::rtree::rtree::U32_0 =
         crate::src::src::pager::PAGER_SYNCHRONOUS_OFF as crate::src::ext::rtree::rtree::U32_0;
     let mut iRandom: crate::src::ext::rtree::rtree::U64_0 = 0;
@@ -472,7 +470,7 @@ pub unsafe extern "C" fn sqlite3RunVacuum(
         pDb = __db_ref.aDb.offset(nDb as isize) as *mut crate::src::headers::sqliteInt_h::Db;
         pTemp = (*pDb).pBt;
         if !pOut.is_null() {
-            let mut id: *mut crate::src::headers::sqlite3_h::sqlite3_file =
+            let id: *mut crate::src::headers::sqlite3_h::sqlite3_file =
                 crate::src::src::pager::sqlite3PagerFile(crate::src::src::btree::sqlite3BtreePager(
                     pTemp,
                 )
@@ -627,7 +625,7 @@ pub unsafe extern "C" fn sqlite3RunVacuum(
                                         );
                                         if !(rc != 0) {
                                             let mut meta: crate::src::ext::rtree::rtree::U32_0 = 0;
-                                            let mut i: ::core::ffi::c_int = 0;
+                                            let mut i: ::core::ffi::c_int;
                                             static mut aCopy: [::core::ffi::c_uchar; 10] = [
                                                 crate::src::src::btree::BTREE_SCHEMA_VERSION
                                                     as ::core::ffi::c_uchar,

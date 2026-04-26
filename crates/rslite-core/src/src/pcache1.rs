@@ -153,7 +153,7 @@ pub unsafe extern "C" fn sqlite3PCacheBufferSetup(
     mut n: ::core::ffi::c_int,
 ) {
     if pcache1_g.isInit != 0 {
-        let mut p: *mut PgFreeslot = ::core::ptr::null_mut::<PgFreeslot>();
+        let mut p: *mut PgFreeslot;
         if pBuf.is_null() {
             n = 0 as ::core::ffi::c_int;
             sz = n;
@@ -192,9 +192,9 @@ pub unsafe extern "C" fn sqlite3PCacheBufferSetup(
     }
 }
 
-unsafe extern "C" fn pcache1InitBulk(mut pCache: *mut PCache1) -> ::core::ffi::c_int {
-    let mut szBulk: crate::src::ext::rtree::rtree::I64_0 = 0;
-    let mut zBulk: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
+unsafe extern "C" fn pcache1InitBulk(pCache: *mut PCache1) -> ::core::ffi::c_int {
+    let mut szBulk: crate::src::ext::rtree::rtree::I64_0;
+    let mut zBulk: *mut ::core::ffi::c_char;
     if pcache1_g.nInitPage == 0 as ::core::ffi::c_int {
         return 0 as ::core::ffi::c_int;
     }
@@ -226,7 +226,7 @@ unsafe extern "C" fn pcache1InitBulk(mut pCache: *mut PCache1) -> ::core::ffi::c
             crate::src::src::malloc::sqlite3MallocSize(zBulk as *const ::core::ffi::c_void)
                 / __pCache_ref.szAlloc;
         loop {
-            let mut pX: *mut PgHdr1 = zBulk.offset(__pCache_ref.szPage as isize)
+            let pX: *mut PgHdr1 = zBulk.offset(__pCache_ref.szPage as isize)
                 as *mut ::core::ffi::c_char as *mut PgHdr1;
             let __pX_ref = { &mut *pX };
             __pX_ref.page.pBuf = zBulk as *mut ::core::ffi::c_void;
@@ -249,7 +249,7 @@ unsafe extern "C" fn pcache1InitBulk(mut pCache: *mut PCache1) -> ::core::ffi::c
     (__pCache_ref.pFree != ::core::ptr::null_mut::<PgHdr1>()) as ::core::ffi::c_int
 }
 
-unsafe extern "C" fn pcache1Alloc(mut nByte: ::core::ffi::c_int) -> *mut ::core::ffi::c_void {
+unsafe extern "C" fn pcache1Alloc(nByte: ::core::ffi::c_int) -> *mut ::core::ffi::c_void {
     let mut p: *mut ::core::ffi::c_void = ::core::ptr::null_mut::<::core::ffi::c_void>();
     if nByte <= pcache1_g.szSlot {
         crate::src::src::mutex::sqlite3_mutex_enter(pcache1_g.mutex);
@@ -275,7 +275,7 @@ unsafe extern "C" fn pcache1Alloc(mut nByte: ::core::ffi::c_int) -> *mut ::core:
     if p.is_null() {
         p = crate::src::src::malloc::sqlite3Malloc(nByte as crate::src::ext::rtree::rtree::U64_0);
         if !p.is_null() {
-            let mut sz: ::core::ffi::c_int = crate::src::src::malloc::sqlite3MallocSize(p);
+            let sz: ::core::ffi::c_int = crate::src::src::malloc::sqlite3MallocSize(p);
             crate::src::src::mutex::sqlite3_mutex_enter(pcache1_g.mutex);
             crate::src::src::status::sqlite3StatusHighwater(
                 crate::src::headers::sqlite3_h::SQLITE_STATUS_PAGECACHE_SIZE,
@@ -291,7 +291,7 @@ unsafe extern "C" fn pcache1Alloc(mut nByte: ::core::ffi::c_int) -> *mut ::core:
     p
 }
 
-unsafe extern "C" fn pcache1Free(mut p: *mut ::core::ffi::c_void) {
+unsafe extern "C" fn pcache1Free(p: *mut ::core::ffi::c_void) {
     if p.is_null() {
         return;
     }
@@ -300,7 +300,7 @@ unsafe extern "C" fn pcache1Free(mut p: *mut ::core::ffi::c_void) {
         && (p as crate::src::headers::sqliteInt_h::Uptr)
             < pcache1_g.pEnd as crate::src::headers::sqliteInt_h::Uptr
     {
-        let mut pSlot: *mut PgFreeslot = ::core::ptr::null_mut::<PgFreeslot>();
+        let pSlot: *mut PgFreeslot;
         crate::src::src::mutex::sqlite3_mutex_enter(pcache1_g.mutex);
         crate::src::src::status::sqlite3StatusDown(
             crate::src::headers::sqlite3_h::SQLITE_STATUS_PAGECACHE_USED,
@@ -316,7 +316,7 @@ unsafe extern "C" fn pcache1Free(mut p: *mut ::core::ffi::c_void) {
         );
         crate::src::src::mutex::sqlite3_mutex_leave(pcache1_g.mutex);
     } else {
-        let mut nFreed: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
+        let nFreed: ::core::ffi::c_int;
         nFreed = crate::src::src::malloc::sqlite3MallocSize(p);
         crate::src::src::mutex::sqlite3_mutex_enter(pcache1_g.mutex);
         crate::src::src::status::sqlite3StatusDown(
@@ -329,11 +329,11 @@ unsafe extern "C" fn pcache1Free(mut p: *mut ::core::ffi::c_void) {
 }
 
 unsafe extern "C" fn pcache1AllocPage(
-    mut pCache: *mut PCache1,
-    mut benignMalloc: ::core::ffi::c_int,
+    pCache: *mut PCache1,
+    benignMalloc: ::core::ffi::c_int,
 ) -> *mut PgHdr1 {
-    let mut p: *mut PgHdr1 = ::core::ptr::null_mut::<PgHdr1>();
-    let mut pPg: *mut ::core::ffi::c_void = ::core::ptr::null_mut::<::core::ffi::c_void>();
+    let p: *mut PgHdr1;
+    let pPg: *mut ::core::ffi::c_void;
     let __pCache_ref = { &mut *pCache };
     if !__pCache_ref.pFree.is_null()
         || __pCache_ref.nPage == 0 as ::core::ffi::c_uint && pcache1InitBulk(pCache) != 0
@@ -367,8 +367,8 @@ unsafe extern "C" fn pcache1AllocPage(
     p
 }
 
-unsafe extern "C" fn pcache1FreePage(mut p: *mut PgHdr1) {
-    let mut pCache: *mut PCache1 = ::core::ptr::null_mut::<PCache1>();
+unsafe extern "C" fn pcache1FreePage(p: *mut PgHdr1) {
+    let pCache: *mut PCache1;
     pCache = (*p).pCache;
     if (*p).isBulkLocal != 0 {
         (*p).pNext = (*pCache).pFree;
@@ -380,14 +380,14 @@ unsafe extern "C" fn pcache1FreePage(mut p: *mut PgHdr1) {
 }
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
-pub unsafe extern "C" fn sqlite3PageMalloc(mut sz: ::core::ffi::c_int) -> *mut ::core::ffi::c_void {
+pub unsafe extern "C" fn sqlite3PageMalloc(sz: ::core::ffi::c_int) -> *mut ::core::ffi::c_void {
     pcache1Alloc(sz)
 }
-pub unsafe extern "C" fn sqlite3PageFree(mut p: *mut ::core::ffi::c_void) {
+pub unsafe extern "C" fn sqlite3PageFree(p: *mut ::core::ffi::c_void) {
     pcache1Free(p);
 }
 
-unsafe extern "C" fn pcache1UnderMemoryPressure(mut pCache: *mut PCache1) -> ::core::ffi::c_int {
+unsafe extern "C" fn pcache1UnderMemoryPressure(pCache: *mut PCache1) -> ::core::ffi::c_int {
     if pcache1_g.nSlot != 0 && (*pCache).szPage + (*pCache).szExtra <= pcache1_g.szSlot {
         return (*((&raw mut pcache1_g.bUnderPressure) as *mut std::sync::atomic::AtomicI32))
             .load(std::sync::atomic::Ordering::Relaxed);
@@ -396,10 +396,10 @@ unsafe extern "C" fn pcache1UnderMemoryPressure(mut pCache: *mut PCache1) -> ::c
     };
 }
 
-unsafe extern "C" fn pcache1ResizeHash(mut p: *mut PCache1) {
-    let mut apNew: *mut *mut PgHdr1 = ::core::ptr::null_mut::<*mut PgHdr1>();
-    let mut nNew: crate::src::ext::rtree::rtree::U64_0 = 0;
-    let mut i: crate::src::ext::rtree::rtree::U32_0 = 0;
+unsafe extern "C" fn pcache1ResizeHash(p: *mut PCache1) {
+    let apNew: *mut *mut PgHdr1;
+    let mut nNew: crate::src::ext::rtree::rtree::U64_0;
+    let mut i: crate::src::ext::rtree::rtree::U32_0;
     let __p_ref = { &mut *p };
     nNew = (2 as crate::src::ext::rtree::rtree::U64_0)
         .wrapping_mul(__p_ref.nHash as crate::src::ext::rtree::rtree::U64_0);
@@ -419,14 +419,14 @@ unsafe extern "C" fn pcache1ResizeHash(mut p: *mut PCache1) {
     if !apNew.is_null() {
         i = 0 as crate::src::ext::rtree::rtree::U32_0;
         while i < __p_ref.nHash as crate::src::ext::rtree::rtree::U32_0 {
-            let mut pPage: *mut PgHdr1 = ::core::ptr::null_mut::<PgHdr1>();
+            let mut pPage: *mut PgHdr1;
             let mut pNext: *mut PgHdr1 = *__p_ref.apHash.offset(i as isize);
             loop {
                 pPage = pNext;
                 if pPage.is_null() {
                     break;
                 }
-                let mut h: ::core::ffi::c_uint =
+                let h: ::core::ffi::c_uint =
                     ((*pPage).iKey as crate::src::ext::rtree::rtree::U64_0).wrapping_rem(nNew)
                         as ::core::ffi::c_uint;
                 pNext = (*pPage).pNext;
@@ -442,7 +442,7 @@ unsafe extern "C" fn pcache1ResizeHash(mut p: *mut PCache1) {
     }
 }
 
-unsafe extern "C" fn pcache1PinPage(mut pPage: *mut PgHdr1) -> *mut PgHdr1 {
+unsafe extern "C" fn pcache1PinPage(pPage: *mut PgHdr1) -> *mut PgHdr1 {
     let __pPage_ref = { &mut *pPage };
     (*__pPage_ref.pLruPrev).pLruNext = __pPage_ref.pLruNext;
     (*__pPage_ref.pLruNext).pLruPrev = __pPage_ref.pLruPrev;
@@ -452,12 +452,12 @@ unsafe extern "C" fn pcache1PinPage(mut pPage: *mut PgHdr1) -> *mut PgHdr1 {
 }
 
 unsafe extern "C" fn pcache1RemoveFromHash(
-    mut pPage: *mut PgHdr1,
-    mut freeFlag: ::core::ffi::c_int,
+    pPage: *mut PgHdr1,
+    freeFlag: ::core::ffi::c_int,
 ) {
-    let mut h: ::core::ffi::c_uint = 0;
-    let mut pCache: *mut PCache1 = (*pPage).pCache;
-    let mut pp: *mut *mut PgHdr1 = ::core::ptr::null_mut::<*mut PgHdr1>();
+    let h: ::core::ffi::c_uint;
+    let pCache: *mut PCache1 = (*pPage).pCache;
+    let mut pp: *mut *mut PgHdr1;
     let __pCache_ref = { &mut *pCache };
     h = (*pPage).iKey.wrapping_rem(__pCache_ref.nHash);
     pp = __pCache_ref.apHash.offset(h as isize) as *mut *mut PgHdr1;
@@ -471,10 +471,10 @@ unsafe extern "C" fn pcache1RemoveFromHash(
     }
 }
 
-unsafe extern "C" fn pcache1EnforceMaxPage(mut pCache: *mut PCache1) {
+unsafe extern "C" fn pcache1EnforceMaxPage(pCache: *mut PCache1) {
     let __pCache_ref = { &mut *pCache };
-    let mut pGroup: *mut PGroup = __pCache_ref.pGroup;
-    let mut p: *mut PgHdr1 = ::core::ptr::null_mut::<PgHdr1>();
+    let pGroup: *mut PGroup = __pCache_ref.pGroup;
+    let mut p: *mut PgHdr1;
     while (*pGroup).nPurgeable > (*pGroup).nMaxPage && {
         p = (*pGroup).lru.pLruPrev;
         (*p).isAnchor as ::core::ffi::c_int == 0 as ::core::ffi::c_int
@@ -490,11 +490,11 @@ unsafe extern "C" fn pcache1EnforceMaxPage(mut pCache: *mut PCache1) {
 }
 
 unsafe extern "C" fn pcache1TruncateUnsafe(
-    mut pCache: *mut PCache1,
-    mut iLimit: ::core::ffi::c_uint,
+    pCache: *mut PCache1,
+    iLimit: ::core::ffi::c_uint,
 ) {
-    let mut h: ::core::ffi::c_uint = 0;
-    let mut iStop: ::core::ffi::c_uint = 0;
+    let mut h: ::core::ffi::c_uint;
+    let iStop: ::core::ffi::c_uint;
     if (*pCache).iMaxKey.wrapping_sub(iLimit) < (*pCache).nHash {
         let __pCache_ref = { &mut *pCache };
         h = iLimit.wrapping_rem(__pCache_ref.nHash);
@@ -504,8 +504,8 @@ unsafe extern "C" fn pcache1TruncateUnsafe(
         iStop = h.wrapping_sub(1 as ::core::ffi::c_uint);
     }
     loop {
-        let mut pp: *mut *mut PgHdr1 = ::core::ptr::null_mut::<*mut PgHdr1>();
-        let mut pPage: *mut PgHdr1 = ::core::ptr::null_mut::<PgHdr1>();
+        let mut pp: *mut *mut PgHdr1;
+        let mut pPage: *mut PgHdr1;
         pp = (*pCache).apHash.offset(h as isize) as *mut *mut PgHdr1;
         loop {
             pPage = *pp;
@@ -571,13 +571,13 @@ unsafe extern "C" fn pcache1Shutdown(mut _NotUsed: *mut ::core::ffi::c_void) {
 }
 
 unsafe extern "C" fn pcache1Create(
-    mut szPage: ::core::ffi::c_int,
-    mut szExtra: ::core::ffi::c_int,
-    mut bPurgeable: ::core::ffi::c_int,
+    szPage: ::core::ffi::c_int,
+    szExtra: ::core::ffi::c_int,
+    bPurgeable: ::core::ffi::c_int,
 ) -> *mut crate::src::headers::sqlite3_h::Sqlite3Pcache {
-    let mut pCache: *mut PCache1 = ::core::ptr::null_mut::<PCache1>();
-    let mut pGroup: *mut PGroup = ::core::ptr::null_mut::<PGroup>();
-    let mut sz: crate::src::ext::rtree::rtree::I64_0 = 0;
+    let mut pCache: *mut PCache1;
+    let pGroup: *mut PGroup;
+    let sz: crate::src::ext::rtree::rtree::I64_0;
     sz = (::core::mem::size_of::<PCache1>() as usize).wrapping_add(
         (::core::mem::size_of::<PGroup>() as usize).wrapping_mul(pcache1_g.separateCache as usize),
     ) as crate::src::ext::rtree::rtree::I64_0;
@@ -631,14 +631,14 @@ unsafe extern "C" fn pcache1Create(
 }
 
 unsafe extern "C" fn pcache1Cachesize(
-    mut p: *mut crate::src::headers::sqlite3_h::Sqlite3Pcache,
-    mut nMax: ::core::ffi::c_int,
+    p: *mut crate::src::headers::sqlite3_h::Sqlite3Pcache,
+    nMax: ::core::ffi::c_int,
 ) {
-    let mut pCache: *mut PCache1 = p as *mut PCache1;
-    let mut n: crate::src::ext::rtree::rtree::U32_0 = 0;
+    let pCache: *mut PCache1 = p as *mut PCache1;
+    let mut n: crate::src::ext::rtree::rtree::U32_0;
     if (*pCache).bPurgeable != 0 {
         let __pCache_ref = { &mut *pCache };
-        let mut pGroup: *mut PGroup = __pCache_ref.pGroup;
+        let pGroup: *mut PGroup = __pCache_ref.pGroup;
         n = nMax as crate::src::ext::rtree::rtree::U32_0;
         let __pGroup_ref = { &mut *pGroup };
         if n > (0x7fff0000 as crate::src::ext::rtree::rtree::U32_0)
@@ -667,11 +667,11 @@ unsafe extern "C" fn pcache1Cachesize(
     }
 }
 
-unsafe extern "C" fn pcache1Shrink(mut p: *mut crate::src::headers::sqlite3_h::Sqlite3Pcache) {
-    let mut pCache: *mut PCache1 = p as *mut PCache1;
+unsafe extern "C" fn pcache1Shrink(p: *mut crate::src::headers::sqlite3_h::Sqlite3Pcache) {
+    let pCache: *mut PCache1 = p as *mut PCache1;
     if (*pCache).bPurgeable != 0 {
-        let mut pGroup: *mut PGroup = (*pCache).pGroup;
-        let mut savedMaxPage: ::core::ffi::c_uint = 0;
+        let pGroup: *mut PGroup = (*pCache).pGroup;
+        let savedMaxPage: ::core::ffi::c_uint;
         let __pGroup_ref = { &mut *pGroup };
         savedMaxPage = __pGroup_ref.nMaxPage;
         __pGroup_ref.nMaxPage = 0 as ::core::ffi::c_uint;
@@ -681,22 +681,22 @@ unsafe extern "C" fn pcache1Shrink(mut p: *mut crate::src::headers::sqlite3_h::S
 }
 
 unsafe extern "C" fn pcache1Pagecount(
-    mut p: *mut crate::src::headers::sqlite3_h::Sqlite3Pcache,
+    p: *mut crate::src::headers::sqlite3_h::Sqlite3Pcache,
 ) -> ::core::ffi::c_int {
-    let mut n: ::core::ffi::c_int = 0;
+    let n: ::core::ffi::c_int;
     let pCache = &*(p as *mut PCache1);
     n = pCache.nPage as ::core::ffi::c_int;
     n
 }
 #[inline(never)]
 unsafe extern "C" fn pcache1FetchStage2(
-    mut pCache: *mut PCache1,
-    mut iKey: ::core::ffi::c_uint,
-    mut createFlag: ::core::ffi::c_int,
+    pCache: *mut PCache1,
+    iKey: ::core::ffi::c_uint,
+    createFlag: ::core::ffi::c_int,
 ) -> *mut PgHdr1 {
-    let mut nPinned: ::core::ffi::c_uint = 0;
+    let nPinned: ::core::ffi::c_uint;
     let __pCache_ref = { &mut *pCache };
-    let mut pGroup: *mut PGroup = __pCache_ref.pGroup;
+    let pGroup: *mut PGroup = __pCache_ref.pGroup;
     let mut pPage: *mut PgHdr1 = ::core::ptr::null_mut::<PgHdr1>();
     nPinned = __pCache_ref.nPage.wrapping_sub(__pCache_ref.nRecyclable);
     if createFlag == 1 as ::core::ffi::c_int
@@ -714,7 +714,7 @@ unsafe extern "C" fn pcache1FetchStage2(
         && (__pCache_ref.nPage.wrapping_add(1 as ::core::ffi::c_uint) >= __pCache_ref.nMax
             || pcache1UnderMemoryPressure(pCache) != 0)
     {
-        let mut pOther: *mut PCache1 = ::core::ptr::null_mut::<PCache1>();
+        let pOther: *mut PCache1;
         pPage = (*pGroup).lru.pLruPrev;
         pcache1RemoveFromHash(pPage, 0 as ::core::ffi::c_int);
         pcache1PinPage(pPage);
@@ -735,7 +735,7 @@ unsafe extern "C" fn pcache1FetchStage2(
         );
     }
     if !pPage.is_null() {
-        let mut h: ::core::ffi::c_uint = iKey.wrapping_rem(__pCache_ref.nHash);
+        let h: ::core::ffi::c_uint = iKey.wrapping_rem(__pCache_ref.nHash);
         __pCache_ref.nPage = __pCache_ref.nPage.wrapping_add(1);
         let __pPage_ref = { &mut *pPage };
         __pPage_ref.iKey = iKey;
@@ -754,12 +754,12 @@ unsafe extern "C" fn pcache1FetchStage2(
 }
 
 unsafe extern "C" fn pcache1FetchNoMutex(
-    mut p: *mut crate::src::headers::sqlite3_h::Sqlite3Pcache,
-    mut iKey: ::core::ffi::c_uint,
-    mut createFlag: ::core::ffi::c_int,
+    p: *mut crate::src::headers::sqlite3_h::Sqlite3Pcache,
+    iKey: ::core::ffi::c_uint,
+    createFlag: ::core::ffi::c_int,
 ) -> *mut PgHdr1 {
-    let mut pCache: *mut PCache1 = p as *mut PCache1;
-    let mut pPage: *mut PgHdr1 = ::core::ptr::null_mut::<PgHdr1>();
+    let pCache: *mut PCache1 = p as *mut PCache1;
+    let mut pPage: *mut PgHdr1;
     pPage = *(*pCache)
         .apHash
         .offset(iKey.wrapping_rem((*pCache).nHash) as isize);
@@ -780,26 +780,26 @@ unsafe extern "C" fn pcache1FetchNoMutex(
 }
 
 unsafe extern "C" fn pcache1Fetch(
-    mut p: *mut crate::src::headers::sqlite3_h::Sqlite3Pcache,
-    mut iKey: ::core::ffi::c_uint,
-    mut createFlag: ::core::ffi::c_int,
+    p: *mut crate::src::headers::sqlite3_h::Sqlite3Pcache,
+    iKey: ::core::ffi::c_uint,
+    createFlag: ::core::ffi::c_int,
 ) -> *mut crate::src::headers::sqlite3_h::sqlite3_pcache_page {
     pcache1FetchNoMutex(p, iKey, createFlag)
         as *mut crate::src::headers::sqlite3_h::sqlite3_pcache_page
 }
 
 unsafe extern "C" fn pcache1Unpin(
-    mut p: *mut crate::src::headers::sqlite3_h::Sqlite3Pcache,
-    mut pPg: *mut crate::src::headers::sqlite3_h::sqlite3_pcache_page,
-    mut reuseUnlikely: ::core::ffi::c_int,
+    p: *mut crate::src::headers::sqlite3_h::Sqlite3Pcache,
+    pPg: *mut crate::src::headers::sqlite3_h::sqlite3_pcache_page,
+    reuseUnlikely: ::core::ffi::c_int,
 ) {
-    let mut pCache = &mut *(p as *mut PCache1);
-    let mut pPage: *mut PgHdr1 = pPg as *mut PgHdr1;
-    let mut pGroup: *mut PGroup = pCache.pGroup;
+    let pCache = &mut *(p as *mut PCache1);
+    let pPage: *mut PgHdr1 = pPg as *mut PgHdr1;
+    let pGroup: *mut PGroup = pCache.pGroup;
     if reuseUnlikely != 0 || (*pGroup).nPurgeable > (*pGroup).nMaxPage {
         pcache1RemoveFromHash(pPage, 1 as ::core::ffi::c_int);
     } else {
-        let mut ppFirst: *mut *mut PgHdr1 = &raw mut (*pGroup).lru.pLruNext;
+        let ppFirst: *mut *mut PgHdr1 = &raw mut (*pGroup).lru.pLruNext;
         let __pPage_ref = { &mut *pPage };
         __pPage_ref.pLruPrev = &raw mut (*pGroup).lru;
         __pPage_ref.pLruNext = *ppFirst;
@@ -810,16 +810,16 @@ unsafe extern "C" fn pcache1Unpin(
 }
 
 unsafe extern "C" fn pcache1Rekey(
-    mut p: *mut crate::src::headers::sqlite3_h::Sqlite3Pcache,
-    mut pPg: *mut crate::src::headers::sqlite3_h::sqlite3_pcache_page,
-    mut iOld: ::core::ffi::c_uint,
-    mut iNew: ::core::ffi::c_uint,
+    p: *mut crate::src::headers::sqlite3_h::Sqlite3Pcache,
+    pPg: *mut crate::src::headers::sqlite3_h::sqlite3_pcache_page,
+    iOld: ::core::ffi::c_uint,
+    iNew: ::core::ffi::c_uint,
 ) {
-    let mut pCache: *mut PCache1 = p as *mut PCache1;
-    let mut pPage: *mut PgHdr1 = pPg as *mut PgHdr1;
-    let mut pp: *mut *mut PgHdr1 = ::core::ptr::null_mut::<*mut PgHdr1>();
-    let mut hOld: ::core::ffi::c_uint = 0;
-    let mut hNew: ::core::ffi::c_uint = 0;
+    let pCache: *mut PCache1 = p as *mut PCache1;
+    let pPage: *mut PgHdr1 = pPg as *mut PgHdr1;
+    let mut pp: *mut *mut PgHdr1;
+    let hOld: ::core::ffi::c_uint;
+    let hNew: ::core::ffi::c_uint;
     let __pCache_ref = { &mut *pCache };
     hOld = iOld.wrapping_rem(__pCache_ref.nHash);
     pp = __pCache_ref.apHash.offset(hOld as isize) as *mut *mut PgHdr1;
@@ -839,20 +839,20 @@ unsafe extern "C" fn pcache1Rekey(
 }
 
 unsafe extern "C" fn pcache1Truncate(
-    mut p: *mut crate::src::headers::sqlite3_h::Sqlite3Pcache,
-    mut iLimit: ::core::ffi::c_uint,
+    p: *mut crate::src::headers::sqlite3_h::Sqlite3Pcache,
+    iLimit: ::core::ffi::c_uint,
 ) {
-    let mut pCache: *mut PCache1 = p as *mut PCache1;
+    let pCache: *mut PCache1 = p as *mut PCache1;
     if iLimit <= (*pCache).iMaxKey {
         pcache1TruncateUnsafe(pCache, iLimit);
         (*pCache).iMaxKey = iLimit.wrapping_sub(1 as ::core::ffi::c_uint);
     }
 }
 
-unsafe extern "C" fn pcache1Destroy(mut p: *mut crate::src::headers::sqlite3_h::Sqlite3Pcache) {
-    let mut pCache: *mut PCache1 = p as *mut PCache1;
+unsafe extern "C" fn pcache1Destroy(p: *mut crate::src::headers::sqlite3_h::Sqlite3Pcache) {
+    let pCache: *mut PCache1 = p as *mut PCache1;
     let __pCache_ref = { &*pCache };
-    let mut pGroup: *mut PGroup = __pCache_ref.pGroup;
+    let pGroup: *mut PGroup = __pCache_ref.pGroup;
     if __pCache_ref.nPage != 0 {
         pcache1TruncateUnsafe(pCache, 0 as ::core::ffi::c_uint);
     }
@@ -948,12 +948,12 @@ pub unsafe extern "C" fn sqlite3Pcache1Mutex() -> *mut crate::src::src::mutex_un
 }
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 pub unsafe extern "C" fn sqlite3PcacheStats(
-    mut pnCurrent: *mut ::core::ffi::c_int,
-    mut pnMax: *mut ::core::ffi::c_int,
-    mut pnMin: *mut ::core::ffi::c_int,
-    mut pnRecyclable: *mut ::core::ffi::c_int,
+    pnCurrent: *mut ::core::ffi::c_int,
+    pnMax: *mut ::core::ffi::c_int,
+    pnMin: *mut ::core::ffi::c_int,
+    pnRecyclable: *mut ::core::ffi::c_int,
 ) {
-    let mut p: *mut PgHdr1 = ::core::ptr::null_mut::<PgHdr1>();
+    let mut p: *mut PgHdr1;
     let mut nRecyclable: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
     p = pcache1_g.grp.lru.pLruNext;
     while !p.is_null() && (*p).isAnchor == 0 {

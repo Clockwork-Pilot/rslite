@@ -78,7 +78,7 @@ pub static mut sqlite3_fts3_enable_parentheses: ::core::ffi::c_int = 0 as ::core
 
 pub const SQLITE_FTS3_DEFAULT_NEAR_PARAM: ::core::ffi::c_int = 10 as ::core::ffi::c_int;
 
-unsafe extern "C" fn fts3isspace(mut c: ::core::ffi::c_char) -> ::core::ffi::c_int {
+unsafe extern "C" fn fts3isspace(c: ::core::ffi::c_char) -> ::core::ffi::c_int {
     (c as ::core::ffi::c_int == ' ' as i32
         || c as ::core::ffi::c_int == '\t' as i32
         || c as ::core::ffi::c_int == '\n' as i32
@@ -89,9 +89,9 @@ unsafe extern "C" fn fts3isspace(mut c: ::core::ffi::c_char) -> ::core::ffi::c_i
 
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 pub unsafe extern "C" fn sqlite3Fts3MallocZero(
-    mut nByte: crate::src::headers::sqlite3_h::Sqlite3Int64,
+    nByte: crate::src::headers::sqlite3_h::Sqlite3Int64,
 ) -> *mut ::core::ffi::c_void {
-    let mut pRet: *mut ::core::ffi::c_void = crate::src::src::malloc::sqlite3_malloc64(
+    let pRet: *mut ::core::ffi::c_void = crate::src::src::malloc::sqlite3_malloc64(
         nByte as crate::src::headers::sqlite3_h::Sqlite3Uint64,
     );
     if !pRet.is_null() {
@@ -106,17 +106,17 @@ pub unsafe extern "C" fn sqlite3Fts3MallocZero(
 
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 pub unsafe extern "C" fn sqlite3Fts3OpenTokenizer(
-    mut pTokenizer: *mut crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer,
-    mut iLangid: ::core::ffi::c_int,
-    mut z: *const ::core::ffi::c_char,
-    mut n: ::core::ffi::c_int,
-    mut ppCsr: *mut *mut crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_cursor,
+    pTokenizer: *mut crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer,
+    iLangid: ::core::ffi::c_int,
+    z: *const ::core::ffi::c_char,
+    n: ::core::ffi::c_int,
+    ppCsr: *mut *mut crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_cursor,
 ) -> ::core::ffi::c_int {
-    let mut pModule: *const crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_module =
+    let pModule: *const crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_module =
         (*pTokenizer).pModule;
     let mut pCsr: *mut crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_cursor =
         ::core::ptr::null_mut::<crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_cursor>();
-    let mut rc: ::core::ffi::c_int = 0;
+    let mut rc: ::core::ffi::c_int;
     rc = (*pModule).xOpen.expect("non-null function pointer")(pTokenizer, z, n, &raw mut pCsr);
     if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
         (*pCsr).pTokenizer = pTokenizer;
@@ -135,10 +135,10 @@ pub unsafe extern "C" fn sqlite3Fts3OpenTokenizer(
 }
 
 unsafe extern "C" fn findBarredChar(
-    mut z: *const ::core::ffi::c_char,
-    mut n: ::core::ffi::c_int,
+    z: *const ::core::ffi::c_char,
+    n: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
-    let mut ii: ::core::ffi::c_int = 0;
+    let mut ii: ::core::ffi::c_int;
     ii = 0 as ::core::ffi::c_int;
     while ii < n {
         if *z.offset(ii as isize) as ::core::ffi::c_int == '"' as i32
@@ -154,18 +154,18 @@ unsafe extern "C" fn findBarredChar(
 }
 
 unsafe extern "C" fn getNextToken(
-    mut pParse: *mut ParseContext,
-    mut iCol: ::core::ffi::c_int,
-    mut z: *const ::core::ffi::c_char,
-    mut n: ::core::ffi::c_int,
-    mut ppExpr: *mut *mut crate::fts3Int_h::Fts3Expr,
-    mut pnConsumed: *mut ::core::ffi::c_int,
+    pParse: *mut ParseContext,
+    iCol: ::core::ffi::c_int,
+    z: *const ::core::ffi::c_char,
+    n: ::core::ffi::c_int,
+    ppExpr: *mut *mut crate::fts3Int_h::Fts3Expr,
+    pnConsumed: *mut ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
-    let mut pTokenizer: *mut crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer =
+    let pTokenizer: *mut crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer =
         (*pParse).pTokenizer;
-    let mut pModule: *const crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_module =
+    let pModule: *const crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_module =
         (*pTokenizer).pModule;
-    let mut rc: ::core::ffi::c_int = 0;
+    let mut rc: ::core::ffi::c_int;
     let mut pCursor: *mut crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_cursor =
         ::core::ptr::null_mut::<crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_cursor>();
     let mut pRet: *mut crate::fts3Int_h::Fts3Expr =
@@ -178,7 +178,7 @@ unsafe extern "C" fn getNextToken(
         let mut iStart: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
         let mut iEnd: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
         let mut iPosition: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
-        let mut nByte: crate::src::headers::sqlite3_h::Sqlite3Int64 = 0;
+        let nByte: crate::src::headers::sqlite3_h::Sqlite3Int64;
         rc = (*pModule).xNext.expect("non-null function pointer")(
             pCursor,
             &raw mut zToken,
@@ -188,7 +188,7 @@ unsafe extern "C" fn getNextToken(
             &raw mut iPosition,
         );
         if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
-            let mut iBarred: ::core::ffi::c_int = findBarredChar(z, iEnd);
+            let iBarred: ::core::ffi::c_int = findBarredChar(z, iEnd);
             if iBarred >= 0 as ::core::ffi::c_int {
                 (*pModule).xClose.expect("non-null function pointer")(pCursor);
                 return getNextToken(pParse, iCol, z, iBarred, ppExpr, pnConsumed);
@@ -265,7 +265,7 @@ unsafe extern "C" fn getNextToken(
             }
             *pnConsumed = iEnd;
         } else if n != 0 && rc == crate::src::headers::sqlite3_h::SQLITE_DONE {
-            let mut iBarred_0: ::core::ffi::c_int = findBarredChar(z, n);
+            let iBarred_0: ::core::ffi::c_int = findBarredChar(z, n);
             if iBarred_0 >= 0 as ::core::ffi::c_int {
                 *pnConsumed = iBarred_0;
             }
@@ -278,10 +278,10 @@ unsafe extern "C" fn getNextToken(
 }
 
 unsafe extern "C" fn fts3ReallocOrFree(
-    mut pOrig: *mut ::core::ffi::c_void,
-    mut nNew: crate::src::headers::sqlite3_h::Sqlite3Int64,
+    pOrig: *mut ::core::ffi::c_void,
+    nNew: crate::src::headers::sqlite3_h::Sqlite3Int64,
 ) -> *mut ::core::ffi::c_void {
-    let mut pRet: *mut ::core::ffi::c_void = crate::src::src::malloc::sqlite3_realloc64(
+    let pRet: *mut ::core::ffi::c_void = crate::src::src::malloc::sqlite3_realloc64(
         pOrig,
         nNew as crate::src::headers::sqlite3_h::Sqlite3Uint64,
     );
@@ -292,17 +292,17 @@ unsafe extern "C" fn fts3ReallocOrFree(
 }
 
 unsafe extern "C" fn getNextString(
-    mut pParse: *mut ParseContext,
-    mut zInput: *const ::core::ffi::c_char,
-    mut nInput: ::core::ffi::c_int,
-    mut ppExpr: *mut *mut crate::fts3Int_h::Fts3Expr,
+    pParse: *mut ParseContext,
+    zInput: *const ::core::ffi::c_char,
+    nInput: ::core::ffi::c_int,
+    ppExpr: *mut *mut crate::fts3Int_h::Fts3Expr,
 ) -> ::core::ffi::c_int {
-    let mut current_block: u64;
-    let mut pTokenizer: *mut crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer =
+    let current_block: u64;
+    let pTokenizer: *mut crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer =
         (*pParse).pTokenizer;
-    let mut pModule: *const crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_module =
+    let pModule: *const crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_module =
         (*pTokenizer).pModule;
-    let mut rc: ::core::ffi::c_int = 0;
+    let mut rc: ::core::ffi::c_int;
     let mut p: *mut crate::fts3Int_h::Fts3Expr =
         ::core::ptr::null_mut::<crate::fts3Int_h::Fts3Expr>();
     let mut pCursor: *mut crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_cursor =
@@ -326,7 +326,7 @@ unsafe extern "C" fn getNextString(
         &raw mut pCursor,
     );
     if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
-        let mut ii: ::core::ffi::c_int = 0;
+        let mut ii: ::core::ffi::c_int;
         ii = 0 as ::core::ffi::c_int;
         loop {
             if !(rc == crate::src::headers::sqlite3_h::SQLITE_OK) {
@@ -347,8 +347,7 @@ unsafe extern "C" fn getNextString(
                 &raw mut iPos,
             );
             if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
-                let mut pToken: *mut crate::fts3Int_h::Fts3PhraseToken =
-                    ::core::ptr::null_mut::<crate::fts3Int_h::Fts3PhraseToken>();
+                let pToken: *mut crate::fts3Int_h::Fts3PhraseToken;
                 p = fts3ReallocOrFree(
                     p as *mut ::core::ffi::c_void,
                     (nSpace as usize).wrapping_add((ii as usize).wrapping_mul(
@@ -403,9 +402,8 @@ unsafe extern "C" fn getNextString(
     match current_block {
         4808432441040389987 => {
             if rc == crate::src::headers::sqlite3_h::SQLITE_DONE {
-                let mut jj: ::core::ffi::c_int = 0;
-                let mut zBuf: *mut ::core::ffi::c_char =
-                    ::core::ptr::null_mut::<::core::ffi::c_char>();
+                let mut jj: ::core::ffi::c_int;
+                let mut zBuf: *mut ::core::ffi::c_char;
                 p = fts3ReallocOrFree(
                     p as *mut ::core::ffi::c_void,
                     ((nSpace as usize).wrapping_add((nToken as usize).wrapping_mul(
@@ -483,11 +481,11 @@ unsafe extern "C" fn getNextString(
 }
 
 unsafe extern "C" fn getNextNode(
-    mut pParse: *mut ParseContext,
-    mut z: *const ::core::ffi::c_char,
-    mut n: ::core::ffi::c_int,
-    mut ppExpr: *mut *mut crate::fts3Int_h::Fts3Expr,
-    mut pnConsumed: *mut ::core::ffi::c_int,
+    pParse: *mut ParseContext,
+    z: *const ::core::ffi::c_char,
+    n: ::core::ffi::c_int,
+    ppExpr: *mut *mut crate::fts3Int_h::Fts3Expr,
+    pnConsumed: *mut ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
     static mut aKeyword: [Fts3Keyword; 4] = [
         Fts3Keyword {
@@ -515,12 +513,11 @@ unsafe extern "C" fn getNextNode(
             eType: crate::fts3Int_h::FTSQUERY_NEAR as ::core::ffi::c_uchar,
         },
     ];
-    let mut ii: ::core::ffi::c_int = 0;
-    let mut iCol: ::core::ffi::c_int = 0;
-    let mut iColLen: ::core::ffi::c_int = 0;
-    let mut rc: ::core::ffi::c_int = 0;
-    let mut pRet: *mut crate::fts3Int_h::Fts3Expr =
-        ::core::ptr::null_mut::<crate::fts3Int_h::Fts3Expr>();
+    let mut ii: ::core::ffi::c_int;
+    let mut iCol: ::core::ffi::c_int;
+    let mut iColLen: ::core::ffi::c_int;
+    let rc: ::core::ffi::c_int;
+    let pRet: *mut crate::fts3Int_h::Fts3Expr;
     let mut zInput: *const ::core::ffi::c_char = z;
     let mut nInput: ::core::ffi::c_int = n;
     let __pParse_ref = unsafe { &mut *pParse };
@@ -538,7 +535,7 @@ unsafe extern "C" fn getNextNode(
             .wrapping_div(::core::mem::size_of::<Fts3Keyword>() as usize)
             as ::core::ffi::c_int
     {
-        let mut pKey: *const Fts3Keyword =
+        let pKey: *const Fts3Keyword =
             (&raw const aKeyword as *const Fts3Keyword).offset(ii as isize) as *const Fts3Keyword;
         if !((*pKey).parenOnly as ::core::ffi::c_int & !sqlite3_fts3_enable_parentheses
             != 0 as ::core::ffi::c_int)
@@ -554,7 +551,7 @@ unsafe extern "C" fn getNextNode(
             {
                 let mut nNear: ::core::ffi::c_int = SQLITE_FTS3_DEFAULT_NEAR_PARAM;
                 let mut nKey: ::core::ffi::c_int = __pKey_ref.n as ::core::ffi::c_int;
-                let mut cNext: ::core::ffi::c_char = 0;
+                let cNext: ::core::ffi::c_char;
                 if __pKey_ref.eType as ::core::ffi::c_int == crate::fts3Int_h::FTSQUERY_NEAR {
                     if *zInput.offset(4 as isize) as ::core::ffi::c_int == '/' as i32
                         && *zInput.offset(5 as isize) as ::core::ffi::c_int >= '0' as i32
@@ -642,8 +639,8 @@ unsafe extern "C" fn getNextNode(
     iColLen = 0 as ::core::ffi::c_int;
     ii = 0 as ::core::ffi::c_int;
     while ii < __pParse_ref.nCol {
-        let mut zStr: *const ::core::ffi::c_char = *__pParse_ref.azCol.offset(ii as isize);
-        let mut nStr: ::core::ffi::c_int = ::libc::strlen(zStr) as ::core::ffi::c_int;
+        let zStr: *const ::core::ffi::c_char = *__pParse_ref.azCol.offset(ii as isize);
+        let nStr: ::core::ffi::c_int = ::libc::strlen(zStr) as ::core::ffi::c_int;
         if nInput > nStr
             && *zInput.offset(nStr as isize) as ::core::ffi::c_int == ':' as i32
             && crate::src::src::util::sqlite3_strnicmp(zStr, zInput, nStr)
@@ -670,7 +667,7 @@ unsafe extern "C" fn getNextNode(
     rc
 }
 
-unsafe extern "C" fn opPrecedence(mut p: *mut crate::fts3Int_h::Fts3Expr) -> ::core::ffi::c_int {
+unsafe extern "C" fn opPrecedence(p: *mut crate::fts3Int_h::Fts3Expr) -> ::core::ffi::c_int {
     if sqlite3_fts3_enable_parentheses != 0 {
         return (*p).eType;
     } else if (*p).eType == crate::fts3Int_h::FTSQUERY_NEAR {
@@ -682,9 +679,9 @@ unsafe extern "C" fn opPrecedence(mut p: *mut crate::fts3Int_h::Fts3Expr) -> ::c
 }
 
 unsafe extern "C" fn insertBinaryOperator(
-    mut ppHead: *mut *mut crate::fts3Int_h::Fts3Expr,
-    mut pPrev: *mut crate::fts3Int_h::Fts3Expr,
-    mut pNew: *mut crate::fts3Int_h::Fts3Expr,
+    ppHead: *mut *mut crate::fts3Int_h::Fts3Expr,
+    pPrev: *mut crate::fts3Int_h::Fts3Expr,
+    pNew: *mut crate::fts3Int_h::Fts3Expr,
 ) {
     let mut pSplit: *mut crate::fts3Int_h::Fts3Expr = pPrev;
     while !(*pSplit).pParent.is_null() && opPrecedence((*pSplit).pParent) <= opPrecedence(pNew) {
@@ -701,13 +698,13 @@ unsafe extern "C" fn insertBinaryOperator(
 }
 
 unsafe extern "C" fn fts3ExprParse(
-    mut pParse: *mut ParseContext,
-    mut z: *const ::core::ffi::c_char,
-    mut n: ::core::ffi::c_int,
-    mut ppExpr: *mut *mut crate::fts3Int_h::Fts3Expr,
-    mut pnConsumed: *mut ::core::ffi::c_int,
+    pParse: *mut ParseContext,
+    z: *const ::core::ffi::c_char,
+    n: ::core::ffi::c_int,
+    ppExpr: *mut *mut crate::fts3Int_h::Fts3Expr,
+    pnConsumed: *mut ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
-    let mut current_block: u64;
+    let current_block: u64;
     let mut pRet: *mut crate::fts3Int_h::Fts3Expr =
         ::core::ptr::null_mut::<crate::fts3Int_h::Fts3Expr>();
     let mut pPrev: *mut crate::fts3Int_h::Fts3Expr =
@@ -729,12 +726,12 @@ unsafe extern "C" fn fts3ExprParse(
         rc = getNextNode(pParse, zIn, nIn, &raw mut p, &raw mut nByte);
         if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
             if !p.is_null() {
-                let mut isPhrase: ::core::ffi::c_int = 0;
+                let isPhrase: ::core::ffi::c_int;
                 if sqlite3_fts3_enable_parentheses == 0
                     && (*p).eType == crate::fts3Int_h::FTSQUERY_PHRASE
                     && (*pParse).isNot != 0
                 {
-                    let mut pNot: *mut crate::fts3Int_h::Fts3Expr =
+                    let pNot: *mut crate::fts3Int_h::Fts3Expr =
                         sqlite3Fts3MallocZero(::core::mem::size_of::<crate::fts3Int_h::Fts3Expr>()
                             as crate::src::headers::sqlite3_h::Sqlite3Int64)
                             as *mut crate::fts3Int_h::Fts3Expr;
@@ -755,7 +752,7 @@ unsafe extern "C" fn fts3ExprParse(
                         p = pPrev;
                     }
                 } else {
-                    let mut eType: ::core::ffi::c_int = (*p).eType;
+                    let eType: ::core::ffi::c_int = (*p).eType;
                     isPhrase = (eType == crate::fts3Int_h::FTSQUERY_PHRASE || !(*p).pLeft.is_null())
                         as ::core::ffi::c_int;
                     if isPhrase == 0 && isRequirePhrase != 0 {
@@ -765,8 +762,7 @@ unsafe extern "C" fn fts3ExprParse(
                         break;
                     } else {
                         if isPhrase != 0 && isRequirePhrase == 0 {
-                            let mut pAnd: *mut crate::fts3Int_h::Fts3Expr =
-                                ::core::ptr::null_mut::<crate::fts3Int_h::Fts3Expr>();
+                            let pAnd: *mut crate::fts3Int_h::Fts3Expr;
                             pAnd = sqlite3Fts3MallocZero(::core::mem::size_of::<
                                 crate::fts3Int_h::Fts3Expr,
                             >()
@@ -854,8 +850,8 @@ unsafe extern "C" fn fts3ExprParse(
 }
 
 unsafe extern "C" fn fts3ExprCheckDepth(
-    mut p: *mut crate::fts3Int_h::Fts3Expr,
-    mut nMaxDepth: ::core::ffi::c_int,
+    p: *mut crate::fts3Int_h::Fts3Expr,
+    nMaxDepth: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
     let mut rc: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_OK;
     if !p.is_null() {
@@ -872,21 +868,20 @@ unsafe extern "C" fn fts3ExprCheckDepth(
 }
 
 unsafe extern "C" fn fts3ExprBalance(
-    mut pp: *mut *mut crate::fts3Int_h::Fts3Expr,
-    mut nMaxDepth: ::core::ffi::c_int,
+    pp: *mut *mut crate::fts3Int_h::Fts3Expr,
+    nMaxDepth: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
     let mut rc: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_OK;
     let mut pRoot: *mut crate::fts3Int_h::Fts3Expr = *pp;
     let mut pFree: *mut crate::fts3Int_h::Fts3Expr =
         ::core::ptr::null_mut::<crate::fts3Int_h::Fts3Expr>();
-    let mut eType: ::core::ffi::c_int = (*pRoot).eType;
+    let eType: ::core::ffi::c_int = (*pRoot).eType;
     if nMaxDepth == 0 as ::core::ffi::c_int {
         rc = crate::src::headers::sqlite3_h::SQLITE_ERROR;
     }
     if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
         if eType == crate::fts3Int_h::FTSQUERY_AND_1 || eType == crate::fts3Int_h::FTSQUERY_OR_1 {
-            let mut apLeaf: *mut *mut crate::fts3Int_h::Fts3Expr =
-                ::core::ptr::null_mut::<*mut crate::fts3Int_h::Fts3Expr>();
+            let apLeaf: *mut *mut crate::fts3Int_h::Fts3Expr;
             apLeaf = crate::src::src::malloc::sqlite3_malloc64(
                 (::core::mem::size_of::<*mut crate::fts3Int_h::Fts3Expr>() as usize)
                     .wrapping_mul(nMaxDepth as usize)
@@ -904,16 +899,15 @@ unsafe extern "C" fn fts3ExprBalance(
                 );
             }
             if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
-                let mut i: ::core::ffi::c_int = 0;
-                let mut p: *mut crate::fts3Int_h::Fts3Expr =
-                    ::core::ptr::null_mut::<crate::fts3Int_h::Fts3Expr>();
+                let mut i: ::core::ffi::c_int;
+                let mut p: *mut crate::fts3Int_h::Fts3Expr;
                 p = pRoot;
                 while (*p).eType == eType {
                     p = (*p).pLeft;
                 }
                 loop {
-                    let mut iLvl: ::core::ffi::c_int = 0;
-                    let mut pParent: *mut crate::fts3Int_h::Fts3Expr = (*p).pParent;
+                    let mut iLvl: ::core::ffi::c_int;
+                    let pParent: *mut crate::fts3Int_h::Fts3Expr = (*p).pParent;
                     (*p).pParent = ::core::ptr::null_mut::<crate::fts3Int_h::Fts3Expr>();
                     if !pParent.is_null() {
                         (*pParent).pLeft = ::core::ptr::null_mut::<crate::fts3Int_h::Fts3Expr>();
@@ -990,8 +984,7 @@ unsafe extern "C" fn fts3ExprBalance(
                     }
                     pRoot = p;
                 } else {
-                    let mut pDel: *mut crate::fts3Int_h::Fts3Expr =
-                        ::core::ptr::null_mut::<crate::fts3Int_h::Fts3Expr>();
+                    let mut pDel: *mut crate::fts3Int_h::Fts3Expr;
                     i = 0 as ::core::ffi::c_int;
                     while i < nMaxDepth {
                         sqlite3Fts3ExprFree(*apLeaf.offset(i as isize));
@@ -1040,18 +1033,18 @@ unsafe extern "C" fn fts3ExprBalance(
 }
 
 unsafe extern "C" fn fts3ExprParseUnbalanced(
-    mut pTokenizer: *mut crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer,
-    mut iLangid: ::core::ffi::c_int,
-    mut azCol: *mut *mut ::core::ffi::c_char,
-    mut bFts4: ::core::ffi::c_int,
-    mut nCol: ::core::ffi::c_int,
-    mut iDefaultCol: ::core::ffi::c_int,
-    mut z: *const ::core::ffi::c_char,
+    pTokenizer: *mut crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer,
+    iLangid: ::core::ffi::c_int,
+    azCol: *mut *mut ::core::ffi::c_char,
+    bFts4: ::core::ffi::c_int,
+    nCol: ::core::ffi::c_int,
+    iDefaultCol: ::core::ffi::c_int,
+    z: *const ::core::ffi::c_char,
     mut n: ::core::ffi::c_int,
-    mut ppExpr: *mut *mut crate::fts3Int_h::Fts3Expr,
+    ppExpr: *mut *mut crate::fts3Int_h::Fts3Expr,
 ) -> ::core::ffi::c_int {
     let mut nParsed: ::core::ffi::c_int = 0;
-    let mut rc: ::core::ffi::c_int = 0;
+    let mut rc: ::core::ffi::c_int;
     let mut sParse: ParseContext = unsafe { ::core::mem::zeroed() };
     sParse.pTokenizer = pTokenizer;
     sParse.iLangid = iLangid;
@@ -1075,16 +1068,16 @@ unsafe extern "C" fn fts3ExprParseUnbalanced(
 
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 pub unsafe extern "C" fn sqlite3Fts3ExprParse(
-    mut pTokenizer: *mut crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer,
-    mut iLangid: ::core::ffi::c_int,
-    mut azCol: *mut *mut ::core::ffi::c_char,
-    mut bFts4: ::core::ffi::c_int,
-    mut nCol: ::core::ffi::c_int,
-    mut iDefaultCol: ::core::ffi::c_int,
-    mut z: *const ::core::ffi::c_char,
-    mut n: ::core::ffi::c_int,
-    mut ppExpr: *mut *mut crate::fts3Int_h::Fts3Expr,
-    mut pzErr: *mut *mut ::core::ffi::c_char,
+    pTokenizer: *mut crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer,
+    iLangid: ::core::ffi::c_int,
+    azCol: *mut *mut ::core::ffi::c_char,
+    bFts4: ::core::ffi::c_int,
+    nCol: ::core::ffi::c_int,
+    iDefaultCol: ::core::ffi::c_int,
+    z: *const ::core::ffi::c_char,
+    n: ::core::ffi::c_int,
+    ppExpr: *mut *mut crate::fts3Int_h::Fts3Expr,
+    pzErr: *mut *mut ::core::ffi::c_char,
 ) -> ::core::ffi::c_int {
     let mut rc: ::core::ffi::c_int = fts3ExprParseUnbalanced(
         pTokenizer,
@@ -1129,7 +1122,7 @@ pub unsafe extern "C" fn sqlite3Fts3ExprParse(
     rc
 }
 
-unsafe extern "C" fn fts3FreeExprNode(mut p: *mut crate::fts3Int_h::Fts3Expr) {
+unsafe extern "C" fn fts3FreeExprNode(p: *mut crate::fts3Int_h::Fts3Expr) {
     crate::src::ext::fts3::fts3::sqlite3Fts3EvalPhraseCleanup(
         (*p).pPhrase as *mut crate::fts3Int_h::Fts3Phrase,
     );
@@ -1138,9 +1131,8 @@ unsafe extern "C" fn fts3FreeExprNode(mut p: *mut crate::fts3Int_h::Fts3Expr) {
 }
 
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
-pub unsafe extern "C" fn sqlite3Fts3ExprFree(mut pDel: *mut crate::fts3Int_h::Fts3Expr) {
-    let mut p: *mut crate::fts3Int_h::Fts3Expr =
-        ::core::ptr::null_mut::<crate::fts3Int_h::Fts3Expr>();
+pub unsafe extern "C" fn sqlite3Fts3ExprFree(pDel: *mut crate::fts3Int_h::Fts3Expr) {
+    let mut p: *mut crate::fts3Int_h::Fts3Expr;
     p = pDel;
     while !p.is_null() && (!(*p).pLeft.is_null() || !(*p).pRight.is_null()) {
         p = if !(*p).pLeft.is_null() {
@@ -1150,7 +1142,7 @@ pub unsafe extern "C" fn sqlite3Fts3ExprFree(mut pDel: *mut crate::fts3Int_h::Ft
         };
     }
     while !p.is_null() {
-        let mut pParent: *mut crate::fts3Int_h::Fts3Expr = (*p).pParent;
+        let pParent: *mut crate::fts3Int_h::Fts3Expr = (*p).pParent;
         fts3FreeExprNode(p);
         if !pParent.is_null() && p == (*pParent).pLeft && !(*pParent).pRight.is_null() {
             p = (*pParent).pRight;
@@ -1168,7 +1160,7 @@ pub unsafe extern "C" fn sqlite3Fts3ExprFree(mut pDel: *mut crate::fts3Int_h::Ft
 }
 
 unsafe extern "C" fn exprToString(
-    mut pExpr: *mut crate::fts3Int_h::Fts3Expr,
+    pExpr: *mut crate::fts3Int_h::Fts3Expr,
     mut zBuf: *mut ::core::ffi::c_char,
 ) -> *mut ::core::ffi::c_char {
     if pExpr.is_null() {
@@ -1176,8 +1168,8 @@ unsafe extern "C" fn exprToString(
     }
     match (*pExpr).eType {
         crate::fts3Int_h::FTSQUERY_PHRASE => {
-            let mut pPhrase: *mut crate::fts3Int_h::Fts3Phrase = (*pExpr).pPhrase;
-            let mut i: ::core::ffi::c_int = 0;
+            let pPhrase: *mut crate::fts3Int_h::Fts3Phrase = (*pExpr).pPhrase;
+            let mut i: ::core::ffi::c_int;
             zBuf = crate::sqlite_printf!("%zPHRASE %d 0", zBuf, (*pPhrase).iColumn);
             i = 0 as ::core::ffi::c_int;
             while !zBuf.is_null() && i < (*pPhrase).nToken {
@@ -1242,27 +1234,26 @@ unsafe extern "C" fn exprToString(
 }
 
 unsafe extern "C" fn fts3ExprTestCommon(
-    mut bRebalance: ::core::ffi::c_int,
-    mut context: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
-    mut argc: ::core::ffi::c_int,
-    mut argv: *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
+    bRebalance: ::core::ffi::c_int,
+    context: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
+    argc: ::core::ffi::c_int,
+    argv: *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
 ) {
     let mut pTokenizer: *mut crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer =
         ::core::ptr::null_mut::<crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer>();
-    let mut rc: ::core::ffi::c_int = 0;
-    let mut azCol: *mut *mut ::core::ffi::c_char =
-        ::core::ptr::null_mut::<*mut ::core::ffi::c_char>();
-    let mut zExpr: *const ::core::ffi::c_char = ::core::ptr::null::<::core::ffi::c_char>();
-    let mut nExpr: ::core::ffi::c_int = 0;
-    let mut nCol: ::core::ffi::c_int = 0;
-    let mut ii: ::core::ffi::c_int = 0;
+    let mut rc: ::core::ffi::c_int;
+    let azCol: *mut *mut ::core::ffi::c_char;
+    let zExpr: *const ::core::ffi::c_char;
+    let nExpr: ::core::ffi::c_int;
+    let nCol: ::core::ffi::c_int;
+    let mut ii: ::core::ffi::c_int;
     let mut pExpr: *mut crate::fts3Int_h::Fts3Expr =
         ::core::ptr::null_mut::<crate::fts3Int_h::Fts3Expr>();
-    let mut zBuf: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
-    let mut pHash: *mut crate::src::ext::fts3::fts3_hash::Fts3Hash =
+    let zBuf: *mut ::core::ffi::c_char;
+    let pHash: *mut crate::src::ext::fts3::fts3_hash::Fts3Hash =
         crate::src::src::vdbeapi::sqlite3_user_data(context)
             as *mut crate::src::ext::fts3::fts3_hash::Fts3Hash;
-    let mut zTokenizer: *const ::core::ffi::c_char = ::core::ptr::null::<::core::ffi::c_char>();
+    let zTokenizer: *const ::core::ffi::c_char;
     let mut zErr: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
     if argc < 3 as ::core::ffi::c_int {
         crate::src::src::vdbeapi::sqlite3_result_error(
@@ -1371,7 +1362,7 @@ unsafe extern "C" fn fts3ExprTestCommon(
         sqlite3Fts3ExprFree(pExpr);
     }
     if !pTokenizer.is_null() {
-        rc = (*(*pTokenizer).pModule)
+        let _ = (*(*pTokenizer).pModule)
             .xDestroy
             .expect("non-null function pointer")(pTokenizer);
     }
@@ -1379,25 +1370,25 @@ unsafe extern "C" fn fts3ExprTestCommon(
 }
 
 unsafe extern "C" fn fts3ExprTest(
-    mut context: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
-    mut argc: ::core::ffi::c_int,
-    mut argv: *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
+    context: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
+    argc: ::core::ffi::c_int,
+    argv: *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
 ) {
     fts3ExprTestCommon(0 as ::core::ffi::c_int, context, argc, argv);
 }
 
 unsafe extern "C" fn fts3ExprTestRebalance(
-    mut context: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
-    mut argc: ::core::ffi::c_int,
-    mut argv: *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
+    context: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
+    argc: ::core::ffi::c_int,
+    argv: *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
 ) {
     fts3ExprTestCommon(1 as ::core::ffi::c_int, context, argc, argv);
 }
 
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 pub unsafe extern "C" fn sqlite3Fts3ExprInitTestInterface(
-    mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
-    mut pHash: *mut crate::src::ext::fts3::fts3_hash::Fts3Hash,
+    db: *mut crate::src::headers::sqliteInt_h::sqlite3,
+    pHash: *mut crate::src::ext::fts3::fts3_hash::Fts3Hash,
 ) -> ::core::ffi::c_int {
     let mut rc: ::core::ffi::c_int = crate::src::src::main::sqlite3_create_function(
         db,

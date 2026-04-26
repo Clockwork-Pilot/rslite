@@ -2506,23 +2506,22 @@ static mut sqlite3Apis: crate::src::headers::sqlite3ext_h::sqlite3_api_routines 
 };
 
 unsafe extern "C" fn sqlite3LoadExtension(
-    mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
-    mut zFile: *const ::core::ffi::c_char,
-    mut zProc: *const ::core::ffi::c_char,
-    mut pzErrMsg: *mut *mut ::core::ffi::c_char,
+    db: *mut crate::src::headers::sqliteInt_h::sqlite3,
+    zFile: *const ::core::ffi::c_char,
+    zProc: *const ::core::ffi::c_char,
+    pzErrMsg: *mut *mut ::core::ffi::c_char,
 ) -> ::core::ffi::c_int {
-    let mut pVfs: *mut crate::src::headers::sqlite3_h::sqlite3_vfs = (*db).pVfs;
-    let mut handle: *mut ::core::ffi::c_void = ::core::ptr::null_mut::<::core::ffi::c_void>();
-    let mut xInit: crate::src::headers::sqlite3ext_h::Sqlite3LoadextEntry = None;
+    let pVfs: *mut crate::src::headers::sqlite3_h::sqlite3_vfs = (*db).pVfs;
+    let mut handle: *mut ::core::ffi::c_void;
+    let mut xInit: crate::src::headers::sqlite3ext_h::Sqlite3LoadextEntry;
     let mut zErrmsg: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
-    let mut zEntry: *const ::core::ffi::c_char = ::core::ptr::null::<::core::ffi::c_char>();
+    let mut zEntry: *const ::core::ffi::c_char;
     let mut zAltEntry: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
-    let mut aHandle: *mut *mut ::core::ffi::c_void =
-        ::core::ptr::null_mut::<*mut ::core::ffi::c_void>();
+    let aHandle: *mut *mut ::core::ffi::c_void;
     let mut nMsg: crate::src::ext::rtree::rtree::U64_0 =
         ::libc::strlen(zFile) as crate::src::ext::rtree::rtree::U64_0;
-    let mut ii: ::core::ffi::c_int = 0;
-    let mut rc: ::core::ffi::c_int = 0;
+    let mut ii: ::core::ffi::c_int;
+    let rc: ::core::ffi::c_int;
     static mut azEndings: [*const ::core::ffi::c_char; 1] =
         [b"so\0" as *const u8 as *const ::core::ffi::c_char];
     if !pzErrMsg.is_null() {
@@ -2573,7 +2572,7 @@ unsafe extern "C" fn sqlite3LoadExtension(
                 let total_len = file_str + 1 + ending_len;
                 let ptr =
                     crate::src::src::malloc::sqlite3_malloc((total_len + 1) as ::core::ffi::c_int);
-                let mut zAltFile: *mut ::core::ffi::c_char = ptr as *mut ::core::ffi::c_char;
+                let zAltFile: *mut ::core::ffi::c_char = ptr as *mut ::core::ffi::c_char;
                 if !zAltFile.is_null() {
                     unsafe {
                         libc::strcpy(zAltFile, zFile);
@@ -2609,10 +2608,10 @@ unsafe extern "C" fn sqlite3LoadExtension(
                     zEntry,
                 ));
                 if xInit.is_none() && zProc.is_null() {
-                    let mut iFile: ::core::ffi::c_int = 0;
-                    let mut iEntry: ::core::ffi::c_int = 0;
-                    let mut c: ::core::ffi::c_int = 0;
-                    let mut ncFile: ::core::ffi::c_int =
+                    let mut iFile: ::core::ffi::c_int;
+                    let mut iEntry: ::core::ffi::c_int;
+                    let mut c: ::core::ffi::c_int;
+                    let ncFile: ::core::ffi::c_int =
                         crate::src::src::util::sqlite3Strlen30(zFile);
                     zAltEntry = crate::src::src::malloc::sqlite3_malloc64(
                         (ncFile + 30 as ::core::ffi::c_int)
@@ -2811,12 +2810,12 @@ unsafe extern "C" fn sqlite3LoadExtension(
 }
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn sqlite3_load_extension(
-    mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
-    mut zFile: *const ::core::ffi::c_char,
-    mut zProc: *const ::core::ffi::c_char,
-    mut pzErrMsg: *mut *mut ::core::ffi::c_char,
+    db: *mut crate::src::headers::sqliteInt_h::sqlite3,
+    zFile: *const ::core::ffi::c_char,
+    zProc: *const ::core::ffi::c_char,
+    pzErrMsg: *mut *mut ::core::ffi::c_char,
 ) -> ::core::ffi::c_int {
-    let mut rc: ::core::ffi::c_int = 0;
+    let mut rc: ::core::ffi::c_int;
     crate::src::src::mutex::sqlite3_mutex_enter((*db).mutex);
     rc = sqlite3LoadExtension(db, zFile, zProc, pzErrMsg);
     rc = crate::src::src::malloc::sqlite3ApiExit(
@@ -2829,9 +2828,9 @@ pub unsafe extern "C" fn sqlite3_load_extension(
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3CloseExtensions(
-    mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
+    db: *mut crate::src::headers::sqliteInt_h::sqlite3,
 ) {
-    let mut i: ::core::ffi::c_int = 0;
+    let mut i: ::core::ffi::c_int;
     i = 0 as ::core::ffi::c_int;
     while i < (*db).nExtension {
         crate::src::src::os::sqlite3OsDlClose(
@@ -2847,8 +2846,8 @@ pub unsafe extern "C" fn sqlite3CloseExtensions(
 }
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn sqlite3_enable_load_extension(
-    mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
-    mut onoff: ::core::ffi::c_int,
+    db: *mut crate::src::headers::sqliteInt_h::sqlite3,
+    onoff: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
     crate::src::src::mutex::sqlite3_mutex_enter((*db).mutex);
     if onoff != 0 {
@@ -2871,15 +2870,15 @@ static mut sqlite3Autoext: sqlite3AutoExtList = sqlite3AutoExtList {
 };
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn sqlite3_auto_extension(
-    mut xInit: Option<unsafe extern "C" fn() -> ()>,
+    xInit: Option<unsafe extern "C" fn() -> ()>,
 ) -> ::core::ffi::c_int {
-    let mut rc: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_OK;
+    let mut rc: ::core::ffi::c_int;
     rc = crate::src::src::main::sqlite3_initialize();
     if rc != 0 {
         return rc;
     } else {
-        let mut i: crate::src::ext::rtree::rtree::U32_0 = 0;
-        let mut mutex: *mut crate::src::src::mutex_unix::sqlite3_mutex =
+        let mut i: crate::src::ext::rtree::rtree::U32_0;
+        let mutex: *mut crate::src::src::mutex_unix::sqlite3_mutex =
             crate::src::src::mutex::sqlite3MutexAlloc(
                 crate::src::headers::sqlite3_h::SQLITE_MUTEX_STATIC_MAIN,
             );
@@ -2892,7 +2891,7 @@ pub unsafe extern "C" fn sqlite3_auto_extension(
             i = i.wrapping_add(1);
         }
         if i == sqlite3Autoext.nExt {
-            let mut nByte: crate::src::ext::rtree::rtree::U64_0 = (sqlite3Autoext
+            let nByte: crate::src::ext::rtree::rtree::U64_0 = (sqlite3Autoext
                 .nExt
                 .wrapping_add(1 as crate::src::ext::rtree::rtree::U32_0)
                 as usize)
@@ -2900,8 +2899,7 @@ pub unsafe extern "C" fn sqlite3_auto_extension(
                     ::core::mem::size_of::<Option<unsafe extern "C" fn() -> ()>>() as usize,
                 )
                 as crate::src::ext::rtree::rtree::U64_0;
-            let mut aNew: *mut Option<unsafe extern "C" fn() -> ()> =
-                ::core::ptr::null_mut::<Option<unsafe extern "C" fn() -> ()>>();
+            let aNew: *mut Option<unsafe extern "C" fn() -> ()>;
             aNew = crate::src::src::malloc::sqlite3_realloc64(
                 sqlite3Autoext.aExt as *mut ::core::ffi::c_void,
                 nByte as crate::src::headers::sqlite3_h::Sqlite3Uint64,
@@ -2921,13 +2919,13 @@ pub unsafe extern "C" fn sqlite3_auto_extension(
 }
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn sqlite3_cancel_auto_extension(
-    mut xInit: Option<unsafe extern "C" fn() -> ()>,
+    xInit: Option<unsafe extern "C" fn() -> ()>,
 ) -> ::core::ffi::c_int {
-    let mut mutex: *mut crate::src::src::mutex_unix::sqlite3_mutex =
+    let mutex: *mut crate::src::src::mutex_unix::sqlite3_mutex =
         crate::src::src::mutex::sqlite3MutexAlloc(
             crate::src::headers::sqlite3_h::SQLITE_MUTEX_STATIC_MAIN,
         );
-    let mut i: ::core::ffi::c_int = 0;
+    let mut i: ::core::ffi::c_int;
     let mut n: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
     crate::src::src::mutex::sqlite3_mutex_enter(mutex);
     i = sqlite3Autoext.nExt as ::core::ffi::c_int - 1 as ::core::ffi::c_int;
@@ -2948,7 +2946,7 @@ pub unsafe extern "C" fn sqlite3_cancel_auto_extension(
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn sqlite3_reset_auto_extension() {
     if crate::src::src::main::sqlite3_initialize() == crate::src::headers::sqlite3_h::SQLITE_OK {
-        let mut mutex: *mut crate::src::src::mutex_unix::sqlite3_mutex =
+        let mutex: *mut crate::src::src::mutex_unix::sqlite3_mutex =
             crate::src::src::mutex::sqlite3MutexAlloc(
                 crate::src::headers::sqlite3_h::SQLITE_MUTEX_STATIC_MAIN,
             );
@@ -2962,23 +2960,23 @@ pub unsafe extern "C" fn sqlite3_reset_auto_extension() {
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3AutoLoadExtensions(
-    mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
+    db: *mut crate::src::headers::sqliteInt_h::sqlite3,
 ) {
-    let mut i: crate::src::ext::rtree::rtree::U32_0 = 0;
+    let mut i: crate::src::ext::rtree::rtree::U32_0;
     let mut go: ::core::ffi::c_int = 1 as ::core::ffi::c_int;
-    let mut rc: ::core::ffi::c_int = 0;
-    let mut xInit: crate::src::headers::sqlite3ext_h::Sqlite3LoadextEntry = None;
+    let mut rc: ::core::ffi::c_int;
+    let mut xInit: crate::src::headers::sqlite3ext_h::Sqlite3LoadextEntry;
     if sqlite3Autoext.nExt == 0 as crate::src::ext::rtree::rtree::U32_0 {
         return;
     }
     i = 0 as crate::src::ext::rtree::rtree::U32_0;
     while go != 0 {
-        let mut zErrmsg: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
-        let mut mutex: *mut crate::src::src::mutex_unix::sqlite3_mutex =
+        let mut zErrmsg: *mut ::core::ffi::c_char;
+        let mutex: *mut crate::src::src::mutex_unix::sqlite3_mutex =
             crate::src::src::mutex::sqlite3MutexAlloc(
                 crate::src::headers::sqlite3_h::SQLITE_MUTEX_STATIC_MAIN,
             );
-        let mut pThunk: *const crate::src::headers::sqlite3ext_h::sqlite3_api_routines =
+        let pThunk: *const crate::src::headers::sqlite3ext_h::sqlite3_api_routines =
             &raw const sqlite3Apis;
         crate::src::src::mutex::sqlite3_mutex_enter(mutex);
         if i >= sqlite3Autoext.nExt {

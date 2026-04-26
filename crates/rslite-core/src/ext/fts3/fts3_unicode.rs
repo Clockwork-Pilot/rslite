@@ -105,10 +105,10 @@ static mut sqlite3Utf8Trans1: [::core::ffi::c_uchar; 64] = [
 ];
 
 unsafe extern "C" fn unicodeDestroy(
-    mut pTokenizer: *mut crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer,
+    pTokenizer: *mut crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer,
 ) -> ::core::ffi::c_int {
     if !pTokenizer.is_null() {
-        let mut p: *mut unicode_tokenizer = pTokenizer as *mut unicode_tokenizer;
+        let p: *mut unicode_tokenizer = pTokenizer as *mut unicode_tokenizer;
         crate::src::src::malloc::sqlite3_free((*p).aiException as *mut ::core::ffi::c_void);
         crate::src::src::malloc::sqlite3_free(p as *mut ::core::ffi::c_void);
     }
@@ -116,15 +116,15 @@ unsafe extern "C" fn unicodeDestroy(
 }
 
 unsafe extern "C" fn unicodeAddExceptions(
-    mut p: *mut unicode_tokenizer,
-    mut bAlnum: ::core::ffi::c_int,
-    mut zIn: *const ::core::ffi::c_char,
-    mut nIn: ::core::ffi::c_int,
+    p: *mut unicode_tokenizer,
+    bAlnum: ::core::ffi::c_int,
+    zIn: *const ::core::ffi::c_char,
+    nIn: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
     let mut z: *const ::core::ffi::c_uchar = zIn as *const ::core::ffi::c_uchar;
-    let mut zTerm: *const ::core::ffi::c_uchar =
+    let zTerm: *const ::core::ffi::c_uchar =
         z.offset(nIn as isize) as *const ::core::ffi::c_uchar;
-    let mut iCode: ::core::ffi::c_uint = 0;
+    let mut iCode: ::core::ffi::c_uint;
     let mut nEntry: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
     while z < zTerm {
         let fresh0 = z;
@@ -162,8 +162,8 @@ unsafe extern "C" fn unicodeAddExceptions(
         }
     }
     if nEntry != 0 {
-        let mut aNew: *mut ::core::ffi::c_int = ::core::ptr::null_mut::<::core::ffi::c_int>();
-        let mut nNew: ::core::ffi::c_int = 0;
+        let aNew: *mut ::core::ffi::c_int;
+        let mut nNew: ::core::ffi::c_int;
         let __p_ref = { &mut *p };
         aNew = crate::src::src::malloc::sqlite3_realloc64(
             __p_ref.aiException as *mut ::core::ffi::c_void,
@@ -208,8 +208,8 @@ unsafe extern "C" fn unicodeAddExceptions(
                     iCode as ::core::ffi::c_int,
                 ) == 0 as ::core::ffi::c_int
             {
-                let mut i: ::core::ffi::c_int = 0;
-                let mut j: ::core::ffi::c_int = 0;
+                let mut i: ::core::ffi::c_int;
+                let mut j: ::core::ffi::c_int;
                 i = 0 as ::core::ffi::c_int;
                 while i < nNew && *aNew.offset(i as isize) < iCode as ::core::ffi::c_int {
                     i += 1;
@@ -230,15 +230,15 @@ unsafe extern "C" fn unicodeAddExceptions(
 }
 
 unsafe extern "C" fn unicodeIsException(
-    mut p: *mut unicode_tokenizer,
-    mut iCode: ::core::ffi::c_int,
+    p: *mut unicode_tokenizer,
+    iCode: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
     if (*p).nException > 0 as ::core::ffi::c_int {
-        let mut a: *mut ::core::ffi::c_int = (*p).aiException;
+        let a: *mut ::core::ffi::c_int = (*p).aiException;
         let mut iLo: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
         let mut iHi: ::core::ffi::c_int = (*p).nException - 1 as ::core::ffi::c_int;
         while iHi >= iLo {
-            let mut iTest: ::core::ffi::c_int = (iHi + iLo) / 2 as ::core::ffi::c_int;
+            let iTest: ::core::ffi::c_int = (iHi + iLo) / 2 as ::core::ffi::c_int;
             if iCode == *a.offset(iTest as isize) {
                 return 1 as ::core::ffi::c_int;
             } else if iCode > *a.offset(iTest as isize) {
@@ -252,20 +252,20 @@ unsafe extern "C" fn unicodeIsException(
 }
 
 unsafe extern "C" fn unicodeIsAlnum(
-    mut p: *mut unicode_tokenizer,
-    mut iCode: ::core::ffi::c_int,
+    p: *mut unicode_tokenizer,
+    iCode: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
     crate::src::ext::fts3::fts3_unicode2::sqlite3FtsUnicodeIsalnum(iCode)
         ^ unicodeIsException(p, iCode)
 }
 
 unsafe extern "C" fn unicodeCreate(
-    mut nArg: ::core::ffi::c_int,
-    mut azArg: *const *const ::core::ffi::c_char,
-    mut pp: *mut *mut crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer,
+    nArg: ::core::ffi::c_int,
+    azArg: *const *const ::core::ffi::c_char,
+    pp: *mut *mut crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer,
 ) -> ::core::ffi::c_int {
-    let mut pNew: *mut unicode_tokenizer = ::core::ptr::null_mut::<unicode_tokenizer>();
-    let mut i: ::core::ffi::c_int = 0;
+    let mut pNew: *mut unicode_tokenizer;
+    let mut i: ::core::ffi::c_int;
     let mut rc: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_OK;
     pNew = crate::src::src::malloc::sqlite3_malloc(
         ::core::mem::size_of::<unicode_tokenizer>() as ::core::ffi::c_int
@@ -281,8 +281,8 @@ unsafe extern "C" fn unicodeCreate(
     (*pNew).eRemoveDiacritic = 1 as ::core::ffi::c_int;
     i = 0 as ::core::ffi::c_int;
     while rc == crate::src::headers::sqlite3_h::SQLITE_OK && i < nArg {
-        let mut z: *const ::core::ffi::c_char = *azArg.offset(i as isize);
-        let mut n: ::core::ffi::c_int = ::libc::strlen(z) as ::core::ffi::c_int;
+        let z: *const ::core::ffi::c_char = *azArg.offset(i as isize);
+        let n: ::core::ffi::c_int = ::libc::strlen(z) as ::core::ffi::c_int;
         if n == 19 as ::core::ffi::c_int
             && ::libc::memcmp(
                 b"remove_diacritics=1\0" as *const u8 as *const ::core::ffi::c_char
@@ -353,11 +353,11 @@ unsafe extern "C" fn unicodeCreate(
 
 unsafe extern "C" fn unicodeOpen(
     mut _p: *mut crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer,
-    mut aInput: *const ::core::ffi::c_char,
-    mut nInput: ::core::ffi::c_int,
-    mut pp: *mut *mut crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_cursor,
+    aInput: *const ::core::ffi::c_char,
+    nInput: ::core::ffi::c_int,
+    pp: *mut *mut crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_cursor,
 ) -> ::core::ffi::c_int {
-    let mut pCsr: *mut unicode_cursor = ::core::ptr::null_mut::<unicode_cursor>();
+    let pCsr: *mut unicode_cursor;
     pCsr = crate::src::src::malloc::sqlite3_malloc(
         ::core::mem::size_of::<unicode_cursor>() as ::core::ffi::c_int
     ) as *mut unicode_cursor;
@@ -384,32 +384,32 @@ unsafe extern "C" fn unicodeOpen(
 }
 
 unsafe extern "C" fn unicodeClose(
-    mut pCursor: *mut crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_cursor,
+    pCursor: *mut crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_cursor,
 ) -> ::core::ffi::c_int {
-    let mut pCsr: *mut unicode_cursor = pCursor as *mut unicode_cursor;
+    let pCsr: *mut unicode_cursor = pCursor as *mut unicode_cursor;
     crate::src::src::malloc::sqlite3_free((*pCsr).zToken as *mut ::core::ffi::c_void);
     crate::src::src::malloc::sqlite3_free(pCsr as *mut ::core::ffi::c_void);
     crate::src::headers::sqlite3_h::SQLITE_OK
 }
 
 unsafe extern "C" fn unicodeNext(
-    mut pC: *mut crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_cursor,
-    mut paToken: *mut *const ::core::ffi::c_char,
-    mut pnToken: *mut ::core::ffi::c_int,
-    mut piStart: *mut ::core::ffi::c_int,
-    mut piEnd: *mut ::core::ffi::c_int,
-    mut piPos: *mut ::core::ffi::c_int,
+    pC: *mut crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_cursor,
+    paToken: *mut *const ::core::ffi::c_char,
+    pnToken: *mut ::core::ffi::c_int,
+    piStart: *mut ::core::ffi::c_int,
+    piEnd: *mut ::core::ffi::c_int,
+    piPos: *mut ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
-    let mut pCsr: *mut unicode_cursor = pC as *mut unicode_cursor;
+    let pCsr: *mut unicode_cursor = pC as *mut unicode_cursor;
     let __pCsr_ref = { &mut *pCsr };
-    let mut p: *mut unicode_tokenizer = __pCsr_ref.base.pTokenizer as *mut unicode_tokenizer;
+    let p: *mut unicode_tokenizer = __pCsr_ref.base.pTokenizer as *mut unicode_tokenizer;
     let mut iCode: ::core::ffi::c_uint = 0 as ::core::ffi::c_uint;
-    let mut zOut: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
+    let mut zOut: *mut ::core::ffi::c_char;
     let mut z: *const ::core::ffi::c_uchar =
         __pCsr_ref.aInput.offset(__pCsr_ref.iOff as isize) as *const ::core::ffi::c_uchar;
     let mut zStart: *const ::core::ffi::c_uchar = z;
-    let mut zEnd: *const ::core::ffi::c_uchar = ::core::ptr::null::<::core::ffi::c_uchar>();
-    let mut zTerm: *const ::core::ffi::c_uchar =
+    let mut zEnd: *const ::core::ffi::c_uchar;
+    let zTerm: *const ::core::ffi::c_uchar =
         __pCsr_ref.aInput.offset(__pCsr_ref.nInput as isize) as *const ::core::ffi::c_uchar;
     while z < zTerm {
         let fresh4 = z;
@@ -446,11 +446,11 @@ unsafe extern "C" fn unicodeNext(
     }
     zOut = __pCsr_ref.zToken;
     loop {
-        let mut iOut: ::core::ffi::c_int = 0;
+        let iOut: ::core::ffi::c_int;
         if zOut.offset_from(__pCsr_ref.zToken) as ::core::ffi::c_long
             >= (__pCsr_ref.nAlloc - 4 as ::core::ffi::c_int) as ::core::ffi::c_long
         {
-            let mut zNew: *mut ::core::ffi::c_char = crate::src::src::malloc::sqlite3_realloc64(
+            let zNew: *mut ::core::ffi::c_char = crate::src::src::malloc::sqlite3_realloc64(
                 __pCsr_ref.zToken as *mut ::core::ffi::c_void,
                 (__pCsr_ref.nAlloc + 64 as ::core::ffi::c_int)
                     as crate::src::headers::sqlite3_h::Sqlite3Uint64,
@@ -578,7 +578,7 @@ unsafe extern "C" fn unicodeNext(
 
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 pub unsafe extern "C" fn sqlite3Fts3UnicodeTokenizer(
-    mut ppModule: *mut *const crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_module,
+    ppModule: *mut *const crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_module,
 ) {
     static mut module: crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_module = {
         crate::src::ext::fts3::fts3_tokenizer::sqlite3_tokenizer_module {

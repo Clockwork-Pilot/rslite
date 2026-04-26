@@ -158,12 +158,12 @@ pub use crate::src::src::vdbe::VdbeOp;
 pub use crate::src::src::vdbe::p4union;
 
 unsafe extern "C" fn callCollNeeded(
-    mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
-    mut enc: ::core::ffi::c_int,
-    mut zName: *const ::core::ffi::c_char,
+    db: *mut crate::src::headers::sqliteInt_h::sqlite3,
+    enc: ::core::ffi::c_int,
+    zName: *const ::core::ffi::c_char,
 ) {
     if (*db).xCollNeeded.is_some() {
-        let mut zExternal: *mut ::core::ffi::c_char = crate::src::src::malloc::sqlite3DbStrDup(
+        let zExternal: *mut ::core::ffi::c_char = crate::src::src::malloc::sqlite3DbStrDup(
             db as *mut crate::src::headers::sqliteInt_h::sqlite3,
             zName,
         );
@@ -182,9 +182,8 @@ unsafe extern "C" fn callCollNeeded(
         );
     }
     if (*db).xCollNeeded16.is_some() {
-        let mut zExternal_0: *const ::core::ffi::c_char =
-            ::core::ptr::null::<::core::ffi::c_char>();
-        let mut pTmp: *mut crate::src::headers::vdbeInt_h::sqlite3_value =
+        let zExternal_0: *const ::core::ffi::c_char;
+        let pTmp: *mut crate::src::headers::vdbeInt_h::sqlite3_value =
             crate::src::src::vdbemem::sqlite3ValueNew(
                 db as *mut crate::src::headers::sqliteInt_h::sqlite3,
             );
@@ -214,13 +213,12 @@ unsafe extern "C" fn callCollNeeded(
 }
 
 unsafe extern "C" fn synthCollSeq(
-    mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
-    mut pColl: *mut crate::src::headers::sqliteInt_h::CollSeq,
+    db: *mut crate::src::headers::sqliteInt_h::sqlite3,
+    pColl: *mut crate::src::headers::sqliteInt_h::CollSeq,
 ) -> ::core::ffi::c_int {
-    let mut pColl2: *mut crate::src::headers::sqliteInt_h::CollSeq =
-        ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::CollSeq>();
-    let mut z: *mut ::core::ffi::c_char = (*pColl).zName;
-    let mut i: ::core::ffi::c_int = 0;
+    let mut pColl2: *mut crate::src::headers::sqliteInt_h::CollSeq;
+    let z: *mut ::core::ffi::c_char = (*pColl).zName;
+    let mut i: ::core::ffi::c_int;
     static mut aEnc: [crate::src::ext::rtree::rtree::U8_0; 3] = [
         crate::src::headers::sqlite3_h::SQLITE_UTF16BE as crate::src::ext::rtree::rtree::U8_0,
         crate::src::headers::sqlite3_h::SQLITE_UTF16LE as crate::src::ext::rtree::rtree::U8_0,
@@ -245,13 +243,13 @@ unsafe extern "C" fn synthCollSeq(
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3CheckCollSeq(
-    mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
-    mut pColl: *mut crate::src::headers::sqliteInt_h::CollSeq,
+    pParse: *mut crate::src::headers::sqliteInt_h::Parse,
+    pColl: *mut crate::src::headers::sqliteInt_h::CollSeq,
 ) -> ::core::ffi::c_int {
     if !pColl.is_null() && (*pColl).xCmp.is_none() {
-        let mut zName: *const ::core::ffi::c_char = (*pColl).zName;
-        let mut db: *mut crate::src::headers::sqliteInt_h::sqlite3 = (*pParse).db;
-        let mut p: *mut crate::src::headers::sqliteInt_h::CollSeq =
+        let zName: *const ::core::ffi::c_char = (*pColl).zName;
+        let db: *mut crate::src::headers::sqliteInt_h::sqlite3 = (*pParse).db;
+        let p: *mut crate::src::headers::sqliteInt_h::CollSeq =
             sqlite3GetCollSeq(pParse, (*db).enc, pColl, zName);
         if p.is_null() {
             return crate::src::headers::sqlite3_h::SQLITE_ERROR;
@@ -261,18 +259,17 @@ pub unsafe extern "C" fn sqlite3CheckCollSeq(
 }
 
 unsafe extern "C" fn findCollSeqEntry(
-    mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
-    mut zName: *const ::core::ffi::c_char,
-    mut create: ::core::ffi::c_int,
+    db: *mut crate::src::headers::sqliteInt_h::sqlite3,
+    zName: *const ::core::ffi::c_char,
+    create: ::core::ffi::c_int,
 ) -> *mut crate::src::headers::sqliteInt_h::CollSeq {
-    let mut pColl: *mut crate::src::headers::sqliteInt_h::CollSeq =
-        ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::CollSeq>();
+    let mut pColl: *mut crate::src::headers::sqliteInt_h::CollSeq;
     pColl = crate::src::src::hash::sqlite3HashFind(
         &raw mut (*db).aCollSeq as *mut _ as *const crate::src::src::hash::Hash,
         zName,
     ) as *mut crate::src::headers::sqliteInt_h::CollSeq;
     if pColl.is_null() && create != 0 {
-        let mut nName: ::core::ffi::c_int =
+        let nName: ::core::ffi::c_int =
             crate::src::src::util::sqlite3Strlen30(zName) + 1 as ::core::ffi::c_int;
         pColl = crate::src::src::malloc::sqlite3DbMallocZero(
             db as *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -283,8 +280,7 @@ unsafe extern "C" fn findCollSeqEntry(
                 .wrapping_add(nName as usize) as crate::src::ext::rtree::rtree::U64_0,
         ) as *mut crate::src::headers::sqliteInt_h::CollSeq;
         if !pColl.is_null() {
-            let mut pDel: *mut crate::src::headers::sqliteInt_h::CollSeq =
-                ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::CollSeq>();
+            let pDel: *mut crate::src::headers::sqliteInt_h::CollSeq;
             let ref mut fresh3 = (*pColl.offset(0 as isize)).zName;
             *fresh3 = pColl.offset(3 as isize) as *mut crate::src::headers::sqliteInt_h::CollSeq
                 as *mut ::core::ffi::c_char;
@@ -327,13 +323,12 @@ unsafe extern "C" fn findCollSeqEntry(
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3FindCollSeq(
-    mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
-    mut enc: crate::src::ext::rtree::rtree::U8_0,
-    mut zName: *const ::core::ffi::c_char,
-    mut create: ::core::ffi::c_int,
+    db: *mut crate::src::headers::sqliteInt_h::sqlite3,
+    enc: crate::src::ext::rtree::rtree::U8_0,
+    zName: *const ::core::ffi::c_char,
+    create: ::core::ffi::c_int,
 ) -> *mut crate::src::headers::sqliteInt_h::CollSeq {
-    let mut pColl: *mut crate::src::headers::sqliteInt_h::CollSeq =
-        ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::CollSeq>();
+    let mut pColl: *mut crate::src::headers::sqliteInt_h::CollSeq;
     if !zName.is_null() {
         pColl = findCollSeqEntry(db, zName, create);
         if !pColl.is_null() {
@@ -347,8 +342,8 @@ pub unsafe extern "C" fn sqlite3FindCollSeq(
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3SetTextEncoding(
-    mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
-    mut enc: crate::src::ext::rtree::rtree::U8_0,
+    db: *mut crate::src::headers::sqliteInt_h::sqlite3,
+    enc: crate::src::ext::rtree::rtree::U8_0,
 ) {
     (*db).enc = enc;
     (*db).pDfltColl = sqlite3FindCollSeq(
@@ -365,14 +360,13 @@ pub unsafe extern "C" fn sqlite3SetTextEncoding(
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3GetCollSeq(
-    mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
-    mut enc: crate::src::ext::rtree::rtree::U8_0,
-    mut pColl: *mut crate::src::headers::sqliteInt_h::CollSeq,
-    mut zName: *const ::core::ffi::c_char,
+    pParse: *mut crate::src::headers::sqliteInt_h::Parse,
+    enc: crate::src::ext::rtree::rtree::U8_0,
+    pColl: *mut crate::src::headers::sqliteInt_h::CollSeq,
+    zName: *const ::core::ffi::c_char,
 ) -> *mut crate::src::headers::sqliteInt_h::CollSeq {
-    let mut p: *mut crate::src::headers::sqliteInt_h::CollSeq =
-        ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::CollSeq>();
-    let mut db: *mut crate::src::headers::sqliteInt_h::sqlite3 = (*pParse).db;
+    let mut p: *mut crate::src::headers::sqliteInt_h::CollSeq;
+    let db: *mut crate::src::headers::sqliteInt_h::sqlite3 = (*pParse).db;
     p = pColl;
     if p.is_null() {
         p = sqlite3FindCollSeq(db, enc, zName, 0 as ::core::ffi::c_int);
@@ -399,14 +393,13 @@ pub unsafe extern "C" fn sqlite3GetCollSeq(
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3LocateCollSeq(
-    mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
-    mut zName: *const ::core::ffi::c_char,
+    pParse: *mut crate::src::headers::sqliteInt_h::Parse,
+    zName: *const ::core::ffi::c_char,
 ) -> *mut crate::src::headers::sqliteInt_h::CollSeq {
-    let mut db: *mut crate::src::headers::sqliteInt_h::sqlite3 = (*pParse).db;
-    let mut enc: crate::src::ext::rtree::rtree::U8_0 = (*db).enc;
-    let mut initbusy: crate::src::ext::rtree::rtree::U8_0 = (*db).init.busy;
-    let mut pColl: *mut crate::src::headers::sqliteInt_h::CollSeq =
-        ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::CollSeq>();
+    let db: *mut crate::src::headers::sqliteInt_h::sqlite3 = (*pParse).db;
+    let enc: crate::src::ext::rtree::rtree::U8_0 = (*db).enc;
+    let initbusy: crate::src::ext::rtree::rtree::U8_0 = (*db).init.busy;
+    let mut pColl: *mut crate::src::headers::sqliteInt_h::CollSeq;
     pColl = sqlite3FindCollSeq(db, enc, zName, initbusy as ::core::ffi::c_int);
     if initbusy == 0 && (pColl.is_null() || (*pColl).xCmp.is_none()) {
         pColl = sqlite3GetCollSeq(pParse, enc, pColl, zName);
@@ -417,11 +410,11 @@ pub unsafe extern "C" fn sqlite3LocateCollSeq(
 pub const FUNC_PERFECT_MATCH: ::core::ffi::c_int = 6 as ::core::ffi::c_int;
 
 unsafe extern "C" fn matchQuality(
-    mut p: *mut crate::src::headers::sqliteInt_h::FuncDef,
-    mut nArg: ::core::ffi::c_int,
-    mut enc: crate::src::ext::rtree::rtree::U8_0,
+    p: *mut crate::src::headers::sqliteInt_h::FuncDef,
+    nArg: ::core::ffi::c_int,
+    enc: crate::src::ext::rtree::rtree::U8_0,
 ) -> ::core::ffi::c_int {
-    let mut match_0: ::core::ffi::c_int = 0;
+    let mut match_0: ::core::ffi::c_int;
     let __p_ref = unsafe { &mut *p };
     if __p_ref.nArg as ::core::ffi::c_int != nArg {
         if nArg == -(2 as ::core::ffi::c_int) {
@@ -463,11 +456,10 @@ unsafe extern "C" fn matchQuality(
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3FunctionSearch(
-    mut h: ::core::ffi::c_int,
-    mut zFunc: *const ::core::ffi::c_char,
+    h: ::core::ffi::c_int,
+    zFunc: *const ::core::ffi::c_char,
 ) -> *mut crate::src::headers::sqliteInt_h::FuncDef {
-    let mut p: *mut crate::src::headers::sqliteInt_h::FuncDef =
-        ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::FuncDef>();
+    let mut p: *mut crate::src::headers::sqliteInt_h::FuncDef;
     p = crate::src::src::global::sqlite3BuiltinFunctions.a[h as usize];
     while !p.is_null() {
         if crate::src::src::util::sqlite3StrICmp((*p).zName, zFunc) == 0 as ::core::ffi::c_int {
@@ -480,17 +472,16 @@ pub unsafe extern "C" fn sqlite3FunctionSearch(
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3InsertBuiltinFuncs(
-    mut aDef: *mut crate::src::headers::sqliteInt_h::FuncDef,
-    mut nDef: ::core::ffi::c_int,
+    aDef: *mut crate::src::headers::sqliteInt_h::FuncDef,
+    nDef: ::core::ffi::c_int,
 ) {
-    let mut i: ::core::ffi::c_int = 0;
+    let mut i: ::core::ffi::c_int;
     i = 0 as ::core::ffi::c_int;
     while i < nDef {
-        let mut pOther: *mut crate::src::headers::sqliteInt_h::FuncDef =
-            ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::FuncDef>();
-        let mut zName: *const ::core::ffi::c_char = (*aDef.offset(i as isize)).zName;
-        let mut nName: ::core::ffi::c_int = crate::src::src::util::sqlite3Strlen30(zName);
-        let mut h: ::core::ffi::c_int = (*zName.offset(0 as isize) as ::core::ffi::c_int + nName)
+        let pOther: *mut crate::src::headers::sqliteInt_h::FuncDef;
+        let zName: *const ::core::ffi::c_char = (*aDef.offset(i as isize)).zName;
+        let nName: ::core::ffi::c_int = crate::src::src::util::sqlite3Strlen30(zName);
+        let h: ::core::ffi::c_int = (*zName.offset(0 as isize) as ::core::ffi::c_int + nName)
             % crate::src::headers::sqliteInt_h::SQLITE_FUNC_HASH_SZ;
         pOther = sqlite3FunctionSearch(h, zName);
         if !pOther.is_null() {
@@ -512,26 +503,25 @@ pub unsafe extern "C" fn sqlite3InsertBuiltinFuncs(
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3FindFunction(
-    mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
-    mut zName: *const ::core::ffi::c_char,
-    mut nArg: ::core::ffi::c_int,
-    mut enc: crate::src::ext::rtree::rtree::U8_0,
-    mut createFlag: crate::src::ext::rtree::rtree::U8_0,
+    db: *mut crate::src::headers::sqliteInt_h::sqlite3,
+    zName: *const ::core::ffi::c_char,
+    nArg: ::core::ffi::c_int,
+    enc: crate::src::ext::rtree::rtree::U8_0,
+    createFlag: crate::src::ext::rtree::rtree::U8_0,
 ) -> *mut crate::src::headers::sqliteInt_h::FuncDef {
-    let mut p: *mut crate::src::headers::sqliteInt_h::FuncDef =
-        ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::FuncDef>();
+    let mut p: *mut crate::src::headers::sqliteInt_h::FuncDef;
     let mut pBest: *mut crate::src::headers::sqliteInt_h::FuncDef =
         ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::FuncDef>();
     let mut bestScore: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
-    let mut h: ::core::ffi::c_int = 0;
-    let mut nName: ::core::ffi::c_int = 0;
+    let h: ::core::ffi::c_int;
+    let nName: ::core::ffi::c_int;
     nName = crate::src::src::util::sqlite3Strlen30(zName);
     p = crate::src::src::hash::sqlite3HashFind(
         &raw mut (*db).aFunc as *mut _ as *const crate::src::src::hash::Hash,
         zName,
     ) as *mut crate::src::headers::sqliteInt_h::FuncDef;
     while !p.is_null() {
-        let mut score: ::core::ffi::c_int = matchQuality(p, nArg, enc);
+        let score: ::core::ffi::c_int = matchQuality(p, nArg, enc);
         if score > bestScore {
             pBest = p;
             bestScore = score;
@@ -554,7 +544,7 @@ pub unsafe extern "C" fn sqlite3FindFunction(
             % crate::src::headers::sqliteInt_h::SQLITE_FUNC_HASH_SZ;
         p = sqlite3FunctionSearch(h, zName);
         while !p.is_null() {
-            let mut score_0: ::core::ffi::c_int = matchQuality(p, nArg, enc);
+            let score_0: ::core::ffi::c_int = matchQuality(p, nArg, enc);
             if score_0 > bestScore {
                 pBest = p;
                 bestScore = score_0;
@@ -571,10 +561,8 @@ pub unsafe extern "C" fn sqlite3FindFunction(
         ) as *mut crate::src::headers::sqliteInt_h::FuncDef;
         !pBest.is_null()
     } {
-        let mut pOther: *mut crate::src::headers::sqliteInt_h::FuncDef =
-            ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::FuncDef>();
-        let mut z: *mut crate::src::ext::rtree::rtree::U8_0 =
-            ::core::ptr::null_mut::<crate::src::ext::rtree::rtree::U8_0>();
+        let pOther: *mut crate::src::headers::sqliteInt_h::FuncDef;
+        let mut z: *mut crate::src::ext::rtree::rtree::U8_0;
         let __pBest_ref = unsafe { &mut *pBest };
         __pBest_ref.zName = pBest.offset(1 as isize)
             as *mut crate::src::headers::sqliteInt_h::FuncDef
@@ -619,12 +607,11 @@ pub unsafe extern "C" fn sqlite3FindFunction(
 }
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
-pub unsafe extern "C" fn sqlite3SchemaClear(mut p: *mut ::core::ffi::c_void) {
-    let mut temp1: crate::src::src::hash::Hash = unsafe { ::core::mem::zeroed() };
-    let mut temp2: crate::src::src::hash::Hash = unsafe { ::core::mem::zeroed() };
-    let mut pElem: *mut crate::src::src::hash::HashElem =
-        ::core::ptr::null_mut::<crate::src::src::hash::HashElem>();
-    let mut pSchema: *mut crate::src::headers::sqliteInt_h::Schema =
+pub unsafe extern "C" fn sqlite3SchemaClear(p: *mut ::core::ffi::c_void) {
+    let mut temp1: crate::src::src::hash::Hash;
+    let mut temp2: crate::src::src::hash::Hash;
+    let mut pElem: *mut crate::src::src::hash::HashElem;
+    let pSchema: *mut crate::src::headers::sqliteInt_h::Schema =
         p as *mut crate::src::headers::sqliteInt_h::Schema;
     let mut xdb: crate::src::headers::sqliteInt_h::sqlite3 = unsafe { ::core::mem::zeroed() };
     let __pSchema_ref = unsafe { &mut *pSchema };
@@ -653,7 +640,7 @@ pub unsafe extern "C" fn sqlite3SchemaClear(mut p: *mut ::core::ffi::c_void) {
     );
     pElem = temp1.first;
     while !pElem.is_null() {
-        let mut pTab: *mut crate::src::headers::sqliteInt_h::Table =
+        let pTab: *mut crate::src::headers::sqliteInt_h::Table =
             (*pElem).data as *mut crate::src::headers::sqliteInt_h::Table;
         crate::src::src::build::sqlite3DeleteTable(
             &raw mut xdb as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -682,11 +669,10 @@ pub unsafe extern "C" fn sqlite3SchemaClear(mut p: *mut ::core::ffi::c_void) {
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3SchemaGet(
-    mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
-    mut pBt: *mut crate::src::headers::btreeInt_h::Btree,
+    db: *mut crate::src::headers::sqliteInt_h::sqlite3,
+    pBt: *mut crate::src::headers::btreeInt_h::Btree,
 ) -> *mut crate::src::headers::sqliteInt_h::Schema {
-    let mut p: *mut crate::src::headers::sqliteInt_h::Schema =
-        ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::Schema>();
+    let p: *mut crate::src::headers::sqliteInt_h::Schema;
     if !pBt.is_null() {
         p = crate::src::src::btree::sqlite3BtreeSchema(
             pBt,

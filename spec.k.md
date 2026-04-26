@@ -19,6 +19,8 @@ Verify c_variadic feature isolation: only in printf_c_variadic.rs
       - [forbid_non_camel_case_types_any](#forbid_non_camel_case_types_any)
       - [forbid_non_camel_case_types_with_warnings_robust](#forbid_non_camel_case_types_with_warnings_robust)
       - [forbid_static_mut_refs_any](#forbid_static_mut_refs_any)
+      - [forbid_unused_mut_assignments_any](#forbid_unused_mut_assignments_any)
+      - [forbid_unused_mut_assignments_workspace_any](#forbid_unused_mut_assignments_workspace_any)
       - [no_forbidden_allows_robust](#no_forbidden_allows_robust)
     - [Feature: fts5_no_libc_global](#feature-fts5_no_libc_global)
       - [fts5_no_libc_calls](#fts5_no_libc_calls)
@@ -69,6 +71,12 @@ Verify c_variadic feature isolation: only in printf_c_variadic.rs
 
 #### forbid_static_mut_refs_any
 **Description:** Structural: Forbid any allow() attribute (inner #![...] or outer #[...], bare or clippy:: prefix, alone or combined, arbitrary whitespace) for static_mut_refs across crates/**/*.rs. Also forbid equivalent suppressions in crates/rslite-core/Cargo.toml under [lints.rust] / [lints.clippy] (e.g. `static_mut_refs = "allow"`). Word boundaries prevent false positives on longer identifiers.
+
+#### forbid_unused_mut_assignments_any
+**Description:** Structural: Forbid any allow() attribute (inner #![...] or outer #[...], bare or clippy:: prefix, alone or combined, arbitrary whitespace) for unused_mut and unused_assignments across crates/**/*.rs. Also forbid equivalent suppressions in crates/rslite-core/Cargo.toml under [lints.rust] / [lints.clippy] (e.g. `unused_mut = "allow"`). Word boundaries prevent false positives on longer identifiers.
+
+#### forbid_unused_mut_assignments_workspace_any
+**Description:** Structural: Forbid any allow() attribute (inner #![...] or outer #[...], bare or clippy:: prefix, alone or combined, arbitrary whitespace) for unused_mut and unused_assignments across crates/**/*.rs. Also forbid equivalent suppressions in any Cargo.toml across the workspace under [lints.rust] / [lints.clippy] / [workspace.lints.rust] / [workspace.lints.clippy] (e.g. `unused_mut = "allow"` at workspace root). Word boundaries prevent false positives on longer identifiers.
 
 #### no_forbidden_allows_robust
 **Description:** Structural: Robust whitespace-tolerant detection of forbidden clippy allows. Detects any formatting of allow() with forbidden lints, ignoring whitespace between allow and (.

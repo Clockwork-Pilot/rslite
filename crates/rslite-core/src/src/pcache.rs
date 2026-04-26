@@ -84,10 +84,10 @@ pub const PCACHE_DIRTYLIST_ADD: ::core::ffi::c_int = 2 as ::core::ffi::c_int;
 pub const PCACHE_DIRTYLIST_FRONT: ::core::ffi::c_int = 3 as ::core::ffi::c_int;
 
 unsafe extern "C" fn pcacheManageDirtyList(
-    mut pPage: *mut crate::src::src::pcache::PgHdr,
-    mut addRemove: crate::src::ext::rtree::rtree::U8_0,
+    pPage: *mut crate::src::src::pcache::PgHdr,
+    addRemove: crate::src::ext::rtree::rtree::U8_0,
 ) {
-    let mut p: *mut PCache = (*pPage).pCache;
+    let p: *mut PCache = (*pPage).pCache;
     if addRemove as ::core::ffi::c_int & PCACHE_DIRTYLIST_REMOVE != 0 {
         if (*p).pSynced == pPage {
             (*p).pSynced = (*pPage).pDirtyPrev;
@@ -130,7 +130,7 @@ unsafe extern "C" fn pcacheManageDirtyList(
     }
 }
 
-unsafe extern "C" fn pcacheUnpin(mut p: *mut crate::src::src::pcache::PgHdr) {
+unsafe extern "C" fn pcacheUnpin(p: *mut crate::src::src::pcache::PgHdr) {
     if (*(*p).pCache).bPurgeable != 0 {
         crate::src::src::global::sqlite3Config
             .pcache2
@@ -143,11 +143,11 @@ unsafe extern "C" fn pcacheUnpin(mut p: *mut crate::src::src::pcache::PgHdr) {
     }
 }
 
-unsafe extern "C" fn numberOfCachePages(mut p: *mut PCache) -> ::core::ffi::c_int {
+unsafe extern "C" fn numberOfCachePages(p: *mut PCache) -> ::core::ffi::c_int {
     if (*p).szCache >= 0 as ::core::ffi::c_int {
         return (*p).szCache;
     } else {
-        let mut n: crate::src::ext::rtree::rtree::I64_0 = 0;
+        let mut n: crate::src::ext::rtree::rtree::I64_0;
         let __p_ref = unsafe { &*p };
         n = -(1024 as ::core::ffi::c_int) as crate::src::ext::rtree::rtree::I64_0
             * __p_ref.szCache as crate::src::ext::rtree::rtree::I64_0
@@ -192,17 +192,17 @@ pub unsafe extern "C" fn sqlite3PcacheSize() -> ::core::ffi::c_int {
     ::core::mem::size_of::<PCache>() as ::core::ffi::c_int
 }
 pub unsafe extern "C" fn sqlite3PcacheOpen(
-    mut szPage: ::core::ffi::c_int,
-    mut szExtra: ::core::ffi::c_int,
-    mut bPurgeable: ::core::ffi::c_int,
-    mut xStress: Option<
+    szPage: ::core::ffi::c_int,
+    szExtra: ::core::ffi::c_int,
+    bPurgeable: ::core::ffi::c_int,
+    xStress: Option<
         unsafe extern "C" fn(
             *mut ::core::ffi::c_void,
             *mut crate::src::src::pcache::PgHdr,
         ) -> ::core::ffi::c_int,
     >,
-    mut pStress: *mut ::core::ffi::c_void,
-    mut p: *mut PCache,
+    pStress: *mut ::core::ffi::c_void,
+    p: *mut PCache,
 ) -> ::core::ffi::c_int {
     ::libc::memset(
         p as *mut ::core::ffi::c_void,
@@ -223,12 +223,11 @@ pub unsafe extern "C" fn sqlite3PcacheOpen(
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PcacheSetPageSize(
-    mut pCache: *mut PCache,
-    mut szPage: ::core::ffi::c_int,
+    pCache: *mut PCache,
+    szPage: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
     if (*pCache).szPage != 0 {
-        let mut pNew: *mut crate::src::headers::sqlite3_h::Sqlite3Pcache =
-            ::core::ptr::null_mut::<crate::src::headers::sqlite3_h::Sqlite3Pcache>();
+        let pNew: *mut crate::src::headers::sqlite3_h::Sqlite3Pcache;
         let __pCache_ref = unsafe { &mut *pCache };
         pNew = crate::src::src::global::sqlite3Config
             .pcache2
@@ -263,13 +262,12 @@ pub unsafe extern "C" fn sqlite3PcacheSetPageSize(
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PcacheFetch(
-    mut pCache: *mut PCache,
-    mut pgno: crate::src::src::pager::Pgno,
-    mut createFlag: ::core::ffi::c_int,
+    pCache: *mut PCache,
+    pgno: crate::src::src::pager::Pgno,
+    createFlag: ::core::ffi::c_int,
 ) -> *mut crate::src::headers::sqlite3_h::sqlite3_pcache_page {
-    let mut eCreate: ::core::ffi::c_int = 0;
-    let mut pRes: *mut crate::src::headers::sqlite3_h::sqlite3_pcache_page =
-        ::core::ptr::null_mut::<crate::src::headers::sqlite3_h::sqlite3_pcache_page>();
+    let eCreate: ::core::ffi::c_int;
+    let pRes: *mut crate::src::headers::sqlite3_h::sqlite3_pcache_page;
     eCreate = createFlag & (*pCache).eCreate as ::core::ffi::c_int;
     pRes = crate::src::src::global::sqlite3Config
         .pcache2
@@ -284,12 +282,11 @@ pub unsafe extern "C" fn sqlite3PcacheFetch(
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PcacheFetchStress(
-    mut pCache: *mut PCache,
-    mut pgno: crate::src::src::pager::Pgno,
-    mut ppPage: *mut *mut crate::src::headers::sqlite3_h::sqlite3_pcache_page,
+    pCache: *mut PCache,
+    pgno: crate::src::src::pager::Pgno,
+    ppPage: *mut *mut crate::src::headers::sqlite3_h::sqlite3_pcache_page,
 ) -> ::core::ffi::c_int {
-    let mut pPg: *mut crate::src::src::pcache::PgHdr =
-        ::core::ptr::null_mut::<crate::src::src::pcache::PgHdr>();
+    let mut pPg: *mut crate::src::src::pcache::PgHdr;
     let __pCache_ref = unsafe { &mut *pCache };
     if __pCache_ref.eCreate as ::core::ffi::c_int == 2 as ::core::ffi::c_int {
         return 0 as ::core::ffi::c_int;
@@ -311,7 +308,7 @@ pub unsafe extern "C" fn sqlite3PcacheFetchStress(
             }
         }
         if !pPg.is_null() {
-            let mut rc: ::core::ffi::c_int = 0;
+            let rc: ::core::ffi::c_int;
             rc =
                 __pCache_ref.xStress.expect("non-null function pointer")(__pCache_ref.pStress, pPg);
             if rc != crate::src::headers::sqlite3_h::SQLITE_OK
@@ -337,12 +334,11 @@ pub unsafe extern "C" fn sqlite3PcacheFetchStress(
 }
 #[inline(never)]
 unsafe extern "C" fn pcacheFetchFinishWithInit(
-    mut pCache: *mut PCache,
-    mut pgno: crate::src::src::pager::Pgno,
-    mut pPage: *mut crate::src::headers::sqlite3_h::sqlite3_pcache_page,
+    pCache: *mut PCache,
+    pgno: crate::src::src::pager::Pgno,
+    pPage: *mut crate::src::headers::sqlite3_h::sqlite3_pcache_page,
 ) -> *mut crate::src::src::pcache::PgHdr {
-    let mut pPgHdr: *mut crate::src::src::pcache::PgHdr =
-        ::core::ptr::null_mut::<crate::src::src::pcache::PgHdr>();
+    let pPgHdr: *mut crate::src::src::pcache::PgHdr;
     pPgHdr = (*pPage).pExtra as *mut crate::src::src::pcache::PgHdr;
     ::libc::memset(
         &raw mut (*pPgHdr).pDirty as *mut ::core::ffi::c_void,
@@ -368,12 +364,11 @@ unsafe extern "C" fn pcacheFetchFinishWithInit(
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PcacheFetchFinish(
-    mut pCache: *mut PCache,
-    mut pgno: crate::src::src::pager::Pgno,
-    mut pPage: *mut crate::src::headers::sqlite3_h::sqlite3_pcache_page,
+    pCache: *mut PCache,
+    pgno: crate::src::src::pager::Pgno,
+    pPage: *mut crate::src::headers::sqlite3_h::sqlite3_pcache_page,
 ) -> *mut crate::src::src::pcache::PgHdr {
-    let mut pPgHdr: *mut crate::src::src::pcache::PgHdr =
-        ::core::ptr::null_mut::<crate::src::src::pcache::PgHdr>();
+    let pPgHdr: *mut crate::src::src::pcache::PgHdr;
     pPgHdr = (*pPage).pExtra as *mut crate::src::src::pcache::PgHdr;
     if (*pPgHdr).pPage.is_null() {
         return pcacheFetchFinishWithInit(pCache, pgno, pPage);
@@ -384,7 +379,7 @@ pub unsafe extern "C" fn sqlite3PcacheFetchFinish(
 }
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 #[inline(never)]
-pub unsafe extern "C" fn sqlite3PcacheRelease(mut p: *mut crate::src::src::pcache::PgHdr) {
+pub unsafe extern "C" fn sqlite3PcacheRelease(p: *mut crate::src::src::pcache::PgHdr) {
     let __p_ref = unsafe { &mut *p };
     (*__p_ref.pCache).nRefSum -= 1;
     __p_ref.nRef -= 1;
@@ -401,13 +396,13 @@ pub unsafe extern "C" fn sqlite3PcacheRelease(mut p: *mut crate::src::src::pcach
 }
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
-pub unsafe extern "C" fn sqlite3PcacheRef(mut p: *mut crate::src::src::pcache::PgHdr) {
+pub unsafe extern "C" fn sqlite3PcacheRef(p: *mut crate::src::src::pcache::PgHdr) {
     (*p).nRef += 1;
     (*(*p).pCache).nRefSum += 1;
 }
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
-pub unsafe extern "C" fn sqlite3PcacheDrop(mut p: *mut crate::src::src::pcache::PgHdr) {
+pub unsafe extern "C" fn sqlite3PcacheDrop(p: *mut crate::src::src::pcache::PgHdr) {
     let __p_ref = unsafe { &mut *p };
     if __p_ref.flags as ::core::ffi::c_int & crate::src::src::pcache::PGHDR_DIRTY != 0 {
         pcacheManageDirtyList(
@@ -427,7 +422,7 @@ pub unsafe extern "C" fn sqlite3PcacheDrop(mut p: *mut crate::src::src::pcache::
 }
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
-pub unsafe extern "C" fn sqlite3PcacheMakeDirty(mut p: *mut crate::src::src::pcache::PgHdr) {
+pub unsafe extern "C" fn sqlite3PcacheMakeDirty(p: *mut crate::src::src::pcache::PgHdr) {
     if (*p).flags as ::core::ffi::c_int
         & (crate::src::src::pcache::PGHDR_CLEAN | crate::src::src::pcache::PGHDR_DONT_WRITE)
         != 0
@@ -449,7 +444,7 @@ pub unsafe extern "C" fn sqlite3PcacheMakeDirty(mut p: *mut crate::src::src::pca
 }
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
-pub unsafe extern "C" fn sqlite3PcacheMakeClean(mut p: *mut crate::src::src::pcache::PgHdr) {
+pub unsafe extern "C" fn sqlite3PcacheMakeClean(p: *mut crate::src::src::pcache::PgHdr) {
     pcacheManageDirtyList(
         p,
         PCACHE_DIRTYLIST_REMOVE as crate::src::ext::rtree::rtree::U8_0,
@@ -468,9 +463,8 @@ pub unsafe extern "C" fn sqlite3PcacheMakeClean(mut p: *mut crate::src::src::pca
 }
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
-pub unsafe extern "C" fn sqlite3PcacheCleanAll(mut pCache: *mut PCache) {
-    let mut p: *mut crate::src::src::pcache::PgHdr =
-        ::core::ptr::null_mut::<crate::src::src::pcache::PgHdr>();
+pub unsafe extern "C" fn sqlite3PcacheCleanAll(pCache: *mut PCache) {
+    let mut p: *mut crate::src::src::pcache::PgHdr;
     loop {
         p = (*pCache).pDirty;
         if p.is_null() {
@@ -481,9 +475,8 @@ pub unsafe extern "C" fn sqlite3PcacheCleanAll(mut pCache: *mut PCache) {
 }
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
-pub unsafe extern "C" fn sqlite3PcacheClearWritable(mut pCache: *mut PCache) {
-    let mut p: *mut crate::src::src::pcache::PgHdr =
-        ::core::ptr::null_mut::<crate::src::src::pcache::PgHdr>();
+pub unsafe extern "C" fn sqlite3PcacheClearWritable(pCache: *mut PCache) {
+    let mut p: *mut crate::src::src::pcache::PgHdr;
     let __pCache_ref = unsafe { &mut *pCache };
     p = __pCache_ref.pDirty;
     while !p.is_null() {
@@ -497,9 +490,8 @@ pub unsafe extern "C" fn sqlite3PcacheClearWritable(mut pCache: *mut PCache) {
 }
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
-pub unsafe extern "C" fn sqlite3PcacheClearSyncFlags(mut pCache: *mut PCache) {
-    let mut p: *mut crate::src::src::pcache::PgHdr =
-        ::core::ptr::null_mut::<crate::src::src::pcache::PgHdr>();
+pub unsafe extern "C" fn sqlite3PcacheClearSyncFlags(pCache: *mut PCache) {
+    let mut p: *mut crate::src::src::pcache::PgHdr;
     let __pCache_ref = unsafe { &mut *pCache };
     p = __pCache_ref.pDirty;
     while !p.is_null() {
@@ -512,13 +504,12 @@ pub unsafe extern "C" fn sqlite3PcacheClearSyncFlags(mut pCache: *mut PCache) {
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PcacheMove(
-    mut p: *mut crate::src::src::pcache::PgHdr,
-    mut newPgno: crate::src::src::pager::Pgno,
+    p: *mut crate::src::src::pcache::PgHdr,
+    newPgno: crate::src::src::pager::Pgno,
 ) {
     let __p_ref = unsafe { &mut *p };
-    let mut pCache: *mut PCache = __p_ref.pCache;
-    let mut pOther: *mut crate::src::headers::sqlite3_h::sqlite3_pcache_page =
-        ::core::ptr::null_mut::<crate::src::headers::sqlite3_h::sqlite3_pcache_page>();
+    let pCache: *mut PCache = __p_ref.pCache;
+    let pOther: *mut crate::src::headers::sqlite3_h::sqlite3_pcache_page;
     pOther = crate::src::src::global::sqlite3Config
         .pcache2
         .xFetch
@@ -528,7 +519,7 @@ pub unsafe extern "C" fn sqlite3PcacheMove(
         0 as ::core::ffi::c_int,
     );
     if !pOther.is_null() {
-        let mut pXPage: *mut crate::src::src::pcache::PgHdr =
+        let pXPage: *mut crate::src::src::pcache::PgHdr =
             (*pOther).pExtra as *mut crate::src::src::pcache::PgHdr;
         (*pXPage).nRef += 1;
         (*pCache).nRefSum += 1;
@@ -556,14 +547,12 @@ pub unsafe extern "C" fn sqlite3PcacheMove(
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PcacheTruncate(
-    mut pCache: *mut PCache,
+    pCache: *mut PCache,
     mut pgno: crate::src::src::pager::Pgno,
 ) {
     if !(*pCache).pCache.is_null() {
-        let mut p: *mut crate::src::src::pcache::PgHdr =
-            ::core::ptr::null_mut::<crate::src::src::pcache::PgHdr>();
-        let mut pNext: *mut crate::src::src::pcache::PgHdr =
-            ::core::ptr::null_mut::<crate::src::src::pcache::PgHdr>();
+        let mut p: *mut crate::src::src::pcache::PgHdr;
+        let mut pNext: *mut crate::src::src::pcache::PgHdr;
         let __pCache_ref = unsafe { &*pCache };
         p = __pCache_ref.pDirty;
         while !p.is_null() {
@@ -574,8 +563,7 @@ pub unsafe extern "C" fn sqlite3PcacheTruncate(
             p = pNext;
         }
         if pgno == 0 as crate::src::src::pager::Pgno && __pCache_ref.nRefSum != 0 {
-            let mut pPage1: *mut crate::src::headers::sqlite3_h::sqlite3_pcache_page =
-                ::core::ptr::null_mut::<crate::src::headers::sqlite3_h::sqlite3_pcache_page>();
+            let pPage1: *mut crate::src::headers::sqlite3_h::sqlite3_pcache_page;
             pPage1 = crate::src::src::global::sqlite3Config
                 .pcache2
                 .xFetch
@@ -604,7 +592,7 @@ pub unsafe extern "C" fn sqlite3PcacheTruncate(
 }
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
-pub unsafe extern "C" fn sqlite3PcacheClose(mut pCache: *mut PCache) {
+pub unsafe extern "C" fn sqlite3PcacheClose(pCache: *mut PCache) {
     crate::src::src::global::sqlite3Config
         .pcache2
         .xDestroy
@@ -612,7 +600,7 @@ pub unsafe extern "C" fn sqlite3PcacheClose(mut pCache: *mut PCache) {
 }
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
-pub unsafe extern "C" fn sqlite3PcacheClear(mut pCache: *mut PCache) {
+pub unsafe extern "C" fn sqlite3PcacheClear(pCache: *mut PCache) {
     sqlite3PcacheTruncate(pCache, 0 as crate::src::src::pager::Pgno);
 }
 
@@ -621,8 +609,7 @@ unsafe extern "C" fn pcacheMergeDirtyList(
     mut pB: *mut crate::src::src::pcache::PgHdr,
 ) -> *mut crate::src::src::pcache::PgHdr {
     let mut result: crate::src::src::pcache::PgHdr = unsafe { ::core::mem::zeroed() };
-    let mut pTail: *mut crate::src::src::pcache::PgHdr =
-        ::core::ptr::null_mut::<crate::src::src::pcache::PgHdr>();
+    let mut pTail: *mut crate::src::src::pcache::PgHdr;
     pTail = &raw mut result;
     loop {
         if (*pA).pgno < (*pB).pgno {
@@ -654,9 +641,8 @@ unsafe extern "C" fn pcacheSortDirtyList(
     mut pIn: *mut crate::src::src::pcache::PgHdr,
 ) -> *mut crate::src::src::pcache::PgHdr {
     let mut a: [*mut crate::src::src::pcache::PgHdr; 32] = unsafe { ::core::mem::zeroed() };
-    let mut p: *mut crate::src::src::pcache::PgHdr =
-        ::core::ptr::null_mut::<crate::src::src::pcache::PgHdr>();
-    let mut i: ::core::ffi::c_int = 0;
+    let mut p: *mut crate::src::src::pcache::PgHdr;
+    let mut i: ::core::ffi::c_int;
     while !pIn.is_null() {
         p = pIn;
         pIn = (*p).pDirty;
@@ -693,10 +679,9 @@ unsafe extern "C" fn pcacheSortDirtyList(
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PcacheDirtyList(
-    mut pCache: *mut PCache,
+    pCache: *mut PCache,
 ) -> *mut crate::src::src::pcache::PgHdr {
-    let mut p: *mut crate::src::src::pcache::PgHdr =
-        ::core::ptr::null_mut::<crate::src::src::pcache::PgHdr>();
+    let mut p: *mut crate::src::src::pcache::PgHdr;
     p = (*pCache).pDirty;
     while !p.is_null() {
         (*p).pDirty = (*p).pDirtyNext;
@@ -707,16 +692,16 @@ pub unsafe extern "C" fn sqlite3PcacheDirtyList(
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PcacheRefCount(
-    mut pCache: *mut PCache,
+    pCache: *mut PCache,
 ) -> crate::src::ext::rtree::rtree::I64_0 {
     (*pCache).nRefSum
 }
 pub unsafe extern "C" fn sqlite3PcachePageRefcount(
-    mut p: *mut crate::src::src::pcache::PgHdr,
+    p: *mut crate::src::src::pcache::PgHdr,
 ) -> crate::src::ext::rtree::rtree::I64_0 {
     (*p).nRef
 }
-pub unsafe extern "C" fn sqlite3PcachePagecount(mut pCache: *mut PCache) -> ::core::ffi::c_int {
+pub unsafe extern "C" fn sqlite3PcachePagecount(pCache: *mut PCache) -> ::core::ffi::c_int {
     crate::src::src::global::sqlite3Config
         .pcache2
         .xPagecount
@@ -724,12 +709,12 @@ pub unsafe extern "C" fn sqlite3PcachePagecount(mut pCache: *mut PCache) -> ::co
 }
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
-pub unsafe extern "C" fn sqlite3PcacheGetCachesize(mut pCache: *mut PCache) -> ::core::ffi::c_int {
+pub unsafe extern "C" fn sqlite3PcacheGetCachesize(pCache: *mut PCache) -> ::core::ffi::c_int {
     numberOfCachePages(pCache)
 }
 pub unsafe extern "C" fn sqlite3PcacheSetCachesize(
-    mut pCache: *mut PCache,
-    mut mxPage: ::core::ffi::c_int,
+    pCache: *mut PCache,
+    mxPage: ::core::ffi::c_int,
 ) {
     (*pCache).szCache = mxPage;
     crate::src::src::global::sqlite3Config
@@ -740,10 +725,10 @@ pub unsafe extern "C" fn sqlite3PcacheSetCachesize(
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PcacheSetSpillsize(
-    mut p: *mut PCache,
+    p: *mut PCache,
     mut mxPage: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
-    let mut res: ::core::ffi::c_int = 0;
+    let mut res: ::core::ffi::c_int;
     if mxPage != 0 {
         if mxPage < 0 as ::core::ffi::c_int {
             mxPage = (-(1024 as ::core::ffi::c_int) as crate::src::ext::rtree::rtree::I64_0
@@ -761,7 +746,7 @@ pub unsafe extern "C" fn sqlite3PcacheSetSpillsize(
 }
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
-pub unsafe extern "C" fn sqlite3PcacheShrink(mut pCache: *mut PCache) {
+pub unsafe extern "C" fn sqlite3PcacheShrink(pCache: *mut PCache) {
     crate::src::src::global::sqlite3Config
         .pcache2
         .xShrink
@@ -775,11 +760,10 @@ pub unsafe extern "C" fn sqlite3HeaderSizePcache() -> ::core::ffi::c_int {
 }
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
-pub unsafe extern "C" fn sqlite3PCachePercentDirty(mut pCache: *mut PCache) -> ::core::ffi::c_int {
-    let mut pDirty: *mut crate::src::src::pcache::PgHdr =
-        ::core::ptr::null_mut::<crate::src::src::pcache::PgHdr>();
+pub unsafe extern "C" fn sqlite3PCachePercentDirty(pCache: *mut PCache) -> ::core::ffi::c_int {
+    let mut pDirty: *mut crate::src::src::pcache::PgHdr;
     let mut nDirty: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
-    let mut nCache: ::core::ffi::c_int = numberOfCachePages(pCache);
+    let nCache: ::core::ffi::c_int = numberOfCachePages(pCache);
     pDirty = (*pCache).pDirty;
     while !pDirty.is_null() {
         nDirty += 1;
@@ -795,7 +779,7 @@ pub unsafe extern "C" fn sqlite3PCachePercentDirty(mut pCache: *mut PCache) -> :
 }
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
-pub unsafe extern "C" fn sqlite3PCacheIsDirty(mut pCache: *mut PCache) -> ::core::ffi::c_int {
+pub unsafe extern "C" fn sqlite3PCacheIsDirty(pCache: *mut PCache) -> ::core::ffi::c_int {
     ((*pCache).pDirty != ::core::ptr::null_mut::<crate::src::src::pcache::PgHdr>())
         as ::core::ffi::c_int
 }

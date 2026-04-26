@@ -20,14 +20,13 @@ pub use crate::src::src::mutex_unix::sqlite3_mutex;
 pub use crate::src::src::mutex_unix::sqlite3DefaultMutex;
 pub use crate::src::src::mutex_unix::sqlite3MemoryBarrier;
 pub unsafe extern "C" fn sqlite3MutexInit() -> ::core::ffi::c_int {
-    let mut rc: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_OK;
+    let rc: ::core::ffi::c_int;
     if (&raw const crate::src::src::global::sqlite3Config.mutex.xMutexAlloc)
         .read()
         .is_none()
     {
-        let mut pFrom: *const crate::src::headers::sqlite3_h::sqlite3_mutex_methods =
-            ::core::ptr::null::<crate::src::headers::sqlite3_h::sqlite3_mutex_methods>();
-        let mut pTo: *mut crate::src::headers::sqlite3_h::sqlite3_mutex_methods =
+        let pFrom: *const crate::src::headers::sqlite3_h::sqlite3_mutex_methods;
+        let pTo: *mut crate::src::headers::sqlite3_h::sqlite3_mutex_methods =
             &raw mut crate::src::src::global::sqlite3Config.mutex;
         if crate::src::src::global::sqlite3Config.bCoreMutex != 0 {
             pFrom = crate::src::src::mutex_unix::sqlite3DefaultMutex()
@@ -71,7 +70,7 @@ pub unsafe extern "C" fn sqlite3MutexEnd() -> ::core::ffi::c_int {
 }
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn sqlite3_mutex_alloc(
-    mut id: ::core::ffi::c_int,
+    id: ::core::ffi::c_int,
 ) -> *mut crate::src::src::mutex_unix::sqlite3_mutex {
     if id <= crate::src::headers::sqlite3_h::SQLITE_MUTEX_RECURSIVE
         && crate::src::src::main::sqlite3_initialize() != 0
@@ -89,7 +88,7 @@ pub unsafe extern "C" fn sqlite3_mutex_alloc(
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3MutexAlloc(
-    mut id: ::core::ffi::c_int,
+    id: ::core::ffi::c_int,
 ) -> *mut crate::src::src::mutex_unix::sqlite3_mutex {
     if crate::src::src::global::sqlite3Config.bCoreMutex == 0 {
         return ::core::ptr::null_mut::<crate::src::src::mutex_unix::sqlite3_mutex>();
@@ -101,7 +100,7 @@ pub unsafe extern "C" fn sqlite3MutexAlloc(
 }
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn sqlite3_mutex_free(
-    mut p: *mut crate::src::src::mutex_unix::sqlite3_mutex,
+    p: *mut crate::src::src::mutex_unix::sqlite3_mutex,
 ) {
     if !p.is_null() {
         crate::src::src::global::sqlite3Config
@@ -112,7 +111,7 @@ pub unsafe extern "C" fn sqlite3_mutex_free(
 }
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn sqlite3_mutex_enter(
-    mut p: *mut crate::src::src::mutex_unix::sqlite3_mutex,
+    p: *mut crate::src::src::mutex_unix::sqlite3_mutex,
 ) {
     if !p.is_null() {
         crate::src::src::global::sqlite3Config
@@ -123,9 +122,9 @@ pub unsafe extern "C" fn sqlite3_mutex_enter(
 }
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn sqlite3_mutex_try(
-    mut p: *mut crate::src::src::mutex_unix::sqlite3_mutex,
+    p: *mut crate::src::src::mutex_unix::sqlite3_mutex,
 ) -> ::core::ffi::c_int {
-    let mut rc: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_OK;
+    let rc: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_OK;
     if !p.is_null() {
         return crate::src::src::global::sqlite3Config
             .mutex
@@ -136,7 +135,7 @@ pub unsafe extern "C" fn sqlite3_mutex_try(
 }
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn sqlite3_mutex_leave(
-    mut p: *mut crate::src::src::mutex_unix::sqlite3_mutex,
+    p: *mut crate::src::src::mutex_unix::sqlite3_mutex,
 ) {
     if !p.is_null() {
         crate::src::src::global::sqlite3Config

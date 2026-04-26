@@ -195,11 +195,11 @@ pub struct sqlite3_backup {
 }
 
 unsafe extern "C" fn findBtree(
-    mut pErrorDb: *mut crate::src::headers::sqliteInt_h::sqlite3,
-    mut pDb: *mut crate::src::headers::sqliteInt_h::sqlite3,
-    mut zDb: *const ::core::ffi::c_char,
+    pErrorDb: *mut crate::src::headers::sqliteInt_h::sqlite3,
+    pDb: *mut crate::src::headers::sqliteInt_h::sqlite3,
+    zDb: *const ::core::ffi::c_char,
 ) -> *mut crate::src::headers::btreeInt_h::Btree {
-    let mut i: ::core::ffi::c_int = crate::src::src::build::sqlite3FindDbName(
+    let i: ::core::ffi::c_int = crate::src::src::build::sqlite3FindDbName(
         pDb as *mut crate::src::headers::sqliteInt_h::sqlite3,
         zDb,
     );
@@ -247,8 +247,8 @@ unsafe extern "C" fn findBtree(
     (*(*pDb).aDb.offset(i as isize)).pBt
 }
 
-unsafe extern "C" fn setDestPgsz(mut p: *mut sqlite3_backup) -> ::core::ffi::c_int {
-    let mut rc: ::core::ffi::c_int = 0;
+unsafe extern "C" fn setDestPgsz(p: *mut sqlite3_backup) -> ::core::ffi::c_int {
+    let rc: ::core::ffi::c_int;
     rc = crate::src::src::btree::sqlite3BtreeSetPageSize(
         (*p).pDest as *mut crate::src::headers::btreeInt_h::Btree,
         crate::src::src::btree::sqlite3BtreeGetPageSize(
@@ -261,8 +261,8 @@ unsafe extern "C" fn setDestPgsz(mut p: *mut sqlite3_backup) -> ::core::ffi::c_i
 }
 
 unsafe extern "C" fn checkReadTransaction(
-    mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
-    mut p: *mut crate::src::headers::btreeInt_h::Btree,
+    db: *mut crate::src::headers::sqliteInt_h::sqlite3,
+    p: *mut crate::src::headers::btreeInt_h::Btree,
 ) -> ::core::ffi::c_int {
     if crate::src::src::btree::sqlite3BtreeTxnState(
         p as *mut crate::src::headers::btreeInt_h::Btree,
@@ -280,12 +280,12 @@ unsafe extern "C" fn checkReadTransaction(
 }
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn sqlite3_backup_init(
-    mut pDestDb: *mut crate::src::headers::sqliteInt_h::sqlite3,
-    mut zDestDb: *const ::core::ffi::c_char,
-    mut pSrcDb: *mut crate::src::headers::sqliteInt_h::sqlite3,
-    mut zSrcDb: *const ::core::ffi::c_char,
+    pDestDb: *mut crate::src::headers::sqliteInt_h::sqlite3,
+    zDestDb: *const ::core::ffi::c_char,
+    pSrcDb: *mut crate::src::headers::sqliteInt_h::sqlite3,
+    zSrcDb: *const ::core::ffi::c_char,
 ) -> *mut sqlite3_backup {
-    let mut p: *mut sqlite3_backup = ::core::ptr::null_mut::<sqlite3_backup>();
+    let mut p: *mut sqlite3_backup;
     crate::src::src::mutex::sqlite3_mutex_enter((*pSrcDb).mutex);
     crate::src::src::mutex::sqlite3_mutex_enter((*pDestDb).mutex);
     if pSrcDb == pDestDb {
@@ -331,17 +331,17 @@ pub unsafe extern "C" fn sqlite3_backup_init(
     p
 }
 
-unsafe extern "C" fn isFatalError(mut rc: ::core::ffi::c_int) -> ::core::ffi::c_int {
+unsafe extern "C" fn isFatalError(rc: ::core::ffi::c_int) -> ::core::ffi::c_int {
     (rc != crate::src::headers::sqlite3_h::SQLITE_OK
         && rc != crate::src::headers::sqlite3_h::SQLITE_BUSY
         && rc != 6 as ::core::ffi::c_int) as ::core::ffi::c_int
 }
 
 unsafe extern "C" fn backupOnePage(
-    mut p: *mut sqlite3_backup,
-    mut iSrcPg: crate::src::src::pager::Pgno,
-    mut zSrcData: *const crate::src::ext::rtree::rtree::U8_0,
-    mut bUpdate: ::core::ffi::c_int,
+    p: *mut sqlite3_backup,
+    iSrcPg: crate::src::src::pager::Pgno,
+    zSrcData: *const crate::src::ext::rtree::rtree::U8_0,
+    bUpdate: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
     let __p_ref = unsafe { &mut *p };
     let pDestPager: *mut crate::src::src::pager::Pager = crate::src::src::btree::sqlite3BtreePager(
@@ -351,7 +351,7 @@ unsafe extern "C" fn backupOnePage(
     let nSrcPgsz: ::core::ffi::c_int = crate::src::src::btree::sqlite3BtreeGetPageSize(
         __p_ref.pSrc as *mut crate::src::headers::btreeInt_h::Btree,
     ) as ::core::ffi::c_int;
-    let mut nDestPgsz: ::core::ffi::c_int = crate::src::src::btree::sqlite3BtreeGetPageSize(
+    let nDestPgsz: ::core::ffi::c_int = crate::src::src::btree::sqlite3BtreeGetPageSize(
         __p_ref.pDest as *mut crate::src::headers::btreeInt_h::Btree,
     );
     let nCopy: ::core::ffi::c_int = if nSrcPgsz < nDestPgsz {
@@ -362,12 +362,12 @@ unsafe extern "C" fn backupOnePage(
     let iEnd: crate::src::ext::rtree::rtree::I64_0 = iSrcPg as crate::src::ext::rtree::rtree::I64_0
         * nSrcPgsz as crate::src::ext::rtree::rtree::I64_0;
     let mut rc: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_OK;
-    let mut iOff: crate::src::ext::rtree::rtree::I64_0 = 0;
+    let mut iOff: crate::src::ext::rtree::rtree::I64_0;
     iOff = iEnd - nSrcPgsz as crate::src::ext::rtree::rtree::I64_0;
     while rc == crate::src::headers::sqlite3_h::SQLITE_OK && iOff < iEnd {
         let mut pDestPg: *mut crate::src::src::pager::DbPage =
             ::core::ptr::null_mut::<crate::src::src::pager::DbPage>();
-        let mut iDest: crate::src::src::pager::Pgno = ((iOff
+        let iDest: crate::src::src::pager::Pgno = ((iOff
             / nDestPgsz as crate::src::ext::rtree::rtree::I64_0)
             as crate::src::src::pager::Pgno)
             .wrapping_add(1 as crate::src::src::pager::Pgno);
@@ -389,14 +389,14 @@ unsafe extern "C" fn backupOnePage(
                 );
                 crate::src::headers::sqlite3_h::SQLITE_OK == rc
             } {
-                let mut zIn: *const crate::src::ext::rtree::rtree::U8_0 = zSrcData
+                let zIn: *const crate::src::ext::rtree::rtree::U8_0 = zSrcData
                     .offset((iOff % nSrcPgsz as crate::src::ext::rtree::rtree::I64_0) as isize)
                     as *const crate::src::ext::rtree::rtree::U8_0;
-                let mut zDestData: *mut crate::src::ext::rtree::rtree::U8_0 =
+                let zDestData: *mut crate::src::ext::rtree::rtree::U8_0 =
                     crate::src::src::pager::sqlite3PagerGetData(
                         pDestPg as *mut crate::src::src::pcache::PgHdr,
                     ) as *mut crate::src::ext::rtree::rtree::U8_0;
-                let mut zOut: *mut crate::src::ext::rtree::rtree::U8_0 = zDestData
+                let zOut: *mut crate::src::ext::rtree::rtree::U8_0 = zDestData
                     .offset((iOff % nDestPgsz as crate::src::ext::rtree::rtree::I64_0) as isize)
                     as *mut crate::src::ext::rtree::rtree::U8_0;
                 ::core::ptr::copy_nonoverlapping(zIn as *const u8, zOut as *mut u8, nCopy as usize);
@@ -425,8 +425,8 @@ unsafe extern "C" fn backupOnePage(
 }
 
 unsafe extern "C" fn backupTruncateFile(
-    mut pFile: *mut crate::src::headers::sqlite3_h::sqlite3_file,
-    mut iSize: crate::src::ext::rtree::rtree::I64_0,
+    pFile: *mut crate::src::headers::sqlite3_h::sqlite3_file,
+    iSize: crate::src::ext::rtree::rtree::I64_0,
 ) -> ::core::ffi::c_int {
     let mut iCurrent: crate::src::ext::rtree::rtree::I64_0 = 0;
     let mut rc: ::core::ffi::c_int = crate::src::src::os::sqlite3OsFileSize(
@@ -442,8 +442,8 @@ unsafe extern "C" fn backupTruncateFile(
     rc
 }
 
-unsafe extern "C" fn attachBackupObject(mut p: *mut sqlite3_backup) {
-    let mut pp: *mut *mut sqlite3_backup = ::core::ptr::null_mut::<*mut sqlite3_backup>();
+unsafe extern "C" fn attachBackupObject(p: *mut sqlite3_backup) {
+    let pp: *mut *mut sqlite3_backup;
     let __p_ref = unsafe { &mut *p };
     pp = crate::src::src::pager::sqlite3PagerBackupPtr(crate::src::src::btree::sqlite3BtreePager(
         __p_ref.pSrc as *mut crate::src::headers::btreeInt_h::Btree,
@@ -454,13 +454,13 @@ unsafe extern "C" fn attachBackupObject(mut p: *mut sqlite3_backup) {
 }
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn sqlite3_backup_step(
-    mut p: *mut sqlite3_backup,
-    mut nPage: ::core::ffi::c_int,
+    p: *mut sqlite3_backup,
+    nPage: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
-    let mut rc: ::core::ffi::c_int = 0;
-    let mut destMode: ::core::ffi::c_int = 0;
-    let mut pgszSrc: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
-    let mut pgszDest: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
+    let mut rc: ::core::ffi::c_int;
+    let destMode: ::core::ffi::c_int;
+    let pgszSrc: ::core::ffi::c_int;
+    let pgszDest: ::core::ffi::c_int;
     let __p_ref = unsafe { &mut *p };
     crate::src::src::mutex::sqlite3_mutex_enter((*__p_ref.pSrcDb).mutex);
     crate::src::src::btmutex::sqlite3BtreeEnter(
@@ -479,8 +479,8 @@ pub unsafe extern "C" fn sqlite3_backup_step(
             crate::src::src::btree::sqlite3BtreePager(
                 __p_ref.pDest as *mut crate::src::headers::btreeInt_h::Btree,
             ) as *mut crate::src::src::pager::Pager;
-        let mut ii: ::core::ffi::c_int = 0;
-        let mut nSrcPage: ::core::ffi::c_int = -(1 as ::core::ffi::c_int);
+        let mut ii: ::core::ffi::c_int;
+        let mut nSrcPage: ::core::ffi::c_int;
         let mut bCloseTrans: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
         if !__p_ref.pDestDb.is_null()
             && (*(*__p_ref.pSrc).pBt).inTransaction as ::core::ffi::c_int
@@ -623,9 +623,9 @@ pub unsafe extern "C" fn sqlite3_backup_step(
                 }
             }
             if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
-                let mut nDestTruncate: ::core::ffi::c_int = 0;
+                let mut nDestTruncate: ::core::ffi::c_int;
                 if pgszSrc < pgszDest {
-                    let mut ratio: ::core::ffi::c_int = pgszDest / pgszSrc;
+                    let ratio: ::core::ffi::c_int = pgszDest / pgszSrc;
                     nDestTruncate = (nSrcPage + ratio - 1 as ::core::ffi::c_int) / ratio;
                     if nDestTruncate
                         == (crate::src::src::global::sqlite3PendingByte
@@ -647,10 +647,10 @@ pub unsafe extern "C" fn sqlite3_backup_step(
                         crate::src::src::pager::sqlite3PagerFile(pDestPager)
                             as *mut crate::src::headers::sqlite3_h::sqlite3_file
                             as *mut crate::src::headers::sqlite3_h::sqlite3_file;
-                    let mut iPg: crate::src::src::pager::Pgno = 0;
+                    let mut iPg: crate::src::src::pager::Pgno;
                     let mut nDstPage: ::core::ffi::c_int = 0;
-                    let mut iOff: crate::src::ext::rtree::rtree::I64_0 = 0;
-                    let mut iEnd: crate::src::ext::rtree::rtree::I64_0 = 0;
+                    let mut iOff: crate::src::ext::rtree::rtree::I64_0;
+                    let iEnd: crate::src::ext::rtree::rtree::I64_0;
                     crate::src::src::pager::sqlite3PagerPagecount(pDestPager, &raw mut nDstPage);
                     iPg = nDestTruncate as crate::src::src::pager::Pgno;
                     while rc == crate::src::headers::sqlite3_h::SQLITE_OK
@@ -713,7 +713,7 @@ pub unsafe extern "C" fn sqlite3_backup_step(
                             0 as ::core::ffi::c_int,
                         );
                         if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
-                            let mut zData: *mut crate::src::ext::rtree::rtree::U8_0 =
+                            let zData: *mut crate::src::ext::rtree::rtree::U8_0 =
                                 crate::src::src::pager::sqlite3PagerGetData(
                                     pSrcPg_0 as *mut crate::src::src::pager::DbPage
                                         as *mut crate::src::src::pcache::PgHdr,
@@ -788,11 +788,10 @@ pub unsafe extern "C" fn sqlite3_backup_step(
     rc
 }
 #[unsafe(no_mangle)]
-pub unsafe extern "C" fn sqlite3_backup_finish(mut p: *mut sqlite3_backup) -> ::core::ffi::c_int {
-    let mut pp: *mut *mut sqlite3_backup = ::core::ptr::null_mut::<*mut sqlite3_backup>();
-    let mut pSrcDb: *mut crate::src::headers::sqliteInt_h::sqlite3 =
-        ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::sqlite3>();
-    let mut rc: ::core::ffi::c_int = 0;
+pub unsafe extern "C" fn sqlite3_backup_finish(p: *mut sqlite3_backup) -> ::core::ffi::c_int {
+    let mut pp: *mut *mut sqlite3_backup;
+    let pSrcDb: *mut crate::src::headers::sqliteInt_h::sqlite3;
+    let rc: ::core::ffi::c_int;
     if p.is_null() {
         return crate::src::headers::sqlite3_h::SQLITE_OK;
     }
@@ -851,25 +850,25 @@ pub unsafe extern "C" fn sqlite3_backup_finish(mut p: *mut sqlite3_backup) -> ::
 }
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn sqlite3_backup_remaining(
-    mut p: *mut sqlite3_backup,
+    p: *mut sqlite3_backup,
 ) -> ::core::ffi::c_int {
     (*p).nRemaining as ::core::ffi::c_int
 }
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn sqlite3_backup_pagecount(
-    mut p: *mut sqlite3_backup,
+    p: *mut sqlite3_backup,
 ) -> ::core::ffi::c_int {
     (*p).nPagecount as ::core::ffi::c_int
 }
 #[inline(never)]
 unsafe extern "C" fn backupUpdate(
     mut p: *mut sqlite3_backup,
-    mut iPage: crate::src::src::pager::Pgno,
-    mut aData: *const crate::src::ext::rtree::rtree::U8_0,
+    iPage: crate::src::src::pager::Pgno,
+    aData: *const crate::src::ext::rtree::rtree::U8_0,
 ) {
     loop {
         if isFatalError((*p).rc) == 0 && iPage < (*p).iNext {
-            let mut rc: ::core::ffi::c_int = 0;
+            let rc: ::core::ffi::c_int;
             let __pDestDb_ref = &*(*p).pDestDb;
             crate::src::src::mutex::sqlite3_mutex_enter(__pDestDb_ref.mutex);
             rc = backupOnePage(p, iPage, aData, 1 as ::core::ffi::c_int);
@@ -887,9 +886,9 @@ unsafe extern "C" fn backupUpdate(
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3BackupUpdate(
-    mut pBackup: *mut sqlite3_backup,
-    mut iPage: crate::src::src::pager::Pgno,
-    mut aData: *const crate::src::ext::rtree::rtree::U8_0,
+    pBackup: *mut sqlite3_backup,
+    iPage: crate::src::src::pager::Pgno,
+    aData: *const crate::src::ext::rtree::rtree::U8_0,
 ) {
     if !pBackup.is_null() {
         backupUpdate(pBackup, iPage, aData);
@@ -897,8 +896,8 @@ pub unsafe extern "C" fn sqlite3BackupUpdate(
 }
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
-pub unsafe extern "C" fn sqlite3BackupRestart(mut pBackup: *mut sqlite3_backup) {
-    let mut p: *mut sqlite3_backup = ::core::ptr::null_mut::<sqlite3_backup>();
+pub unsafe extern "C" fn sqlite3BackupRestart(pBackup: *mut sqlite3_backup) {
+    let mut p: *mut sqlite3_backup;
     p = pBackup;
     while !p.is_null() {
         (*p).iNext = 1 as crate::src::src::pager::Pgno;
@@ -908,13 +907,12 @@ pub unsafe extern "C" fn sqlite3BackupRestart(mut pBackup: *mut sqlite3_backup) 
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3BtreeCopyFile(
-    mut pTo: *mut crate::src::headers::btreeInt_h::Btree,
-    mut pFrom: *mut crate::src::headers::btreeInt_h::Btree,
+    pTo: *mut crate::src::headers::btreeInt_h::Btree,
+    pFrom: *mut crate::src::headers::btreeInt_h::Btree,
 ) -> ::core::ffi::c_int {
-    let mut current_block: u64;
+    let current_block: u64;
     let mut rc: ::core::ffi::c_int = 0;
-    let mut pFd: *mut crate::src::headers::sqlite3_h::sqlite3_file =
-        ::core::ptr::null_mut::<crate::src::headers::sqlite3_h::sqlite3_file>();
+    let pFd: *mut crate::src::headers::sqlite3_h::sqlite3_file;
     let mut b: sqlite3_backup = unsafe { ::core::mem::zeroed() };
     crate::src::src::btmutex::sqlite3BtreeEnter(pTo as *mut crate::src::headers::btreeInt_h::Btree);
     crate::src::src::btmutex::sqlite3BtreeEnter(

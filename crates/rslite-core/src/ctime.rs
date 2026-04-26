@@ -58,7 +58,7 @@ static mut sqlite3azCompileOpt: [*const ::core::ffi::c_char; 55] = [
 
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 pub unsafe extern "C" fn sqlite3CompileOptions(
-    mut pnOpt: *mut ::core::ffi::c_int,
+    pnOpt: *mut ::core::ffi::c_int,
 ) -> *mut *const ::core::ffi::c_char {
     *pnOpt = (::core::mem::size_of::<[*const ::core::ffi::c_char; 55]>() as usize)
         .wrapping_div(::core::mem::size_of::<*const ::core::ffi::c_char>() as usize)

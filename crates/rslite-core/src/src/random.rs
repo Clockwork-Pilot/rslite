@@ -33,10 +33,10 @@ static mut sqlite3Prng: sqlite3PrngType = sqlite3PrngType {
 };
 
 unsafe extern "C" fn chacha_block(
-    mut out: *mut crate::src::ext::rtree::rtree::U32_0,
-    mut in_0: *const crate::src::ext::rtree::rtree::U32_0,
+    out: *mut crate::src::ext::rtree::rtree::U32_0,
+    in_0: *const crate::src::ext::rtree::rtree::U32_0,
 ) {
-    let mut i: ::core::ffi::c_int = 0;
+    let mut i: ::core::ffi::c_int;
     let mut x: [crate::src::ext::rtree::rtree::U32_0; 16] = [0; 16];
     ::core::ptr::copy_nonoverlapping(
         in_0 as *const u8,
@@ -280,11 +280,10 @@ unsafe extern "C" fn chacha_block(
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn sqlite3_randomness(
     mut N: ::core::ffi::c_int,
-    mut pBuf: *mut ::core::ffi::c_void,
+    pBuf: *mut ::core::ffi::c_void,
 ) {
     let mut zBuf: *mut ::core::ffi::c_uchar = pBuf as *mut ::core::ffi::c_uchar;
-    let mut mutex: *mut crate::src::src::mutex_unix::sqlite3_mutex =
-        ::core::ptr::null_mut::<crate::src::src::mutex_unix::sqlite3_mutex>();
+    let mutex: *mut crate::src::src::mutex_unix::sqlite3_mutex;
     if crate::src::src::main::sqlite3_initialize() != 0 {
         return;
     }
@@ -299,7 +298,7 @@ pub unsafe extern "C" fn sqlite3_randomness(
     }
     if sqlite3Prng.s[0 as ::core::ffi::c_int as usize] == 0 as crate::src::ext::rtree::rtree::U32_0
     {
-        let mut pVfs: *mut crate::src::headers::sqlite3_h::sqlite3_vfs =
+        let pVfs: *mut crate::src::headers::sqlite3_h::sqlite3_vfs =
             crate::src::src::os::sqlite3_vfs_find(::core::ptr::null::<::core::ffi::c_char>())
                 as *mut crate::src::headers::sqlite3_h::sqlite3_vfs;
         static mut chacha20_init: [crate::src::ext::rtree::rtree::U32_0; 4] = [

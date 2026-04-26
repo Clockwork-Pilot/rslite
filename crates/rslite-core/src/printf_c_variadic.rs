@@ -45,13 +45,12 @@ impl VtabConfigOp {
 
 #[unsafe(export_name = "sqlite3_vtab_config_args")]
 pub unsafe extern "C" fn rs_vtab_config_dispatch(
-    mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
+    db: *mut crate::src::headers::sqliteInt_h::sqlite3,
     op: ::core::ffi::c_int,
     args: *const u64,
 ) -> ::core::ffi::c_int {
     let mut rc: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_OK;
-    let mut p: *mut crate::src::src::vtab::VtabCtx =
-        ::core::ptr::null_mut::<crate::src::src::vtab::VtabCtx>();
+    let p: *mut crate::src::src::vtab::VtabCtx;
     let __db_ref = unsafe { &*db };
     crate::src::src::mutex::sqlite3_mutex_enter(__db_ref.mutex);
     p = __db_ref.pVtabCtx;
@@ -125,7 +124,7 @@ pub unsafe fn sqlite3ErrorMsg_args(
     zFormat: *const ::core::ffi::c_char,
     args: &[crate::src::src::printf::PrintfArg],
 ) {
-    let mut zMsg: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
+    let zMsg: *mut ::core::ffi::c_char;
     let db: *mut crate::src::headers::sqliteInt_h::sqlite3 = (*pParse).db;
     let __db_ref = &mut *db;
     __db_ref.errByteOffset = -(2 as ::core::ffi::c_int);
@@ -489,11 +488,11 @@ use crate::src::headers::sqlite3_h::SqliteDbConfig;
 
 #[unsafe(export_name = "sqlite3_db_config_args")]
 pub unsafe extern "C" fn rs_db_config_dispatch(
-    mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
+    db: *mut crate::src::headers::sqliteInt_h::sqlite3,
     op: ::core::ffi::c_int,
     args: *const u64,
 ) -> ::core::ffi::c_int {
-    let mut rc: ::core::ffi::c_int = 0;
+    let rc: ::core::ffi::c_int;
     crate::src::src::mutex::sqlite3_mutex_enter((*db).mutex);
     let Some(cfg) = SqliteDbConfig::from_repr(op) else {
         crate::src::src::mutex::sqlite3_mutex_leave((*db).mutex);
@@ -725,7 +724,7 @@ pub unsafe extern "C" fn rs_test_control_dispatch(
             crate::src::src::random::sqlite3PrngRestoreState();
         }
         TestControlOp::PrngSeed(mut x, db) => {
-            let mut y: ::core::ffi::c_int = 0;
+            let y: ::core::ffi::c_int;
             if !db.is_null() && {
                 y = (*(*(*db).aDb.offset(0 as isize)).pSchema).schema_cookie;
                 y != 0 as ::core::ffi::c_int

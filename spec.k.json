@@ -155,6 +155,18 @@
           "cmd": "! { grep -rE \"allow[[:space:]]*\\\\([^)]*\\\\b(clippy::)?static_mut_refs\\\\b\" \"$PROJECT_ROOT/crates\" --include=\"*.rs\" 2>/dev/null; grep -E \"^[[:space:]]*(clippy::)?static_mut_refs[[:space:]]*=[[:space:]]*\\\"allow\\\"\" \"$PROJECT_ROOT/crates/rslite-core/Cargo.toml\" 2>/dev/null; } | grep -q .",
           "description": "Structural: Forbid any allow() attribute (inner #![...] or outer #[...], bare or clippy:: prefix, alone or combined, arbitrary whitespace) for static_mut_refs across crates/**/*.rs. Also forbid equivalent suppressions in crates/rslite-core/Cargo.toml under [lints.rust] / [lints.clippy] (e.g. `static_mut_refs = \"allow\"`). Word boundaries prevent false positives on longer identifiers.",
           "fails_count": 1
+        },
+        "forbid_unused_mut_assignments_any": {
+          "id": "forbid_unused_mut_assignments_any",
+          "cmd": "! { grep -rE \"allow[[:space:]]*\\\\([^)]*\\\\b(clippy::)?(unused_mut|unused_assignments)\\\\b\" \"$PROJECT_ROOT/crates\" --include=\"*.rs\" 2>/dev/null; grep -E \"^[[:space:]]*(clippy::)?(unused_mut|unused_assignments)[[:space:]]*=[[:space:]]*\\\"allow\\\"\" \"$PROJECT_ROOT/crates/rslite-core/Cargo.toml\" 2>/dev/null; } | grep -q .",
+          "description": "Structural: Forbid any allow() attribute (inner #![...] or outer #[...], bare or clippy:: prefix, alone or combined, arbitrary whitespace) for unused_mut and unused_assignments across crates/**/*.rs. Also forbid equivalent suppressions in crates/rslite-core/Cargo.toml under [lints.rust] / [lints.clippy] (e.g. `unused_mut = \"allow\"`). Word boundaries prevent false positives on longer identifiers.",
+          "fails_count": 1
+        },
+        "forbid_unused_mut_assignments_workspace_any": {
+          "id": "forbid_unused_mut_assignments_workspace_any",
+          "cmd": "! { grep -rE \"allow[[:space:]]*\\([^)]*\\b(clippy::)?(unused_mut|unused_assignments)\\b\" \"$PROJECT_ROOT/crates\" --include=\"*.rs\" 2>/dev/null; grep -rE \"^[[:space:]]*(clippy::)?(unused_mut|unused_assignments)[[:space:]]*=[[:space:]]*\\\"allow\\\"\" \"$PROJECT_ROOT\" --include=\"Cargo.toml\" 2>/dev/null; } | grep -q .",
+          "description": "Structural: Forbid any allow() attribute (inner #![...] or outer #[...], bare or clippy:: prefix, alone or combined, arbitrary whitespace) for unused_mut and unused_assignments across crates/**/*.rs. Also forbid equivalent suppressions in any Cargo.toml across the workspace under [lints.rust] / [lints.clippy] / [workspace.lints.rust] / [workspace.lints.clippy] (e.g. `unused_mut = \"allow\"` at workspace root). Word boundaries prevent false positives on longer identifiers.",
+          "fails_count": 1
         }
       }
     },

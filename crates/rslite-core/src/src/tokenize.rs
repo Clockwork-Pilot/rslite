@@ -1404,13 +1404,13 @@ pub mod keywordhash_h {
     ];
 
     pub unsafe extern "C" fn keywordCode(
-        mut z: *const ::core::ffi::c_char,
-        mut n: ::core::ffi::c_int,
-        mut pType: *mut ::core::ffi::c_int,
+        z: *const ::core::ffi::c_char,
+        n: ::core::ffi::c_int,
+        pType: *mut ::core::ffi::c_int,
     ) -> ::core::ffi::c_int {
-        let mut i: ::core::ffi::c_int = 0;
-        let mut j: ::core::ffi::c_int = 0;
-        let mut zKW: *const ::core::ffi::c_char = ::core::ptr::null::<::core::ffi::c_char>();
+        let mut i: ::core::ffi::c_int;
+        let mut j: ::core::ffi::c_int;
+        let mut zKW: *const ::core::ffi::c_char;
         i =
             (*(&raw const crate::src::src::global::sqlite3UpperToLower
                 as *const ::core::ffi::c_uchar)
@@ -1460,8 +1460,8 @@ pub mod keywordhash_h {
     #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
     pub unsafe extern "C" fn sqlite3KeywordCode(
-        mut z: *const ::core::ffi::c_uchar,
-        mut n: ::core::ffi::c_int,
+        z: *const ::core::ffi::c_uchar,
+        n: ::core::ffi::c_int,
     ) -> ::core::ffi::c_int {
         let mut id: ::core::ffi::c_int = crate::src::parse::TK_ID;
         if n >= 2 as ::core::ffi::c_int {
@@ -1473,8 +1473,8 @@ pub mod keywordhash_h {
     #[unsafe(no_mangle)]
     pub unsafe extern "C" fn sqlite3_keyword_name(
         mut i: ::core::ffi::c_int,
-        mut pzName: *mut *const ::core::ffi::c_char,
-        mut pnName: *mut ::core::ffi::c_int,
+        pzName: *mut *const ::core::ffi::c_char,
+        pnName: *mut ::core::ffi::c_int,
     ) -> ::core::ffi::c_int {
         if i < 0 as ::core::ffi::c_int || i >= crate::keywordhash_h::SQLITE_N_KEYWORD {
             return crate::src::headers::sqlite3_h::SQLITE_ERROR;
@@ -1491,8 +1491,8 @@ pub mod keywordhash_h {
     }
     #[unsafe(no_mangle)]
     pub unsafe extern "C" fn sqlite3_keyword_check(
-        mut zName: *const ::core::ffi::c_char,
-        mut nName: ::core::ffi::c_int,
+        zName: *const ::core::ffi::c_char,
+        nName: ::core::ffi::c_int,
     ) -> ::core::ffi::c_int {
         (crate::src::parse::TK_ID
             != sqlite3KeywordCode(zName as *const ::core::ffi::c_uchar, nName))
@@ -2151,7 +2151,7 @@ static mut aiClass: [::core::ffi::c_uchar; 256] = [
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3IsIdChar(
-    mut c: crate::src::ext::rtree::rtree::U8_0,
+    c: crate::src::ext::rtree::rtree::U8_0,
 ) -> ::core::ffi::c_int {
     (*(&raw const crate::src::src::global::sqlite3CtypeMap as *const ::core::ffi::c_uchar)
         .offset(c as ::core::ffi::c_uchar as isize) as ::core::ffi::c_int
@@ -2159,7 +2159,7 @@ pub unsafe extern "C" fn sqlite3IsIdChar(
         != 0 as ::core::ffi::c_int) as ::core::ffi::c_int
 }
 
-unsafe extern "C" fn getToken(mut pz: *mut *const ::core::ffi::c_uchar) -> ::core::ffi::c_int {
+unsafe extern "C" fn getToken(pz: *mut *const ::core::ffi::c_uchar) -> ::core::ffi::c_int {
     let mut z: *const ::core::ffi::c_uchar = *pz;
     let mut t: ::core::ffi::c_int = 0;
     loop {
@@ -2184,7 +2184,7 @@ unsafe extern "C" fn getToken(mut pz: *mut *const ::core::ffi::c_uchar) -> ::cor
 unsafe extern "C" fn analyzeWindowKeyword(
     mut z: *const ::core::ffi::c_uchar,
 ) -> ::core::ffi::c_int {
-    let mut t: ::core::ffi::c_int = 0;
+    let mut t: ::core::ffi::c_int;
     t = getToken(&raw mut z);
     if t != crate::src::parse::TK_ID {
         return crate::src::parse::TK_ID;
@@ -2198,10 +2198,10 @@ unsafe extern "C" fn analyzeWindowKeyword(
 
 unsafe extern "C" fn analyzeOverKeyword(
     mut z: *const ::core::ffi::c_uchar,
-    mut lastToken: ::core::ffi::c_int,
+    lastToken: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
     if lastToken == crate::src::parse::TK_RP {
-        let mut t: ::core::ffi::c_int = getToken(&raw mut z);
+        let t: ::core::ffi::c_int = getToken(&raw mut z);
         if t == crate::src::parse::TK_LP || t == crate::src::parse::TK_ID {
             return crate::src::parse::TK_OVER;
         }
@@ -2211,7 +2211,7 @@ unsafe extern "C" fn analyzeOverKeyword(
 
 unsafe extern "C" fn analyzeFilterKeyword(
     mut z: *const ::core::ffi::c_uchar,
-    mut lastToken: ::core::ffi::c_int,
+    lastToken: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
     if lastToken == crate::src::parse::TK_RP && getToken(&raw mut z) == crate::src::parse::TK_LP {
         return crate::src::parse::TK_FILTER;
@@ -2221,12 +2221,12 @@ unsafe extern "C" fn analyzeFilterKeyword(
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3GetToken(
-    mut z: *const ::core::ffi::c_uchar,
-    mut tokenType: *mut ::core::ffi::c_int,
+    z: *const ::core::ffi::c_uchar,
+    tokenType: *mut ::core::ffi::c_int,
 ) -> crate::src::ext::rtree::rtree::I64_0 {
     let mut i: crate::src::ext::rtree::rtree::I64_0 = 0;
-    let mut c: ::core::ffi::c_int = 0;
-    let mut current_block_253: u64;
+    let mut c: ::core::ffi::c_int;
+    let current_block_253: u64;
     match aiClass[*z as usize] as ::core::ffi::c_int {
         CC_SPACE => {
             i = 1 as crate::src::ext::rtree::rtree::I64_0;
@@ -2376,7 +2376,7 @@ pub unsafe extern "C" fn sqlite3GetToken(
             return 1 as crate::src::ext::rtree::rtree::I64_0;
         }
         CC_QUOTE => {
-            let mut delim: ::core::ffi::c_int = *z.offset(0 as isize) as ::core::ffi::c_int;
+            let delim: ::core::ffi::c_int = *z.offset(0 as isize) as ::core::ffi::c_int;
             i = 1 as crate::src::ext::rtree::rtree::I64_0;
             loop {
                 c = *z.offset(i as isize) as ::core::ffi::c_int;
@@ -2730,19 +2730,18 @@ pub unsafe extern "C" fn sqlite3GetToken(
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3RunParser(
-    mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
+    pParse: *mut crate::src::headers::sqliteInt_h::Parse,
     mut zSql: *const ::core::ffi::c_char,
 ) -> ::core::ffi::c_int {
     let mut nErr: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
-    let mut pEngine: *mut ::core::ffi::c_void = ::core::ptr::null_mut::<::core::ffi::c_void>();
-    let mut n: crate::src::ext::rtree::rtree::I64_0 = 0 as crate::src::ext::rtree::rtree::I64_0;
+    let pEngine: *mut ::core::ffi::c_void;
+    let mut n: crate::src::ext::rtree::rtree::I64_0;
     let mut tokenType: ::core::ffi::c_int = 0;
     let mut lastTokenParsed: ::core::ffi::c_int = -(1 as ::core::ffi::c_int);
     let __pParse_ref = unsafe { &mut *pParse };
-    let mut db: *mut crate::src::headers::sqliteInt_h::sqlite3 = __pParse_ref.db;
-    let mut mxSqlLen: ::core::ffi::c_int = 0;
-    let mut pParentParse: *mut crate::src::headers::sqliteInt_h::Parse =
-        ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::Parse>();
+    let db: *mut crate::src::headers::sqliteInt_h::sqlite3 = __pParse_ref.db;
+    let mut mxSqlLen: ::core::ffi::c_int;
+    let pParentParse: *mut crate::src::headers::sqliteInt_h::Parse;
     let __db_ref = unsafe { &mut *db };
     mxSqlLen = __db_ref.aLimit[crate::src::headers::sqlite3_h::SQLITE_LIMIT_SQL_LENGTH as usize];
     if __db_ref.nVdbeActive == 0 as ::core::ffi::c_int {

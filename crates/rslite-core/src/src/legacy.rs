@@ -150,11 +150,11 @@ pub use crate::src::src::vdbe::p4union;
 pub use crate::src::src::vdbeaux::sqlite3VdbeFinalize;
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn sqlite3_exec(
-    mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
+    db: *mut crate::src::headers::sqliteInt_h::sqlite3,
     mut zSql: *const ::core::ffi::c_char,
-    mut xCallback: crate::src::headers::sqlite3_h::Sqlite3Callback,
-    mut pArg: *mut ::core::ffi::c_void,
-    mut pzErrMsg: *mut *mut ::core::ffi::c_char,
+    xCallback: crate::src::headers::sqlite3_h::Sqlite3Callback,
+    pArg: *mut ::core::ffi::c_void,
+    pzErrMsg: *mut *mut ::core::ffi::c_char,
 ) -> ::core::ffi::c_int {
     let mut rc: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_OK;
     let mut zLeftover: *const ::core::ffi::c_char = ::core::ptr::null::<::core::ffi::c_char>();
@@ -162,7 +162,7 @@ pub unsafe extern "C" fn sqlite3_exec(
         ::core::ptr::null_mut::<crate::src::headers::sqlite3_h::Sqlite3Stmt>();
     let mut azCols: *mut *mut ::core::ffi::c_char =
         ::core::ptr::null_mut::<*mut ::core::ffi::c_char>();
-    let mut callbackIsInit: ::core::ffi::c_int = 0;
+    let mut callbackIsInit: ::core::ffi::c_int;
     if crate::src::src::util::sqlite3SafetyCheckOk(
         db as *mut crate::src::headers::sqliteInt_h::sqlite3,
     ) == 0
@@ -199,7 +199,7 @@ pub unsafe extern "C" fn sqlite3_exec(
         } else {
             callbackIsInit = 0 as ::core::ffi::c_int;
             loop {
-                let mut i: ::core::ffi::c_int = 0;
+                let mut i: ::core::ffi::c_int;
                 rc = crate::src::src::vdbeapi::sqlite3_step(pStmt);
                 if xCallback.is_some()
                     && (crate::src::headers::sqlite3_h::SQLITE_ROW == rc

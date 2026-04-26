@@ -136,21 +136,21 @@ pub use crate::src::src::vdbe::SubrtnSig;
 pub use crate::src::src::vdbe::VdbeOp;
 pub use crate::src::src::vdbe::p4union;
 
-unsafe extern "C" fn lockBtreeMutex(mut p: *mut crate::src::headers::btreeInt_h::Btree) {
+unsafe extern "C" fn lockBtreeMutex(p: *mut crate::src::headers::btreeInt_h::Btree) {
     let __p_ref = unsafe { &mut *p };
     crate::src::src::mutex::sqlite3_mutex_enter((*__p_ref.pBt).mutex);
     (*__p_ref.pBt).db = __p_ref.db;
     __p_ref.locked = 1 as crate::src::ext::rtree::rtree::U8_0;
 }
 #[inline(never)]
-unsafe extern "C" fn unlockBtreeMutex(mut p: *mut crate::src::headers::btreeInt_h::Btree) {
-    let mut pBt: *mut crate::src::headers::btreeInt_h::BtShared = (*p).pBt;
+unsafe extern "C" fn unlockBtreeMutex(p: *mut crate::src::headers::btreeInt_h::Btree) {
+    let pBt: *mut crate::src::headers::btreeInt_h::BtShared = (*p).pBt;
     crate::src::src::mutex::sqlite3_mutex_leave((*pBt).mutex);
     (*p).locked = 0 as crate::src::ext::rtree::rtree::U8_0;
 }
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
-pub unsafe extern "C" fn sqlite3BtreeEnter(mut p: *mut crate::src::headers::btreeInt_h::Btree) {
+pub unsafe extern "C" fn sqlite3BtreeEnter(p: *mut crate::src::headers::btreeInt_h::Btree) {
     let __p_ref = unsafe { &mut *p };
     if __p_ref.sharable == 0 {
         return;
@@ -162,9 +162,8 @@ pub unsafe extern "C" fn sqlite3BtreeEnter(mut p: *mut crate::src::headers::btre
     btreeLockCarefully(p);
 }
 #[inline(never)]
-unsafe extern "C" fn btreeLockCarefully(mut p: *mut crate::src::headers::btreeInt_h::Btree) {
-    let mut pLater: *mut crate::src::headers::btreeInt_h::Btree =
-        ::core::ptr::null_mut::<crate::src::headers::btreeInt_h::Btree>();
+unsafe extern "C" fn btreeLockCarefully(p: *mut crate::src::headers::btreeInt_h::Btree) {
+    let mut pLater: *mut crate::src::headers::btreeInt_h::Btree;
     let __p_ref = unsafe { &mut *p };
     if crate::src::src::mutex::sqlite3_mutex_try((*__p_ref.pBt).mutex)
         == crate::src::headers::sqlite3_h::SQLITE_OK
@@ -191,7 +190,7 @@ unsafe extern "C" fn btreeLockCarefully(mut p: *mut crate::src::headers::btreeIn
 }
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
-pub unsafe extern "C" fn sqlite3BtreeLeave(mut p: *mut crate::src::headers::btreeInt_h::Btree) {
+pub unsafe extern "C" fn sqlite3BtreeLeave(p: *mut crate::src::headers::btreeInt_h::Btree) {
     if (*p).sharable != 0 {
         (*p).wantToLock -= 1;
         if (*p).wantToLock == 0 as ::core::ffi::c_int {
@@ -200,11 +199,10 @@ pub unsafe extern "C" fn sqlite3BtreeLeave(mut p: *mut crate::src::headers::btre
     }
 }
 #[inline(never)]
-unsafe extern "C" fn btreeEnterAll(mut db: *mut crate::src::headers::sqliteInt_h::sqlite3) {
-    let mut i: ::core::ffi::c_int = 0;
+unsafe extern "C" fn btreeEnterAll(db: *mut crate::src::headers::sqliteInt_h::sqlite3) {
+    let mut i: ::core::ffi::c_int;
     let mut skipOk: crate::src::ext::rtree::rtree::U8_0 = 1 as crate::src::ext::rtree::rtree::U8_0;
-    let mut p: *mut crate::src::headers::btreeInt_h::Btree =
-        ::core::ptr::null_mut::<crate::src::headers::btreeInt_h::Btree>();
+    let mut p: *mut crate::src::headers::btreeInt_h::Btree;
     i = 0 as ::core::ffi::c_int;
     while i < (*db).nDb {
         p = (*(*db).aDb.offset(i as isize)).pBt;
@@ -219,17 +217,16 @@ unsafe extern "C" fn btreeEnterAll(mut db: *mut crate::src::headers::sqliteInt_h
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3BtreeEnterAll(
-    mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
+    db: *mut crate::src::headers::sqliteInt_h::sqlite3,
 ) {
     if (*db).noSharedCache as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
         btreeEnterAll(db);
     }
 }
 #[inline(never)]
-unsafe extern "C" fn btreeLeaveAll(mut db: *mut crate::src::headers::sqliteInt_h::sqlite3) {
-    let mut i: ::core::ffi::c_int = 0;
-    let mut p: *mut crate::src::headers::btreeInt_h::Btree =
-        ::core::ptr::null_mut::<crate::src::headers::btreeInt_h::Btree>();
+unsafe extern "C" fn btreeLeaveAll(db: *mut crate::src::headers::sqliteInt_h::sqlite3) {
+    let mut i: ::core::ffi::c_int;
+    let mut p: *mut crate::src::headers::btreeInt_h::Btree;
     i = 0 as ::core::ffi::c_int;
     while i < (*db).nDb {
         p = (*(*db).aDb.offset(i as isize)).pBt;
@@ -242,7 +239,7 @@ unsafe extern "C" fn btreeLeaveAll(mut db: *mut crate::src::headers::sqliteInt_h
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3BtreeLeaveAll(
-    mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
+    db: *mut crate::src::headers::sqliteInt_h::sqlite3,
 ) {
     if (*db).noSharedCache as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
         btreeLeaveAll(db);
@@ -251,12 +248,12 @@ pub unsafe extern "C" fn sqlite3BtreeLeaveAll(
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3BtreeEnterCursor(
-    mut pCur: *mut crate::src::headers::btreeInt_h::BtCursor,
+    pCur: *mut crate::src::headers::btreeInt_h::BtCursor,
 ) {
     sqlite3BtreeEnter((*pCur).pBtree);
 }
 pub unsafe extern "C" fn sqlite3BtreeLeaveCursor(
-    mut pCur: *mut crate::src::headers::btreeInt_h::BtCursor,
+    pCur: *mut crate::src::headers::btreeInt_h::BtCursor,
 ) {
     sqlite3BtreeLeave((*pCur).pBtree);
 }

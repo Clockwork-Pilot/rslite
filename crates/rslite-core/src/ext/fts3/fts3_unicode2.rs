@@ -7,7 +7,7 @@ pub struct TableEntry {
 }
 
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
-pub unsafe extern "C" fn sqlite3FtsUnicodeIsalnum(mut c: ::core::ffi::c_int) -> ::core::ffi::c_int {
+pub unsafe extern "C" fn sqlite3FtsUnicodeIsalnum(c: ::core::ffi::c_int) -> ::core::ffi::c_int {
     static mut aEntry: [::core::ffi::c_uint; 406] = [
         0x30 as ::core::ffi::c_int as ::core::ffi::c_uint,
         0xe807 as ::core::ffi::c_int as ::core::ffi::c_uint,
@@ -429,7 +429,7 @@ pub unsafe extern "C" fn sqlite3FtsUnicodeIsalnum(mut c: ::core::ffi::c_int) -> 
     } else if (c as ::core::ffi::c_uint)
         < ((1 as ::core::ffi::c_int) << 22 as ::core::ffi::c_int) as ::core::ffi::c_uint
     {
-        let mut key: ::core::ffi::c_uint =
+        let key: ::core::ffi::c_uint =
             (c as ::core::ffi::c_uint) << 10 as ::core::ffi::c_int | 0x3ff as ::core::ffi::c_uint;
         let mut iRes: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
         let mut iHi: ::core::ffi::c_int =
@@ -438,7 +438,7 @@ pub unsafe extern "C" fn sqlite3FtsUnicodeIsalnum(mut c: ::core::ffi::c_int) -> 
                 .wrapping_sub(1 as usize) as ::core::ffi::c_int;
         let mut iLo: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
         while iHi >= iLo {
-            let mut iTest: ::core::ffi::c_int = (iHi + iLo) / 2 as ::core::ffi::c_int;
+            let iTest: ::core::ffi::c_int = (iHi + iLo) / 2 as ::core::ffi::c_int;
             if key >= aEntry[iTest as usize] {
                 iRes = iTest;
                 iLo = iTest + 1 as ::core::ffi::c_int;
@@ -455,10 +455,10 @@ pub unsafe extern "C" fn sqlite3FtsUnicodeIsalnum(mut c: ::core::ffi::c_int) -> 
 }
 
 unsafe extern "C" fn remove_diacritic(
-    mut c: ::core::ffi::c_int,
-    mut bComplex: ::core::ffi::c_int,
+    c: ::core::ffi::c_int,
+    bComplex: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
-    let mut aDia: [::core::ffi::c_ushort; 126] = [
+    let aDia: [::core::ffi::c_ushort; 126] = [
         0 as ::core::ffi::c_int as ::core::ffi::c_ushort,
         1797 as ::core::ffi::c_int as ::core::ffi::c_ushort,
         1848 as ::core::ffi::c_int as ::core::ffi::c_ushort,
@@ -586,7 +586,7 @@ unsafe extern "C" fn remove_diacritic(
         63368 as ::core::ffi::c_int as ::core::ffi::c_ushort,
         63390 as ::core::ffi::c_int as ::core::ffi::c_ushort,
     ];
-    let mut aChar: [::core::ffi::c_uchar; 126] = [
+    let aChar: [::core::ffi::c_uchar; 126] = [
         '\0' as i32 as ::core::ffi::c_uchar,
         'a' as i32 as ::core::ffi::c_uchar,
         'c' as i32 as ::core::ffi::c_uchar,
@@ -714,7 +714,7 @@ unsafe extern "C" fn remove_diacritic(
         ('u' as i32 | HIBIT as ::core::ffi::c_int) as ::core::ffi::c_uchar,
         'y' as i32 as ::core::ffi::c_uchar,
     ];
-    let mut key: ::core::ffi::c_uint =
+    let key: ::core::ffi::c_uint =
         (c as ::core::ffi::c_uint) << 3 as ::core::ffi::c_int | 0x7 as ::core::ffi::c_uint;
     let mut iRes: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
     let mut iHi: ::core::ffi::c_int = (::core::mem::size_of::<[::core::ffi::c_ushort; 126]>()
@@ -723,7 +723,7 @@ unsafe extern "C" fn remove_diacritic(
         .wrapping_sub(1 as usize) as ::core::ffi::c_int;
     let mut iLo: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
     while iHi >= iLo {
-        let mut iTest: ::core::ffi::c_int = (iHi + iLo) / 2 as ::core::ffi::c_int;
+        let iTest: ::core::ffi::c_int = (iHi + iLo) / 2 as ::core::ffi::c_int;
         if key >= aDia[iTest as usize] as ::core::ffi::c_uint {
             iRes = iTest;
             iLo = iTest + 1 as ::core::ffi::c_int;
@@ -749,10 +749,10 @@ pub const HIBIT: ::core::ffi::c_uchar = 0x80 as ::core::ffi::c_int as ::core::ff
 
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 pub unsafe extern "C" fn sqlite3FtsUnicodeIsdiacritic(
-    mut c: ::core::ffi::c_int,
+    c: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
-    let mut mask0: ::core::ffi::c_uint = 0x8029fdf as ::core::ffi::c_int as ::core::ffi::c_uint;
-    let mut mask1: ::core::ffi::c_uint = 0x361f8 as ::core::ffi::c_int as ::core::ffi::c_uint;
+    let mask0: ::core::ffi::c_uint = 0x8029fdf as ::core::ffi::c_int as ::core::ffi::c_uint;
+    let mask1: ::core::ffi::c_uint = 0x361f8 as ::core::ffi::c_int as ::core::ffi::c_uint;
     if c < 768 as ::core::ffi::c_int || c > 817 as ::core::ffi::c_int {
         return 0 as ::core::ffi::c_int;
     }
@@ -767,8 +767,8 @@ pub unsafe extern "C" fn sqlite3FtsUnicodeIsdiacritic(
 
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 pub unsafe extern "C" fn sqlite3FtsUnicodeFold(
-    mut c: ::core::ffi::c_int,
-    mut eRemoveDiacritic: ::core::ffi::c_int,
+    c: ::core::ffi::c_int,
+    eRemoveDiacritic: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
     static mut aEntry: [TableEntry; 163] = [
         TableEntry {
@@ -1672,7 +1672,7 @@ pub unsafe extern "C" fn sqlite3FtsUnicodeFold(
             ret = c + ('a' as i32 - 'A' as i32);
         }
     } else if c < 65536 as ::core::ffi::c_int {
-        let mut p: *const TableEntry = ::core::ptr::null::<TableEntry>();
+        let p: *const TableEntry;
         let mut iHi: ::core::ffi::c_int = (::core::mem::size_of::<[TableEntry; 163]>() as usize)
             .wrapping_div(::core::mem::size_of::<TableEntry>() as usize)
             .wrapping_sub(1 as usize)
@@ -1680,8 +1680,8 @@ pub unsafe extern "C" fn sqlite3FtsUnicodeFold(
         let mut iLo: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
         let mut iRes: ::core::ffi::c_int = -(1 as ::core::ffi::c_int);
         while iHi >= iLo {
-            let mut iTest: ::core::ffi::c_int = (iHi + iLo) / 2 as ::core::ffi::c_int;
-            let mut cmp: ::core::ffi::c_int =
+            let iTest: ::core::ffi::c_int = (iHi + iLo) / 2 as ::core::ffi::c_int;
+            let cmp: ::core::ffi::c_int =
                 c - aEntry[iTest as usize].iCode as ::core::ffi::c_int;
             if cmp >= 0 as ::core::ffi::c_int {
                 iRes = iTest;
