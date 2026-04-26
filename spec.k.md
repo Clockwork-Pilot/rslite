@@ -24,6 +24,7 @@ Verify c_variadic feature isolation: only in printf_c_variadic.rs
       - [forbid_non_camel_case_types_with_warnings_robust](#forbid_non_camel_case_types_with_warnings_robust)
       - [forbid_pointer_null_comparison_lints_any](#forbid_pointer_null_comparison_lints_any)
       - [forbid_static_mut_refs_any](#forbid_static_mut_refs_any)
+      - [forbid_unsafe_correctness_lints_allow_expect_any](#forbid_unsafe_correctness_lints_allow_expect_any)
       - [forbid_unsafe_correctness_lints_any](#forbid_unsafe_correctness_lints_any)
       - [forbid_unused_mut_assignments_any](#forbid_unused_mut_assignments_any)
       - [forbid_unused_mut_assignments_workspace_any](#forbid_unused_mut_assignments_workspace_any)
@@ -92,6 +93,9 @@ Verify c_variadic feature isolation: only in printf_c_variadic.rs
 
 #### forbid_static_mut_refs_any
 **Description:** Structural: Forbid any allow() attribute (inner #![...] or outer #[...], bare or clippy:: prefix, alone or combined, arbitrary whitespace) for static_mut_refs across crates/**/*.rs. Also forbid equivalent suppressions in crates/rslite-core/Cargo.toml under [lints.rust] / [lints.clippy] (e.g. `static_mut_refs = "allow"`). Word boundaries prevent false positives on longer identifiers.
+
+#### forbid_unsafe_correctness_lints_allow_expect_any
+**Description:** Structural: Forbid any allow() OR expect() attribute (inner #![...] or outer #[...], bare or clippy:: prefix, alone or combined, arbitrary whitespace) for unsafe-correctness lints unsafe_op_in_unsafe_fn (rustc), improper_ctypes (rustc), clippy::undocumented_unsafe_blocks, clippy::useless_transmute, clippy::missing_transmute_annotations across crates/**/*.rs. Also forbid equivalent suppressions (allow or expect) in any Cargo.toml across the workspace under [lints.rust] / [lints.clippy] / [workspace.lints.rust] / [workspace.lints.clippy] (e.g. `unsafe_op_in_unsafe_fn = "allow"` or `= "expect"`). Word boundaries prevent false positives on longer identifiers.
 
 #### forbid_unsafe_correctness_lints_any
 **Description:** Structural: Forbid any allow() attribute (inner #![...] or outer #[...], bare or clippy:: prefix, alone or combined, arbitrary whitespace) for unsafe-correctness lints unsafe_op_in_unsafe_fn (rustc), improper_ctypes (rustc), clippy::undocumented_unsafe_blocks, clippy::useless_transmute, clippy::missing_transmute_annotations across crates/**/*.rs. Also forbid equivalent suppressions in any Cargo.toml across the workspace under [lints.rust] / [lints.clippy] / [workspace.lints.rust] / [workspace.lints.clippy] (e.g. `unsafe_op_in_unsafe_fn = "allow"`). Word boundaries prevent false positives on longer identifiers.
