@@ -287,7 +287,7 @@ pub unsafe extern "C" fn sqlite3UpsertNew(
         __pNew_ref.pUpsertSet = pSet;
         __pNew_ref.pUpsertWhere = pWhere;
         __pNew_ref.isDoUpdate =
-            (pSet != ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::ExprList>())
+            !pSet.is_null()
                 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::U8_0;
         __pNew_ref.pNextUpsert = pNext;
     }

@@ -180,9 +180,9 @@ pub unsafe extern "C" fn sqlite3RowSetInit(
         __p_ref.pEntry = ::core::ptr::null_mut::<RowSetEntry>();
         __p_ref.pLast = ::core::ptr::null_mut::<RowSetEntry>();
         __p_ref.pForest = ::core::ptr::null_mut::<RowSetEntry>();
-        __p_ref.pFresh = (p as *mut ::core::ffi::c_char).offset(
+        __p_ref.pFresh = (p as *mut ::core::ffi::c_char).add(
             ((::core::mem::size_of::<RowSet>() as usize).wrapping_add(7_usize)
-                & !(7 as ::core::ffi::c_int) as usize) as isize,
+                & !(7 as ::core::ffi::c_int) as usize),
         ) as *mut RowSetEntry;
         __p_ref.nFresh = (N as usize)
             .wrapping_sub(

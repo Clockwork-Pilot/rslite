@@ -3022,8 +3022,7 @@ pub unsafe extern "C" fn sqlite3WhereCodeOneLoopStart(
             while iTerm < (*pWC).nTerm {
                 let mut pExpr: *mut crate::src::headers::sqliteInt_h::Expr =
                     (*(*pWC).a.offset(iTerm as isize)).pExpr;
-                if ((*pWC).a.offset(iTerm as isize)
-                    as *mut crate::src::headers::whereInt_h::WhereTerm != pTerm)
+                if !std::ptr::eq((*pWC).a.offset(iTerm as isize), pTerm)
                     && ((*(*pWC).a.offset(iTerm as isize)).wtFlags as ::core::ffi::c_int
                         & (crate::src::headers::whereInt_h::TERM_VIRTUAL
                             | crate::src::headers::whereInt_h::TERM_CODED

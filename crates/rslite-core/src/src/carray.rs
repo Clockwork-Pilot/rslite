@@ -654,11 +654,14 @@ pub unsafe extern "C" fn sqlite3_carray_bind(
         } else {
             (*pNew).nData = nData;
             (*pNew).mFlags = mFlags;
-            if xDestroy
-                == ::core::mem::transmute::<
-                    crate::src::headers::stdlib::IntptrT,
-                    crate::src::headers::sqlite3_h::Sqlite3DestructorType,
-                >(-(1 as ::core::ffi::c_int) as crate::src::headers::stdlib::IntptrT)
+            if match (xDestroy, ::core::mem::transmute::<
+                crate::src::headers::stdlib::IntptrT,
+                crate::src::headers::sqlite3_h::Sqlite3DestructorType,
+            >(-(1 as ::core::ffi::c_int) as crate::src::headers::stdlib::IntptrT)) {
+                (Some(__x), Some(__y)) => ::core::ptr::fn_addr_eq(__x, __y),
+                (None, None) => true,
+                _ => false,
+            }
             {
                 let mut sz: crate::src::headers::sqlite3_h::Sqlite3Int64 =
                     nData as crate::src::headers::sqlite3_h::Sqlite3Int64;
@@ -770,7 +773,7 @@ pub unsafe extern "C" fn sqlite3_carray_bind(
                             (*p.offset(i as isize)).iov_len = n_0;
                             let fresh2 = &mut (*p.offset(i as isize)).iov_base;
                             *fresh2 = z_1 as *mut ::core::ffi::c_void;
-                            z_1 = z_1.offset(n_0 as isize);
+                            z_1 = z_1.add(n_0);
                             ::libc::memcpy(
                                 (*p.offset(i as isize)).iov_base,
                                 (*(aData as *mut ::libc::iovec).offset(i as isize)).iov_base,
@@ -812,11 +815,14 @@ pub unsafe extern "C" fn sqlite3_carray_bind(
         }
     }
     if xDestroy.is_some()
-        && xDestroy
-            != ::core::mem::transmute::<
-                crate::src::headers::stdlib::IntptrT,
-                crate::src::headers::sqlite3_h::Sqlite3DestructorType,
-            >(-(1 as ::core::ffi::c_int) as crate::src::headers::stdlib::IntptrT)
+        && !match (xDestroy, ::core::mem::transmute::<
+            crate::src::headers::stdlib::IntptrT,
+            crate::src::headers::sqlite3_h::Sqlite3DestructorType,
+        >(-(1 as ::core::ffi::c_int) as crate::src::headers::stdlib::IntptrT)) {
+            (Some(__x), Some(__y)) => ::core::ptr::fn_addr_eq(__x, __y),
+            (None, None) => true,
+            _ => false,
+        }
     {
         xDestroy.expect("non-null function pointer")(aData);
     }

@@ -420,7 +420,7 @@ unsafe extern "C" fn walIndexPage(
 
 unsafe extern "C" fn walCkptInfo(pWal: *mut Wal) -> *mut WalCkptInfo {
     (*(*pWal).apWiData.offset(0_isize))
-        .offset((::core::mem::size_of::<WalIndexHdr>() as usize).wrapping_div(2_usize) as isize)
+        .add((::core::mem::size_of::<WalIndexHdr>() as usize).wrapping_div(2_usize))
         as *mut crate::src::ext::rtree::rtree::U32_0 as *mut WalCkptInfo
 }
 
@@ -807,9 +807,9 @@ unsafe extern "C" fn walHashGet(
             __pLoc_ref.aPgno =
                 __pLoc_ref
                     .aPgno
-                    .offset(WALINDEX_HDR_SIZE.wrapping_div(::core::mem::size_of::<
+                    .add(WALINDEX_HDR_SIZE.wrapping_div(::core::mem::size_of::<
                         crate::src::ext::rtree::rtree::U32_0,
-                    >() as usize) as isize)
+                    >() as usize))
                     as *mut crate::src::ext::rtree::rtree::U32_0;
             __pLoc_ref.iZero = 0 as crate::src::ext::rtree::rtree::U32_0;
         } else {
@@ -840,19 +840,19 @@ unsafe extern "C" fn walFramePgno(
 ) -> crate::src::ext::rtree::rtree::U32_0 {
     let iHash: ::core::ffi::c_int = walFramePage(iFrame);
     if iHash == 0 as ::core::ffi::c_int {
-        return *(*(*pWal).apWiData.offset(0_isize)).offset(
+        return *(*(*pWal).apWiData.offset(0_isize)).add(
             WALINDEX_HDR_SIZE
                 .wrapping_div(
                     ::core::mem::size_of::<crate::src::ext::rtree::rtree::U32_0>() as usize,
                 )
                 .wrapping_add(iFrame as usize)
-                .wrapping_sub(1_usize) as isize,
+                .wrapping_sub(1_usize),
         );
     }
-    *(*(*pWal).apWiData.offset(iHash as isize)).offset(
+    *(*(*pWal).apWiData.offset(iHash as isize)).add(
         (iFrame.wrapping_sub(1 as crate::src::ext::rtree::rtree::U32_0) as usize)
             .wrapping_sub(HASHTABLE_NPAGE_ONE)
-            .wrapping_rem(HASHTABLE_NPAGE as usize) as isize,
+            .wrapping_rem(HASHTABLE_NPAGE as usize),
     )
 }
 
@@ -3028,7 +3028,7 @@ unsafe extern "C" fn walRewriteChecksums(
         crate::src::src::util::sqlite3Get4byte(aBuf);
     __pWal_ref.hdr.aFrameCksum[1 as ::core::ffi::c_int as usize] =
         crate::src::src::util::sqlite3Get4byte(
-            aBuf.offset(::core::mem::size_of::<crate::src::ext::rtree::rtree::U32_0>() as isize)
+            aBuf.add(::core::mem::size_of::<crate::src::ext::rtree::rtree::U32_0>())
                 as *mut crate::src::ext::rtree::rtree::U8_0,
         );
     iRead = __pWal_ref.iReCksum;

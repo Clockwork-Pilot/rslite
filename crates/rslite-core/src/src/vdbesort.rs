@@ -1674,10 +1674,10 @@ unsafe extern "C" fn vdbeMergeEngineStep(
             }
             i /= 2 as ::core::ffi::c_int;
         }
-        *pbEof = ((*(*pMerger)
+        *pbEof = (*(*pMerger)
             .aReadr
             .offset(*__pMerger_ref.aTree.offset(1_isize) as isize))
-        .pFd == ::core::ptr::null_mut::<crate::src::headers::sqlite3_h::sqlite3_file>())
+        .pFd.is_null()
             as ::core::ffi::c_int;
     }
     if rc == crate::src::headers::sqlite3_h::SQLITE_OK {

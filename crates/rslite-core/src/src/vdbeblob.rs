@@ -747,16 +747,16 @@ unsafe extern "C" fn blobReadWrite(
         rc = crate::src::headers::sqlite3_h::SQLITE_ABORT;
     } else {
         crate::src::src::btmutex::sqlite3BtreeEnterCursor(__p_ref.pCsr);
-        if xCall
-            == Some(
-                crate::src::src::btree::sqlite3BtreePutData
-                    as unsafe extern "C" fn(
-                        *mut crate::src::headers::btreeInt_h::BtCursor,
-                        crate::src::ext::rtree::rtree::U32_0,
-                        crate::src::ext::rtree::rtree::U32_0,
-                        *mut ::core::ffi::c_void,
-                    ) -> ::core::ffi::c_int,
-            )
+        if xCall.is_some_and(|__f| ::core::ptr::fn_addr_eq(
+            __f,
+            crate::src::src::btree::sqlite3BtreePutData
+                as unsafe extern "C" fn(
+                    *mut crate::src::headers::btreeInt_h::BtCursor,
+                    crate::src::ext::rtree::rtree::U32_0,
+                    crate::src::ext::rtree::rtree::U32_0,
+                    *mut ::core::ffi::c_void,
+                ) -> ::core::ffi::c_int,
+        ))
             && (*db).xPreUpdateCallback.is_some()
         {
             if crate::src::src::btree::sqlite3BtreeCursorIsValidNN(__p_ref.pCsr)

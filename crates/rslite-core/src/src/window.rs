@@ -3236,15 +3236,15 @@ unsafe extern "C" fn windowAggStep(
                 (*pWin).regApp + 1 as ::core::ffi::c_int - bInverse,
                 1 as ::core::ffi::c_int,
             );
-        } else if (*pFunc).xSFunc
-            != Some(
-                noopStepFunc
-                    as unsafe extern "C" fn(
-                        *mut crate::src::headers::vdbeInt_h::sqlite3_context,
-                        ::core::ffi::c_int,
-                        *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
-                    ) -> (),
-            )
+        } else if !(*pFunc).xSFunc.is_some_and(|__f| ::core::ptr::fn_addr_eq(
+            __f,
+            noopStepFunc
+                as unsafe extern "C" fn(
+                    *mut crate::src::headers::vdbeInt_h::sqlite3_context,
+                    ::core::ffi::c_int,
+                    *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
+                ) -> (),
+        ))
         {
             let __pWin_ref = unsafe { &mut *pWin };
             if __pWin_ref.bExprArgs != 0 {

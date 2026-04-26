@@ -1664,10 +1664,9 @@ unsafe extern "C" fn fts3InitVtab(
                                 i += 1;
                             }
                             if rc == crate::src::headers::sqlite3_h::SQLITE_OK
-                                && (zCompress == ::core::ptr::null_mut::<::core::ffi::c_char>())
+                                && zCompress.is_null()
                                     as ::core::ffi::c_int
-                                    != (zUncompress
-                                        == ::core::ptr::null_mut::<::core::ffi::c_char>())
+                                    != zUncompress.is_null()
                                         as ::core::ffi::c_int
                             {
                                 let zMiss: *const ::core::ffi::c_char = if zCompress.is_null() {
@@ -6231,8 +6230,7 @@ unsafe extern "C" fn fts3EvalTestExpr(
                         fts3EvalInvalidatePoslist(pPhrase);
                     }
                     *pRc = fts3EvalDeferredPhrase(pCsr, pPhrase);
-                    bHit = ((*pPhrase).doclist.pList
-                        != ::core::ptr::null_mut::<::core::ffi::c_char>())
+                    bHit = !(*pPhrase).doclist.pList.is_null()
                         as ::core::ffi::c_int;
                     __pExpr_ref.iDocid = (*pCsr).iPrevId;
                 } else {

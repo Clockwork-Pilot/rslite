@@ -3407,9 +3407,8 @@ unsafe extern "C" fn resizeIndexObject(
             .wrapping_mul(__pIdx_ref.nColumn as crate::__stddef_size_t_h::SizeT)) as usize,
     );
     __pIdx_ref.azColl = zExtra as *mut *const ::core::ffi::c_char;
-    zExtra = zExtra.offset(
-        (::core::mem::size_of::<*mut ::core::ffi::c_char>() as usize).wrapping_mul(N as usize)
-            as isize,
+    zExtra = zExtra.add(
+        (::core::mem::size_of::<*mut ::core::ffi::c_char>() as usize).wrapping_mul(N as usize),
     );
     ::core::ptr::copy_nonoverlapping(
         __pIdx_ref.aiRowLogEst as *const u8,
@@ -3422,9 +3421,9 @@ unsafe extern "C" fn resizeIndexObject(
             )) as usize,
     );
     __pIdx_ref.aiRowLogEst = zExtra as *mut crate::src::headers::sqliteInt_h::LogEst;
-    zExtra = zExtra.offset(
+    zExtra = zExtra.add(
         (::core::mem::size_of::<crate::src::headers::sqliteInt_h::LogEst>() as usize)
-            .wrapping_mul(N as usize) as isize,
+            .wrapping_mul(N as usize),
     );
     ::core::ptr::copy_nonoverlapping(
         __pIdx_ref.aiColumn as *const u8,
@@ -3433,9 +3432,8 @@ unsafe extern "C" fn resizeIndexObject(
             .wrapping_mul(__pIdx_ref.nColumn as crate::__stddef_size_t_h::SizeT)) as usize,
     );
     __pIdx_ref.aiColumn = zExtra as *mut crate::src::fts5::I16_0;
-    zExtra = zExtra.offset(
-        (::core::mem::size_of::<crate::src::fts5::I16_0>() as usize).wrapping_mul(N as usize)
-            as isize,
+    zExtra = zExtra.add(
+        (::core::mem::size_of::<crate::src::fts5::I16_0>() as usize).wrapping_mul(N as usize),
     );
     ::core::ptr::copy_nonoverlapping(
         __pIdx_ref.aSortOrder as *const u8,
@@ -5719,28 +5717,27 @@ pub unsafe extern "C" fn sqlite3AllocateIndexObject(
             as crate::src::ext::rtree::rtree::U64_0,
     ) as *mut crate::src::headers::sqliteInt_h::Index;
     if !p.is_null() {
-        let mut pExtra: *mut ::core::ffi::c_char = (p as *mut ::core::ffi::c_char).offset(
+        let mut pExtra: *mut ::core::ffi::c_char = (p as *mut ::core::ffi::c_char).add(
             ((::core::mem::size_of::<crate::src::headers::sqliteInt_h::Index>() as usize)
                 .wrapping_add(7_usize)
-                & !(7 as ::core::ffi::c_int) as usize) as isize,
+                & !(7 as ::core::ffi::c_int) as usize),
         );
         let __p_ref = unsafe { &mut *p };
         __p_ref.azColl = pExtra as *mut *const ::core::ffi::c_char;
-        pExtra = pExtra.offset(
+        pExtra = pExtra.add(
             ((::core::mem::size_of::<*mut ::core::ffi::c_char>() as usize)
                 .wrapping_mul(nCol as usize)
                 .wrapping_add(7_usize)
-                & !(7 as ::core::ffi::c_int) as usize) as isize,
+                & !(7 as ::core::ffi::c_int) as usize),
         );
         __p_ref.aiRowLogEst = pExtra as *mut crate::src::headers::sqliteInt_h::LogEst;
-        pExtra = pExtra.offset(
+        pExtra = pExtra.add(
             (::core::mem::size_of::<crate::src::headers::sqliteInt_h::LogEst>() as usize)
-                .wrapping_mul((nCol + 1 as ::core::ffi::c_int) as usize) as isize,
+                .wrapping_mul((nCol + 1 as ::core::ffi::c_int) as usize),
         );
         __p_ref.aiColumn = pExtra as *mut crate::src::fts5::I16_0;
-        pExtra = pExtra.offset(
-            (::core::mem::size_of::<crate::src::fts5::I16_0>() as usize).wrapping_mul(nCol as usize)
-                as isize,
+        pExtra = pExtra.add(
+            (::core::mem::size_of::<crate::src::fts5::I16_0>() as usize).wrapping_mul(nCol as usize),
         );
         __p_ref.aSortOrder = pExtra as *mut crate::src::ext::rtree::rtree::U8_0;
         __p_ref.nColumn = nCol as crate::src::fts5::U16_0;
@@ -7491,9 +7488,9 @@ pub unsafe extern "C" fn sqlite3SrcItemAttachSubquery(
         .set_isSubquery(1 as ::core::ffi::c_uint as ::core::ffi::c_uint);
     (*p).pSelect = pSelect;
     ::libc::memset(
-        (p as *mut ::core::ffi::c_char).offset(::core::mem::size_of::<
+        (p as *mut ::core::ffi::c_char).add(::core::mem::size_of::<
             *mut crate::src::headers::sqliteInt_h::Select,
-        >() as usize as isize) as *mut ::core::ffi::c_void,
+        >() as usize) as *mut ::core::ffi::c_void,
         0 as ::core::ffi::c_int,
         (::core::mem::size_of::<crate::src::headers::sqliteInt_h::Subquery>()
             as crate::__stddef_size_t_h::SizeT)

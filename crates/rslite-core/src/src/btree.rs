@@ -2853,9 +2853,7 @@ pub unsafe extern "C" fn sqlite3BtreeOpen(
                             0 as ::core::ffi::c_int,
                         ),
                     )
-                    && crate::src::src::pager::sqlite3PagerVfs((*pBt).pPager)
-                        as *mut crate::src::headers::sqlite3_h::sqlite3_vfs
-                        == pVfs
+                    && std::ptr::eq(crate::src::src::pager::sqlite3PagerVfs((*pBt).pPager), pVfs)
                 {
                     let mut iDb: ::core::ffi::c_int;
                     iDb = (*db).nDb - 1 as ::core::ffi::c_int;
@@ -5629,8 +5627,7 @@ unsafe extern "C" fn moveToRoot(
     if current_block == 17478428563724192186 {
         pRoot = __pCur_ref.pPage;
         if (*pRoot).isInit as ::core::ffi::c_int == 0 as ::core::ffi::c_int
-            || (__pCur_ref.pKeyInfo
-                == ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::KeyInfo>())
+            || __pCur_ref.pKeyInfo.is_null()
                 as ::core::ffi::c_int
                 != (*pRoot).intKey as ::core::ffi::c_int
         {

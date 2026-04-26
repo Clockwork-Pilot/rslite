@@ -990,7 +990,7 @@ unsafe extern "C" fn jsonCacheSearch(
     }
     i = 0 as ::core::ffi::c_int;
     while i < (*p).nUsed {
-        if (*(*p).a[i as usize]).zJson == zJson as *mut ::core::ffi::c_char {
+        if std::ptr::eq((*(*p).a[i as usize]).zJson, zJson) {
             break;
         }
         i += 1;
@@ -4814,11 +4814,11 @@ unsafe extern "C" fn jsonLookupStep(
             } else {
                 return JSON_LOOKUP_PATHERROR as crate::src::ext::rtree::rtree::U32_0;
             }
-            rawKey = (::libc::memchr(
+            rawKey = ::libc::memchr(
                 zKey as *const ::core::ffi::c_void,
                 '\\' as i32,
                 nKey as crate::__stddef_size_t_h::SizeT,
-            ) == ::core::ptr::null_mut::<::core::ffi::c_void>())
+            ).is_null()
                 as ::core::ffi::c_int;
         } else {
             zKey = zPath;

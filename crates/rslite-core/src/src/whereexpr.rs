@@ -401,16 +401,15 @@ unsafe extern "C" fn exprCommute(
     let __pExpr_ref = unsafe { &mut *pExpr };
     if (*__pExpr_ref.pLeft).op as ::core::ffi::c_int == crate::src::parse::TK_VECTOR
         || (*__pExpr_ref.pRight).op as ::core::ffi::c_int == crate::src::parse::TK_VECTOR
-        || crate::src::src::expr::sqlite3BinaryCompareCollSeq(
+        || !std::ptr::eq(crate::src::src::expr::sqlite3BinaryCompareCollSeq(
             pParse as *mut crate::src::headers::sqliteInt_h::Parse,
             __pExpr_ref.pLeft as *const crate::src::headers::sqliteInt_h::Expr,
             __pExpr_ref.pRight as *const crate::src::headers::sqliteInt_h::Expr,
-        ) as *mut crate::src::headers::sqliteInt_h::CollSeq
-            != crate::src::src::expr::sqlite3BinaryCompareCollSeq(
+        ), crate::src::src::expr::sqlite3BinaryCompareCollSeq(
                 pParse as *mut crate::src::headers::sqliteInt_h::Parse,
                 __pExpr_ref.pRight as *const crate::src::headers::sqliteInt_h::Expr,
                 __pExpr_ref.pLeft as *const crate::src::headers::sqliteInt_h::Expr,
-            ) as *mut crate::src::headers::sqliteInt_h::CollSeq
+            ))
     {
         __pExpr_ref.flags ^=
             crate::src::headers::sqliteInt_h::EP_Commuted as crate::src::ext::rtree::rtree::U32_0;
@@ -669,7 +668,7 @@ unsafe extern "C" fn isLikeOrGlob(
             z = ::core::ptr::null::<crate::src::ext::rtree::rtree::U8_0>();
         }
     }
-    let rc: ::core::ffi::c_int = (z != ::core::ptr::null::<crate::src::ext::rtree::rtree::U8_0>()) as ::core::ffi::c_int;
+    let rc: ::core::ffi::c_int = !z.is_null() as ::core::ffi::c_int;
     crate::src::src::vdbemem::sqlite3ValueFree(pVal);
     rc
 }

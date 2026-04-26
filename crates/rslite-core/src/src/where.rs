@@ -919,9 +919,7 @@ unsafe extern "C" fn whereScanNext(
                                     != 0 as ::core::ffi::c_int
                                     && {
                                         pX = (*(*pTerm).pExpr).pRight;
-                                        pX != ::core::ptr::null_mut::<
-                                            crate::src::headers::sqliteInt_h::Expr,
-                                        >()
+                                        !pX.is_null()
                                     }
                                     && (*pX).op as ::core::ffi::c_int
                                         == crate::src::parse::TK_COLUMN
@@ -2478,9 +2476,9 @@ unsafe extern "C" fn whereRangeScanEst(
         nNew = (nNew as ::core::ffi::c_int - 20 as ::core::ffi::c_int)
             as crate::src::headers::sqliteInt_h::LogEst;
     }
-    nOut -= (pLower != ::core::ptr::null_mut::<crate::src::headers::whereInt_h::WhereTerm>())
+    nOut -= !pLower.is_null()
         as ::core::ffi::c_int
-        + (pUpper != ::core::ptr::null_mut::<crate::src::headers::whereInt_h::WhereTerm>())
+        + !pUpper.is_null()
             as ::core::ffi::c_int;
     if (nNew as ::core::ffi::c_int) < 10 as ::core::ffi::c_int {
         nNew = 10 as crate::src::headers::sqliteInt_h::LogEst;
@@ -2978,9 +2976,7 @@ unsafe extern "C" fn whereLoopOutputAdjust(
                                 break;
                             }
                             if (*pX).iParent >= 0 as ::core::ffi::c_int
-                                && (*pWC).a.offset((*pX).iParent as isize)
-                                    as *mut crate::src::headers::whereInt_h::WhereTerm
-                                    == pTerm
+                                && std::ptr::eq((*pWC).a.offset((*pX).iParent as isize), pTerm)
                             {
                                 break;
                             }

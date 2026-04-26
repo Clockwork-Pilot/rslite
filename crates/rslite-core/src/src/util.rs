@@ -222,7 +222,7 @@ pub unsafe extern "C" fn sqlite3ColumnType(
     {
         (*pCol)
             .zCnName
-            .offset(::libc::strlen((*pCol).zCnName) as isize)
+            .add(::libc::strlen((*pCol).zCnName))
             .offset(1_isize)
     } else if (*pCol).eCType() != 0 {
         *(&raw mut crate::src::src::global::sqlite3StdType

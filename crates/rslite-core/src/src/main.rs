@@ -922,17 +922,17 @@ pub unsafe extern "C" fn sqlite3IsBinary(
     p: *const crate::src::headers::sqliteInt_h::CollSeq,
 ) -> ::core::ffi::c_int {
     (p.is_null()
-        || (*p).xCmp
-            == Some(
-                binCollFunc
-                    as unsafe extern "C" fn(
-                        *mut ::core::ffi::c_void,
-                        ::core::ffi::c_int,
-                        *const ::core::ffi::c_void,
-                        ::core::ffi::c_int,
-                        *const ::core::ffi::c_void,
-                    ) -> ::core::ffi::c_int,
-            )) as ::core::ffi::c_int
+        || (*p).xCmp.is_some_and(|__f| ::core::ptr::fn_addr_eq(
+            __f,
+            binCollFunc
+                as unsafe extern "C" fn(
+                    *mut ::core::ffi::c_void,
+                    ::core::ffi::c_int,
+                    *const ::core::ffi::c_void,
+                    ::core::ffi::c_int,
+                    *const ::core::ffi::c_void,
+                ) -> ::core::ffi::c_int,
+        ))) as ::core::ffi::c_int
 }
 
 unsafe extern "C" fn nocaseCollatingFunc(
@@ -2337,14 +2337,13 @@ pub unsafe extern "C" fn sqlite3_overload_function(
     
     
     crate::src::src::mutex::sqlite3_mutex_enter((*db).mutex);
-    let rc: ::core::ffi::c_int = (crate::src::src::callback::sqlite3FindFunction(
+    let rc: ::core::ffi::c_int = !(crate::src::src::callback::sqlite3FindFunction(
         db as *mut crate::src::headers::sqliteInt_h::sqlite3,
         zName,
         nArg,
         crate::src::headers::sqlite3_h::SQLITE_UTF8 as crate::src::ext::rtree::rtree::U8_0,
         0 as crate::src::ext::rtree::rtree::U8_0,
-    ) as *mut crate::src::headers::sqliteInt_h::FuncDef
-        != ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::FuncDef>())
+    ) as *mut crate::src::headers::sqliteInt_h::FuncDef).is_null()
         as ::core::ffi::c_int;
     crate::src::src::mutex::sqlite3_mutex_leave((*db).mutex);
     if rc != 0 {
@@ -4565,7 +4564,7 @@ unsafe extern "C" fn appendText(
         p as *mut u8,
         (n.wrapping_add(1 as crate::__stddef_size_t_h::SizeT)) as usize,
     );
-    p.offset(n as isize).offset(1_isize)
+    p.add(n).offset(1_isize)
 }
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn sqlite3_create_filename(

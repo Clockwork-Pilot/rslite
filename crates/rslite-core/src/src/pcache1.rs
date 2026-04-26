@@ -230,9 +230,9 @@ unsafe extern "C" fn pcache1InitBulk(pCache: *mut PCache1) -> ::core::ffi::c_int
                 as *mut ::core::ffi::c_char as *mut PgHdr1;
             let __pX_ref = { &mut *pX };
             __pX_ref.page.pBuf = zBulk as *mut ::core::ffi::c_void;
-            __pX_ref.page.pExtra = (pX as *mut crate::src::ext::rtree::rtree::U8_0).offset(
+            __pX_ref.page.pExtra = (pX as *mut crate::src::ext::rtree::rtree::U8_0).add(
                 ((::core::mem::size_of::<PgHdr1>() as usize).wrapping_add(7_usize)
-                    & !(7 as ::core::ffi::c_int) as usize) as isize,
+                    & !(7 as ::core::ffi::c_int) as usize),
             ) as *mut ::core::ffi::c_void;
             __pX_ref.isBulkLocal = 1 as crate::src::fts5::U16_0;
             __pX_ref.isAnchor = 0 as crate::src::fts5::U16_0;
@@ -246,7 +246,7 @@ unsafe extern "C" fn pcache1InitBulk(pCache: *mut PCache1) -> ::core::ffi::c_int
             }
         }
     }
-    (__pCache_ref.pFree != ::core::ptr::null_mut::<PgHdr1>()) as ::core::ffi::c_int
+    !__pCache_ref.pFree.is_null() as ::core::ffi::c_int
 }
 
 unsafe extern "C" fn pcache1Alloc(nByte: ::core::ffi::c_int) -> *mut ::core::ffi::c_void {
@@ -355,9 +355,9 @@ unsafe extern "C" fn pcache1AllocPage(
         p = (pPg as *mut crate::src::ext::rtree::rtree::U8_0).offset(__pCache_ref.szPage as isize)
             as *mut crate::src::ext::rtree::rtree::U8_0 as *mut PgHdr1;
         (*p).page.pBuf = pPg;
-        (*p).page.pExtra = (p as *mut crate::src::ext::rtree::rtree::U8_0).offset(
+        (*p).page.pExtra = (p as *mut crate::src::ext::rtree::rtree::U8_0).add(
             ((::core::mem::size_of::<PgHdr1>() as usize).wrapping_add(7_usize)
-                & !(7 as ::core::ffi::c_int) as usize) as isize,
+                & !(7 as ::core::ffi::c_int) as usize),
         ) as *mut ::core::ffi::c_void;
         (*p).isBulkLocal = 0 as crate::src::fts5::U16_0;
         (*p).isAnchor = 0 as crate::src::fts5::U16_0;

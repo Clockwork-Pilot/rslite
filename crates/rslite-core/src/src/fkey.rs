@@ -1357,8 +1357,7 @@ pub unsafe extern "C" fn sqlite3FkCheck(
                             );
                         }
                         if regOld != 0 as ::core::ffi::c_int {
-                            let mut eAction: ::core::ffi::c_int = (*pFKey).aAction[(aChange
-                                != ::core::ptr::null_mut::<::core::ffi::c_int>())
+                            let mut eAction: ::core::ffi::c_int = (*pFKey).aAction[!aChange.is_null()
                                 as ::core::ffi::c_int
                                 as usize]
                                 as ::core::ffi::c_int;
@@ -1536,8 +1535,7 @@ unsafe extern "C" fn fkActionTrigger(
     let db: *mut crate::src::headers::sqliteInt_h::sqlite3 = (*pParse).db;
     let mut action: ::core::ffi::c_int;
     let mut pTrigger: *mut crate::src::headers::sqliteInt_h::Trigger;
-    let iAction: ::core::ffi::c_int = (pChanges
-        != ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::ExprList>())
+    let iAction: ::core::ffi::c_int = !pChanges.is_null()
         as ::core::ffi::c_int;
     action = (*pFKey).aAction[iAction as usize] as ::core::ffi::c_int;
     if (*db).flags & crate::src::headers::sqliteInt_h::SQLITE_FkNoAction != 0 {

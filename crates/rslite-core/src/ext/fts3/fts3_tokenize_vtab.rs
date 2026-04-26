@@ -387,7 +387,7 @@ unsafe extern "C" fn fts3tokEofMethod(
     pCursor: *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
 ) -> ::core::ffi::c_int {
     let pCsr = &*(pCursor as *mut Fts3tokCursor);
-    (pCsr.zToken == ::core::ptr::null::<::core::ffi::c_char>()) as ::core::ffi::c_int
+    pCsr.zToken.is_null() as ::core::ffi::c_int
 }
 
 unsafe extern "C" fn fts3tokColumnMethod(

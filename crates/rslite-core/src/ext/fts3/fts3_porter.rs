@@ -345,9 +345,8 @@ unsafe extern "C" fn porter_stemmer(
         j -= 1;
     }
     ::libc::memset(
-        (&raw mut zReverse as *mut ::core::ffi::c_char).offset(
-            (::core::mem::size_of::<[::core::ffi::c_char; 28]>() as usize).wrapping_sub(5_usize)
-                as isize,
+        (&raw mut zReverse as *mut ::core::ffi::c_char).add(
+            (::core::mem::size_of::<[::core::ffi::c_char; 28]>() as usize).wrapping_sub(5_usize),
         ) as *mut ::core::ffi::c_char as *mut ::core::ffi::c_void,
         0 as ::core::ffi::c_int,
         5 as crate::__stddef_size_t_h::SizeT,

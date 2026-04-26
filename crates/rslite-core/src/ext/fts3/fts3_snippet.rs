@@ -224,7 +224,7 @@ unsafe extern "C" fn fts3MIBufferNew(
                 .offset_from(pRet as *mut crate::src::ext::rtree::rtree::U8_0)
                 as ::core::ffi::c_long as crate::src::ext::rtree::rtree::U32_0;
         *(&raw mut __pRet_ref.aMI as *mut crate::src::ext::rtree::rtree::U32_0)
-            .offset((1 as crate::__stddef_size_t_h::SizeT).wrapping_add(nElem) as isize) =
+            .add((1 as crate::__stddef_size_t_h::SizeT).wrapping_add(nElem)) =
             (*(&raw mut __pRet_ref.aMI as *mut crate::src::ext::rtree::rtree::U32_0)
                 .offset(0_isize) as usize)
                 .wrapping_add(
@@ -252,9 +252,7 @@ unsafe extern "C" fn fts3MIBufferFree(p: *mut ::core::ffi::c_void) {
             .offset(-(1 as ::core::ffi::c_int) as isize) as isize),
     ) as *mut MatchinfoBuffer;
     let __pBuf_ref = unsafe { &mut *pBuf };
-    if p as *mut crate::src::ext::rtree::rtree::U32_0
-        == (&raw mut __pBuf_ref.aMI as *mut crate::src::ext::rtree::rtree::U32_0).offset(1_isize)
-            as *mut crate::src::ext::rtree::rtree::U32_0
+    if std::ptr::eq(p as *mut crate::src::ext::rtree::rtree::U32_0, (&raw mut __pBuf_ref.aMI as *mut crate::src::ext::rtree::rtree::U32_0).offset(1_isize))
     {
         __pBuf_ref.aRef[1 as ::core::ffi::c_int as usize] =
             0 as crate::src::ext::rtree::rtree::U8_0;
@@ -1624,7 +1622,7 @@ unsafe extern "C" fn fts3MatchinfoValues(
         }
         __pInfo_ref.aMatchinfo = (*pInfo)
             .aMatchinfo
-            .offset(fts3MatchinfoSize(pInfo, *zArg.offset(i as isize)) as isize);
+            .add(fts3MatchinfoSize(pInfo, *zArg.offset(i as isize)));
         i += 1;
     }
     crate::src::src::vdbeapi::sqlite3_reset(pSelect);

@@ -457,10 +457,10 @@ pub unsafe extern "C" fn sqlite3Fts3InitTokenizer(
     if zCopy.is_null() {
         return crate::src::headers::sqlite3_h::SQLITE_NOMEM;
     }
-    let zEnd: *mut ::core::ffi::c_char = zCopy.offset((::libc::strlen
+    let zEnd: *mut ::core::ffi::c_char = zCopy.add((::libc::strlen
         as unsafe extern "C" fn(*const ::core::ffi::c_char) -> crate::__stddef_size_t_h::SizeT)(
         zCopy,
-    ) as isize) as *mut ::core::ffi::c_char;
+    )) as *mut ::core::ffi::c_char;
     z = sqlite3Fts3NextToken(zCopy, &raw mut n) as *mut ::core::ffi::c_char;
     if z.is_null() {
         z = zCopy;

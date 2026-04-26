@@ -4751,7 +4751,7 @@ unsafe extern "C" fn rtreeStepToLeaf(pCur: *mut RtreeCursor) -> ::core::ffi::c_i
         }
     }
     __pCur_ref.atEOF =
-        (p == ::core::ptr::null_mut::<RtreeSearchPoint>()) as ::core::ffi::c_int as U8_0;
+        p.is_null() as ::core::ffi::c_int as U8_0;
     crate::src::headers::sqlite3_h::SQLITE_OK
 }
 

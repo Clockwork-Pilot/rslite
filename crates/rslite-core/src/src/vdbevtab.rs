@@ -203,7 +203,7 @@ unsafe extern "C" fn bytecodevtabConnect(
     let pNew: *mut bytecodevtab;
     
     let isTabUsed: ::core::ffi::c_int =
-        (pAux != ::core::ptr::null_mut::<::core::ffi::c_void>()) as ::core::ffi::c_int;
+        !pAux.is_null() as ::core::ffi::c_int;
     let azSchema: [*const ::core::ffi::c_char; 2] = [
         b"CREATE TABLE x(addr INT,opcode TEXT,p1 INT,p2 INT,p3 INT,p4 TEXT,p5 INT,comment TEXT,subprog TEXT,nexec INT,ncycle INT,stmt HIDDEN);\0"
             as *const u8 as *const ::core::ffi::c_char,
@@ -338,7 +338,7 @@ unsafe extern "C" fn bytecodevtabEof(
     cur: *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
 ) -> ::core::ffi::c_int {
     let pCur = &*(cur as *mut bytecodevtab_cursor);
-    (pCur.aOp == ::core::ptr::null_mut::<crate::src::headers::vdbeInt_h::Op>())
+    pCur.aOp.is_null()
         as ::core::ffi::c_int
 }
 

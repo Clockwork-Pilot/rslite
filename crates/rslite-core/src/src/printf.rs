@@ -561,10 +561,10 @@ pub unsafe extern "C" fn sqlite3RecordErrorByteOffset(
     if zText.is_null() {
         return;
     }
-    let zEnd: *const ::core::ffi::c_char = zText.offset((::libc::strlen
+    let zEnd: *const ::core::ffi::c_char = zText.add((::libc::strlen
         as unsafe extern "C" fn(*const ::core::ffi::c_char) -> crate::__stddef_size_t_h::SizeT)(
         zText,
-    ) as isize) as *const ::core::ffi::c_char;
+    )) as *const ::core::ffi::c_char;
     if z as crate::src::headers::sqliteInt_h::Uptr
         >= zText as crate::src::headers::sqliteInt_h::Uptr
         && (z as crate::src::headers::sqliteInt_h::Uptr)

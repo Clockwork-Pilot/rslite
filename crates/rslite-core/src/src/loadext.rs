@@ -2884,7 +2884,11 @@ pub unsafe extern "C" fn sqlite3_auto_extension(
         crate::src::src::mutex::sqlite3_mutex_enter(mutex);
         i = 0 as crate::src::ext::rtree::rtree::U32_0;
         while i < sqlite3Autoext.nExt {
-            if *sqlite3Autoext.aExt.offset(i as isize) == xInit {
+            if match (*sqlite3Autoext.aExt.offset(i as isize), xInit) {
+                (Some(__x), Some(__y)) => ::core::ptr::fn_addr_eq(__x, __y),
+                (None, None) => true,
+                _ => false,
+            } {
                 break;
             }
             i = i.wrapping_add(1);
@@ -2929,7 +2933,11 @@ pub unsafe extern "C" fn sqlite3_cancel_auto_extension(
     crate::src::src::mutex::sqlite3_mutex_enter(mutex);
     i = sqlite3Autoext.nExt as ::core::ffi::c_int - 1 as ::core::ffi::c_int;
     while i >= 0 as ::core::ffi::c_int {
-        if *sqlite3Autoext.aExt.offset(i as isize) == xInit {
+        if match (*sqlite3Autoext.aExt.offset(i as isize), xInit) {
+            (Some(__x), Some(__y)) => ::core::ptr::fn_addr_eq(__x, __y),
+            (None, None) => true,
+            _ => false,
+        } {
             sqlite3Autoext.nExt = sqlite3Autoext.nExt.wrapping_sub(1);
             let fresh3 = &mut *sqlite3Autoext.aExt.offset(i as isize);
             *fresh3 = *sqlite3Autoext.aExt.offset(sqlite3Autoext.nExt as isize);

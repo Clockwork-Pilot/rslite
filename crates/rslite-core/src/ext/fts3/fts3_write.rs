@@ -2123,9 +2123,9 @@ unsafe extern "C" fn fts3SegReaderCmp(
             rc = rc2;
         }
     } else {
-        rc = ((*pLhs).aNode == ::core::ptr::null_mut::<::core::ffi::c_char>())
+        rc = (*pLhs).aNode.is_null()
             as ::core::ffi::c_int
-            - ((*pRhs).aNode == ::core::ptr::null_mut::<::core::ffi::c_char>())
+            - (*pRhs).aNode.is_null()
                 as ::core::ffi::c_int;
     }
     if rc == 0 as ::core::ffi::c_int {
@@ -2138,10 +2138,9 @@ unsafe extern "C" fn fts3SegReaderDoclistCmp(
     pLhs: *mut Fts3SegReader,
     pRhs: *mut Fts3SegReader,
 ) -> ::core::ffi::c_int {
-    let mut rc: ::core::ffi::c_int = ((*pLhs).pOffsetList
-        == ::core::ptr::null_mut::<::core::ffi::c_char>())
+    let mut rc: ::core::ffi::c_int = (*pLhs).pOffsetList.is_null()
         as ::core::ffi::c_int
-        - ((*pRhs).pOffsetList == ::core::ptr::null_mut::<::core::ffi::c_char>())
+        - (*pRhs).pOffsetList.is_null()
             as ::core::ffi::c_int;
     if rc == 0 as ::core::ffi::c_int {
         if (*pLhs).iDocid == (*pRhs).iDocid {
@@ -2161,10 +2160,9 @@ unsafe extern "C" fn fts3SegReaderDoclistCmpRev(
     pLhs: *mut Fts3SegReader,
     pRhs: *mut Fts3SegReader,
 ) -> ::core::ffi::c_int {
-    let mut rc: ::core::ffi::c_int = ((*pLhs).pOffsetList
-        == ::core::ptr::null_mut::<::core::ffi::c_char>())
+    let mut rc: ::core::ffi::c_int = (*pLhs).pOffsetList.is_null()
         as ::core::ffi::c_int
-        - ((*pRhs).pOffsetList == ::core::ptr::null_mut::<::core::ffi::c_char>())
+        - (*pRhs).pOffsetList.is_null()
             as ::core::ffi::c_int;
     if rc == 0 as ::core::ffi::c_int {
         if (*pLhs).iDocid == (*pRhs).iDocid {
@@ -3511,9 +3509,7 @@ pub unsafe extern "C" fn sqlite3Fts3SegReaderStep(
             && isIgnoreEmpty == 0
             && isFirst == 0
             && ((*p).bDescIdx as ::core::ffi::c_int == 0 as ::core::ffi::c_int
-                || ((**apSegment.offset(0_isize)).ppNextElem
-                    != ::core::ptr::null_mut::<*mut crate::src::ext::fts3::fts3_hash::Fts3HashElem>(
-                    )) as ::core::ffi::c_int
+                || !(**apSegment.offset(0_isize)).ppNextElem.is_null() as ::core::ffi::c_int
                     == 0 as ::core::ffi::c_int)
         {
             __pCsr_ref.nDoclist = (**apSegment.offset(0_isize)).nDoclist;
@@ -3929,10 +3925,7 @@ unsafe extern "C" fn fts3SegmentMerge(
                 if iLevel == crate::fts3Int_h::FTS3_SEGCURSOR_ALL {
                     if csr.nSegment == 1 as ::core::ffi::c_int
                         && 0 as ::core::ffi::c_int
-                            == ((**csr.apSegment.offset(0_isize)).ppNextElem
-                                != ::core::ptr::null_mut::<
-                                    *mut crate::src::ext::fts3::fts3_hash::Fts3HashElem,
-                                >()) as ::core::ffi::c_int
+                            == !(**csr.apSegment.offset(0_isize)).ppNextElem.is_null() as ::core::ffi::c_int
                     {
                         rc = crate::src::headers::sqlite3_h::SQLITE_DONE;
                         current_block = 14255763095006029735;

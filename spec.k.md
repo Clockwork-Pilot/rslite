@@ -22,6 +22,7 @@ Verify c_variadic feature isolation: only in printf_c_variadic.rs
       - [forbid_non_camel_case_types_allow_robust](#forbid_non_camel_case_types_allow_robust)
       - [forbid_non_camel_case_types_any](#forbid_non_camel_case_types_any)
       - [forbid_non_camel_case_types_with_warnings_robust](#forbid_non_camel_case_types_with_warnings_robust)
+      - [forbid_pointer_null_comparison_lints_any](#forbid_pointer_null_comparison_lints_any)
       - [forbid_static_mut_refs_any](#forbid_static_mut_refs_any)
       - [forbid_unused_mut_assignments_any](#forbid_unused_mut_assignments_any)
       - [forbid_unused_mut_assignments_workspace_any](#forbid_unused_mut_assignments_workspace_any)
@@ -84,6 +85,9 @@ Verify c_variadic feature isolation: only in printf_c_variadic.rs
 
 #### forbid_non_camel_case_types_with_warnings_robust
 **Description:** Structural: Robust whitespace-tolerant detection of forbidden clippy::non_camel_case_types and warnings allows. Forbids any formatting of allow() with non_camel_case_types or warnings, ignoring whitespace between allow and (.
+
+#### forbid_pointer_null_comparison_lints_any
+**Description:** Structural: Forbid any allow() attribute (inner #![...] or outer #[...], bare or clippy:: prefix, alone or combined, arbitrary whitespace) for pointer/null comparison lints unpredictable_function_pointer_comparisons (rustc), clippy::ptr_eq, clippy::cmp_null, clippy::ptr_offset_with_cast across crates/**/*.rs. Also forbid equivalent suppressions in any Cargo.toml across the workspace under [lints.rust] / [lints.clippy] / [workspace.lints.rust] / [workspace.lints.clippy] (e.g. `ptr_eq = "allow"`). Word boundaries prevent false positives on longer identifiers.
 
 #### forbid_static_mut_refs_any
 **Description:** Structural: Forbid any allow() attribute (inner #![...] or outer #[...], bare or clippy:: prefix, alone or combined, arbitrary whitespace) for static_mut_refs across crates/**/*.rs. Also forbid equivalent suppressions in crates/rslite-core/Cargo.toml under [lints.rust] / [lints.clippy] (e.g. `static_mut_refs = "allow"`). Word boundaries prevent false positives on longer identifiers.

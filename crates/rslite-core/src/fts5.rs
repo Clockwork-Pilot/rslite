@@ -12773,7 +12773,7 @@ unsafe extern "C" fn fts5PorterDelete(pTok: *mut Fts5Tokenizer) {
 }
 
 unsafe extern "C" fn sqlite3Fts5HashScanEof(p: *mut Fts5Hash) -> ::core::ffi::c_int {
-    ((*p).pScan == std::ptr::null_mut::<Fts5HashEntry>()) as ::core::ffi::c_int
+    (*p).pScan.is_null() as ::core::ffi::c_int
 }
 
 unsafe extern "C" fn sqlite3Fts5ParserAlloc(
@@ -20581,16 +20581,16 @@ unsafe extern "C" fn sqlite3Fts5TokenizerPattern(
     >,
     pTok: *mut Fts5Tokenizer,
 ) -> ::core::ffi::c_int {
-    if xCreate
-        == Some(
-            fts5TriCreate
-                as unsafe extern "C" fn(
-                    *mut ::core::ffi::c_void,
-                    *mut *const ::core::ffi::c_char,
-                    ::core::ffi::c_int,
-                    *mut *mut Fts5Tokenizer,
-                ) -> ::core::ffi::c_int,
-        )
+    if xCreate.is_some_and(|__f| ::core::ptr::fn_addr_eq(
+        __f,
+        fts5TriCreate
+            as unsafe extern "C" fn(
+                *mut ::core::ffi::c_void,
+                *mut *const ::core::ffi::c_char,
+                ::core::ffi::c_int,
+                *mut *mut Fts5Tokenizer,
+            ) -> ::core::ffi::c_int,
+    ))
     {
         let p = &*(pTok as *mut TrigramTokenizer);
         if p.iFoldParam == 0 as ::core::ffi::c_int {
@@ -21627,8 +21627,8 @@ unsafe extern "C" fn fts5ParseTokenize(
             );
             let __pSyn_ref = { &mut *pSyn };
             __pSyn_ref.pTerm = (pSyn as *mut ::core::ffi::c_char)
-                .offset(std::mem::size_of::<Fts5ExprTerm>() as usize as isize)
-                .offset(std::mem::size_of::<Fts5Buffer>() as usize as isize);
+                .add(std::mem::size_of::<Fts5ExprTerm>() as usize)
+                .add(std::mem::size_of::<Fts5Buffer>() as usize);
             __pSyn_ref.nQueryTerm = nToken;
             __pSyn_ref.nFullTerm = __pSyn_ref.nQueryTerm;
             if (*__pCtx_ref.pConfig).bTokendata != 0 {
@@ -23709,7 +23709,7 @@ unsafe extern "C" fn fts5CsrPoslist(
     let pConfig: *mut Fts5Config = (*(__pCsr_ref.base.pVtab as *mut Fts5Table)).pConfig;
     let mut rc: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_OK;
     let bLive: ::core::ffi::c_int =
-        (__pCsr_ref.pSorter == std::ptr::null_mut::<Fts5Sorter>()) as ::core::ffi::c_int;
+        __pCsr_ref.pSorter.is_null() as ::core::ffi::c_int;
     if iPhrase < 0 as ::core::ffi::c_int || iPhrase >= sqlite3Fts5ExprPhraseCount(__pCsr_ref.pExpr)
     {
         rc = crate::src::headers::sqlite3_h::SQLITE_RANGE;
@@ -27335,7 +27335,7 @@ unsafe extern "C" fn fts5MultiIterSetEof(pIter: *mut Fts5Iter) {
         as *mut Fts5SegIter);
 
     __pIter_ref.base.bEof =
-        (pSeg.pLeaf == std::ptr::null_mut::<Fts5Data>()) as ::core::ffi::c_int as U8_0;
+        pSeg.pLeaf.is_null() as ::core::ffi::c_int as U8_0;
     __pIter_ref.iSwitchRowid = pSeg.iRowid;
 }
 
@@ -34717,8 +34717,7 @@ unsafe extern "C" fn fts5DecodeFunction(
     let mut s: Fts5Buffer = { std::mem::zeroed() };
     let mut rc: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_OK;
     
-    let eDetailNone: ::core::ffi::c_int = (crate::src::src::vdbeapi::sqlite3_user_data(pCtx)
-        != std::ptr::null_mut::<::core::ffi::c_void>())
+    let eDetailNone: ::core::ffi::c_int = !crate::src::src::vdbeapi::sqlite3_user_data(pCtx).is_null()
         as ::core::ffi::c_int;
     let iRowid: I64_0 = crate::src::src::vdbeapi::sqlite3_value_int64(*apVal.offset(0_isize)) as I64_0;
     let n: ::core::ffi::c_int = crate::src::src::vdbeapi::sqlite3_value_bytes(*apVal.offset(1_isize));
@@ -35208,7 +35207,7 @@ unsafe extern "C" fn fts5structEofMethod(
     cur: *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
 ) -> ::core::ffi::c_int {
     let pCsr = &*(cur as *mut Fts5StructVcsr);
-    (pCsr.pStruct == std::ptr::null_mut::<Fts5Structure>()) as ::core::ffi::c_int
+    pCsr.pStruct.is_null() as ::core::ffi::c_int
 }
 
 unsafe extern "C" fn fts5structRowidMethod(

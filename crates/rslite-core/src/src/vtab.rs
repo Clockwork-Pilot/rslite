@@ -1649,7 +1649,11 @@ pub unsafe extern "C" fn sqlite3VtabEponymousTableInit(
     if !__pMod_ref.pEpoTab.is_null() {
         return 1 as ::core::ffi::c_int;
     }
-    if (*pModule).xCreate.is_some() && (*pModule).xCreate != (*pModule).xConnect {
+    if (*pModule).xCreate.is_some() && !match ((*pModule).xCreate, (*pModule).xConnect) {
+        (Some(__x), Some(__y)) => ::core::ptr::fn_addr_eq(__x, __y),
+        (None, None) => true,
+        _ => false,
+    } {
         return 0 as ::core::ffi::c_int;
     }
     let pTab: *mut crate::src::headers::sqliteInt_h::Table = crate::src::src::malloc::sqlite3DbMallocZero(
