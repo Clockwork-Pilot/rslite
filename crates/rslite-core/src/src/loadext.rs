@@ -413,7 +413,7 @@ unsafe extern "C" {
     ) -> *mut ::core::ffi::c_char;
     #[link_name = "sqlite3_str_appendf"]
     fn sqlite3_str_appendf_c(
-        p: *mut crate::src::headers::sqliteInt_h::sqlite3_str,
+        p: *mut ::core::ffi::c_void,
         zFormat: *const ::core::ffi::c_char,
         ...
     );
@@ -421,13 +421,13 @@ unsafe extern "C" {
     fn sqlite3_test_control_c(op: ::core::ffi::c_int, ...) -> ::core::ffi::c_int;
     #[link_name = "sqlite3_db_config"]
     fn sqlite3_db_config_c(
-        db: *mut crate::src::headers::sqliteInt_h::sqlite3,
+        db: *mut ::core::ffi::c_void,
         op: ::core::ffi::c_int,
         ...
     ) -> ::core::ffi::c_int;
     #[link_name = "sqlite3_vtab_config"]
     fn sqlite3_vtab_config_c(
-        db: *mut crate::src::headers::sqliteInt_h::sqlite3,
+        db: *mut ::core::ffi::c_void,
         op: ::core::ffi::c_int,
         ...
     ) -> ::core::ffi::c_int;
@@ -1684,14 +1684,13 @@ static mut sqlite3Apis: crate::src::headers::sqlite3ext_h::sqlite3_api_routines 
                     Option<unsafe extern "C" fn(*mut ::core::ffi::c_void) -> ()>,
                 ) -> ::core::ffi::c_int,
         ),
-        db_config: Some(
+        db_config: Some(unsafe { ::core::mem::transmute::<
+            unsafe extern "C" fn(*mut ::core::ffi::c_void, ::core::ffi::c_int, ...) -> ::core::ffi::c_int,
+            unsafe extern "C" fn(*mut crate::src::headers::sqliteInt_h::sqlite3, ::core::ffi::c_int, ...) -> ::core::ffi::c_int,
+        >(
             sqlite3_db_config_c
-                as unsafe extern "C" fn(
-                    *mut crate::src::headers::sqliteInt_h::sqlite3,
-                    ::core::ffi::c_int,
-                    ...
-                ) -> ::core::ffi::c_int,
-        ),
+                as unsafe extern "C" fn(*mut ::core::ffi::c_void, ::core::ffi::c_int, ...) -> ::core::ffi::c_int,
+        ) }),
         db_mutex: Some(
             crate::src::src::main::sqlite3_db_mutex
                 as unsafe extern "C" fn(
@@ -1783,14 +1782,13 @@ static mut sqlite3Apis: crate::src::headers::sqlite3ext_h::sqlite3_api_routines 
                     crate::src::headers::sqlite3_h::Sqlite3Int64,
                 ) -> ::core::ffi::c_int,
         ),
-        vtab_config: Some(
+        vtab_config: Some(unsafe { ::core::mem::transmute::<
+            unsafe extern "C" fn(*mut ::core::ffi::c_void, ::core::ffi::c_int, ...) -> ::core::ffi::c_int,
+            unsafe extern "C" fn(*mut crate::src::headers::sqliteInt_h::sqlite3, ::core::ffi::c_int, ...) -> ::core::ffi::c_int,
+        >(
             sqlite3_vtab_config_c
-                as unsafe extern "C" fn(
-                    *mut crate::src::headers::sqliteInt_h::sqlite3,
-                    ::core::ffi::c_int,
-                    ...
-                ) -> ::core::ffi::c_int,
-        ),
+                as unsafe extern "C" fn(*mut ::core::ffi::c_void, ::core::ffi::c_int, ...) -> ::core::ffi::c_int,
+        ) }),
         vtab_on_conflict: Some(
             crate::src::src::vtab::sqlite3_vtab_on_conflict
                 as unsafe extern "C" fn(
@@ -2171,14 +2169,13 @@ static mut sqlite3Apis: crate::src::headers::sqlite3ext_h::sqlite3_api_routines 
                     *mut crate::src::headers::sqliteInt_h::sqlite3_str,
                 ) -> *mut ::core::ffi::c_char,
         ),
-        str_appendf: Some(
+        str_appendf: Some(unsafe { ::core::mem::transmute::<
+            unsafe extern "C" fn(*mut ::core::ffi::c_void, *const ::core::ffi::c_char, ...) -> (),
+            unsafe extern "C" fn(*mut crate::src::headers::sqliteInt_h::sqlite3_str, *const ::core::ffi::c_char, ...) -> (),
+        >(
             sqlite3_str_appendf_c
-                as unsafe extern "C" fn(
-                    *mut crate::src::headers::sqliteInt_h::sqlite3_str,
-                    *const ::core::ffi::c_char,
-                    ...
-                ) -> (),
-        ),
+                as unsafe extern "C" fn(*mut ::core::ffi::c_void, *const ::core::ffi::c_char, ...) -> (),
+        ) }),
         str_vappendf: None,
         str_append: Some(
             crate::src::src::printf::sqlite3_str_append

@@ -197,6 +197,12 @@
           "cmd": "! { grep -rE \"allow[[:space:]]*\\([^)]*\\b(clippy::)?(unpredictable_function_pointer_comparisons|ptr_eq|cmp_null|ptr_offset_with_cast)\\b\" \"$PROJECT_ROOT/crates\" --include=\"*.rs\" 2>/dev/null; grep -rE \"^[[:space:]]*(clippy::)?(unpredictable_function_pointer_comparisons|ptr_eq|cmp_null|ptr_offset_with_cast)[[:space:]]*=[[:space:]]*\\\"allow\\\"\" \"$PROJECT_ROOT\" --include=\"Cargo.toml\" 2>/dev/null; } | grep -q .",
           "description": "Structural: Forbid any allow() attribute (inner #![...] or outer #[...], bare or clippy:: prefix, alone or combined, arbitrary whitespace) for pointer/null comparison lints unpredictable_function_pointer_comparisons (rustc), clippy::ptr_eq, clippy::cmp_null, clippy::ptr_offset_with_cast across crates/**/*.rs. Also forbid equivalent suppressions in any Cargo.toml across the workspace under [lints.rust] / [lints.clippy] / [workspace.lints.rust] / [workspace.lints.clippy] (e.g. `ptr_eq = \"allow\"`). Word boundaries prevent false positives on longer identifiers.",
           "fails_count": 1
+        },
+        "forbid_unsafe_correctness_lints_any": {
+          "id": "forbid_unsafe_correctness_lints_any",
+          "cmd": "! { grep -rE \"(allow|expect)[[:space:]]*\\\\([^)]*\\\\b(improper_ctypes|(clippy::)?(undocumented_unsafe_blocks|useless_transmute|missing_transmute_annotations))\\\\b\" \"$PROJECT_ROOT/crates\" --include=\"*.rs\" 2>/dev/null; grep -rE \"^[[:space:]]*(clippy::)?(improper_ctypes|undocumented_unsafe_blocks|useless_transmute|missing_transmute_annotations)[[:space:]]*=[[:space:]]*\\\"(allow|expect)\\\"\" \"$PROJECT_ROOT\" --include=\"Cargo.toml\" 2>/dev/null; } | grep -q .",
+          "description": "Structural: Forbid any allow() or expect() attribute (inner #![...] or outer #[...], bare or clippy:: prefix, alone or combined, arbitrary whitespace) for unsafe-correctness lints improper_ctypes (rustc), clippy::undocumented_unsafe_blocks, clippy::useless_transmute, clippy::missing_transmute_annotations across crates/**/*.rs. Also forbid equivalent suppressions in any Cargo.toml across the workspace under [lints.rust] / [lints.clippy] / [workspace.lints.rust] / [workspace.lints.clippy] (e.g. `useless_transmute = \"allow\"` or `= \"expect\"`). Word boundaries prevent false positives on longer identifiers.",
+          "fails_count": 1
         }
       }
     },

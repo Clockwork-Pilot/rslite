@@ -300,7 +300,10 @@ impl ConfigOp {
                 *args.offset(1) as ::core::ffi::c_int,
             ),
             SqliteConfig::LOG => Self::Log(
-                ::core::mem::transmute(*args.offset(0) as usize),
+                ::core::mem::transmute::<
+                    usize,
+                    Option<unsafe extern "C" fn(*mut libc::c_void, i32, *const i8)>,
+                >(*args.offset(0) as usize),
                 *args.offset(1) as usize as *mut _,
             ),
             SqliteConfig::URI => Self::Uri(*args.offset(0) as ::core::ffi::c_int),
@@ -635,12 +638,19 @@ impl TestControlOp {
                 *args.offset(0) as ::core::ffi::c_int,
                 *args.offset(1) as usize as *mut _,
             ),
-            SqliteTestCtrl::FaultInstall => {
-                Self::FaultInstall(::core::mem::transmute(*args.offset(0) as usize))
-            }
+            SqliteTestCtrl::FaultInstall => Self::FaultInstall(::core::mem::transmute::<
+                usize,
+                Option<unsafe extern "C" fn(i32) -> i32>,
+            >(
+                *args.offset(0) as usize
+            )),
             SqliteTestCtrl::BenignMallocHooks => Self::BenignMallocHooks(
-                ::core::mem::transmute(*args.offset(0) as usize),
-                ::core::mem::transmute(*args.offset(1) as usize),
+                ::core::mem::transmute::<usize, Option<unsafe extern "C" fn()>>(
+                    *args.offset(0) as usize,
+                ),
+                ::core::mem::transmute::<usize, Option<unsafe extern "C" fn()>>(
+                    *args.offset(1) as usize,
+                ),
             ),
             SqliteTestCtrl::PendingByte => {
                 Self::PendingByte(*args.offset(0) as ::core::ffi::c_uint)
@@ -659,7 +669,10 @@ impl TestControlOp {
             SqliteTestCtrl::LocaltimeFault => {
                 let bFault = *args.offset(0) as ::core::ffi::c_int;
                 let xAlt = if bFault == 2 {
-                    ::core::mem::transmute(*args.offset(1) as usize)
+                    ::core::mem::transmute::<
+                        usize,
+                        Option<unsafe extern "C" fn(*const libc::c_void, *mut libc::c_void) -> i32>,
+                    >(*args.offset(1) as usize)
                 } else {
                     None
                 };

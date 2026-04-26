@@ -4036,14 +4036,14 @@ unsafe extern "C" fn wherePartIdxExpr(
                             &raw mut (*pParse).pIdxPartExpr as *mut ::core::ffi::c_void;
                         crate::src::src::prepare::sqlite3ParserAddCleanup(
                             pParse as *mut crate::src::headers::sqliteInt_h::Parse,
-                            ::core::mem::transmute(Some(
+                            Some(
                                 whereIndexedExprCleanup
                                     as unsafe extern "C" fn(
                                         *mut crate::src::headers::sqliteInt_h::sqlite3,
                                         *mut ::core::ffi::c_void,
                                     )
                                         -> (),
-                            )),
+                            ),
                             pArg,
                         );
                     }
@@ -7061,14 +7061,14 @@ unsafe extern "C" fn whereAddIndexedExpr(
                             &raw mut __pParse_ref.pIdxEpr as *mut ::core::ffi::c_void;
                         crate::src::src::prepare::sqlite3ParserAddCleanup(
                             pParse as *mut crate::src::headers::sqliteInt_h::Parse,
-                            ::core::mem::transmute(Some(
+                            Some(
                                 whereIndexedExprCleanup
                                     as unsafe extern "C" fn(
                                         *mut crate::src::headers::sqliteInt_h::sqlite3,
                                         *mut ::core::ffi::c_void,
                                     )
                                         -> (),
-                            )),
+                            ),
                             pArg,
                         );
                     }

@@ -1784,13 +1784,13 @@ pub unsafe extern "C" fn sqlite3ExprAddFunctionOrderBy(
     if __pExpr_ref.x.pList.is_null() || (*__pExpr_ref.x.pList).nExpr == 0 as ::core::ffi::c_int {
         crate::src::src::prepare::sqlite3ParserAddCleanup(
             pParse as *mut crate::src::headers::sqliteInt_h::Parse,
-            ::core::mem::transmute(Some(
+            Some(
                 sqlite3ExprListDeleteGeneric
                     as unsafe extern "C" fn(
                         *mut crate::src::headers::sqliteInt_h::sqlite3,
                         *mut ::core::ffi::c_void,
                     ) -> (),
-            )),
+            ),
             pOrderBy as *mut ::core::ffi::c_void,
         );
         return;
@@ -2066,13 +2066,13 @@ pub unsafe extern "C" fn sqlite3ExprDeferredDelete(
 ) -> ::core::ffi::c_int {
     crate::src::src::prepare::sqlite3ParserAddCleanup(
             pParse as *mut crate::src::headers::sqliteInt_h::Parse,
-            ::core::mem::transmute(Some(
+            Some(
                 sqlite3ExprDeleteGeneric
                     as unsafe extern "C" fn(
                         *mut crate::src::headers::sqliteInt_h::sqlite3,
                         *mut ::core::ffi::c_void,
                     ) -> (),
-            )),
+            ),
             pExpr as *mut ::core::ffi::c_void,
         ).is_null() as ::core::ffi::c_int
 }

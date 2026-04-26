@@ -2905,9 +2905,9 @@ pub unsafe extern "C" fn sqlite3BtreeOpen(
                     as ::core::ffi::c_int,
                 flags,
                 vfsFlags,
-                ::core::mem::transmute(Some(
+                Some(
                     pageReinit as unsafe extern "C" fn(*mut crate::src::src::pager::DbPage) -> (),
-                )),
+                ),
             );
             if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
                 crate::src::src::pager::sqlite3PagerSetMmapLimit(

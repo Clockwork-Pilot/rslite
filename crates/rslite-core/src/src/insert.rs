@@ -914,13 +914,13 @@ unsafe extern "C" fn autoIncBegin(
             ) as *mut crate::src::headers::sqliteInt_h::AutoincInfo;
             crate::src::src::prepare::sqlite3ParserAddCleanup(
                 pToplevel as *mut crate::src::headers::sqliteInt_h::Parse,
-                ::core::mem::transmute(Some(
+                Some(
                     crate::src::src::malloc::sqlite3DbFree
                         as unsafe extern "C" fn(
                             *mut crate::src::headers::sqliteInt_h::sqlite3,
                             *mut ::core::ffi::c_void,
                         ) -> (),
-                )),
+                ),
                 pInfo as *mut ::core::ffi::c_void,
             );
             if (*(*pParse).db).mallocFailed != 0 {

@@ -3151,7 +3151,7 @@ pub unsafe extern "C" fn sqlite3session_create(
     ));
     let pOld: *mut sqlite3_session = crate::src::src::main::sqlite3_preupdate_hook(
         db as *mut crate::src::headers::sqliteInt_h::sqlite3,
-        ::core::mem::transmute(Some(
+        Some(
             xPreUpdate
                 as unsafe extern "C" fn(
                     *mut ::core::ffi::c_void,
@@ -3162,7 +3162,7 @@ pub unsafe extern "C" fn sqlite3session_create(
                     crate::src::headers::sqlite3_h::Sqlite3Int64,
                     crate::src::headers::sqlite3_h::Sqlite3Int64,
                 ) -> (),
-        )),
+        ),
         pNew as *mut ::core::ffi::c_void,
     ) as *mut sqlite3_session;
     (*pNew).pNext = pOld;
@@ -3236,7 +3236,7 @@ pub unsafe extern "C" fn sqlite3session_delete(pSession: *mut sqlite3_session) {
             if !pHead.is_null() {
                 crate::src::src::main::sqlite3_preupdate_hook(
                     db as *mut crate::src::headers::sqliteInt_h::sqlite3,
-                    ::core::mem::transmute(Some(
+                    Some(
                         xPreUpdate
                             as unsafe extern "C" fn(
                                 *mut ::core::ffi::c_void,
@@ -3247,7 +3247,7 @@ pub unsafe extern "C" fn sqlite3session_delete(pSession: *mut sqlite3_session) {
                                 crate::src::headers::sqlite3_h::Sqlite3Int64,
                                 crate::src::headers::sqlite3_h::Sqlite3Int64,
                             ) -> (),
-                    )),
+                    ),
                     pHead as *mut ::core::ffi::c_void,
                 );
             }

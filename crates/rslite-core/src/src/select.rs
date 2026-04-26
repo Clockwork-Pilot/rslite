@@ -4506,13 +4506,13 @@ unsafe extern "C" fn multiSelect(
     if !pDelete.is_null() {
         crate::src::src::prepare::sqlite3ParserAddCleanup(
             pParse as *mut crate::src::headers::sqliteInt_h::Parse,
-            ::core::mem::transmute(Some(
+            Some(
                 sqlite3SelectDeleteGeneric
                     as unsafe extern "C" fn(
                         *mut crate::src::headers::sqliteInt_h::sqlite3,
                         *mut ::core::ffi::c_void,
                     ) -> (),
-            )),
+            ),
             pDelete as *mut ::core::ffi::c_void,
         );
     }
@@ -5192,13 +5192,13 @@ unsafe extern "C" fn multiSelectOrderBy(
     if !(*pSplit).pPrior.is_null() {
         crate::src::src::prepare::sqlite3ParserAddCleanup(
             pParse as *mut crate::src::headers::sqliteInt_h::Parse,
-            ::core::mem::transmute(Some(
+            Some(
                 sqlite3SelectDeleteGeneric
                     as unsafe extern "C" fn(
                         *mut crate::src::headers::sqliteInt_h::sqlite3,
                         *mut ::core::ffi::c_void,
                     ) -> (),
-            )),
+            ),
             (*pSplit).pPrior as *mut ::core::ffi::c_void,
         );
     }
@@ -5958,13 +5958,13 @@ unsafe extern "C" fn flattenSubquery(
                 };
             crate::src::src::prepare::sqlite3ParserAddCleanup(
                 pToplevel as *mut crate::src::headers::sqliteInt_h::Parse,
-                ::core::mem::transmute(Some(
+                Some(
                     crate::src::src::build::sqlite3DeleteTableGeneric
                         as unsafe extern "C" fn(
                             *mut crate::src::headers::sqliteInt_h::sqlite3,
                             *mut ::core::ffi::c_void,
                         ) -> (),
-                )),
+                ),
                 pTabToDel as *mut ::core::ffi::c_void,
             );
         } else {
@@ -6960,13 +6960,13 @@ pub unsafe extern "C" fn sqlite3WithPush(
         if bFree != 0 {
             pWith = crate::src::src::prepare::sqlite3ParserAddCleanup(
                 pParse as *mut crate::src::headers::sqliteInt_h::Parse,
-                ::core::mem::transmute(Some(
+                Some(
                     crate::src::src::build::sqlite3WithDeleteGeneric
                         as unsafe extern "C" fn(
                             *mut crate::src::headers::sqliteInt_h::sqlite3,
                             *mut ::core::ffi::c_void,
                         ) -> (),
-                )),
+                ),
                 pWith as *mut ::core::ffi::c_void,
             ) as *mut crate::src::headers::sqliteInt_h::With;
             if pWith.is_null() {
@@ -7051,13 +7051,13 @@ unsafe extern "C" fn resolveFromTermToCte(
             if pCteUse.is_null()
                 || crate::src::src::prepare::sqlite3ParserAddCleanup(
                     pParse as *mut crate::src::headers::sqliteInt_h::Parse,
-                    ::core::mem::transmute(Some(
+                    Some(
                         crate::src::src::malloc::sqlite3DbFree
                             as unsafe extern "C" fn(
                                 *mut crate::src::headers::sqliteInt_h::sqlite3,
                                 *mut ::core::ffi::c_void,
                             ) -> (),
-                    )),
+                    ),
                     pCteUse as *mut ::core::ffi::c_void,
                 )
                 .is_null()
@@ -9180,13 +9180,13 @@ unsafe extern "C" fn countOfViewOptimization(
         (*pSub).nSelectRow = 0 as crate::src::headers::sqliteInt_h::LogEst;
         crate::src::src::prepare::sqlite3ParserAddCleanup(
             pParse as *mut crate::src::headers::sqliteInt_h::Parse,
-            ::core::mem::transmute(Some(
+            Some(
                 crate::src::src::expr::sqlite3ExprListDeleteGeneric
                     as unsafe extern "C" fn(
                         *mut crate::src::headers::sqliteInt_h::sqlite3,
                         *mut ::core::ffi::c_void,
                     ) -> (),
-            )),
+            ),
             (*pSub).pEList as *mut ::core::ffi::c_void,
         );
         pTerm = if !pPrior.is_null() {
@@ -9456,13 +9456,13 @@ unsafe extern "C" fn existsToJoin(
                     ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::SrcList>();
                 crate::src::src::prepare::sqlite3ParserAddCleanup(
                     pParse as *mut crate::src::headers::sqliteInt_h::Parse,
-                    ::core::mem::transmute(Some(
+                    Some(
                         sqlite3SelectDeleteGeneric
                             as unsafe extern "C" fn(
                                 *mut crate::src::headers::sqliteInt_h::sqlite3,
                                 *mut ::core::ffi::c_void,
                             ) -> (),
-                    )),
+                    ),
                     pSub as *mut ::core::ffi::c_void,
                 );
                 existsToJoin(pParse, p, pSubWhere);
@@ -9644,13 +9644,13 @@ pub unsafe extern "C" fn sqlite3Select(
         if !__p_ref.pOrderBy.is_null() {
             crate::src::src::prepare::sqlite3ParserAddCleanup(
                 pParse as *mut crate::src::headers::sqliteInt_h::Parse,
-                ::core::mem::transmute(Some(
+                Some(
                     crate::src::src::expr::sqlite3ExprListDeleteGeneric
                         as unsafe extern "C" fn(
                             *mut crate::src::headers::sqliteInt_h::sqlite3,
                             *mut ::core::ffi::c_void,
                         ) -> (),
-                )),
+                ),
                 __p_ref.pOrderBy as *mut ::core::ffi::c_void,
             );
             __p_ref.pOrderBy =
@@ -9905,8 +9905,6 @@ pub unsafe extern "C" fn sqlite3Select(
                                                 crate::src::src::prepare::sqlite3ParserAddCleanup(
                                                     
                                                     pParse as *mut crate::src::headers::sqliteInt_h::Parse,
-                                                    ::core::mem::transmute(
-                                                        
                                                     Some(
                                                         crate::src::src::expr::sqlite3ExprListDeleteGeneric
                                                             as unsafe extern "C" fn(
@@ -9914,7 +9912,6 @@ pub unsafe extern "C" fn sqlite3Select(
                                                                 *mut ::core::ffi::c_void,
                                                             )
                                                                 -> (),
-                                                    ),
                                                     ),
                                                     __pSub_ref.pOrderBy as *mut ::core::ffi::c_void,
                                                 );
@@ -10735,8 +10732,6 @@ pub unsafe extern "C" fn sqlite3Select(
                                                             crate::src::src::prepare::sqlite3ParserAddCleanup(
                                                                 
                                                                 pParse as *mut crate::src::headers::sqliteInt_h::Parse,
-                                                                ::core::mem::transmute(
-                                                                    
                                                                 Some(
                                                                     agginfoFree
                                                                         as unsafe extern "C" fn(
@@ -10745,7 +10740,6 @@ pub unsafe extern "C" fn sqlite3Select(
                                                                         )
                                                                             -> (
                                                                         ),
-                                                                ),
                                                                 ),
                                                                 pAggInfo
                                                                     as *mut ::core::ffi::c_void,
