@@ -6487,14 +6487,14 @@ unsafe extern "C" fn fts3EvalGatherStats(
         let bEof: crate::src::ext::rtree::rtree::U8_0 = (*pRoot).bEof;
         rc = crate::src::ext::fts3::fts3_snippet::sqlite3Fts3ExprIterate(
             pRoot as *mut crate::fts3Int_h::Fts3Expr,
-            ::core::mem::transmute(Some(
+            Some(
                 fts3AllocateMSI
                     as unsafe extern "C" fn(
                         *mut crate::fts3Int_h::Fts3Expr,
                         ::core::ffi::c_int,
                         *mut ::core::ffi::c_void,
                     ) -> ::core::ffi::c_int,
-            )),
+            ),
             pTab as *mut ::core::ffi::c_void,
         );
         if rc != crate::src::headers::sqlite3_h::SQLITE_OK {

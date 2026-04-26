@@ -1270,13 +1270,10 @@ pub unsafe extern "C" fn sqlite3VdbeMemSetStr(
                 _ => false,
             }
         {
-            if match (xDel, ::core::mem::transmute::<
-                Option<unsafe extern "C" fn(*mut ::core::ffi::c_void) -> ()>,
-                crate::src::headers::sqlite3_h::Sqlite3DestructorType,
-            >(Some(
+            if match (xDel, Some(
                 crate::src::src::rowset::sqlite3RowSetClear
                     as unsafe extern "C" fn(*mut ::core::ffi::c_void) -> (),
-            ))) {
+            )) {
                 (Some(__x), Some(__y)) => ::core::ptr::fn_addr_eq(__x, __y),
                 (None, None) => true,
                 _ => false,
@@ -1328,13 +1325,10 @@ pub unsafe extern "C" fn sqlite3VdbeMemSetStr(
     } else {
         sqlite3VdbeMemRelease(pMem);
         __pMem_ref.z = z as *mut ::core::ffi::c_char;
-        if match (xDel, ::core::mem::transmute::<
-            Option<unsafe extern "C" fn(*mut ::core::ffi::c_void) -> ()>,
-            crate::src::headers::sqlite3_h::Sqlite3DestructorType,
-        >(Some(
+        if match (xDel, Some(
             crate::src::src::rowset::sqlite3RowSetClear
                 as unsafe extern "C" fn(*mut ::core::ffi::c_void) -> (),
-        ))) {
+        )) {
             (Some(__x), Some(__y)) => ::core::ptr::fn_addr_eq(__x, __y),
             (None, None) => true,
             _ => false,

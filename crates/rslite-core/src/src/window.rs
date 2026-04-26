@@ -2376,13 +2376,13 @@ pub unsafe extern "C" fn sqlite3WindowRewrite(
         }
         crate::src::src::prepare::sqlite3ParserAddCleanup(
             pParse as *mut crate::src::headers::sqliteInt_h::Parse,
-            ::core::mem::transmute(Some(
+            Some(
                 crate::src::src::malloc::sqlite3DbFree
                     as unsafe extern "C" fn(
                         *mut crate::src::headers::sqliteInt_h::sqlite3,
                         *mut ::core::ffi::c_void,
                     ) -> (),
-            )),
+            ),
             pTab as *mut ::core::ffi::c_void,
         );
     }
