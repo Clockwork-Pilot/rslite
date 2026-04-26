@@ -4,8 +4,6 @@
 #![allow(unused_mut)]
 #![allow(static_mut_refs)]
 #![allow(unsafe_op_in_unsafe_fn)]
-#![allow(clippy::empty_line_after_outer_attr)]
-#![allow(clippy::toplevel_ref_arg)]
 #![allow(clippy::ptr_eq)]
 #![allow(clippy::no_effect)]
 #![allow(clippy::precedence)]
