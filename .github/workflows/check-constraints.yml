@@ -21,8 +21,7 @@ jobs:
         with:
           base_image:       ghcr.io/clockwork-pilot/autopilot-ws:latest
           dockerfile:       Dockerfile.agent
-          tag:              autopilot-check
-          tag_prefix:       ${{ github.repository }}-check-img
+          tag_prefix:       agent-img
       - uses: Clockwork-Pilot/autopilot/.github/actions/check-constraints@main
         with:
           image:             ${{ steps.image.outputs.image }}
