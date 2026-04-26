@@ -1986,10 +1986,7 @@ unsafe extern "C" fn vdbeIncrSwap(pIncr: *mut IncrMerger) -> ::core::ffi::c_int 
         rc = vdbeSorterJoinThread((*pIncr).pTask);
         if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
             let __pIncr_ref = unsafe { &mut *pIncr };
-            let f0: SorterFile = __pIncr_ref.aFile[0 as ::core::ffi::c_int as usize];
-            __pIncr_ref.aFile[0 as ::core::ffi::c_int as usize] =
-                __pIncr_ref.aFile[1 as ::core::ffi::c_int as usize];
-            __pIncr_ref.aFile[1 as ::core::ffi::c_int as usize] = f0;
+            __pIncr_ref.aFile.swap(0 as ::core::ffi::c_int as usize, 1 as ::core::ffi::c_int as usize);
         }
         if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
             if (*pIncr).aFile[0 as ::core::ffi::c_int as usize].iEof == (*pIncr).iStartOff {

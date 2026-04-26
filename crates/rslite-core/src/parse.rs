@@ -7599,7 +7599,7 @@ unsafe extern "C" fn yy_destructor(
                 (*yypminor).yy28.b as *mut crate::src::headers::sqliteInt_h::IdList,
             );
         }
-        318 | 319 | 320 => {
+        318..=320 => {
             crate::src::src::expr::sqlite3ExprDelete(
                 (*pParse).db as *mut crate::src::headers::sqliteInt_h::sqlite3,
                 (*yypminor).yy205.pExpr as *mut crate::src::headers::sqliteInt_h::Expr,
@@ -11207,7 +11207,7 @@ unsafe extern "C" fn yy_reduce(
                     as *mut crate::src::headers::sqliteInt_h::Expr,
             ) as *mut crate::src::headers::sqliteInt_h::Expr;
         }
-        198 | 199 | 200 | 201 | 202 | 203 | 204 => {
+        198..=204 => {
             let fresh86 = &mut (*yymsp.offset(-(2 as ::core::ffi::c_int) as isize))
                 .minor
                 .yy590;
@@ -12865,7 +12865,7 @@ unsafe extern "C" fn yy_reduce(
                 pParse as *mut crate::src::headers::sqliteInt_h::Parse,
             );
         }
-        302 | 303 | 304 => {
+        302..=304 => {
             crate::src::src::vtab::sqlite3VtabArgExtend(
                 pParse as *mut crate::src::headers::sqliteInt_h::Parse,
                 &raw mut (*yymsp.offset(0_isize)).minor.yy0 as *mut _

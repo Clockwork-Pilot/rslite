@@ -643,9 +643,7 @@ pub unsafe extern "C" fn sqlite3_carray_bind(
     let mut pNew: *mut carray_bind = ::core::ptr::null_mut::<carray_bind>();
     let mut i: ::core::ffi::c_int;
     let mut rc: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_OK;
-    if mFlags < crate::src::headers::sqlite3_h::CARRAY_INT32
-        || mFlags > crate::src::headers::sqlite3_h::CARRAY_BLOB
-    {
+    if !(crate::src::headers::sqlite3_h::CARRAY_INT32..=crate::src::headers::sqlite3_h::CARRAY_BLOB).contains(&mFlags) {
         rc = crate::src::headers::sqlite3_h::SQLITE_ERROR;
     } else {
         pNew =

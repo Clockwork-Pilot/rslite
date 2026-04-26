@@ -515,20 +515,14 @@ pub unsafe extern "C" fn sqlite3VdbeSwap(
     
     
     
-    let tmp: crate::src::headers::vdbeInt_h::Vdbe = *pA;
-    *pA = *pB;
-    *pB = tmp;
+    core::ptr::swap(pA, pB);
     let __pA_ref = unsafe { &mut *pA };
     let pTmp: *mut crate::src::headers::vdbeInt_h::Vdbe = __pA_ref.pVNext;
     let __pB_ref = unsafe { &mut *pB };
     __pA_ref.pVNext = __pB_ref.pVNext;
     __pB_ref.pVNext = pTmp;
-    let ppTmp: *mut *mut crate::src::headers::vdbeInt_h::Vdbe = __pA_ref.ppVPrev;
-    __pA_ref.ppVPrev = __pB_ref.ppVPrev;
-    __pB_ref.ppVPrev = ppTmp;
-    let zTmp: *mut ::core::ffi::c_char = __pA_ref.zSql;
-    __pA_ref.zSql = __pB_ref.zSql;
-    __pB_ref.zSql = zTmp;
+    std::mem::swap(&mut __pA_ref.ppVPrev, &mut __pB_ref.ppVPrev);
+    std::mem::swap(&mut __pA_ref.zSql, &mut __pB_ref.zSql);
     __pB_ref.expmask = __pA_ref.expmask;
     __pB_ref.prepFlags = __pA_ref.prepFlags;
     ::core::ptr::copy_nonoverlapping(

@@ -17,6 +17,7 @@ Verify c_variadic feature isolation: only in printf_c_variadic.rs
       - [forbid_clippy_stylistic_lints_any](#forbid_clippy_stylistic_lints_any)
       - [forbid_code_structure_clippy_lints_any](#forbid_code_structure_clippy_lints_any)
       - [forbid_control_flow_simplification_lints_any](#forbid_control_flow_simplification_lints_any)
+      - [forbid_manual_clippy_lints_any](#forbid_manual_clippy_lints_any)
       - [forbid_non_camel_case_types_allow](#forbid_non_camel_case_types_allow)
       - [forbid_non_camel_case_types_allow_robust](#forbid_non_camel_case_types_allow_robust)
       - [forbid_non_camel_case_types_any](#forbid_non_camel_case_types_any)
@@ -68,6 +69,9 @@ Verify c_variadic feature isolation: only in printf_c_variadic.rs
 
 #### forbid_control_flow_simplification_lints_any
 **Description:** Structural: Forbid any allow() attribute (inner #![...] or outer #[...], bare or clippy:: prefix, alone or combined, arbitrary whitespace) for control-flow simplification lints clippy::collapsible_if, if_same_then_else, single_match, short_circuit_statement, while_immutable_condition, needless_else, wildcard_in_or_patterns, redundant_pattern_matching, precedence across crates/**/*.rs. Also forbid equivalent suppressions in any Cargo.toml across the workspace under [lints.rust] / [lints.clippy] / [workspace.lints.rust] / [workspace.lints.clippy] (e.g. `single_match = "allow"`). Word boundaries prevent false positives on longer identifiers.
+
+#### forbid_manual_clippy_lints_any
+**Description:** Structural: Forbid any allow() attribute (inner #![...] or outer #[...], bare or clippy:: prefix, alone or combined, arbitrary whitespace) for manual-pattern clippy lints clippy::manual_swap, manual_range_contains, manual_range_patterns, manual_pattern_char_comparison across crates/**/*.rs. Also forbid equivalent suppressions in any Cargo.toml across the workspace under [lints.rust] / [lints.clippy] / [workspace.lints.rust] / [workspace.lints.clippy] (e.g. `manual_swap = "allow"`). Word boundaries prevent false positives on longer identifiers.
 
 #### forbid_non_camel_case_types_allow
 **Description:** Structural: Forbid allow() attributes for clippy::non_camel_case_types rule. Types must follow camelCase naming convention.

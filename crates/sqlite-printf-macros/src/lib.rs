@@ -238,7 +238,7 @@ fn gen_arg_handler(arg: &Expr, spec: &FormatSpec) -> proc_macro2::TokenStream {
             quote! {{
                 let __n = (#arg) as i64;
                 let __abs = __n.unsigned_abs() % 100;
-                let __suffix = if __abs >= 11 && __abs <= 13 {
+                let __suffix = if (11..=13).contains(&__abs) {
                     "th"
                 } else {
                     match __abs % 10 {

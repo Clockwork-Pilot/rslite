@@ -2497,12 +2497,8 @@ pub unsafe extern "C" fn sqlite3WhereCodeOneLoopStart(
                     == crate::src::headers::sqliteInt_h::SQLITE_SO_ASC)
                     as ::core::ffi::c_int
         {
-            let t: *mut crate::src::headers::whereInt_h::WhereTerm = pRangeEnd;
-            pRangeEnd = pRangeStart;
-            pRangeStart = t;
-            let t_0: crate::src::ext::rtree::rtree::U8_0 = bSeekPastNull;
-            bSeekPastNull = bStopAtNull;
-            bStopAtNull = t_0;
+            std::mem::swap(&mut pRangeEnd, &mut pRangeStart);
+            std::mem::swap(&mut bSeekPastNull, &mut bStopAtNull);
             let t_1: crate::src::ext::rtree::rtree::U8_0 =
                 nBtm as crate::src::ext::rtree::rtree::U8_0;
             nBtm = nTop;
