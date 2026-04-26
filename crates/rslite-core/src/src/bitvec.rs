@@ -174,9 +174,9 @@ pub const BITVEC_NPTR: crate::src::ext::rtree::rtree::U32_0 = BITVEC_USIZE
     as crate::src::ext::rtree::rtree::U32_0;
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 pub unsafe extern "C" fn sqlite3BitvecCreate(
-    mut iSize: crate::src::ext::rtree::rtree::U32_0,
+    iSize: crate::src::ext::rtree::rtree::U32_0,
 ) -> *mut Bitvec {
-    let mut p: *mut Bitvec = ::core::ptr::null_mut::<Bitvec>();
+    let p: *mut Bitvec;
     p = crate::src::src::malloc::sqlite3MallocZero(
         ::core::mem::size_of::<Bitvec>() as crate::src::ext::rtree::rtree::U64_0
     ) as *mut Bitvec;
@@ -196,7 +196,7 @@ pub unsafe extern "C" fn sqlite3BitvecTestNotNull(
         return 0 as ::core::ffi::c_int;
     }
     while (*p).iDivisor != 0 {
-        let mut bin: crate::src::ext::rtree::rtree::U32_0 = i.wrapping_div((*p).iDivisor);
+        let bin: crate::src::ext::rtree::rtree::U32_0 = i.wrapping_div((*p).iDivisor);
         i = i.wrapping_rem((*p).iDivisor);
         p = (*p).u.apSub[bin as usize];
         if p.is_null() {
@@ -231,8 +231,8 @@ pub unsafe extern "C" fn sqlite3BitvecTestNotNull(
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3BitvecTest(
-    mut p: *mut Bitvec,
-    mut i: crate::src::ext::rtree::rtree::U32_0,
+    p: *mut Bitvec,
+    i: crate::src::ext::rtree::rtree::U32_0,
 ) -> ::core::ffi::c_int {
     (!p.is_null() && sqlite3BitvecTestNotNull(p, i) != 0) as ::core::ffi::c_int
 }
@@ -241,14 +241,14 @@ pub unsafe extern "C" fn sqlite3BitvecSet(
     mut p: *mut Bitvec,
     mut i: crate::src::ext::rtree::rtree::U32_0,
 ) -> ::core::ffi::c_int {
-    let mut current_block: u64;
-    let mut h: crate::src::ext::rtree::rtree::U32_0 = 0;
+    let current_block: u64;
+    let mut h: crate::src::ext::rtree::rtree::U32_0;
     if p.is_null() {
         return crate::src::headers::sqlite3_h::SQLITE_OK;
     }
     i = i.wrapping_sub(1);
     while (*p).iSize as usize > BITVEC_NBIT && (*p).iDivisor != 0 {
-        let mut bin: crate::src::ext::rtree::rtree::U32_0 = i.wrapping_div((*p).iDivisor);
+        let bin: crate::src::ext::rtree::rtree::U32_0 = i.wrapping_div((*p).iDivisor);
         i = i.wrapping_rem((*p).iDivisor);
         if (*p).u.apSub[bin as usize].is_null() {
             let __p_ref = unsafe { &mut *p };
@@ -300,9 +300,9 @@ pub unsafe extern "C" fn sqlite3BitvecSet(
     match current_block {
         810581434665164779 => {
             if (*p).nSet as usize >= BITVEC_MXHASH {
-                let mut j: ::core::ffi::c_uint = 0;
-                let mut rc: ::core::ffi::c_int = 0;
-                let mut aiValues: *mut crate::src::ext::rtree::rtree::U32_0 =
+                let mut j: ::core::ffi::c_uint;
+                let mut rc: ::core::ffi::c_int;
+                let aiValues: *mut crate::src::ext::rtree::rtree::U32_0 =
                     crate::src::src::malloc::sqlite3DbMallocRaw(
                         ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::sqlite3>()
                             as *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -363,14 +363,14 @@ pub unsafe extern "C" fn sqlite3BitvecSet(
 pub unsafe extern "C" fn sqlite3BitvecClear(
     mut p: *mut Bitvec,
     mut i: crate::src::ext::rtree::rtree::U32_0,
-    mut pBuf: *mut ::core::ffi::c_void,
+    pBuf: *mut ::core::ffi::c_void,
 ) {
     if p.is_null() {
         return;
     }
     i = i.wrapping_sub(1);
     while (*p).iDivisor != 0 {
-        let mut bin: crate::src::ext::rtree::rtree::U32_0 = i.wrapping_div((*p).iDivisor);
+        let bin: crate::src::ext::rtree::rtree::U32_0 = i.wrapping_div((*p).iDivisor);
         i = i.wrapping_rem((*p).iDivisor);
         p = (*p).u.apSub[bin as usize];
         if p.is_null() {
@@ -390,8 +390,8 @@ pub unsafe extern "C" fn sqlite3BitvecClear(
                 as crate::src::ext::rtree::rtree::U8_0 as ::core::ffi::c_int))
             as crate::src::ext::rtree::rtree::U8_0;
     } else {
-        let mut j: ::core::ffi::c_uint = 0;
-        let mut aiValues: *mut crate::src::ext::rtree::rtree::U32_0 =
+        let mut j: ::core::ffi::c_uint;
+        let aiValues: *mut crate::src::ext::rtree::rtree::U32_0 =
             pBuf as *mut crate::src::ext::rtree::rtree::U32_0;
         let __p_ref = unsafe { &mut *p };
         ::core::ptr::copy_nonoverlapping(
@@ -434,12 +434,12 @@ pub unsafe extern "C" fn sqlite3BitvecClear(
 }
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
-pub unsafe extern "C" fn sqlite3BitvecDestroy(mut p: *mut Bitvec) {
+pub unsafe extern "C" fn sqlite3BitvecDestroy(p: *mut Bitvec) {
     if p.is_null() {
         return;
     }
     if (*p).iDivisor != 0 {
-        let mut i: ::core::ffi::c_uint = 0;
+        let mut i: ::core::ffi::c_uint;
         i = 0 as ::core::ffi::c_uint;
         while (i as crate::src::ext::rtree::rtree::U32_0) < BITVEC_NPTR {
             sqlite3BitvecDestroy((*p).u.apSub[i as usize]);
@@ -451,23 +451,23 @@ pub unsafe extern "C" fn sqlite3BitvecDestroy(mut p: *mut Bitvec) {
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3BitvecSize(
-    mut p: *mut Bitvec,
+    p: *mut Bitvec,
 ) -> crate::src::ext::rtree::rtree::U32_0 {
     (*p).iSize
 }
 pub unsafe extern "C" fn sqlite3BitvecBuiltinTest(
-    mut sz: ::core::ffi::c_int,
-    mut aOp: *mut ::core::ffi::c_int,
+    sz: ::core::ffi::c_int,
+    aOp: *mut ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
-    let mut current_block: u64;
-    let mut pBitvec: *mut Bitvec = ::core::ptr::null_mut::<Bitvec>();
-    let mut pV: *mut ::core::ffi::c_uchar = ::core::ptr::null_mut::<::core::ffi::c_uchar>();
+    let current_block: u64;
+    let pBitvec: *mut Bitvec;
+    let pV: *mut ::core::ffi::c_uchar;
     let mut rc: ::core::ffi::c_int = -(1 as ::core::ffi::c_int);
-    let mut i: ::core::ffi::c_int = 0;
-    let mut nx: ::core::ffi::c_int = 0;
-    let mut pc: ::core::ffi::c_int = 0;
-    let mut op: ::core::ffi::c_int = 0;
-    let mut pTmpSpace: *mut ::core::ffi::c_void = ::core::ptr::null_mut::<::core::ffi::c_void>();
+    let mut i: ::core::ffi::c_int;
+    let mut nx: ::core::ffi::c_int;
+    let mut pc: ::core::ffi::c_int;
+    let mut op: ::core::ffi::c_int;
+    let pTmpSpace: *mut ::core::ffi::c_void;
     if sz <= 0 as ::core::ffi::c_int {
         pBitvec = sqlite3BitvecCreate(
             (2 as crate::src::ext::rtree::rtree::U32_0)

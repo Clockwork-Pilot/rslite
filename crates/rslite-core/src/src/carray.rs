@@ -178,16 +178,15 @@ static mut azCarrayType: [*const ::core::ffi::c_char; 5] = [
 ];
 
 unsafe extern "C" fn carrayConnect(
-    mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
+    db: *mut crate::src::headers::sqliteInt_h::sqlite3,
     mut _pAux: *mut ::core::ffi::c_void,
     mut _argc: ::core::ffi::c_int,
     mut _argv: *const *const ::core::ffi::c_char,
-    mut ppVtab: *mut *mut crate::src::headers::sqlite3_h::sqlite3_vtab,
+    ppVtab: *mut *mut crate::src::headers::sqlite3_h::sqlite3_vtab,
     mut _pzErr: *mut *mut ::core::ffi::c_char,
 ) -> ::core::ffi::c_int {
-    let mut pNew: *mut crate::src::headers::sqlite3_h::sqlite3_vtab =
-        ::core::ptr::null_mut::<crate::src::headers::sqlite3_h::sqlite3_vtab>();
-    let mut rc: ::core::ffi::c_int = 0;
+    let pNew: *mut crate::src::headers::sqlite3_h::sqlite3_vtab;
+    let rc: ::core::ffi::c_int;
     rc = crate::src::src::vtab::sqlite3_declare_vtab(
         db as *mut crate::src::headers::sqliteInt_h::sqlite3,
         b"CREATE TABLE x(value,pointer hidden,count hidden,ctype hidden)\0" as *const u8
@@ -219,7 +218,7 @@ pub const CARRAY_COLUMN_COUNT: ::core::ffi::c_int = 2;
 pub const CARRAY_COLUMN_CTYPE: ::core::ffi::c_int = 3;
 
 unsafe extern "C" fn carrayDisconnect(
-    mut pVtab: *mut crate::src::headers::sqlite3_h::sqlite3_vtab,
+    pVtab: *mut crate::src::headers::sqlite3_h::sqlite3_vtab,
 ) -> ::core::ffi::c_int {
     crate::src::src::malloc::sqlite3_free(pVtab as *mut ::core::ffi::c_void);
     crate::src::headers::sqlite3_h::SQLITE_OK
@@ -227,9 +226,9 @@ unsafe extern "C" fn carrayDisconnect(
 
 unsafe extern "C" fn carrayOpen(
     mut _p: *mut crate::src::headers::sqlite3_h::sqlite3_vtab,
-    mut ppCursor: *mut *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
+    ppCursor: *mut *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
 ) -> ::core::ffi::c_int {
-    let mut pCur: *mut carray_cursor = ::core::ptr::null_mut::<carray_cursor>();
+    let pCur: *mut carray_cursor;
     pCur = crate::src::src::malloc::sqlite3_malloc(
         ::core::mem::size_of::<carray_cursor>() as ::core::ffi::c_int
     ) as *mut carray_cursor;
@@ -246,28 +245,27 @@ unsafe extern "C" fn carrayOpen(
 }
 
 unsafe extern "C" fn carrayClose(
-    mut cur: *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
+    cur: *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
 ) -> ::core::ffi::c_int {
     crate::src::src::malloc::sqlite3_free(cur as *mut ::core::ffi::c_void);
     crate::src::headers::sqlite3_h::SQLITE_OK
 }
 
 unsafe extern "C" fn carrayNext(
-    mut cur: *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
+    cur: *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
 ) -> ::core::ffi::c_int {
-    let mut pCur: *mut carray_cursor = cur as *mut carray_cursor;
+    let pCur: *mut carray_cursor = cur as *mut carray_cursor;
     (*pCur).iRowid += 1;
     crate::src::headers::sqlite3_h::SQLITE_OK
 }
 
 unsafe extern "C" fn carrayColumn(
-    mut cur: *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
-    mut ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
-    mut i: ::core::ffi::c_int,
+    cur: *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
+    ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
+    i: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
-    let mut pCur: *mut carray_cursor = cur as *mut carray_cursor;
-    let mut x: crate::src::headers::sqlite3_h::Sqlite3Int64 =
-        0 as crate::src::headers::sqlite3_h::Sqlite3Int64;
+    let pCur: *mut carray_cursor = cur as *mut carray_cursor;
+    let x: crate::src::headers::sqlite3_h::Sqlite3Int64;
     match i {
         CARRAY_COLUMN_POINTER => return crate::src::headers::sqlite3_h::SQLITE_OK,
         CARRAY_COLUMN_COUNT => {
@@ -284,7 +282,7 @@ unsafe extern "C" fn carrayColumn(
         }
         _ => match (*pCur).eType as ::core::ffi::c_int {
             crate::src::headers::sqlite3_h::CARRAY_INT32 => {
-                let mut p: *mut ::core::ffi::c_int = (*pCur).pPtr as *mut ::core::ffi::c_int;
+                let p: *mut ::core::ffi::c_int = (*pCur).pPtr as *mut ::core::ffi::c_int;
                 crate::src::src::vdbeapi::sqlite3_result_int(
                     ctx,
                     *p.offset(
@@ -295,7 +293,7 @@ unsafe extern "C" fn carrayColumn(
                 return crate::src::headers::sqlite3_h::SQLITE_OK;
             }
             crate::src::headers::sqlite3_h::CARRAY_INT64 => {
-                let mut p_0: *mut crate::src::headers::sqlite3_h::Sqlite3Int64 =
+                let p_0: *mut crate::src::headers::sqlite3_h::Sqlite3Int64 =
                     (*pCur).pPtr as *mut crate::src::headers::sqlite3_h::Sqlite3Int64;
                 crate::src::src::vdbeapi::sqlite3_result_int64(
                     ctx,
@@ -307,7 +305,7 @@ unsafe extern "C" fn carrayColumn(
                 return crate::src::headers::sqlite3_h::SQLITE_OK;
             }
             crate::src::headers::sqlite3_h::CARRAY_DOUBLE => {
-                let mut p_1: *mut ::core::ffi::c_double =
+                let p_1: *mut ::core::ffi::c_double =
                     (*pCur).pPtr as *mut ::core::ffi::c_double;
                 crate::src::src::vdbeapi::sqlite3_result_double(
                     ctx,
@@ -319,7 +317,7 @@ unsafe extern "C" fn carrayColumn(
                 return crate::src::headers::sqlite3_h::SQLITE_OK;
             }
             crate::src::headers::sqlite3_h::CARRAY_TEXT => {
-                let mut p_2: *mut *const ::core::ffi::c_char =
+                let p_2: *mut *const ::core::ffi::c_char =
                     (*pCur).pPtr as *mut *const ::core::ffi::c_char;
                 crate::src::src::vdbeapi::sqlite3_result_text(
                     ctx,
@@ -337,7 +335,7 @@ unsafe extern "C" fn carrayColumn(
             }
             _ => {
                 let __pCur_ref = { &*pCur };
-                let mut p_3: *const ::libc::iovec = __pCur_ref.pPtr as *mut ::libc::iovec;
+                let p_3: *const ::libc::iovec = __pCur_ref.pPtr as *mut ::libc::iovec;
                 crate::src::src::vdbeapi::sqlite3_result_blob(
                     ctx,
                     (*p_3.offset(
@@ -364,8 +362,8 @@ unsafe extern "C" fn carrayColumn(
 }
 
 unsafe extern "C" fn carrayRowid(
-    mut cur: *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
-    mut pRowid: *mut crate::src::headers::sqlite3_h::SqliteInt64,
+    cur: *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
+    pRowid: *mut crate::src::headers::sqlite3_h::SqliteInt64,
 ) -> ::core::ffi::c_int {
     let pCur = &*(cur as *mut carray_cursor);
     *pRowid = pCur.iRowid as crate::src::headers::sqlite3_h::SqliteInt64;
@@ -373,26 +371,26 @@ unsafe extern "C" fn carrayRowid(
 }
 
 unsafe extern "C" fn carrayEof(
-    mut cur: *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
+    cur: *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
 ) -> ::core::ffi::c_int {
     let pCur = &*(cur as *mut carray_cursor);
     (pCur.iRowid > pCur.iCnt) as ::core::ffi::c_int
 }
 
 unsafe extern "C" fn carrayFilter(
-    mut pVtabCursor: *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
-    mut idxNum: ::core::ffi::c_int,
+    pVtabCursor: *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
+    idxNum: ::core::ffi::c_int,
     mut _idxStr: *const ::core::ffi::c_char,
     mut _argc: ::core::ffi::c_int,
-    mut argv: *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
+    argv: *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
 ) -> ::core::ffi::c_int {
-    let mut pCur: *mut carray_cursor = pVtabCursor as *mut carray_cursor;
+    let pCur: *mut carray_cursor = pVtabCursor as *mut carray_cursor;
     let __pCur_ref = { &mut *pCur };
     __pCur_ref.pPtr = ::core::ptr::null_mut::<::core::ffi::c_void>();
     __pCur_ref.iCnt = 0 as crate::src::headers::sqlite3_h::Sqlite3Int64;
     match idxNum {
         1 => {
-            let mut pBind: *mut carray_bind = crate::src::src::vdbeapi::sqlite3_value_pointer(
+            let pBind: *mut carray_bind = crate::src::src::vdbeapi::sqlite3_value_pointer(
                 *argv.offset(0 as isize),
                 b"carray-bind\0" as *const u8 as *const ::core::ffi::c_char,
             ) as *mut carray_bind;
@@ -419,8 +417,8 @@ unsafe extern "C" fn carrayFilter(
                 __pCur_ref.eType =
                     crate::src::headers::sqlite3_h::CARRAY_INT32 as ::core::ffi::c_uchar;
             } else {
-                let mut i: ::core::ffi::c_uchar = 0;
-                let mut zType: *const ::core::ffi::c_char =
+                let mut i: ::core::ffi::c_uchar;
+                let zType: *const ::core::ffi::c_char =
                     crate::src::src::vdbeapi::sqlite3_value_text(*argv.offset(2 as isize))
                         as *const ::core::ffi::c_char;
                 i = 0 as ::core::ffi::c_uchar;
@@ -455,15 +453,14 @@ unsafe extern "C" fn carrayFilter(
 
 unsafe extern "C" fn carrayBestIndex(
     mut _tab: *mut crate::src::headers::sqlite3_h::sqlite3_vtab,
-    mut pIdxInfo: *mut crate::src::headers::sqlite3_h::sqlite3_index_info,
+    pIdxInfo: *mut crate::src::headers::sqlite3_h::sqlite3_index_info,
 ) -> ::core::ffi::c_int {
-    let mut i: ::core::ffi::c_int = 0;
+    let mut i: ::core::ffi::c_int;
     let mut ptrIdx: ::core::ffi::c_int = -(1 as ::core::ffi::c_int);
     let mut cntIdx: ::core::ffi::c_int = -(1 as ::core::ffi::c_int);
     let mut ctypeIdx: ::core::ffi::c_int = -(1 as ::core::ffi::c_int);
     let mut seen: ::core::ffi::c_uint = 0 as ::core::ffi::c_uint;
-    let mut pConstraint: *const crate::src::headers::sqlite3_h::sqlite3_index_constraint =
-        ::core::ptr::null::<crate::src::headers::sqlite3_h::sqlite3_index_constraint>();
+    let mut pConstraint: *const crate::src::headers::sqlite3_h::sqlite3_index_constraint;
     pConstraint = (*pIdxInfo).aConstraint;
     i = 0 as ::core::ffi::c_int;
     while i < (*pIdxInfo).nConstraint {
@@ -626,8 +623,8 @@ static mut carrayModule: crate::src::headers::sqlite3_h::sqlite3_module = {
     }
 };
 
-unsafe extern "C" fn carrayBindDel(mut pPtr: *mut ::core::ffi::c_void) {
-    let mut p: *mut carray_bind = pPtr as *mut carray_bind;
+unsafe extern "C" fn carrayBindDel(pPtr: *mut ::core::ffi::c_void) {
+    let p: *mut carray_bind = pPtr as *mut carray_bind;
     if (*p).xDel.is_some() {
         (*p).xDel.expect("non-null function pointer")((*p).aData);
     }
@@ -636,16 +633,16 @@ unsafe extern "C" fn carrayBindDel(mut pPtr: *mut ::core::ffi::c_void) {
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3_carray_bind(
-    mut pStmt: *mut crate::src::headers::sqlite3_h::Sqlite3Stmt,
-    mut idx: ::core::ffi::c_int,
-    mut aData: *mut ::core::ffi::c_void,
-    mut nData: ::core::ffi::c_int,
-    mut mFlags: ::core::ffi::c_int,
-    mut xDestroy: Option<unsafe extern "C" fn(*mut ::core::ffi::c_void) -> ()>,
+    pStmt: *mut crate::src::headers::sqlite3_h::Sqlite3Stmt,
+    idx: ::core::ffi::c_int,
+    aData: *mut ::core::ffi::c_void,
+    nData: ::core::ffi::c_int,
+    mFlags: ::core::ffi::c_int,
+    xDestroy: Option<unsafe extern "C" fn(*mut ::core::ffi::c_void) -> ()>,
 ) -> ::core::ffi::c_int {
-    let mut current_block: u64;
+    let current_block: u64;
     let mut pNew: *mut carray_bind = ::core::ptr::null_mut::<carray_bind>();
-    let mut i: ::core::ffi::c_int = 0;
+    let mut i: ::core::ffi::c_int;
     let mut rc: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_OK;
     if mFlags < crate::src::headers::sqlite3_h::CARRAY_INT32
         || mFlags > crate::src::headers::sqlite3_h::CARRAY_BLOB
@@ -700,7 +697,7 @@ pub unsafe extern "C" fn sqlite3_carray_bind(
                 if mFlags == crate::src::headers::sqlite3_h::CARRAY_TEXT {
                     i = 0 as ::core::ffi::c_int;
                     while i < nData {
-                        let mut z: *const ::core::ffi::c_char =
+                        let z: *const ::core::ffi::c_char =
                             *(aData as *mut *mut ::core::ffi::c_char).offset(i as isize);
                         if !z.is_null() {
                             sz = (sz as ::core::ffi::c_ulonglong).wrapping_add(
@@ -733,16 +730,16 @@ pub unsafe extern "C" fn sqlite3_carray_bind(
                     current_block = 4611504007440461070;
                 } else {
                     if mFlags == crate::src::headers::sqlite3_h::CARRAY_TEXT {
-                        let mut az: *mut *mut ::core::ffi::c_char =
+                        let az: *mut *mut ::core::ffi::c_char =
                             (*pNew).aData as *mut *mut ::core::ffi::c_char;
                         let mut z_0: *mut ::core::ffi::c_char = az.offset(nData as isize)
                             as *mut *mut ::core::ffi::c_char
                             as *mut ::core::ffi::c_char;
                         i = 0 as ::core::ffi::c_int;
                         while i < nData {
-                            let mut zData: *const ::core::ffi::c_char =
+                            let zData: *const ::core::ffi::c_char =
                                 *(aData as *mut *mut ::core::ffi::c_char).offset(i as isize);
-                            let mut n: crate::src::headers::sqlite3_h::Sqlite3Int64 = 0;
+                            let n: crate::src::headers::sqlite3_h::Sqlite3Int64;
                             if zData.is_null() {
                                 let ref mut fresh0 = *az.offset(i as isize);
                                 *fresh0 = ::core::ptr::null_mut::<::core::ffi::c_char>();
@@ -765,13 +762,13 @@ pub unsafe extern "C" fn sqlite3_carray_bind(
                             i += 1;
                         }
                     } else if mFlags == crate::src::headers::sqlite3_h::CARRAY_BLOB {
-                        let mut p: *mut ::libc::iovec = (*pNew).aData as *mut ::libc::iovec;
+                        let p: *mut ::libc::iovec = (*pNew).aData as *mut ::libc::iovec;
                         let mut z_1: *mut ::core::ffi::c_uchar = p.offset(nData as isize)
                             as *mut ::libc::iovec
                             as *mut ::core::ffi::c_uchar;
                         i = 0 as ::core::ffi::c_int;
                         while i < nData {
-                            let mut n_0: crate::__stddef_size_t_h::SizeT =
+                            let n_0: crate::__stddef_size_t_h::SizeT =
                                 (*(aData as *mut ::libc::iovec).offset(i as isize)).iov_len;
                             (*p.offset(i as isize)).iov_len = n_0;
                             let ref mut fresh2 = (*p.offset(i as isize)).iov_base;
@@ -832,7 +829,7 @@ pub unsafe extern "C" fn sqlite3_carray_bind(
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3CarrayRegister(
-    mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
+    db: *mut crate::src::headers::sqliteInt_h::sqlite3,
 ) -> *mut crate::src::headers::sqliteInt_h::Module {
     crate::src::src::vtab::sqlite3VtabCreateModule(
         db as *mut crate::src::headers::sqliteInt_h::sqlite3,

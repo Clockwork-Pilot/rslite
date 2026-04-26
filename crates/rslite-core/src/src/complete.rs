@@ -238,7 +238,7 @@ pub unsafe extern "C" fn sqlite3_complete(
         ],
     ];
     while *zSql != 0 {
-        let mut current_block_65: u64;
+        let current_block_65: u64;
         match *zSql as ::core::ffi::c_int {
             59 => {
                 token = tkSEMI as crate::src::ext::rtree::rtree::U8_0;
@@ -312,7 +312,7 @@ pub unsafe extern "C" fn sqlite3_complete(
                     & 0x46 as ::core::ffi::c_int
                     != 0 as ::core::ffi::c_int
                 {
-                    let mut nId: ::core::ffi::c_int = 0;
+                    let mut nId: ::core::ffi::c_int;
                     nId = 1 as ::core::ffi::c_int;
                     while *(&raw const crate::src::src::global::sqlite3CtypeMap
                         as *const ::core::ffi::c_uchar)
@@ -400,7 +400,7 @@ pub unsafe extern "C" fn sqlite3_complete(
         }
         match current_block_65 {
             4775909272756257391 => {
-                let mut c: ::core::ffi::c_int = *zSql as ::core::ffi::c_int;
+                let c: ::core::ffi::c_int = *zSql as ::core::ffi::c_int;
                 zSql = zSql.offset(1);
                 while *zSql as ::core::ffi::c_int != 0 && *zSql as ::core::ffi::c_int != c {
                     zSql = zSql.offset(1);
@@ -419,12 +419,11 @@ pub unsafe extern "C" fn sqlite3_complete(
 }
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn sqlite3_complete16(
-    mut zSql: *const ::core::ffi::c_void,
+    zSql: *const ::core::ffi::c_void,
 ) -> ::core::ffi::c_int {
-    let mut pVal: *mut crate::src::headers::vdbeInt_h::sqlite3_value =
-        ::core::ptr::null_mut::<crate::src::headers::vdbeInt_h::sqlite3_value>();
-    let mut zSql8: *const ::core::ffi::c_char = ::core::ptr::null::<::core::ffi::c_char>();
-    let mut rc: ::core::ffi::c_int = 0;
+    let pVal: *mut crate::src::headers::vdbeInt_h::sqlite3_value;
+    let zSql8: *const ::core::ffi::c_char;
+    let mut rc: ::core::ffi::c_int;
     rc = crate::src::src::main::sqlite3_initialize();
     if rc != 0 {
         return rc;

@@ -135,8 +135,8 @@ pub use crate::src::src::vdbe::VdbeOp;
 pub use crate::src::src::vdbe::p4union;
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn sqlite3_set_authorizer(
-    mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
-    mut xAuth: Option<
+    db: *mut crate::src::headers::sqliteInt_h::sqlite3,
+    xAuth: Option<
         unsafe extern "C" fn(
             *mut ::core::ffi::c_void,
             ::core::ffi::c_int,
@@ -146,7 +146,7 @@ pub unsafe extern "C" fn sqlite3_set_authorizer(
             *const ::core::ffi::c_char,
         ) -> ::core::ffi::c_int,
     >,
-    mut pArg: *mut ::core::ffi::c_void,
+    pArg: *mut ::core::ffi::c_void,
 ) -> ::core::ffi::c_int {
     let __db_ref = unsafe { &mut *db };
     crate::src::src::mutex::sqlite3_mutex_enter(__db_ref.mutex);
@@ -163,7 +163,7 @@ pub unsafe extern "C" fn sqlite3_set_authorizer(
 }
 
 unsafe extern "C" fn sqliteAuthBadReturnCode(
-    mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
+    pParse: *mut crate::src::headers::sqliteInt_h::Parse,
 ) {
     crate::src::printf_c_variadic::sqlite3ErrorMsg_args(
         pParse as *mut crate::src::headers::sqliteInt_h::Parse,
@@ -175,15 +175,15 @@ unsafe extern "C" fn sqliteAuthBadReturnCode(
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3AuthReadCol(
-    mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
-    mut zTab: *const ::core::ffi::c_char,
-    mut zCol: *const ::core::ffi::c_char,
-    mut iDb: ::core::ffi::c_int,
+    pParse: *mut crate::src::headers::sqliteInt_h::Parse,
+    zTab: *const ::core::ffi::c_char,
+    zCol: *const ::core::ffi::c_char,
+    iDb: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
-    let mut db: *mut crate::src::headers::sqliteInt_h::sqlite3 = (*pParse).db;
+    let db: *mut crate::src::headers::sqliteInt_h::sqlite3 = (*pParse).db;
     let __db_ref = unsafe { &mut *db };
-    let mut zDb: *mut ::core::ffi::c_char = (*__db_ref.aDb.offset(iDb as isize)).zDbSName;
-    let mut rc: ::core::ffi::c_int = 0;
+    let zDb: *mut ::core::ffi::c_char = (*__db_ref.aDb.offset(iDb as isize)).zDbSName;
+    let rc: ::core::ffi::c_int;
     if __db_ref.init.busy != 0 {
         return crate::src::headers::sqlite3_h::SQLITE_OK;
     }
@@ -216,17 +216,17 @@ pub unsafe extern "C" fn sqlite3AuthReadCol(
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3AuthRead(
-    mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
-    mut pExpr: *mut crate::src::headers::sqliteInt_h::Expr,
-    mut pSchema: *mut crate::src::headers::sqliteInt_h::Schema,
-    mut pTabList: *mut crate::src::headers::sqliteInt_h::SrcList,
+    pParse: *mut crate::src::headers::sqliteInt_h::Parse,
+    pExpr: *mut crate::src::headers::sqliteInt_h::Expr,
+    pSchema: *mut crate::src::headers::sqliteInt_h::Schema,
+    pTabList: *mut crate::src::headers::sqliteInt_h::SrcList,
 ) {
     let mut pTab: *mut crate::src::headers::sqliteInt_h::Table =
         ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::Table>();
-    let mut zCol: *const ::core::ffi::c_char = ::core::ptr::null::<::core::ffi::c_char>();
-    let mut iSrc: ::core::ffi::c_int = 0;
-    let mut iDb: ::core::ffi::c_int = 0;
-    let mut iCol: ::core::ffi::c_int = 0;
+    let zCol: *const ::core::ffi::c_char;
+    let mut iSrc: ::core::ffi::c_int;
+    let iDb: ::core::ffi::c_int;
+    let iCol: ::core::ffi::c_int;
     iDb = crate::src::src::prepare::sqlite3SchemaToIndex(
         (*pParse).db as *mut crate::src::headers::sqliteInt_h::sqlite3,
         pSchema as *mut crate::src::headers::sqliteInt_h::Schema,
@@ -274,15 +274,15 @@ pub unsafe extern "C" fn sqlite3AuthRead(
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3AuthCheck(
-    mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
-    mut code: ::core::ffi::c_int,
-    mut zArg1: *const ::core::ffi::c_char,
-    mut zArg2: *const ::core::ffi::c_char,
-    mut zArg3: *const ::core::ffi::c_char,
+    pParse: *mut crate::src::headers::sqliteInt_h::Parse,
+    code: ::core::ffi::c_int,
+    zArg1: *const ::core::ffi::c_char,
+    zArg2: *const ::core::ffi::c_char,
+    zArg3: *const ::core::ffi::c_char,
 ) -> ::core::ffi::c_int {
     let __pParse_ref = unsafe { &mut *pParse };
-    let mut db: *mut crate::src::headers::sqliteInt_h::sqlite3 = __pParse_ref.db;
-    let mut rc: ::core::ffi::c_int = 0;
+    let db: *mut crate::src::headers::sqliteInt_h::sqlite3 = __pParse_ref.db;
+    let mut rc: ::core::ffi::c_int;
     let __db_ref = unsafe { &mut *db };
     if __db_ref.xAuth.is_none()
         || __db_ref.init.busy as ::core::ffi::c_int != 0
@@ -317,9 +317,9 @@ pub unsafe extern "C" fn sqlite3AuthCheck(
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3AuthContextPush(
-    mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
-    mut pContext: *mut crate::src::headers::sqliteInt_h::AuthContext,
-    mut zContext: *const ::core::ffi::c_char,
+    pParse: *mut crate::src::headers::sqliteInt_h::Parse,
+    pContext: *mut crate::src::headers::sqliteInt_h::AuthContext,
+    zContext: *const ::core::ffi::c_char,
 ) {
     (*pContext).pParse = pParse;
     (*pContext).zAuthContext = (*pParse).zAuthContext;
@@ -328,7 +328,7 @@ pub unsafe extern "C" fn sqlite3AuthContextPush(
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3AuthContextPop(
-    mut pContext: *mut crate::src::headers::sqliteInt_h::AuthContext,
+    pContext: *mut crate::src::headers::sqliteInt_h::AuthContext,
 ) {
     if !(*pContext).pParse.is_null() {
         let __pContext_ref = unsafe { &mut *pContext };

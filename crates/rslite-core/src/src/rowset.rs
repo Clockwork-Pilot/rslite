@@ -163,14 +163,14 @@ pub const ROWSET_NEXT: ::core::ffi::c_int = 0x2 as ::core::ffi::c_int;
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3RowSetInit(
-    mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
+    db: *mut crate::src::headers::sqliteInt_h::sqlite3,
 ) -> *mut RowSet {
-    let mut p: *mut RowSet = crate::src::src::malloc::sqlite3DbMallocRawNN(
+    let p: *mut RowSet = crate::src::src::malloc::sqlite3DbMallocRawNN(
         db as *mut crate::src::headers::sqliteInt_h::sqlite3,
         ::core::mem::size_of::<RowSet>() as crate::src::ext::rtree::rtree::U64_0,
     ) as *mut RowSet;
     if !p.is_null() {
-        let mut N: ::core::ffi::c_int = crate::src::src::malloc::sqlite3DbMallocSize(
+        let N: ::core::ffi::c_int = crate::src::src::malloc::sqlite3DbMallocSize(
             db as *mut crate::src::headers::sqliteInt_h::sqlite3,
             p as *const ::core::ffi::c_void,
         );
@@ -198,10 +198,10 @@ pub unsafe extern "C" fn sqlite3RowSetInit(
 }
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
-pub unsafe extern "C" fn sqlite3RowSetClear(mut pArg: *mut ::core::ffi::c_void) {
-    let mut p: *mut RowSet = pArg as *mut RowSet;
-    let mut pChunk: *mut RowSetChunk = ::core::ptr::null_mut::<RowSetChunk>();
-    let mut pNextChunk: *mut RowSetChunk = ::core::ptr::null_mut::<RowSetChunk>();
+pub unsafe extern "C" fn sqlite3RowSetClear(pArg: *mut ::core::ffi::c_void) {
+    let p: *mut RowSet = pArg as *mut RowSet;
+    let mut pChunk: *mut RowSetChunk;
+    let mut pNextChunk: *mut RowSetChunk;
     let __p_ref = unsafe { &mut *p };
     pChunk = __p_ref.pChunk;
     while !pChunk.is_null() {
@@ -221,7 +221,7 @@ pub unsafe extern "C" fn sqlite3RowSetClear(mut pArg: *mut ::core::ffi::c_void) 
 }
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
-pub unsafe extern "C" fn sqlite3RowSetDelete(mut pArg: *mut ::core::ffi::c_void) {
+pub unsafe extern "C" fn sqlite3RowSetDelete(pArg: *mut ::core::ffi::c_void) {
     sqlite3RowSetClear(pArg);
     crate::src::src::malloc::sqlite3DbFree(
         (*(pArg as *mut RowSet)).db as *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -229,10 +229,10 @@ pub unsafe extern "C" fn sqlite3RowSetDelete(mut pArg: *mut ::core::ffi::c_void)
     );
 }
 
-unsafe extern "C" fn rowSetEntryAlloc(mut p: *mut RowSet) -> *mut RowSetEntry {
+unsafe extern "C" fn rowSetEntryAlloc(p: *mut RowSet) -> *mut RowSetEntry {
     let __p_ref = unsafe { &mut *p };
     if __p_ref.nFresh as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
-        let mut pNew: *mut RowSetChunk = ::core::ptr::null_mut::<RowSetChunk>();
+        let pNew: *mut RowSetChunk;
         pNew = crate::src::src::malloc::sqlite3DbMallocRawNN(
             __p_ref.db as *mut crate::src::headers::sqliteInt_h::sqlite3,
             ::core::mem::size_of::<RowSetChunk>() as crate::src::ext::rtree::rtree::U64_0,
@@ -253,11 +253,11 @@ unsafe extern "C" fn rowSetEntryAlloc(mut p: *mut RowSet) -> *mut RowSetEntry {
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3RowSetInsert(
-    mut p: *mut RowSet,
-    mut rowid: crate::src::ext::rtree::rtree::I64_0,
+    p: *mut RowSet,
+    rowid: crate::src::ext::rtree::rtree::I64_0,
 ) {
-    let mut pEntry: *mut RowSetEntry = ::core::ptr::null_mut::<RowSetEntry>();
-    let mut pLast: *mut RowSetEntry = ::core::ptr::null_mut::<RowSetEntry>();
+    let pEntry: *mut RowSetEntry;
+    let pLast: *mut RowSetEntry;
     pEntry = rowSetEntryAlloc(p);
     if pEntry.is_null() {
         return;
@@ -282,7 +282,7 @@ unsafe extern "C" fn rowSetEntryMerge(
     mut pB: *mut RowSetEntry,
 ) -> *mut RowSetEntry {
     let mut head: RowSetEntry = unsafe { ::core::mem::zeroed() };
-    let mut pTail: *mut RowSetEntry = ::core::ptr::null_mut::<RowSetEntry>();
+    let mut pTail: *mut RowSetEntry;
     pTail = &raw mut head;
     loop {
         if (*pA).v <= (*pB).v {
@@ -311,8 +311,8 @@ unsafe extern "C" fn rowSetEntryMerge(
 }
 
 unsafe extern "C" fn rowSetEntrySort(mut pIn: *mut RowSetEntry) -> *mut RowSetEntry {
-    let mut i: ::core::ffi::c_uint = 0;
-    let mut pNext: *mut RowSetEntry = ::core::ptr::null_mut::<RowSetEntry>();
+    let mut i: ::core::ffi::c_uint;
+    let mut pNext: *mut RowSetEntry;
     let mut aBucket: [*mut RowSetEntry; 40] = unsafe { ::core::mem::zeroed() };
     while !pIn.is_null() {
         pNext = (*pIn).pRight;
@@ -345,9 +345,9 @@ unsafe extern "C" fn rowSetEntrySort(mut pIn: *mut RowSetEntry) -> *mut RowSetEn
 }
 
 unsafe extern "C" fn rowSetTreeToList(
-    mut pIn: *mut RowSetEntry,
-    mut ppFirst: *mut *mut RowSetEntry,
-    mut ppLast: *mut *mut RowSetEntry,
+    pIn: *mut RowSetEntry,
+    ppFirst: *mut *mut RowSetEntry,
+    ppLast: *mut *mut RowSetEntry,
 ) {
     if !(*pIn).pLeft.is_null() {
         let mut p: *mut RowSetEntry = ::core::ptr::null_mut::<RowSetEntry>();
@@ -364,11 +364,11 @@ unsafe extern "C" fn rowSetTreeToList(
 }
 
 unsafe extern "C" fn rowSetNDeepTree(
-    mut ppList: *mut *mut RowSetEntry,
-    mut iDepth: ::core::ffi::c_int,
+    ppList: *mut *mut RowSetEntry,
+    iDepth: ::core::ffi::c_int,
 ) -> *mut RowSetEntry {
-    let mut p: *mut RowSetEntry = ::core::ptr::null_mut::<RowSetEntry>();
-    let mut pLeft: *mut RowSetEntry = ::core::ptr::null_mut::<RowSetEntry>();
+    let p: *mut RowSetEntry;
+    let pLeft: *mut RowSetEntry;
     if (*ppList).is_null() {
         return ::core::ptr::null_mut::<RowSetEntry>();
     }
@@ -391,9 +391,9 @@ unsafe extern "C" fn rowSetNDeepTree(
 }
 
 unsafe extern "C" fn rowSetListToTree(mut pList: *mut RowSetEntry) -> *mut RowSetEntry {
-    let mut iDepth: ::core::ffi::c_int = 0;
-    let mut p: *mut RowSetEntry = ::core::ptr::null_mut::<RowSetEntry>();
-    let mut pLeft: *mut RowSetEntry = ::core::ptr::null_mut::<RowSetEntry>();
+    let mut iDepth: ::core::ffi::c_int;
+    let mut p: *mut RowSetEntry;
+    let mut pLeft: *mut RowSetEntry;
     p = pList;
     pList = (*p).pRight;
     (*p).pRight = ::core::ptr::null_mut::<RowSetEntry>();
@@ -412,8 +412,8 @@ unsafe extern "C" fn rowSetListToTree(mut pList: *mut RowSetEntry) -> *mut RowSe
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3RowSetNext(
-    mut p: *mut RowSet,
-    mut pRowid: *mut crate::src::ext::rtree::rtree::I64_0,
+    p: *mut RowSet,
+    pRowid: *mut crate::src::ext::rtree::rtree::I64_0,
 ) -> ::core::ffi::c_int {
     if (*p).rsFlags as ::core::ffi::c_int & ROWSET_NEXT == 0 as ::core::ffi::c_int {
         let __p_ref = unsafe { &mut *p };
@@ -438,12 +438,12 @@ pub unsafe extern "C" fn sqlite3RowSetNext(
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3RowSetTest(
-    mut pRowSet: *mut RowSet,
-    mut iBatch: ::core::ffi::c_int,
-    mut iRowid: crate::src::headers::sqlite3_h::Sqlite3Int64,
+    pRowSet: *mut RowSet,
+    iBatch: ::core::ffi::c_int,
+    iRowid: crate::src::headers::sqlite3_h::Sqlite3Int64,
 ) -> ::core::ffi::c_int {
-    let mut p: *mut RowSetEntry = ::core::ptr::null_mut::<RowSetEntry>();
-    let mut pTree: *mut RowSetEntry = ::core::ptr::null_mut::<RowSetEntry>();
+    let mut p: *mut RowSetEntry;
+    let mut pTree: *mut RowSetEntry;
     if iBatch != (*pRowSet).iBatch {
         p = (*pRowSet).pEntry;
         if !p.is_null() {

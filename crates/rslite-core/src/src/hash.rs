@@ -36,7 +36,7 @@ pub use crate::src::src::util::sqlite3StrICmp;
 
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
-pub unsafe extern "C" fn sqlite3HashInit(mut pNew: *mut crate::src::src::hash::Hash) {
+pub unsafe extern "C" fn sqlite3HashInit(pNew: *mut crate::src::src::hash::Hash) {
     let __pNew_ref = unsafe { &mut *pNew };
     __pNew_ref.first = ::core::ptr::null_mut::<crate::src::src::hash::HashElem>();
     __pNew_ref.count = 0 as ::core::ffi::c_uint;
@@ -45,9 +45,8 @@ pub unsafe extern "C" fn sqlite3HashInit(mut pNew: *mut crate::src::src::hash::H
 }
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
-pub unsafe extern "C" fn sqlite3HashClear(mut pH: *mut crate::src::src::hash::Hash) {
-    let mut elem: *mut crate::src::src::hash::HashElem =
-        ::core::ptr::null_mut::<crate::src::src::hash::HashElem>();
+pub unsafe extern "C" fn sqlite3HashClear(pH: *mut crate::src::src::hash::Hash) {
+    let mut elem: *mut crate::src::src::hash::HashElem;
     let __pH_ref = unsafe { &mut *pH };
     elem = __pH_ref.first;
     __pH_ref.first = ::core::ptr::null_mut::<crate::src::src::hash::HashElem>();
@@ -55,7 +54,7 @@ pub unsafe extern "C" fn sqlite3HashClear(mut pH: *mut crate::src::src::hash::Ha
     __pH_ref.ht = ::core::ptr::null_mut::<crate::src::src::hash::_ht>();
     __pH_ref.htsize = 0 as ::core::ffi::c_uint;
     while !elem.is_null() {
-        let mut next_elem: *mut crate::src::src::hash::HashElem = (*elem).next;
+        let next_elem: *mut crate::src::src::hash::HashElem = (*elem).next;
         crate::src::src::malloc::sqlite3_free(elem as *mut ::core::ffi::c_void);
         elem = next_elem;
     }
@@ -77,12 +76,11 @@ unsafe extern "C" fn strHash(mut z: *const ::core::ffi::c_char) -> ::core::ffi::
 }
 
 unsafe extern "C" fn insertElement(
-    mut pH: *mut crate::src::src::hash::Hash,
-    mut pEntry: *mut crate::src::src::hash::_ht,
-    mut pNew: *mut crate::src::src::hash::HashElem,
+    pH: *mut crate::src::src::hash::Hash,
+    pEntry: *mut crate::src::src::hash::_ht,
+    pNew: *mut crate::src::src::hash::HashElem,
 ) {
-    let mut pHead: *mut crate::src::src::hash::HashElem =
-        ::core::ptr::null_mut::<crate::src::src::hash::HashElem>();
+    let pHead: *mut crate::src::src::hash::HashElem;
     if !pEntry.is_null() {
         let __pEntry_ref = unsafe { &mut *pEntry };
         pHead = if __pEntry_ref.count != 0 {
@@ -117,15 +115,12 @@ unsafe extern "C" fn insertElement(
 }
 
 unsafe extern "C" fn rehash(
-    mut pH: *mut crate::src::src::hash::Hash,
+    pH: *mut crate::src::src::hash::Hash,
     mut new_size: ::core::ffi::c_uint,
 ) -> ::core::ffi::c_int {
-    let mut new_ht: *mut crate::src::src::hash::_ht =
-        ::core::ptr::null_mut::<crate::src::src::hash::_ht>();
-    let mut elem: *mut crate::src::src::hash::HashElem =
-        ::core::ptr::null_mut::<crate::src::src::hash::HashElem>();
-    let mut next_elem: *mut crate::src::src::hash::HashElem =
-        ::core::ptr::null_mut::<crate::src::src::hash::HashElem>();
+    let new_ht: *mut crate::src::src::hash::_ht;
+    let mut elem: *mut crate::src::src::hash::HashElem;
+    let mut next_elem: *mut crate::src::src::hash::HashElem;
     if (new_size as usize)
         .wrapping_mul(::core::mem::size_of::<crate::src::src::hash::_ht>() as usize)
         > crate::src::headers::sqliteInt_h::SQLITE_MALLOC_SOFT_LIMIT as usize
@@ -178,14 +173,13 @@ unsafe extern "C" fn rehash(
 }
 
 unsafe extern "C" fn findElementWithHash(
-    mut pH: *const crate::src::src::hash::Hash,
-    mut pKey: *const ::core::ffi::c_char,
-    mut pHash: *mut ::core::ffi::c_uint,
+    pH: *const crate::src::src::hash::Hash,
+    pKey: *const ::core::ffi::c_char,
+    pHash: *mut ::core::ffi::c_uint,
 ) -> *mut crate::src::src::hash::HashElem {
-    let mut elem: *mut crate::src::src::hash::HashElem =
-        ::core::ptr::null_mut::<crate::src::src::hash::HashElem>();
-    let mut count: ::core::ffi::c_uint = 0;
-    let mut h: ::core::ffi::c_uint = 0;
+    let mut elem: *mut crate::src::src::hash::HashElem;
+    let mut count: ::core::ffi::c_uint;
+    let h: ::core::ffi::c_uint;
     static mut nullElement: crate::src::src::hash::HashElem = crate::src::src::hash::HashElem {
         next: ::core::ptr::null::<crate::src::src::hash::HashElem>()
             as *mut crate::src::src::hash::HashElem,
@@ -197,8 +191,7 @@ unsafe extern "C" fn findElementWithHash(
     };
     h = strHash(pKey);
     if !(*pH).ht.is_null() {
-        let mut pEntry: *mut crate::src::src::hash::_ht =
-            ::core::ptr::null_mut::<crate::src::src::hash::_ht>();
+        let pEntry: *mut crate::src::src::hash::_ht;
         pEntry = (*pH).ht.offset(h.wrapping_rem((*pH).htsize) as isize)
             as *mut crate::src::src::hash::_ht as *mut crate::src::src::hash::_ht;
         elem = (*pEntry).chain;
@@ -223,11 +216,10 @@ unsafe extern "C" fn findElementWithHash(
 }
 
 unsafe extern "C" fn removeElement(
-    mut pH: *mut crate::src::src::hash::Hash,
-    mut elem: *mut crate::src::src::hash::HashElem,
+    pH: *mut crate::src::src::hash::Hash,
+    elem: *mut crate::src::src::hash::HashElem,
 ) {
-    let mut pEntry: *mut crate::src::src::hash::_ht =
-        ::core::ptr::null_mut::<crate::src::src::hash::_ht>();
+    let pEntry: *mut crate::src::src::hash::_ht;
     let __pH_ref = unsafe { &mut *pH };
     if !(*elem).prev.is_null() {
         (*(*elem).prev).next = (*elem).next;
@@ -256,26 +248,24 @@ unsafe extern "C" fn removeElement(
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3HashFind(
-    mut pH: *const crate::src::src::hash::Hash,
-    mut pKey: *const ::core::ffi::c_char,
+    pH: *const crate::src::src::hash::Hash,
+    pKey: *const ::core::ffi::c_char,
 ) -> *mut ::core::ffi::c_void {
     (*findElementWithHash(pH, pKey, ::core::ptr::null_mut::<::core::ffi::c_uint>())).data
 }
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3HashInsert(
-    mut pH: *mut crate::src::src::hash::Hash,
-    mut pKey: *const ::core::ffi::c_char,
-    mut data: *mut ::core::ffi::c_void,
+    pH: *mut crate::src::src::hash::Hash,
+    pKey: *const ::core::ffi::c_char,
+    data: *mut ::core::ffi::c_void,
 ) -> *mut ::core::ffi::c_void {
     let mut h: ::core::ffi::c_uint = 0;
-    let mut elem: *mut crate::src::src::hash::HashElem =
-        ::core::ptr::null_mut::<crate::src::src::hash::HashElem>();
-    let mut new_elem: *mut crate::src::src::hash::HashElem =
-        ::core::ptr::null_mut::<crate::src::src::hash::HashElem>();
+    let elem: *mut crate::src::src::hash::HashElem;
+    let new_elem: *mut crate::src::src::hash::HashElem;
     elem = findElementWithHash(pH, pKey, &raw mut h);
     if !(*elem).data.is_null() {
-        let mut old_data: *mut ::core::ffi::c_void = (*elem).data;
+        let old_data: *mut ::core::ffi::c_void = (*elem).data;
         if data.is_null() {
             removeElement(pH, elem);
         } else {

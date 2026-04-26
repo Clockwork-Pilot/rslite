@@ -239,16 +239,16 @@ static mut zDbstatSchema: [::core::ffi::c_char; 258] = unsafe {
 };
 
 unsafe extern "C" fn statConnect(
-    mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
+    db: *mut crate::src::headers::sqliteInt_h::sqlite3,
     mut _pAux: *mut ::core::ffi::c_void,
-    mut argc: ::core::ffi::c_int,
-    mut argv: *const *const ::core::ffi::c_char,
-    mut ppVtab: *mut *mut crate::src::headers::sqlite3_h::sqlite3_vtab,
-    mut pzErr: *mut *mut ::core::ffi::c_char,
+    argc: ::core::ffi::c_int,
+    argv: *const *const ::core::ffi::c_char,
+    ppVtab: *mut *mut crate::src::headers::sqlite3_h::sqlite3_vtab,
+    pzErr: *mut *mut ::core::ffi::c_char,
 ) -> ::core::ffi::c_int {
     let mut pTab: *mut StatTable = ::core::ptr::null_mut::<StatTable>();
-    let mut rc: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_OK;
-    let mut iDb: ::core::ffi::c_int = 0;
+    let mut rc: ::core::ffi::c_int;
+    let iDb: ::core::ffi::c_int;
     if argc >= 4 as ::core::ffi::c_int {
         let mut nm: crate::src::headers::sqliteInt_h::Token = { ::core::mem::zeroed() };
         crate::src::src::util::sqlite3TokenInit(
@@ -300,7 +300,7 @@ unsafe extern "C" fn statConnect(
 }
 
 unsafe extern "C" fn statDisconnect(
-    mut pVtab: *mut crate::src::headers::sqlite3_h::sqlite3_vtab,
+    pVtab: *mut crate::src::headers::sqlite3_h::sqlite3_vtab,
 ) -> ::core::ffi::c_int {
     crate::src::src::malloc::sqlite3_free(pVtab as *mut ::core::ffi::c_void);
     crate::src::headers::sqlite3_h::SQLITE_OK
@@ -308,9 +308,9 @@ unsafe extern "C" fn statDisconnect(
 
 unsafe extern "C" fn statBestIndex(
     mut _tab: *mut crate::src::headers::sqlite3_h::sqlite3_vtab,
-    mut pIdxInfo: *mut crate::src::headers::sqlite3_h::sqlite3_index_info,
+    pIdxInfo: *mut crate::src::headers::sqlite3_h::sqlite3_index_info,
 ) -> ::core::ffi::c_int {
-    let mut i: ::core::ffi::c_int = 0;
+    let mut i: ::core::ffi::c_int;
     let mut iSchema: ::core::ffi::c_int = -(1 as ::core::ffi::c_int);
     let mut iName: ::core::ffi::c_int = -(1 as ::core::ffi::c_int);
     let mut iAgg: ::core::ffi::c_int = -(1 as ::core::ffi::c_int);
@@ -379,11 +379,11 @@ unsafe extern "C" fn statBestIndex(
 }
 
 unsafe extern "C" fn statOpen(
-    mut pVTab: *mut crate::src::headers::sqlite3_h::sqlite3_vtab,
-    mut ppCursor: *mut *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
+    pVTab: *mut crate::src::headers::sqlite3_h::sqlite3_vtab,
+    ppCursor: *mut *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
 ) -> ::core::ffi::c_int {
-    let mut pTab: *mut StatTable = pVTab as *mut StatTable;
-    let mut pCsr: *mut StatCursor = ::core::ptr::null_mut::<StatCursor>();
+    let pTab: *mut StatTable = pVTab as *mut StatTable;
+    let pCsr: *mut StatCursor;
     pCsr = crate::src::src::malloc::sqlite3_malloc64(
         ::core::mem::size_of::<StatCursor>() as crate::src::headers::sqlite3_h::Sqlite3Uint64
     ) as *mut StatCursor;
@@ -402,8 +402,8 @@ unsafe extern "C" fn statOpen(
     crate::src::headers::sqlite3_h::SQLITE_OK
 }
 
-unsafe extern "C" fn statClearCells(mut p: *mut StatPage) {
-    let mut i: ::core::ffi::c_int = 0;
+unsafe extern "C" fn statClearCells(p: *mut StatPage) {
+    let mut i: ::core::ffi::c_int;
     let __p_ref = { &mut *p };
     if !__p_ref.aCell.is_null() {
         i = 0 as ::core::ffi::c_int;
@@ -419,9 +419,9 @@ unsafe extern "C" fn statClearCells(mut p: *mut StatPage) {
     __p_ref.aCell = ::core::ptr::null_mut::<StatCell>();
 }
 
-unsafe extern "C" fn statClearPage(mut p: *mut StatPage) {
+unsafe extern "C" fn statClearPage(p: *mut StatPage) {
     let __p_ref = { &mut *p };
-    let mut aPg: *mut crate::src::ext::rtree::rtree::U8_0 = __p_ref.aPg;
+    let aPg: *mut crate::src::ext::rtree::rtree::U8_0 = __p_ref.aPg;
     statClearCells(p);
     crate::src::src::malloc::sqlite3_free(__p_ref.zPath as *mut ::core::ffi::c_void);
     ::libc::memset(
@@ -432,8 +432,8 @@ unsafe extern "C" fn statClearPage(mut p: *mut StatPage) {
     __p_ref.aPg = aPg;
 }
 
-unsafe extern "C" fn statResetCsr(mut pCsr: *mut StatCursor) {
-    let mut i: ::core::ffi::c_int = 0;
+unsafe extern "C" fn statResetCsr(pCsr: *mut StatCursor) {
+    let mut i: ::core::ffi::c_int;
     i = 0 as ::core::ffi::c_int;
     let __pCsr_ref = { &mut *pCsr };
     while i
@@ -458,7 +458,7 @@ unsafe extern "C" fn statResetCsr(mut pCsr: *mut StatCursor) {
     __pCsr_ref.isEof = 0 as crate::src::ext::rtree::rtree::U8_0;
 }
 
-unsafe extern "C" fn statResetCounts(mut pCsr: *mut StatCursor) {
+unsafe extern "C" fn statResetCounts(pCsr: *mut StatCursor) {
     let __pCsr_ref = { &mut *pCsr };
     __pCsr_ref.nCell = 0 as ::core::ffi::c_int;
     __pCsr_ref.nMxPayload = 0 as ::core::ffi::c_int;
@@ -469,9 +469,9 @@ unsafe extern "C" fn statResetCounts(mut pCsr: *mut StatCursor) {
 }
 
 unsafe extern "C" fn statClose(
-    mut pCursor: *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
+    pCursor: *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
 ) -> ::core::ffi::c_int {
-    let mut pCsr: *mut StatCursor = pCursor as *mut StatCursor;
+    let pCsr: *mut StatCursor = pCursor as *mut StatCursor;
     statResetCsr(pCsr);
     crate::src::src::vdbeapi::sqlite3_finalize((*pCsr).pStmt);
     crate::src::src::malloc::sqlite3_free(pCsr as *mut ::core::ffi::c_void);
@@ -479,13 +479,13 @@ unsafe extern "C" fn statClose(
 }
 
 unsafe extern "C" fn getLocalPayload(
-    mut nUsable: ::core::ffi::c_int,
-    mut flags: crate::src::ext::rtree::rtree::U8_0,
-    mut nTotal: ::core::ffi::c_int,
+    nUsable: ::core::ffi::c_int,
+    flags: crate::src::ext::rtree::rtree::U8_0,
+    nTotal: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
-    let mut nLocal: ::core::ffi::c_int = 0;
-    let mut nMinLocal: ::core::ffi::c_int = 0;
-    let mut nMaxLocal: ::core::ffi::c_int = 0;
+    let mut nLocal: ::core::ffi::c_int;
+    let nMinLocal: ::core::ffi::c_int;
+    let nMaxLocal: ::core::ffi::c_int;
     if flags as ::core::ffi::c_int == 0xd as ::core::ffi::c_int {
         nMinLocal = (nUsable - 12 as ::core::ffi::c_int) * 32 as ::core::ffi::c_int
             / 255 as ::core::ffi::c_int
@@ -507,18 +507,18 @@ unsafe extern "C" fn getLocalPayload(
 }
 
 unsafe extern "C" fn statDecodePage(
-    mut pBt: *mut crate::src::headers::btreeInt_h::Btree,
-    mut p: *mut StatPage,
+    pBt: *mut crate::src::headers::btreeInt_h::Btree,
+    p: *mut StatPage,
 ) -> ::core::ffi::c_int {
     let mut current_block: u64;
-    let mut nUnused: ::core::ffi::c_int = 0;
-    let mut iOff: ::core::ffi::c_int = 0;
+    let mut nUnused: ::core::ffi::c_int;
+    let mut iOff: ::core::ffi::c_int;
     let mut nHdr: ::core::ffi::c_int = 0;
     let mut isLeaf: ::core::ffi::c_int = 0;
-    let mut szPage: ::core::ffi::c_int = 0;
+    let szPage: ::core::ffi::c_int;
     let __p_ref = { &mut *p };
-    let mut aData: *mut crate::src::ext::rtree::rtree::U8_0 = __p_ref.aPg;
-    let mut aHdr: *mut crate::src::ext::rtree::rtree::U8_0 = aData.offset(
+    let aData: *mut crate::src::ext::rtree::rtree::U8_0 = __p_ref.aPg;
+    let aHdr: *mut crate::src::ext::rtree::rtree::U8_0 = aData.offset(
         (if __p_ref.iPgno == 1 as crate::src::ext::rtree::rtree::U32_0 {
             100 as ::core::ffi::c_int
         } else {
@@ -572,7 +572,7 @@ unsafe extern "C" fn statDecodePage(
                     current_block = 12147880666119273379;
                     break;
                 }
-                let mut iNext: ::core::ffi::c_int = 0;
+                let iNext: ::core::ffi::c_int;
                 if iOff >= szPage {
                     current_block = 13503832839001051727;
                     break;
@@ -607,8 +607,8 @@ unsafe extern "C" fn statDecodePage(
                         )
                     };
                     if __p_ref.nCell != 0 {
-                        let mut i: ::core::ffi::c_int = 0;
-                        let mut nUsable: ::core::ffi::c_int = 0;
+                        let mut i: ::core::ffi::c_int;
+                        let nUsable: ::core::ffi::c_int;
                         crate::src::src::btmutex::sqlite3BtreeEnter(pBt);
                         nUsable =
                             szPage - crate::src::src::btree::sqlite3BtreeGetReserveNoMutex(pBt);
@@ -635,7 +635,7 @@ unsafe extern "C" fn statDecodePage(
                                 current_block = 5597585068398118923;
                                 break;
                             }
-                            let mut pCell: *mut StatCell =
+                            let pCell: *mut StatCell =
                                 __p_ref.aCell.offset(i as isize) as *mut StatCell;
                             iOff = (*(aData.offset((nHdr + i * 2 as ::core::ffi::c_int) as isize)
                                 as *mut crate::src::ext::rtree::rtree::U8_0)
@@ -659,7 +659,7 @@ unsafe extern "C" fn statDecodePage(
                             }
                             if !(__p_ref.flags as ::core::ffi::c_int == 0x5 as ::core::ffi::c_int) {
                                 let mut nPayload: crate::src::ext::rtree::rtree::U32_0 = 0;
-                                let mut nLocal: ::core::ffi::c_int = 0;
+                                let nLocal: ::core::ffi::c_int;
                                 iOff += (if (*aData.offset(iOff as isize) as ::core::ffi::c_int)
                                     < 0x80 as ::core::ffi::c_int
                                         as crate::src::ext::rtree::rtree::U8_0
@@ -703,8 +703,8 @@ unsafe extern "C" fn statDecodePage(
                                 }
                                 (*pCell).nLocal = nLocal;
                                 if nPayload > nLocal as crate::src::ext::rtree::rtree::U32_0 {
-                                    let mut j: ::core::ffi::c_int = 0;
-                                    let mut nOvfl: ::core::ffi::c_int = nPayload
+                                    let mut j: ::core::ffi::c_int;
+                                    let nOvfl: ::core::ffi::c_int = nPayload
                                         .wrapping_sub(
                                             nLocal as crate::src::ext::rtree::rtree::U32_0,
                                         )
@@ -757,8 +757,8 @@ unsafe extern "C" fn statDecodePage(
                                         );
                                     j = 1 as ::core::ffi::c_int;
                                     while j < nOvfl {
-                                        let mut rc: ::core::ffi::c_int = 0;
-                                        let mut iPrev: crate::src::ext::rtree::rtree::U32_0 =
+                                        let rc: ::core::ffi::c_int;
+                                        let iPrev: crate::src::ext::rtree::rtree::U32_0 =
                                             *(*pCell)
                                                 .aOvfl
                                                 .offset((j - 1 as ::core::ffi::c_int) as isize);
@@ -809,16 +809,15 @@ unsafe extern "C" fn statDecodePage(
     crate::src::headers::sqlite3_h::SQLITE_OK
 }
 
-unsafe extern "C" fn statSizeAndOffset(mut pCsr: *mut StatCursor) {
-    let mut pTab: *mut StatTable = (*(pCsr
+unsafe extern "C" fn statSizeAndOffset(pCsr: *mut StatCursor) {
+    let pTab: *mut StatTable = (*(pCsr
         as *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor))
         .pVtab as *mut StatTable;
-    let mut pBt: *mut crate::src::headers::btreeInt_h::Btree =
+    let pBt: *mut crate::src::headers::btreeInt_h::Btree =
         (*(*(*pTab).db).aDb.offset((*pTab).iDb as isize)).pBt;
-    let mut pPager: *mut crate::src::src::pager::Pager =
+    let pPager: *mut crate::src::src::pager::Pager =
         crate::src::src::btree::sqlite3BtreePager(pBt) as *mut crate::src::src::pager::Pager;
-    let mut fd: *mut crate::src::headers::sqlite3_h::sqlite3_file =
-        ::core::ptr::null_mut::<crate::src::headers::sqlite3_h::sqlite3_file>();
+    let fd: *mut crate::src::headers::sqlite3_h::sqlite3_file;
     let mut x: [crate::src::headers::sqlite3_h::Sqlite3Int64; 2] = [0; 2];
     fd = crate::src::src::pager::sqlite3PagerFile(pPager)
         as *mut crate::src::headers::sqlite3_h::sqlite3_file;
@@ -847,14 +846,14 @@ unsafe extern "C" fn statSizeAndOffset(mut pCsr: *mut StatCursor) {
 }
 
 unsafe extern "C" fn statGetPage(
-    mut pBt: *mut crate::src::headers::btreeInt_h::Btree,
-    mut iPg: crate::src::ext::rtree::rtree::U32_0,
-    mut pPg: *mut StatPage,
+    pBt: *mut crate::src::headers::btreeInt_h::Btree,
+    iPg: crate::src::ext::rtree::rtree::U32_0,
+    pPg: *mut StatPage,
 ) -> ::core::ffi::c_int {
-    let mut pgsz: ::core::ffi::c_int = crate::src::src::btree::sqlite3BtreeGetPageSize(pBt);
+    let pgsz: ::core::ffi::c_int = crate::src::src::btree::sqlite3BtreeGetPageSize(pBt);
     let mut pDbPage: *mut crate::src::src::pager::DbPage =
         ::core::ptr::null_mut::<crate::src::src::pager::DbPage>();
-    let mut rc: ::core::ffi::c_int = 0;
+    let rc: ::core::ffi::c_int;
     if (*pPg).aPg.is_null() {
         let __pPg_ref = { &mut *pPg };
         __pPg_ref.aPg = crate::src::src::malloc::sqlite3_malloc(pgsz + DBSTAT_PAGE_PADDING_BYTES)
@@ -876,7 +875,7 @@ unsafe extern "C" fn statGetPage(
         0 as ::core::ffi::c_int,
     );
     if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
-        let mut a: *const crate::src::ext::rtree::rtree::U8_0 =
+        let a: *const crate::src::ext::rtree::rtree::U8_0 =
             crate::src::src::pager::sqlite3PagerGetData(
                 pDbPage as *mut crate::src::src::pcache::PgHdr,
             ) as *const crate::src::ext::rtree::rtree::U8_0;
@@ -887,17 +886,17 @@ unsafe extern "C" fn statGetPage(
 }
 
 unsafe extern "C" fn statNext(
-    mut pCursor: *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
+    pCursor: *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
 ) -> ::core::ffi::c_int {
-    let mut rc: ::core::ffi::c_int = 0;
-    let mut nPayload: ::core::ffi::c_int = 0;
-    let mut z: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
-    let mut pCsr: *mut StatCursor = pCursor as *mut StatCursor;
-    let mut pTab: *mut StatTable = (*pCursor).pVtab as *mut StatTable;
+    let mut rc: ::core::ffi::c_int;
+    let mut nPayload: ::core::ffi::c_int;
+    let mut z: *mut ::core::ffi::c_char;
+    let pCsr: *mut StatCursor = pCursor as *mut StatCursor;
+    let pTab: *mut StatTable = (*pCursor).pVtab as *mut StatTable;
     let __pCsr_ref = { &mut *pCsr };
-    let mut pBt: *mut crate::src::headers::btreeInt_h::Btree =
+    let pBt: *mut crate::src::headers::btreeInt_h::Btree =
         (*(*(*pTab).db).aDb.offset(__pCsr_ref.iDb as isize)).pBt;
-    let mut pPager: *mut crate::src::src::pager::Pager =
+    let pPager: *mut crate::src::src::pager::Pager =
         crate::src::src::btree::sqlite3BtreePager(pBt) as *mut crate::src::src::pager::Pager;
     crate::src::src::malloc::sqlite3_free(__pCsr_ref.zPath as *mut ::core::ffi::c_void);
     __pCsr_ref.zPath = ::core::ptr::null_mut::<::core::ffi::c_char>();
@@ -907,7 +906,7 @@ unsafe extern "C" fn statNext(
             rc = crate::src::src::vdbeapi::sqlite3_step(__pCsr_ref.pStmt);
             if rc == crate::src::headers::sqlite3_h::SQLITE_ROW {
                 let mut nPage: ::core::ffi::c_int = 0;
-                let mut iRoot: crate::src::ext::rtree::rtree::U32_0 =
+                let iRoot: crate::src::ext::rtree::rtree::U32_0 =
                     crate::src::src::vdbeapi::sqlite3_column_int64(
                         __pCsr_ref.pStmt,
                         1 as ::core::ffi::c_int,
@@ -939,7 +938,7 @@ unsafe extern "C" fn statNext(
                 return crate::src::src::vdbeapi::sqlite3_reset(__pCsr_ref.pStmt);
             }
         } else {
-            let mut p: *mut StatPage = (&raw mut __pCsr_ref.aPage as *mut StatPage)
+            let p: *mut StatPage = (&raw mut __pCsr_ref.aPage as *mut StatPage)
                 .offset(__pCsr_ref.iPage as isize)
                 as *mut StatPage;
             if __pCsr_ref.isAgg == 0 {
@@ -947,11 +946,11 @@ unsafe extern "C" fn statNext(
             }
             let __p_ref = { &mut *p };
             while __p_ref.iCell < __p_ref.nCell {
-                let mut pCell: *mut StatCell =
+                let pCell: *mut StatCell =
                     __p_ref.aCell.offset(__p_ref.iCell as isize) as *mut StatCell;
                 while (*pCell).iOvfl < (*pCell).nOvfl {
-                    let mut nUsable: ::core::ffi::c_int = 0;
-                    let mut iOvfl: ::core::ffi::c_int = 0;
+                    let nUsable: ::core::ffi::c_int;
+                    let iOvfl: ::core::ffi::c_int;
                     crate::src::src::btmutex::sqlite3BtreeEnter(pBt);
                     nUsable = crate::src::src::btree::sqlite3BtreeGetPageSize(pBt)
                         - crate::src::src::btree::sqlite3BtreeGetReserveNoMutex(pBt);
@@ -1045,8 +1044,8 @@ unsafe extern "C" fn statNext(
         if !(rc == crate::src::headers::sqlite3_h::SQLITE_OK) {
             break;
         }
-        let mut i: ::core::ffi::c_int = 0;
-        let mut p_0: *mut StatPage = (&raw mut __pCsr_ref.aPage as *mut StatPage)
+        let mut i: ::core::ffi::c_int;
+        let p_0: *mut StatPage = (&raw mut __pCsr_ref.aPage as *mut StatPage)
             .offset(__pCsr_ref.iPage as isize)
             as *mut StatPage;
         __pCsr_ref.zName = crate::src::src::vdbeapi::sqlite3_column_text(
@@ -1101,26 +1100,25 @@ unsafe extern "C" fn statNext(
 }
 
 unsafe extern "C" fn statEof(
-    mut pCursor: *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
+    pCursor: *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
 ) -> ::core::ffi::c_int {
     let pCsr = &*(pCursor as *mut StatCursor);
     pCsr.isEof as ::core::ffi::c_int
 }
 
 unsafe extern "C" fn statFilter(
-    mut pCursor: *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
-    mut idxNum: ::core::ffi::c_int,
+    pCursor: *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
+    idxNum: ::core::ffi::c_int,
     mut _idxStr: *const ::core::ffi::c_char,
     mut _argc: ::core::ffi::c_int,
-    mut argv: *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
+    argv: *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
 ) -> ::core::ffi::c_int {
-    let mut pCsr: *mut StatCursor = pCursor as *mut StatCursor;
-    let mut pTab: *mut StatTable = (*pCursor).pVtab as *mut StatTable;
-    let mut pSql: *mut crate::src::headers::sqliteInt_h::sqlite3_str =
-        ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::sqlite3_str>();
-    let mut zSql: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
+    let pCsr: *mut StatCursor = pCursor as *mut StatCursor;
+    let pTab: *mut StatTable = (*pCursor).pVtab as *mut StatTable;
+    let pSql: *mut crate::src::headers::sqliteInt_h::sqlite3_str;
+    let zSql: *mut ::core::ffi::c_char;
     let mut iArg: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
-    let mut rc: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_OK;
+    let mut rc: ::core::ffi::c_int;
     let mut zName: *const ::core::ffi::c_char = ::core::ptr::null::<::core::ffi::c_char>();
     statResetCsr(pCsr);
     let __pCsr_ref = { &mut *pCsr };
@@ -1129,7 +1127,7 @@ unsafe extern "C" fn statFilter(
     if idxNum & 0x1 as ::core::ffi::c_int != 0 {
         let fresh1 = iArg;
         iArg += 1;
-        let mut zDbase: *const ::core::ffi::c_char =
+        let zDbase: *const ::core::ffi::c_char =
             crate::src::src::vdbeapi::sqlite3_value_text(*argv.offset(fresh1 as isize))
                 as *const ::core::ffi::c_char;
         __pCsr_ref.iDb = crate::src::src::build::sqlite3FindDbName(
@@ -1152,7 +1150,6 @@ unsafe extern "C" fn statFilter(
     }
     if idxNum & 0x4 as ::core::ffi::c_int != 0 {
         let fresh3 = iArg;
-        iArg += 1;
         __pCsr_ref.isAgg =
             (crate::src::src::vdbeapi::sqlite3_value_double(*argv.offset(fresh3 as isize))
                 != 0.0f64) as ::core::ffi::c_int as crate::src::ext::rtree::rtree::U8_0;
@@ -1200,11 +1197,11 @@ unsafe extern "C" fn statFilter(
 }
 
 unsafe extern "C" fn statColumn(
-    mut pCursor: *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
-    mut ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
-    mut i: ::core::ffi::c_int,
+    pCursor: *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
+    ctx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
+    i: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
-    let mut pCsr: *mut StatCursor = pCursor as *mut StatCursor;
+    let pCsr: *mut StatCursor = pCursor as *mut StatCursor;
     match i {
         0 => {
             crate::src::src::vdbeapi::sqlite3_result_text(
@@ -1292,10 +1289,10 @@ unsafe extern "C" fn statColumn(
             );
         }
         10 => {
-            let mut db: *mut crate::src::headers::sqliteInt_h::sqlite3 =
+            let db: *mut crate::src::headers::sqliteInt_h::sqlite3 =
                 crate::src::src::vdbeapi::sqlite3_context_db_handle(ctx)
                     as *mut crate::src::headers::sqliteInt_h::sqlite3;
-            let mut iDb: ::core::ffi::c_int = (*pCsr).iDb;
+            let iDb: ::core::ffi::c_int = (*pCsr).iDb;
             crate::src::src::vdbeapi::sqlite3_result_text(
                 ctx,
                 (*(*db).aDb.offset(iDb as isize)).zDbSName,
@@ -1311,8 +1308,8 @@ unsafe extern "C" fn statColumn(
 }
 
 unsafe extern "C" fn statRowid(
-    mut pCursor: *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
-    mut pRowid: *mut crate::src::headers::sqlite3_h::SqliteInt64,
+    pCursor: *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
+    pRowid: *mut crate::src::headers::sqlite3_h::SqliteInt64,
 ) -> ::core::ffi::c_int {
     let pCsr = &*(pCursor as *mut StatCursor);
     *pRowid = pCsr.iPageno as crate::src::headers::sqlite3_h::SqliteInt64;
@@ -1321,7 +1318,7 @@ unsafe extern "C" fn statRowid(
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3DbstatRegister(
-    mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
+    db: *mut crate::src::headers::sqliteInt_h::sqlite3,
 ) -> ::core::ffi::c_int {
     static mut dbstat_module: crate::src::headers::sqlite3_h::sqlite3_module = {
         crate::src::headers::sqlite3_h::sqlite3_module {

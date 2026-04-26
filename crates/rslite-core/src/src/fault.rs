@@ -12,8 +12,8 @@ static mut sqlite3Hooks: BenignMallocHooks = BenignMallocHooks {
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3BenignMallocHooks(
-    mut xBenignBegin: Option<unsafe extern "C" fn() -> ()>,
-    mut xBenignEnd: Option<unsafe extern "C" fn() -> ()>,
+    xBenignBegin: Option<unsafe extern "C" fn() -> ()>,
+    xBenignEnd: Option<unsafe extern "C" fn() -> ()>,
 ) {
     sqlite3Hooks.xBenignBegin = xBenignBegin;
     sqlite3Hooks.xBenignEnd = xBenignEnd;

@@ -301,8 +301,8 @@ pub struct RenameCtx {
 }
 
 unsafe extern "C" fn isAlterableTable(
-    mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
-    mut pTab: *mut crate::src::headers::sqliteInt_h::Table,
+    pParse: *mut crate::src::headers::sqliteInt_h::Parse,
+    pTab: *mut crate::src::headers::sqliteInt_h::Table,
 ) -> ::core::ffi::c_int {
     let __pTab_ref = { &*pTab };
     if 0 as ::core::ffi::c_int
@@ -334,11 +334,11 @@ unsafe extern "C" fn isAlterableTable(
 }
 
 unsafe extern "C" fn renameTestSchema(
-    mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
-    mut zDb: *const ::core::ffi::c_char,
-    mut bTemp: ::core::ffi::c_int,
-    mut zWhen: *const ::core::ffi::c_char,
-    mut bNoDQS: ::core::ffi::c_int,
+    pParse: *mut crate::src::headers::sqliteInt_h::Parse,
+    zDb: *const ::core::ffi::c_char,
+    bTemp: ::core::ffi::c_int,
+    zWhen: *const ::core::ffi::c_char,
+    bNoDQS: ::core::ffi::c_int,
 ) {
     (*pParse).set_colNamesSet(
         1 as crate::src::headers::sqliteInt_h::Bft as crate::src::headers::sqliteInt_h::Bft,
@@ -358,9 +358,9 @@ unsafe extern "C" fn renameTestSchema(
 }
 
 unsafe extern "C" fn renameFixQuotes(
-    mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
-    mut zDb: *const ::core::ffi::c_char,
-    mut bTemp: ::core::ffi::c_int,
+    pParse: *mut crate::src::headers::sqliteInt_h::Parse,
+    zDb: *const ::core::ffi::c_char,
+    bTemp: ::core::ffi::c_int,
 ) {
     crate::src::src::build::sqlite3NestedParse_args(
         pParse as *mut crate::src::headers::sqliteInt_h::Parse,
@@ -377,11 +377,11 @@ unsafe extern "C" fn renameFixQuotes(
 }
 
 unsafe extern "C" fn renameReloadSchema(
-    mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
-    mut iDb: ::core::ffi::c_int,
-    mut p5: crate::src::fts5::U16_0,
+    pParse: *mut crate::src::headers::sqliteInt_h::Parse,
+    iDb: ::core::ffi::c_int,
+    p5: crate::src::fts5::U16_0,
 ) {
-    let mut v: *mut crate::src::headers::vdbeInt_h::Vdbe = (*pParse).pVdbe;
+    let v: *mut crate::src::headers::vdbeInt_h::Vdbe = (*pParse).pVdbe;
     if !v.is_null() {
         crate::src::src::build::sqlite3ChangeCookie(
             pParse as *mut crate::src::headers::sqliteInt_h::Parse,
@@ -406,20 +406,18 @@ unsafe extern "C" fn renameReloadSchema(
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3AlterRenameTable(
-    mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
-    mut pSrc: *mut crate::src::headers::sqliteInt_h::SrcList,
-    mut pName: *mut crate::src::headers::sqliteInt_h::Token,
+    pParse: *mut crate::src::headers::sqliteInt_h::Parse,
+    pSrc: *mut crate::src::headers::sqliteInt_h::SrcList,
+    pName: *mut crate::src::headers::sqliteInt_h::Token,
 ) {
-    let mut iDb: ::core::ffi::c_int = 0;
-    let mut zDb: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
-    let mut pTab: *mut crate::src::headers::sqliteInt_h::Table =
-        ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::Table>();
+    let iDb: ::core::ffi::c_int;
+    let zDb: *mut ::core::ffi::c_char;
+    let pTab: *mut crate::src::headers::sqliteInt_h::Table;
     let mut zName: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
-    let mut db: *mut crate::src::headers::sqliteInt_h::sqlite3 = (*pParse).db;
-    let mut nTabName: ::core::ffi::c_int = 0;
-    let mut zTabName: *const ::core::ffi::c_char = ::core::ptr::null::<::core::ffi::c_char>();
-    let mut v: *mut crate::src::headers::vdbeInt_h::Vdbe =
-        ::core::ptr::null_mut::<crate::src::headers::vdbeInt_h::Vdbe>();
+    let db: *mut crate::src::headers::sqliteInt_h::sqlite3 = (*pParse).db;
+    let nTabName: ::core::ffi::c_int;
+    let zTabName: *const ::core::ffi::c_char;
+    let v: *mut crate::src::headers::vdbeInt_h::Vdbe;
     let mut pVTab: *mut crate::src::headers::sqliteInt_h::VTable =
         ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::VTable>();
     if !((*db).mallocFailed != 0) {
@@ -573,7 +571,7 @@ pub unsafe extern "C" fn sqlite3AlterRenameTable(
                                     }
                                     if !pVTab.is_null() {
                                         (*pParse).nMem += 1;
-                                        let mut i: ::core::ffi::c_int = (*pParse).nMem;
+                                        let i: ::core::ffi::c_int = (*pParse).nMem;
                                         crate::src::src::vdbeaux::sqlite3VdbeLoadString(
                                             v, i, zName,
                                         );
@@ -620,10 +618,10 @@ pub unsafe extern "C" fn sqlite3AlterRenameTable(
 }
 
 unsafe extern "C" fn sqlite3ErrorIfNotEmpty(
-    mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
-    mut zDb: *const ::core::ffi::c_char,
-    mut zTab: *const ::core::ffi::c_char,
-    mut zErr: *const ::core::ffi::c_char,
+    pParse: *mut crate::src::headers::sqliteInt_h::Parse,
+    zDb: *const ::core::ffi::c_char,
+    zTab: *const ::core::ffi::c_char,
+    zErr: *const ::core::ffi::c_char,
 ) {
     crate::src::src::build::sqlite3NestedParse_args(
         pParse as *mut crate::src::headers::sqliteInt_h::Parse,
@@ -634,26 +632,20 @@ unsafe extern "C" fn sqlite3ErrorIfNotEmpty(
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3AlterFinishAddColumn(
-    mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
-    mut pColDef: *mut crate::src::headers::sqliteInt_h::Token,
+    pParse: *mut crate::src::headers::sqliteInt_h::Parse,
+    pColDef: *mut crate::src::headers::sqliteInt_h::Token,
 ) {
-    let mut pNew: *mut crate::src::headers::sqliteInt_h::Table =
-        ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::Table>();
-    let mut pTab: *mut crate::src::headers::sqliteInt_h::Table =
-        ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::Table>();
-    let mut iDb: ::core::ffi::c_int = 0;
-    let mut zDb: *const ::core::ffi::c_char = ::core::ptr::null::<::core::ffi::c_char>();
-    let mut zTab: *const ::core::ffi::c_char = ::core::ptr::null::<::core::ffi::c_char>();
-    let mut zCol: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
-    let mut pCol: *mut crate::src::headers::sqliteInt_h::Column =
-        ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::Column>();
-    let mut pDflt: *mut crate::src::headers::sqliteInt_h::Expr =
-        ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::Expr>();
-    let mut db: *mut crate::src::headers::sqliteInt_h::sqlite3 =
-        ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::sqlite3>();
-    let mut v: *mut crate::src::headers::vdbeInt_h::Vdbe =
-        ::core::ptr::null_mut::<crate::src::headers::vdbeInt_h::Vdbe>();
-    let mut r1: ::core::ffi::c_int = 0;
+    let pNew: *mut crate::src::headers::sqliteInt_h::Table;
+    let pTab: *mut crate::src::headers::sqliteInt_h::Table;
+    let iDb: ::core::ffi::c_int;
+    let zDb: *const ::core::ffi::c_char;
+    let zTab: *const ::core::ffi::c_char;
+    let zCol: *mut ::core::ffi::c_char;
+    let pCol: *mut crate::src::headers::sqliteInt_h::Column;
+    let mut pDflt: *mut crate::src::headers::sqliteInt_h::Expr;
+    let db: *mut crate::src::headers::sqliteInt_h::sqlite3;
+    let v: *mut crate::src::headers::vdbeInt_h::Vdbe;
+    let r1: ::core::ffi::c_int;
     let __pParse_ref = { &*pParse };
     db = __pParse_ref.db;
     if __pParse_ref.nErr != 0 {
@@ -742,7 +734,7 @@ pub unsafe extern "C" fn sqlite3AlterFinishAddColumn(
         if !pDflt.is_null() {
             let mut pVal: *mut crate::src::headers::vdbeInt_h::sqlite3_value =
                 ::core::ptr::null_mut::<crate::src::headers::vdbeInt_h::sqlite3_value>();
-            let mut rc: ::core::ffi::c_int = 0;
+            let rc: ::core::ffi::c_int;
             rc = crate::src::src::vdbemem::sqlite3ValueFromExpr(
                 db as *mut crate::src::headers::sqliteInt_h::sqlite3,
                 pDflt as *const crate::src::headers::sqliteInt_h::Expr,
@@ -878,17 +870,15 @@ pub unsafe extern "C" fn sqlite3AlterFinishAddColumn(
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3AlterBeginAddColumn(
-    mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
-    mut pSrc: *mut crate::src::headers::sqliteInt_h::SrcList,
+    pParse: *mut crate::src::headers::sqliteInt_h::Parse,
+    pSrc: *mut crate::src::headers::sqliteInt_h::SrcList,
 ) {
-    let mut pNew: *mut crate::src::headers::sqliteInt_h::Table =
-        ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::Table>();
-    let mut pTab: *mut crate::src::headers::sqliteInt_h::Table =
-        ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::Table>();
-    let mut iDb: ::core::ffi::c_int = 0;
-    let mut i: ::core::ffi::c_int = 0;
-    let mut nAlloc: ::core::ffi::c_int = 0;
-    let mut db: *mut crate::src::headers::sqliteInt_h::sqlite3 = (*pParse).db;
+    let pNew: *mut crate::src::headers::sqliteInt_h::Table;
+    let pTab: *mut crate::src::headers::sqliteInt_h::Table;
+    let iDb: ::core::ffi::c_int;
+    let mut i: ::core::ffi::c_int;
+    let nAlloc: ::core::ffi::c_int;
+    let db: *mut crate::src::headers::sqliteInt_h::sqlite3 = (*pParse).db;
     if !((*db).mallocFailed != 0) {
         pTab = crate::src::src::build::sqlite3LocateTableItem(
             pParse as *mut crate::src::headers::sqliteInt_h::Parse,
@@ -965,7 +955,7 @@ pub unsafe extern "C" fn sqlite3AlterBeginAddColumn(
                         );
                         i = 0 as ::core::ffi::c_int;
                         while i < __pNew_ref.nCol as ::core::ffi::c_int {
-                            let mut pCol: *mut crate::src::headers::sqliteInt_h::Column =
+                            let pCol: *mut crate::src::headers::sqliteInt_h::Column =
                                 __pNew_ref.aCol.offset(i as isize)
                                     as *mut crate::src::headers::sqliteInt_h::Column;
                             let __pCol_ref = { &mut *pCol };
@@ -998,9 +988,9 @@ pub unsafe extern "C" fn sqlite3AlterBeginAddColumn(
 }
 
 unsafe extern "C" fn isRealTable(
-    mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
-    mut pTab: *mut crate::src::headers::sqliteInt_h::Table,
-    mut bDrop: ::core::ffi::c_int,
+    pParse: *mut crate::src::headers::sqliteInt_h::Parse,
+    pTab: *mut crate::src::headers::sqliteInt_h::Table,
+    bDrop: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
     let mut zType: *const ::core::ffi::c_char = ::core::ptr::null::<::core::ffi::c_char>();
     if (*pTab).eTabType as ::core::ffi::c_int == crate::src::headers::sqliteInt_h::TABTYP_VIEW {
@@ -1031,20 +1021,19 @@ unsafe extern "C" fn isRealTable(
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3AlterRenameColumn(
-    mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
-    mut pSrc: *mut crate::src::headers::sqliteInt_h::SrcList,
-    mut pOld: *mut crate::src::headers::sqliteInt_h::Token,
-    mut pNew: *mut crate::src::headers::sqliteInt_h::Token,
+    pParse: *mut crate::src::headers::sqliteInt_h::Parse,
+    pSrc: *mut crate::src::headers::sqliteInt_h::SrcList,
+    pOld: *mut crate::src::headers::sqliteInt_h::Token,
+    pNew: *mut crate::src::headers::sqliteInt_h::Token,
 ) {
-    let mut db: *mut crate::src::headers::sqliteInt_h::sqlite3 = (*pParse).db;
-    let mut pTab: *mut crate::src::headers::sqliteInt_h::Table =
-        ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::Table>();
-    let mut iCol: ::core::ffi::c_int = 0;
+    let db: *mut crate::src::headers::sqliteInt_h::sqlite3 = (*pParse).db;
+    let pTab: *mut crate::src::headers::sqliteInt_h::Table;
+    let iCol: ::core::ffi::c_int;
     let mut zOld: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
     let mut zNew: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
-    let mut zDb: *const ::core::ffi::c_char = ::core::ptr::null::<::core::ffi::c_char>();
-    let mut iSchema: ::core::ffi::c_int = 0;
-    let mut bQuote: ::core::ffi::c_int = 0;
+    let zDb: *const ::core::ffi::c_char;
+    let iSchema: ::core::ffi::c_int;
+    let bQuote: ::core::ffi::c_int;
     pTab = crate::src::src::build::sqlite3LocateTableItem(
         pParse as *mut crate::src::headers::sqliteInt_h::Parse,
         0 as crate::src::ext::rtree::rtree::U32_0,
@@ -1177,11 +1166,11 @@ pub unsafe extern "C" fn sqlite3AlterRenameColumn(
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3RenameTokenMap(
-    mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
-    mut pPtr: *const ::core::ffi::c_void,
-    mut pToken: *const crate::src::headers::sqliteInt_h::Token,
+    pParse: *mut crate::src::headers::sqliteInt_h::Parse,
+    pPtr: *const ::core::ffi::c_void,
+    pToken: *const crate::src::headers::sqliteInt_h::Token,
 ) -> *const ::core::ffi::c_void {
-    let mut pNew: *mut RenameToken = ::core::ptr::null_mut::<RenameToken>();
+    let pNew: *mut RenameToken;
     if (*pParse).eParseMode as ::core::ffi::c_int != 3 as ::core::ffi::c_int {
         pNew = crate::src::src::malloc::sqlite3DbMallocZero(
             (*pParse).db as *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -1200,11 +1189,11 @@ pub unsafe extern "C" fn sqlite3RenameTokenMap(
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3RenameTokenRemap(
-    mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
-    mut pTo: *const ::core::ffi::c_void,
-    mut pFrom: *const ::core::ffi::c_void,
+    pParse: *mut crate::src::headers::sqliteInt_h::Parse,
+    pTo: *const ::core::ffi::c_void,
+    pFrom: *const ::core::ffi::c_void,
 ) {
-    let mut p: *mut RenameToken = ::core::ptr::null_mut::<RenameToken>();
+    let mut p: *mut RenameToken;
     p = (*pParse).pRename;
     while !p.is_null() {
         if (*p).p == pFrom {
@@ -1217,10 +1206,10 @@ pub unsafe extern "C" fn sqlite3RenameTokenRemap(
 }
 
 unsafe extern "C" fn renameUnmapExprCb(
-    mut pWalker: *mut crate::src::headers::sqliteInt_h::Walker,
-    mut pExpr: *mut crate::src::headers::sqliteInt_h::Expr,
+    pWalker: *mut crate::src::headers::sqliteInt_h::Walker,
+    pExpr: *mut crate::src::headers::sqliteInt_h::Expr,
 ) -> ::core::ffi::c_int {
-    let mut pParse: *mut crate::src::headers::sqliteInt_h::Parse = (*pWalker).pParse;
+    let pParse: *mut crate::src::headers::sqliteInt_h::Parse = (*pWalker).pParse;
     sqlite3RenameTokenRemap(
         pParse,
         ::core::ptr::null::<::core::ffi::c_void>(),
@@ -1242,13 +1231,13 @@ unsafe extern "C" fn renameUnmapExprCb(
 }
 
 unsafe extern "C" fn renameWalkWith(
-    mut pWalker: *mut crate::src::headers::sqliteInt_h::Walker,
-    mut pSelect: *mut crate::src::headers::sqliteInt_h::Select,
+    pWalker: *mut crate::src::headers::sqliteInt_h::Walker,
+    pSelect: *mut crate::src::headers::sqliteInt_h::Select,
 ) {
-    let mut pWith: *mut crate::src::headers::sqliteInt_h::With = (*pSelect).pWith;
+    let pWith: *mut crate::src::headers::sqliteInt_h::With = (*pSelect).pWith;
     if !pWith.is_null() {
-        let mut pParse: *mut crate::src::headers::sqliteInt_h::Parse = (*pWalker).pParse;
-        let mut i: ::core::ffi::c_int = 0;
+        let pParse: *mut crate::src::headers::sqliteInt_h::Parse = (*pWalker).pParse;
+        let mut i: ::core::ffi::c_int;
         let mut pCopy: *mut crate::src::headers::sqliteInt_h::With =
             ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::With>();
         if (*(*(&raw mut (*pWith).a as *mut crate::src::headers::sqliteInt_h::Cte)
@@ -1270,7 +1259,7 @@ unsafe extern "C" fn renameWalkWith(
         }
         i = 0 as ::core::ffi::c_int;
         while i < (*pWith).nCte {
-            let mut p: *mut crate::src::headers::sqliteInt_h::Select = (*(&raw mut (*pWith).a
+            let p: *mut crate::src::headers::sqliteInt_h::Select = (*(&raw mut (*pWith).a
                 as *mut crate::src::headers::sqliteInt_h::Cte)
                 .offset(i as isize))
             .pSelect;
@@ -1305,10 +1294,10 @@ unsafe extern "C" fn renameWalkWith(
 }
 
 unsafe extern "C" fn unmapColumnIdlistNames(
-    mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
-    mut pIdList: *const crate::src::headers::sqliteInt_h::IdList,
+    pParse: *mut crate::src::headers::sqliteInt_h::Parse,
+    pIdList: *const crate::src::headers::sqliteInt_h::IdList,
 ) {
-    let mut ii: ::core::ffi::c_int = 0;
+    let mut ii: ::core::ffi::c_int;
     ii = 0 as ::core::ffi::c_int;
     while ii < (*pIdList).nId {
         sqlite3RenameTokenRemap(
@@ -1323,11 +1312,11 @@ unsafe extern "C" fn unmapColumnIdlistNames(
 }
 
 unsafe extern "C" fn renameUnmapSelectCb(
-    mut pWalker: *mut crate::src::headers::sqliteInt_h::Walker,
-    mut p: *mut crate::src::headers::sqliteInt_h::Select,
+    pWalker: *mut crate::src::headers::sqliteInt_h::Walker,
+    p: *mut crate::src::headers::sqliteInt_h::Select,
 ) -> ::core::ffi::c_int {
-    let mut pParse: *mut crate::src::headers::sqliteInt_h::Parse = (*pWalker).pParse;
-    let mut i: ::core::ffi::c_int = 0;
+    let pParse: *mut crate::src::headers::sqliteInt_h::Parse = (*pWalker).pParse;
+    let mut i: ::core::ffi::c_int;
     if (*pParse).nErr != 0 {
         return crate::src::headers::sqliteInt_h::WRC_Abort;
     }
@@ -1340,7 +1329,7 @@ unsafe extern "C" fn renameUnmapSelectCb(
         return crate::src::headers::sqliteInt_h::WRC_Prune;
     }
     if !__p_ref.pEList.is_null() {
-        let mut pList: *mut crate::src::headers::sqliteInt_h::ExprList = __p_ref.pEList;
+        let pList: *mut crate::src::headers::sqliteInt_h::ExprList = __p_ref.pEList;
         i = 0 as ::core::ffi::c_int;
         while i < (*pList).nExpr {
             if !(*(&raw mut (*pList).a as *mut crate::src::headers::sqliteInt_h::ExprList_item)
@@ -1365,7 +1354,7 @@ unsafe extern "C" fn renameUnmapSelectCb(
         }
     }
     if !__p_ref.pSrc.is_null() {
-        let mut pSrc: *mut crate::src::headers::sqliteInt_h::SrcList = __p_ref.pSrc;
+        let pSrc: *mut crate::src::headers::sqliteInt_h::SrcList = __p_ref.pSrc;
         i = 0 as ::core::ffi::c_int;
         while i < (*pSrc).nSrc {
             sqlite3RenameTokenRemap(
@@ -1406,11 +1395,11 @@ unsafe extern "C" fn renameUnmapSelectCb(
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3RenameExprUnmap(
-    mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
-    mut pExpr: *mut crate::src::headers::sqliteInt_h::Expr,
+    pParse: *mut crate::src::headers::sqliteInt_h::Parse,
+    pExpr: *mut crate::src::headers::sqliteInt_h::Expr,
 ) {
     let __pParse_ref = { &mut *pParse };
-    let mut eMode: crate::src::ext::rtree::rtree::U8_0 = __pParse_ref.eParseMode;
+    let eMode: crate::src::ext::rtree::rtree::U8_0 = __pParse_ref.eParseMode;
     let mut sWalker: crate::src::headers::sqliteInt_h::Walker = { ::core::mem::zeroed() };
     sWalker.pParse = pParse;
     sWalker.xExprCallback = Some(
@@ -1450,11 +1439,11 @@ pub unsafe extern "C" fn sqlite3RenameExprUnmap(
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3RenameExprlistUnmap(
-    mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
-    mut pEList: *mut crate::src::headers::sqliteInt_h::ExprList,
+    pParse: *mut crate::src::headers::sqliteInt_h::Parse,
+    pEList: *mut crate::src::headers::sqliteInt_h::ExprList,
 ) {
     if !pEList.is_null() {
-        let mut i: ::core::ffi::c_int = 0;
+        let mut i: ::core::ffi::c_int;
         let mut sWalker: crate::src::headers::sqliteInt_h::Walker = { ::core::mem::zeroed() };
         sWalker.pParse = pParse;
         sWalker.xExprCallback = Some(
@@ -1497,11 +1486,11 @@ pub unsafe extern "C" fn sqlite3RenameExprlistUnmap(
 }
 
 unsafe extern "C" fn renameTokenFree(
-    mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
-    mut pToken: *mut RenameToken,
+    db: *mut crate::src::headers::sqliteInt_h::sqlite3,
+    pToken: *mut RenameToken,
 ) {
-    let mut pNext: *mut RenameToken = ::core::ptr::null_mut::<RenameToken>();
-    let mut p: *mut RenameToken = ::core::ptr::null_mut::<RenameToken>();
+    let mut pNext: *mut RenameToken;
+    let mut p: *mut RenameToken;
     p = pToken;
     while !p.is_null() {
         pNext = (*p).pNext;
@@ -1514,18 +1503,18 @@ unsafe extern "C" fn renameTokenFree(
 }
 
 unsafe extern "C" fn renameTokenFind(
-    mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
-    mut pCtx: *mut RenameCtx,
-    mut pPtr: *const ::core::ffi::c_void,
+    pParse: *mut crate::src::headers::sqliteInt_h::Parse,
+    pCtx: *mut RenameCtx,
+    pPtr: *const ::core::ffi::c_void,
 ) -> *mut RenameToken {
-    let mut pp: *mut *mut RenameToken = ::core::ptr::null_mut::<*mut RenameToken>();
+    let mut pp: *mut *mut RenameToken;
     if pPtr.is_null() {
         return ::core::ptr::null_mut::<RenameToken>();
     }
     pp = &raw mut (*pParse).pRename;
     while !(*pp).is_null() {
         if (**pp).p == pPtr {
-            let mut pToken: *mut RenameToken = *pp;
+            let pToken: *mut RenameToken = *pp;
             if !pCtx.is_null() {
                 *pp = (*pToken).pNext;
                 let __pCtx_ref = { &mut *pCtx };
@@ -1541,8 +1530,8 @@ unsafe extern "C" fn renameTokenFind(
 }
 
 unsafe extern "C" fn renameColumnSelectCb(
-    mut pWalker: *mut crate::src::headers::sqliteInt_h::Walker,
-    mut p: *mut crate::src::headers::sqliteInt_h::Select,
+    pWalker: *mut crate::src::headers::sqliteInt_h::Walker,
+    p: *mut crate::src::headers::sqliteInt_h::Select,
 ) -> ::core::ffi::c_int {
     if (*p).selFlags
         & (crate::src::headers::sqliteInt_h::SF_View | crate::src::headers::sqliteInt_h::SF_CopyCte)
@@ -1556,10 +1545,10 @@ unsafe extern "C" fn renameColumnSelectCb(
 }
 
 unsafe extern "C" fn renameColumnExprCb(
-    mut pWalker: *mut crate::src::headers::sqliteInt_h::Walker,
-    mut pExpr: *mut crate::src::headers::sqliteInt_h::Expr,
+    pWalker: *mut crate::src::headers::sqliteInt_h::Walker,
+    pExpr: *mut crate::src::headers::sqliteInt_h::Expr,
 ) -> ::core::ffi::c_int {
-    let mut p: *mut RenameCtx = (*pWalker).u.pRename as *mut RenameCtx;
+    let p: *mut RenameCtx = (*pWalker).u.pRename as *mut RenameCtx;
     let __p_ref = { &*p };
     let __pExpr_ref = { &*pExpr };
     if __pExpr_ref.op as ::core::ffi::c_int == crate::src::parse::TK_TRIGGER
@@ -1588,10 +1577,10 @@ unsafe extern "C" fn renameColumnExprCb(
     crate::src::headers::sqliteInt_h::WRC_Continue
 }
 
-unsafe extern "C" fn renameColumnTokenNext(mut pCtx: *mut RenameCtx) -> *mut RenameToken {
+unsafe extern "C" fn renameColumnTokenNext(pCtx: *mut RenameCtx) -> *mut RenameToken {
     let mut pBest: *mut RenameToken = (*pCtx).pList;
-    let mut pToken: *mut RenameToken = ::core::ptr::null_mut::<RenameToken>();
-    let mut pp: *mut *mut RenameToken = ::core::ptr::null_mut::<*mut RenameToken>();
+    let mut pToken: *mut RenameToken;
+    let mut pp: *mut *mut RenameToken;
     pToken = (*pBest).pNext;
     while !pToken.is_null() {
         if (*pToken).t.z > (*pBest).t.z {
@@ -1608,17 +1597,17 @@ unsafe extern "C" fn renameColumnTokenNext(mut pCtx: *mut RenameCtx) -> *mut Ren
 }
 
 unsafe extern "C" fn renameColumnParseError(
-    mut pCtx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
-    mut zWhen: *const ::core::ffi::c_char,
-    mut pType: *mut crate::src::headers::vdbeInt_h::sqlite3_value,
-    mut pObject: *mut crate::src::headers::vdbeInt_h::sqlite3_value,
-    mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
+    pCtx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
+    zWhen: *const ::core::ffi::c_char,
+    pType: *mut crate::src::headers::vdbeInt_h::sqlite3_value,
+    pObject: *mut crate::src::headers::vdbeInt_h::sqlite3_value,
+    pParse: *mut crate::src::headers::sqliteInt_h::Parse,
 ) {
-    let mut zT: *const ::core::ffi::c_char =
+    let zT: *const ::core::ffi::c_char =
         crate::src::src::vdbeapi::sqlite3_value_text(pType) as *const ::core::ffi::c_char;
-    let mut zN: *const ::core::ffi::c_char =
+    let zN: *const ::core::ffi::c_char =
         crate::src::src::vdbeapi::sqlite3_value_text(pObject) as *const ::core::ffi::c_char;
-    let mut zErr: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
+    let zErr: *mut ::core::ffi::c_char;
     let __pParse_ref = { &*pParse };
     zErr = crate::src::printf_c_variadic::sqlite3MPrintf_args(
         __pParse_ref.db as *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -1648,16 +1637,16 @@ unsafe extern "C" fn renameColumnParseError(
 }
 
 unsafe extern "C" fn renameColumnElistNames(
-    mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
-    mut pCtx: *mut RenameCtx,
-    mut pEList: *const crate::src::headers::sqliteInt_h::ExprList,
-    mut zOld: *const ::core::ffi::c_char,
+    pParse: *mut crate::src::headers::sqliteInt_h::Parse,
+    pCtx: *mut RenameCtx,
+    pEList: *const crate::src::headers::sqliteInt_h::ExprList,
+    zOld: *const ::core::ffi::c_char,
 ) {
     if !pEList.is_null() {
-        let mut i: ::core::ffi::c_int = 0;
+        let mut i: ::core::ffi::c_int;
         i = 0 as ::core::ffi::c_int;
         while i < (*pEList).nExpr {
-            let mut zName: *const ::core::ffi::c_char = (*(&raw const (*pEList).a
+            let zName: *const ::core::ffi::c_char = (*(&raw const (*pEList).a
                 as *const crate::src::headers::sqliteInt_h::ExprList_item)
                 .offset(i as isize))
             .zEName;
@@ -1681,16 +1670,16 @@ unsafe extern "C" fn renameColumnElistNames(
 }
 
 unsafe extern "C" fn renameColumnIdlistNames(
-    mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
-    mut pCtx: *mut RenameCtx,
-    mut pIdList: *const crate::src::headers::sqliteInt_h::IdList,
-    mut zOld: *const ::core::ffi::c_char,
+    pParse: *mut crate::src::headers::sqliteInt_h::Parse,
+    pCtx: *mut RenameCtx,
+    pIdList: *const crate::src::headers::sqliteInt_h::IdList,
+    zOld: *const ::core::ffi::c_char,
 ) {
     if !pIdList.is_null() {
-        let mut i: ::core::ffi::c_int = 0;
+        let mut i: ::core::ffi::c_int;
         i = 0 as ::core::ffi::c_int;
         while i < (*pIdList).nId {
-            let mut zName: *const ::core::ffi::c_char = (*(&raw const (*pIdList).a
+            let zName: *const ::core::ffi::c_char = (*(&raw const (*pIdList).a
                 as *const crate::src::headers::sqliteInt_h::IdList_item)
                 .offset(i as isize))
             .zName;
@@ -1707,14 +1696,14 @@ unsafe extern "C" fn renameColumnIdlistNames(
 }
 
 unsafe extern "C" fn renameParseSql(
-    mut p: *mut crate::src::headers::sqliteInt_h::Parse,
-    mut zDb: *const ::core::ffi::c_char,
-    mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
-    mut zSql: *const ::core::ffi::c_char,
-    mut bTemp: ::core::ffi::c_int,
+    p: *mut crate::src::headers::sqliteInt_h::Parse,
+    zDb: *const ::core::ffi::c_char,
+    db: *mut crate::src::headers::sqliteInt_h::sqlite3,
+    zSql: *const ::core::ffi::c_char,
+    bTemp: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
-    let mut rc: ::core::ffi::c_int = 0;
-    let mut flags: crate::src::ext::rtree::rtree::U64_0 = 0;
+    let mut rc: ::core::ffi::c_int;
+    let flags: crate::src::ext::rtree::rtree::U64_0;
     crate::src::src::prepare::sqlite3ParseObjectInit(
         p as *mut crate::src::headers::sqliteInt_h::Parse,
         db as *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -1734,7 +1723,7 @@ unsafe extern "C" fn renameParseSql(
     if bTemp != 0 {
         __db_ref.init.iDb = 1 as crate::src::ext::rtree::rtree::U8_0;
     } else {
-        let mut iDb: ::core::ffi::c_int = crate::src::src::build::sqlite3FindDbName(
+        let iDb: ::core::ffi::c_int = crate::src::src::build::sqlite3FindDbName(
             db as *mut crate::src::headers::sqliteInt_h::sqlite3,
             zDb,
         );
@@ -1767,22 +1756,22 @@ unsafe extern "C" fn renameParseSql(
 }
 
 unsafe extern "C" fn renameEditSql(
-    mut pCtx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
-    mut pRename: *mut RenameCtx,
-    mut zSql: *const ::core::ffi::c_char,
-    mut zNew: *const ::core::ffi::c_char,
-    mut bQuote: ::core::ffi::c_int,
+    pCtx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
+    pRename: *mut RenameCtx,
+    zSql: *const ::core::ffi::c_char,
+    zNew: *const ::core::ffi::c_char,
+    bQuote: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
-    let mut nNew: crate::src::ext::rtree::rtree::I64_0 =
+    let nNew: crate::src::ext::rtree::rtree::I64_0 =
         crate::src::src::util::sqlite3Strlen30(zNew) as crate::src::ext::rtree::rtree::I64_0;
-    let mut nSql: crate::src::ext::rtree::rtree::I64_0 =
+    let nSql: crate::src::ext::rtree::rtree::I64_0 =
         crate::src::src::util::sqlite3Strlen30(zSql) as crate::src::ext::rtree::rtree::I64_0;
-    let mut db: *mut crate::src::headers::sqliteInt_h::sqlite3 =
+    let db: *mut crate::src::headers::sqliteInt_h::sqlite3 =
         crate::src::src::vdbeapi::sqlite3_context_db_handle(pCtx)
             as *mut crate::src::headers::sqliteInt_h::sqlite3;
     let mut rc: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_OK;
     let mut zQuot: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
-    let mut zOut: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
+    let zOut: *mut ::core::ffi::c_char;
     let mut nQuot: crate::src::ext::rtree::rtree::I64_0 = 0 as crate::src::ext::rtree::rtree::I64_0;
     let mut zBuf1: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
     let mut zBuf2: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
@@ -1832,11 +1821,10 @@ unsafe extern "C" fn renameEditSql(
         let mut nOut: crate::src::ext::rtree::rtree::I64_0 = nSql;
         ::core::ptr::copy_nonoverlapping(zSql as *const u8, zOut as *mut u8, nSql as usize);
         while !(*pRename).pList.is_null() {
-            let mut iOff: ::core::ffi::c_int = 0;
-            let mut nReplace: crate::src::ext::rtree::rtree::I64_0 = 0;
-            let mut zReplace: *const ::core::ffi::c_char =
-                ::core::ptr::null::<::core::ffi::c_char>();
-            let mut pBest: *mut RenameToken = renameColumnTokenNext(pRename);
+            let iOff: ::core::ffi::c_int;
+            let mut nReplace: crate::src::ext::rtree::rtree::I64_0;
+            let zReplace: *const ::core::ffi::c_char;
+            let pBest: *mut RenameToken = renameColumnTokenNext(pRename);
             if !zNew.is_null() {
                 if bQuote == 0 as ::core::ffi::c_int
                     && crate::src::src::tokenize::sqlite3IsIdChar(
@@ -1923,11 +1911,11 @@ unsafe extern "C" fn renameEditSql(
 }
 
 unsafe extern "C" fn renameSetENames(
-    mut pEList: *mut crate::src::headers::sqliteInt_h::ExprList,
-    mut val: ::core::ffi::c_int,
+    pEList: *mut crate::src::headers::sqliteInt_h::ExprList,
+    val: ::core::ffi::c_int,
 ) {
     if !pEList.is_null() {
-        let mut i: ::core::ffi::c_int = 0;
+        let mut i: ::core::ffi::c_int;
         i = 0 as ::core::ffi::c_int;
         while i < (*pEList).nExpr {
             let ref mut fresh0 = (*(&raw mut (*pEList).a
@@ -1943,13 +1931,12 @@ unsafe extern "C" fn renameSetENames(
 }
 
 unsafe extern "C" fn renameResolveTrigger(
-    mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
+    pParse: *mut crate::src::headers::sqliteInt_h::Parse,
 ) -> ::core::ffi::c_int {
     let __pParse_ref = { &mut *pParse };
-    let mut db: *mut crate::src::headers::sqliteInt_h::sqlite3 = __pParse_ref.db;
-    let mut pNew: *mut crate::src::headers::sqliteInt_h::Trigger = __pParse_ref.pNewTrigger;
-    let mut pStep: *mut crate::src::headers::sqliteInt_h::TriggerStep =
-        ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::TriggerStep>();
+    let db: *mut crate::src::headers::sqliteInt_h::sqlite3 = __pParse_ref.db;
+    let pNew: *mut crate::src::headers::sqliteInt_h::Trigger = __pParse_ref.pNewTrigger;
+    let mut pStep: *mut crate::src::headers::sqliteInt_h::TriggerStep;
     let mut sNC: crate::src::headers::sqliteInt_h::NameContext = { ::core::mem::zeroed() };
     let mut rc: ::core::ffi::c_int = crate::src::headers::sqlite3_h::SQLITE_OK;
     sNC.pParse = pParse;
@@ -1998,7 +1985,7 @@ unsafe extern "C" fn renameResolveTrigger(
                 ) as *mut crate::src::headers::sqliteInt_h::SrcList;
             if !pSrc.is_null() {
                 let __pStep_ref = { &mut *pStep };
-                let mut pSel: *mut crate::src::headers::sqliteInt_h::Select =
+                let pSel: *mut crate::src::headers::sqliteInt_h::Select =
                     crate::src::src::select::sqlite3SelectNew(
                         pParse as *mut crate::src::headers::sqliteInt_h::Parse,
                         __pStep_ref.pExprList as *mut crate::src::headers::sqliteInt_h::ExprList,
@@ -2052,12 +2039,12 @@ unsafe extern "C" fn renameResolveTrigger(
                     );
                 }
                 if !__pStep_ref.pFrom.is_null() {
-                    let mut i: ::core::ffi::c_int = 0;
+                    let mut i: ::core::ffi::c_int;
                     i = 0 as ::core::ffi::c_int;
                     while i < (*__pStep_ref.pFrom).nSrc
                         && rc == crate::src::headers::sqlite3_h::SQLITE_OK
                     {
-                        let mut p: *mut crate::src::headers::sqliteInt_h::SrcItem =
+                        let p: *mut crate::src::headers::sqliteInt_h::SrcItem =
                             (&raw mut (*__pStep_ref.pFrom).a
                                 as *mut crate::src::headers::sqliteInt_h::SrcItem)
                                 .offset(i as isize)
@@ -2096,7 +2083,7 @@ unsafe extern "C" fn renameResolveTrigger(
                 }
                 if !__pStep_ref.pUpsert.is_null() && rc == crate::src::headers::sqlite3_h::SQLITE_OK
                 {
-                    let mut pUpsert: *mut crate::src::headers::sqliteInt_h::Upsert =
+                    let pUpsert: *mut crate::src::headers::sqliteInt_h::Upsert =
                         __pStep_ref.pUpsert;
                     (*pUpsert).pUpsertSrc = pSrc;
                     sNC.uNC.pUpsert = pUpsert;
@@ -2107,7 +2094,7 @@ unsafe extern "C" fn renameResolveTrigger(
                         (*pUpsert).pUpsertTarget as *mut crate::src::headers::sqliteInt_h::ExprList,
                     );
                     if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
-                        let mut pUpsertSet: *mut crate::src::headers::sqliteInt_h::ExprList =
+                        let pUpsertSet: *mut crate::src::headers::sqliteInt_h::ExprList =
                             (*pUpsert).pUpsertSet;
                         rc = crate::src::src::resolve::sqlite3ResolveExprListNames(
                             &raw mut sNC as *mut _
@@ -2147,11 +2134,10 @@ unsafe extern "C" fn renameResolveTrigger(
 }
 
 unsafe extern "C" fn renameWalkTrigger(
-    mut pWalker: *mut crate::src::headers::sqliteInt_h::Walker,
-    mut pTrigger: *mut crate::src::headers::sqliteInt_h::Trigger,
+    pWalker: *mut crate::src::headers::sqliteInt_h::Walker,
+    pTrigger: *mut crate::src::headers::sqliteInt_h::Trigger,
 ) {
-    let mut pStep: *mut crate::src::headers::sqliteInt_h::TriggerStep =
-        ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::TriggerStep>();
+    let mut pStep: *mut crate::src::headers::sqliteInt_h::TriggerStep;
     crate::src::src::walker::sqlite3WalkExpr(
         pWalker as *mut crate::src::headers::sqliteInt_h::Walker,
         (*pTrigger).pWhen as *mut crate::src::headers::sqliteInt_h::Expr,
@@ -2171,7 +2157,7 @@ unsafe extern "C" fn renameWalkTrigger(
             (*pStep).pExprList as *mut crate::src::headers::sqliteInt_h::ExprList,
         );
         if !(*pStep).pUpsert.is_null() {
-            let mut pUpsert: *mut crate::src::headers::sqliteInt_h::Upsert = (*pStep).pUpsert;
+            let pUpsert: *mut crate::src::headers::sqliteInt_h::Upsert = (*pStep).pUpsert;
             let __pUpsert_ref = { &*pUpsert };
             crate::src::src::walker::sqlite3WalkExprList(
                 pWalker as *mut crate::src::headers::sqliteInt_h::Walker,
@@ -2191,8 +2177,8 @@ unsafe extern "C" fn renameWalkTrigger(
             );
         }
         if !(*pStep).pFrom.is_null() {
-            let mut i: ::core::ffi::c_int = 0;
-            let mut pFrom: *mut crate::src::headers::sqliteInt_h::SrcList = (*pStep).pFrom;
+            let mut i: ::core::ffi::c_int;
+            let pFrom: *mut crate::src::headers::sqliteInt_h::SrcList = (*pStep).pFrom;
             i = 0 as ::core::ffi::c_int;
             while i < (*pFrom).nSrc {
                 if (*(&raw mut (*pFrom).a as *mut crate::src::headers::sqliteInt_h::SrcItem)
@@ -2219,11 +2205,10 @@ unsafe extern "C" fn renameWalkTrigger(
     }
 }
 
-unsafe extern "C" fn renameParseCleanup(mut pParse: *mut crate::src::headers::sqliteInt_h::Parse) {
+unsafe extern "C" fn renameParseCleanup(pParse: *mut crate::src::headers::sqliteInt_h::Parse) {
     let __pParse_ref = { &mut *pParse };
-    let mut db: *mut crate::src::headers::sqliteInt_h::sqlite3 = __pParse_ref.db;
-    let mut pIdx: *mut crate::src::headers::sqliteInt_h::Index =
-        ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::Index>();
+    let db: *mut crate::src::headers::sqliteInt_h::sqlite3 = __pParse_ref.db;
+    let mut pIdx: *mut crate::src::headers::sqliteInt_h::Index;
     if !__pParse_ref.pVdbe.is_null() {
         crate::src::src::vdbeaux::sqlite3VdbeFinalize(__pParse_ref.pVdbe);
     }
@@ -2257,44 +2242,42 @@ unsafe extern "C" fn renameParseCleanup(mut pParse: *mut crate::src::headers::sq
 }
 
 unsafe extern "C" fn renameColumnFunc(
-    mut context: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
+    context: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
     mut _NotUsed: ::core::ffi::c_int,
-    mut argv: *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
+    argv: *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
 ) {
-    let mut current_block: u64;
-    let mut db: *mut crate::src::headers::sqliteInt_h::sqlite3 =
+    let current_block: u64;
+    let db: *mut crate::src::headers::sqliteInt_h::sqlite3 =
         crate::src::src::vdbeapi::sqlite3_context_db_handle(context)
             as *mut crate::src::headers::sqliteInt_h::sqlite3;
     let mut sCtx: RenameCtx = { ::core::mem::zeroed() };
-    let mut zSql: *const ::core::ffi::c_char =
+    let zSql: *const ::core::ffi::c_char =
         crate::src::src::vdbeapi::sqlite3_value_text(*argv.offset(0 as isize))
             as *const ::core::ffi::c_char;
-    let mut zDb: *const ::core::ffi::c_char =
+    let zDb: *const ::core::ffi::c_char =
         crate::src::src::vdbeapi::sqlite3_value_text(*argv.offset(3 as isize))
             as *const ::core::ffi::c_char;
-    let mut zTable: *const ::core::ffi::c_char =
+    let zTable: *const ::core::ffi::c_char =
         crate::src::src::vdbeapi::sqlite3_value_text(*argv.offset(4 as isize))
             as *const ::core::ffi::c_char;
-    let mut iCol: ::core::ffi::c_int =
+    let iCol: ::core::ffi::c_int =
         crate::src::src::vdbeapi::sqlite3_value_int(*argv.offset(5 as isize));
-    let mut zNew: *const ::core::ffi::c_char =
+    let zNew: *const ::core::ffi::c_char =
         crate::src::src::vdbeapi::sqlite3_value_text(*argv.offset(6 as isize))
             as *const ::core::ffi::c_char;
-    let mut bQuote: ::core::ffi::c_int =
+    let bQuote: ::core::ffi::c_int =
         crate::src::src::vdbeapi::sqlite3_value_int(*argv.offset(7 as isize));
-    let mut bTemp: ::core::ffi::c_int =
+    let bTemp: ::core::ffi::c_int =
         crate::src::src::vdbeapi::sqlite3_value_int(*argv.offset(8 as isize));
-    let mut zOld: *const ::core::ffi::c_char = ::core::ptr::null::<::core::ffi::c_char>();
-    let mut rc: ::core::ffi::c_int = 0;
+    let zOld: *const ::core::ffi::c_char;
+    let mut rc: ::core::ffi::c_int;
     let mut sParse: crate::src::headers::sqliteInt_h::Parse = { ::core::mem::zeroed() };
     let mut sWalker: crate::src::headers::sqliteInt_h::Walker = { ::core::mem::zeroed() };
-    let mut pIdx: *mut crate::src::headers::sqliteInt_h::Index =
-        ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::Index>();
-    let mut i: ::core::ffi::c_int = 0;
-    let mut pTab: *mut crate::src::headers::sqliteInt_h::Table =
-        ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::Table>();
+    let mut pIdx: *mut crate::src::headers::sqliteInt_h::Index;
+    let mut i: ::core::ffi::c_int;
+    let pTab: *mut crate::src::headers::sqliteInt_h::Table;
     let __db_ref = { &mut *db };
-    let mut xAuth: crate::src::headers::sqliteInt_h::Sqlite3Xauth = __db_ref.xAuth;
+    let xAuth: crate::src::headers::sqliteInt_h::Sqlite3Xauth = __db_ref.xAuth;
     if zSql.is_null() {
         return;
     }
@@ -2363,7 +2346,7 @@ unsafe extern "C" fn renameColumnFunc(
             if (*sParse.pNewTable).eTabType as ::core::ffi::c_int
                 == crate::src::headers::sqliteInt_h::TABTYP_VIEW
             {
-                let mut pSelect: *mut crate::src::headers::sqliteInt_h::Select =
+                let pSelect: *mut crate::src::headers::sqliteInt_h::Select =
                     (*sParse.pNewTable).u.view.pSelect;
                 (*pSelect).selFlags &= !(crate::src::headers::sqliteInt_h::SF_View
                     as crate::src::ext::rtree::rtree::U32_0);
@@ -2394,10 +2377,9 @@ unsafe extern "C" fn renameColumnFunc(
                 if (*sParse.pNewTable).eTabType as ::core::ffi::c_int
                     == crate::src::headers::sqliteInt_h::TABTYP_NORM
                 {
-                    let mut bFKOnly: ::core::ffi::c_int =
+                    let bFKOnly: ::core::ffi::c_int =
                         crate::src::src::util::sqlite3_stricmp(zTable, (*sParse.pNewTable).zName);
-                    let mut pFKey: *mut crate::src::headers::sqliteInt_h::FKey =
-                        ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::FKey>();
+                    let mut pFKey: *mut crate::src::headers::sqliteInt_h::FKey;
                     sCtx.pTab = sParse.pNewTable;
                     if bFKOnly == 0 as ::core::ffi::c_int {
                         if iCol < (*sParse.pNewTable).nCol as ::core::ffi::c_int {
@@ -2441,7 +2423,7 @@ unsafe extern "C" fn renameColumnFunc(
                         }
                         i = 0 as ::core::ffi::c_int;
                         while i < (*sParse.pNewTable).nCol as ::core::ffi::c_int {
-                            let mut pExpr: *mut crate::src::headers::sqliteInt_h::Expr =
+                            let pExpr: *mut crate::src::headers::sqliteInt_h::Expr =
                                 crate::src::src::build::sqlite3ColumnExpr(
                                     sParse.pNewTable
                                         as *mut crate::src::headers::sqliteInt_h::Table,
@@ -2519,8 +2501,7 @@ unsafe extern "C" fn renameColumnFunc(
             );
             current_block = 17688141731389699982;
         } else {
-            let mut pStep: *mut crate::src::headers::sqliteInt_h::TriggerStep =
-                ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::TriggerStep>();
+            let mut pStep: *mut crate::src::headers::sqliteInt_h::TriggerStep;
             rc = renameResolveTrigger(&raw mut sParse);
             if rc != crate::src::headers::sqlite3_h::SQLITE_OK {
                 current_block = 6633030875973123825;
@@ -2528,7 +2509,7 @@ unsafe extern "C" fn renameColumnFunc(
                 pStep = (*sParse.pNewTrigger).step_list;
                 while !pStep.is_null() {
                     if !(*pStep).zTarget.is_null() {
-                        let mut pTarget: *mut crate::src::headers::sqliteInt_h::Table =
+                        let pTarget: *mut crate::src::headers::sqliteInt_h::Table =
                             crate::src::src::build::sqlite3LocateTable(
                                 &raw mut sParse as *mut _
                                     as *mut crate::src::headers::sqliteInt_h::Parse,
@@ -2540,7 +2521,7 @@ unsafe extern "C" fn renameColumnFunc(
                         if pTarget == pTab {
                             let __pStep_ref = { &mut *pStep };
                             if !__pStep_ref.pUpsert.is_null() {
-                                let mut pUpsertSet: *mut crate::src::headers::sqliteInt_h::ExprList = (*__pStep_ref.pUpsert).pUpsertSet;
+                                let pUpsertSet: *mut crate::src::headers::sqliteInt_h::ExprList = (*__pStep_ref.pUpsert).pUpsertSet;
                                 renameColumnElistNames(
                                     &raw mut sParse,
                                     &raw mut sCtx,
@@ -2611,10 +2592,10 @@ unsafe extern "C" fn renameColumnFunc(
 }
 
 unsafe extern "C" fn renameTableExprCb(
-    mut pWalker: *mut crate::src::headers::sqliteInt_h::Walker,
-    mut pExpr: *mut crate::src::headers::sqliteInt_h::Expr,
+    pWalker: *mut crate::src::headers::sqliteInt_h::Walker,
+    pExpr: *mut crate::src::headers::sqliteInt_h::Expr,
 ) -> ::core::ffi::c_int {
-    let mut p: *mut RenameCtx = (*pWalker).u.pRename as *mut RenameCtx;
+    let p: *mut RenameCtx = (*pWalker).u.pRename as *mut RenameCtx;
     let __pExpr_ref = { &mut *pExpr };
     if __pExpr_ref.op as ::core::ffi::c_int == crate::src::parse::TK_COLUMN
         && __pExpr_ref.flags
@@ -2633,12 +2614,12 @@ unsafe extern "C" fn renameTableExprCb(
 }
 
 unsafe extern "C" fn renameTableSelectCb(
-    mut pWalker: *mut crate::src::headers::sqliteInt_h::Walker,
-    mut pSelect: *mut crate::src::headers::sqliteInt_h::Select,
+    pWalker: *mut crate::src::headers::sqliteInt_h::Walker,
+    pSelect: *mut crate::src::headers::sqliteInt_h::Select,
 ) -> ::core::ffi::c_int {
-    let mut i: ::core::ffi::c_int = 0;
-    let mut p: *mut RenameCtx = (*pWalker).u.pRename as *mut RenameCtx;
-    let mut pSrc: *mut crate::src::headers::sqliteInt_h::SrcList = (*pSelect).pSrc;
+    let mut i: ::core::ffi::c_int;
+    let p: *mut RenameCtx = (*pWalker).u.pRename as *mut RenameCtx;
+    let pSrc: *mut crate::src::headers::sqliteInt_h::SrcList = (*pSelect).pSrc;
     if (*pSelect).selFlags
         & (crate::src::headers::sqliteInt_h::SF_View | crate::src::headers::sqliteInt_h::SF_CopyCte)
             as crate::src::ext::rtree::rtree::U32_0
@@ -2651,7 +2632,7 @@ unsafe extern "C" fn renameTableSelectCb(
     }
     i = 0 as ::core::ffi::c_int;
     while i < (*pSrc).nSrc {
-        let mut pItem: *mut crate::src::headers::sqliteInt_h::SrcItem =
+        let pItem: *mut crate::src::headers::sqliteInt_h::SrcItem =
             (&raw mut (*pSrc).a as *mut crate::src::headers::sqliteInt_h::SrcItem)
                 .offset(i as isize) as *mut crate::src::headers::sqliteInt_h::SrcItem;
         if (*pItem).pSTab == (*p).pTab {
@@ -2668,35 +2649,35 @@ unsafe extern "C" fn renameTableSelectCb(
 }
 
 unsafe extern "C" fn renameTableFunc(
-    mut context: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
+    context: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
     mut _NotUsed: ::core::ffi::c_int,
-    mut argv: *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
+    argv: *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
 ) {
-    let mut db: *mut crate::src::headers::sqliteInt_h::sqlite3 =
+    let db: *mut crate::src::headers::sqliteInt_h::sqlite3 =
         crate::src::src::vdbeapi::sqlite3_context_db_handle(context)
             as *mut crate::src::headers::sqliteInt_h::sqlite3;
-    let mut zDb: *const ::core::ffi::c_char =
+    let zDb: *const ::core::ffi::c_char =
         crate::src::src::vdbeapi::sqlite3_value_text(*argv.offset(0 as isize))
             as *const ::core::ffi::c_char;
-    let mut zInput: *const ::core::ffi::c_char =
+    let zInput: *const ::core::ffi::c_char =
         crate::src::src::vdbeapi::sqlite3_value_text(*argv.offset(3 as isize))
             as *const ::core::ffi::c_char;
-    let mut zOld: *const ::core::ffi::c_char =
+    let zOld: *const ::core::ffi::c_char =
         crate::src::src::vdbeapi::sqlite3_value_text(*argv.offset(4 as isize))
             as *const ::core::ffi::c_char;
-    let mut zNew: *const ::core::ffi::c_char =
+    let zNew: *const ::core::ffi::c_char =
         crate::src::src::vdbeapi::sqlite3_value_text(*argv.offset(5 as isize))
             as *const ::core::ffi::c_char;
-    let mut bTemp: ::core::ffi::c_int =
+    let bTemp: ::core::ffi::c_int =
         crate::src::src::vdbeapi::sqlite3_value_int(*argv.offset(6 as isize));
     if !zInput.is_null() && !zOld.is_null() && !zNew.is_null() {
         let mut sParse: crate::src::headers::sqliteInt_h::Parse = { ::core::mem::zeroed() };
-        let mut rc: ::core::ffi::c_int = 0;
-        let mut bQuote: ::core::ffi::c_int = 1 as ::core::ffi::c_int;
+        let mut rc: ::core::ffi::c_int;
+        let bQuote: ::core::ffi::c_int = 1 as ::core::ffi::c_int;
         let mut sCtx: RenameCtx = { ::core::mem::zeroed() };
         let mut sWalker: crate::src::headers::sqliteInt_h::Walker = { ::core::mem::zeroed() };
         let __db_ref = { &mut *db };
-        let mut xAuth: crate::src::headers::sqliteInt_h::Sqlite3Xauth = __db_ref.xAuth;
+        let xAuth: crate::src::headers::sqliteInt_h::Sqlite3Xauth = __db_ref.xAuth;
         __db_ref.xAuth = None;
         crate::src::src::btmutex::sqlite3BtreeEnterAll(
             db as *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -2736,17 +2717,17 @@ unsafe extern "C" fn renameTableFunc(
         sWalker.u.pRename = &raw mut sCtx as *mut RenameCtx;
         rc = renameParseSql(&raw mut sParse, zDb, db, zInput, bTemp);
         if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
-            let mut isLegacy: ::core::ffi::c_int = (__db_ref.flags
+            let isLegacy: ::core::ffi::c_int = (__db_ref.flags
                 & crate::src::headers::sqliteInt_h::SQLITE_LegacyAlter
                     as crate::src::ext::rtree::rtree::U64_0)
                 as ::core::ffi::c_int;
             if !sParse.pNewTable.is_null() {
-                let mut pTab: *mut crate::src::headers::sqliteInt_h::Table = sParse.pNewTable;
+                let pTab: *mut crate::src::headers::sqliteInt_h::Table = sParse.pNewTable;
                 if (*pTab).eTabType as ::core::ffi::c_int
                     == crate::src::headers::sqliteInt_h::TABTYP_VIEW
                 {
                     if isLegacy == 0 as ::core::ffi::c_int {
-                        let mut pSelect: *mut crate::src::headers::sqliteInt_h::Select =
+                        let pSelect: *mut crate::src::headers::sqliteInt_h::Select =
                             (*pTab).u.view.pSelect;
                         let mut sNC: crate::src::headers::sqliteInt_h::NameContext =
                             { ::core::mem::zeroed() };
@@ -2780,8 +2761,7 @@ unsafe extern "C" fn renameTableFunc(
                         && !((*pTab).eTabType as ::core::ffi::c_int
                             == crate::src::headers::sqliteInt_h::TABTYP_VTAB)
                     {
-                        let mut pFKey: *mut crate::src::headers::sqliteInt_h::FKey =
-                            ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::FKey>();
+                        let mut pFKey: *mut crate::src::headers::sqliteInt_h::FKey;
                         pFKey = (*pTab).u.tab.pFKey;
                         while !pFKey.is_null() {
                             if crate::src::src::util::sqlite3_stricmp((*pFKey).zTo, zOld)
@@ -2828,10 +2808,9 @@ unsafe extern "C" fn renameTableFunc(
                     );
                 }
             } else {
-                let mut pTrigger: *mut crate::src::headers::sqliteInt_h::Trigger =
+                let pTrigger: *mut crate::src::headers::sqliteInt_h::Trigger =
                     sParse.pNewTrigger;
-                let mut pStep: *mut crate::src::headers::sqliteInt_h::TriggerStep =
-                    ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::TriggerStep>();
+                let mut pStep: *mut crate::src::headers::sqliteInt_h::TriggerStep;
                 if 0 as ::core::ffi::c_int
                     == crate::src::src::util::sqlite3_stricmp((*sParse.pNewTrigger).table, zOld)
                     && (*sCtx.pTab).pSchema == (*pTrigger).pTabSchema
@@ -2862,10 +2841,10 @@ unsafe extern "C" fn renameTableFunc(
                                 );
                             }
                             if !(*pStep).pFrom.is_null() {
-                                let mut i: ::core::ffi::c_int = 0;
+                                let mut i: ::core::ffi::c_int;
                                 i = 0 as ::core::ffi::c_int;
                                 while i < (*(*pStep).pFrom).nSrc {
-                                    let mut pItem: *mut crate::src::headers::sqliteInt_h::SrcItem =
+                                    let pItem: *mut crate::src::headers::sqliteInt_h::SrcItem =
                                         (&raw mut (*(*pStep).pFrom).a
                                             as *mut crate::src::headers::sqliteInt_h::SrcItem)
                                             .offset(i as isize)
@@ -2923,8 +2902,8 @@ unsafe extern "C" fn renameTableFunc(
 }
 
 unsafe extern "C" fn renameQuotefixExprCb(
-    mut pWalker: *mut crate::src::headers::sqliteInt_h::Walker,
-    mut pExpr: *mut crate::src::headers::sqliteInt_h::Expr,
+    pWalker: *mut crate::src::headers::sqliteInt_h::Walker,
+    pExpr: *mut crate::src::headers::sqliteInt_h::Expr,
 ) -> ::core::ffi::c_int {
     if (*pExpr).op as ::core::ffi::c_int == crate::src::parse::TK_STRING
         && (*pExpr).flags
@@ -2941,27 +2920,27 @@ unsafe extern "C" fn renameQuotefixExprCb(
 }
 
 unsafe extern "C" fn renameQuotefixFunc(
-    mut context: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
+    context: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
     mut _NotUsed: ::core::ffi::c_int,
-    mut argv: *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
+    argv: *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
 ) {
-    let mut db: *mut crate::src::headers::sqliteInt_h::sqlite3 =
+    let db: *mut crate::src::headers::sqliteInt_h::sqlite3 =
         crate::src::src::vdbeapi::sqlite3_context_db_handle(context)
             as *mut crate::src::headers::sqliteInt_h::sqlite3;
-    let mut zDb: *const ::core::ffi::c_char =
+    let zDb: *const ::core::ffi::c_char =
         crate::src::src::vdbeapi::sqlite3_value_text(*argv.offset(0 as isize))
             as *const ::core::ffi::c_char;
-    let mut zInput: *const ::core::ffi::c_char =
+    let zInput: *const ::core::ffi::c_char =
         crate::src::src::vdbeapi::sqlite3_value_text(*argv.offset(1 as isize))
             as *const ::core::ffi::c_char;
     let __db_ref = { &mut *db };
-    let mut xAuth: crate::src::headers::sqliteInt_h::Sqlite3Xauth = __db_ref.xAuth;
+    let xAuth: crate::src::headers::sqliteInt_h::Sqlite3Xauth = __db_ref.xAuth;
     __db_ref.xAuth = None;
     crate::src::src::btmutex::sqlite3BtreeEnterAll(
         db as *mut crate::src::headers::sqliteInt_h::sqlite3,
     );
     if !zDb.is_null() && !zInput.is_null() {
-        let mut rc: ::core::ffi::c_int = 0;
+        let mut rc: ::core::ffi::c_int;
         let mut sParse: crate::src::headers::sqliteInt_h::Parse = { ::core::mem::zeroed() };
         rc = renameParseSql(&raw mut sParse, zDb, db, zInput, 0 as ::core::ffi::c_int);
         if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
@@ -2999,7 +2978,7 @@ unsafe extern "C" fn renameQuotefixFunc(
                 if (*sParse.pNewTable).eTabType as ::core::ffi::c_int
                     == crate::src::headers::sqliteInt_h::TABTYP_VIEW
                 {
-                    let mut pSelect: *mut crate::src::headers::sqliteInt_h::Select =
+                    let pSelect: *mut crate::src::headers::sqliteInt_h::Select =
                         (*sParse.pNewTable).u.view.pSelect;
                     (*pSelect).selFlags &= !(crate::src::headers::sqliteInt_h::SF_View
                         as crate::src::ext::rtree::rtree::U32_0);
@@ -3023,7 +3002,7 @@ unsafe extern "C" fn renameQuotefixFunc(
                         );
                     }
                 } else {
-                    let mut i: ::core::ffi::c_int = 0;
+                    let mut i: ::core::ffi::c_int;
                     crate::src::src::walker::sqlite3WalkExprList(
                         &raw mut sWalker as *mut _ as *mut crate::src::headers::sqliteInt_h::Walker,
                         (*sParse.pNewTable).pCheck
@@ -3093,37 +3072,37 @@ unsafe extern "C" fn renameQuotefixFunc(
 }
 
 unsafe extern "C" fn renameTableTest(
-    mut context: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
+    context: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
     mut _NotUsed: ::core::ffi::c_int,
-    mut argv: *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
+    argv: *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
 ) {
-    let mut db: *mut crate::src::headers::sqliteInt_h::sqlite3 =
+    let db: *mut crate::src::headers::sqliteInt_h::sqlite3 =
         crate::src::src::vdbeapi::sqlite3_context_db_handle(context)
             as *mut crate::src::headers::sqliteInt_h::sqlite3;
-    let mut zDb: *const ::core::ffi::c_char =
+    let zDb: *const ::core::ffi::c_char =
         crate::src::src::vdbeapi::sqlite3_value_text(*argv.offset(0 as isize))
             as *const ::core::ffi::c_char;
-    let mut zInput: *const ::core::ffi::c_char =
+    let zInput: *const ::core::ffi::c_char =
         crate::src::src::vdbeapi::sqlite3_value_text(*argv.offset(1 as isize))
             as *const ::core::ffi::c_char;
-    let mut bTemp: ::core::ffi::c_int =
+    let bTemp: ::core::ffi::c_int =
         crate::src::src::vdbeapi::sqlite3_value_int(*argv.offset(4 as isize));
     let __db_ref = { &mut *db };
-    let mut isLegacy: ::core::ffi::c_int = (__db_ref.flags
+    let isLegacy: ::core::ffi::c_int = (__db_ref.flags
         & crate::src::headers::sqliteInt_h::SQLITE_LegacyAlter
             as crate::src::ext::rtree::rtree::U64_0)
         as ::core::ffi::c_int;
-    let mut zWhen: *const ::core::ffi::c_char =
+    let zWhen: *const ::core::ffi::c_char =
         crate::src::src::vdbeapi::sqlite3_value_text(*argv.offset(5 as isize))
             as *const ::core::ffi::c_char;
-    let mut bNoDQS: ::core::ffi::c_int =
+    let bNoDQS: ::core::ffi::c_int =
         crate::src::src::vdbeapi::sqlite3_value_int(*argv.offset(6 as isize));
-    let mut xAuth: crate::src::headers::sqliteInt_h::Sqlite3Xauth = __db_ref.xAuth;
+    let xAuth: crate::src::headers::sqliteInt_h::Sqlite3Xauth = __db_ref.xAuth;
     __db_ref.xAuth = None;
     if !zDb.is_null() && !zInput.is_null() {
-        let mut rc: ::core::ffi::c_int = 0;
+        let mut rc: ::core::ffi::c_int;
         let mut sParse: crate::src::headers::sqliteInt_h::Parse = { ::core::mem::zeroed() };
-        let mut flags: crate::src::ext::rtree::rtree::U64_0 = __db_ref.flags;
+        let flags: crate::src::ext::rtree::rtree::U64_0 = __db_ref.flags;
         if bNoDQS != 0 {
             __db_ref.flags &= !(crate::src::headers::sqliteInt_h::SQLITE_DqsDML
                 | crate::src::headers::sqliteInt_h::SQLITE_DqsDDL)
@@ -3154,12 +3133,12 @@ unsafe extern "C" fn renameTableTest(
                     rc = renameResolveTrigger(&raw mut sParse);
                 }
                 if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
-                    let mut i1: ::core::ffi::c_int = crate::src::src::prepare::sqlite3SchemaToIndex(
+                    let i1: ::core::ffi::c_int = crate::src::src::prepare::sqlite3SchemaToIndex(
                         db as *mut crate::src::headers::sqliteInt_h::sqlite3,
                         (*sParse.pNewTrigger).pTabSchema
                             as *mut crate::src::headers::sqliteInt_h::Schema,
                     );
-                    let mut i2: ::core::ffi::c_int = crate::src::src::build::sqlite3FindDbName(
+                    let i2: ::core::ffi::c_int = crate::src::src::build::sqlite3FindDbName(
                         db as *mut crate::src::headers::sqliteInt_h::sqlite3,
                         zDb,
                     );
@@ -3192,30 +3171,29 @@ unsafe extern "C" fn renameTableTest(
 }
 
 unsafe extern "C" fn dropColumnFunc(
-    mut context: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
+    context: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
     mut _NotUsed: ::core::ffi::c_int,
-    mut argv: *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
+    argv: *mut *mut crate::src::headers::vdbeInt_h::sqlite3_value,
 ) {
-    let mut db: *mut crate::src::headers::sqliteInt_h::sqlite3 =
+    let db: *mut crate::src::headers::sqliteInt_h::sqlite3 =
         crate::src::src::vdbeapi::sqlite3_context_db_handle(context)
             as *mut crate::src::headers::sqliteInt_h::sqlite3;
-    let mut iSchema: ::core::ffi::c_int =
+    let iSchema: ::core::ffi::c_int =
         crate::src::src::vdbeapi::sqlite3_value_int(*argv.offset(0 as isize));
-    let mut zSql: *const ::core::ffi::c_char =
+    let zSql: *const ::core::ffi::c_char =
         crate::src::src::vdbeapi::sqlite3_value_text(*argv.offset(1 as isize))
             as *const ::core::ffi::c_char;
-    let mut iCol: ::core::ffi::c_int =
+    let iCol: ::core::ffi::c_int =
         crate::src::src::vdbeapi::sqlite3_value_int(*argv.offset(2 as isize));
     let __db_ref = { &mut *db };
-    let mut zDb: *const ::core::ffi::c_char = (*__db_ref.aDb.offset(iSchema as isize)).zDbSName;
-    let mut rc: ::core::ffi::c_int = 0;
+    let zDb: *const ::core::ffi::c_char = (*__db_ref.aDb.offset(iSchema as isize)).zDbSName;
+    let mut rc: ::core::ffi::c_int;
     let mut sParse: crate::src::headers::sqliteInt_h::Parse = { ::core::mem::zeroed() };
-    let mut pCol: *mut RenameToken = ::core::ptr::null_mut::<RenameToken>();
-    let mut pTab: *mut crate::src::headers::sqliteInt_h::Table =
-        ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::Table>();
-    let mut zEnd: *const ::core::ffi::c_char = ::core::ptr::null::<::core::ffi::c_char>();
-    let mut zNew: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
-    let mut xAuth: crate::src::headers::sqliteInt_h::Sqlite3Xauth = __db_ref.xAuth;
+    let pCol: *mut RenameToken;
+    let pTab: *mut crate::src::headers::sqliteInt_h::Table;
+    let zEnd: *const ::core::ffi::c_char;
+    let zNew: *mut ::core::ffi::c_char;
+    let xAuth: crate::src::headers::sqliteInt_h::Sqlite3Xauth = __db_ref.xAuth;
     __db_ref.xAuth = None;
     rc = renameParseSql(
         &raw mut sParse,
@@ -3238,7 +3216,7 @@ unsafe extern "C" fn dropColumnFunc(
                 (*(*pTab).aCol.offset(iCol as isize)).zCnName as *mut ::core::ffi::c_void,
             );
             if iCol < (*pTab).nCol as ::core::ffi::c_int - 1 as ::core::ffi::c_int {
-                let mut pEnd: *mut RenameToken = ::core::ptr::null_mut::<RenameToken>();
+                let pEnd: *mut RenameToken;
                 pEnd = renameTokenFind(
                     &raw mut sParse,
                     ::core::ptr::null_mut::<RenameCtx>(),
@@ -3290,17 +3268,16 @@ unsafe extern "C" fn dropColumnFunc(
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3AlterDropColumn(
-    mut pParse: *mut crate::src::headers::sqliteInt_h::Parse,
-    mut pSrc: *mut crate::src::headers::sqliteInt_h::SrcList,
-    mut pName: *const crate::src::headers::sqliteInt_h::Token,
+    pParse: *mut crate::src::headers::sqliteInt_h::Parse,
+    pSrc: *mut crate::src::headers::sqliteInt_h::SrcList,
+    pName: *const crate::src::headers::sqliteInt_h::Token,
 ) {
-    let mut db: *mut crate::src::headers::sqliteInt_h::sqlite3 = (*pParse).db;
-    let mut pTab: *mut crate::src::headers::sqliteInt_h::Table =
-        ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::Table>();
-    let mut iDb: ::core::ffi::c_int = 0;
-    let mut zDb: *const ::core::ffi::c_char = ::core::ptr::null::<::core::ffi::c_char>();
+    let db: *mut crate::src::headers::sqliteInt_h::sqlite3 = (*pParse).db;
+    let pTab: *mut crate::src::headers::sqliteInt_h::Table;
+    let iDb: ::core::ffi::c_int;
+    let zDb: *const ::core::ffi::c_char;
     let mut zCol: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
-    let mut iCol: ::core::ffi::c_int = 0;
+    let iCol: ::core::ffi::c_int;
     if !((*db).mallocFailed != 0) {
         pTab = crate::src::src::build::sqlite3LocateTableItem(
             pParse as *mut crate::src::headers::sqliteInt_h::Parse,
@@ -3421,17 +3398,17 @@ pub unsafe extern "C" fn sqlite3AlterDropColumn(
                                         & crate::src::headers::sqliteInt_h::COLFLAG_VIRTUAL
                                         == 0 as ::core::ffi::c_int
                                 {
-                                    let mut i: ::core::ffi::c_int = 0;
-                                    let mut addr: ::core::ffi::c_int = 0;
-                                    let mut reg: ::core::ffi::c_int = 0;
-                                    let mut regRec: ::core::ffi::c_int = 0;
+                                    let mut i: ::core::ffi::c_int;
+                                    let addr: ::core::ffi::c_int;
+                                    let reg: ::core::ffi::c_int;
+                                    let regRec: ::core::ffi::c_int;
                                     let mut pPk: *mut crate::src::headers::sqliteInt_h::Index =
                                         ::core::ptr::null_mut::<
                                             crate::src::headers::sqliteInt_h::Index,
                                         >();
                                     let mut nField: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
-                                    let mut iCur: ::core::ffi::c_int = 0;
-                                    let mut v: *mut crate::src::headers::vdbeInt_h::Vdbe =
+                                    let iCur: ::core::ffi::c_int;
+                                    let v: *mut crate::src::headers::vdbeInt_h::Vdbe =
                                         crate::src::src::select::sqlite3GetVdbe(
                                             pParse as *mut crate::src::headers::sqliteInt_h::Parse,
                                         );
@@ -3497,9 +3474,9 @@ pub unsafe extern "C" fn sqlite3AlterDropColumn(
                                         {
                                             let mut regOut: ::core::ffi::c_int = 0;
                                             if !pPk.is_null() {
-                                                let mut iPos: ::core::ffi::c_int =
+                                                let iPos: ::core::ffi::c_int =
                                                     crate::src::src::build::sqlite3TableColumnToIndex(pPk as *mut crate::src::headers::sqliteInt_h::Index, i);
-                                                let mut iColPos: ::core::ffi::c_int =
+                                                let iColPos: ::core::ffi::c_int =
                                                     crate::src::src::build::sqlite3TableColumnToIndex(pPk as *mut crate::src::headers::sqliteInt_h::Index, iCol);
                                                 if iPos < (*pPk).nKeyCol as ::core::ffi::c_int {
                                                     current_block_48 = 10891380440665537214;
@@ -3523,7 +3500,7 @@ pub unsafe extern "C" fn sqlite3AlterDropColumn(
                                                             regOut,
                                                         );
                                                     } else {
-                                                        let mut aff: ::core::ffi::c_char =
+                                                        let aff: ::core::ffi::c_char =
                                                             (*(*pTab).aCol.offset(i as isize))
                                                                 .affinity;
                                                         if aff as ::core::ffi::c_int

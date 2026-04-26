@@ -139,15 +139,14 @@ pub use crate::src::src::vdbe::VdbeOp;
 pub use crate::src::src::vdbe::p4union;
 
 unsafe extern "C" fn walkWindowList(
-    mut pWalker: *mut crate::src::headers::sqliteInt_h::Walker,
-    mut pList: *mut crate::src::headers::sqliteInt_h::Window,
-    mut bOneOnly: ::core::ffi::c_int,
+    pWalker: *mut crate::src::headers::sqliteInt_h::Walker,
+    pList: *mut crate::src::headers::sqliteInt_h::Window,
+    bOneOnly: ::core::ffi::c_int,
 ) -> ::core::ffi::c_int {
-    let mut pWin: *mut crate::src::headers::sqliteInt_h::Window =
-        ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::Window>();
+    let mut pWin: *mut crate::src::headers::sqliteInt_h::Window;
     pWin = pList;
     while !pWin.is_null() {
-        let mut rc: ::core::ffi::c_int = 0;
+        let mut rc: ::core::ffi::c_int;
         rc = sqlite3WalkExprList(pWalker, (*pWin).pOrderBy);
         if rc != 0 {
             return crate::src::headers::sqliteInt_h::WRC_Abort;
@@ -178,10 +177,10 @@ unsafe extern "C" fn walkWindowList(
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 #[inline(never)]
 pub unsafe extern "C" fn sqlite3WalkExprNN(
-    mut pWalker: *mut crate::src::headers::sqliteInt_h::Walker,
+    pWalker: *mut crate::src::headers::sqliteInt_h::Walker,
     mut pExpr: *mut crate::src::headers::sqliteInt_h::Expr,
 ) -> ::core::ffi::c_int {
-    let mut rc: ::core::ffi::c_int = 0;
+    let mut rc: ::core::ffi::c_int;
     loop {
         rc = (*pWalker).xExprCallback.expect("non-null function pointer")(pWalker, pExpr);
         if rc != 0 {
@@ -231,8 +230,8 @@ pub unsafe extern "C" fn sqlite3WalkExprNN(
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3WalkExpr(
-    mut pWalker: *mut crate::src::headers::sqliteInt_h::Walker,
-    mut pExpr: *mut crate::src::headers::sqliteInt_h::Expr,
+    pWalker: *mut crate::src::headers::sqliteInt_h::Walker,
+    pExpr: *mut crate::src::headers::sqliteInt_h::Expr,
 ) -> ::core::ffi::c_int {
     if !pExpr.is_null() {
         sqlite3WalkExprNN(pWalker, pExpr)
@@ -243,12 +242,11 @@ pub unsafe extern "C" fn sqlite3WalkExpr(
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3WalkExprList(
-    mut pWalker: *mut crate::src::headers::sqliteInt_h::Walker,
-    mut p: *mut crate::src::headers::sqliteInt_h::ExprList,
+    pWalker: *mut crate::src::headers::sqliteInt_h::Walker,
+    p: *mut crate::src::headers::sqliteInt_h::ExprList,
 ) -> ::core::ffi::c_int {
-    let mut i: ::core::ffi::c_int = 0;
-    let mut pItem: *mut crate::src::headers::sqliteInt_h::ExprList_item =
-        ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::ExprList_item>();
+    let mut i: ::core::ffi::c_int;
+    let mut pItem: *mut crate::src::headers::sqliteInt_h::ExprList_item;
     if !p.is_null() {
         i = (*p).nExpr;
         pItem = &raw mut (*p).a as *mut crate::src::headers::sqliteInt_h::ExprList_item
@@ -273,8 +271,8 @@ pub unsafe extern "C" fn sqlite3WalkWinDefnDummyCallback(
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3WalkSelectExpr(
-    mut pWalker: *mut crate::src::headers::sqliteInt_h::Walker,
-    mut p: *mut crate::src::headers::sqliteInt_h::Select,
+    pWalker: *mut crate::src::headers::sqliteInt_h::Walker,
+    p: *mut crate::src::headers::sqliteInt_h::Select,
 ) -> ::core::ffi::c_int {
     let __p_ref = unsafe { &mut *p };
     if sqlite3WalkExprList(pWalker, __p_ref.pEList) != 0 {
@@ -296,8 +294,7 @@ pub unsafe extern "C" fn sqlite3WalkSelectExpr(
         return crate::src::headers::sqliteInt_h::WRC_Abort;
     }
     if !__p_ref.pWinDefn.is_null() {
-        let mut pParse: *mut crate::src::headers::sqliteInt_h::Parse =
-            ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::Parse>();
+        let pParse: *mut crate::src::headers::sqliteInt_h::Parse;
         if (*pWalker).xSelectCallback2
             == Some(
                 sqlite3WalkWinDefnDummyCallback
@@ -321,7 +318,7 @@ pub unsafe extern "C" fn sqlite3WalkSelectExpr(
                         ) -> (),
                 )
         {
-            let mut rc: ::core::ffi::c_int =
+            let rc: ::core::ffi::c_int =
                 walkWindowList(pWalker, __p_ref.pWinDefn, 0 as ::core::ffi::c_int);
             return rc;
         }
@@ -331,14 +328,12 @@ pub unsafe extern "C" fn sqlite3WalkSelectExpr(
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3WalkSelectFrom(
-    mut pWalker: *mut crate::src::headers::sqliteInt_h::Walker,
-    mut p: *mut crate::src::headers::sqliteInt_h::Select,
+    pWalker: *mut crate::src::headers::sqliteInt_h::Walker,
+    p: *mut crate::src::headers::sqliteInt_h::Select,
 ) -> ::core::ffi::c_int {
-    let mut pSrc: *mut crate::src::headers::sqliteInt_h::SrcList =
-        ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::SrcList>();
-    let mut i: ::core::ffi::c_int = 0;
-    let mut pItem: *mut crate::src::headers::sqliteInt_h::SrcItem =
-        ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::SrcItem>();
+    let pSrc: *mut crate::src::headers::sqliteInt_h::SrcList;
+    let mut i: ::core::ffi::c_int;
+    let mut pItem: *mut crate::src::headers::sqliteInt_h::SrcItem;
     pSrc = (*p).pSrc;
     if !pSrc.is_null() {
         i = (*pSrc).nSrc;
@@ -363,10 +358,10 @@ pub unsafe extern "C" fn sqlite3WalkSelectFrom(
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3WalkSelect(
-    mut pWalker: *mut crate::src::headers::sqliteInt_h::Walker,
+    pWalker: *mut crate::src::headers::sqliteInt_h::Walker,
     mut p: *mut crate::src::headers::sqliteInt_h::Select,
 ) -> ::core::ffi::c_int {
-    let mut rc: ::core::ffi::c_int = 0;
+    let mut rc: ::core::ffi::c_int;
     if p.is_null() {
         return crate::src::headers::sqliteInt_h::WRC_Continue;
     }
@@ -398,7 +393,7 @@ pub unsafe extern "C" fn sqlite3WalkSelect(
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3WalkerDepthIncrease(
-    mut pWalker: *mut crate::src::headers::sqliteInt_h::Walker,
+    pWalker: *mut crate::src::headers::sqliteInt_h::Walker,
     mut _pSelect: *mut crate::src::headers::sqliteInt_h::Select,
 ) -> ::core::ffi::c_int {
     (*pWalker).walkerDepth += 1;
@@ -407,7 +402,7 @@ pub unsafe extern "C" fn sqlite3WalkerDepthIncrease(
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3WalkerDepthDecrease(
-    mut pWalker: *mut crate::src::headers::sqliteInt_h::Walker,
+    pWalker: *mut crate::src::headers::sqliteInt_h::Walker,
     mut _pSelect: *mut crate::src::headers::sqliteInt_h::Select,
 ) {
     (*pWalker).walkerDepth -= 1;

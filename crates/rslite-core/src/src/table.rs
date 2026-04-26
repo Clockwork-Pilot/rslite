@@ -145,16 +145,16 @@ pub struct TabResult {
 }
 
 unsafe extern "C" fn sqlite3_get_table_cb(
-    mut pArg: *mut ::core::ffi::c_void,
-    mut nCol: ::core::ffi::c_int,
-    mut argv: *mut *mut ::core::ffi::c_char,
-    mut colv: *mut *mut ::core::ffi::c_char,
+    pArg: *mut ::core::ffi::c_void,
+    nCol: ::core::ffi::c_int,
+    argv: *mut *mut ::core::ffi::c_char,
+    colv: *mut *mut ::core::ffi::c_char,
 ) -> ::core::ffi::c_int {
     let mut current_block: u64;
-    let mut p: *mut TabResult = pArg as *mut TabResult;
-    let mut need: ::core::ffi::c_int = 0;
-    let mut i: ::core::ffi::c_int = 0;
-    let mut z: *mut ::core::ffi::c_char = ::core::ptr::null_mut::<::core::ffi::c_char>();
+    let p: *mut TabResult = pArg as *mut TabResult;
+    let need: ::core::ffi::c_int;
+    let mut i: ::core::ffi::c_int;
+    let mut z: *mut ::core::ffi::c_char;
     let __p_ref = unsafe { &mut *p };
     if __p_ref.nRow == 0 as crate::src::ext::rtree::rtree::U32_0 && !argv.is_null() {
         need = nCol * 2 as ::core::ffi::c_int;
@@ -166,8 +166,7 @@ unsafe extern "C" fn sqlite3_get_table_cb(
         .wrapping_add(need as crate::src::ext::rtree::rtree::U32_0)
         > __p_ref.nAlloc
     {
-        let mut azNew: *mut *mut ::core::ffi::c_char =
-            ::core::ptr::null_mut::<*mut ::core::ffi::c_char>();
+        let azNew: *mut *mut ::core::ffi::c_char;
         __p_ref.nAlloc = (*p)
             .nAlloc
             .wrapping_mul(2 as crate::src::ext::rtree::rtree::U32_0)
@@ -254,7 +253,7 @@ unsafe extern "C" fn sqlite3_get_table_cb(
                             if (*argv.offset(i as isize)).is_null() {
                                 z = ::core::ptr::null_mut::<::core::ffi::c_char>();
                             } else {
-                                let mut n: ::core::ffi::c_int =
+                                let n: ::core::ffi::c_int =
                                     crate::src::src::util::sqlite3Strlen30(
                                         *argv.offset(i as isize),
                                     ) + 1 as ::core::ffi::c_int;
@@ -301,14 +300,14 @@ unsafe extern "C" fn sqlite3_get_table_cb(
 }
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn sqlite3_get_table(
-    mut db: *mut crate::src::headers::sqliteInt_h::sqlite3,
-    mut zSql: *const ::core::ffi::c_char,
-    mut pazResult: *mut *mut *mut ::core::ffi::c_char,
-    mut pnRow: *mut ::core::ffi::c_int,
-    mut pnColumn: *mut ::core::ffi::c_int,
-    mut pzErrMsg: *mut *mut ::core::ffi::c_char,
+    db: *mut crate::src::headers::sqliteInt_h::sqlite3,
+    zSql: *const ::core::ffi::c_char,
+    pazResult: *mut *mut *mut ::core::ffi::c_char,
+    pnRow: *mut ::core::ffi::c_int,
+    pnColumn: *mut ::core::ffi::c_int,
+    pzErrMsg: *mut *mut ::core::ffi::c_char,
 ) -> ::core::ffi::c_int {
-    let mut rc: ::core::ffi::c_int = 0;
+    let rc: ::core::ffi::c_int;
     let mut res: TabResult = unsafe { ::core::mem::zeroed() };
     *pazResult = ::core::ptr::null_mut::<*mut ::core::ffi::c_char>();
     if !pnColumn.is_null() {
@@ -380,8 +379,7 @@ pub unsafe extern "C" fn sqlite3_get_table(
         return rc;
     }
     if res.nAlloc > res.nData {
-        let mut azNew: *mut *mut ::core::ffi::c_char =
-            ::core::ptr::null_mut::<*mut ::core::ffi::c_char>();
+        let azNew: *mut *mut ::core::ffi::c_char;
         azNew = crate::src::src::malloc::sqlite3Realloc(
             res.azResult as *mut ::core::ffi::c_void,
             (::core::mem::size_of::<*mut ::core::ffi::c_char>() as usize)
@@ -407,8 +405,8 @@ pub unsafe extern "C" fn sqlite3_get_table(
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn sqlite3_free_table(mut azResult: *mut *mut ::core::ffi::c_char) {
     if !azResult.is_null() {
-        let mut i: ::core::ffi::c_int = 0;
-        let mut n: ::core::ffi::c_int = 0;
+        let mut i: ::core::ffi::c_int;
+        let n: ::core::ffi::c_int;
         azResult = azResult.offset(-1);
         n = *azResult.offset(0 as isize) as crate::src::headers::stdlib::IntptrT
             as ::core::ffi::c_int;

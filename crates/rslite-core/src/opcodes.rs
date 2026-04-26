@@ -1,6 +1,6 @@
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 pub unsafe extern "C" fn sqlite3OpcodeName(
-    mut i: ::core::ffi::c_int,
+    i: ::core::ffi::c_int,
 ) -> *const ::core::ffi::c_char {
     static mut azName: [*const ::core::ffi::c_char; 191] = [
         b"Savepoint\0" as *const u8 as *const ::core::ffi::c_char,
