@@ -541,266 +541,263 @@ unsafe extern "C" fn statDecodePage(
     } else {
         current_block = 13503832839001051727;
     }
-    match current_block {
-        3640593987805443782 => {
-            if __p_ref.iPgno == 1 as crate::src::ext::rtree::rtree::U32_0 {
-                nHdr += 100 as ::core::ffi::c_int;
+    if current_block == 3640593987805443782 {
+        if __p_ref.iPgno == 1 as crate::src::ext::rtree::rtree::U32_0 {
+            nHdr += 100 as ::core::ffi::c_int;
+        }
+        __p_ref.nCell = (*(aHdr.offset(3_isize) as *mut crate::src::ext::rtree::rtree::U8_0)
+            .offset(0_isize) as ::core::ffi::c_int)
+            << 8 as ::core::ffi::c_int
+            | *(aHdr.offset(3_isize) as *mut crate::src::ext::rtree::rtree::U8_0)
+                .offset(1_isize) as ::core::ffi::c_int;
+        __p_ref.nMxPayload = 0 as ::core::ffi::c_int;
+        szPage = crate::src::src::btree::sqlite3BtreeGetPageSize(pBt);
+        nUnused = ((*(aHdr.offset(5_isize) as *mut crate::src::ext::rtree::rtree::U8_0)
+            .offset(0_isize) as ::core::ffi::c_int)
+            << 8 as ::core::ffi::c_int
+            | *(aHdr.offset(5_isize) as *mut crate::src::ext::rtree::rtree::U8_0)
+                .offset(1_isize) as ::core::ffi::c_int)
+            - nHdr
+            - 2 as ::core::ffi::c_int * __p_ref.nCell;
+        nUnused += *aHdr.offset(7_isize) as ::core::ffi::c_int;
+        iOff = (*(aHdr.offset(1_isize) as *mut crate::src::ext::rtree::rtree::U8_0)
+            .offset(0_isize) as ::core::ffi::c_int)
+            << 8 as ::core::ffi::c_int
+            | *(aHdr.offset(1_isize) as *mut crate::src::ext::rtree::rtree::U8_0)
+                .offset(1_isize) as ::core::ffi::c_int;
+        loop {
+            if (iOff == 0) {
+                current_block = 12147880666119273379;
+                break;
             }
-            __p_ref.nCell = (*(aHdr.offset(3_isize) as *mut crate::src::ext::rtree::rtree::U8_0)
+            
+            if iOff >= szPage {
+                current_block = 13503832839001051727;
+                break;
+            }
+            nUnused += (*(aData.offset((iOff + 2 as ::core::ffi::c_int) as isize)
+                as *mut crate::src::ext::rtree::rtree::U8_0)
                 .offset(0_isize) as ::core::ffi::c_int)
                 << 8 as ::core::ffi::c_int
-                | *(aHdr.offset(3_isize) as *mut crate::src::ext::rtree::rtree::U8_0)
-                    .offset(1_isize) as ::core::ffi::c_int;
-            __p_ref.nMxPayload = 0 as ::core::ffi::c_int;
-            szPage = crate::src::src::btree::sqlite3BtreeGetPageSize(pBt);
-            nUnused = ((*(aHdr.offset(5_isize) as *mut crate::src::ext::rtree::rtree::U8_0)
-                .offset(0_isize) as ::core::ffi::c_int)
-                << 8 as ::core::ffi::c_int
-                | *(aHdr.offset(5_isize) as *mut crate::src::ext::rtree::rtree::U8_0)
-                    .offset(1_isize) as ::core::ffi::c_int)
-                - nHdr
-                - 2 as ::core::ffi::c_int * __p_ref.nCell;
-            nUnused += *aHdr.offset(7_isize) as ::core::ffi::c_int;
-            iOff = (*(aHdr.offset(1_isize) as *mut crate::src::ext::rtree::rtree::U8_0)
-                .offset(0_isize) as ::core::ffi::c_int)
-                << 8 as ::core::ffi::c_int
-                | *(aHdr.offset(1_isize) as *mut crate::src::ext::rtree::rtree::U8_0)
-                    .offset(1_isize) as ::core::ffi::c_int;
-            loop {
-                if (iOff == 0) {
-                    current_block = 12147880666119273379;
-                    break;
-                }
-                
-                if iOff >= szPage {
-                    current_block = 13503832839001051727;
-                    break;
-                }
-                nUnused += (*(aData.offset((iOff + 2 as ::core::ffi::c_int) as isize)
+                | *(aData.offset((iOff + 2 as ::core::ffi::c_int) as isize)
                     as *mut crate::src::ext::rtree::rtree::U8_0)
-                    .offset(0_isize) as ::core::ffi::c_int)
-                    << 8 as ::core::ffi::c_int
-                    | *(aData.offset((iOff + 2 as ::core::ffi::c_int) as isize)
-                        as *mut crate::src::ext::rtree::rtree::U8_0)
-                        .offset(1_isize) as ::core::ffi::c_int;
-                let iNext: ::core::ffi::c_int = (*(aData.offset(iOff as isize) as *mut crate::src::ext::rtree::rtree::U8_0)
-                    .offset(0_isize) as ::core::ffi::c_int)
-                    << 8 as ::core::ffi::c_int
-                    | *(aData.offset(iOff as isize) as *mut crate::src::ext::rtree::rtree::U8_0)
-                        .offset(1_isize) as ::core::ffi::c_int;
-                if iNext < iOff + 4 as ::core::ffi::c_int && iNext > 0 as ::core::ffi::c_int {
-                    current_block = 13503832839001051727;
-                    break;
-                }
-                iOff = iNext;
+                    .offset(1_isize) as ::core::ffi::c_int;
+            let iNext: ::core::ffi::c_int = (*(aData.offset(iOff as isize) as *mut crate::src::ext::rtree::rtree::U8_0)
+                .offset(0_isize) as ::core::ffi::c_int)
+                << 8 as ::core::ffi::c_int
+                | *(aData.offset(iOff as isize) as *mut crate::src::ext::rtree::rtree::U8_0)
+                    .offset(1_isize) as ::core::ffi::c_int;
+            if iNext < iOff + 4 as ::core::ffi::c_int && iNext > 0 as ::core::ffi::c_int {
+                current_block = 13503832839001051727;
+                break;
             }
-            match current_block {
-                13503832839001051727 => {}
-                _ => {
-                    __p_ref.nUnused = nUnused;
-                    __p_ref.iRightChildPg = if isLeaf != 0 {
-                        0 as crate::src::ext::rtree::rtree::U32_0
-                    } else {
-                        crate::src::src::util::sqlite3Get4byte(
-                            aHdr.offset(8_isize) as *mut crate::src::ext::rtree::rtree::U8_0
-                        )
-                    };
-                    if __p_ref.nCell != 0 {
-                        let mut i: ::core::ffi::c_int;
-                        
-                        crate::src::src::btmutex::sqlite3BtreeEnter(pBt);
-                        let nUsable: ::core::ffi::c_int = szPage - crate::src::src::btree::sqlite3BtreeGetReserveNoMutex(pBt);
-                        crate::src::src::btmutex::sqlite3BtreeLeave(pBt);
-                        __p_ref.aCell = crate::src::src::malloc::sqlite3_malloc64(
-                            ((__p_ref.nCell + 1 as ::core::ffi::c_int) as usize)
-                                .wrapping_mul(::core::mem::size_of::<StatCell>() as usize)
-                                as crate::src::headers::sqlite3_h::Sqlite3Uint64,
-                        ) as *mut StatCell;
-                        if __p_ref.aCell.is_null() {
-                            return crate::src::headers::sqliteInt_h::SQLITE_NOMEM_BKPT;
+            iOff = iNext;
+        }
+        match current_block {
+            13503832839001051727 => {}
+            _ => {
+                __p_ref.nUnused = nUnused;
+                __p_ref.iRightChildPg = if isLeaf != 0 {
+                    0 as crate::src::ext::rtree::rtree::U32_0
+                } else {
+                    crate::src::src::util::sqlite3Get4byte(
+                        aHdr.offset(8_isize) as *mut crate::src::ext::rtree::rtree::U8_0
+                    )
+                };
+                if __p_ref.nCell != 0 {
+                    let mut i: ::core::ffi::c_int;
+                    
+                    crate::src::src::btmutex::sqlite3BtreeEnter(pBt);
+                    let nUsable: ::core::ffi::c_int = szPage - crate::src::src::btree::sqlite3BtreeGetReserveNoMutex(pBt);
+                    crate::src::src::btmutex::sqlite3BtreeLeave(pBt);
+                    __p_ref.aCell = crate::src::src::malloc::sqlite3_malloc64(
+                        ((__p_ref.nCell + 1 as ::core::ffi::c_int) as usize)
+                            .wrapping_mul(::core::mem::size_of::<StatCell>() as usize)
+                            as crate::src::headers::sqlite3_h::Sqlite3Uint64,
+                    ) as *mut StatCell;
+                    if __p_ref.aCell.is_null() {
+                        return crate::src::headers::sqliteInt_h::SQLITE_NOMEM_BKPT;
+                    }
+                    ::libc::memset(
+                        __p_ref.aCell as *mut ::core::ffi::c_void,
+                        0 as ::core::ffi::c_int,
+                        ((__p_ref.nCell + 1 as ::core::ffi::c_int)
+                            as crate::__stddef_size_t_h::SizeT)
+                            .wrapping_mul(::core::mem::size_of::<StatCell>()
+                                as crate::__stddef_size_t_h::SizeT),
+                    );
+                    i = 0 as ::core::ffi::c_int;
+                    loop {
+                        if (i >= __p_ref.nCell) {
+                            current_block = 5597585068398118923;
+                            break;
                         }
-                        ::libc::memset(
-                            __p_ref.aCell as *mut ::core::ffi::c_void,
-                            0 as ::core::ffi::c_int,
-                            ((__p_ref.nCell + 1 as ::core::ffi::c_int)
-                                as crate::__stddef_size_t_h::SizeT)
-                                .wrapping_mul(::core::mem::size_of::<StatCell>()
-                                    as crate::__stddef_size_t_h::SizeT),
-                        );
-                        i = 0 as ::core::ffi::c_int;
-                        loop {
-                            if (i >= __p_ref.nCell) {
-                                current_block = 5597585068398118923;
-                                break;
-                            }
-                            let pCell: *mut StatCell =
-                                __p_ref.aCell.offset(i as isize) as *mut StatCell;
-                            iOff = (*(aData.offset((nHdr + i * 2 as ::core::ffi::c_int) as isize)
+                        let pCell: *mut StatCell =
+                            __p_ref.aCell.offset(i as isize) as *mut StatCell;
+                        iOff = (*(aData.offset((nHdr + i * 2 as ::core::ffi::c_int) as isize)
+                            as *mut crate::src::ext::rtree::rtree::U8_0)
+                            .offset(0_isize)
+                            as ::core::ffi::c_int)
+                            << 8 as ::core::ffi::c_int
+                            | *(aData.offset((nHdr + i * 2 as ::core::ffi::c_int) as isize)
                                 as *mut crate::src::ext::rtree::rtree::U8_0)
-                                .offset(0_isize)
-                                as ::core::ffi::c_int)
-                                << 8 as ::core::ffi::c_int
-                                | *(aData.offset((nHdr + i * 2 as ::core::ffi::c_int) as isize)
-                                    as *mut crate::src::ext::rtree::rtree::U8_0)
-                                    .offset(1_isize)
+                                .offset(1_isize)
+                                as ::core::ffi::c_int;
+                        if iOff < nHdr || iOff >= szPage {
+                            current_block = 13503832839001051727;
+                            break;
+                        }
+                        if isLeaf == 0 {
+                            (*pCell).iChildPg = crate::src::src::util::sqlite3Get4byte(
+                                aData.offset(iOff as isize)
+                                    as *mut crate::src::ext::rtree::rtree::U8_0,
+                            );
+                            iOff += 4 as ::core::ffi::c_int;
+                        }
+                        if (__p_ref.flags as ::core::ffi::c_int != 0x5 as ::core::ffi::c_int) {
+                            let mut nPayload: crate::src::ext::rtree::rtree::U32_0 = 0;
+                            
+                            iOff += (if (*aData.offset(iOff as isize) as ::core::ffi::c_int)
+                                < 0x80 as ::core::ffi::c_int
+                                    as crate::src::ext::rtree::rtree::U8_0
+                                    as ::core::ffi::c_int
+                            {
+                                nPayload = *aData.offset(iOff as isize)
+                                    as crate::src::ext::rtree::rtree::U32_0;
+                                1 as ::core::ffi::c_int
+                            } else {
+                                crate::src::src::util::sqlite3GetVarint32(
+                                    aData.offset(iOff as isize)
+                                        as *mut crate::src::ext::rtree::rtree::U8_0,
+                                    &raw mut nPayload,
+                                ) as ::core::ffi::c_int
+                            })
+                                as crate::src::ext::rtree::rtree::U8_0
+                                as ::core::ffi::c_int;
+                            if __p_ref.flags as ::core::ffi::c_int == 0xd as ::core::ffi::c_int
+                            {
+                                let mut dummy: crate::src::ext::rtree::rtree::U64_0 = 0;
+                                iOff += crate::src::src::util::sqlite3GetVarint(
+                                    aData.offset(iOff as isize)
+                                        as *mut crate::src::ext::rtree::rtree::U8_0,
+                                    &raw mut dummy,
+                                )
                                     as ::core::ffi::c_int;
-                            if iOff < nHdr || iOff >= szPage {
+                            }
+                            if nPayload
+                                > __p_ref.nMxPayload as crate::src::ext::rtree::rtree::U32_0
+                            {
+                                __p_ref.nMxPayload = nPayload as ::core::ffi::c_int;
+                            }
+                            let nLocal: ::core::ffi::c_int = getLocalPayload(
+                                nUsable,
+                                __p_ref.flags,
+                                nPayload as ::core::ffi::c_int,
+                            );
+                            if nLocal < 0 as ::core::ffi::c_int {
                                 current_block = 13503832839001051727;
                                 break;
                             }
-                            if isLeaf == 0 {
-                                (*pCell).iChildPg = crate::src::src::util::sqlite3Get4byte(
-                                    aData.offset(iOff as isize)
-                                        as *mut crate::src::ext::rtree::rtree::U8_0,
-                                );
-                                iOff += 4 as ::core::ffi::c_int;
-                            }
-                            if (__p_ref.flags as ::core::ffi::c_int != 0x5 as ::core::ffi::c_int) {
-                                let mut nPayload: crate::src::ext::rtree::rtree::U32_0 = 0;
-                                
-                                iOff += (if (*aData.offset(iOff as isize) as ::core::ffi::c_int)
-                                    < 0x80 as ::core::ffi::c_int
-                                        as crate::src::ext::rtree::rtree::U8_0
-                                        as ::core::ffi::c_int
-                                {
-                                    nPayload = *aData.offset(iOff as isize)
-                                        as crate::src::ext::rtree::rtree::U32_0;
-                                    1 as ::core::ffi::c_int
-                                } else {
-                                    crate::src::src::util::sqlite3GetVarint32(
-                                        aData.offset(iOff as isize)
-                                            as *mut crate::src::ext::rtree::rtree::U8_0,
-                                        &raw mut nPayload,
-                                    ) as ::core::ffi::c_int
-                                })
-                                    as crate::src::ext::rtree::rtree::U8_0
-                                    as ::core::ffi::c_int;
-                                if __p_ref.flags as ::core::ffi::c_int == 0xd as ::core::ffi::c_int
-                                {
-                                    let mut dummy: crate::src::ext::rtree::rtree::U64_0 = 0;
-                                    iOff += crate::src::src::util::sqlite3GetVarint(
-                                        aData.offset(iOff as isize)
-                                            as *mut crate::src::ext::rtree::rtree::U8_0,
-                                        &raw mut dummy,
+                            (*pCell).nLocal = nLocal;
+                            if nPayload > nLocal as crate::src::ext::rtree::rtree::U32_0 {
+                                let mut j: ::core::ffi::c_int;
+                                let nOvfl: ::core::ffi::c_int = nPayload
+                                    .wrapping_sub(
+                                        nLocal as crate::src::ext::rtree::rtree::U32_0,
                                     )
-                                        as ::core::ffi::c_int;
-                                }
-                                if nPayload
-                                    > __p_ref.nMxPayload as crate::src::ext::rtree::rtree::U32_0
+                                    .wrapping_add(
+                                        nUsable as crate::src::ext::rtree::rtree::U32_0,
+                                    )
+                                    .wrapping_sub(4 as crate::src::ext::rtree::rtree::U32_0)
+                                    .wrapping_sub(1 as crate::src::ext::rtree::rtree::U32_0)
+                                    .wrapping_div(
+                                        (nUsable - 4 as ::core::ffi::c_int)
+                                            as crate::src::ext::rtree::rtree::U32_0,
+                                    )
+                                    as ::core::ffi::c_int;
+                                if iOff + nLocal + 4 as ::core::ffi::c_int > nUsable
+                                    || nPayload
+                                        > 0x7fffffff as crate::src::ext::rtree::rtree::U32_0
                                 {
-                                    __p_ref.nMxPayload = nPayload as ::core::ffi::c_int;
-                                }
-                                let nLocal: ::core::ffi::c_int = getLocalPayload(
-                                    nUsable,
-                                    __p_ref.flags,
-                                    nPayload as ::core::ffi::c_int,
-                                );
-                                if nLocal < 0 as ::core::ffi::c_int {
                                     current_block = 13503832839001051727;
                                     break;
                                 }
-                                (*pCell).nLocal = nLocal;
-                                if nPayload > nLocal as crate::src::ext::rtree::rtree::U32_0 {
-                                    let mut j: ::core::ffi::c_int;
-                                    let nOvfl: ::core::ffi::c_int = nPayload
-                                        .wrapping_sub(
-                                            nLocal as crate::src::ext::rtree::rtree::U32_0,
-                                        )
-                                        .wrapping_add(
-                                            nUsable as crate::src::ext::rtree::rtree::U32_0,
-                                        )
-                                        .wrapping_sub(4 as crate::src::ext::rtree::rtree::U32_0)
-                                        .wrapping_sub(1 as crate::src::ext::rtree::rtree::U32_0)
-                                        .wrapping_div(
-                                            (nUsable - 4 as ::core::ffi::c_int)
-                                                as crate::src::ext::rtree::rtree::U32_0,
-                                        )
-                                        as ::core::ffi::c_int;
-                                    if iOff + nLocal + 4 as ::core::ffi::c_int > nUsable
-                                        || nPayload
-                                            > 0x7fffffff as crate::src::ext::rtree::rtree::U32_0
-                                    {
-                                        current_block = 13503832839001051727;
-                                        break;
+                                let __pCell_ref = { &mut *pCell };
+                                __pCell_ref.nLastOvfl = nPayload
+                                    .wrapping_sub(
+                                        nLocal as crate::src::ext::rtree::rtree::U32_0,
+                                    )
+                                    .wrapping_sub(
+                                        ((nOvfl - 1 as ::core::ffi::c_int)
+                                            * (nUsable - 4 as ::core::ffi::c_int))
+                                            as crate::src::ext::rtree::rtree::U32_0,
+                                    )
+                                    as ::core::ffi::c_int;
+                                __pCell_ref.nOvfl = nOvfl;
+                                __pCell_ref.aOvfl =
+                                    crate::src::src::malloc::sqlite3_malloc64(
+                                        (::core::mem::size_of::<
+                                            crate::src::ext::rtree::rtree::U32_0,
+                                        >()
+                                            as usize)
+                                            .wrapping_mul(nOvfl as usize)
+                                            as crate::src::headers::sqlite3_h::Sqlite3Uint64,
+                                    )
+                                        as *mut crate::src::ext::rtree::rtree::U32_0;
+                                if __pCell_ref.aOvfl.is_null() {
+                                    return crate::src::headers::sqliteInt_h::SQLITE_NOMEM_BKPT;
+                                }
+                                *__pCell_ref.aOvfl.offset(0_isize) =
+                                    crate::src::src::util::sqlite3Get4byte(
+                                        aData.offset((iOff + nLocal) as isize)
+                                            as *mut crate::src::ext::rtree::rtree::U8_0,
+                                    );
+                                j = 1 as ::core::ffi::c_int;
+                                while j < nOvfl {
+                                    
+                                    let iPrev: crate::src::ext::rtree::rtree::U32_0 =
+                                        *(*pCell)
+                                            .aOvfl
+                                            .offset((j - 1 as ::core::ffi::c_int) as isize);
+                                    let mut pPg: *mut crate::src::src::pager::DbPage =
+                                        ::core::ptr::null_mut::<crate::src::src::pager::DbPage>(
+                                        );
+                                    let rc: ::core::ffi::c_int = crate::src::src::pager::sqlite3PagerGet(
+                                        crate::src::src::btree::sqlite3BtreePager(pBt)
+                                            as *mut crate::src::src::pager::Pager,
+                                        iPrev as crate::src::src::pager::Pgno,
+                                        &raw mut pPg as *mut _
+                                            as *mut *mut crate::src::src::pcache::PgHdr,
+                                        0 as ::core::ffi::c_int,
+                                    );
+                                    if rc != crate::src::headers::sqlite3_h::SQLITE_OK {
+                                        return rc;
                                     }
-                                    let __pCell_ref = { &mut *pCell };
-                                    __pCell_ref.nLastOvfl = nPayload
-                                        .wrapping_sub(
-                                            nLocal as crate::src::ext::rtree::rtree::U32_0,
-                                        )
-                                        .wrapping_sub(
-                                            ((nOvfl - 1 as ::core::ffi::c_int)
-                                                * (nUsable - 4 as ::core::ffi::c_int))
-                                                as crate::src::ext::rtree::rtree::U32_0,
-                                        )
-                                        as ::core::ffi::c_int;
-                                    __pCell_ref.nOvfl = nOvfl;
-                                    __pCell_ref.aOvfl =
-                                        crate::src::src::malloc::sqlite3_malloc64(
-                                            (::core::mem::size_of::<
-                                                crate::src::ext::rtree::rtree::U32_0,
-                                            >()
-                                                as usize)
-                                                .wrapping_mul(nOvfl as usize)
-                                                as crate::src::headers::sqlite3_h::Sqlite3Uint64,
-                                        )
-                                            as *mut crate::src::ext::rtree::rtree::U32_0;
-                                    if __pCell_ref.aOvfl.is_null() {
-                                        return crate::src::headers::sqliteInt_h::SQLITE_NOMEM_BKPT;
-                                    }
-                                    *__pCell_ref.aOvfl.offset(0_isize) =
+                                    *__pCell_ref.aOvfl.offset(j as isize) =
                                         crate::src::src::util::sqlite3Get4byte(
-                                            aData.offset((iOff + nLocal) as isize)
-                                                as *mut crate::src::ext::rtree::rtree::U8_0,
+                                            crate::src::src::pager::sqlite3PagerGetData(
+                                                pPg as *mut crate::src::src::pcache::PgHdr,
+                                            )
+                                                as *const crate::src::ext::rtree::rtree::U8_0,
                                         );
-                                    j = 1 as ::core::ffi::c_int;
-                                    while j < nOvfl {
-                                        
-                                        let iPrev: crate::src::ext::rtree::rtree::U32_0 =
-                                            *(*pCell)
-                                                .aOvfl
-                                                .offset((j - 1 as ::core::ffi::c_int) as isize);
-                                        let mut pPg: *mut crate::src::src::pager::DbPage =
-                                            ::core::ptr::null_mut::<crate::src::src::pager::DbPage>(
-                                            );
-                                        let rc: ::core::ffi::c_int = crate::src::src::pager::sqlite3PagerGet(
-                                            crate::src::src::btree::sqlite3BtreePager(pBt)
-                                                as *mut crate::src::src::pager::Pager,
-                                            iPrev as crate::src::src::pager::Pgno,
-                                            &raw mut pPg as *mut _
-                                                as *mut *mut crate::src::src::pcache::PgHdr,
-                                            0 as ::core::ffi::c_int,
-                                        );
-                                        if rc != crate::src::headers::sqlite3_h::SQLITE_OK {
-                                            return rc;
-                                        }
-                                        *__pCell_ref.aOvfl.offset(j as isize) =
-                                            crate::src::src::util::sqlite3Get4byte(
-                                                crate::src::src::pager::sqlite3PagerGetData(
-                                                    pPg as *mut crate::src::src::pcache::PgHdr,
-                                                )
-                                                    as *const crate::src::ext::rtree::rtree::U8_0,
-                                            );
-                                        crate::src::src::pager::sqlite3PagerUnref(
-                                            pPg as *mut crate::src::src::pcache::PgHdr,
-                                        );
-                                        j += 1;
-                                    }
+                                    crate::src::src::pager::sqlite3PagerUnref(
+                                        pPg as *mut crate::src::src::pcache::PgHdr,
+                                    );
+                                    j += 1;
                                 }
                             }
-                            i += 1;
                         }
-                    } else {
-                        current_block = 5597585068398118923;
+                        i += 1;
                     }
-                    match current_block {
-                        13503832839001051727 => {}
-                        _ => return crate::src::headers::sqlite3_h::SQLITE_OK,
-                    }
+                } else {
+                    current_block = 5597585068398118923;
+                }
+                match current_block {
+                    13503832839001051727 => {}
+                    _ => return crate::src::headers::sqlite3_h::SQLITE_OK,
                 }
             }
         }
-        _ => {}
     }
     __p_ref.flags = 0 as crate::src::ext::rtree::rtree::U8_0;
     statClearCells(p);

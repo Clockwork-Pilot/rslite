@@ -2089,11 +2089,9 @@ pub unsafe extern "C" fn sqlite3LogEstToInt(
         return crate::fts3Int_h::LARGEST_INT64 as crate::src::ext::rtree::rtree::U64_0;
     }
     if x as ::core::ffi::c_int >= 3 as ::core::ffi::c_int {
-        n.wrapping_add(8 as crate::src::ext::rtree::rtree::U64_0)
-            << x as ::core::ffi::c_int - 3 as ::core::ffi::c_int
+        n.wrapping_add(8 as crate::src::ext::rtree::rtree::U64_0) << (x as ::core::ffi::c_int - 3 as ::core::ffi::c_int)
     } else {
-        n.wrapping_add(8 as crate::src::ext::rtree::rtree::U64_0)
-            >> 3 as ::core::ffi::c_int - x as ::core::ffi::c_int
+        n.wrapping_add(8 as crate::src::ext::rtree::rtree::U64_0) >> (3 as ::core::ffi::c_int - x as ::core::ffi::c_int)
     }
 }
 #[cfg_attr(feature = "test", unsafe(no_mangle))]

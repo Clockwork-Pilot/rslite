@@ -113,8 +113,7 @@ pub const ALLBITS: crate::src::headers::sqliteInt_h::Bitmask =
     -(1 as ::core::ffi::c_int) as crate::src::headers::sqliteInt_h::Bitmask;
 
 pub const TOPBIT: crate::src::headers::sqliteInt_h::Bitmask = (1 as ::core::ffi::c_int
-    as crate::src::headers::sqliteInt_h::Bitmask)
-    << crate::src::headers::sqliteInt_h::BMS - 1 as ::core::ffi::c_int;
+    as crate::src::headers::sqliteInt_h::Bitmask) << (crate::src::headers::sqliteInt_h::BMS - 1 as ::core::ffi::c_int);
 
 pub type VList = ::core::ffi::c_int;
 

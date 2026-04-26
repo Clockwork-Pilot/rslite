@@ -842,43 +842,40 @@ unsafe extern "C" fn fts3PendingListAppend(
     } else {
         current_block = 3640593987805443782;
     }
-    match current_block {
-        3640593987805443782 => {
-            if iCol > 0 as crate::src::headers::sqlite3_h::Sqlite3Int64 && (*p).iLastCol != iCol {
-                rc = fts3PendingListAppendVarint(
-                    &raw mut p,
-                    1 as crate::src::headers::sqlite3_h::Sqlite3Int64,
-                );
-                if crate::src::headers::sqlite3_h::SQLITE_OK != rc || {
-                    rc = fts3PendingListAppendVarint(&raw mut p, iCol);
-                    crate::src::headers::sqlite3_h::SQLITE_OK != rc
-                } {
-                    current_block = 17264066162094073856;
-                } else {
-                    (*p).iLastCol = iCol;
-                    (*p).iLastPos = 0 as crate::src::headers::sqlite3_h::Sqlite3Int64;
-                    current_block = 4166486009154926805;
-                }
+    if current_block == 3640593987805443782 {
+        if iCol > 0 as crate::src::headers::sqlite3_h::Sqlite3Int64 && (*p).iLastCol != iCol {
+            rc = fts3PendingListAppendVarint(
+                &raw mut p,
+                1 as crate::src::headers::sqlite3_h::Sqlite3Int64,
+            );
+            if crate::src::headers::sqlite3_h::SQLITE_OK != rc || {
+                rc = fts3PendingListAppendVarint(&raw mut p, iCol);
+                crate::src::headers::sqlite3_h::SQLITE_OK != rc
+            } {
+                current_block = 17264066162094073856;
             } else {
+                (*p).iLastCol = iCol;
+                (*p).iLastPos = 0 as crate::src::headers::sqlite3_h::Sqlite3Int64;
                 current_block = 4166486009154926805;
             }
-            match current_block {
-                17264066162094073856 => {}
-                _ => {
-                    if iCol >= 0 as crate::src::headers::sqlite3_h::Sqlite3Int64 {
-                        rc = fts3PendingListAppendVarint(
-                            &raw mut p,
-                            2 as crate::src::headers::sqlite3_h::Sqlite3Int64 + iPos
-                                - (*p).iLastPos,
-                        );
-                        if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
-                            (*p).iLastPos = iPos;
-                        }
+        } else {
+            current_block = 4166486009154926805;
+        }
+        match current_block {
+            17264066162094073856 => {}
+            _ => {
+                if iCol >= 0 as crate::src::headers::sqlite3_h::Sqlite3Int64 {
+                    rc = fts3PendingListAppendVarint(
+                        &raw mut p,
+                        2 as crate::src::headers::sqlite3_h::Sqlite3Int64 + iPos
+                            - (*p).iLastPos,
+                    );
+                    if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
+                        (*p).iLastPos = iPos;
                     }
                 }
             }
         }
-        _ => {}
     }
     *pRc = rc;
     if p != *pp {
@@ -921,8 +918,7 @@ unsafe extern "C" fn fts3PendingTermsAddOne(
         iPos as crate::src::headers::sqlite3_h::Sqlite3Int64,
         &raw mut rc,
     ) != 0
-    {
-        if pList
+        && pList
             == crate::src::ext::fts3::fts3_hash::sqlite3Fts3HashInsert(
                 pHash as *mut crate::src::ext::fts3::fts3_hash::Fts3Hash,
                 zToken as *const ::core::ffi::c_void,
@@ -933,7 +929,6 @@ unsafe extern "C" fn fts3PendingTermsAddOne(
             crate::src::src::malloc::sqlite3_free(pList as *mut ::core::ffi::c_void);
             rc = crate::src::headers::sqlite3_h::SQLITE_NOMEM;
         }
-    }
     if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
         (*p).nPendingData = ((*p).nPendingData as ::core::ffi::c_ulong).wrapping_add(
             (((*pList).nData + nToken) as usize).wrapping_add(::core::mem::size_of::<
@@ -4010,10 +4005,10 @@ unsafe extern "C" fn fts3SegmentMerge(
                                     _ => {
                                         if !pWriter.is_null() {
                                             rc = fts3SegWriterFlush(p, pWriter, iNewLevel, iIdx);
-                                            if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
-                                                if iLevel
+                                            if rc == crate::src::headers::sqlite3_h::SQLITE_OK
+                                                && (iLevel
                                                     == crate::fts3Int_h::FTS3_SEGCURSOR_PENDING
-                                                    || iNewLevel < iMaxLevel
+                                                    || iNewLevel < iMaxLevel)
                                                 {
                                                     rc = fts3PromoteSegments(
                                                         p,
@@ -4021,7 +4016,6 @@ unsafe extern "C" fn fts3SegmentMerge(
                                                         (*pWriter).nLeafData as crate::src::headers::sqlite3_h::Sqlite3Int64,
                                                     );
                                                 }
-                                            }
                                         }
                                     }
                                 }
@@ -5629,21 +5623,18 @@ unsafe extern "C" fn fts3TruncateNode(
         } else {
             current_block_10 = 12209867499936983673;
         }
-        match current_block_10 {
-            12209867499936983673 => {
-                rc = fts3AppendToNode(
-                    pNew,
-                    &raw mut prev,
-                    reader.term.a,
-                    reader.term.n,
-                    reader.aDoclist,
-                    reader.nDoclist,
-                );
-                if rc != crate::src::headers::sqlite3_h::SQLITE_OK {
-                    break;
-                }
+        if current_block_10 == 12209867499936983673 {
+            rc = fts3AppendToNode(
+                pNew,
+                &raw mut prev,
+                reader.term.a,
+                reader.term.n,
+                reader.aDoclist,
+                reader.nDoclist,
+            );
+            if rc != crate::src::headers::sqlite3_h::SQLITE_OK {
+                break;
             }
-            _ => {}
         }
         rc = nodeReaderNext(&raw mut reader);
     }

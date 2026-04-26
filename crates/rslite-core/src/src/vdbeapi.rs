@@ -762,15 +762,14 @@ unsafe extern "C" fn invokeValueDestructor(
     xDel: Option<unsafe extern "C" fn(*mut ::core::ffi::c_void) -> ()>,
     pCtx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
 ) -> ::core::ffi::c_int {
-    if xDel.is_some() {
-        if (xDel != ::core::mem::transmute::<
+    if xDel.is_some()
+        && (xDel != ::core::mem::transmute::<
                 crate::src::headers::stdlib::IntptrT,
                 crate::src::headers::sqlite3_h::Sqlite3DestructorType,
             >(-(1 as ::core::ffi::c_int) as crate::src::headers::stdlib::IntptrT))
         {
             xDel.expect("non-null function pointer")(p as *mut ::core::ffi::c_void);
         }
-    }
     sqlite3_result_error_toobig(pCtx);
     crate::src::headers::sqlite3_h::SQLITE_TOOBIG
 }
@@ -1267,62 +1266,59 @@ unsafe extern "C" fn sqlite3Step(
     } else {
         current_block = 2719512138335094285;
     }
-    match current_block {
-        2719512138335094285 => {
-            let __p_ref = unsafe { &mut *p };
-            if __p_ref.explain() != 0 {
-                rc = crate::src::src::vdbeaux::sqlite3VdbeList(
-                    p as *mut crate::src::headers::vdbeInt_h::Vdbe,
-                );
-            } else {
-                (*db).nVdbeExec += 1;
-                rc = crate::src::src::vdbe::sqlite3VdbeExec(
-                    p as *mut crate::src::headers::vdbeInt_h::Vdbe,
-                );
-                (*db).nVdbeExec -= 1;
+    if current_block == 2719512138335094285 {
+        let __p_ref = unsafe { &mut *p };
+        if __p_ref.explain() != 0 {
+            rc = crate::src::src::vdbeaux::sqlite3VdbeList(
+                p as *mut crate::src::headers::vdbeInt_h::Vdbe,
+            );
+        } else {
+            (*db).nVdbeExec += 1;
+            rc = crate::src::src::vdbe::sqlite3VdbeExec(
+                p as *mut crate::src::headers::vdbeInt_h::Vdbe,
+            );
+            (*db).nVdbeExec -= 1;
+        }
+        if rc == crate::src::headers::sqlite3_h::SQLITE_ROW {
+            (*db).errCode = crate::src::headers::sqlite3_h::SQLITE_ROW;
+            return crate::src::headers::sqlite3_h::SQLITE_ROW;
+        } else {
+            if __p_ref.startTime > 0 as crate::src::ext::rtree::rtree::I64_0 {
+                invokeProfileCallback(db, p);
             }
-            if rc == crate::src::headers::sqlite3_h::SQLITE_ROW {
-                (*db).errCode = crate::src::headers::sqlite3_h::SQLITE_ROW;
-                return crate::src::headers::sqlite3_h::SQLITE_ROW;
-            } else {
-                if __p_ref.startTime > 0 as crate::src::ext::rtree::rtree::I64_0 {
-                    invokeProfileCallback(db, p);
-                }
-                __p_ref.pResultRow = ::core::ptr::null_mut::<crate::src::src::vdbe::Mem>();
-                if rc == crate::src::headers::sqlite3_h::SQLITE_DONE
-                    && (*db).autoCommit as ::core::ffi::c_int != 0
-                {
-                    __p_ref.rc = doWalCallbacks(db);
-                    if __p_ref.rc != crate::src::headers::sqlite3_h::SQLITE_OK {
-                        rc = crate::src::headers::sqlite3_h::SQLITE_ERROR;
-                    }
-                } else if rc != crate::src::headers::sqlite3_h::SQLITE_DONE
-                    && __p_ref.prepFlags as ::core::ffi::c_int
-                        & crate::src::src::vdbe::SQLITE_PREPARE_SAVESQL
-                        != 0 as ::core::ffi::c_int
-                {
-                    rc = crate::src::src::vdbeaux::sqlite3VdbeTransferError(
-                        p as *mut crate::src::headers::vdbeInt_h::Vdbe,
-                    );
-                }
-            }
-            (*db).errCode = rc;
-            if crate::src::headers::sqlite3_h::SQLITE_NOMEM
-                == crate::src::src::malloc::sqlite3ApiExit(
-                    __p_ref.db as *mut crate::src::headers::sqliteInt_h::sqlite3,
-                    __p_ref.rc,
-                )
+            __p_ref.pResultRow = ::core::ptr::null_mut::<crate::src::src::vdbe::Mem>();
+            if rc == crate::src::headers::sqlite3_h::SQLITE_DONE
+                && (*db).autoCommit as ::core::ffi::c_int != 0
             {
-                __p_ref.rc = crate::src::headers::sqliteInt_h::SQLITE_NOMEM_BKPT;
-                if __p_ref.prepFlags as ::core::ffi::c_int
+                __p_ref.rc = doWalCallbacks(db);
+                if __p_ref.rc != crate::src::headers::sqlite3_h::SQLITE_OK {
+                    rc = crate::src::headers::sqlite3_h::SQLITE_ERROR;
+                }
+            } else if rc != crate::src::headers::sqlite3_h::SQLITE_DONE
+                && __p_ref.prepFlags as ::core::ffi::c_int
                     & crate::src::src::vdbe::SQLITE_PREPARE_SAVESQL
                     != 0 as ::core::ffi::c_int
-                {
-                    rc = __p_ref.rc;
-                }
+            {
+                rc = crate::src::src::vdbeaux::sqlite3VdbeTransferError(
+                    p as *mut crate::src::headers::vdbeInt_h::Vdbe,
+                );
             }
         }
-        _ => {}
+        (*db).errCode = rc;
+        if crate::src::headers::sqlite3_h::SQLITE_NOMEM
+            == crate::src::src::malloc::sqlite3ApiExit(
+                __p_ref.db as *mut crate::src::headers::sqliteInt_h::sqlite3,
+                __p_ref.rc,
+            )
+        {
+            __p_ref.rc = crate::src::headers::sqliteInt_h::SQLITE_NOMEM_BKPT;
+            if __p_ref.prepFlags as ::core::ffi::c_int
+                & crate::src::src::vdbe::SQLITE_PREPARE_SAVESQL
+                != 0 as ::core::ffi::c_int
+            {
+                rc = __p_ref.rc;
+            }
+        }
     }
     rc & (*db).errMask
 }
@@ -2598,11 +2594,11 @@ pub unsafe extern "C" fn sqlite3_stmt_explain(
     crate::src::src::mutex::sqlite3_mutex_enter((*__v_ref.db).mutex);
     if __v_ref.explain() as ::core::ffi::c_int == eMode {
         rc = crate::src::headers::sqlite3_h::SQLITE_OK;
-    } else if eMode < 0 as ::core::ffi::c_int || eMode > 2 as ::core::ffi::c_int {
-        rc = crate::src::headers::sqlite3_h::SQLITE_ERROR;
-    } else if __v_ref.prepFlags as ::core::ffi::c_int
-        & crate::src::src::vdbe::SQLITE_PREPARE_SAVESQL
-        == 0 as ::core::ffi::c_int
+    } else if eMode < 0 as ::core::ffi::c_int
+        || eMode > 2 as ::core::ffi::c_int
+        || __v_ref.prepFlags as ::core::ffi::c_int
+            & crate::src::src::vdbe::SQLITE_PREPARE_SAVESQL
+            == 0 as ::core::ffi::c_int
     {
         rc = crate::src::headers::sqlite3_h::SQLITE_ERROR;
     } else if __v_ref.eVdbeState as ::core::ffi::c_int
@@ -2920,8 +2916,7 @@ pub unsafe extern "C" fn sqlite3_preupdate_old(
                             } else if (*(*__p_ref.pTab).aCol.offset(iIdx as isize)).affinity
                                 as ::core::ffi::c_int
                                 == crate::src::headers::sqliteInt_h::SQLITE_AFF_REAL
-                            {
-                                if (*pMem).flags as ::core::ffi::c_int
+                                && (*pMem).flags as ::core::ffi::c_int
                                     & (crate::src::headers::vdbeInt_h::MEM_Int
                                         | crate::src::headers::vdbeInt_h::MEM_IntReal)
                                     != 0
@@ -2930,7 +2925,6 @@ pub unsafe extern "C" fn sqlite3_preupdate_old(
                                         pMem as *mut crate::src::headers::vdbeInt_h::sqlite3_value,
                                     );
                                 }
-                            }
                         }
                     }
                 }

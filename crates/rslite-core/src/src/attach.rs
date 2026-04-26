@@ -443,137 +443,134 @@ unsafe extern "C" fn attachFunc(
             }
         }
     }
-    match current_block {
-        10380409671385728102 => {
-            __db_ref.noSharedCache = 0 as crate::src::ext::rtree::rtree::U8_0;
-            if rc == crate::src::headers::sqlite3_h::SQLITE_CONSTRAINT {
-                rc = crate::src::headers::sqlite3_h::SQLITE_ERROR;
+    if current_block == 10380409671385728102 {
+        __db_ref.noSharedCache = 0 as crate::src::ext::rtree::rtree::U8_0;
+        if rc == crate::src::headers::sqlite3_h::SQLITE_CONSTRAINT {
+            rc = crate::src::headers::sqlite3_h::SQLITE_ERROR;
+            zErrDyn = crate::src::src::printf::sqlite3MPrintf_args(
+                db as *mut crate::src::headers::sqliteInt_h::sqlite3,
+                b"database is already attached\0" as *const u8 as *const ::core::ffi::c_char,
+                &[],
+            );
+        } else if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
+            
+            let __pNew_ref = { &mut *pNew };
+            __pNew_ref.pSchema = crate::src::src::callback::sqlite3SchemaGet(
+                db as *mut crate::src::headers::sqliteInt_h::sqlite3,
+                __pNew_ref.pBt,
+            )
+                as *mut crate::src::headers::sqliteInt_h::Schema;
+            if __pNew_ref.pSchema.is_null() {
+                rc = crate::src::headers::sqliteInt_h::SQLITE_NOMEM_BKPT;
+            } else if (*__pNew_ref.pSchema).file_format as ::core::ffi::c_int != 0
+                && (*__pNew_ref.pSchema).enc as ::core::ffi::c_int
+                    != __db_ref.enc as ::core::ffi::c_int
+            {
                 zErrDyn = crate::src::src::printf::sqlite3MPrintf_args(
                     db as *mut crate::src::headers::sqliteInt_h::sqlite3,
-                    b"database is already attached\0" as *const u8 as *const ::core::ffi::c_char,
+                    b"attached databases must use the same text encoding as main database\0"
+                        as *const u8 as *const ::core::ffi::c_char,
                     &[],
                 );
-            } else if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
-                
-                let __pNew_ref = { &mut *pNew };
-                __pNew_ref.pSchema = crate::src::src::callback::sqlite3SchemaGet(
+                rc = crate::src::headers::sqlite3_h::SQLITE_ERROR;
+            }
+            crate::src::src::btmutex::sqlite3BtreeEnter(__pNew_ref.pBt);
+            let pPager: *mut crate::src::src::pager::Pager = crate::src::src::btree::sqlite3BtreePager(__pNew_ref.pBt)
+                as *mut crate::src::src::pager::Pager;
+            crate::src::src::pager::sqlite3PagerLockingMode(
+                pPager,
+                __db_ref.dfltLockMode as ::core::ffi::c_int,
+            );
+            crate::src::src::btree::sqlite3BtreeSecureDelete(
+                __pNew_ref.pBt,
+                crate::src::src::btree::sqlite3BtreeSecureDelete(
+                    (*__db_ref.aDb.offset(0_isize)).pBt,
+                    -(1 as ::core::ffi::c_int),
+                ),
+            );
+            crate::src::src::btree::sqlite3BtreeSetPagerFlags(
+                __pNew_ref.pBt,
+                (crate::src::src::pager::PAGER_SYNCHRONOUS_FULL
+                    as crate::src::ext::rtree::rtree::U64_0
+                    | __db_ref.flags
+                        & crate::src::src::pager::PAGER_FLAGS_MASK
+                            as crate::src::ext::rtree::rtree::U64_0)
+                    as ::core::ffi::c_uint,
+            );
+            crate::src::src::btmutex::sqlite3BtreeLeave(__pNew_ref.pBt);
+        }
+        (*pNew).safety_level = (crate::src::headers::sqliteInt_h::SQLITE_DEFAULT_SYNCHRONOUS
+            + 1 as ::core::ffi::c_int)
+            as crate::src::ext::rtree::rtree::U8_0;
+        if rc == crate::src::headers::sqlite3_h::SQLITE_OK && (*pNew).zDbSName.is_null() {
+            rc = crate::src::headers::sqliteInt_h::SQLITE_NOMEM_BKPT;
+        }
+        crate::src::src::main::sqlite3_free_filename(
+            zPath as crate::src::headers::sqlite3_h::Sqlite3Filename,
+        );
+        if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
+            crate::src::src::btmutex::sqlite3BtreeEnterAll(
+                db as *mut crate::src::headers::sqliteInt_h::sqlite3,
+            );
+            __db_ref.init.iDb = 0 as crate::src::ext::rtree::rtree::U8_0;
+            __db_ref.mDbFlags &=
+                !(0x10 as ::core::ffi::c_int) as crate::src::ext::rtree::rtree::U32_0;
+            if __db_ref.init.reopenMemdb() == 0 {
+                rc = crate::src::src::prepare::sqlite3Init(
                     db as *mut crate::src::headers::sqliteInt_h::sqlite3,
-                    __pNew_ref.pBt,
-                )
-                    as *mut crate::src::headers::sqliteInt_h::Schema;
-                if __pNew_ref.pSchema.is_null() {
-                    rc = crate::src::headers::sqliteInt_h::SQLITE_NOMEM_BKPT;
-                } else if (*__pNew_ref.pSchema).file_format as ::core::ffi::c_int != 0
-                    && (*__pNew_ref.pSchema).enc as ::core::ffi::c_int
-                        != __db_ref.enc as ::core::ffi::c_int
+                    &raw mut zErrDyn,
+                );
+            }
+            crate::src::src::btmutex::sqlite3BtreeLeaveAll(
+                db as *mut crate::src::headers::sqliteInt_h::sqlite3,
+            );
+        }
+        if rc != 0 {
+            if __db_ref.init.reopenMemdb() == 0 {
+                let iDb: ::core::ffi::c_int = __db_ref.nDb - 1 as ::core::ffi::c_int;
+                if !(*__db_ref.aDb.offset(iDb as isize)).pBt.is_null() {
+                    crate::src::src::btree::sqlite3BtreeClose(
+                        (*__db_ref.aDb.offset(iDb as isize)).pBt,
+                    );
+                    let fresh0 = &mut (*__db_ref.aDb.offset(iDb as isize)).pBt;
+                    *fresh0 = ::core::ptr::null_mut::<crate::src::headers::btreeInt_h::Btree>();
+                    let fresh1 = &mut (*__db_ref.aDb.offset(iDb as isize)).pSchema;
+                    *fresh1 =
+                        ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::Schema>();
+                }
+                crate::src::src::build::sqlite3ResetAllSchemasOfConnection(
+                    db as *mut crate::src::headers::sqliteInt_h::sqlite3,
+                );
+                __db_ref.nDb = iDb;
+                if rc == crate::src::headers::sqlite3_h::SQLITE_NOMEM
+                    || rc == crate::src::headers::sqlite3_h::SQLITE_IOERR_NOMEM
                 {
+                    crate::src::src::malloc::sqlite3OomFault(
+                        db as *mut crate::src::headers::sqliteInt_h::sqlite3,
+                    );
+                    crate::src::src::malloc::sqlite3DbFree(
+                        db as *mut crate::src::headers::sqliteInt_h::sqlite3,
+                        zErrDyn as *mut ::core::ffi::c_void,
+                    );
                     zErrDyn = crate::src::src::printf::sqlite3MPrintf_args(
                         db as *mut crate::src::headers::sqliteInt_h::sqlite3,
-                        b"attached databases must use the same text encoding as main database\0"
-                            as *const u8 as *const ::core::ffi::c_char,
+                        b"out of memory\0" as *const u8 as *const ::core::ffi::c_char,
                         &[],
                     );
-                    rc = crate::src::headers::sqlite3_h::SQLITE_ERROR;
-                }
-                crate::src::src::btmutex::sqlite3BtreeEnter(__pNew_ref.pBt);
-                let pPager: *mut crate::src::src::pager::Pager = crate::src::src::btree::sqlite3BtreePager(__pNew_ref.pBt)
-                    as *mut crate::src::src::pager::Pager;
-                crate::src::src::pager::sqlite3PagerLockingMode(
-                    pPager,
-                    __db_ref.dfltLockMode as ::core::ffi::c_int,
-                );
-                crate::src::src::btree::sqlite3BtreeSecureDelete(
-                    __pNew_ref.pBt,
-                    crate::src::src::btree::sqlite3BtreeSecureDelete(
-                        (*__db_ref.aDb.offset(0_isize)).pBt,
-                        -(1 as ::core::ffi::c_int),
-                    ),
-                );
-                crate::src::src::btree::sqlite3BtreeSetPagerFlags(
-                    __pNew_ref.pBt,
-                    (crate::src::src::pager::PAGER_SYNCHRONOUS_FULL
-                        as crate::src::ext::rtree::rtree::U64_0
-                        | __db_ref.flags
-                            & crate::src::src::pager::PAGER_FLAGS_MASK
-                                as crate::src::ext::rtree::rtree::U64_0)
-                        as ::core::ffi::c_uint,
-                );
-                crate::src::src::btmutex::sqlite3BtreeLeave(__pNew_ref.pBt);
-            }
-            (*pNew).safety_level = (crate::src::headers::sqliteInt_h::SQLITE_DEFAULT_SYNCHRONOUS
-                + 1 as ::core::ffi::c_int)
-                as crate::src::ext::rtree::rtree::U8_0;
-            if rc == crate::src::headers::sqlite3_h::SQLITE_OK && (*pNew).zDbSName.is_null() {
-                rc = crate::src::headers::sqliteInt_h::SQLITE_NOMEM_BKPT;
-            }
-            crate::src::src::main::sqlite3_free_filename(
-                zPath as crate::src::headers::sqlite3_h::Sqlite3Filename,
-            );
-            if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
-                crate::src::src::btmutex::sqlite3BtreeEnterAll(
-                    db as *mut crate::src::headers::sqliteInt_h::sqlite3,
-                );
-                __db_ref.init.iDb = 0 as crate::src::ext::rtree::rtree::U8_0;
-                __db_ref.mDbFlags &=
-                    !(0x10 as ::core::ffi::c_int) as crate::src::ext::rtree::rtree::U32_0;
-                if __db_ref.init.reopenMemdb() == 0 {
-                    rc = crate::src::src::prepare::sqlite3Init(
+                } else if zErrDyn.is_null() {
+                    zErrDyn = crate::src::src::printf::sqlite3MPrintf_args(
                         db as *mut crate::src::headers::sqliteInt_h::sqlite3,
-                        &raw mut zErrDyn,
+                        b"unable to open database: %s\0" as *const u8
+                            as *const ::core::ffi::c_char,
+                        &[crate::src::src::printf::PrintfArg::Str(
+                            zFile as *mut ::core::ffi::c_char,
+                        )],
                     );
                 }
-                crate::src::src::btmutex::sqlite3BtreeLeaveAll(
-                    db as *mut crate::src::headers::sqliteInt_h::sqlite3,
-                );
             }
-            if rc != 0 {
-                if __db_ref.init.reopenMemdb() == 0 {
-                    let iDb: ::core::ffi::c_int = __db_ref.nDb - 1 as ::core::ffi::c_int;
-                    if !(*__db_ref.aDb.offset(iDb as isize)).pBt.is_null() {
-                        crate::src::src::btree::sqlite3BtreeClose(
-                            (*__db_ref.aDb.offset(iDb as isize)).pBt,
-                        );
-                        let fresh0 = &mut (*__db_ref.aDb.offset(iDb as isize)).pBt;
-                        *fresh0 = ::core::ptr::null_mut::<crate::src::headers::btreeInt_h::Btree>();
-                        let fresh1 = &mut (*__db_ref.aDb.offset(iDb as isize)).pSchema;
-                        *fresh1 =
-                            ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::Schema>();
-                    }
-                    crate::src::src::build::sqlite3ResetAllSchemasOfConnection(
-                        db as *mut crate::src::headers::sqliteInt_h::sqlite3,
-                    );
-                    __db_ref.nDb = iDb;
-                    if rc == crate::src::headers::sqlite3_h::SQLITE_NOMEM
-                        || rc == crate::src::headers::sqlite3_h::SQLITE_IOERR_NOMEM
-                    {
-                        crate::src::src::malloc::sqlite3OomFault(
-                            db as *mut crate::src::headers::sqliteInt_h::sqlite3,
-                        );
-                        crate::src::src::malloc::sqlite3DbFree(
-                            db as *mut crate::src::headers::sqliteInt_h::sqlite3,
-                            zErrDyn as *mut ::core::ffi::c_void,
-                        );
-                        zErrDyn = crate::src::src::printf::sqlite3MPrintf_args(
-                            db as *mut crate::src::headers::sqliteInt_h::sqlite3,
-                            b"out of memory\0" as *const u8 as *const ::core::ffi::c_char,
-                            &[],
-                        );
-                    } else if zErrDyn.is_null() {
-                        zErrDyn = crate::src::src::printf::sqlite3MPrintf_args(
-                            db as *mut crate::src::headers::sqliteInt_h::sqlite3,
-                            b"unable to open database: %s\0" as *const u8
-                                as *const ::core::ffi::c_char,
-                            &[crate::src::src::printf::PrintfArg::Str(
-                                zFile as *mut ::core::ffi::c_char,
-                            )],
-                        );
-                    }
-                }
-            } else {
-                return;
-            }
+        } else {
+            return;
         }
-        _ => {}
     }
     if !zErrDyn.is_null() {
         crate::src::src::vdbeapi::sqlite3_result_error(
@@ -613,11 +610,10 @@ unsafe extern "C" fn detachFunc(
     i = 0 as ::core::ffi::c_int;
     while i < (*db).nDb {
         pDb = (*db).aDb.offset(i as isize) as *mut crate::src::headers::sqliteInt_h::Db;
-        if !(*pDb).pBt.is_null() {
-            if sqlite3DbIsNamed(db, i, zName) != 0 {
+        if !(*pDb).pBt.is_null()
+            && sqlite3DbIsNamed(db, i, zName) != 0 {
                 break;
             }
-        }
         i += 1;
     }
     if i >= (*db).nDb {
@@ -688,8 +684,7 @@ unsafe extern "C" fn codeAttach(
     if (crate::src::headers::sqlite3_h::SQLITE_OK == crate::src::src::prepare::sqlite3ReadSchema(
             pParse as *mut crate::src::headers::sqliteInt_h::Parse,
         ))
-    {
-        if ((*pParse).nErr == 0) {
+        && ((*pParse).nErr == 0) {
             sName.pParse = pParse;
             if !(crate::src::headers::sqlite3_h::SQLITE_OK
                 != resolveAttachExpr(&raw mut sName, pFilename)
@@ -767,7 +762,6 @@ unsafe extern "C" fn codeAttach(
                 }
             }
         }
-    }
     crate::src::src::expr::sqlite3ExprDelete(
         db as *mut crate::src::headers::sqliteInt_h::sqlite3,
         pFilename as *mut crate::src::headers::sqliteInt_h::Expr,

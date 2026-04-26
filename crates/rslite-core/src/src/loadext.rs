@@ -2553,8 +2553,8 @@ unsafe extern "C" fn sqlite3LoadExtension(
     } else {
         b"sqlite3_extension_init\0" as *const u8 as *const ::core::ffi::c_char
     };
-    if (nMsg <= crate::src::src::os::SQLITE_MAX_PATHLEN as crate::src::ext::rtree::rtree::U64_0) {
-        if (nMsg != 0 as crate::src::ext::rtree::rtree::U64_0) {
+    if (nMsg <= crate::src::src::os::SQLITE_MAX_PATHLEN as crate::src::ext::rtree::rtree::U64_0)
+        && (nMsg != 0 as crate::src::ext::rtree::rtree::U64_0) {
             handle = crate::src::src::os::sqlite3OsDlOpen(
                 pVfs as *mut crate::src::headers::sqlite3_h::sqlite3_vfs,
                 zFile,
@@ -2784,7 +2784,6 @@ unsafe extern "C" fn sqlite3LoadExtension(
                 return crate::src::headers::sqlite3_h::SQLITE_OK;
             }
         }
-    }
     if !pzErrMsg.is_null() {
         nMsg = nMsg.wrapping_add(300 as crate::src::ext::rtree::rtree::U64_0);
         zErrmsg = crate::src::src::malloc::sqlite3_malloc64(

@@ -768,16 +768,15 @@ pub unsafe extern "C" fn sqlite3WhereExplainOneScan(
     wctrlFlags: crate::src::fts5::U16_0,
 ) -> ::core::ffi::c_int {
     let mut ret: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
-    if (*(if !(*pParse).pToplevel.is_null() {
+    if ((*(if !(*pParse).pToplevel.is_null() {
         (*pParse).pToplevel
     } else {
         pParse
     }))
     .explain as ::core::ffi::c_int
         == 2 as ::core::ffi::c_int
-        || 0 as ::core::ffi::c_int != 0
-    {
-        if (*(*pLevel).pWLoop).wsFlags
+        || 0 as ::core::ffi::c_int != 0)
+        && (*(*pLevel).pWLoop).wsFlags
             & crate::src::headers::whereInt_h::WHERE_MULTI_OR
                 as crate::src::ext::rtree::rtree::U32_0
             == 0 as crate::src::ext::rtree::rtree::U32_0
@@ -796,7 +795,6 @@ pub unsafe extern "C" fn sqlite3WhereExplainOneScan(
             );
             sqlite3WhereAddExplainText(pParse, addr, pTabList, pLevel, wctrlFlags);
         }
-    }
     ret
 }
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
@@ -1535,12 +1533,10 @@ unsafe extern "C" fn codeAllEqualityTerms(
                 & crate::src::headers::sqliteInt_h::EP_xIsSelect
                     as crate::src::ext::rtree::rtree::U32_0
                 != 0
-            {
-                if !zAff.is_null() {
+                && !zAff.is_null() {
                     *zAff.offset(j as isize) =
                         crate::src::headers::sqliteInt_h::SQLITE_AFF_BLOB as ::core::ffi::c_char;
                 }
-            }
         } else if (*pTerm).eOperator as ::core::ffi::c_int
             & crate::src::headers::whereInt_h::WO_ISNULL
             == 0 as ::core::ffi::c_int
@@ -2272,10 +2268,9 @@ pub unsafe extern "C" fn sqlite3WhereCodeOneLoopStart(
                 );
                 r1 = rTemp;
                 codeExprOrVector(pParse, (*pX).pRight, r1, 1 as ::core::ffi::c_int);
-                op = aMoveOp[((*pX).op as ::core::ffi::c_int
+                op = aMoveOp[(((*pX).op as ::core::ffi::c_int
                     - crate::src::parse::TK_GT_1
-                    - 1 as ::core::ffi::c_int
-                    & 0x3 as ::core::ffi::c_int
+                    - 1 as ::core::ffi::c_int) & 0x3 as ::core::ffi::c_int
                     | 0x1 as ::core::ffi::c_int) as usize]
                     as ::core::ffi::c_int;
             } else {
@@ -2865,11 +2860,10 @@ pub unsafe extern "C" fn sqlite3WhereCodeOneLoopStart(
                 );
             }
         }
-        if __pLevel_ref.iLeftJoin == 0 as ::core::ffi::c_int {
-            if !(*pIdx).pPartIdxWhere.is_null() && __pLevel_ref.pRJ.is_null() {
+        if __pLevel_ref.iLeftJoin == 0 as ::core::ffi::c_int
+            && !(*pIdx).pPartIdxWhere.is_null() && __pLevel_ref.pRJ.is_null() {
                 whereApplyPartialIndexConstraints((*pIdx).pPartIdxWhere, iCur, pWC);
             }
-        }
         if __pLoop_ref.wsFlags
             & crate::src::headers::whereInt_h::WHERE_ONEROW as crate::src::ext::rtree::rtree::U32_0
             != 0
@@ -3034,16 +3028,13 @@ pub unsafe extern "C" fn sqlite3WhereCodeOneLoopStart(
                     (*(*pWC).a.offset(iTerm as isize)).pExpr;
                 if ((*pWC).a.offset(iTerm as isize)
                     as *mut crate::src::headers::whereInt_h::WhereTerm != pTerm)
-                {
-                    if ((*(*pWC).a.offset(iTerm as isize)).wtFlags as ::core::ffi::c_int
+                    && ((*(*pWC).a.offset(iTerm as isize)).wtFlags as ::core::ffi::c_int
                         & (crate::src::headers::whereInt_h::TERM_VIRTUAL
                             | crate::src::headers::whereInt_h::TERM_CODED
                             | crate::src::headers::whereInt_h::TERM_SLICE) == 0 as ::core::ffi::c_int)
-                    {
-                        if ((*(*pWC).a.offset(iTerm as isize)).eOperator as ::core::ffi::c_int
+                        && ((*(*pWC).a.offset(iTerm as isize)).eOperator as ::core::ffi::c_int
                             & crate::src::headers::whereInt_h::WO_ALL != 0 as ::core::ffi::c_int)
-                        {
-                            if ((*pExpr).flags
+                            && ((*pExpr).flags
                                 & 0x400000 as ::core::ffi::c_int
                                     as crate::src::ext::rtree::rtree::U32_0 == 0 as crate::src::ext::rtree::rtree::U32_0)
                             {
@@ -3060,9 +3051,6 @@ pub unsafe extern "C" fn sqlite3WhereCodeOneLoopStart(
                                 )
                                     as *mut crate::src::headers::sqliteInt_h::Expr;
                             }
-                        }
-                    }
-                }
                 iTerm += 1;
             }
             if !pAndExpr.is_null() {
@@ -3385,13 +3373,11 @@ pub unsafe extern "C" fn sqlite3WhereCodeOneLoopStart(
                         if ((*pE).flags
                             & (0x1 as ::core::ffi::c_int | 0x2 as ::core::ffi::c_int)
                                 as crate::src::ext::rtree::rtree::U32_0 == 0 as crate::src::ext::rtree::rtree::U32_0)
-                        {
-                            current_block_647 = 16642413284942005565;
-                        } else if (*pTabItem).fg.jointype as ::core::ffi::c_int
-                            & crate::src::headers::sqliteInt_h::JT_LEFT
-                            == crate::src::headers::sqliteInt_h::JT_LEFT
-                            && ((*pE).flags
-                                & 0x1 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::U32_0 == 0 as crate::src::ext::rtree::rtree::U32_0)
+                            || (*pTabItem).fg.jointype as ::core::ffi::c_int
+                                & crate::src::headers::sqliteInt_h::JT_LEFT
+                                == crate::src::headers::sqliteInt_h::JT_LEFT
+                                && ((*pE).flags
+                                    & 0x1 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::U32_0 == 0 as crate::src::ext::rtree::rtree::U32_0)
                         {
                             current_block_647 = 16642413284942005565;
                         } else {
@@ -3483,15 +3469,12 @@ pub unsafe extern "C" fn sqlite3WhereCodeOneLoopStart(
         if ((*pTerm).wtFlags as ::core::ffi::c_int
             & (crate::src::headers::whereInt_h::TERM_VIRTUAL
                 | crate::src::headers::whereInt_h::TERM_CODED) == 0)
-        {
-            if ((*pTerm).eOperator as ::core::ffi::c_int
+            && ((*pTerm).eOperator as ::core::ffi::c_int
                 & (crate::src::headers::whereInt_h::WO_EQ | crate::src::headers::whereInt_h::WO_IS) != 0 as ::core::ffi::c_int)
-            {
-                if ((*pTerm).eOperator as ::core::ffi::c_int
+                && ((*pTerm).eOperator as ::core::ffi::c_int
                     & crate::src::headers::whereInt_h::WO_EQUIV != 0 as ::core::ffi::c_int)
-                {
-                    if ((*pTerm).leftCursor == iCur) {
-                        if ((*pTabItem).fg.jointype as ::core::ffi::c_int
+                    && ((*pTerm).leftCursor == iCur)
+                        && ((*pTabItem).fg.jointype as ::core::ffi::c_int
                             & (crate::src::headers::sqliteInt_h::JT_LEFT
                                 | crate::src::headers::sqliteInt_h::JT_LTORJ
                                 | crate::src::headers::sqliteInt_h::JT_RIGHT) == 0)
@@ -3510,8 +3493,8 @@ pub unsafe extern "C" fn sqlite3WhereCodeOneLoopStart(
                                     as *mut crate::src::headers::sqliteInt_h::Index,
                             )
                                 as *mut crate::src::headers::whereInt_h::WhereTerm;
-                            if !pAlt.is_null() {
-                                if ((*pAlt).wtFlags as ::core::ffi::c_int
+                            if !pAlt.is_null()
+                                && ((*pAlt).wtFlags as ::core::ffi::c_int
                                     & 0x4 as ::core::ffi::c_int == 0)
                                 {
                                     let __pAlt_ref = unsafe { &mut *pAlt };
@@ -3540,12 +3523,7 @@ pub unsafe extern "C" fn sqlite3WhereCodeOneLoopStart(
                                             as crate::src::fts5::U16_0;
                                     }
                                 }
-                            }
                         }
-                    }
-                }
-            }
-        }
         j -= 1;
         pTerm = pTerm.offset(1);
     }
@@ -3659,57 +3637,47 @@ pub unsafe extern "C" fn sqlite3WhereCodeOneLoopStart(
     } else {
         current_block = 16549556943091836366;
     }
-    match current_block {
-        16549556943091836366 => {
-            if !__pLevel_ref.pRJ.is_null() {
-                pRJ_0 = __pLevel_ref.pRJ;
-                crate::src::src::vdbeaux::sqlite3VdbeAddOp2(
-                    v,
-                    crate::src::headers::opcodes_h::OP_BeginSubrtn,
-                    0 as ::core::ffi::c_int,
-                    (*pRJ_0).regReturn,
-                );
-                (*pRJ_0).addrSubrtn = crate::src::src::vdbeaux::sqlite3VdbeCurrentAddr(v);
-                (*pParse).withinRJSubrtn = (*pParse).withinRJSubrtn.wrapping_add(1);
-                current_block = 1595193678520386028;
-            } else {
-                current_block = 8500432430644993475;
-            }
+    if current_block == 16549556943091836366 {
+        if !__pLevel_ref.pRJ.is_null() {
+            pRJ_0 = __pLevel_ref.pRJ;
+            crate::src::src::vdbeaux::sqlite3VdbeAddOp2(
+                v,
+                crate::src::headers::opcodes_h::OP_BeginSubrtn,
+                0 as ::core::ffi::c_int,
+                (*pRJ_0).regReturn,
+            );
+            (*pRJ_0).addrSubrtn = crate::src::src::vdbeaux::sqlite3VdbeCurrentAddr(v);
+            (*pParse).withinRJSubrtn = (*pParse).withinRJSubrtn.wrapping_add(1);
+            current_block = 1595193678520386028;
+        } else {
+            current_block = 8500432430644993475;
         }
-        _ => {}
     }
-    match current_block {
-        1595193678520386028 => {
-            pTerm = (*pWC).a;
-            j = 0 as ::core::ffi::c_int;
-            while j < (*pWC).nBase {
-                if ((*pTerm).wtFlags as ::core::ffi::c_int
-                    & (crate::src::headers::whereInt_h::TERM_VIRTUAL
-                        | crate::src::headers::whereInt_h::TERM_CODED) == 0)
-                {
-                    if ((*pTerm).prereqAll & __pLevel_ref.notReady == 0 as crate::src::headers::sqliteInt_h::Bitmask)
+    if current_block == 1595193678520386028 {
+        pTerm = (*pWC).a;
+        j = 0 as ::core::ffi::c_int;
+        while j < (*pWC).nBase {
+            if ((*pTerm).wtFlags as ::core::ffi::c_int
+                & (crate::src::headers::whereInt_h::TERM_VIRTUAL
+                    | crate::src::headers::whereInt_h::TERM_CODED) == 0)
+                && ((*pTerm).prereqAll & __pLevel_ref.notReady == 0 as crate::src::headers::sqliteInt_h::Bitmask)
+                    && ((*pTabItem).fg.jointype as ::core::ffi::c_int
+                        & crate::src::headers::sqliteInt_h::JT_LTORJ == 0)
                     {
-                        if ((*pTabItem).fg.jointype as ::core::ffi::c_int
-                            & crate::src::headers::sqliteInt_h::JT_LTORJ == 0)
-                        {
-                            let __pTerm_ref = unsafe { &mut *pTerm };
-                            crate::src::src::expr::sqlite3ExprIfFalse(
-                                pParse as *mut crate::src::headers::sqliteInt_h::Parse,
-                                __pTerm_ref.pExpr as *mut crate::src::headers::sqliteInt_h::Expr,
-                                addrCont,
-                                crate::src::headers::sqliteInt_h::SQLITE_JUMPIFNULL,
-                            );
-                            __pTerm_ref.wtFlags = (__pTerm_ref.wtFlags as ::core::ffi::c_int
-                                | crate::src::headers::whereInt_h::TERM_CODED)
-                                as crate::src::fts5::U16_0;
-                        }
+                        let __pTerm_ref = unsafe { &mut *pTerm };
+                        crate::src::src::expr::sqlite3ExprIfFalse(
+                            pParse as *mut crate::src::headers::sqliteInt_h::Parse,
+                            __pTerm_ref.pExpr as *mut crate::src::headers::sqliteInt_h::Expr,
+                            addrCont,
+                            crate::src::headers::sqliteInt_h::SQLITE_JUMPIFNULL,
+                        );
+                        __pTerm_ref.wtFlags = (__pTerm_ref.wtFlags as ::core::ffi::c_int
+                            | crate::src::headers::whereInt_h::TERM_CODED)
+                            as crate::src::fts5::U16_0;
                     }
-                }
-                j += 1;
-                pTerm = pTerm.offset(1);
-            }
+            j += 1;
+            pTerm = pTerm.offset(1);
         }
-        _ => {}
     }
     __pLevel_ref.notReady
 }
@@ -3812,8 +3780,8 @@ pub unsafe extern "C" fn sqlite3WhereRightJoinLoop(
             {
                 break;
             }
-            if (__pTerm_ref.prereqAll & !mAll == 0) {
-                if ((*__pTerm_ref.pExpr).flags
+            if (__pTerm_ref.prereqAll & !mAll == 0)
+                && ((*__pTerm_ref.pExpr).flags
                     & (0x1 as ::core::ffi::c_int | 0x2 as ::core::ffi::c_int)
                         as crate::src::ext::rtree::rtree::U32_0 == 0 as crate::src::ext::rtree::rtree::U32_0)
                 {
@@ -3829,7 +3797,6 @@ pub unsafe extern "C" fn sqlite3WhereRightJoinLoop(
                     )
                         as *mut crate::src::headers::sqliteInt_h::Expr;
                 }
-            }
             k += 1;
         }
     }

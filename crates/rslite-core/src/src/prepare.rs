@@ -359,21 +359,19 @@ pub unsafe extern "C" fn sqlite3InitCallback(
         let saved_iDb: crate::src::ext::rtree::rtree::U8_0 = __db_ref.init.iDb;
         let mut pStmt: *mut crate::src::headers::sqlite3_h::Sqlite3Stmt;
         __db_ref.init.iDb = iDb as crate::src::ext::rtree::rtree::U8_0;
-        if crate::src::src::util::sqlite3GetUInt32(
+        if (crate::src::src::util::sqlite3GetUInt32(
             *argv.offset(3_isize),
             &raw mut __db_ref.init.newTnum,
         ) == 0 as ::core::ffi::c_int
             || __db_ref.init.newTnum > __pData_ref.mxPage
-                && __pData_ref.mxPage > 0 as crate::src::src::pager::Pgno
-        {
-            if crate::src::src::global::sqlite3Config.bExtraSchemaChecks != 0 {
+                && __pData_ref.mxPage > 0 as crate::src::src::pager::Pgno)
+            && crate::src::src::global::sqlite3Config.bExtraSchemaChecks != 0 {
                 corruptSchema(
                     pData,
                     argv,
                     b"invalid rootpage\0" as *const u8 as *const ::core::ffi::c_char,
                 );
             }
-        }
         (*db)
             .init
             .set_orphanTrigger(0 as ::core::ffi::c_uint as ::core::ffi::c_uint);
@@ -390,8 +388,8 @@ pub unsafe extern "C" fn sqlite3InitCallback(
         );
         let rc: ::core::ffi::c_int = __db_ref.errCode;
         __db_ref.init.iDb = saved_iDb;
-        if crate::src::headers::sqlite3_h::SQLITE_OK != rc {
-            if (__db_ref.init.orphanTrigger() == 0) {
+        if crate::src::headers::sqlite3_h::SQLITE_OK != rc
+            && (__db_ref.init.orphanTrigger() == 0) {
                 if rc > __pData_ref.rc {
                     __pData_ref.rc = rc;
                 }
@@ -412,7 +410,6 @@ pub unsafe extern "C" fn sqlite3InitCallback(
                     );
                 }
             }
-        }
         __db_ref.init.azInit =
             &raw mut crate::src::src::global::sqlite3StdType as *mut *const ::core::ffi::c_char;
         crate::src::src::vdbeapi::sqlite3_finalize(pStmt);
@@ -435,22 +432,20 @@ pub unsafe extern "C" fn sqlite3InitCallback(
                 argv,
                 b"orphan index\0" as *const u8 as *const ::core::ffi::c_char,
             );
-        } else if crate::src::src::util::sqlite3GetUInt32(
+        } else if (crate::src::src::util::sqlite3GetUInt32(
             *argv.offset(3_isize),
             &raw mut (*pIndex).tnum,
         ) == 0 as ::core::ffi::c_int
             || (*pIndex).tnum < 2 as crate::src::src::pager::Pgno
             || (*pIndex).tnum > __pData_ref.mxPage
-            || sqlite3IndexHasDuplicateRootPage(pIndex) != 0
-        {
-            if crate::src::src::global::sqlite3Config.bExtraSchemaChecks != 0 {
+            || sqlite3IndexHasDuplicateRootPage(pIndex) != 0)
+            && crate::src::src::global::sqlite3Config.bExtraSchemaChecks != 0 {
                 corruptSchema(
                     pData,
                     argv,
                     b"invalid rootpage\0" as *const u8 as *const ::core::ffi::c_char,
                 );
             }
-        }
     }
     0 as ::core::ffi::c_int
 }
@@ -550,213 +545,210 @@ pub unsafe extern "C" fn sqlite3InitOne(
             } else {
                 current_block = 14763689060501151050;
             }
-            match current_block {
-                14763689060501151050 => {
-                    i = 0 as ::core::ffi::c_int;
-                    while i
-                        < (::core::mem::size_of::<[::core::ffi::c_int; 5]>() as usize)
-                            .wrapping_div(::core::mem::size_of::<::core::ffi::c_int>() as usize)
-                            as ::core::ffi::c_int
+            if current_block == 14763689060501151050 {
+                i = 0 as ::core::ffi::c_int;
+                while i
+                    < (::core::mem::size_of::<[::core::ffi::c_int; 5]>() as usize)
+                        .wrapping_div(::core::mem::size_of::<::core::ffi::c_int>() as usize)
+                        as ::core::ffi::c_int
+                {
+                    crate::src::src::btree::sqlite3BtreeGetMeta(
+                        (*pDb).pBt,
+                        i + 1 as ::core::ffi::c_int,
+                        (&raw mut meta as *mut ::core::ffi::c_int).offset(i as isize)
+                            as *mut ::core::ffi::c_int
+                            as *mut crate::src::ext::rtree::rtree::U32_0,
+                    );
+                    i += 1;
+                }
+                if __db_ref.flags
+                    & crate::src::headers::sqliteInt_h::SQLITE_ResetDatabase
+                        as crate::src::ext::rtree::rtree::U64_0
+                    != 0 as crate::src::ext::rtree::rtree::U64_0
+                {
+                    ::libc::memset(
+                        &raw mut meta as *mut ::core::ffi::c_int as *mut ::core::ffi::c_void,
+                        0 as ::core::ffi::c_int,
+                        ::core::mem::size_of::<[::core::ffi::c_int; 5]>()
+                            as crate::__stddef_size_t_h::SizeT,
+                    );
+                }
+                (*(*pDb).pSchema).schema_cookie = meta
+                    [(crate::src::src::btree::BTREE_SCHEMA_VERSION - 1 as ::core::ffi::c_int)
+                        as usize];
+                if meta[(crate::src::src::btree::BTREE_TEXT_ENCODING - 1 as ::core::ffi::c_int)
+                    as usize]
+                    != 0
+                {
+                    if iDb == 0 as ::core::ffi::c_int
+                        && __db_ref.mDbFlags
+                            & crate::src::headers::sqliteInt_h::DBFLAG_EncodingFixed
+                                as crate::src::ext::rtree::rtree::U32_0
+                            == 0 as crate::src::ext::rtree::rtree::U32_0
                     {
-                        crate::src::src::btree::sqlite3BtreeGetMeta(
-                            (*pDb).pBt,
-                            i + 1 as ::core::ffi::c_int,
-                            (&raw mut meta as *mut ::core::ffi::c_int).offset(i as isize)
-                                as *mut ::core::ffi::c_int
-                                as *mut crate::src::ext::rtree::rtree::U32_0,
-                        );
-                        i += 1;
-                    }
-                    if __db_ref.flags
-                        & crate::src::headers::sqliteInt_h::SQLITE_ResetDatabase
-                            as crate::src::ext::rtree::rtree::U64_0
-                        != 0 as crate::src::ext::rtree::rtree::U64_0
-                    {
-                        ::libc::memset(
-                            &raw mut meta as *mut ::core::ffi::c_int as *mut ::core::ffi::c_void,
-                            0 as ::core::ffi::c_int,
-                            ::core::mem::size_of::<[::core::ffi::c_int; 5]>()
-                                as crate::__stddef_size_t_h::SizeT,
-                        );
-                    }
-                    (*(*pDb).pSchema).schema_cookie = meta
-                        [(crate::src::src::btree::BTREE_SCHEMA_VERSION - 1 as ::core::ffi::c_int)
-                            as usize];
-                    if meta[(crate::src::src::btree::BTREE_TEXT_ENCODING - 1 as ::core::ffi::c_int)
-                        as usize]
-                        != 0
-                    {
-                        if iDb == 0 as ::core::ffi::c_int
-                            && __db_ref.mDbFlags
-                                & crate::src::headers::sqliteInt_h::DBFLAG_EncodingFixed
-                                    as crate::src::ext::rtree::rtree::U32_0
-                                == 0 as crate::src::ext::rtree::rtree::U32_0
-                        {
-                            let mut encoding: crate::src::ext::rtree::rtree::U8_0;
-                            encoding = (meta[(crate::src::src::btree::BTREE_TEXT_ENCODING
-                                - 1 as ::core::ffi::c_int)
-                                as usize]
-                                as crate::src::ext::rtree::rtree::U8_0
-                                as ::core::ffi::c_int
-                                & 3 as ::core::ffi::c_int)
-                                as crate::src::ext::rtree::rtree::U8_0;
-                            if encoding as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
-                                encoding = crate::src::headers::sqlite3_h::SQLITE_UTF8
-                                    as crate::src::ext::rtree::rtree::U8_0;
-                            }
-                            crate::src::src::callback::sqlite3SetTextEncoding(
-                                db as *mut crate::src::headers::sqliteInt_h::sqlite3,
-                                encoding,
-                            );
-                            current_block = 790185930182612747;
-                        } else if meta[(crate::src::src::btree::BTREE_TEXT_ENCODING
+                        let mut encoding: crate::src::ext::rtree::rtree::U8_0;
+                        encoding = (meta[(crate::src::src::btree::BTREE_TEXT_ENCODING
                             - 1 as ::core::ffi::c_int)
                             as usize]
-                            & 3 as ::core::ffi::c_int
-                            != __db_ref.enc as ::core::ffi::c_int
-                        {
-                            crate::src::src::malloc::sqlite3SetString(
-                                pzErrMsg,
-                                
-                                db as *mut crate::src::headers::sqliteInt_h::sqlite3,
-                                b"attached databases must use the same text encoding as main database\0"
-                                    as *const u8 as *const ::core::ffi::c_char,
-                            );
-                            rc = crate::src::headers::sqlite3_h::SQLITE_ERROR;
-                            current_block = 6780458696513854818;
-                        } else {
-                            current_block = 790185930182612747;
+                            as crate::src::ext::rtree::rtree::U8_0
+                            as ::core::ffi::c_int
+                            & 3 as ::core::ffi::c_int)
+                            as crate::src::ext::rtree::rtree::U8_0;
+                        if encoding as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
+                            encoding = crate::src::headers::sqlite3_h::SQLITE_UTF8
+                                as crate::src::ext::rtree::rtree::U8_0;
                         }
+                        crate::src::src::callback::sqlite3SetTextEncoding(
+                            db as *mut crate::src::headers::sqliteInt_h::sqlite3,
+                            encoding,
+                        );
+                        current_block = 790185930182612747;
+                    } else if meta[(crate::src::src::btree::BTREE_TEXT_ENCODING
+                        - 1 as ::core::ffi::c_int)
+                        as usize]
+                        & 3 as ::core::ffi::c_int
+                        != __db_ref.enc as ::core::ffi::c_int
+                    {
+                        crate::src::src::malloc::sqlite3SetString(
+                            pzErrMsg,
+                            
+                            db as *mut crate::src::headers::sqliteInt_h::sqlite3,
+                            b"attached databases must use the same text encoding as main database\0"
+                                as *const u8 as *const ::core::ffi::c_char,
+                        );
+                        rc = crate::src::headers::sqlite3_h::SQLITE_ERROR;
+                        current_block = 6780458696513854818;
                     } else {
                         current_block = 790185930182612747;
                     }
-                    match current_block {
-                        6780458696513854818 => {}
-                        _ => {
-                            (*(*pDb).pSchema).enc = __db_ref.enc;
-                            if (*(*pDb).pSchema).cache_size == 0 as ::core::ffi::c_int {
-                                size = crate::src::src::util::sqlite3AbsInt32(
-                                    meta[(crate::src::src::btree::BTREE_DEFAULT_CACHE_SIZE
-                                        - 1 as ::core::ffi::c_int)
-                                        as usize],
-                                );
-                                if size == 0 as ::core::ffi::c_int {
-                                    size = crate::sqliteLimit_h::SQLITE_DEFAULT_CACHE_SIZE;
-                                }
-                                let __pDb_ref = unsafe { &mut *pDb };
-                                (*__pDb_ref.pSchema).cache_size = size;
-                                crate::src::src::btree::sqlite3BtreeSetCacheSize(
-                                    __pDb_ref.pBt,
-                                    (*__pDb_ref.pSchema).cache_size,
-                                );
+                } else {
+                    current_block = 790185930182612747;
+                }
+                match current_block {
+                    6780458696513854818 => {}
+                    _ => {
+                        (*(*pDb).pSchema).enc = __db_ref.enc;
+                        if (*(*pDb).pSchema).cache_size == 0 as ::core::ffi::c_int {
+                            size = crate::src::src::util::sqlite3AbsInt32(
+                                meta[(crate::src::src::btree::BTREE_DEFAULT_CACHE_SIZE
+                                    - 1 as ::core::ffi::c_int)
+                                    as usize],
+                            );
+                            if size == 0 as ::core::ffi::c_int {
+                                size = crate::sqliteLimit_h::SQLITE_DEFAULT_CACHE_SIZE;
                             }
-                            (*(*pDb).pSchema).file_format = meta
-                                [(crate::src::src::btree::BTREE_FILE_FORMAT
+                            let __pDb_ref = unsafe { &mut *pDb };
+                            (*__pDb_ref.pSchema).cache_size = size;
+                            crate::src::src::btree::sqlite3BtreeSetCacheSize(
+                                __pDb_ref.pBt,
+                                (*__pDb_ref.pSchema).cache_size,
+                            );
+                        }
+                        (*(*pDb).pSchema).file_format = meta
+                            [(crate::src::src::btree::BTREE_FILE_FORMAT
+                                - 1 as ::core::ffi::c_int)
+                                as usize]
+                            as crate::src::ext::rtree::rtree::U8_0;
+                        if (*(*pDb).pSchema).file_format as ::core::ffi::c_int
+                            == 0 as ::core::ffi::c_int
+                        {
+                            (*(*pDb).pSchema).file_format =
+                                1 as crate::src::ext::rtree::rtree::U8_0;
+                        }
+                        if (*(*pDb).pSchema).file_format as ::core::ffi::c_int
+                            > crate::src::headers::sqliteInt_h::SQLITE_MAX_FILE_FORMAT
+                        {
+                            crate::src::src::malloc::sqlite3SetString(
+                                pzErrMsg,
+                                db as *mut crate::src::headers::sqliteInt_h::sqlite3,
+                                b"unsupported file format\0" as *const u8
+                                    as *const ::core::ffi::c_char,
+                            );
+                            rc = crate::src::headers::sqlite3_h::SQLITE_ERROR;
+                        } else {
+                            if iDb == 0 as ::core::ffi::c_int
+                                && meta[(crate::src::src::btree::BTREE_FILE_FORMAT
                                     - 1 as ::core::ffi::c_int)
                                     as usize]
-                                as crate::src::ext::rtree::rtree::U8_0;
-                            if (*(*pDb).pSchema).file_format as ::core::ffi::c_int
-                                == 0 as ::core::ffi::c_int
+                                    >= 4 as ::core::ffi::c_int
                             {
-                                (*(*pDb).pSchema).file_format =
-                                    1 as crate::src::ext::rtree::rtree::U8_0;
+                                __db_ref.flags &=
+                                    !(crate::src::headers::sqliteInt_h::SQLITE_LegacyFileFmt
+                                        as crate::src::ext::rtree::rtree::U64_0);
                             }
-                            if (*(*pDb).pSchema).file_format as ::core::ffi::c_int
-                                > crate::src::headers::sqliteInt_h::SQLITE_MAX_FILE_FORMAT
-                            {
-                                crate::src::src::malloc::sqlite3SetString(
-                                    pzErrMsg,
-                                    db as *mut crate::src::headers::sqliteInt_h::sqlite3,
-                                    b"unsupported file format\0" as *const u8
-                                        as *const ::core::ffi::c_char,
-                                );
-                                rc = crate::src::headers::sqlite3_h::SQLITE_ERROR;
-                            } else {
-                                if iDb == 0 as ::core::ffi::c_int
-                                    && meta[(crate::src::src::btree::BTREE_FILE_FORMAT
-                                        - 1 as ::core::ffi::c_int)
-                                        as usize]
-                                        >= 4 as ::core::ffi::c_int
-                                {
-                                    __db_ref.flags &=
-                                        !(crate::src::headers::sqliteInt_h::SQLITE_LegacyFileFmt
-                                            as crate::src::ext::rtree::rtree::U64_0);
-                                }
-                                initData.mxPage =
-                                    crate::src::src::btree::sqlite3BtreeLastPage((*pDb).pBt);
-                                
-                                let zSql: *mut ::core::ffi::c_char = crate::src::src::printf::sqlite3MPrintf_args(
-                                    db as *mut crate::src::headers::sqliteInt_h::sqlite3,
-                                    b"SELECT*FROM\"%w\".%s ORDER BY rowid\0" as *const u8
-                                        as *const ::core::ffi::c_char,
-                                    &[
-                                        crate::src::src::printf::PrintfArg::Str(
-                                            (*__db_ref.aDb.offset(iDb as isize)).zDbSName
-                                                as *mut ::core::ffi::c_char,
-                                        ),
-                                        crate::src::src::printf::PrintfArg::Str(
-                                            zSchemaTabName as *mut ::core::ffi::c_char,
-                                        ),
-                                    ],
-                                );
-                                
-                                let xAuth: crate::src::headers::sqliteInt_h::Sqlite3Xauth = __db_ref.xAuth;
-                                __db_ref.xAuth = None;
-                                rc = crate::src::src::legacy::sqlite3_exec(
-                                    db as *mut crate::src::headers::sqliteInt_h::sqlite3,
-                                    zSql,
-                                    Some(
-                                        sqlite3InitCallback
-                                            as unsafe extern "C" fn(
-                                                *mut ::core::ffi::c_void,
-                                                ::core::ffi::c_int,
-                                                *mut *mut ::core::ffi::c_char,
-                                                *mut *mut ::core::ffi::c_char,
-                                            )
-                                                -> ::core::ffi::c_int,
+                            initData.mxPage =
+                                crate::src::src::btree::sqlite3BtreeLastPage((*pDb).pBt);
+                            
+                            let zSql: *mut ::core::ffi::c_char = crate::src::src::printf::sqlite3MPrintf_args(
+                                db as *mut crate::src::headers::sqliteInt_h::sqlite3,
+                                b"SELECT*FROM\"%w\".%s ORDER BY rowid\0" as *const u8
+                                    as *const ::core::ffi::c_char,
+                                &[
+                                    crate::src::src::printf::PrintfArg::Str(
+                                        (*__db_ref.aDb.offset(iDb as isize)).zDbSName
+                                            as *mut ::core::ffi::c_char,
                                     ),
-                                    &raw mut initData as *mut ::core::ffi::c_void,
-                                    ::core::ptr::null_mut::<*mut ::core::ffi::c_char>(),
-                                );
-                                __db_ref.xAuth = xAuth;
-                                if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
-                                    rc = initData.rc;
-                                }
-                                crate::src::src::malloc::sqlite3DbFree(
+                                    crate::src::src::printf::PrintfArg::Str(
+                                        zSchemaTabName as *mut ::core::ffi::c_char,
+                                    ),
+                                ],
+                            );
+                            
+                            let xAuth: crate::src::headers::sqliteInt_h::Sqlite3Xauth = __db_ref.xAuth;
+                            __db_ref.xAuth = None;
+                            rc = crate::src::src::legacy::sqlite3_exec(
+                                db as *mut crate::src::headers::sqliteInt_h::sqlite3,
+                                zSql,
+                                Some(
+                                    sqlite3InitCallback
+                                        as unsafe extern "C" fn(
+                                            *mut ::core::ffi::c_void,
+                                            ::core::ffi::c_int,
+                                            *mut *mut ::core::ffi::c_char,
+                                            *mut *mut ::core::ffi::c_char,
+                                        )
+                                            -> ::core::ffi::c_int,
+                                ),
+                                &raw mut initData as *mut ::core::ffi::c_void,
+                                ::core::ptr::null_mut::<*mut ::core::ffi::c_char>(),
+                            );
+                            __db_ref.xAuth = xAuth;
+                            if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
+                                rc = initData.rc;
+                            }
+                            crate::src::src::malloc::sqlite3DbFree(
+                                db as *mut crate::src::headers::sqliteInt_h::sqlite3,
+                                zSql as *mut ::core::ffi::c_void,
+                            );
+                            if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
+                                crate::src::src::analyze::sqlite3AnalysisLoad(
                                     db as *mut crate::src::headers::sqliteInt_h::sqlite3,
-                                    zSql as *mut ::core::ffi::c_void,
+                                    iDb,
                                 );
-                                if rc == crate::src::headers::sqlite3_h::SQLITE_OK {
-                                    crate::src::src::analyze::sqlite3AnalysisLoad(
-                                        db as *mut crate::src::headers::sqliteInt_h::sqlite3,
-                                        iDb,
-                                    );
-                                }
-                                if __db_ref.mallocFailed != 0 {
-                                    rc = crate::src::headers::sqliteInt_h::SQLITE_NOMEM_BKPT;
-                                    crate::src::src::build::sqlite3ResetAllSchemasOfConnection(
-                                        db as *mut crate::src::headers::sqliteInt_h::sqlite3,
-                                    );
-                                    pDb = __db_ref.aDb.offset(iDb as isize)
-                                        as *mut crate::src::headers::sqliteInt_h::Db;
-                                } else if rc == crate::src::headers::sqlite3_h::SQLITE_OK
-                                    || __db_ref.flags
-                                        & crate::src::headers::sqliteInt_h::SQLITE_NoSchemaError
-                                            as crate::src::ext::rtree::rtree::U64_0
-                                        != 0
-                                        && rc != crate::src::headers::sqlite3_h::SQLITE_NOMEM
-                                {
-                                    let fresh1 = &mut (*(*__db_ref.aDb.offset(iDb as isize)).pSchema).schemaFlags;
-                                    *fresh1 = (*fresh1 as ::core::ffi::c_int
-                                        | 0x1 as ::core::ffi::c_int)
-                                        as crate::src::fts5::U16_0;
-                                    rc = crate::src::headers::sqlite3_h::SQLITE_OK;
-                                }
+                            }
+                            if __db_ref.mallocFailed != 0 {
+                                rc = crate::src::headers::sqliteInt_h::SQLITE_NOMEM_BKPT;
+                                crate::src::src::build::sqlite3ResetAllSchemasOfConnection(
+                                    db as *mut crate::src::headers::sqliteInt_h::sqlite3,
+                                );
+                                pDb = __db_ref.aDb.offset(iDb as isize)
+                                    as *mut crate::src::headers::sqliteInt_h::Db;
+                            } else if rc == crate::src::headers::sqlite3_h::SQLITE_OK
+                                || __db_ref.flags
+                                    & crate::src::headers::sqliteInt_h::SQLITE_NoSchemaError
+                                        as crate::src::ext::rtree::rtree::U64_0
+                                    != 0
+                                    && rc != crate::src::headers::sqlite3_h::SQLITE_NOMEM
+                            {
+                                let fresh1 = &mut (*(*__db_ref.aDb.offset(iDb as isize)).pSchema).schemaFlags;
+                                *fresh1 = (*fresh1 as ::core::ffi::c_int
+                                    | 0x1 as ::core::ffi::c_int)
+                                    as crate::src::fts5::U16_0;
+                                rc = crate::src::headers::sqlite3_h::SQLITE_OK;
                             }
                         }
                     }
                 }
-                _ => {}
             }
             if openedTransaction != 0 {
                 crate::src::src::btree::sqlite3BtreeCommit((*pDb).pBt);

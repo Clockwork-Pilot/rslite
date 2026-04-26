@@ -50,225 +50,193 @@ unsafe extern "C" fn chacha_block(
         x[12 as ::core::ffi::c_int as usize] ^= x[0 as ::core::ffi::c_int as usize];
         x[12 as ::core::ffi::c_int as usize] = x[12 as ::core::ffi::c_int as usize]
             << 16 as ::core::ffi::c_int
-            | x[12 as ::core::ffi::c_int as usize]
-                >> 32 as ::core::ffi::c_int - 16 as ::core::ffi::c_int;
+            | x[12 as ::core::ffi::c_int as usize] >> (32 as ::core::ffi::c_int - 16 as ::core::ffi::c_int);
         x[8 as ::core::ffi::c_int as usize] =
             x[8 as ::core::ffi::c_int as usize].wrapping_add(x[12 as ::core::ffi::c_int as usize]);
         x[4 as ::core::ffi::c_int as usize] ^= x[8 as ::core::ffi::c_int as usize];
         x[4 as ::core::ffi::c_int as usize] = x[4 as ::core::ffi::c_int as usize]
             << 12 as ::core::ffi::c_int
-            | x[4 as ::core::ffi::c_int as usize]
-                >> 32 as ::core::ffi::c_int - 12 as ::core::ffi::c_int;
+            | x[4 as ::core::ffi::c_int as usize] >> (32 as ::core::ffi::c_int - 12 as ::core::ffi::c_int);
         x[0 as ::core::ffi::c_int as usize] =
             x[0 as ::core::ffi::c_int as usize].wrapping_add(x[4 as ::core::ffi::c_int as usize]);
         x[12 as ::core::ffi::c_int as usize] ^= x[0 as ::core::ffi::c_int as usize];
         x[12 as ::core::ffi::c_int as usize] = x[12 as ::core::ffi::c_int as usize]
             << 8 as ::core::ffi::c_int
-            | x[12 as ::core::ffi::c_int as usize]
-                >> 32 as ::core::ffi::c_int - 8 as ::core::ffi::c_int;
+            | x[12 as ::core::ffi::c_int as usize] >> (32 as ::core::ffi::c_int - 8 as ::core::ffi::c_int);
         x[8 as ::core::ffi::c_int as usize] =
             x[8 as ::core::ffi::c_int as usize].wrapping_add(x[12 as ::core::ffi::c_int as usize]);
         x[4 as ::core::ffi::c_int as usize] ^= x[8 as ::core::ffi::c_int as usize];
         x[4 as ::core::ffi::c_int as usize] = x[4 as ::core::ffi::c_int as usize]
             << 7 as ::core::ffi::c_int
-            | x[4 as ::core::ffi::c_int as usize]
-                >> 32 as ::core::ffi::c_int - 7 as ::core::ffi::c_int;
+            | x[4 as ::core::ffi::c_int as usize] >> (32 as ::core::ffi::c_int - 7 as ::core::ffi::c_int);
         x[1 as ::core::ffi::c_int as usize] =
             x[1 as ::core::ffi::c_int as usize].wrapping_add(x[5 as ::core::ffi::c_int as usize]);
         x[13 as ::core::ffi::c_int as usize] ^= x[1 as ::core::ffi::c_int as usize];
         x[13 as ::core::ffi::c_int as usize] = x[13 as ::core::ffi::c_int as usize]
             << 16 as ::core::ffi::c_int
-            | x[13 as ::core::ffi::c_int as usize]
-                >> 32 as ::core::ffi::c_int - 16 as ::core::ffi::c_int;
+            | x[13 as ::core::ffi::c_int as usize] >> (32 as ::core::ffi::c_int - 16 as ::core::ffi::c_int);
         x[9 as ::core::ffi::c_int as usize] =
             x[9 as ::core::ffi::c_int as usize].wrapping_add(x[13 as ::core::ffi::c_int as usize]);
         x[5 as ::core::ffi::c_int as usize] ^= x[9 as ::core::ffi::c_int as usize];
         x[5 as ::core::ffi::c_int as usize] = x[5 as ::core::ffi::c_int as usize]
             << 12 as ::core::ffi::c_int
-            | x[5 as ::core::ffi::c_int as usize]
-                >> 32 as ::core::ffi::c_int - 12 as ::core::ffi::c_int;
+            | x[5 as ::core::ffi::c_int as usize] >> (32 as ::core::ffi::c_int - 12 as ::core::ffi::c_int);
         x[1 as ::core::ffi::c_int as usize] =
             x[1 as ::core::ffi::c_int as usize].wrapping_add(x[5 as ::core::ffi::c_int as usize]);
         x[13 as ::core::ffi::c_int as usize] ^= x[1 as ::core::ffi::c_int as usize];
         x[13 as ::core::ffi::c_int as usize] = x[13 as ::core::ffi::c_int as usize]
             << 8 as ::core::ffi::c_int
-            | x[13 as ::core::ffi::c_int as usize]
-                >> 32 as ::core::ffi::c_int - 8 as ::core::ffi::c_int;
+            | x[13 as ::core::ffi::c_int as usize] >> (32 as ::core::ffi::c_int - 8 as ::core::ffi::c_int);
         x[9 as ::core::ffi::c_int as usize] =
             x[9 as ::core::ffi::c_int as usize].wrapping_add(x[13 as ::core::ffi::c_int as usize]);
         x[5 as ::core::ffi::c_int as usize] ^= x[9 as ::core::ffi::c_int as usize];
         x[5 as ::core::ffi::c_int as usize] = x[5 as ::core::ffi::c_int as usize]
             << 7 as ::core::ffi::c_int
-            | x[5 as ::core::ffi::c_int as usize]
-                >> 32 as ::core::ffi::c_int - 7 as ::core::ffi::c_int;
+            | x[5 as ::core::ffi::c_int as usize] >> (32 as ::core::ffi::c_int - 7 as ::core::ffi::c_int);
         x[2 as ::core::ffi::c_int as usize] =
             x[2 as ::core::ffi::c_int as usize].wrapping_add(x[6 as ::core::ffi::c_int as usize]);
         x[14 as ::core::ffi::c_int as usize] ^= x[2 as ::core::ffi::c_int as usize];
         x[14 as ::core::ffi::c_int as usize] = x[14 as ::core::ffi::c_int as usize]
             << 16 as ::core::ffi::c_int
-            | x[14 as ::core::ffi::c_int as usize]
-                >> 32 as ::core::ffi::c_int - 16 as ::core::ffi::c_int;
+            | x[14 as ::core::ffi::c_int as usize] >> (32 as ::core::ffi::c_int - 16 as ::core::ffi::c_int);
         x[10 as ::core::ffi::c_int as usize] =
             x[10 as ::core::ffi::c_int as usize].wrapping_add(x[14 as ::core::ffi::c_int as usize]);
         x[6 as ::core::ffi::c_int as usize] ^= x[10 as ::core::ffi::c_int as usize];
         x[6 as ::core::ffi::c_int as usize] = x[6 as ::core::ffi::c_int as usize]
             << 12 as ::core::ffi::c_int
-            | x[6 as ::core::ffi::c_int as usize]
-                >> 32 as ::core::ffi::c_int - 12 as ::core::ffi::c_int;
+            | x[6 as ::core::ffi::c_int as usize] >> (32 as ::core::ffi::c_int - 12 as ::core::ffi::c_int);
         x[2 as ::core::ffi::c_int as usize] =
             x[2 as ::core::ffi::c_int as usize].wrapping_add(x[6 as ::core::ffi::c_int as usize]);
         x[14 as ::core::ffi::c_int as usize] ^= x[2 as ::core::ffi::c_int as usize];
         x[14 as ::core::ffi::c_int as usize] = x[14 as ::core::ffi::c_int as usize]
             << 8 as ::core::ffi::c_int
-            | x[14 as ::core::ffi::c_int as usize]
-                >> 32 as ::core::ffi::c_int - 8 as ::core::ffi::c_int;
+            | x[14 as ::core::ffi::c_int as usize] >> (32 as ::core::ffi::c_int - 8 as ::core::ffi::c_int);
         x[10 as ::core::ffi::c_int as usize] =
             x[10 as ::core::ffi::c_int as usize].wrapping_add(x[14 as ::core::ffi::c_int as usize]);
         x[6 as ::core::ffi::c_int as usize] ^= x[10 as ::core::ffi::c_int as usize];
         x[6 as ::core::ffi::c_int as usize] = x[6 as ::core::ffi::c_int as usize]
             << 7 as ::core::ffi::c_int
-            | x[6 as ::core::ffi::c_int as usize]
-                >> 32 as ::core::ffi::c_int - 7 as ::core::ffi::c_int;
+            | x[6 as ::core::ffi::c_int as usize] >> (32 as ::core::ffi::c_int - 7 as ::core::ffi::c_int);
         x[3 as ::core::ffi::c_int as usize] =
             x[3 as ::core::ffi::c_int as usize].wrapping_add(x[7 as ::core::ffi::c_int as usize]);
         x[15 as ::core::ffi::c_int as usize] ^= x[3 as ::core::ffi::c_int as usize];
         x[15 as ::core::ffi::c_int as usize] = x[15 as ::core::ffi::c_int as usize]
             << 16 as ::core::ffi::c_int
-            | x[15 as ::core::ffi::c_int as usize]
-                >> 32 as ::core::ffi::c_int - 16 as ::core::ffi::c_int;
+            | x[15 as ::core::ffi::c_int as usize] >> (32 as ::core::ffi::c_int - 16 as ::core::ffi::c_int);
         x[11 as ::core::ffi::c_int as usize] =
             x[11 as ::core::ffi::c_int as usize].wrapping_add(x[15 as ::core::ffi::c_int as usize]);
         x[7 as ::core::ffi::c_int as usize] ^= x[11 as ::core::ffi::c_int as usize];
         x[7 as ::core::ffi::c_int as usize] = x[7 as ::core::ffi::c_int as usize]
             << 12 as ::core::ffi::c_int
-            | x[7 as ::core::ffi::c_int as usize]
-                >> 32 as ::core::ffi::c_int - 12 as ::core::ffi::c_int;
+            | x[7 as ::core::ffi::c_int as usize] >> (32 as ::core::ffi::c_int - 12 as ::core::ffi::c_int);
         x[3 as ::core::ffi::c_int as usize] =
             x[3 as ::core::ffi::c_int as usize].wrapping_add(x[7 as ::core::ffi::c_int as usize]);
         x[15 as ::core::ffi::c_int as usize] ^= x[3 as ::core::ffi::c_int as usize];
         x[15 as ::core::ffi::c_int as usize] = x[15 as ::core::ffi::c_int as usize]
             << 8 as ::core::ffi::c_int
-            | x[15 as ::core::ffi::c_int as usize]
-                >> 32 as ::core::ffi::c_int - 8 as ::core::ffi::c_int;
+            | x[15 as ::core::ffi::c_int as usize] >> (32 as ::core::ffi::c_int - 8 as ::core::ffi::c_int);
         x[11 as ::core::ffi::c_int as usize] =
             x[11 as ::core::ffi::c_int as usize].wrapping_add(x[15 as ::core::ffi::c_int as usize]);
         x[7 as ::core::ffi::c_int as usize] ^= x[11 as ::core::ffi::c_int as usize];
         x[7 as ::core::ffi::c_int as usize] = x[7 as ::core::ffi::c_int as usize]
             << 7 as ::core::ffi::c_int
-            | x[7 as ::core::ffi::c_int as usize]
-                >> 32 as ::core::ffi::c_int - 7 as ::core::ffi::c_int;
+            | x[7 as ::core::ffi::c_int as usize] >> (32 as ::core::ffi::c_int - 7 as ::core::ffi::c_int);
         x[0 as ::core::ffi::c_int as usize] =
             x[0 as ::core::ffi::c_int as usize].wrapping_add(x[5 as ::core::ffi::c_int as usize]);
         x[15 as ::core::ffi::c_int as usize] ^= x[0 as ::core::ffi::c_int as usize];
         x[15 as ::core::ffi::c_int as usize] = x[15 as ::core::ffi::c_int as usize]
             << 16 as ::core::ffi::c_int
-            | x[15 as ::core::ffi::c_int as usize]
-                >> 32 as ::core::ffi::c_int - 16 as ::core::ffi::c_int;
+            | x[15 as ::core::ffi::c_int as usize] >> (32 as ::core::ffi::c_int - 16 as ::core::ffi::c_int);
         x[10 as ::core::ffi::c_int as usize] =
             x[10 as ::core::ffi::c_int as usize].wrapping_add(x[15 as ::core::ffi::c_int as usize]);
         x[5 as ::core::ffi::c_int as usize] ^= x[10 as ::core::ffi::c_int as usize];
         x[5 as ::core::ffi::c_int as usize] = x[5 as ::core::ffi::c_int as usize]
             << 12 as ::core::ffi::c_int
-            | x[5 as ::core::ffi::c_int as usize]
-                >> 32 as ::core::ffi::c_int - 12 as ::core::ffi::c_int;
+            | x[5 as ::core::ffi::c_int as usize] >> (32 as ::core::ffi::c_int - 12 as ::core::ffi::c_int);
         x[0 as ::core::ffi::c_int as usize] =
             x[0 as ::core::ffi::c_int as usize].wrapping_add(x[5 as ::core::ffi::c_int as usize]);
         x[15 as ::core::ffi::c_int as usize] ^= x[0 as ::core::ffi::c_int as usize];
         x[15 as ::core::ffi::c_int as usize] = x[15 as ::core::ffi::c_int as usize]
             << 8 as ::core::ffi::c_int
-            | x[15 as ::core::ffi::c_int as usize]
-                >> 32 as ::core::ffi::c_int - 8 as ::core::ffi::c_int;
+            | x[15 as ::core::ffi::c_int as usize] >> (32 as ::core::ffi::c_int - 8 as ::core::ffi::c_int);
         x[10 as ::core::ffi::c_int as usize] =
             x[10 as ::core::ffi::c_int as usize].wrapping_add(x[15 as ::core::ffi::c_int as usize]);
         x[5 as ::core::ffi::c_int as usize] ^= x[10 as ::core::ffi::c_int as usize];
         x[5 as ::core::ffi::c_int as usize] = x[5 as ::core::ffi::c_int as usize]
             << 7 as ::core::ffi::c_int
-            | x[5 as ::core::ffi::c_int as usize]
-                >> 32 as ::core::ffi::c_int - 7 as ::core::ffi::c_int;
+            | x[5 as ::core::ffi::c_int as usize] >> (32 as ::core::ffi::c_int - 7 as ::core::ffi::c_int);
         x[1 as ::core::ffi::c_int as usize] =
             x[1 as ::core::ffi::c_int as usize].wrapping_add(x[6 as ::core::ffi::c_int as usize]);
         x[12 as ::core::ffi::c_int as usize] ^= x[1 as ::core::ffi::c_int as usize];
         x[12 as ::core::ffi::c_int as usize] = x[12 as ::core::ffi::c_int as usize]
             << 16 as ::core::ffi::c_int
-            | x[12 as ::core::ffi::c_int as usize]
-                >> 32 as ::core::ffi::c_int - 16 as ::core::ffi::c_int;
+            | x[12 as ::core::ffi::c_int as usize] >> (32 as ::core::ffi::c_int - 16 as ::core::ffi::c_int);
         x[11 as ::core::ffi::c_int as usize] =
             x[11 as ::core::ffi::c_int as usize].wrapping_add(x[12 as ::core::ffi::c_int as usize]);
         x[6 as ::core::ffi::c_int as usize] ^= x[11 as ::core::ffi::c_int as usize];
         x[6 as ::core::ffi::c_int as usize] = x[6 as ::core::ffi::c_int as usize]
             << 12 as ::core::ffi::c_int
-            | x[6 as ::core::ffi::c_int as usize]
-                >> 32 as ::core::ffi::c_int - 12 as ::core::ffi::c_int;
+            | x[6 as ::core::ffi::c_int as usize] >> (32 as ::core::ffi::c_int - 12 as ::core::ffi::c_int);
         x[1 as ::core::ffi::c_int as usize] =
             x[1 as ::core::ffi::c_int as usize].wrapping_add(x[6 as ::core::ffi::c_int as usize]);
         x[12 as ::core::ffi::c_int as usize] ^= x[1 as ::core::ffi::c_int as usize];
         x[12 as ::core::ffi::c_int as usize] = x[12 as ::core::ffi::c_int as usize]
             << 8 as ::core::ffi::c_int
-            | x[12 as ::core::ffi::c_int as usize]
-                >> 32 as ::core::ffi::c_int - 8 as ::core::ffi::c_int;
+            | x[12 as ::core::ffi::c_int as usize] >> (32 as ::core::ffi::c_int - 8 as ::core::ffi::c_int);
         x[11 as ::core::ffi::c_int as usize] =
             x[11 as ::core::ffi::c_int as usize].wrapping_add(x[12 as ::core::ffi::c_int as usize]);
         x[6 as ::core::ffi::c_int as usize] ^= x[11 as ::core::ffi::c_int as usize];
         x[6 as ::core::ffi::c_int as usize] = x[6 as ::core::ffi::c_int as usize]
             << 7 as ::core::ffi::c_int
-            | x[6 as ::core::ffi::c_int as usize]
-                >> 32 as ::core::ffi::c_int - 7 as ::core::ffi::c_int;
+            | x[6 as ::core::ffi::c_int as usize] >> (32 as ::core::ffi::c_int - 7 as ::core::ffi::c_int);
         x[2 as ::core::ffi::c_int as usize] =
             x[2 as ::core::ffi::c_int as usize].wrapping_add(x[7 as ::core::ffi::c_int as usize]);
         x[13 as ::core::ffi::c_int as usize] ^= x[2 as ::core::ffi::c_int as usize];
         x[13 as ::core::ffi::c_int as usize] = x[13 as ::core::ffi::c_int as usize]
             << 16 as ::core::ffi::c_int
-            | x[13 as ::core::ffi::c_int as usize]
-                >> 32 as ::core::ffi::c_int - 16 as ::core::ffi::c_int;
+            | x[13 as ::core::ffi::c_int as usize] >> (32 as ::core::ffi::c_int - 16 as ::core::ffi::c_int);
         x[8 as ::core::ffi::c_int as usize] =
             x[8 as ::core::ffi::c_int as usize].wrapping_add(x[13 as ::core::ffi::c_int as usize]);
         x[7 as ::core::ffi::c_int as usize] ^= x[8 as ::core::ffi::c_int as usize];
         x[7 as ::core::ffi::c_int as usize] = x[7 as ::core::ffi::c_int as usize]
             << 12 as ::core::ffi::c_int
-            | x[7 as ::core::ffi::c_int as usize]
-                >> 32 as ::core::ffi::c_int - 12 as ::core::ffi::c_int;
+            | x[7 as ::core::ffi::c_int as usize] >> (32 as ::core::ffi::c_int - 12 as ::core::ffi::c_int);
         x[2 as ::core::ffi::c_int as usize] =
             x[2 as ::core::ffi::c_int as usize].wrapping_add(x[7 as ::core::ffi::c_int as usize]);
         x[13 as ::core::ffi::c_int as usize] ^= x[2 as ::core::ffi::c_int as usize];
         x[13 as ::core::ffi::c_int as usize] = x[13 as ::core::ffi::c_int as usize]
             << 8 as ::core::ffi::c_int
-            | x[13 as ::core::ffi::c_int as usize]
-                >> 32 as ::core::ffi::c_int - 8 as ::core::ffi::c_int;
+            | x[13 as ::core::ffi::c_int as usize] >> (32 as ::core::ffi::c_int - 8 as ::core::ffi::c_int);
         x[8 as ::core::ffi::c_int as usize] =
             x[8 as ::core::ffi::c_int as usize].wrapping_add(x[13 as ::core::ffi::c_int as usize]);
         x[7 as ::core::ffi::c_int as usize] ^= x[8 as ::core::ffi::c_int as usize];
         x[7 as ::core::ffi::c_int as usize] = x[7 as ::core::ffi::c_int as usize]
             << 7 as ::core::ffi::c_int
-            | x[7 as ::core::ffi::c_int as usize]
-                >> 32 as ::core::ffi::c_int - 7 as ::core::ffi::c_int;
+            | x[7 as ::core::ffi::c_int as usize] >> (32 as ::core::ffi::c_int - 7 as ::core::ffi::c_int);
         x[3 as ::core::ffi::c_int as usize] =
             x[3 as ::core::ffi::c_int as usize].wrapping_add(x[4 as ::core::ffi::c_int as usize]);
         x[14 as ::core::ffi::c_int as usize] ^= x[3 as ::core::ffi::c_int as usize];
         x[14 as ::core::ffi::c_int as usize] = x[14 as ::core::ffi::c_int as usize]
             << 16 as ::core::ffi::c_int
-            | x[14 as ::core::ffi::c_int as usize]
-                >> 32 as ::core::ffi::c_int - 16 as ::core::ffi::c_int;
+            | x[14 as ::core::ffi::c_int as usize] >> (32 as ::core::ffi::c_int - 16 as ::core::ffi::c_int);
         x[9 as ::core::ffi::c_int as usize] =
             x[9 as ::core::ffi::c_int as usize].wrapping_add(x[14 as ::core::ffi::c_int as usize]);
         x[4 as ::core::ffi::c_int as usize] ^= x[9 as ::core::ffi::c_int as usize];
         x[4 as ::core::ffi::c_int as usize] = x[4 as ::core::ffi::c_int as usize]
             << 12 as ::core::ffi::c_int
-            | x[4 as ::core::ffi::c_int as usize]
-                >> 32 as ::core::ffi::c_int - 12 as ::core::ffi::c_int;
+            | x[4 as ::core::ffi::c_int as usize] >> (32 as ::core::ffi::c_int - 12 as ::core::ffi::c_int);
         x[3 as ::core::ffi::c_int as usize] =
             x[3 as ::core::ffi::c_int as usize].wrapping_add(x[4 as ::core::ffi::c_int as usize]);
         x[14 as ::core::ffi::c_int as usize] ^= x[3 as ::core::ffi::c_int as usize];
         x[14 as ::core::ffi::c_int as usize] = x[14 as ::core::ffi::c_int as usize]
             << 8 as ::core::ffi::c_int
-            | x[14 as ::core::ffi::c_int as usize]
-                >> 32 as ::core::ffi::c_int - 8 as ::core::ffi::c_int;
+            | x[14 as ::core::ffi::c_int as usize] >> (32 as ::core::ffi::c_int - 8 as ::core::ffi::c_int);
         x[9 as ::core::ffi::c_int as usize] =
             x[9 as ::core::ffi::c_int as usize].wrapping_add(x[14 as ::core::ffi::c_int as usize]);
         x[4 as ::core::ffi::c_int as usize] ^= x[9 as ::core::ffi::c_int as usize];
         x[4 as ::core::ffi::c_int as usize] = x[4 as ::core::ffi::c_int as usize]
             << 7 as ::core::ffi::c_int
-            | x[4 as ::core::ffi::c_int as usize]
-                >> 32 as ::core::ffi::c_int - 7 as ::core::ffi::c_int;
+            | x[4 as ::core::ffi::c_int as usize] >> (32 as ::core::ffi::c_int - 7 as ::core::ffi::c_int);
         i += 1;
     }
     i = 0 as ::core::ffi::c_int;

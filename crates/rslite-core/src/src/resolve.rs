@@ -377,11 +377,9 @@ unsafe extern "C" fn resolveAlias(
         );
         if (*pExpr).flags & 0x1000000 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::U32_0
             != 0 as crate::src::ext::rtree::rtree::U32_0
-        {
-            if !(*pExpr).y.pWin.is_null() {
+            && !(*pExpr).y.pWin.is_null() {
                 (*(*pExpr).y.pWin).pOwner = pExpr;
             }
-        }
         crate::src::src::expr::sqlite3ExprDeferredDelete(
             pParse as *mut crate::src::headers::sqliteInt_h::Parse,
             pDup as *mut crate::src::headers::sqliteInt_h::Expr,
@@ -787,157 +785,153 @@ unsafe extern "C" fn lookupName(
                 } else {
                     current_block_79 = 17075014677070940716;
                 }
-                match current_block_79 {
-                    17075014677070940716 => {
-                        if !zTab.is_null() {
-                            if !zDb.is_null() {
-                                if (*pTab).pSchema != pSchema {
-                                    current_block_79 = 15125582407903384992;
-                                } else if pSchema.is_null()
+                if current_block_79 == 17075014677070940716 {
+                    if !zTab.is_null() {
+                        if !zDb.is_null() {
+                            if (*pTab).pSchema != pSchema
+                                || pSchema.is_null()
                                     && ::libc::strcmp(
                                         zDb,
                                         b"*\0" as *const u8 as *const ::core::ffi::c_char,
                                     ) != 0 as ::core::ffi::c_int
-                                {
-                                    current_block_79 = 15125582407903384992;
-                                } else {
-                                    current_block_79 = 8869332144787829186;
-                                }
+                            {
+                                current_block_79 = 15125582407903384992;
                             } else {
                                 current_block_79 = 8869332144787829186;
                             }
-                            match current_block_79 {
-                                15125582407903384992 => {}
-                                _ => {
-                                    if !(*pItem).zAlias.is_null() {
-                                        if crate::src::src::util::sqlite3StrICmp(
-                                            zTab,
-                                            (*pItem).zAlias,
-                                        ) != 0 as ::core::ffi::c_int
-                                        {
-                                            current_block_79 = 15125582407903384992;
-                                        } else {
-                                            current_block_79 = 2723324002591448311;
-                                        }
-                                    } else if crate::src::src::util::sqlite3StrICmp(
-                                        zTab,
-                                        (*pTab).zName,
-                                    ) != 0 as ::core::ffi::c_int
-                                    {
-                                        if (*pTab).tnum != 1 as crate::src::src::pager::Pgno {
-                                            current_block_79 = 15125582407903384992;
-                                        } else if isValidSchemaTableName(zTab, pTab, zDb) == 0 {
-                                            current_block_79 = 15125582407903384992;
-                                        } else {
-                                            current_block_79 = 2723324002591448311;
-                                        }
-                                    } else {
-                                        current_block_79 = 2723324002591448311;
-                                    }
-                                    match current_block_79 {
-                                        15125582407903384992 => {}
-                                        _ => {
-                                            if (*pParse).eParseMode as ::core::ffi::c_int
-                                                >= crate::src::headers::sqliteInt_h::PARSE_MODE_RENAME
-                                                && !(*pItem).zAlias.is_null()
-                                            {
-                                                crate::src::src::alter::sqlite3RenameTokenRemap(
-                                                    
-                                                    pParse as *mut crate::src::headers::sqliteInt_h::Parse,
-                                                    ::core::ptr::null::<::core::ffi::c_void>(),
-                                                    &raw mut (*pExpr).y.pTab
-                                                        as *mut ::core::ffi::c_void,
-                                                );
-                                            }
-                                            current_block_79 = 10435735846551762309;
-                                        }
-                                    }
-                                }
-                            }
                         } else {
-                            current_block_79 = 10435735846551762309;
+                            current_block_79 = 8869332144787829186;
                         }
                         match current_block_79 {
                             15125582407903384992 => {}
                             _ => {
-                                j = crate::src::src::select::sqlite3ColumnIndex(
-                                    pTab as *mut crate::src::headers::sqliteInt_h::Table,
-                                    zCol,
-                                );
-                                if j >= 0 as ::core::ffi::c_int {
-                                    if cnt > 0 as ::core::ffi::c_int {
-                                        let __pItem_ref = unsafe { &mut *pItem };
-                                        if __pItem_ref.fg.isUsing() as ::core::ffi::c_int
-                                            == 0 as ::core::ffi::c_int
-                                            || crate::src::src::build::sqlite3IdListIndex(__pItem_ref.u3.pUsing as *mut crate::src::headers::sqliteInt_h::IdList, zCol)
-                                                < 0 as ::core::ffi::c_int
-                                        {
-                                            crate::src::src::expr::sqlite3ExprListDelete(db as *mut crate::src::headers::sqliteInt_h::sqlite3,  pFJMatch as *mut crate::src::headers::sqliteInt_h::ExprList);
-                                            pFJMatch = ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::ExprList>();
-                                            current_block_79 = 16791665189521845338;
-                                        } else if __pItem_ref.fg.jointype as ::core::ffi::c_int
-                                            & crate::src::headers::sqliteInt_h::JT_RIGHT
-                                            == 0 as ::core::ffi::c_int
-                                        {
-                                            current_block_79 = 15125582407903384992;
-                                        } else {
-                                            if __pItem_ref.fg.jointype as ::core::ffi::c_int & crate::src::headers::sqliteInt_h::JT_LEFT
-                                                == 0 as ::core::ffi::c_int
-                                            {
-                                                cnt = 0 as ::core::ffi::c_int;
-                                                crate::src::src::expr::sqlite3ExprListDelete(db as *mut crate::src::headers::sqliteInt_h::sqlite3,  pFJMatch as *mut crate::src::headers::sqliteInt_h::ExprList);
-                                                pFJMatch = ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::ExprList>();
-                                            } else {
-                                                extendFJMatch(
-                                                    pParse,
-                                                    &raw mut pFJMatch,
-                                                    pMatch,
-                                                    (*pExpr).iColumn as crate::src::fts5::I16_0,
-                                                );
-                                            }
-                                            current_block_79 = 16791665189521845338;
-                                        }
+                                if !(*pItem).zAlias.is_null() {
+                                    if crate::src::src::util::sqlite3StrICmp(
+                                        zTab,
+                                        (*pItem).zAlias,
+                                    ) != 0 as ::core::ffi::c_int
+                                    {
+                                        current_block_79 = 15125582407903384992;
                                     } else {
-                                        current_block_79 = 16791665189521845338;
+                                        current_block_79 = 2723324002591448311;
                                     }
-                                    match current_block_79 {
-                                        15125582407903384992 => {}
-                                        _ => {
-                                            cnt += 1;
-                                            pMatch = pItem;
-                                            (*pExpr).iColumn = (if j
-                                                == (*pTab).iPKey as ::core::ffi::c_int
-                                            {
-                                                -(1 as ::core::ffi::c_int)
-                                            } else {
-                                                j as crate::src::fts5::I16_0 as ::core::ffi::c_int
-                                            })
-                                                as crate::src::headers::sqliteInt_h::YnVar;
-                                            if (*pItem).fg.isNestedFrom() != 0 {
-                                                crate::src::src::select::sqlite3SrcItemColumnUsed(pItem as *mut crate::src::headers::sqliteInt_h::SrcItem, j);
-                                            }
-                                            current_block_79 = 16313536926714486912;
-                                        }
+                                } else if crate::src::src::util::sqlite3StrICmp(
+                                    zTab,
+                                    (*pTab).zName,
+                                ) != 0 as ::core::ffi::c_int
+                                {
+                                    if (*pTab).tnum != 1 as crate::src::src::pager::Pgno
+                                        || isValidSchemaTableName(zTab, pTab, zDb) == 0
+                                    {
+                                        current_block_79 = 15125582407903384992;
+                                    } else {
+                                        current_block_79 = 2723324002591448311;
                                     }
                                 } else {
-                                    current_block_79 = 16313536926714486912;
+                                    current_block_79 = 2723324002591448311;
                                 }
                                 match current_block_79 {
                                     15125582407903384992 => {}
                                     _ => {
-                                        if 0 as ::core::ffi::c_int == cnt
-                                            && (*pTab).tabFlags & crate::src::headers::sqliteInt_h::TF_NoVisibleRowid as crate::src::ext::rtree::rtree::U32_0
-                                                == 0 as crate::src::ext::rtree::rtree::U32_0
+                                        if (*pParse).eParseMode as ::core::ffi::c_int
+                                            >= crate::src::headers::sqliteInt_h::PARSE_MODE_RENAME
+                                            && !(*pItem).zAlias.is_null()
                                         {
-                                            cntTab += 1;
-                                            pMatch = pItem;
+                                            crate::src::src::alter::sqlite3RenameTokenRemap(
+                                                
+                                                pParse as *mut crate::src::headers::sqliteInt_h::Parse,
+                                                ::core::ptr::null::<::core::ffi::c_void>(),
+                                                &raw mut (*pExpr).y.pTab
+                                                    as *mut ::core::ffi::c_void,
+                                            );
                                         }
+                                        current_block_79 = 10435735846551762309;
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        current_block_79 = 10435735846551762309;
+                    }
+                    match current_block_79 {
+                        15125582407903384992 => {}
+                        _ => {
+                            j = crate::src::src::select::sqlite3ColumnIndex(
+                                pTab as *mut crate::src::headers::sqliteInt_h::Table,
+                                zCol,
+                            );
+                            if j >= 0 as ::core::ffi::c_int {
+                                if cnt > 0 as ::core::ffi::c_int {
+                                    let __pItem_ref = unsafe { &mut *pItem };
+                                    if __pItem_ref.fg.isUsing() as ::core::ffi::c_int
+                                        == 0 as ::core::ffi::c_int
+                                        || crate::src::src::build::sqlite3IdListIndex(__pItem_ref.u3.pUsing as *mut crate::src::headers::sqliteInt_h::IdList, zCol)
+                                            < 0 as ::core::ffi::c_int
+                                    {
+                                        crate::src::src::expr::sqlite3ExprListDelete(db as *mut crate::src::headers::sqliteInt_h::sqlite3,  pFJMatch as *mut crate::src::headers::sqliteInt_h::ExprList);
+                                        pFJMatch = ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::ExprList>();
+                                        current_block_79 = 16791665189521845338;
+                                    } else if __pItem_ref.fg.jointype as ::core::ffi::c_int
+                                        & crate::src::headers::sqliteInt_h::JT_RIGHT
+                                        == 0 as ::core::ffi::c_int
+                                    {
+                                        current_block_79 = 15125582407903384992;
+                                    } else {
+                                        if __pItem_ref.fg.jointype as ::core::ffi::c_int & crate::src::headers::sqliteInt_h::JT_LEFT
+                                            == 0 as ::core::ffi::c_int
+                                        {
+                                            cnt = 0 as ::core::ffi::c_int;
+                                            crate::src::src::expr::sqlite3ExprListDelete(db as *mut crate::src::headers::sqliteInt_h::sqlite3,  pFJMatch as *mut crate::src::headers::sqliteInt_h::ExprList);
+                                            pFJMatch = ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::ExprList>();
+                                        } else {
+                                            extendFJMatch(
+                                                pParse,
+                                                &raw mut pFJMatch,
+                                                pMatch,
+                                                (*pExpr).iColumn as crate::src::fts5::I16_0,
+                                            );
+                                        }
+                                        current_block_79 = 16791665189521845338;
+                                    }
+                                } else {
+                                    current_block_79 = 16791665189521845338;
+                                }
+                                match current_block_79 {
+                                    15125582407903384992 => {}
+                                    _ => {
+                                        cnt += 1;
+                                        pMatch = pItem;
+                                        (*pExpr).iColumn = (if j
+                                            == (*pTab).iPKey as ::core::ffi::c_int
+                                        {
+                                            -(1 as ::core::ffi::c_int)
+                                        } else {
+                                            j as crate::src::fts5::I16_0 as ::core::ffi::c_int
+                                        })
+                                            as crate::src::headers::sqliteInt_h::YnVar;
+                                        if (*pItem).fg.isNestedFrom() != 0 {
+                                            crate::src::src::select::sqlite3SrcItemColumnUsed(pItem as *mut crate::src::headers::sqliteInt_h::SrcItem, j);
+                                        }
+                                        current_block_79 = 16313536926714486912;
+                                    }
+                                }
+                            } else {
+                                current_block_79 = 16313536926714486912;
+                            }
+                            match current_block_79 {
+                                15125582407903384992 => {}
+                                _ => {
+                                    if 0 as ::core::ffi::c_int == cnt
+                                        && (*pTab).tabFlags & crate::src::headers::sqliteInt_h::TF_NoVisibleRowid as crate::src::ext::rtree::rtree::U32_0
+                                            == 0 as crate::src::ext::rtree::rtree::U32_0
+                                    {
+                                        cntTab += 1;
+                                        pMatch = pItem;
                                     }
                                 }
                             }
                         }
                     }
-                    _ => {}
                 }
                 i += 1;
                 pItem = pItem.offset(1);
@@ -1227,190 +1221,50 @@ unsafe extern "C" fn lookupName(
             break;
         }
     }
-    match current_block {
-        2661260690706066674 => {
-            if cnt == 0 as ::core::ffi::c_int && zTab.is_null() {
-                if (*pExpr).flags
-                    & 0x80 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::U32_0
-                    != 0 as crate::src::ext::rtree::rtree::U32_0
-                    && areDoubleQuotedStringsEnabled(db, pTopNC) != 0
-                {
-                    crate::src::src::printf::sqlite3_log_args(
-                        crate::src::headers::sqlite3_h::SQLITE_WARNING,
-                        b"double-quoted string literal: \"%w\"\0" as *const u8
-                            as *const ::core::ffi::c_char,
-                        &[crate::src::src::printf::PrintfArg::Str(
-                            zCol as *mut ::core::ffi::c_char,
-                        )],
-                    );
-                    (*pExpr).op =
-                        crate::src::parse::TK_STRING as crate::src::ext::rtree::rtree::U8_0;
-                    ::libc::memset(
-                        &raw mut (*pExpr).y as *mut ::core::ffi::c_void,
-                        0 as ::core::ffi::c_int,
-                        ::core::mem::size_of::<crate::src::headers::sqliteInt_h::__anon_union_8>()
-                            as crate::__stddef_size_t_h::SizeT,
-                    );
-                    return crate::src::headers::sqliteInt_h::WRC_Prune;
-                }
-                if crate::src::src::expr::sqlite3ExprIdToTrueFalse(
-                    pExpr as *mut crate::src::headers::sqliteInt_h::Expr,
-                ) != 0
-                {
-                    return crate::src::headers::sqliteInt_h::WRC_Prune;
-                }
+    if current_block == 2661260690706066674 {
+        if cnt == 0 as ::core::ffi::c_int && zTab.is_null() {
+            if (*pExpr).flags
+                & 0x80 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::U32_0
+                != 0 as crate::src::ext::rtree::rtree::U32_0
+                && areDoubleQuotedStringsEnabled(db, pTopNC) != 0
+            {
+                crate::src::src::printf::sqlite3_log_args(
+                    crate::src::headers::sqlite3_h::SQLITE_WARNING,
+                    b"double-quoted string literal: \"%w\"\0" as *const u8
+                        as *const ::core::ffi::c_char,
+                    &[crate::src::src::printf::PrintfArg::Str(
+                        zCol as *mut ::core::ffi::c_char,
+                    )],
+                );
+                (*pExpr).op =
+                    crate::src::parse::TK_STRING as crate::src::ext::rtree::rtree::U8_0;
+                ::libc::memset(
+                    &raw mut (*pExpr).y as *mut ::core::ffi::c_void,
+                    0 as ::core::ffi::c_int,
+                    ::core::mem::size_of::<crate::src::headers::sqliteInt_h::__anon_union_8>()
+                        as crate::__stddef_size_t_h::SizeT,
+                );
+                return crate::src::headers::sqliteInt_h::WRC_Prune;
             }
-            if cnt != 1 as ::core::ffi::c_int {
-                let zErr: *const ::core::ffi::c_char;
-                if !pFJMatch.is_null() {
-                    if (*pFJMatch).nExpr == cnt - 1 as ::core::ffi::c_int {
-                        let __pExpr_ref = unsafe { &mut *pExpr };
-                        if __pExpr_ref.flags
-                            & 0x800000 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::U32_0
-                            != 0 as crate::src::ext::rtree::rtree::U32_0
-                        {
-                            __pExpr_ref.flags &= !(0x800000 as ::core::ffi::c_int
-                                as crate::src::ext::rtree::rtree::U32_0);
-                        } else {
-                            crate::src::src::expr::sqlite3ExprDelete(
-                                db as *mut crate::src::headers::sqliteInt_h::sqlite3,
-                                __pExpr_ref.pLeft as *mut crate::src::headers::sqliteInt_h::Expr,
-                            );
-                            __pExpr_ref.pLeft =
-                                ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::Expr>();
-                            crate::src::src::expr::sqlite3ExprDelete(
-                                db as *mut crate::src::headers::sqliteInt_h::sqlite3,
-                                __pExpr_ref.pRight as *mut crate::src::headers::sqliteInt_h::Expr,
-                            );
-                            __pExpr_ref.pRight =
-                                ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::Expr>();
-                        }
-                        extendFJMatch(
-                            pParse,
-                            &raw mut pFJMatch,
-                            pMatch,
-                            __pExpr_ref.iColumn as crate::src::fts5::I16_0,
-                        );
-                        __pExpr_ref.op =
-                            crate::src::parse::TK_FUNCTION_1 as crate::src::ext::rtree::rtree::U8_0;
-                        __pExpr_ref.u.zToken = b"coalesce\0" as *const u8
-                            as *const ::core::ffi::c_char
-                            as *mut ::core::ffi::c_char;
-                        __pExpr_ref.x.pList = pFJMatch;
-                        cnt = 1 as ::core::ffi::c_int;
-                        current_block = 8657971716502531892;
-                    } else {
-                        crate::src::src::expr::sqlite3ExprListDelete(
-                            db as *mut crate::src::headers::sqliteInt_h::sqlite3,
-                            pFJMatch as *mut crate::src::headers::sqliteInt_h::ExprList,
-                        );
-                        let _ = 
-                            ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::ExprList>();
-                        current_block = 17664728594743454682;
-                    }
-                } else {
-                    current_block = 17664728594743454682;
-                }
-                match current_block {
-                    8657971716502531892 => {}
-                    _ => {
-                        zErr = if cnt == 0 as ::core::ffi::c_int {
-                            b"no such column\0" as *const u8 as *const ::core::ffi::c_char
-                        } else {
-                            b"ambiguous column name\0" as *const u8 as *const ::core::ffi::c_char
-                        };
-                        if !zDb.is_null() {
-                            crate::src::src::util::sqlite3ErrorMsg_args(
-                                pParse as *mut crate::src::headers::sqliteInt_h::Parse,
-                                b"%s: %s.%s.%s\0" as *const u8 as *const ::core::ffi::c_char,
-                                &[
-                                    crate::src::src::printf::PrintfArg::Str(
-                                        zErr as *mut ::core::ffi::c_char,
-                                    ),
-                                    crate::src::src::printf::PrintfArg::Str(
-                                        zDb as *mut ::core::ffi::c_char,
-                                    ),
-                                    crate::src::src::printf::PrintfArg::Str(
-                                        zTab as *mut ::core::ffi::c_char,
-                                    ),
-                                    crate::src::src::printf::PrintfArg::Str(
-                                        zCol as *mut ::core::ffi::c_char,
-                                    ),
-                                ],
-                            );
-                        } else if !zTab.is_null() {
-                            crate::src::src::util::sqlite3ErrorMsg_args(
-                                pParse as *mut crate::src::headers::sqliteInt_h::Parse,
-                                b"%s: %s.%s\0" as *const u8 as *const ::core::ffi::c_char,
-                                &[
-                                    crate::src::src::printf::PrintfArg::Str(
-                                        zErr as *mut ::core::ffi::c_char,
-                                    ),
-                                    crate::src::src::printf::PrintfArg::Str(
-                                        zTab as *mut ::core::ffi::c_char,
-                                    ),
-                                    crate::src::src::printf::PrintfArg::Str(
-                                        zCol as *mut ::core::ffi::c_char,
-                                    ),
-                                ],
-                            );
-                        } else if cnt == 0 as ::core::ffi::c_int
-                            && (*pRight).flags
-                                & 0x80 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::U32_0
-                                != 0 as crate::src::ext::rtree::rtree::U32_0
-                        {
-                            crate::src::src::util::sqlite3ErrorMsg_args(
-                                pParse as *mut crate::src::headers::sqliteInt_h::Parse,
-                                b"%s: \"%s\" - should this be a string literal in single-quotes?\0"
-                                    as *const u8
-                                    as *const ::core::ffi::c_char,
-                                &[
-                                    crate::src::src::printf::PrintfArg::Str(
-                                        zErr as *mut ::core::ffi::c_char,
-                                    ),
-                                    crate::src::src::printf::PrintfArg::Str(
-                                        zCol as *mut ::core::ffi::c_char,
-                                    ),
-                                ],
-                            );
-                        } else {
-                            crate::src::src::util::sqlite3ErrorMsg_args(
-                                pParse as *mut crate::src::headers::sqliteInt_h::Parse,
-                                b"%s: %s\0" as *const u8 as *const ::core::ffi::c_char,
-                                &[
-                                    crate::src::src::printf::PrintfArg::Str(
-                                        zErr as *mut ::core::ffi::c_char,
-                                    ),
-                                    crate::src::src::printf::PrintfArg::Str(
-                                        zCol as *mut ::core::ffi::c_char,
-                                    ),
-                                ],
-                            );
-                        }
-                        crate::src::src::printf::sqlite3RecordErrorOffsetOfExpr(
-                            (*pParse).db as *mut crate::src::headers::sqliteInt_h::sqlite3,
-                            pExpr as *const crate::src::headers::sqliteInt_h::Expr,
-                        );
-                        (*pParse).set_checkSchema(
-                            1 as crate::src::headers::sqliteInt_h::Bft
-                                as crate::src::headers::sqliteInt_h::Bft,
-                        );
-                        (*pTopNC).nNcErr += 1;
-                        eNewExprOp = crate::src::parse::TK_NULL;
-                        current_block = 3244376785761602731;
-                    }
-                }
-            } else {
-                current_block = 3244376785761602731;
+            if crate::src::src::expr::sqlite3ExprIdToTrueFalse(
+                pExpr as *mut crate::src::headers::sqliteInt_h::Expr,
+            ) != 0
+            {
+                return crate::src::headers::sqliteInt_h::WRC_Prune;
             }
-            match current_block {
-                8657971716502531892 => {}
-                _ => {
-                    if ((*pExpr).flags
-                        & (0x10000 as ::core::ffi::c_int | 0x800000 as ::core::ffi::c_int)
-                            as crate::src::ext::rtree::rtree::U32_0 == 0 as crate::src::ext::rtree::rtree::U32_0)
+        }
+        if cnt != 1 as ::core::ffi::c_int {
+            let zErr: *const ::core::ffi::c_char;
+            if !pFJMatch.is_null() {
+                if (*pFJMatch).nExpr == cnt - 1 as ::core::ffi::c_int {
+                    let __pExpr_ref = unsafe { &mut *pExpr };
+                    if __pExpr_ref.flags
+                        & 0x800000 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::U32_0
+                        != 0 as crate::src::ext::rtree::rtree::U32_0
                     {
-                        let __pExpr_ref = unsafe { &mut *pExpr };
+                        __pExpr_ref.flags &= !(0x800000 as ::core::ffi::c_int
+                            as crate::src::ext::rtree::rtree::U32_0);
+                    } else {
                         crate::src::src::expr::sqlite3ExprDelete(
                             db as *mut crate::src::headers::sqliteInt_h::sqlite3,
                             __pExpr_ref.pLeft as *mut crate::src::headers::sqliteInt_h::Expr,
@@ -1423,23 +1277,160 @@ unsafe extern "C" fn lookupName(
                         );
                         __pExpr_ref.pRight =
                             ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::Expr>();
-                        __pExpr_ref.flags |=
-                            0x800000 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::U32_0;
                     }
-                    if !pMatch.is_null() {
-                        if (*pExpr).iColumn as ::core::ffi::c_int >= 0 as ::core::ffi::c_int {
-                            (*pMatch).colUsed |= sqlite3ExprColUsed(pExpr);
-                        } else {
-                            (*pMatch)
-                                .fg
-                                .set_rowidUsed(1 as ::core::ffi::c_uint as ::core::ffi::c_uint);
-                        }
+                    extendFJMatch(
+                        pParse,
+                        &raw mut pFJMatch,
+                        pMatch,
+                        __pExpr_ref.iColumn as crate::src::fts5::I16_0,
+                    );
+                    __pExpr_ref.op =
+                        crate::src::parse::TK_FUNCTION_1 as crate::src::ext::rtree::rtree::U8_0;
+                    __pExpr_ref.u.zToken = b"coalesce\0" as *const u8
+                        as *const ::core::ffi::c_char
+                        as *mut ::core::ffi::c_char;
+                    __pExpr_ref.x.pList = pFJMatch;
+                    cnt = 1 as ::core::ffi::c_int;
+                    current_block = 8657971716502531892;
+                } else {
+                    crate::src::src::expr::sqlite3ExprListDelete(
+                        db as *mut crate::src::headers::sqliteInt_h::sqlite3,
+                        pFJMatch as *mut crate::src::headers::sqliteInt_h::ExprList,
+                    );
+                    let _ = 
+                        ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::ExprList>();
+                    current_block = 17664728594743454682;
+                }
+            } else {
+                current_block = 17664728594743454682;
+            }
+            match current_block {
+                8657971716502531892 => {}
+                _ => {
+                    zErr = if cnt == 0 as ::core::ffi::c_int {
+                        b"no such column\0" as *const u8 as *const ::core::ffi::c_char
+                    } else {
+                        b"ambiguous column name\0" as *const u8 as *const ::core::ffi::c_char
+                    };
+                    if !zDb.is_null() {
+                        crate::src::src::util::sqlite3ErrorMsg_args(
+                            pParse as *mut crate::src::headers::sqliteInt_h::Parse,
+                            b"%s: %s.%s.%s\0" as *const u8 as *const ::core::ffi::c_char,
+                            &[
+                                crate::src::src::printf::PrintfArg::Str(
+                                    zErr as *mut ::core::ffi::c_char,
+                                ),
+                                crate::src::src::printf::PrintfArg::Str(
+                                    zDb as *mut ::core::ffi::c_char,
+                                ),
+                                crate::src::src::printf::PrintfArg::Str(
+                                    zTab as *mut ::core::ffi::c_char,
+                                ),
+                                crate::src::src::printf::PrintfArg::Str(
+                                    zCol as *mut ::core::ffi::c_char,
+                                ),
+                            ],
+                        );
+                    } else if !zTab.is_null() {
+                        crate::src::src::util::sqlite3ErrorMsg_args(
+                            pParse as *mut crate::src::headers::sqliteInt_h::Parse,
+                            b"%s: %s.%s\0" as *const u8 as *const ::core::ffi::c_char,
+                            &[
+                                crate::src::src::printf::PrintfArg::Str(
+                                    zErr as *mut ::core::ffi::c_char,
+                                ),
+                                crate::src::src::printf::PrintfArg::Str(
+                                    zTab as *mut ::core::ffi::c_char,
+                                ),
+                                crate::src::src::printf::PrintfArg::Str(
+                                    zCol as *mut ::core::ffi::c_char,
+                                ),
+                            ],
+                        );
+                    } else if cnt == 0 as ::core::ffi::c_int
+                        && (*pRight).flags
+                            & 0x80 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::U32_0
+                            != 0 as crate::src::ext::rtree::rtree::U32_0
+                    {
+                        crate::src::src::util::sqlite3ErrorMsg_args(
+                            pParse as *mut crate::src::headers::sqliteInt_h::Parse,
+                            b"%s: \"%s\" - should this be a string literal in single-quotes?\0"
+                                as *const u8
+                                as *const ::core::ffi::c_char,
+                            &[
+                                crate::src::src::printf::PrintfArg::Str(
+                                    zErr as *mut ::core::ffi::c_char,
+                                ),
+                                crate::src::src::printf::PrintfArg::Str(
+                                    zCol as *mut ::core::ffi::c_char,
+                                ),
+                            ],
+                        );
+                    } else {
+                        crate::src::src::util::sqlite3ErrorMsg_args(
+                            pParse as *mut crate::src::headers::sqliteInt_h::Parse,
+                            b"%s: %s\0" as *const u8 as *const ::core::ffi::c_char,
+                            &[
+                                crate::src::src::printf::PrintfArg::Str(
+                                    zErr as *mut ::core::ffi::c_char,
+                                ),
+                                crate::src::src::printf::PrintfArg::Str(
+                                    zCol as *mut ::core::ffi::c_char,
+                                ),
+                            ],
+                        );
                     }
-                    (*pExpr).op = eNewExprOp as crate::src::ext::rtree::rtree::U8_0;
+                    crate::src::src::printf::sqlite3RecordErrorOffsetOfExpr(
+                        (*pParse).db as *mut crate::src::headers::sqliteInt_h::sqlite3,
+                        pExpr as *const crate::src::headers::sqliteInt_h::Expr,
+                    );
+                    (*pParse).set_checkSchema(
+                        1 as crate::src::headers::sqliteInt_h::Bft
+                            as crate::src::headers::sqliteInt_h::Bft,
+                    );
+                    (*pTopNC).nNcErr += 1;
+                    eNewExprOp = crate::src::parse::TK_NULL;
+                    current_block = 3244376785761602731;
                 }
             }
+        } else {
+            current_block = 3244376785761602731;
         }
-        _ => {}
+        match current_block {
+            8657971716502531892 => {}
+            _ => {
+                if ((*pExpr).flags
+                    & (0x10000 as ::core::ffi::c_int | 0x800000 as ::core::ffi::c_int)
+                        as crate::src::ext::rtree::rtree::U32_0 == 0 as crate::src::ext::rtree::rtree::U32_0)
+                {
+                    let __pExpr_ref = unsafe { &mut *pExpr };
+                    crate::src::src::expr::sqlite3ExprDelete(
+                        db as *mut crate::src::headers::sqliteInt_h::sqlite3,
+                        __pExpr_ref.pLeft as *mut crate::src::headers::sqliteInt_h::Expr,
+                    );
+                    __pExpr_ref.pLeft =
+                        ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::Expr>();
+                    crate::src::src::expr::sqlite3ExprDelete(
+                        db as *mut crate::src::headers::sqliteInt_h::sqlite3,
+                        __pExpr_ref.pRight as *mut crate::src::headers::sqliteInt_h::Expr,
+                    );
+                    __pExpr_ref.pRight =
+                        ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::Expr>();
+                    __pExpr_ref.flags |=
+                        0x800000 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::U32_0;
+                }
+                if !pMatch.is_null() {
+                    if (*pExpr).iColumn as ::core::ffi::c_int >= 0 as ::core::ffi::c_int {
+                        (*pMatch).colUsed |= sqlite3ExprColUsed(pExpr);
+                    } else {
+                        (*pMatch)
+                            .fg
+                            .set_rowidUsed(1 as ::core::ffi::c_uint as ::core::ffi::c_uint);
+                    }
+                }
+                (*pExpr).op = eNewExprOp as crate::src::ext::rtree::rtree::U8_0;
+            }
+        }
     }
     if cnt == 1 as ::core::ffi::c_int {
         if (*(*pParse).db).xAuth.is_some()
@@ -2229,50 +2220,47 @@ unsafe extern "C" fn resolveExprStep(
             current_block_278 = 14666402909811248417;
         }
     }
-    match current_block_278 {
-        12972356734185922794 => {
-            let nLeft: ::core::ffi::c_int;
-            let mut nRight: ::core::ffi::c_int;
-            if ((*(*pParse).db).mallocFailed == 0) {
-                nLeft = crate::src::src::expr::sqlite3ExprVectorSize(
-                    (*pExpr).pLeft as *const crate::src::headers::sqliteInt_h::Expr,
+    if current_block_278 == 12972356734185922794 {
+        let nLeft: ::core::ffi::c_int;
+        let mut nRight: ::core::ffi::c_int;
+        if ((*(*pParse).db).mallocFailed == 0) {
+            nLeft = crate::src::src::expr::sqlite3ExprVectorSize(
+                (*pExpr).pLeft as *const crate::src::headers::sqliteInt_h::Expr,
+            );
+            if (*pExpr).op as ::core::ffi::c_int == crate::src::parse::TK_BETWEEN {
+                nRight = crate::src::src::expr::sqlite3ExprVectorSize(
+                    (*(&raw mut (*(*pExpr).x.pList).a
+                        as *mut crate::src::headers::sqliteInt_h::ExprList_item)
+                        .offset(0_isize))
+                    .pExpr
+                        as *const crate::src::headers::sqliteInt_h::Expr,
                 );
-                if (*pExpr).op as ::core::ffi::c_int == crate::src::parse::TK_BETWEEN {
+                if nRight == nLeft {
                     nRight = crate::src::src::expr::sqlite3ExprVectorSize(
                         (*(&raw mut (*(*pExpr).x.pList).a
                             as *mut crate::src::headers::sqliteInt_h::ExprList_item)
-                            .offset(0_isize))
+                            .offset(1_isize))
                         .pExpr
                             as *const crate::src::headers::sqliteInt_h::Expr,
                     );
-                    if nRight == nLeft {
-                        nRight = crate::src::src::expr::sqlite3ExprVectorSize(
-                            (*(&raw mut (*(*pExpr).x.pList).a
-                                as *mut crate::src::headers::sqliteInt_h::ExprList_item)
-                                .offset(1_isize))
-                            .pExpr
-                                as *const crate::src::headers::sqliteInt_h::Expr,
-                        );
-                    }
-                } else {
-                    nRight = crate::src::src::expr::sqlite3ExprVectorSize(
-                        (*pExpr).pRight as *const crate::src::headers::sqliteInt_h::Expr,
-                    );
                 }
-                if nLeft != nRight {
-                    crate::src::src::util::sqlite3ErrorMsg_args(
-                        pParse as *mut crate::src::headers::sqliteInt_h::Parse,
-                        b"row value misused\0" as *const u8 as *const ::core::ffi::c_char,
-                        &[],
-                    );
-                    crate::src::src::printf::sqlite3RecordErrorOffsetOfExpr(
-                        (*pParse).db as *mut crate::src::headers::sqliteInt_h::sqlite3,
-                        pExpr as *const crate::src::headers::sqliteInt_h::Expr,
-                    );
-                }
+            } else {
+                nRight = crate::src::src::expr::sqlite3ExprVectorSize(
+                    (*pExpr).pRight as *const crate::src::headers::sqliteInt_h::Expr,
+                );
+            }
+            if nLeft != nRight {
+                crate::src::src::util::sqlite3ErrorMsg_args(
+                    pParse as *mut crate::src::headers::sqliteInt_h::Parse,
+                    b"row value misused\0" as *const u8 as *const ::core::ffi::c_char,
+                    &[],
+                );
+                crate::src::src::printf::sqlite3RecordErrorOffsetOfExpr(
+                    (*pParse).db as *mut crate::src::headers::sqliteInt_h::sqlite3,
+                    pExpr as *const crate::src::headers::sqliteInt_h::Expr,
+                );
             }
         }
-        _ => {}
     }
     if (*pParse).nErr != 0 {
         crate::src::headers::sqliteInt_h::WRC_Abort

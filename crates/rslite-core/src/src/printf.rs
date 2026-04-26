@@ -2767,162 +2767,159 @@ pub unsafe fn sqlite3_str_vappendf2<T: PrintfArgs>(
                 }
                 _ => {}
             }
-            match current_block {
-                9031895888649199432 => {
-                    let __infop_ref = unsafe { &*infop };
-                    if __infop_ref.flags as ::core::ffi::c_int & FLAG_SIGNED != 0 {
-                        let v: crate::src::ext::rtree::rtree::I64_0 = cursor.get_int();
-                        if v < 0 as crate::src::ext::rtree::rtree::I64_0 {
-                            longvalue = !v as crate::src::headers::sqlite3_h::SqliteUint64;
-                            longvalue = longvalue.wrapping_add(1);
-                            prefix = '-' as i32 as ::core::ffi::c_char;
-                        } else {
-                            longvalue = v as crate::src::headers::sqlite3_h::SqliteUint64;
-                            prefix = flag_prefix as ::core::ffi::c_char;
-                        }
+            if current_block == 9031895888649199432 {
+                let __infop_ref = unsafe { &*infop };
+                if __infop_ref.flags as ::core::ffi::c_int & FLAG_SIGNED != 0 {
+                    let v: crate::src::ext::rtree::rtree::I64_0 = cursor.get_int();
+                    if v < 0 as crate::src::ext::rtree::rtree::I64_0 {
+                        longvalue = !v as crate::src::headers::sqlite3_h::SqliteUint64;
+                        longvalue = longvalue.wrapping_add(1);
+                        prefix = '-' as i32 as ::core::ffi::c_char;
                     } else {
-                        longvalue = cursor.get_uint();
-                        prefix = 0 as ::core::ffi::c_char;
+                        longvalue = v as crate::src::headers::sqlite3_h::SqliteUint64;
+                        prefix = flag_prefix as ::core::ffi::c_char;
                     }
-                    if longvalue == 0 as crate::src::headers::sqlite3_h::SqliteUint64 {
-                        flag_alternateform = 0 as EtByte;
-                    }
-                    if flag_zeropad as ::core::ffi::c_int != 0
-                        && precision
-                            < width
-                                - (prefix as ::core::ffi::c_int != 0 as ::core::ffi::c_int)
-                                    as ::core::ffi::c_int
-                    {
-                        precision = width
+                } else {
+                    longvalue = cursor.get_uint();
+                    prefix = 0 as ::core::ffi::c_char;
+                }
+                if longvalue == 0 as crate::src::headers::sqlite3_h::SqliteUint64 {
+                    flag_alternateform = 0 as EtByte;
+                }
+                if flag_zeropad as ::core::ffi::c_int != 0
+                    && precision
+                        < width
                             - (prefix as ::core::ffi::c_int != 0 as ::core::ffi::c_int)
-                                as ::core::ffi::c_int;
-                    }
-                    if precision
-                        < etBUFSIZE - 10 as ::core::ffi::c_int - etBUFSIZE / 3 as ::core::ffi::c_int
-                    {
-                        nOut = etBUFSIZE;
-                        zOut = &raw mut buf as *mut ::core::ffi::c_char;
-                    } else {
-                        let mut n: crate::src::ext::rtree::rtree::U64_0;
-                        n = (precision as crate::src::ext::rtree::rtree::U64_0)
-                            .wrapping_add(10 as crate::src::ext::rtree::rtree::U64_0);
-                        if cThousand != 0 {
-                            n = n.wrapping_add(
-                                (precision / 3 as ::core::ffi::c_int)
-                                    as crate::src::ext::rtree::rtree::U64_0,
-                            );
-                        }
-                        zExtra = printfTempBuf(
-                            pAccum,
-                            n as crate::src::headers::sqlite3_h::Sqlite3Int64,
-                        );
-                        zOut = zExtra;
-                        if zOut.is_null() {
-                            return;
-                        }
-                        nOut = n as ::core::ffi::c_int;
-                    }
-                    bufpt = zOut.offset((nOut - 1 as ::core::ffi::c_int) as isize)
-                        as *mut ::core::ffi::c_char;
-                    if xtype as ::core::ffi::c_int == etORDINAL {
-                        static mut zOrd: [::core::ffi::c_char; 9] = unsafe {
-                            ::core::mem::transmute::<[u8; 9], [::core::ffi::c_char; 9]>(
-                                *b"thstndrd\0",
-                            )
-                        };
-                        let mut x: ::core::ffi::c_int = longvalue
-                            .wrapping_rem(10 as crate::src::headers::sqlite3_h::SqliteUint64)
+                                as ::core::ffi::c_int
+                {
+                    precision = width
+                        - (prefix as ::core::ffi::c_int != 0 as ::core::ffi::c_int)
                             as ::core::ffi::c_int;
-                        if x >= 4 as ::core::ffi::c_int
-                            || longvalue
-                                .wrapping_div(10 as crate::src::headers::sqlite3_h::SqliteUint64)
-                                .wrapping_rem(10 as crate::src::headers::sqlite3_h::SqliteUint64)
-                                == 1 as crate::src::headers::sqlite3_h::SqliteUint64
-                        {
-                            x = 0 as ::core::ffi::c_int;
-                        }
-                        bufpt = bufpt.offset(-1);
-                        *bufpt =
-                            zOrd[(x * 2 as ::core::ffi::c_int + 1 as ::core::ffi::c_int) as usize];
-                        bufpt = bufpt.offset(-1);
-                        *bufpt = zOrd[(x * 2 as ::core::ffi::c_int) as usize];
-                    }
-                    let cset: *const ::core::ffi::c_char = (&raw const aDigits
-                        as *const ::core::ffi::c_char)
-                        .offset(__infop_ref.charset as isize)
-                        as *const ::core::ffi::c_char;
-                    let base: crate::src::ext::rtree::rtree::U8_0 =
-                        __infop_ref.base as crate::src::ext::rtree::rtree::U8_0;
-                    loop {
-                        bufpt = bufpt.offset(-1);
-                        *bufpt = *cset.offset(
-                            longvalue
-                                .wrapping_rem(base as crate::src::headers::sqlite3_h::SqliteUint64)
-                                as isize,
+                }
+                if precision
+                    < etBUFSIZE - 10 as ::core::ffi::c_int - etBUFSIZE / 3 as ::core::ffi::c_int
+                {
+                    nOut = etBUFSIZE;
+                    zOut = &raw mut buf as *mut ::core::ffi::c_char;
+                } else {
+                    let mut n: crate::src::ext::rtree::rtree::U64_0;
+                    n = (precision as crate::src::ext::rtree::rtree::U64_0)
+                        .wrapping_add(10 as crate::src::ext::rtree::rtree::U64_0);
+                    if cThousand != 0 {
+                        n = n.wrapping_add(
+                            (precision / 3 as ::core::ffi::c_int)
+                                as crate::src::ext::rtree::rtree::U64_0,
                         );
-                        longvalue = longvalue
-                            .wrapping_div(base as crate::src::headers::sqlite3_h::SqliteUint64);
-                        if (longvalue <= 0 as crate::src::headers::sqlite3_h::SqliteUint64) {
+                    }
+                    zExtra = printfTempBuf(
+                        pAccum,
+                        n as crate::src::headers::sqlite3_h::Sqlite3Int64,
+                    );
+                    zOut = zExtra;
+                    if zOut.is_null() {
+                        return;
+                    }
+                    nOut = n as ::core::ffi::c_int;
+                }
+                bufpt = zOut.offset((nOut - 1 as ::core::ffi::c_int) as isize)
+                    as *mut ::core::ffi::c_char;
+                if xtype as ::core::ffi::c_int == etORDINAL {
+                    static mut zOrd: [::core::ffi::c_char; 9] = unsafe {
+                        ::core::mem::transmute::<[u8; 9], [::core::ffi::c_char; 9]>(
+                            *b"thstndrd\0",
+                        )
+                    };
+                    let mut x: ::core::ffi::c_int = longvalue
+                        .wrapping_rem(10 as crate::src::headers::sqlite3_h::SqliteUint64)
+                        as ::core::ffi::c_int;
+                    if x >= 4 as ::core::ffi::c_int
+                        || longvalue
+                            .wrapping_div(10 as crate::src::headers::sqlite3_h::SqliteUint64)
+                            .wrapping_rem(10 as crate::src::headers::sqlite3_h::SqliteUint64)
+                            == 1 as crate::src::headers::sqlite3_h::SqliteUint64
+                    {
+                        x = 0 as ::core::ffi::c_int;
+                    }
+                    bufpt = bufpt.offset(-1);
+                    *bufpt =
+                        zOrd[(x * 2 as ::core::ffi::c_int + 1 as ::core::ffi::c_int) as usize];
+                    bufpt = bufpt.offset(-1);
+                    *bufpt = zOrd[(x * 2 as ::core::ffi::c_int) as usize];
+                }
+                let cset: *const ::core::ffi::c_char = (&raw const aDigits
+                    as *const ::core::ffi::c_char)
+                    .offset(__infop_ref.charset as isize)
+                    as *const ::core::ffi::c_char;
+                let base: crate::src::ext::rtree::rtree::U8_0 =
+                    __infop_ref.base as crate::src::ext::rtree::rtree::U8_0;
+                loop {
+                    bufpt = bufpt.offset(-1);
+                    *bufpt = *cset.offset(
+                        longvalue
+                            .wrapping_rem(base as crate::src::headers::sqlite3_h::SqliteUint64)
+                            as isize,
+                    );
+                    longvalue = longvalue
+                        .wrapping_div(base as crate::src::headers::sqlite3_h::SqliteUint64);
+                    if (longvalue <= 0 as crate::src::headers::sqlite3_h::SqliteUint64) {
+                        break;
+                    }
+                }
+                length = (zOut.offset((nOut - 1 as ::core::ffi::c_int) as isize)
+                    as *mut ::core::ffi::c_char)
+                    .offset_from(bufpt) as ::core::ffi::c_long
+                    as ::core::ffi::c_int;
+                while precision > length {
+                    bufpt = bufpt.offset(-1);
+                    *bufpt = '0' as i32 as ::core::ffi::c_char;
+                    length += 1;
+                }
+                if cThousand != 0 {
+                    let mut nn: ::core::ffi::c_int =
+                        (length - 1 as ::core::ffi::c_int) / 3 as ::core::ffi::c_int;
+                    let mut ix: ::core::ffi::c_int = (length - 1 as ::core::ffi::c_int)
+                        % 3 as ::core::ffi::c_int
+                        + 1 as ::core::ffi::c_int;
+                    bufpt = bufpt.offset(-(nn as isize));
+                    idx = 0 as ::core::ffi::c_int;
+                    while nn > 0 as ::core::ffi::c_int {
+                        *bufpt.offset(idx as isize) = *bufpt.offset((idx + nn) as isize);
+                        ix -= 1;
+                        if ix == 0 as ::core::ffi::c_int {
+                            idx += 1;
+                            *bufpt.offset(idx as isize) = cThousand as ::core::ffi::c_char;
+                            nn -= 1;
+                            ix = 3 as ::core::ffi::c_int;
+                        }
+                        idx += 1;
+                    }
+                }
+                if prefix != 0 {
+                    bufpt = bufpt.offset(-1);
+                    *bufpt = prefix;
+                }
+                if flag_alternateform as ::core::ffi::c_int != 0
+                    && __infop_ref.prefix as ::core::ffi::c_int != 0
+                {
+                    let mut pre: *const ::core::ffi::c_char;
+                    let mut x_0: ::core::ffi::c_char;
+                    pre = (&raw const aPrefix as *const ::core::ffi::c_char)
+                        .offset(__infop_ref.prefix as isize)
+                        as *const ::core::ffi::c_char;
+                    loop {
+                        x_0 = *pre;
+                        if (x_0 as ::core::ffi::c_int == 0 as ::core::ffi::c_int) {
                             break;
                         }
-                    }
-                    length = (zOut.offset((nOut - 1 as ::core::ffi::c_int) as isize)
-                        as *mut ::core::ffi::c_char)
-                        .offset_from(bufpt) as ::core::ffi::c_long
-                        as ::core::ffi::c_int;
-                    while precision > length {
                         bufpt = bufpt.offset(-1);
-                        *bufpt = '0' as i32 as ::core::ffi::c_char;
-                        length += 1;
+                        *bufpt = x_0;
+                        pre = pre.offset(1);
                     }
-                    if cThousand != 0 {
-                        let mut nn: ::core::ffi::c_int =
-                            (length - 1 as ::core::ffi::c_int) / 3 as ::core::ffi::c_int;
-                        let mut ix: ::core::ffi::c_int = (length - 1 as ::core::ffi::c_int)
-                            % 3 as ::core::ffi::c_int
-                            + 1 as ::core::ffi::c_int;
-                        bufpt = bufpt.offset(-(nn as isize));
-                        idx = 0 as ::core::ffi::c_int;
-                        while nn > 0 as ::core::ffi::c_int {
-                            *bufpt.offset(idx as isize) = *bufpt.offset((idx + nn) as isize);
-                            ix -= 1;
-                            if ix == 0 as ::core::ffi::c_int {
-                                idx += 1;
-                                *bufpt.offset(idx as isize) = cThousand as ::core::ffi::c_char;
-                                nn -= 1;
-                                ix = 3 as ::core::ffi::c_int;
-                            }
-                            idx += 1;
-                        }
-                    }
-                    if prefix != 0 {
-                        bufpt = bufpt.offset(-1);
-                        *bufpt = prefix;
-                    }
-                    if flag_alternateform as ::core::ffi::c_int != 0
-                        && __infop_ref.prefix as ::core::ffi::c_int != 0
-                    {
-                        let mut pre: *const ::core::ffi::c_char;
-                        let mut x_0: ::core::ffi::c_char;
-                        pre = (&raw const aPrefix as *const ::core::ffi::c_char)
-                            .offset(__infop_ref.prefix as isize)
-                            as *const ::core::ffi::c_char;
-                        loop {
-                            x_0 = *pre;
-                            if (x_0 as ::core::ffi::c_int == 0 as ::core::ffi::c_int) {
-                                break;
-                            }
-                            bufpt = bufpt.offset(-1);
-                            *bufpt = x_0;
-                            pre = pre.offset(1);
-                        }
-                    }
-                    length = (zOut.offset((nOut - 1 as ::core::ffi::c_int) as isize)
-                        as *mut ::core::ffi::c_char)
-                        .offset_from(bufpt) as ::core::ffi::c_long
-                        as ::core::ffi::c_int;
                 }
-                _ => {}
+                length = (zOut.offset((nOut - 1 as ::core::ffi::c_int) as isize)
+                    as *mut ::core::ffi::c_char)
+                    .offset_from(bufpt) as ::core::ffi::c_long
+                    as ::core::ffi::c_int;
             }
             width -= length;
             if width > 0 as ::core::ffi::c_int {

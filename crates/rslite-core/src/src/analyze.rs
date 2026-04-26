@@ -383,7 +383,7 @@ unsafe extern "C" fn statInit(
     let nColUp: ::core::ffi::c_int = if (::core::mem::size_of::<crate::src::headers::sqliteInt_h::TRowcnt>() as usize)
         < 8_usize
     {
-        nCol + 1 as ::core::ffi::c_int & !(1 as ::core::ffi::c_int)
+        (nCol + 1 as ::core::ffi::c_int) & !(1 as ::core::ffi::c_int)
     } else {
         nCol
     };

@@ -985,8 +985,7 @@ unsafe extern "C" fn applyAffinity(
         let __pRec_ref = unsafe { &mut *pRec };
         if 0 as ::core::ffi::c_int
             == __pRec_ref.flags as ::core::ffi::c_int & crate::src::headers::vdbeInt_h::MEM_Str
-        {
-            if __pRec_ref.flags as ::core::ffi::c_int
+            && __pRec_ref.flags as ::core::ffi::c_int
                 & (crate::src::headers::vdbeInt_h::MEM_Real
                     | crate::src::headers::vdbeInt_h::MEM_Int
                     | crate::src::headers::vdbeInt_h::MEM_IntReal)
@@ -998,7 +997,6 @@ unsafe extern "C" fn applyAffinity(
                     1 as crate::src::ext::rtree::rtree::U8_0,
                 );
             }
-        }
         __pRec_ref.flags = (__pRec_ref.flags as ::core::ffi::c_int
             & !(crate::src::headers::vdbeInt_h::MEM_Real
                 | crate::src::headers::vdbeInt_h::MEM_Int
@@ -2405,18 +2403,16 @@ pub unsafe extern "C" fn sqlite3VdbeExec(
                                         aMask[serialType as usize] as crate::src::fts5::U16_0;
                                 }
                             } else {
-                                typeMask = ((1 as ::core::ffi::c_int)
-                                    << (*pOp).p4.i - 1 as ::core::ffi::c_int)
+                                typeMask = ((1 as ::core::ffi::c_int) << ((*pOp).p4.i - 1 as ::core::ffi::c_int))
                                     as crate::src::fts5::U16_0;
                             }
                         } else {
-                            typeMask = ((1 as ::core::ffi::c_int)
-                                << crate::src::src::vdbeapi::sqlite3_value_type(
+                            typeMask = ((1 as ::core::ffi::c_int) << (crate::src::src::vdbeapi::sqlite3_value_type(
                                     aMem.offset((*pOp).p3 as isize)
                                         as *mut crate::src::src::vdbe::Mem
                                         as *mut crate::src::headers::vdbeInt_h::sqlite3_value
                                         as *mut crate::src::headers::vdbeInt_h::sqlite3_value,
-                                ) - 1 as ::core::ffi::c_int)
+                                ) - 1 as ::core::ffi::c_int))
                                 as crate::src::fts5::U16_0;
                         }
                         if typeMask as ::core::ffi::c_int & (*pOp).p5 as ::core::ffi::c_int != 0 {
@@ -2597,165 +2593,156 @@ pub unsafe extern "C" fn sqlite3VdbeExec(
                             }
                             _ => {}
                         }
-                        match current_block {
-                            4580464979391500237 => {
-                                let __pC_1_ref = unsafe { &mut *pC_1 };
-                                __pC_1_ref.cacheStatus = __p_ref.cacheCtr;
-                                let fresh3 = &mut *aOffset.offset(0_isize);
-                                *fresh3 = *__pC_1_ref.aRow.offset(0_isize)
-                                    as crate::src::ext::rtree::rtree::U32_0;
-                                if *fresh3 < 0x80 as crate::src::ext::rtree::rtree::U32_0 {
-                                    __pC_1_ref.iHdrOffset =
-                                        1 as crate::src::ext::rtree::rtree::U32_0;
+                        if current_block == 4580464979391500237 {
+                            let __pC_1_ref = unsafe { &mut *pC_1 };
+                            __pC_1_ref.cacheStatus = __p_ref.cacheCtr;
+                            let fresh3 = &mut *aOffset.offset(0_isize);
+                            *fresh3 = *__pC_1_ref.aRow.offset(0_isize)
+                                as crate::src::ext::rtree::rtree::U32_0;
+                            if *fresh3 < 0x80 as crate::src::ext::rtree::rtree::U32_0 {
+                                __pC_1_ref.iHdrOffset =
+                                    1 as crate::src::ext::rtree::rtree::U32_0;
+                            } else {
+                                __pC_1_ref.iHdrOffset =
+                                    crate::src::src::util::sqlite3GetVarint32(
+                                        __pC_1_ref.aRow as *const ::core::ffi::c_uchar,
+                                        aOffset,
+                                    )
+                                        as crate::src::ext::rtree::rtree::U32_0;
+                            }
+                            __pC_1_ref.nHdrParsed = 0 as crate::src::fts5::U16_0;
+                            if __pC_1_ref.szRow < *aOffset.offset(0_isize) {
+                                __pC_1_ref.aRow =
+                                    ::core::ptr::null::<crate::src::ext::rtree::rtree::U8_0>();
+                                __pC_1_ref.szRow = 0 as crate::src::ext::rtree::rtree::U32_0;
+                                if *aOffset.offset(0_isize)
+                                    > 98307 as crate::src::ext::rtree::rtree::U32_0
+                                    || *aOffset.offset(0_isize) > __pC_1_ref.payloadSize
+                                {
+                                    current_block = 1447722815581200623;
                                 } else {
-                                    __pC_1_ref.iHdrOffset =
-                                        crate::src::src::util::sqlite3GetVarint32(
-                                            __pC_1_ref.aRow as *const ::core::ffi::c_uchar,
-                                            aOffset,
-                                        )
-                                            as crate::src::ext::rtree::rtree::U32_0;
+                                    current_block = 9147150541555199843;
                                 }
-                                __pC_1_ref.nHdrParsed = 0 as crate::src::fts5::U16_0;
-                                if __pC_1_ref.szRow < *aOffset.offset(0_isize) {
-                                    __pC_1_ref.aRow =
-                                        ::core::ptr::null::<crate::src::ext::rtree::rtree::U8_0>();
-                                    __pC_1_ref.szRow = 0 as crate::src::ext::rtree::rtree::U32_0;
-                                    if *aOffset.offset(0_isize)
-                                        > 98307 as crate::src::ext::rtree::rtree::U32_0
-                                        || *aOffset.offset(0_isize) > __pC_1_ref.payloadSize
-                                    {
-                                        current_block = 1447722815581200623;
+                            } else {
+                                zData = __pC_1_ref.aRow;
+                                current_block = 13485359645741033759;
+                            }
+                        }
+                        if current_block == 9147150541555199843 {
+                            if (*pC_1).nHdrParsed as crate::src::ext::rtree::rtree::U32_0
+                                <= p2_1
+                            {
+                                if (*pC_1).iHdrOffset < *aOffset.offset(0_isize) {
+                                    if (*pC_1).aRow.is_null() {
+                                        rc = crate::src::src::vdbemem::sqlite3VdbeMemFromBtreeZeroOffset(
+                                            (*pC_1).uc.pCursor,
+                                            *aOffset.offset(0_isize),
+                                            
+                                            &raw mut sMem as *mut _ as *mut crate::src::headers::vdbeInt_h::sqlite3_value,
+                                        );
+                                        if rc != crate::src::headers::sqlite3_h::SQLITE_OK {
+                                            current_block = 9863799879598557851;
+                                            break;
+                                        }
+                                        zData =
+                                            sMem.z as *mut crate::src::ext::rtree::rtree::U8_0;
                                     } else {
-                                        current_block = 9147150541555199843;
+                                        zData = (*pC_1).aRow;
                                     }
-                                } else {
-                                    zData = __pC_1_ref.aRow;
                                     current_block = 13485359645741033759;
-                                }
-                            }
-                            _ => {}
-                        }
-                        match current_block {
-                            9147150541555199843 => {
-                                if (*pC_1).nHdrParsed as crate::src::ext::rtree::rtree::U32_0
-                                    <= p2_1
-                                {
-                                    if (*pC_1).iHdrOffset < *aOffset.offset(0_isize) {
-                                        if (*pC_1).aRow.is_null() {
-                                            rc = crate::src::src::vdbemem::sqlite3VdbeMemFromBtreeZeroOffset(
-                                                (*pC_1).uc.pCursor,
-                                                *aOffset.offset(0_isize),
-                                                
-                                                &raw mut sMem as *mut _ as *mut crate::src::headers::vdbeInt_h::sqlite3_value,
-                                            );
-                                            if rc != crate::src::headers::sqlite3_h::SQLITE_OK {
-                                                current_block = 9863799879598557851;
-                                                break;
-                                            }
-                                            zData =
-                                                sMem.z as *mut crate::src::ext::rtree::rtree::U8_0;
-                                        } else {
-                                            zData = (*pC_1).aRow;
-                                        }
-                                        current_block = 13485359645741033759;
-                                    } else {
-                                        t = 0 as crate::src::ext::rtree::rtree::U32_0;
-                                        current_block = 13908727566713266484;
-                                    }
                                 } else {
-                                    t = *(&raw mut (*pC_1).aType
+                                    t = 0 as crate::src::ext::rtree::rtree::U32_0;
+                                    current_block = 13908727566713266484;
+                                }
+                            } else {
+                                t = *(&raw mut (*pC_1).aType
+                                    as *mut crate::src::ext::rtree::rtree::U32_0)
+                                    .offset(p2_1 as isize);
+                                current_block = 2644446111302234773;
+                            }
+                        }
+                        if current_block == 13485359645741033759 {
+                            let __pC_1_ref = unsafe { &mut *pC_1 };
+                            i_0 = __pC_1_ref.nHdrParsed as ::core::ffi::c_int;
+                            offset64 = *aOffset.offset(i_0 as isize)
+                                as crate::src::ext::rtree::rtree::U64_0;
+                            zHdr = zData.offset(__pC_1_ref.iHdrOffset as isize);
+                            zEndHdr = zData.offset(*aOffset.offset(0_isize) as isize);
+                            loop {
+                                t = *zHdr.offset(0_isize)
+                                    as crate::src::ext::rtree::rtree::U32_0;
+                                let fresh4 = &mut *(&raw mut __pC_1_ref.aType
+                                    as *mut crate::src::ext::rtree::rtree::U32_0)
+                                    .offset(i_0 as isize);
+                                *fresh4 = t;
+                                if *fresh4 < 0x80 as crate::src::ext::rtree::rtree::U32_0 {
+                                    zHdr = zHdr.offset(1);
+                                    offset64 = offset64.wrapping_add(
+                                        crate::src::src::vdbeaux::sqlite3VdbeOneByteSerialTypeLen(t as crate::src::ext::rtree::rtree::U8_0) as crate::src::ext::rtree::rtree::U64_0,
+                                    );
+                                } else {
+                                    zHdr =
+                                        zHdr.offset(crate::src::src::util::sqlite3GetVarint32(
+                                            zHdr as *const ::core::ffi::c_uchar,
+                                            &raw mut t,
+                                        )
+                                            as ::core::ffi::c_int
+                                            as isize);
+                                    *(&raw mut __pC_1_ref.aType
                                         as *mut crate::src::ext::rtree::rtree::U32_0)
-                                        .offset(p2_1 as isize);
-                                    current_block = 2644446111302234773;
+                                        .offset(i_0 as isize) = t;
+                                    offset64 = offset64.wrapping_add(
+                                        crate::src::src::vdbeaux::sqlite3VdbeSerialTypeLen(t)
+                                            as crate::src::ext::rtree::rtree::U64_0,
+                                    );
+                                }
+                                i_0 += 1;
+                                *aOffset.offset(i_0 as isize) = (offset64
+                                    & 0xffffffff as crate::src::ext::rtree::rtree::U64_0)
+                                    as crate::src::ext::rtree::rtree::U32_0;
+                                if !(i_0 as crate::src::ext::rtree::rtree::U32_0 <= p2_1
+                                    && zHdr < zEndHdr)
+                                {
+                                    break;
                                 }
                             }
-                            _ => {}
-                        }
-                        match current_block {
-                            13485359645741033759 => {
-                                let __pC_1_ref = unsafe { &mut *pC_1 };
-                                i_0 = __pC_1_ref.nHdrParsed as ::core::ffi::c_int;
-                                offset64 = *aOffset.offset(i_0 as isize)
-                                    as crate::src::ext::rtree::rtree::U64_0;
-                                zHdr = zData.offset(__pC_1_ref.iHdrOffset as isize);
-                                zEndHdr = zData.offset(*aOffset.offset(0_isize) as isize);
-                                loop {
-                                    t = *zHdr.offset(0_isize)
-                                        as crate::src::ext::rtree::rtree::U32_0;
-                                    let fresh4 = &mut *(&raw mut __pC_1_ref.aType
-                                        as *mut crate::src::ext::rtree::rtree::U32_0)
-                                        .offset(i_0 as isize);
-                                    *fresh4 = t;
-                                    if *fresh4 < 0x80 as crate::src::ext::rtree::rtree::U32_0 {
-                                        zHdr = zHdr.offset(1);
-                                        offset64 = offset64.wrapping_add(
-                                            crate::src::src::vdbeaux::sqlite3VdbeOneByteSerialTypeLen(t as crate::src::ext::rtree::rtree::U8_0) as crate::src::ext::rtree::rtree::U64_0,
-                                        );
-                                    } else {
-                                        zHdr =
-                                            zHdr.offset(crate::src::src::util::sqlite3GetVarint32(
-                                                zHdr as *const ::core::ffi::c_uchar,
-                                                &raw mut t,
-                                            )
-                                                as ::core::ffi::c_int
-                                                as isize);
-                                        *(&raw mut __pC_1_ref.aType
-                                            as *mut crate::src::ext::rtree::rtree::U32_0)
-                                            .offset(i_0 as isize) = t;
-                                        offset64 = offset64.wrapping_add(
-                                            crate::src::src::vdbeaux::sqlite3VdbeSerialTypeLen(t)
-                                                as crate::src::ext::rtree::rtree::U64_0,
-                                        );
-                                    }
-                                    i_0 += 1;
-                                    *aOffset.offset(i_0 as isize) = (offset64
-                                        & 0xffffffff as crate::src::ext::rtree::rtree::U64_0)
-                                        as crate::src::ext::rtree::rtree::U32_0;
-                                    if !(i_0 as crate::src::ext::rtree::rtree::U32_0 <= p2_1
-                                        && zHdr < zEndHdr)
-                                    {
-                                        break;
-                                    }
-                                }
-                                if zHdr >= zEndHdr
-                                    && (zHdr > zEndHdr
-                                        || offset64
-                                            != __pC_1_ref.payloadSize
-                                                as crate::src::ext::rtree::rtree::U64_0)
+                            if zHdr >= zEndHdr
+                                && (zHdr > zEndHdr
                                     || offset64
-                                        > __pC_1_ref.payloadSize
-                                            as crate::src::ext::rtree::rtree::U64_0
+                                        != __pC_1_ref.payloadSize
+                                            as crate::src::ext::rtree::rtree::U64_0)
+                                || offset64
+                                    > __pC_1_ref.payloadSize
+                                        as crate::src::ext::rtree::rtree::U64_0
+                            {
+                                if *aOffset.offset(0_isize)
+                                    == 0 as crate::src::ext::rtree::rtree::U32_0
                                 {
-                                    if *aOffset.offset(0_isize)
-                                        == 0 as crate::src::ext::rtree::rtree::U32_0
-                                    {
-                                        i_0 = 0 as ::core::ffi::c_int;
-                                        zHdr = zEndHdr;
-                                        current_block = 14847419611938267583;
-                                    } else {
-                                        if __pC_1_ref.aRow.is_null() {
-                                            crate::src::src::vdbemem::sqlite3VdbeMemRelease(&raw mut sMem as *mut _ as *mut crate::src::headers::vdbeInt_h::sqlite3_value);
-                                        }
-                                        current_block = 1447722815581200623;
-                                    }
-                                } else {
+                                    i_0 = 0 as ::core::ffi::c_int;
+                                    zHdr = zEndHdr;
                                     current_block = 14847419611938267583;
-                                }
-                                match current_block {
-                                    1447722815581200623 => {}
-                                    _ => {
-                                        __pC_1_ref.nHdrParsed = i_0 as crate::src::fts5::U16_0;
-                                        __pC_1_ref.iHdrOffset = zHdr.offset_from(zData)
-                                            as ::core::ffi::c_long
-                                            as crate::src::ext::rtree::rtree::U32_0;
-                                        if __pC_1_ref.aRow.is_null() {
-                                            crate::src::src::vdbemem::sqlite3VdbeMemRelease(&raw mut sMem as *mut _ as *mut crate::src::headers::vdbeInt_h::sqlite3_value);
-                                        }
-                                        current_block = 13908727566713266484;
+                                } else {
+                                    if __pC_1_ref.aRow.is_null() {
+                                        crate::src::src::vdbemem::sqlite3VdbeMemRelease(&raw mut sMem as *mut _ as *mut crate::src::headers::vdbeInt_h::sqlite3_value);
                                     }
+                                    current_block = 1447722815581200623;
+                                }
+                            } else {
+                                current_block = 14847419611938267583;
+                            }
+                            match current_block {
+                                1447722815581200623 => {}
+                                _ => {
+                                    __pC_1_ref.nHdrParsed = i_0 as crate::src::fts5::U16_0;
+                                    __pC_1_ref.iHdrOffset = zHdr.offset_from(zData)
+                                        as ::core::ffi::c_long
+                                        as crate::src::ext::rtree::rtree::U32_0;
+                                    if __pC_1_ref.aRow.is_null() {
+                                        crate::src::src::vdbemem::sqlite3VdbeMemRelease(&raw mut sMem as *mut _ as *mut crate::src::headers::vdbeInt_h::sqlite3_value);
+                                    }
+                                    current_block = 13908727566713266484;
                                 }
                             }
-                            _ => {}
                         }
                         match current_block {
                             13908727566713266484 => {
@@ -2803,140 +2790,137 @@ pub unsafe extern "C" fn sqlite3VdbeExec(
                         match current_block {
                             5783071609795492627 => {}
                             _ => {
-                                match current_block {
-                                    2644446111302234773 => {
-                                        pDest = aMem.offset((*pOp).p3 as isize)
-                                            as *mut crate::src::src::vdbe::Mem;
-                                        if (*pDest).flags as ::core::ffi::c_int
-                                            & (crate::src::headers::vdbeInt_h::MEM_Agg
-                                                | crate::src::headers::vdbeInt_h::MEM_Dyn)
-                                            != 0 as ::core::ffi::c_int
-                                        {
-                                            crate::src::src::vdbemem::sqlite3VdbeMemSetNull(pDest as *mut crate::src::headers::vdbeInt_h::sqlite3_value);
-                                        }
-                                        if (*pC_1).szRow
-                                            >= *aOffset.offset(p2_1.wrapping_add(
-                                                1 as crate::src::ext::rtree::rtree::U32_0,
-                                            )
-                                                as isize)
-                                        {
-                                            zData = (*pC_1)
-                                                .aRow
-                                                .offset(*aOffset.offset(p2_1 as isize) as isize);
-                                            if t < 12 as crate::src::ext::rtree::rtree::U32_0 {
-                                                crate::src::src::vdbeaux::sqlite3VdbeSerialGet(
-                                                    zData as *const ::core::ffi::c_uchar,
-                                                    t,
-                                                    
-                                                    pDest as *mut crate::src::headers::vdbeInt_h::sqlite3_value,
-                                                );
-                                            } else {
-                                                static mut aFlag: [crate::src::fts5::U16_0; 2] = [
-                                                    crate::src::headers::vdbeInt_h::MEM_Blob
-                                                        as crate::src::fts5::U16_0,
-                                                    (crate::src::headers::vdbeInt_h::MEM_Str
-                                                        | crate::src::headers::vdbeInt_h::MEM_Term)
-                                                        as crate::src::fts5::U16_0,
-                                                ];
-                                                len = t
-                                                    .wrapping_sub(
-                                                        12 as crate::src::ext::rtree::rtree::U32_0,
-                                                    )
-                                                    .wrapping_div(
-                                                        2 as crate::src::ext::rtree::rtree::U32_0,
-                                                    )
-                                                    as ::core::ffi::c_int;
-                                                let __pDest_ref = unsafe { &mut *pDest };
-                                                __pDest_ref.n = len;
-                                                __pDest_ref.enc = encoding;
-                                                if __pDest_ref.szMalloc
-                                                    < len + 2 as ::core::ffi::c_int
-                                                {
-                                                    if len
-                                                        > (*db).aLimit[crate::src::headers::sqlite3_h::SQLITE_LIMIT_LENGTH as usize]
-                                                    {
-                                                        current_block = 7113757447962609068;
-                                                        break;
-                                                    }
-                                                    __pDest_ref.flags =
-                                                        crate::src::headers::vdbeInt_h::MEM_Null
-                                                            as crate::src::fts5::U16_0;
-                                                    if crate::src::src::vdbemem::sqlite3VdbeMemGrow(
-                                                        
-                                                        pDest as *mut crate::src::headers::vdbeInt_h::sqlite3_value,
-                                                        len + 2 as ::core::ffi::c_int,
-                                                        0 as ::core::ffi::c_int,
-                                                    ) != 0
-                                                    {
-                                                        current_block = 2471432538116610086;
-                                                        break;
-                                                    }
-                                                } else {
-                                                    __pDest_ref.z = __pDest_ref.zMalloc;
-                                                }
-                                                ::core::ptr::copy_nonoverlapping(
-                                                    zData as *const u8,
-                                                    __pDest_ref.z as *mut u8,
-                                                    len as usize,
-                                                );
-                                                *__pDest_ref.z.offset(len as isize) =
-                                                    0 as ::core::ffi::c_char;
-                                                *__pDest_ref.z.offset(
-                                                    (len + 1 as ::core::ffi::c_int) as isize,
-                                                ) = 0 as ::core::ffi::c_char;
-                                                __pDest_ref.flags = aFlag[(t & 1
-                                                    as crate::src::ext::rtree::rtree::U32_0)
-                                                    as usize];
-                                            }
+                                if current_block == 2644446111302234773 {
+                                    pDest = aMem.offset((*pOp).p3 as isize)
+                                        as *mut crate::src::src::vdbe::Mem;
+                                    if (*pDest).flags as ::core::ffi::c_int
+                                        & (crate::src::headers::vdbeInt_h::MEM_Agg
+                                            | crate::src::headers::vdbeInt_h::MEM_Dyn)
+                                        != 0 as ::core::ffi::c_int
+                                    {
+                                        crate::src::src::vdbemem::sqlite3VdbeMemSetNull(pDest as *mut crate::src::headers::vdbeInt_h::sqlite3_value);
+                                    }
+                                    if (*pC_1).szRow
+                                        >= *aOffset.offset(p2_1.wrapping_add(
+                                            1 as crate::src::ext::rtree::rtree::U32_0,
+                                        )
+                                            as isize)
+                                    {
+                                        zData = (*pC_1)
+                                            .aRow
+                                            .offset(*aOffset.offset(p2_1 as isize) as isize);
+                                        if t < 12 as crate::src::ext::rtree::rtree::U32_0 {
+                                            crate::src::src::vdbeaux::sqlite3VdbeSerialGet(
+                                                zData as *const ::core::ffi::c_uchar,
+                                                t,
+                                                
+                                                pDest as *mut crate::src::headers::vdbeInt_h::sqlite3_value,
+                                            );
                                         } else {
-                                            
-                                            (*pDest).enc = encoding;
-                                            let p5: crate::src::ext::rtree::rtree::U8_0 = ((*pOp).p5 as ::core::ffi::c_int
-                                                & crate::src::headers::sqliteInt_h::OPFLAG_BYTELENARG)
-                                                as crate::src::ext::rtree::rtree::U8_0;
-                                            if p5 as ::core::ffi::c_int != 0 as ::core::ffi::c_int
-                                                && (p5 as ::core::ffi::c_int == crate::src::headers::sqliteInt_h::OPFLAG_TYPEOFARG
-                                                    || t >= 12 as crate::src::ext::rtree::rtree::U32_0
-                                                        && (t & 1 as crate::src::ext::rtree::rtree::U32_0 == 0 as crate::src::ext::rtree::rtree::U32_0
-                                                            || p5 as ::core::ffi::c_int
-                                                                == crate::src::headers::sqliteInt_h::OPFLAG_BYTELENARG))
-                                                || crate::src::src::vdbeaux::sqlite3VdbeSerialTypeLen(t) == 0 as crate::src::ext::rtree::rtree::U32_0
+                                            static mut aFlag: [crate::src::fts5::U16_0; 2] = [
+                                                crate::src::headers::vdbeInt_h::MEM_Blob
+                                                    as crate::src::fts5::U16_0,
+                                                (crate::src::headers::vdbeInt_h::MEM_Str
+                                                    | crate::src::headers::vdbeInt_h::MEM_Term)
+                                                    as crate::src::fts5::U16_0,
+                                            ];
+                                            len = t
+                                                .wrapping_sub(
+                                                    12 as crate::src::ext::rtree::rtree::U32_0,
+                                                )
+                                                .wrapping_div(
+                                                    2 as crate::src::ext::rtree::rtree::U32_0,
+                                                )
+                                                as ::core::ffi::c_int;
+                                            let __pDest_ref = unsafe { &mut *pDest };
+                                            __pDest_ref.n = len;
+                                            __pDest_ref.enc = encoding;
+                                            if __pDest_ref.szMalloc
+                                                < len + 2 as ::core::ffi::c_int
                                             {
-                                                crate::src::src::vdbeaux::sqlite3VdbeSerialGet(
-                                                    &raw const crate::src::src::global::sqlite3CtypeMap
-                                                        as *const ::core::ffi::c_uchar
-                                                        as *mut crate::src::ext::rtree::rtree::U8_0,
-                                                    t,
+                                                if len
+                                                    > (*db).aLimit[crate::src::headers::sqlite3_h::SQLITE_LIMIT_LENGTH as usize]
+                                                {
+                                                    current_block = 7113757447962609068;
+                                                    break;
+                                                }
+                                                __pDest_ref.flags =
+                                                    crate::src::headers::vdbeInt_h::MEM_Null
+                                                        as crate::src::fts5::U16_0;
+                                                if crate::src::src::vdbemem::sqlite3VdbeMemGrow(
                                                     
                                                     pDest as *mut crate::src::headers::vdbeInt_h::sqlite3_value,
-                                                );
+                                                    len + 2 as ::core::ffi::c_int,
+                                                    0 as ::core::ffi::c_int,
+                                                ) != 0
+                                                {
+                                                    current_block = 2471432538116610086;
+                                                    break;
+                                                }
                                             } else {
-                                                rc = vdbeColumnFromOverflow(
-                                                    pC_1,
-                                                    p2_1 as ::core::ffi::c_int,
-                                                    t,
-                                                    *aOffset.offset(p2_1 as isize) as crate::src::ext::rtree::rtree::I64_0,
-                                                    __p_ref.cacheCtr,
-                                                    colCacheCtr,
-                                                    pDest,
-                                                );
-                                                if rc != 0 {
-                                                    if rc == crate::src::headers::sqlite3_h::SQLITE_NOMEM {
-                                                        current_block = 2471432538116610086;
-                                                        break;
-                                                    }
-                                                    if rc == crate::src::headers::sqlite3_h::SQLITE_TOOBIG {
-                                                        current_block = 7113757447962609068;
-                                                        break;
-                                                    } else {
-                                                        current_block = 9863799879598557851;
-                                                        break;
-                                                    }
+                                                __pDest_ref.z = __pDest_ref.zMalloc;
+                                            }
+                                            ::core::ptr::copy_nonoverlapping(
+                                                zData as *const u8,
+                                                __pDest_ref.z as *mut u8,
+                                                len as usize,
+                                            );
+                                            *__pDest_ref.z.offset(len as isize) =
+                                                0 as ::core::ffi::c_char;
+                                            *__pDest_ref.z.offset(
+                                                (len + 1 as ::core::ffi::c_int) as isize,
+                                            ) = 0 as ::core::ffi::c_char;
+                                            __pDest_ref.flags = aFlag[(t & 1
+                                                as crate::src::ext::rtree::rtree::U32_0)
+                                                as usize];
+                                        }
+                                    } else {
+                                        
+                                        (*pDest).enc = encoding;
+                                        let p5: crate::src::ext::rtree::rtree::U8_0 = ((*pOp).p5 as ::core::ffi::c_int
+                                            & crate::src::headers::sqliteInt_h::OPFLAG_BYTELENARG)
+                                            as crate::src::ext::rtree::rtree::U8_0;
+                                        if p5 as ::core::ffi::c_int != 0 as ::core::ffi::c_int
+                                            && (p5 as ::core::ffi::c_int == crate::src::headers::sqliteInt_h::OPFLAG_TYPEOFARG
+                                                || t >= 12 as crate::src::ext::rtree::rtree::U32_0
+                                                    && (t & 1 as crate::src::ext::rtree::rtree::U32_0 == 0 as crate::src::ext::rtree::rtree::U32_0
+                                                        || p5 as ::core::ffi::c_int
+                                                            == crate::src::headers::sqliteInt_h::OPFLAG_BYTELENARG))
+                                            || crate::src::src::vdbeaux::sqlite3VdbeSerialTypeLen(t) == 0 as crate::src::ext::rtree::rtree::U32_0
+                                        {
+                                            crate::src::src::vdbeaux::sqlite3VdbeSerialGet(
+                                                &raw const crate::src::src::global::sqlite3CtypeMap
+                                                    as *const ::core::ffi::c_uchar
+                                                    as *mut crate::src::ext::rtree::rtree::U8_0,
+                                                t,
+                                                
+                                                pDest as *mut crate::src::headers::vdbeInt_h::sqlite3_value,
+                                            );
+                                        } else {
+                                            rc = vdbeColumnFromOverflow(
+                                                pC_1,
+                                                p2_1 as ::core::ffi::c_int,
+                                                t,
+                                                *aOffset.offset(p2_1 as isize) as crate::src::ext::rtree::rtree::I64_0,
+                                                __p_ref.cacheCtr,
+                                                colCacheCtr,
+                                                pDest,
+                                            );
+                                            if rc != 0 {
+                                                if rc == crate::src::headers::sqlite3_h::SQLITE_NOMEM {
+                                                    current_block = 2471432538116610086;
+                                                    break;
+                                                }
+                                                if rc == crate::src::headers::sqlite3_h::SQLITE_TOOBIG {
+                                                    current_block = 7113757447962609068;
+                                                    break;
+                                                } else {
+                                                    current_block = 9863799879598557851;
+                                                    break;
                                                 }
                                             }
                                         }
                                     }
-                                    _ => {}
                                 }
                                 updateMaxBlobsize(pDest);
                                 current_block = 5783071609795492627;
@@ -2984,327 +2968,324 @@ pub unsafe extern "C" fn sqlite3VdbeExec(
                             } else {
                                 current_block = 14461663267880372962;
                             }
-                            match current_block {
-                                14461663267880372962 => {
-                                    applyAffinity(
-                                        pIn1,
-                                        (*aCol.offset(i_1 as isize)).affinity,
-                                        encoding,
-                                    );
-                                    if (*pIn1).flags as ::core::ffi::c_int
-                                        & crate::src::headers::vdbeInt_h::MEM_Null
-                                        == 0 as ::core::ffi::c_int
+                            if current_block == 14461663267880372962 {
+                                applyAffinity(
+                                    pIn1,
+                                    (*aCol.offset(i_1 as isize)).affinity,
+                                    encoding,
+                                );
+                                if (*pIn1).flags as ::core::ffi::c_int
+                                    & crate::src::headers::vdbeInt_h::MEM_Null
+                                    == 0 as ::core::ffi::c_int
+                                {
+                                    match (*aCol.offset(i_1 as isize)).eCType()
+                                        as ::core::ffi::c_int
                                     {
-                                        match (*aCol.offset(i_1 as isize)).eCType()
-                                            as ::core::ffi::c_int
-                                        {
-                                            crate::src::headers::sqliteInt_h::COLTYPE_BLOB => {
-                                                current_block = 18205226828399833612;
-                                                match current_block {
-                                                    3518619798157913413 => {
-                                                        if (*pIn1).flags as ::core::ffi::c_int
-                                                            & crate::src::headers::vdbeInt_h::MEM_Str
-                                                            == 0 as ::core::ffi::c_int
-                                                        {
-                                                            current_block = 8094297922442305621;
-                                                            break;
-                                                        }
+                                        crate::src::headers::sqliteInt_h::COLTYPE_BLOB => {
+                                            current_block = 18205226828399833612;
+                                            match current_block {
+                                                3518619798157913413 => {
+                                                    if (*pIn1).flags as ::core::ffi::c_int
+                                                        & crate::src::headers::vdbeInt_h::MEM_Str
+                                                        == 0 as ::core::ffi::c_int
+                                                    {
+                                                        current_block = 8094297922442305621;
+                                                        break;
                                                     }
-                                                    18205226828399833612 => {
-                                                        if (*pIn1).flags as ::core::ffi::c_int
-                                                            & crate::src::headers::vdbeInt_h::MEM_Blob
-                                                            == 0 as ::core::ffi::c_int
-                                                        {
-                                                            current_block = 8094297922442305621;
-                                                            break;
-                                                        }
+                                                }
+                                                18205226828399833612 => {
+                                                    if (*pIn1).flags as ::core::ffi::c_int
+                                                        & crate::src::headers::vdbeInt_h::MEM_Blob
+                                                        == 0 as ::core::ffi::c_int
+                                                    {
+                                                        current_block = 8094297922442305621;
+                                                        break;
                                                     }
-                                                    10371895734591966926 => {
-                                                        if (*pIn1).flags as ::core::ffi::c_int
-                                                            & crate::src::headers::vdbeInt_h::MEM_Int
-                                                            == 0 as ::core::ffi::c_int
-                                                        {
-                                                            current_block = 8094297922442305621;
-                                                            break;
-                                                        }
+                                                }
+                                                10371895734591966926 => {
+                                                    if (*pIn1).flags as ::core::ffi::c_int
+                                                        & crate::src::headers::vdbeInt_h::MEM_Int
+                                                        == 0 as ::core::ffi::c_int
+                                                    {
+                                                        current_block = 8094297922442305621;
+                                                        break;
                                                     }
-                                                    _ => {
-                                                        if (*pIn1).flags as ::core::ffi::c_int
-                                                            & crate::src::headers::vdbeInt_h::MEM_Int
-                                                            != 0
+                                                }
+                                                _ => {
+                                                    if (*pIn1).flags as ::core::ffi::c_int
+                                                        & crate::src::headers::vdbeInt_h::MEM_Int
+                                                        != 0
+                                                    {
+                                                        if (*pIn1).u.i
+                                                            <= 140737488355327
+                                                                as ::core::ffi::c_longlong
+                                                            && (*pIn1).u.i
+                                                                >= -(140737488355328
+                                                                    as ::core::ffi::c_longlong)
                                                         {
-                                                            if (*pIn1).u.i
-                                                                <= 140737488355327
-                                                                    as ::core::ffi::c_longlong
-                                                                && (*pIn1).u.i
-                                                                    >= -(140737488355328
-                                                                        as ::core::ffi::c_longlong)
-                                                            {
-                                                                let __pIn1_ref = unsafe { &mut *pIn1 };
-                                                                __pIn1_ref.flags = (__pIn1_ref.flags
-                                                                    as ::core::ffi::c_int
-                                                                    | crate::src::headers::vdbeInt_h::MEM_IntReal)
-                                                                    as crate::src::fts5::U16_0;
-                                                                __pIn1_ref.flags = (__pIn1_ref.flags
-                                                                    as ::core::ffi::c_int
-                                                                    & !crate::src::headers::vdbeInt_h::MEM_Int)
-                                                                    as crate::src::fts5::U16_0;
-                                                            } else {
-                                                                let __pIn1_ref = unsafe { &mut *pIn1 };
-                                                                __pIn1_ref.u.r = __pIn1_ref.u.i
-                                                                    as ::core::ffi::c_double;
-                                                                __pIn1_ref.flags = (__pIn1_ref.flags
-                                                                    as ::core::ffi::c_int
-                                                                    | crate::src::headers::vdbeInt_h::MEM_Real)
-                                                                    as crate::src::fts5::U16_0;
-                                                                __pIn1_ref.flags = (__pIn1_ref.flags
-                                                                    as ::core::ffi::c_int
-                                                                    & !crate::src::headers::vdbeInt_h::MEM_Int)
-                                                                    as crate::src::fts5::U16_0;
-                                                            }
-                                                        } else if (*pIn1).flags
-                                                            as ::core::ffi::c_int
-                                                            & (crate::src::headers::vdbeInt_h::MEM_Real | crate::src::headers::vdbeInt_h::MEM_IntReal)
-                                                            == 0 as ::core::ffi::c_int
-                                                        {
-                                                            current_block = 8094297922442305621;
-                                                            break;
+                                                            let __pIn1_ref = unsafe { &mut *pIn1 };
+                                                            __pIn1_ref.flags = (__pIn1_ref.flags
+                                                                as ::core::ffi::c_int
+                                                                | crate::src::headers::vdbeInt_h::MEM_IntReal)
+                                                                as crate::src::fts5::U16_0;
+                                                            __pIn1_ref.flags = (__pIn1_ref.flags
+                                                                as ::core::ffi::c_int
+                                                                & !crate::src::headers::vdbeInt_h::MEM_Int)
+                                                                as crate::src::fts5::U16_0;
+                                                        } else {
+                                                            let __pIn1_ref = unsafe { &mut *pIn1 };
+                                                            __pIn1_ref.u.r = __pIn1_ref.u.i
+                                                                as ::core::ffi::c_double;
+                                                            __pIn1_ref.flags = (__pIn1_ref.flags
+                                                                as ::core::ffi::c_int
+                                                                | crate::src::headers::vdbeInt_h::MEM_Real)
+                                                                as crate::src::fts5::U16_0;
+                                                            __pIn1_ref.flags = (__pIn1_ref.flags
+                                                                as ::core::ffi::c_int
+                                                                & !crate::src::headers::vdbeInt_h::MEM_Int)
+                                                                as crate::src::fts5::U16_0;
                                                         }
+                                                    } else if (*pIn1).flags
+                                                        as ::core::ffi::c_int
+                                                        & (crate::src::headers::vdbeInt_h::MEM_Real | crate::src::headers::vdbeInt_h::MEM_IntReal)
+                                                        == 0 as ::core::ffi::c_int
+                                                    {
+                                                        current_block = 8094297922442305621;
+                                                        break;
                                                     }
                                                 }
                                             }
-                                            crate::src::headers::sqliteInt_h::COLTYPE_INTEGER_1
-                                            | crate::src::headers::sqliteInt_h::COLTYPE_INT => {
-                                                current_block = 10371895734591966926;
-                                                match current_block {
-                                                    3518619798157913413 => {
-                                                        if (*pIn1).flags as ::core::ffi::c_int
-                                                            & crate::src::headers::vdbeInt_h::MEM_Str
-                                                            == 0 as ::core::ffi::c_int
-                                                        {
-                                                            current_block = 8094297922442305621;
-                                                            break;
-                                                        }
-                                                    }
-                                                    18205226828399833612 => {
-                                                        if (*pIn1).flags as ::core::ffi::c_int
-                                                            & crate::src::headers::vdbeInt_h::MEM_Blob
-                                                            == 0 as ::core::ffi::c_int
-                                                        {
-                                                            current_block = 8094297922442305621;
-                                                            break;
-                                                        }
-                                                    }
-                                                    10371895734591966926 => {
-                                                        if (*pIn1).flags as ::core::ffi::c_int
-                                                            & crate::src::headers::vdbeInt_h::MEM_Int
-                                                            == 0 as ::core::ffi::c_int
-                                                        {
-                                                            current_block = 8094297922442305621;
-                                                            break;
-                                                        }
-                                                    }
-                                                    _ => {
-                                                        if (*pIn1).flags as ::core::ffi::c_int
-                                                            & crate::src::headers::vdbeInt_h::MEM_Int
-                                                            != 0
-                                                        {
-                                                            if (*pIn1).u.i
-                                                                <= 140737488355327
-                                                                    as ::core::ffi::c_longlong
-                                                                && (*pIn1).u.i
-                                                                    >= -(140737488355328
-                                                                        as ::core::ffi::c_longlong)
-                                                            {
-                                                                let __pIn1_ref = unsafe { &mut *pIn1 };
-                                                                __pIn1_ref.flags = (__pIn1_ref.flags
-                                                                    as ::core::ffi::c_int
-                                                                    | crate::src::headers::vdbeInt_h::MEM_IntReal)
-                                                                    as crate::src::fts5::U16_0;
-                                                                __pIn1_ref.flags = (__pIn1_ref.flags
-                                                                    as ::core::ffi::c_int
-                                                                    & !crate::src::headers::vdbeInt_h::MEM_Int)
-                                                                    as crate::src::fts5::U16_0;
-                                                            } else {
-                                                                let __pIn1_ref = unsafe { &mut *pIn1 };
-                                                                __pIn1_ref.u.r = __pIn1_ref.u.i
-                                                                    as ::core::ffi::c_double;
-                                                                __pIn1_ref.flags = (__pIn1_ref.flags
-                                                                    as ::core::ffi::c_int
-                                                                    | crate::src::headers::vdbeInt_h::MEM_Real)
-                                                                    as crate::src::fts5::U16_0;
-                                                                __pIn1_ref.flags = (__pIn1_ref.flags
-                                                                    as ::core::ffi::c_int
-                                                                    & !crate::src::headers::vdbeInt_h::MEM_Int)
-                                                                    as crate::src::fts5::U16_0;
-                                                            }
-                                                        } else if (*pIn1).flags
-                                                            as ::core::ffi::c_int
-                                                            & (crate::src::headers::vdbeInt_h::MEM_Real | crate::src::headers::vdbeInt_h::MEM_IntReal)
-                                                            == 0 as ::core::ffi::c_int
-                                                        {
-                                                            current_block = 8094297922442305621;
-                                                            break;
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                            crate::src::headers::sqliteInt_h::COLTYPE_TEXT => {
-                                                current_block = 3518619798157913413;
-                                                match current_block {
-                                                    3518619798157913413 => {
-                                                        if (*pIn1).flags as ::core::ffi::c_int
-                                                            & crate::src::headers::vdbeInt_h::MEM_Str
-                                                            == 0 as ::core::ffi::c_int
-                                                        {
-                                                            current_block = 8094297922442305621;
-                                                            break;
-                                                        }
-                                                    }
-                                                    18205226828399833612 => {
-                                                        if (*pIn1).flags as ::core::ffi::c_int
-                                                            & crate::src::headers::vdbeInt_h::MEM_Blob
-                                                            == 0 as ::core::ffi::c_int
-                                                        {
-                                                            current_block = 8094297922442305621;
-                                                            break;
-                                                        }
-                                                    }
-                                                    10371895734591966926 => {
-                                                        if (*pIn1).flags as ::core::ffi::c_int
-                                                            & crate::src::headers::vdbeInt_h::MEM_Int
-                                                            == 0 as ::core::ffi::c_int
-                                                        {
-                                                            current_block = 8094297922442305621;
-                                                            break;
-                                                        }
-                                                    }
-                                                    _ => {
-                                                        if (*pIn1).flags as ::core::ffi::c_int
-                                                            & crate::src::headers::vdbeInt_h::MEM_Int
-                                                            != 0
-                                                        {
-                                                            if (*pIn1).u.i
-                                                                <= 140737488355327
-                                                                    as ::core::ffi::c_longlong
-                                                                && (*pIn1).u.i
-                                                                    >= -(140737488355328
-                                                                        as ::core::ffi::c_longlong)
-                                                            {
-                                                                let __pIn1_ref = unsafe { &mut *pIn1 };
-                                                                __pIn1_ref.flags = (__pIn1_ref.flags
-                                                                    as ::core::ffi::c_int
-                                                                    | crate::src::headers::vdbeInt_h::MEM_IntReal)
-                                                                    as crate::src::fts5::U16_0;
-                                                                __pIn1_ref.flags = (__pIn1_ref.flags
-                                                                    as ::core::ffi::c_int
-                                                                    & !crate::src::headers::vdbeInt_h::MEM_Int)
-                                                                    as crate::src::fts5::U16_0;
-                                                            } else {
-                                                                let __pIn1_ref = unsafe { &mut *pIn1 };
-                                                                __pIn1_ref.u.r = __pIn1_ref.u.i
-                                                                    as ::core::ffi::c_double;
-                                                                __pIn1_ref.flags = (__pIn1_ref.flags
-                                                                    as ::core::ffi::c_int
-                                                                    | crate::src::headers::vdbeInt_h::MEM_Real)
-                                                                    as crate::src::fts5::U16_0;
-                                                                __pIn1_ref.flags = (__pIn1_ref.flags
-                                                                    as ::core::ffi::c_int
-                                                                    & !crate::src::headers::vdbeInt_h::MEM_Int)
-                                                                    as crate::src::fts5::U16_0;
-                                                            }
-                                                        } else if (*pIn1).flags
-                                                            as ::core::ffi::c_int
-                                                            & (crate::src::headers::vdbeInt_h::MEM_Real | crate::src::headers::vdbeInt_h::MEM_IntReal)
-                                                            == 0 as ::core::ffi::c_int
-                                                        {
-                                                            current_block = 8094297922442305621;
-                                                            break;
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                            crate::src::headers::sqliteInt_h::COLTYPE_REAL => {
-                                                current_block = 6603035963279056686;
-                                                match current_block {
-                                                    3518619798157913413 => {
-                                                        if (*pIn1).flags as ::core::ffi::c_int
-                                                            & crate::src::headers::vdbeInt_h::MEM_Str
-                                                            == 0 as ::core::ffi::c_int
-                                                        {
-                                                            current_block = 8094297922442305621;
-                                                            break;
-                                                        }
-                                                    }
-                                                    18205226828399833612 => {
-                                                        if (*pIn1).flags as ::core::ffi::c_int
-                                                            & crate::src::headers::vdbeInt_h::MEM_Blob
-                                                            == 0 as ::core::ffi::c_int
-                                                        {
-                                                            current_block = 8094297922442305621;
-                                                            break;
-                                                        }
-                                                    }
-                                                    10371895734591966926 => {
-                                                        if (*pIn1).flags as ::core::ffi::c_int
-                                                            & crate::src::headers::vdbeInt_h::MEM_Int
-                                                            == 0 as ::core::ffi::c_int
-                                                        {
-                                                            current_block = 8094297922442305621;
-                                                            break;
-                                                        }
-                                                    }
-                                                    _ => {
-                                                        if (*pIn1).flags as ::core::ffi::c_int
-                                                            & crate::src::headers::vdbeInt_h::MEM_Int
-                                                            != 0
-                                                        {
-                                                            if (*pIn1).u.i
-                                                                <= 140737488355327
-                                                                    as ::core::ffi::c_longlong
-                                                                && (*pIn1).u.i
-                                                                    >= -(140737488355328
-                                                                        as ::core::ffi::c_longlong)
-                                                            {
-                                                                let __pIn1_ref = unsafe { &mut *pIn1 };
-                                                                __pIn1_ref.flags = (__pIn1_ref.flags
-                                                                    as ::core::ffi::c_int
-                                                                    | crate::src::headers::vdbeInt_h::MEM_IntReal)
-                                                                    as crate::src::fts5::U16_0;
-                                                                __pIn1_ref.flags = (__pIn1_ref.flags
-                                                                    as ::core::ffi::c_int
-                                                                    & !crate::src::headers::vdbeInt_h::MEM_Int)
-                                                                    as crate::src::fts5::U16_0;
-                                                            } else {
-                                                                let __pIn1_ref = unsafe { &mut *pIn1 };
-                                                                __pIn1_ref.u.r = __pIn1_ref.u.i
-                                                                    as ::core::ffi::c_double;
-                                                                __pIn1_ref.flags = (__pIn1_ref.flags
-                                                                    as ::core::ffi::c_int
-                                                                    | crate::src::headers::vdbeInt_h::MEM_Real)
-                                                                    as crate::src::fts5::U16_0;
-                                                                __pIn1_ref.flags = (__pIn1_ref.flags
-                                                                    as ::core::ffi::c_int
-                                                                    & !crate::src::headers::vdbeInt_h::MEM_Int)
-                                                                    as crate::src::fts5::U16_0;
-                                                            }
-                                                        } else if (*pIn1).flags
-                                                            as ::core::ffi::c_int
-                                                            & (crate::src::headers::vdbeInt_h::MEM_Real | crate::src::headers::vdbeInt_h::MEM_IntReal)
-                                                            == 0 as ::core::ffi::c_int
-                                                        {
-                                                            current_block = 8094297922442305621;
-                                                            break;
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                            _ => {}
                                         }
+                                        crate::src::headers::sqliteInt_h::COLTYPE_INTEGER_1
+                                        | crate::src::headers::sqliteInt_h::COLTYPE_INT => {
+                                            current_block = 10371895734591966926;
+                                            match current_block {
+                                                3518619798157913413 => {
+                                                    if (*pIn1).flags as ::core::ffi::c_int
+                                                        & crate::src::headers::vdbeInt_h::MEM_Str
+                                                        == 0 as ::core::ffi::c_int
+                                                    {
+                                                        current_block = 8094297922442305621;
+                                                        break;
+                                                    }
+                                                }
+                                                18205226828399833612 => {
+                                                    if (*pIn1).flags as ::core::ffi::c_int
+                                                        & crate::src::headers::vdbeInt_h::MEM_Blob
+                                                        == 0 as ::core::ffi::c_int
+                                                    {
+                                                        current_block = 8094297922442305621;
+                                                        break;
+                                                    }
+                                                }
+                                                10371895734591966926 => {
+                                                    if (*pIn1).flags as ::core::ffi::c_int
+                                                        & crate::src::headers::vdbeInt_h::MEM_Int
+                                                        == 0 as ::core::ffi::c_int
+                                                    {
+                                                        current_block = 8094297922442305621;
+                                                        break;
+                                                    }
+                                                }
+                                                _ => {
+                                                    if (*pIn1).flags as ::core::ffi::c_int
+                                                        & crate::src::headers::vdbeInt_h::MEM_Int
+                                                        != 0
+                                                    {
+                                                        if (*pIn1).u.i
+                                                            <= 140737488355327
+                                                                as ::core::ffi::c_longlong
+                                                            && (*pIn1).u.i
+                                                                >= -(140737488355328
+                                                                    as ::core::ffi::c_longlong)
+                                                        {
+                                                            let __pIn1_ref = unsafe { &mut *pIn1 };
+                                                            __pIn1_ref.flags = (__pIn1_ref.flags
+                                                                as ::core::ffi::c_int
+                                                                | crate::src::headers::vdbeInt_h::MEM_IntReal)
+                                                                as crate::src::fts5::U16_0;
+                                                            __pIn1_ref.flags = (__pIn1_ref.flags
+                                                                as ::core::ffi::c_int
+                                                                & !crate::src::headers::vdbeInt_h::MEM_Int)
+                                                                as crate::src::fts5::U16_0;
+                                                        } else {
+                                                            let __pIn1_ref = unsafe { &mut *pIn1 };
+                                                            __pIn1_ref.u.r = __pIn1_ref.u.i
+                                                                as ::core::ffi::c_double;
+                                                            __pIn1_ref.flags = (__pIn1_ref.flags
+                                                                as ::core::ffi::c_int
+                                                                | crate::src::headers::vdbeInt_h::MEM_Real)
+                                                                as crate::src::fts5::U16_0;
+                                                            __pIn1_ref.flags = (__pIn1_ref.flags
+                                                                as ::core::ffi::c_int
+                                                                & !crate::src::headers::vdbeInt_h::MEM_Int)
+                                                                as crate::src::fts5::U16_0;
+                                                        }
+                                                    } else if (*pIn1).flags
+                                                        as ::core::ffi::c_int
+                                                        & (crate::src::headers::vdbeInt_h::MEM_Real | crate::src::headers::vdbeInt_h::MEM_IntReal)
+                                                        == 0 as ::core::ffi::c_int
+                                                    {
+                                                        current_block = 8094297922442305621;
+                                                        break;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        crate::src::headers::sqliteInt_h::COLTYPE_TEXT => {
+                                            current_block = 3518619798157913413;
+                                            match current_block {
+                                                3518619798157913413 => {
+                                                    if (*pIn1).flags as ::core::ffi::c_int
+                                                        & crate::src::headers::vdbeInt_h::MEM_Str
+                                                        == 0 as ::core::ffi::c_int
+                                                    {
+                                                        current_block = 8094297922442305621;
+                                                        break;
+                                                    }
+                                                }
+                                                18205226828399833612 => {
+                                                    if (*pIn1).flags as ::core::ffi::c_int
+                                                        & crate::src::headers::vdbeInt_h::MEM_Blob
+                                                        == 0 as ::core::ffi::c_int
+                                                    {
+                                                        current_block = 8094297922442305621;
+                                                        break;
+                                                    }
+                                                }
+                                                10371895734591966926 => {
+                                                    if (*pIn1).flags as ::core::ffi::c_int
+                                                        & crate::src::headers::vdbeInt_h::MEM_Int
+                                                        == 0 as ::core::ffi::c_int
+                                                    {
+                                                        current_block = 8094297922442305621;
+                                                        break;
+                                                    }
+                                                }
+                                                _ => {
+                                                    if (*pIn1).flags as ::core::ffi::c_int
+                                                        & crate::src::headers::vdbeInt_h::MEM_Int
+                                                        != 0
+                                                    {
+                                                        if (*pIn1).u.i
+                                                            <= 140737488355327
+                                                                as ::core::ffi::c_longlong
+                                                            && (*pIn1).u.i
+                                                                >= -(140737488355328
+                                                                    as ::core::ffi::c_longlong)
+                                                        {
+                                                            let __pIn1_ref = unsafe { &mut *pIn1 };
+                                                            __pIn1_ref.flags = (__pIn1_ref.flags
+                                                                as ::core::ffi::c_int
+                                                                | crate::src::headers::vdbeInt_h::MEM_IntReal)
+                                                                as crate::src::fts5::U16_0;
+                                                            __pIn1_ref.flags = (__pIn1_ref.flags
+                                                                as ::core::ffi::c_int
+                                                                & !crate::src::headers::vdbeInt_h::MEM_Int)
+                                                                as crate::src::fts5::U16_0;
+                                                        } else {
+                                                            let __pIn1_ref = unsafe { &mut *pIn1 };
+                                                            __pIn1_ref.u.r = __pIn1_ref.u.i
+                                                                as ::core::ffi::c_double;
+                                                            __pIn1_ref.flags = (__pIn1_ref.flags
+                                                                as ::core::ffi::c_int
+                                                                | crate::src::headers::vdbeInt_h::MEM_Real)
+                                                                as crate::src::fts5::U16_0;
+                                                            __pIn1_ref.flags = (__pIn1_ref.flags
+                                                                as ::core::ffi::c_int
+                                                                & !crate::src::headers::vdbeInt_h::MEM_Int)
+                                                                as crate::src::fts5::U16_0;
+                                                        }
+                                                    } else if (*pIn1).flags
+                                                        as ::core::ffi::c_int
+                                                        & (crate::src::headers::vdbeInt_h::MEM_Real | crate::src::headers::vdbeInt_h::MEM_IntReal)
+                                                        == 0 as ::core::ffi::c_int
+                                                    {
+                                                        current_block = 8094297922442305621;
+                                                        break;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        crate::src::headers::sqliteInt_h::COLTYPE_REAL => {
+                                            current_block = 6603035963279056686;
+                                            match current_block {
+                                                3518619798157913413 => {
+                                                    if (*pIn1).flags as ::core::ffi::c_int
+                                                        & crate::src::headers::vdbeInt_h::MEM_Str
+                                                        == 0 as ::core::ffi::c_int
+                                                    {
+                                                        current_block = 8094297922442305621;
+                                                        break;
+                                                    }
+                                                }
+                                                18205226828399833612 => {
+                                                    if (*pIn1).flags as ::core::ffi::c_int
+                                                        & crate::src::headers::vdbeInt_h::MEM_Blob
+                                                        == 0 as ::core::ffi::c_int
+                                                    {
+                                                        current_block = 8094297922442305621;
+                                                        break;
+                                                    }
+                                                }
+                                                10371895734591966926 => {
+                                                    if (*pIn1).flags as ::core::ffi::c_int
+                                                        & crate::src::headers::vdbeInt_h::MEM_Int
+                                                        == 0 as ::core::ffi::c_int
+                                                    {
+                                                        current_block = 8094297922442305621;
+                                                        break;
+                                                    }
+                                                }
+                                                _ => {
+                                                    if (*pIn1).flags as ::core::ffi::c_int
+                                                        & crate::src::headers::vdbeInt_h::MEM_Int
+                                                        != 0
+                                                    {
+                                                        if (*pIn1).u.i
+                                                            <= 140737488355327
+                                                                as ::core::ffi::c_longlong
+                                                            && (*pIn1).u.i
+                                                                >= -(140737488355328
+                                                                    as ::core::ffi::c_longlong)
+                                                        {
+                                                            let __pIn1_ref = unsafe { &mut *pIn1 };
+                                                            __pIn1_ref.flags = (__pIn1_ref.flags
+                                                                as ::core::ffi::c_int
+                                                                | crate::src::headers::vdbeInt_h::MEM_IntReal)
+                                                                as crate::src::fts5::U16_0;
+                                                            __pIn1_ref.flags = (__pIn1_ref.flags
+                                                                as ::core::ffi::c_int
+                                                                & !crate::src::headers::vdbeInt_h::MEM_Int)
+                                                                as crate::src::fts5::U16_0;
+                                                        } else {
+                                                            let __pIn1_ref = unsafe { &mut *pIn1 };
+                                                            __pIn1_ref.u.r = __pIn1_ref.u.i
+                                                                as ::core::ffi::c_double;
+                                                            __pIn1_ref.flags = (__pIn1_ref.flags
+                                                                as ::core::ffi::c_int
+                                                                | crate::src::headers::vdbeInt_h::MEM_Real)
+                                                                as crate::src::fts5::U16_0;
+                                                            __pIn1_ref.flags = (__pIn1_ref.flags
+                                                                as ::core::ffi::c_int
+                                                                & !crate::src::headers::vdbeInt_h::MEM_Int)
+                                                                as crate::src::fts5::U16_0;
+                                                        }
+                                                    } else if (*pIn1).flags
+                                                        as ::core::ffi::c_int
+                                                        & (crate::src::headers::vdbeInt_h::MEM_Real | crate::src::headers::vdbeInt_h::MEM_IntReal)
+                                                        == 0 as ::core::ffi::c_int
+                                                    {
+                                                        current_block = 8094297922442305621;
+                                                        break;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        _ => {}
                                     }
-                                    pIn1 = pIn1.offset(1);
                                 }
-                                _ => {}
+                                pIn1 = pIn1.offset(1);
                             }
                             i_1 += 1;
                         }
@@ -3697,48 +3678,36 @@ pub unsafe extern "C" fn sqlite3VdbeExec(
                                             current_block_959 = 5984951798085141333;
                                         }
                                     }
-                                    match current_block_959 {
-                                        5984951798085141333 => {
-                                            *zPayload.offset(5_isize) = (v & 0xff
-                                                as crate::src::ext::rtree::rtree::U64_0)
-                                                as crate::src::ext::rtree::rtree::U8_0;
-                                            v >>= 8 as ::core::ffi::c_int;
-                                            *zPayload.offset(4_isize) = (v & 0xff
-                                                as crate::src::ext::rtree::rtree::U64_0)
-                                                as crate::src::ext::rtree::rtree::U8_0;
-                                            v >>= 8 as ::core::ffi::c_int;
-                                            current_block_959 = 367661657315018966;
-                                        }
-                                        _ => {}
+                                    if current_block_959 == 5984951798085141333 {
+                                        *zPayload.offset(5_isize) = (v & 0xff
+                                            as crate::src::ext::rtree::rtree::U64_0)
+                                            as crate::src::ext::rtree::rtree::U8_0;
+                                        v >>= 8 as ::core::ffi::c_int;
+                                        *zPayload.offset(4_isize) = (v & 0xff
+                                            as crate::src::ext::rtree::rtree::U64_0)
+                                            as crate::src::ext::rtree::rtree::U8_0;
+                                        v >>= 8 as ::core::ffi::c_int;
+                                        current_block_959 = 367661657315018966;
                                     }
-                                    match current_block_959 {
-                                        367661657315018966 => {
-                                            *zPayload.offset(3_isize) = (v & 0xff
-                                                as crate::src::ext::rtree::rtree::U64_0)
-                                                as crate::src::ext::rtree::rtree::U8_0;
-                                            v >>= 8 as ::core::ffi::c_int;
-                                            current_block_959 = 17706572088613336346;
-                                        }
-                                        _ => {}
+                                    if current_block_959 == 367661657315018966 {
+                                        *zPayload.offset(3_isize) = (v & 0xff
+                                            as crate::src::ext::rtree::rtree::U64_0)
+                                            as crate::src::ext::rtree::rtree::U8_0;
+                                        v >>= 8 as ::core::ffi::c_int;
+                                        current_block_959 = 17706572088613336346;
                                     }
-                                    match current_block_959 {
-                                        17706572088613336346 => {
-                                            *zPayload.offset(2_isize) = (v & 0xff
-                                                as crate::src::ext::rtree::rtree::U64_0)
-                                                as crate::src::ext::rtree::rtree::U8_0;
-                                            v >>= 8 as ::core::ffi::c_int;
-                                            current_block_959 = 18141179283682394123;
-                                        }
-                                        _ => {}
+                                    if current_block_959 == 17706572088613336346 {
+                                        *zPayload.offset(2_isize) = (v & 0xff
+                                            as crate::src::ext::rtree::rtree::U64_0)
+                                            as crate::src::ext::rtree::rtree::U8_0;
+                                        v >>= 8 as ::core::ffi::c_int;
+                                        current_block_959 = 18141179283682394123;
                                     }
-                                    match current_block_959 {
-                                        18141179283682394123 => {
-                                            *zPayload.offset(1_isize) = (v & 0xff
-                                                as crate::src::ext::rtree::rtree::U64_0)
-                                                as crate::src::ext::rtree::rtree::U8_0;
-                                            v >>= 8 as ::core::ffi::c_int;
-                                        }
-                                        _ => {}
+                                    if current_block_959 == 18141179283682394123 {
+                                        *zPayload.offset(1_isize) = (v & 0xff
+                                            as crate::src::ext::rtree::rtree::U64_0)
+                                            as crate::src::ext::rtree::rtree::U8_0;
+                                        v >>= 8 as ::core::ffi::c_int;
                                     }
                                     *zPayload.offset(0_isize) = (v & 0xff
                                         as crate::src::ext::rtree::rtree::U64_0)
@@ -5015,8 +4984,8 @@ pub unsafe extern "C" fn sqlite3VdbeExec(
                             current_block = 9863799879598557851;
                             break;
                         }
-                        if (*pOp).p3 == 0 {
-                            if (*pOut).flags as ::core::ffi::c_int
+                        if (*pOp).p3 == 0
+                            && (*pOut).flags as ::core::ffi::c_int
                                 & crate::src::headers::vdbeInt_h::MEM_Ephem
                                 != 0 as ::core::ffi::c_int
                                 && crate::src::src::vdbemem::sqlite3VdbeMemMakeWriteable(
@@ -5026,7 +4995,6 @@ pub unsafe extern "C" fn sqlite3VdbeExec(
                                 current_block = 2471432538116610086;
                                 break;
                             }
-                        }
                         updateMaxBlobsize(pOut);
                         current_block = 5783071609795492627;
                     }
@@ -5753,15 +5721,13 @@ pub unsafe extern "C" fn sqlite3VdbeExec(
                         if (*pIn1).flags as ::core::ffi::c_int
                             & crate::src::headers::vdbeInt_h::MEM_Blob
                             == 0 as ::core::ffi::c_int
-                        {
-                            if crate::src::src::vdbemem::sqlite3VdbeMemSetRowSet(
+                            && crate::src::src::vdbemem::sqlite3VdbeMemSetRowSet(
                                 pIn1 as *mut crate::src::headers::vdbeInt_h::sqlite3_value,
                             ) != 0
                             {
                                 current_block = 2471432538116610086;
                                 break;
                             }
-                        }
                         crate::src::src::rowset::sqlite3RowSetInsert(
                             (*pIn1).z as *mut crate::src::src::rowset::RowSet,
                             (*pIn2).u.i,
@@ -5804,15 +5770,13 @@ pub unsafe extern "C" fn sqlite3VdbeExec(
                         if (*pIn1).flags as ::core::ffi::c_int
                             & crate::src::headers::vdbeInt_h::MEM_Blob
                             == 0 as ::core::ffi::c_int
-                        {
-                            if crate::src::src::vdbemem::sqlite3VdbeMemSetRowSet(
+                            && crate::src::src::vdbemem::sqlite3VdbeMemSetRowSet(
                                 pIn1 as *mut crate::src::headers::vdbeInt_h::sqlite3_value,
                             ) != 0
                             {
                                 current_block = 2471432538116610086;
                                 break;
                             }
-                        }
                         if iSet != 0 {
                             exists = crate::src::src::rowset::sqlite3RowSetTest(
                                 (*pIn1).z as *mut crate::src::src::rowset::RowSet,
@@ -7259,7 +7223,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(
                             }
                         }
                     }
-                    crate::src::headers::opcodes_h::OP_Permutation_1 | _ => {
+                    _ => {
                         current_block = 5783071609795492627;
                     }
                 }
@@ -8381,14 +8345,13 @@ pub unsafe extern "C" fn sqlite3VdbeExec(
                                         {
                                             oc -= 1;
                                         }
-                                    } else if c_1 < 0 as ::core::ffi::c_int {
-                                        if oc & 0x1 as ::core::ffi::c_int
+                                    } else if c_1 < 0 as ::core::ffi::c_int
+                                        && oc & 0x1 as ::core::ffi::c_int
                                             == crate::src::headers::opcodes_h::OP_SeekLT
                                                 & 0x1 as ::core::ffi::c_int
                                         {
                                             oc += 1;
                                         }
-                                    }
                                     current_block = 30898356577063691;
                                 }
                             } else {
@@ -8425,8 +8388,7 @@ pub unsafe extern "C" fn sqlite3VdbeExec(
                             nField_1 = (*pOp).p4.i;
                             r.pKeyInfo = __pC_3_ref.pKeyInfo;
                             r.nField = nField_1 as crate::src::fts5::U16_0;
-                            r.default_rc = (if 1 as ::core::ffi::c_int
-                                & oc - crate::src::headers::opcodes_h::OP_SeekLT
+                            r.default_rc = (if 1 as ::core::ffi::c_int & (oc - crate::src::headers::opcodes_h::OP_SeekLT)
                                 != 0
                             {
                                 -(1 as ::core::ffi::c_int)
@@ -8458,43 +8420,21 @@ pub unsafe extern "C" fn sqlite3VdbeExec(
                         match current_block {
                             9512719473022792396 => {}
                             _ => {
-                                match current_block {
-                                    1453880179885609999 => {
-                                        sqlite3_search_count += 1;
-                                        if oc >= crate::src::headers::opcodes_h::OP_SeekGE {
-                                            if res_0 < 0 as ::core::ffi::c_int
-                                                || res_0 == 0 as ::core::ffi::c_int
-                                                    && oc
-                                                        == crate::src::headers::opcodes_h::OP_SeekGT
-                                            {
-                                                res_0 = 0 as ::core::ffi::c_int;
-                                                rc = crate::src::src::btree::sqlite3BtreeNext(
-                                                    (*pC_3).uc.pCursor,
-                                                    0 as ::core::ffi::c_int,
-                                                );
-                                                if rc != crate::src::headers::sqlite3_h::SQLITE_OK {
-                                                    if (rc != crate::src::headers::sqlite3_h::SQLITE_DONE) {
-                                                        current_block = 9863799879598557851;
-                                                        break;
-                                                    }
-                                                    rc = crate::src::headers::sqlite3_h::SQLITE_OK;
-                                                    res_0 = 1 as ::core::ffi::c_int;
-                                                }
-                                            } else {
-                                                res_0 = 0 as ::core::ffi::c_int;
-                                            }
-                                        } else if res_0 > 0 as ::core::ffi::c_int
+                                if current_block == 1453880179885609999 {
+                                    sqlite3_search_count += 1;
+                                    if oc >= crate::src::headers::opcodes_h::OP_SeekGE {
+                                        if res_0 < 0 as ::core::ffi::c_int
                                             || res_0 == 0 as ::core::ffi::c_int
-                                                && oc == crate::src::headers::opcodes_h::OP_SeekLT
+                                                && oc
+                                                    == crate::src::headers::opcodes_h::OP_SeekGT
                                         {
                                             res_0 = 0 as ::core::ffi::c_int;
-                                            rc = crate::src::src::btree::sqlite3BtreePrevious(
+                                            rc = crate::src::src::btree::sqlite3BtreeNext(
                                                 (*pC_3).uc.pCursor,
                                                 0 as ::core::ffi::c_int,
                                             );
                                             if rc != crate::src::headers::sqlite3_h::SQLITE_OK {
-                                                if (rc != crate::src::headers::sqlite3_h::SQLITE_DONE)
-                                                {
+                                                if (rc != crate::src::headers::sqlite3_h::SQLITE_DONE) {
                                                     current_block = 9863799879598557851;
                                                     break;
                                                 }
@@ -8502,12 +8442,31 @@ pub unsafe extern "C" fn sqlite3VdbeExec(
                                                 res_0 = 1 as ::core::ffi::c_int;
                                             }
                                         } else {
-                                            res_0 = crate::src::src::btree::sqlite3BtreeEof(
-                                                (*pC_3).uc.pCursor,
-                                            );
+                                            res_0 = 0 as ::core::ffi::c_int;
                                         }
+                                    } else if res_0 > 0 as ::core::ffi::c_int
+                                        || res_0 == 0 as ::core::ffi::c_int
+                                            && oc == crate::src::headers::opcodes_h::OP_SeekLT
+                                    {
+                                        res_0 = 0 as ::core::ffi::c_int;
+                                        rc = crate::src::src::btree::sqlite3BtreePrevious(
+                                            (*pC_3).uc.pCursor,
+                                            0 as ::core::ffi::c_int,
+                                        );
+                                        if rc != crate::src::headers::sqlite3_h::SQLITE_OK {
+                                            if (rc != crate::src::headers::sqlite3_h::SQLITE_DONE)
+                                            {
+                                                current_block = 9863799879598557851;
+                                                break;
+                                            }
+                                            rc = crate::src::headers::sqlite3_h::SQLITE_OK;
+                                            res_0 = 1 as ::core::ffi::c_int;
+                                        }
+                                    } else {
+                                        res_0 = crate::src::src::btree::sqlite3BtreeEof(
+                                            (*pC_3).uc.pCursor,
+                                        );
                                     }
-                                    _ => {}
                                 }
                                 if res_0 != 0 {
                                     current_block = 9512719473022792396;
@@ -8599,9 +8558,8 @@ pub unsafe extern "C" fn sqlite3VdbeExec(
                                                 as crate::src::ext::rtree::rtree::U64_0)
                                                 << 32 as ::core::ffi::c_int
                                                 | 0xffffffff
-                                                    as crate::src::ext::rtree::rtree::U64_0)
-                                                << 64 as crate::src::ext::rtree::rtree::I64_0
-                                                    - iB_0;
+                                                    as crate::src::ext::rtree::rtree::U64_0) << (64 as crate::src::ext::rtree::rtree::I64_0
+                                                    - iB_0);
                                         }
                                     }
                                     ::core::ptr::copy_nonoverlapping(
@@ -8671,152 +8629,146 @@ pub unsafe extern "C" fn sqlite3VdbeExec(
                                 current_block = 16857357506424929049;
                             }
                         }
-                        match current_block {
-                            4899479028894616879 => {
-                                iA = (*pIn1).u.i;
-                                iB = (*pIn2).u.i;
-                                match __pOp_ref.opcode as ::core::ffi::c_int {
-                                    crate::src::headers::opcodes_h::OP_Add => {
-                                        if crate::src::src::util::sqlite3AddInt64(&raw mut iB, iA)
-                                            != 0
-                                        {
-                                            current_block = 16857357506424929049;
-                                        } else {
-                                            current_block = 14114736409816581360;
-                                        }
-                                    }
-                                    crate::src::headers::opcodes_h::OP_Subtract_1 => {
-                                        if crate::src::src::util::sqlite3SubInt64(&raw mut iB, iA)
-                                            != 0
-                                        {
-                                            current_block = 16857357506424929049;
-                                        } else {
-                                            current_block = 14114736409816581360;
-                                        }
-                                    }
-                                    crate::src::headers::opcodes_h::OP_Multiply => {
-                                        if crate::src::src::util::sqlite3MulInt64(&raw mut iB, iA)
-                                            != 0
-                                        {
-                                            current_block = 16857357506424929049;
-                                        } else {
-                                            current_block = 14114736409816581360;
-                                        }
-                                    }
-                                    crate::src::headers::opcodes_h::OP_Divide => {
-                                        if iA == 0 as crate::src::ext::rtree::rtree::I64_0 {
-                                            current_block = 11350077356682528340;
-                                        } else if iA
-                                            == -(1 as ::core::ffi::c_int)
-                                                as crate::src::ext::rtree::rtree::I64_0
-                                            && iB == crate::fts3Int_h::SMALLEST_INT64
-                                        {
-                                            current_block = 16857357506424929049;
-                                        } else {
-                                            iB /= iA;
-                                            current_block = 14114736409816581360;
-                                        }
-                                    }
-                                    _ => {
-                                        if iA == 0 as crate::src::ext::rtree::rtree::I64_0 {
-                                            current_block = 11350077356682528340;
-                                        } else {
-                                            if iA
-                                                == -(1 as ::core::ffi::c_int)
-                                                    as crate::src::ext::rtree::rtree::I64_0
-                                            {
-                                                iA = 1 as crate::src::ext::rtree::rtree::I64_0;
-                                            }
-                                            iB %= iA;
-                                            current_block = 14114736409816581360;
-                                        }
+                        if current_block == 4899479028894616879 {
+                            iA = (*pIn1).u.i;
+                            iB = (*pIn2).u.i;
+                            match __pOp_ref.opcode as ::core::ffi::c_int {
+                                crate::src::headers::opcodes_h::OP_Add => {
+                                    if crate::src::src::util::sqlite3AddInt64(&raw mut iB, iA)
+                                        != 0
+                                    {
+                                        current_block = 16857357506424929049;
+                                    } else {
+                                        current_block = 14114736409816581360;
                                     }
                                 }
-                                match current_block {
-                                    11350077356682528340 => {}
-                                    16857357506424929049 => {}
-                                    _ => {
-                                        let __pOut_ref = unsafe { &mut *pOut };
-                                        __pOut_ref.u.i = iB;
-                                        __pOut_ref.flags = (__pOut_ref.flags as ::core::ffi::c_int
-                                            & !(crate::src::headers::vdbeInt_h::MEM_TypeMask
-                                                | crate::src::headers::vdbeInt_h::MEM_Zero)
-                                            | 0x4 as ::core::ffi::c_int)
-                                            as crate::src::fts5::U16_0;
-                                        current_block = 5783071609795492627;
+                                crate::src::headers::opcodes_h::OP_Subtract_1 => {
+                                    if crate::src::src::util::sqlite3SubInt64(&raw mut iB, iA)
+                                        != 0
+                                    {
+                                        current_block = 16857357506424929049;
+                                    } else {
+                                        current_block = 14114736409816581360;
+                                    }
+                                }
+                                crate::src::headers::opcodes_h::OP_Multiply => {
+                                    if crate::src::src::util::sqlite3MulInt64(&raw mut iB, iA)
+                                        != 0
+                                    {
+                                        current_block = 16857357506424929049;
+                                    } else {
+                                        current_block = 14114736409816581360;
+                                    }
+                                }
+                                crate::src::headers::opcodes_h::OP_Divide => {
+                                    if iA == 0 as crate::src::ext::rtree::rtree::I64_0 {
+                                        current_block = 11350077356682528340;
+                                    } else if iA
+                                        == -(1 as ::core::ffi::c_int)
+                                            as crate::src::ext::rtree::rtree::I64_0
+                                        && iB == crate::fts3Int_h::SMALLEST_INT64
+                                    {
+                                        current_block = 16857357506424929049;
+                                    } else {
+                                        iB /= iA;
+                                        current_block = 14114736409816581360;
+                                    }
+                                }
+                                _ => {
+                                    if iA == 0 as crate::src::ext::rtree::rtree::I64_0 {
+                                        current_block = 11350077356682528340;
+                                    } else {
+                                        if iA
+                                            == -(1 as ::core::ffi::c_int)
+                                                as crate::src::ext::rtree::rtree::I64_0
+                                        {
+                                            iA = 1 as crate::src::ext::rtree::rtree::I64_0;
+                                        }
+                                        iB %= iA;
+                                        current_block = 14114736409816581360;
                                     }
                                 }
                             }
-                            _ => {}
+                            match current_block {
+                                11350077356682528340 => {}
+                                16857357506424929049 => {}
+                                _ => {
+                                    let __pOut_ref = unsafe { &mut *pOut };
+                                    __pOut_ref.u.i = iB;
+                                    __pOut_ref.flags = (__pOut_ref.flags as ::core::ffi::c_int
+                                        & !(crate::src::headers::vdbeInt_h::MEM_TypeMask
+                                            | crate::src::headers::vdbeInt_h::MEM_Zero)
+                                        | 0x4 as ::core::ffi::c_int)
+                                        as crate::src::fts5::U16_0;
+                                    current_block = 5783071609795492627;
+                                }
+                            }
                         }
                         match current_block {
                             5783071609795492627 => {}
                             _ => {
-                                match current_block {
-                                    16857357506424929049 => {
-                                        rA = crate::src::src::vdbemem::sqlite3VdbeRealValue(pIn1 as *mut crate::src::headers::vdbeInt_h::sqlite3_value);
-                                        rB = crate::src::src::vdbemem::sqlite3VdbeRealValue(pIn2 as *mut crate::src::headers::vdbeInt_h::sqlite3_value);
-                                        match __pOp_ref.opcode as ::core::ffi::c_int {
-                                            crate::src::headers::opcodes_h::OP_Add => {
-                                                rB += rA;
+                                if current_block == 16857357506424929049 {
+                                    rA = crate::src::src::vdbemem::sqlite3VdbeRealValue(pIn1 as *mut crate::src::headers::vdbeInt_h::sqlite3_value);
+                                    rB = crate::src::src::vdbemem::sqlite3VdbeRealValue(pIn2 as *mut crate::src::headers::vdbeInt_h::sqlite3_value);
+                                    match __pOp_ref.opcode as ::core::ffi::c_int {
+                                        crate::src::headers::opcodes_h::OP_Add => {
+                                            rB += rA;
+                                            current_block = 7157913506381630964;
+                                        }
+                                        crate::src::headers::opcodes_h::OP_Subtract_1 => {
+                                            rB -= rA;
+                                            current_block = 7157913506381630964;
+                                        }
+                                        crate::src::headers::opcodes_h::OP_Multiply => {
+                                            rB *= rA;
+                                            current_block = 7157913506381630964;
+                                        }
+                                        crate::src::headers::opcodes_h::OP_Divide => {
+                                            if rA
+                                                == 0 as ::core::ffi::c_int
+                                                    as ::core::ffi::c_double
+                                            {
+                                                current_block = 11350077356682528340;
+                                            } else {
+                                                rB /= rA;
                                                 current_block = 7157913506381630964;
-                                            }
-                                            crate::src::headers::opcodes_h::OP_Subtract_1 => {
-                                                rB -= rA;
-                                                current_block = 7157913506381630964;
-                                            }
-                                            crate::src::headers::opcodes_h::OP_Multiply => {
-                                                rB *= rA;
-                                                current_block = 7157913506381630964;
-                                            }
-                                            crate::src::headers::opcodes_h::OP_Divide => {
-                                                if rA
-                                                    == 0 as ::core::ffi::c_int
-                                                        as ::core::ffi::c_double
-                                                {
-                                                    current_block = 11350077356682528340;
-                                                } else {
-                                                    rB /= rA;
-                                                    current_block = 7157913506381630964;
-                                                }
-                                            }
-                                            _ => {
-                                                iA = crate::src::src::vdbemem::sqlite3VdbeIntValue(pIn1 as *const crate::src::headers::vdbeInt_h::sqlite3_value);
-                                                iB = crate::src::src::vdbemem::sqlite3VdbeIntValue(pIn2 as *const crate::src::headers::vdbeInt_h::sqlite3_value);
-                                                if iA == 0 as crate::src::ext::rtree::rtree::I64_0 {
-                                                    current_block = 11350077356682528340;
-                                                } else {
-                                                    if iA
-                                                        == -(1 as ::core::ffi::c_int)
-                                                            as crate::src::ext::rtree::rtree::I64_0
-                                                    {
-                                                        iA = 1
-                                                            as crate::src::ext::rtree::rtree::I64_0;
-                                                    }
-                                                    rB = (iB % iA) as ::core::ffi::c_double;
-                                                    current_block = 7157913506381630964;
-                                                }
                                             }
                                         }
-                                        match current_block {
-                                            11350077356682528340 => {}
-                                            _ => {
-                                                if crate::src::src::util::sqlite3IsNaN(rB) != 0 {
-                                                    current_block = 11350077356682528340;
-                                                } else {
-                                                    let __pOut_ref = unsafe { &mut *pOut };
-                                                    __pOut_ref.u.r = rB;
-                                                    __pOut_ref.flags = (__pOut_ref.flags
-                                                        as ::core::ffi::c_int
-                                                        & !(crate::src::headers::vdbeInt_h::MEM_TypeMask | crate::src::headers::vdbeInt_h::MEM_Zero)
-                                                        | 0x8 as ::core::ffi::c_int)
-                                                        as crate::src::fts5::U16_0;
-                                                    current_block = 5783071609795492627;
+                                        _ => {
+                                            iA = crate::src::src::vdbemem::sqlite3VdbeIntValue(pIn1 as *const crate::src::headers::vdbeInt_h::sqlite3_value);
+                                            iB = crate::src::src::vdbemem::sqlite3VdbeIntValue(pIn2 as *const crate::src::headers::vdbeInt_h::sqlite3_value);
+                                            if iA == 0 as crate::src::ext::rtree::rtree::I64_0 {
+                                                current_block = 11350077356682528340;
+                                            } else {
+                                                if iA
+                                                    == -(1 as ::core::ffi::c_int)
+                                                        as crate::src::ext::rtree::rtree::I64_0
+                                                {
+                                                    iA = 1
+                                                        as crate::src::ext::rtree::rtree::I64_0;
                                                 }
+                                                rB = (iB % iA) as ::core::ffi::c_double;
+                                                current_block = 7157913506381630964;
                                             }
                                         }
                                     }
-                                    _ => {}
+                                    match current_block {
+                                        11350077356682528340 => {}
+                                        _ => {
+                                            if crate::src::src::util::sqlite3IsNaN(rB) != 0 {
+                                                current_block = 11350077356682528340;
+                                            } else {
+                                                let __pOut_ref = unsafe { &mut *pOut };
+                                                __pOut_ref.u.r = rB;
+                                                __pOut_ref.flags = (__pOut_ref.flags
+                                                    as ::core::ffi::c_int
+                                                    & !(crate::src::headers::vdbeInt_h::MEM_TypeMask | crate::src::headers::vdbeInt_h::MEM_Zero)
+                                                    | 0x8 as ::core::ffi::c_int)
+                                                    as crate::src::fts5::U16_0;
+                                                current_block = 5783071609795492627;
+                                            }
+                                        }
+                                    }
                                 }
                                 match current_block {
                                     5783071609795492627 => {}
@@ -8833,223 +8785,217 @@ pub unsafe extern "C" fn sqlite3VdbeExec(
                     }
                     _ => {}
                 }
-                match current_block {
-                    9598485154371622742 => {
-                        let mut res: ::core::ffi::c_int = 0;
-                        let res2: ::core::ffi::c_int;
-                        let affinity: ::core::ffi::c_char;
-                        let mut flags1_0: crate::src::fts5::U16_0;
-                        let mut flags3: crate::src::fts5::U16_0;
-                        pIn1 = aMem.offset((*pOp).p1 as isize) as *mut crate::src::src::vdbe::Mem;
-                        pIn3 = aMem.offset((*pOp).p3 as isize) as *mut crate::src::src::vdbe::Mem;
-                        flags1_0 = (*pIn1).flags;
-                        flags3 = (*pIn3).flags;
-                        if flags1_0 as ::core::ffi::c_int
-                            & flags3 as ::core::ffi::c_int
-                            & crate::src::headers::vdbeInt_h::MEM_Int
-                            != 0 as ::core::ffi::c_int
-                        {
-                            if (*pIn3).u.i > (*pIn1).u.i {
-                                if *crate::src::src::global::sqlite3aGTb
-                                    .offset((*pOp).opcode as isize)
-                                    != 0
-                                {
-                                    current_block = 9512719473022792396;
-                                } else {
-                                    iCompare = 1 as ::core::ffi::c_int;
-                                    current_block = 5783071609795492627;
-                                }
-                            } else if (*pIn3).u.i < (*pIn1).u.i {
-                                if *crate::src::src::global::sqlite3aLTb
-                                    .offset((*pOp).opcode as isize)
-                                    != 0
-                                {
-                                    current_block = 9512719473022792396;
-                                } else {
-                                    iCompare = -(1 as ::core::ffi::c_int);
-                                    current_block = 5783071609795492627;
-                                }
-                            } else if *crate::src::src::global::sqlite3aEQb
+                if current_block == 9598485154371622742 {
+                    let mut res: ::core::ffi::c_int = 0;
+                    let res2: ::core::ffi::c_int;
+                    let affinity: ::core::ffi::c_char;
+                    let mut flags1_0: crate::src::fts5::U16_0;
+                    let mut flags3: crate::src::fts5::U16_0;
+                    pIn1 = aMem.offset((*pOp).p1 as isize) as *mut crate::src::src::vdbe::Mem;
+                    pIn3 = aMem.offset((*pOp).p3 as isize) as *mut crate::src::src::vdbe::Mem;
+                    flags1_0 = (*pIn1).flags;
+                    flags3 = (*pIn3).flags;
+                    if flags1_0 as ::core::ffi::c_int
+                        & flags3 as ::core::ffi::c_int
+                        & crate::src::headers::vdbeInt_h::MEM_Int
+                        != 0 as ::core::ffi::c_int
+                    {
+                        if (*pIn3).u.i > (*pIn1).u.i {
+                            if *crate::src::src::global::sqlite3aGTb
                                 .offset((*pOp).opcode as isize)
                                 != 0
                             {
                                 current_block = 9512719473022792396;
                             } else {
-                                iCompare = 0 as ::core::ffi::c_int;
+                                iCompare = 1 as ::core::ffi::c_int;
+                                current_block = 5783071609795492627;
+                            }
+                        } else if (*pIn3).u.i < (*pIn1).u.i {
+                            if *crate::src::src::global::sqlite3aLTb
+                                .offset((*pOp).opcode as isize)
+                                != 0
+                            {
+                                current_block = 9512719473022792396;
+                            } else {
+                                iCompare = -(1 as ::core::ffi::c_int);
+                                current_block = 5783071609795492627;
+                            }
+                        } else if *crate::src::src::global::sqlite3aEQb
+                            .offset((*pOp).opcode as isize)
+                            != 0
+                        {
+                            current_block = 9512719473022792396;
+                        } else {
+                            iCompare = 0 as ::core::ffi::c_int;
+                            current_block = 5783071609795492627;
+                        }
+                    } else {
+                        if (flags1_0 as ::core::ffi::c_int | flags3 as ::core::ffi::c_int)
+                            & crate::src::headers::vdbeInt_h::MEM_Null
+                            != 0
+                        {
+                            if (*pOp).p5 as ::core::ffi::c_int
+                                & crate::src::headers::sqliteInt_h::SQLITE_NULLEQ
+                                != 0
+                            {
+                                if flags1_0 as ::core::ffi::c_int
+                                    & flags3 as ::core::ffi::c_int
+                                    & crate::src::headers::vdbeInt_h::MEM_Null
+                                    != 0 as ::core::ffi::c_int
+                                    && flags3 as ::core::ffi::c_int
+                                        & crate::src::headers::vdbeInt_h::MEM_Cleared
+                                        == 0 as ::core::ffi::c_int
+                                {
+                                    res = 0 as ::core::ffi::c_int;
+                                } else {
+                                    res = if flags3 as ::core::ffi::c_int
+                                        & crate::src::headers::vdbeInt_h::MEM_Null
+                                        != 0
+                                    {
+                                        -(1 as ::core::ffi::c_int)
+                                    } else {
+                                        1 as ::core::ffi::c_int
+                                    };
+                                }
+                                current_block = 915695187752424879;
+                            } else if (*pOp).p5 as ::core::ffi::c_int
+                                & crate::src::headers::sqliteInt_h::SQLITE_JUMPIFNULL
+                                != 0
+                            {
+                                current_block = 9512719473022792396;
+                            } else {
+                                iCompare = 1 as ::core::ffi::c_int;
                                 current_block = 5783071609795492627;
                             }
                         } else {
-                            if (flags1_0 as ::core::ffi::c_int | flags3 as ::core::ffi::c_int)
-                                & crate::src::headers::vdbeInt_h::MEM_Null
-                                != 0
+                            affinity = ((*pOp).p5 as ::core::ffi::c_int
+                                & crate::src::headers::sqliteInt_h::SQLITE_AFF_MASK)
+                                as ::core::ffi::c_char;
+                            if affinity as ::core::ffi::c_int
+                                >= crate::src::headers::sqliteInt_h::SQLITE_AFF_NUMERIC
                             {
-                                if (*pOp).p5 as ::core::ffi::c_int
-                                    & crate::src::headers::sqliteInt_h::SQLITE_NULLEQ
+                                if (flags1_0 as ::core::ffi::c_int
+                                    | flags3 as ::core::ffi::c_int)
+                                    & crate::src::headers::vdbeInt_h::MEM_Str
                                     != 0
                                 {
                                     if flags1_0 as ::core::ffi::c_int
-                                        & flags3 as ::core::ffi::c_int
-                                        & crate::src::headers::vdbeInt_h::MEM_Null
-                                        != 0 as ::core::ffi::c_int
-                                        && flags3 as ::core::ffi::c_int
-                                            & crate::src::headers::vdbeInt_h::MEM_Cleared
-                                            == 0 as ::core::ffi::c_int
-                                    {
-                                        res = 0 as ::core::ffi::c_int;
-                                    } else {
-                                        res = if flags3 as ::core::ffi::c_int
-                                            & crate::src::headers::vdbeInt_h::MEM_Null
-                                            != 0
-                                        {
-                                            -(1 as ::core::ffi::c_int)
-                                        } else {
-                                            1 as ::core::ffi::c_int
-                                        };
-                                    }
-                                    current_block = 915695187752424879;
-                                } else if (*pOp).p5 as ::core::ffi::c_int
-                                    & crate::src::headers::sqliteInt_h::SQLITE_JUMPIFNULL
-                                    != 0
-                                {
-                                    current_block = 9512719473022792396;
-                                } else {
-                                    iCompare = 1 as ::core::ffi::c_int;
-                                    current_block = 5783071609795492627;
-                                }
-                            } else {
-                                affinity = ((*pOp).p5 as ::core::ffi::c_int
-                                    & crate::src::headers::sqliteInt_h::SQLITE_AFF_MASK)
-                                    as ::core::ffi::c_char;
-                                if affinity as ::core::ffi::c_int
-                                    >= crate::src::headers::sqliteInt_h::SQLITE_AFF_NUMERIC
-                                {
-                                    if (flags1_0 as ::core::ffi::c_int
-                                        | flags3 as ::core::ffi::c_int)
-                                        & crate::src::headers::vdbeInt_h::MEM_Str
-                                        != 0
-                                    {
-                                        if flags1_0 as ::core::ffi::c_int
-                                            & (crate::src::headers::vdbeInt_h::MEM_Int
-                                                | crate::src::headers::vdbeInt_h::MEM_IntReal
-                                                | crate::src::headers::vdbeInt_h::MEM_Real
-                                                | crate::src::headers::vdbeInt_h::MEM_Str)
-                                            == crate::src::headers::vdbeInt_h::MEM_Str
-                                        {
-                                            applyNumericAffinity(pIn1, 0 as ::core::ffi::c_int);
-                                            flags3 = (*pIn3).flags;
-                                        }
-                                        if flags3 as ::core::ffi::c_int
-                                            & (crate::src::headers::vdbeInt_h::MEM_Int
-                                                | crate::src::headers::vdbeInt_h::MEM_IntReal
-                                                | crate::src::headers::vdbeInt_h::MEM_Real
-                                                | crate::src::headers::vdbeInt_h::MEM_Str)
-                                            == crate::src::headers::vdbeInt_h::MEM_Str
-                                        {
-                                            applyNumericAffinity(pIn3, 0 as ::core::ffi::c_int);
-                                        }
-                                    }
-                                } else if affinity as ::core::ffi::c_int
-                                    == crate::src::headers::sqliteInt_h::SQLITE_AFF_TEXT
-                                    && (flags1_0 as ::core::ffi::c_int
-                                        | flags3 as ::core::ffi::c_int)
-                                        & crate::src::headers::vdbeInt_h::MEM_Str
-                                        != 0 as ::core::ffi::c_int
-                                {
-                                    if flags1_0 as ::core::ffi::c_int
-                                        & crate::src::headers::vdbeInt_h::MEM_Str
-                                        != 0 as ::core::ffi::c_int
-                                    {
-                                        (*pIn1).flags = ((*pIn1).flags as ::core::ffi::c_int
-                                            & !(crate::src::headers::vdbeInt_h::MEM_Int
-                                                | crate::src::headers::vdbeInt_h::MEM_Real
-                                                | crate::src::headers::vdbeInt_h::MEM_IntReal))
-                                            as crate::src::fts5::U16_0;
-                                    } else if flags1_0 as ::core::ffi::c_int
                                         & (crate::src::headers::vdbeInt_h::MEM_Int
+                                            | crate::src::headers::vdbeInt_h::MEM_IntReal
                                             | crate::src::headers::vdbeInt_h::MEM_Real
-                                            | crate::src::headers::vdbeInt_h::MEM_IntReal)
-                                        != 0 as ::core::ffi::c_int
+                                            | crate::src::headers::vdbeInt_h::MEM_Str)
+                                        == crate::src::headers::vdbeInt_h::MEM_Str
                                     {
-                                        crate::src::src::vdbemem::sqlite3VdbeMemStringify(pIn1 as *mut crate::src::headers::vdbeInt_h::sqlite3_value, encoding, 1 as crate::src::ext::rtree::rtree::U8_0);
-                                        flags1_0 = ((*pIn1).flags as ::core::ffi::c_int
-                                            & !crate::src::headers::vdbeInt_h::MEM_TypeMask
-                                            | flags1_0 as ::core::ffi::c_int
-                                                & crate::src::headers::vdbeInt_h::MEM_TypeMask)
-                                            as crate::src::fts5::U16_0;
-                                        if pIn1 == pIn3 {
-                                            flags3 = (flags1_0 as ::core::ffi::c_int
-                                                | crate::src::headers::vdbeInt_h::MEM_Str)
-                                                as crate::src::fts5::U16_0;
-                                        }
+                                        applyNumericAffinity(pIn1, 0 as ::core::ffi::c_int);
+                                        flags3 = (*pIn3).flags;
                                     }
                                     if flags3 as ::core::ffi::c_int
-                                        & crate::src::headers::vdbeInt_h::MEM_Str
-                                        != 0 as ::core::ffi::c_int
-                                    {
-                                        (*pIn3).flags = ((*pIn3).flags as ::core::ffi::c_int
-                                            & !(crate::src::headers::vdbeInt_h::MEM_Int
-                                                | crate::src::headers::vdbeInt_h::MEM_Real
-                                                | crate::src::headers::vdbeInt_h::MEM_IntReal))
-                                            as crate::src::fts5::U16_0;
-                                    } else if flags3 as ::core::ffi::c_int
                                         & (crate::src::headers::vdbeInt_h::MEM_Int
+                                            | crate::src::headers::vdbeInt_h::MEM_IntReal
                                             | crate::src::headers::vdbeInt_h::MEM_Real
-                                            | crate::src::headers::vdbeInt_h::MEM_IntReal)
-                                        != 0 as ::core::ffi::c_int
+                                            | crate::src::headers::vdbeInt_h::MEM_Str)
+                                        == crate::src::headers::vdbeInt_h::MEM_Str
                                     {
-                                        crate::src::src::vdbemem::sqlite3VdbeMemStringify(pIn3 as *mut crate::src::headers::vdbeInt_h::sqlite3_value, encoding, 1 as crate::src::ext::rtree::rtree::U8_0);
-                                        flags3 = ((*pIn3).flags as ::core::ffi::c_int
-                                            & !crate::src::headers::vdbeInt_h::MEM_TypeMask
-                                            | flags3 as ::core::ffi::c_int
-                                                & crate::src::headers::vdbeInt_h::MEM_TypeMask)
+                                        applyNumericAffinity(pIn3, 0 as ::core::ffi::c_int);
+                                    }
+                                }
+                            } else if affinity as ::core::ffi::c_int
+                                == crate::src::headers::sqliteInt_h::SQLITE_AFF_TEXT
+                                && (flags1_0 as ::core::ffi::c_int
+                                    | flags3 as ::core::ffi::c_int)
+                                    & crate::src::headers::vdbeInt_h::MEM_Str
+                                    != 0 as ::core::ffi::c_int
+                            {
+                                if flags1_0 as ::core::ffi::c_int
+                                    & crate::src::headers::vdbeInt_h::MEM_Str
+                                    != 0 as ::core::ffi::c_int
+                                {
+                                    (*pIn1).flags = ((*pIn1).flags as ::core::ffi::c_int
+                                        & !(crate::src::headers::vdbeInt_h::MEM_Int
+                                            | crate::src::headers::vdbeInt_h::MEM_Real
+                                            | crate::src::headers::vdbeInt_h::MEM_IntReal))
+                                        as crate::src::fts5::U16_0;
+                                } else if flags1_0 as ::core::ffi::c_int
+                                    & (crate::src::headers::vdbeInt_h::MEM_Int
+                                        | crate::src::headers::vdbeInt_h::MEM_Real
+                                        | crate::src::headers::vdbeInt_h::MEM_IntReal)
+                                    != 0 as ::core::ffi::c_int
+                                {
+                                    crate::src::src::vdbemem::sqlite3VdbeMemStringify(pIn1 as *mut crate::src::headers::vdbeInt_h::sqlite3_value, encoding, 1 as crate::src::ext::rtree::rtree::U8_0);
+                                    flags1_0 = ((*pIn1).flags as ::core::ffi::c_int
+                                        & !crate::src::headers::vdbeInt_h::MEM_TypeMask
+                                        | flags1_0 as ::core::ffi::c_int
+                                            & crate::src::headers::vdbeInt_h::MEM_TypeMask)
+                                        as crate::src::fts5::U16_0;
+                                    if pIn1 == pIn3 {
+                                        flags3 = (flags1_0 as ::core::ffi::c_int
+                                            | crate::src::headers::vdbeInt_h::MEM_Str)
                                             as crate::src::fts5::U16_0;
                                     }
                                 }
-                                res = crate::src::src::vdbeaux::sqlite3MemCompare(
-                                    pIn3 as *const crate::src::headers::vdbeInt_h::sqlite3_value,
-                                    pIn1 as *const crate::src::headers::vdbeInt_h::sqlite3_value,
-                                    (*pOp).p4.pColl
-                                        as *const crate::src::headers::sqliteInt_h::CollSeq,
-                                );
-                                current_block = 915695187752424879;
+                                if flags3 as ::core::ffi::c_int
+                                    & crate::src::headers::vdbeInt_h::MEM_Str
+                                    != 0 as ::core::ffi::c_int
+                                {
+                                    (*pIn3).flags = ((*pIn3).flags as ::core::ffi::c_int
+                                        & !(crate::src::headers::vdbeInt_h::MEM_Int
+                                            | crate::src::headers::vdbeInt_h::MEM_Real
+                                            | crate::src::headers::vdbeInt_h::MEM_IntReal))
+                                        as crate::src::fts5::U16_0;
+                                } else if flags3 as ::core::ffi::c_int
+                                    & (crate::src::headers::vdbeInt_h::MEM_Int
+                                        | crate::src::headers::vdbeInt_h::MEM_Real
+                                        | crate::src::headers::vdbeInt_h::MEM_IntReal)
+                                    != 0 as ::core::ffi::c_int
+                                {
+                                    crate::src::src::vdbemem::sqlite3VdbeMemStringify(pIn3 as *mut crate::src::headers::vdbeInt_h::sqlite3_value, encoding, 1 as crate::src::ext::rtree::rtree::U8_0);
+                                    flags3 = ((*pIn3).flags as ::core::ffi::c_int
+                                        & !crate::src::headers::vdbeInt_h::MEM_TypeMask
+                                        | flags3 as ::core::ffi::c_int
+                                            & crate::src::headers::vdbeInt_h::MEM_TypeMask)
+                                        as crate::src::fts5::U16_0;
+                                }
                             }
-                            match current_block {
-                                5783071609795492627 => {}
-                                9512719473022792396 => {}
-                                _ => {
-                                    if res < 0 as ::core::ffi::c_int {
-                                        res2 = *crate::src::src::global::sqlite3aLTb
-                                            .offset((*pOp).opcode as isize)
-                                            as ::core::ffi::c_int;
-                                    } else if res == 0 as ::core::ffi::c_int {
-                                        res2 = *crate::src::src::global::sqlite3aEQb
-                                            .offset((*pOp).opcode as isize)
-                                            as ::core::ffi::c_int;
-                                    } else {
-                                        res2 = *crate::src::src::global::sqlite3aGTb
-                                            .offset((*pOp).opcode as isize)
-                                            as ::core::ffi::c_int;
-                                    }
-                                    iCompare = res;
-                                    (*pIn3).flags = flags3;
-                                    (*pIn1).flags = flags1_0;
-                                    if res2 != 0 {
-                                        current_block = 9512719473022792396;
-                                    } else {
-                                        current_block = 5783071609795492627;
-                                    }
+                            res = crate::src::src::vdbeaux::sqlite3MemCompare(
+                                pIn3 as *const crate::src::headers::vdbeInt_h::sqlite3_value,
+                                pIn1 as *const crate::src::headers::vdbeInt_h::sqlite3_value,
+                                (*pOp).p4.pColl
+                                    as *const crate::src::headers::sqliteInt_h::CollSeq,
+                            );
+                            current_block = 915695187752424879;
+                        }
+                        match current_block {
+                            5783071609795492627 => {}
+                            9512719473022792396 => {}
+                            _ => {
+                                if res < 0 as ::core::ffi::c_int {
+                                    res2 = *crate::src::src::global::sqlite3aLTb
+                                        .offset((*pOp).opcode as isize)
+                                        as ::core::ffi::c_int;
+                                } else if res == 0 as ::core::ffi::c_int {
+                                    res2 = *crate::src::src::global::sqlite3aEQb
+                                        .offset((*pOp).opcode as isize)
+                                        as ::core::ffi::c_int;
+                                } else {
+                                    res2 = *crate::src::src::global::sqlite3aGTb
+                                        .offset((*pOp).opcode as isize)
+                                        as ::core::ffi::c_int;
+                                }
+                                iCompare = res;
+                                (*pIn3).flags = flags3;
+                                (*pIn1).flags = flags1_0;
+                                if res2 != 0 {
+                                    current_block = 9512719473022792396;
+                                } else {
+                                    current_block = 5783071609795492627;
                                 }
                             }
                         }
                     }
-                    _ => {}
                 }
-                match current_block {
-                    9512719473022792396 => {
-                        pOp = aOp.offset(((*pOp).p2 - 1 as ::core::ffi::c_int) as isize)
-                            as *mut crate::src::headers::vdbeInt_h::Op;
-                    }
-                    _ => {}
+                if current_block == 9512719473022792396 {
+                    pOp = aOp.offset(((*pOp).p2 - 1 as ::core::ffi::c_int) as isize)
+                        as *mut crate::src::headers::vdbeInt_h::Op;
                 }
                 pOp = pOp.offset(1);
             }
@@ -9079,20 +9025,17 @@ pub unsafe extern "C" fn sqlite3VdbeExec(
             }
         }
     }
-    match current_block {
-        2471432538116610086 => {
-            crate::src::src::malloc::sqlite3OomFault(
-                db as *mut crate::src::headers::sqliteInt_h::sqlite3,
-            );
-            crate::src::src::vdbeaux::sqlite3VdbeError_args(
-                p as *mut crate::src::headers::vdbeInt_h::Vdbe,
-                b"out of memory\0" as *const u8 as *const ::core::ffi::c_char,
-                &[],
-            );
-            rc = crate::src::headers::sqliteInt_h::SQLITE_NOMEM_BKPT;
-            current_block = 9863799879598557851;
-        }
-        _ => {}
+    if current_block == 2471432538116610086 {
+        crate::src::src::malloc::sqlite3OomFault(
+            db as *mut crate::src::headers::sqliteInt_h::sqlite3,
+        );
+        crate::src::src::vdbeaux::sqlite3VdbeError_args(
+            p as *mut crate::src::headers::vdbeInt_h::Vdbe,
+            b"out of memory\0" as *const u8 as *const ::core::ffi::c_char,
+            &[],
+        );
+        rc = crate::src::headers::sqliteInt_h::SQLITE_NOMEM_BKPT;
+        current_block = 9863799879598557851;
     }
     loop {
         match current_block {

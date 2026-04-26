@@ -208,19 +208,16 @@ pub unsafe extern "C" fn sqlite3WalkExprNN(
                     return crate::src::headers::sqliteInt_h::WRC_Abort;
                 }
             } else {
-                if !(*pExpr).x.pList.is_null() {
-                    if sqlite3WalkExprList(pWalker, (*pExpr).x.pList) != 0 {
+                if !(*pExpr).x.pList.is_null()
+                    && sqlite3WalkExprList(pWalker, (*pExpr).x.pList) != 0 {
                         return crate::src::headers::sqliteInt_h::WRC_Abort;
                     }
-                }
                 if (*pExpr).flags
                     & 0x1000000 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::U32_0
                     != 0 as crate::src::ext::rtree::rtree::U32_0
-                {
-                    if walkWindowList(pWalker, (*pExpr).y.pWin, 1 as ::core::ffi::c_int) != 0 {
+                    && walkWindowList(pWalker, (*pExpr).y.pWin, 1 as ::core::ffi::c_int) != 0 {
                         return crate::src::headers::sqliteInt_h::WRC_Abort;
                     }
-                }
             }
             break;
         }

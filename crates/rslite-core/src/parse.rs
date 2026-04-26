@@ -7687,7 +7687,10 @@ unsafe extern "C" fn yy_find_reduce_action(
 unsafe extern "C" fn yyStackOverflow(yypParser: *mut yyParser) {
     let __yypParser_ref = unsafe { &mut *yypParser };
     let pParse: *mut crate::src::headers::sqliteInt_h::Parse = __yypParser_ref.pParse;
-    while __yypParser_ref.yytos > __yypParser_ref.yystack {
+    loop {
+        if !(__yypParser_ref.yytos > __yypParser_ref.yystack) {
+            break;
+        }
         yy_pop_parser_stack(yypParser);
     }
     crate::src::src::malloc::sqlite3OomFault(
@@ -13348,14 +13351,12 @@ pub unsafe extern "C" fn sqlite3Parser(
         if yyact as ::core::ffi::c_int >= YY_MIN_REDUCE {
             let yyruleno: ::core::ffi::c_uint =
                 (yyact as ::core::ffi::c_int - YY_MIN_REDUCE) as ::core::ffi::c_uint;
-            if yyRuleInfoNRhs[yyruleno as usize] as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
-                if (*yypParser).yytos >= (*yypParser).yystackEnd {
-                    if yyGrowStack(yypParser) != 0 {
+            if yyRuleInfoNRhs[yyruleno as usize] as ::core::ffi::c_int == 0 as ::core::ffi::c_int
+                && (*yypParser).yytos >= (*yypParser).yystackEnd
+                    && yyGrowStack(yypParser) != 0 {
                         yyStackOverflow(yypParser);
                         break;
                     }
-                }
-            }
             yyact = yy_reduce(yypParser, yyruleno, yymajor, yyminor, pParse);
         } else if yyact as ::core::ffi::c_int <= YY_MAX_SHIFTREDUCE {
             yy_shift(yypParser, yyact, yymajor as ::core::ffi::c_ushort, yyminor);

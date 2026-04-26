@@ -502,8 +502,8 @@ pub unsafe extern "C" fn sqlite3DbMallocSize(
     db: *mut crate::src::headers::sqliteInt_h::sqlite3,
     p: *const ::core::ffi::c_void,
 ) -> ::core::ffi::c_int {
-    if !db.is_null() {
-        if (p as crate::src::headers::sqliteInt_h::Uptr)
+    if !db.is_null()
+        && (p as crate::src::headers::sqliteInt_h::Uptr)
             < (*db).lookaside.pTrueEnd as crate::src::headers::sqliteInt_h::Uptr
         {
             if p as crate::src::headers::sqliteInt_h::Uptr
@@ -517,7 +517,6 @@ pub unsafe extern "C" fn sqlite3DbMallocSize(
                 return (*db).lookaside.szTrue as ::core::ffi::c_int;
             }
         }
-    }
     crate::src::src::global::sqlite3Config
         .m
         .xSize
@@ -877,11 +876,9 @@ pub unsafe extern "C" fn sqlite3DbRealloc(
             }
         } else if p as crate::src::headers::sqliteInt_h::Uptr
             >= (*db).lookaside.pStart as crate::src::headers::sqliteInt_h::Uptr
-        {
-            if n <= (*db).lookaside.szTrue as crate::src::ext::rtree::rtree::U64_0 {
+            && n <= (*db).lookaside.szTrue as crate::src::ext::rtree::rtree::U64_0 {
                 return p;
             }
-        }
     }
     dbReallocFinish(db, p, n)
 }

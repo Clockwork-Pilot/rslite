@@ -297,25 +297,22 @@ unsafe extern "C" fn parseTimezone(
         }
         current_block = 11362447018299814777;
     }
-    match current_block {
-        3512920355445576850 => {
-            zDate = zDate.offset(1);
-            if getDigits_args(
-                zDate,
-                b"20b:20e\0" as *const u8 as *const ::core::ffi::c_char,
-                &[&raw mut nHr, &raw mut nMn],
-            ) != 2 as ::core::ffi::c_int
-            {
-                return 1 as ::core::ffi::c_int;
-            }
-            zDate = zDate.offset(5_isize);
-            (*p).tz = sgn * (nMn + nHr * 60 as ::core::ffi::c_int);
-            if (*p).tz == 0 as ::core::ffi::c_int {
-                (*p).set_isLocal(0 as ::core::ffi::c_uint as ::core::ffi::c_uint);
-                (*p).set_isUtc(1 as ::core::ffi::c_uint as ::core::ffi::c_uint);
-            }
+    if current_block == 3512920355445576850 {
+        zDate = zDate.offset(1);
+        if getDigits_args(
+            zDate,
+            b"20b:20e\0" as *const u8 as *const ::core::ffi::c_char,
+            &[&raw mut nHr, &raw mut nMn],
+        ) != 2 as ::core::ffi::c_int
+        {
+            return 1 as ::core::ffi::c_int;
         }
-        _ => {}
+        zDate = zDate.offset(5_isize);
+        (*p).tz = sgn * (nMn + nHr * 60 as ::core::ffi::c_int);
+        if (*p).tz == 0 as ::core::ffi::c_int {
+            (*p).set_isLocal(0 as ::core::ffi::c_uint as ::core::ffi::c_uint);
+            (*p).set_isUtc(1 as ::core::ffi::c_uint as ::core::ffi::c_uint);
+        }
     }
     while *(&raw const crate::src::src::global::sqlite3CtypeMap as *const ::core::ffi::c_uchar)
         .offset(*zDate as ::core::ffi::c_uchar as isize) as ::core::ffi::c_int
@@ -466,9 +463,9 @@ unsafe extern "C" fn computeJD(p: *mut DateTime) {
 
 unsafe extern "C" fn computeFloor(p: *mut DateTime) {
     let __p_ref = { &mut *p };
-    if __p_ref.D <= 28 as ::core::ffi::c_int {
-        __p_ref.nFloor = 0 as ::core::ffi::c_char;
-    } else if (1 as ::core::ffi::c_int) << __p_ref.M & 0x15aa as ::core::ffi::c_int != 0 {
+    if __p_ref.D <= 28 as ::core::ffi::c_int
+        || (1 as ::core::ffi::c_int) << __p_ref.M & 0x15aa as ::core::ffi::c_int != 0
+    {
         __p_ref.nFloor = 0 as ::core::ffi::c_char;
     } else if __p_ref.M != 2 as ::core::ffi::c_int {
         __p_ref.nFloor =
@@ -566,9 +563,9 @@ unsafe extern "C" fn parseDateOrTime(
     p: *mut DateTime,
 ) -> ::core::ffi::c_int {
     let mut r: ::core::ffi::c_double = 0.;
-    if parseYyyyMmDd(zDate, p) == 0 as ::core::ffi::c_int {
-        return 0 as ::core::ffi::c_int;
-    } else if parseHhMmSs(zDate, p) == 0 as ::core::ffi::c_int {
+    if parseYyyyMmDd(zDate, p) == 0 as ::core::ffi::c_int
+        || parseHhMmSs(zDate, p) == 0 as ::core::ffi::c_int
+    {
         return 0 as ::core::ffi::c_int;
     } else if crate::src::src::util::sqlite3StrICmp(
         zDate,
@@ -1182,9 +1179,9 @@ unsafe extern "C" fn parseModifier(
                         match current_block_175 {
                             2413388577390654262 => {}
                             _ => {
-                                if M >= 12 as ::core::ffi::c_int {
-                                    current_block_175 = 2413388577390654262;
-                                } else if D >= 31 as ::core::ffi::c_int {
+                                if M >= 12 as ::core::ffi::c_int
+                                    || D >= 31 as ::core::ffi::c_int
+                                {
                                     current_block_175 = 2413388577390654262;
                                 } else {
                                     computeYMD_HMS(p);

@@ -1310,8 +1310,7 @@ pub unsafe extern "C" fn sqlite3FkCheck(
         let mut aiCol_0: *mut ::core::ffi::c_int = ::core::ptr::null_mut::<::core::ffi::c_int>();
         if !(!aChange.is_null()
             && fkParentIsModified(pTab, pFKey, aChange, bChngRowid) == 0 as ::core::ffi::c_int)
-        {
-            if !((*pFKey).isDeferred == 0
+            && !((*pFKey).isDeferred == 0
                 && (*db).flags
                     & crate::src::headers::sqliteInt_h::SQLITE_DeferFKs
                         as crate::src::ext::rtree::rtree::U64_0
@@ -1399,7 +1398,6 @@ pub unsafe extern "C" fn sqlite3FkCheck(
                     );
                 }
             }
-        }
         pFKey = (*pFKey).pNextTo;
     }
 }
@@ -1963,11 +1961,8 @@ unsafe extern "C" fn fkActionTrigger(
                 current_block_96 = 16943022006405211372;
             }
         }
-        match current_block_96 {
-            16943022006405211372 => {
-                (*pStep).op = crate::src::parse::TK_UPDATE as crate::src::ext::rtree::rtree::U8_0;
-            }
-            _ => {}
+        if current_block_96 == 16943022006405211372 {
+            (*pStep).op = crate::src::parse::TK_UPDATE as crate::src::ext::rtree::rtree::U8_0;
         }
         (*pStep).pTrig = pTrigger;
         (*pTrigger).pSchema = (*pTab).pSchema;

@@ -343,17 +343,14 @@ pub unsafe extern "C" fn sqlite3_drop_modules(
         } else {
             current_block_5 = 13513818773234778473;
         }
-        match current_block_5 {
-            13513818773234778473 => {
-                createModule(
-                    db,
-                    (*pMod).zName,
-                    ::core::ptr::null::<crate::src::headers::sqlite3_h::sqlite3_module>(),
-                    ::core::ptr::null_mut::<::core::ffi::c_void>(),
-                    None,
-                );
-            }
-            _ => {}
+        if current_block_5 == 13513818773234778473 {
+            createModule(
+                db,
+                (*pMod).zName,
+                ::core::ptr::null::<crate::src::headers::sqlite3_h::sqlite3_module>(),
+                ::core::ptr::null_mut::<::core::ffi::c_void>(),
+                None,
+            );
         }
         pThis = pNext;
     }

@@ -419,8 +419,7 @@ unsafe extern "C" fn exprCommute(
     __pExpr_ref.pRight = __pExpr_ref.pLeft;
     __pExpr_ref.pLeft = t;
     if __pExpr_ref.op as ::core::ffi::c_int >= crate::src::parse::TK_GT_1 {
-        __pExpr_ref.op = ((__pExpr_ref.op as ::core::ffi::c_int - crate::src::parse::TK_GT_1
-            ^ 2 as ::core::ffi::c_int)
+        __pExpr_ref.op = (((__pExpr_ref.op as ::core::ffi::c_int - crate::src::parse::TK_GT_1) ^ 2 as ::core::ffi::c_int)
             + crate::src::parse::TK_GT_1)
             as crate::src::ext::rtree::rtree::U8_0;
     }
@@ -430,7 +429,7 @@ unsafe extern "C" fn exprCommute(
 unsafe extern "C" fn operatorMask(op: ::core::ffi::c_int) -> crate::src::fts5::U16_0 {
     let c: crate::src::fts5::U16_0;
     if op >= crate::src::parse::TK_EQ {
-        c = (crate::src::headers::whereInt_h::WO_EQ << op - crate::src::parse::TK_EQ)
+        c = (crate::src::headers::whereInt_h::WO_EQ << (op - crate::src::parse::TK_EQ))
             as crate::src::fts5::U16_0;
     } else if op == crate::src::parse::TK_IN {
         c = crate::src::headers::whereInt_h::WO_IN as crate::src::fts5::U16_0;
@@ -952,7 +951,7 @@ unsafe extern "C" fn whereCombineDisjuncts(
     {
         return;
     }
-    if eOp as ::core::ffi::c_int & eOp as ::core::ffi::c_int - 1 as ::core::ffi::c_int
+    if eOp as ::core::ffi::c_int & (eOp as ::core::ffi::c_int - 1 as ::core::ffi::c_int)
         != 0 as ::core::ffi::c_int
     {
         if eOp as ::core::ffi::c_int
@@ -975,7 +974,7 @@ unsafe extern "C" fn whereCombineDisjuncts(
     }
     op = crate::src::parse::TK_EQ;
     while eOp as ::core::ffi::c_int
-        != crate::src::headers::whereInt_h::WO_EQ << op - crate::src::parse::TK_EQ
+        != crate::src::headers::whereInt_h::WO_EQ << (op - crate::src::parse::TK_EQ)
     {
         op += 1;
     }
@@ -1189,8 +1188,8 @@ unsafe extern "C" fn exprAnalyzeOrTerm(
                 (*pOrTerm).wtFlags = ((*pOrTerm).wtFlags as ::core::ffi::c_int
                     & !crate::src::headers::whereInt_h::TERM_OK)
                     as crate::src::fts5::U16_0;
-                if ((*pOrTerm).leftCursor != iCursor) {
-                    if (chngToIN
+                if ((*pOrTerm).leftCursor != iCursor)
+                    && (chngToIN
                         & crate::src::src::r#where::sqlite3WhereGetMask(
                             &raw mut (*pWInfo).sMaskSet as *mut _
                                 as *mut crate::src::headers::whereInt_h::WhereMaskSet,
@@ -1203,7 +1202,6 @@ unsafe extern "C" fn exprAnalyzeOrTerm(
                         pLeft = (*__pOrTerm_ref.pExpr).pLeft;
                         break;
                     }
-                }
                 i -= 1;
                 pOrTerm = pOrTerm.offset(1);
             }
@@ -1754,9 +1752,8 @@ unsafe extern "C" fn exprAnalyze(
             (*pNew).prereqRight = prereqLeft | extraRight;
             (*pNew).prereqAll = prereqAll;
             (*pNew).eOperator =
-                (operatorMask((*pDup).op as ::core::ffi::c_int) as ::core::ffi::c_int
-                    + eExtraOp as ::core::ffi::c_int
-                    & opMask as ::core::ffi::c_int) as crate::src::fts5::U16_0;
+                ((operatorMask((*pDup).op as ::core::ffi::c_int) as ::core::ffi::c_int
+                    + eExtraOp as ::core::ffi::c_int) & opMask as ::core::ffi::c_int) as crate::src::fts5::U16_0;
         } else if op == crate::src::parse::TK_ISNULL
             && (__pExpr_ref.flags
                 & 0x1 as ::core::ffi::c_int as crate::src::ext::rtree::rtree::U32_0 == 0 as crate::src::ext::rtree::rtree::U32_0)
@@ -2313,9 +2310,8 @@ pub unsafe extern "C" fn sqlite3WhereAddLimit(
         while ii < (*pWC).nTerm {
             if ((*(*pWC).a.offset(ii as isize)).wtFlags as ::core::ffi::c_int
                 & crate::src::headers::whereInt_h::TERM_CODED == 0)
-            {
-                if ((*(*pWC).a.offset(ii as isize)).nChild == 0) {
-                    if !((*(*pWC).a.offset(ii as isize)).leftCursor == iCsr
+                && ((*(*pWC).a.offset(ii as isize)).nChild == 0)
+                    && !((*(*pWC).a.offset(ii as isize)).leftCursor == iCsr
                         && (*(*pWC).a.offset(ii as isize)).prereqRight
                             == 0 as crate::src::headers::sqliteInt_h::Bitmask)
                     {
@@ -2344,8 +2340,6 @@ pub unsafe extern "C" fn sqlite3WhereAddLimit(
                             _ => return,
                         }
                     }
-                }
-            }
             ii += 1;
         }
         if !pOrderBy.is_null() {

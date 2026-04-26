@@ -509,14 +509,13 @@ pub unsafe extern "C" fn sqlite3BeginTrigger(
                                 db as *mut crate::src::headers::sqliteInt_h::sqlite3,
                                 pName as *const crate::src::headers::sqliteInt_h::Token,
                             );
-                            if zName.is_null() {
-                                current_block = 8745723808304665510;
-                            } else if crate::src::src::build::sqlite3CheckObjectName(
-                                pParse as *mut crate::src::headers::sqliteInt_h::Parse,
-                                zName,
-                                b"trigger\0" as *const u8 as *const ::core::ffi::c_char,
-                                (*pTab).zName,
-                            ) != 0
+                            if zName.is_null()
+                                || crate::src::src::build::sqlite3CheckObjectName(
+                                    pParse as *mut crate::src::headers::sqliteInt_h::Parse,
+                                    zName,
+                                    b"trigger\0" as *const u8 as *const ::core::ffi::c_char,
+                                    (*pTab).zName,
+                                ) != 0
                             {
                                 current_block = 8745723808304665510;
                             } else {
@@ -628,29 +627,25 @@ pub unsafe extern "C" fn sqlite3BeginTrigger(
                                                     code = crate::src::headers::sqlite3_h::SQLITE_CREATE_TEMP_TRIGGER;
                                                 }
                                                 if crate::src::src::auth::sqlite3AuthCheck(
-                                                    
                                                     pParse as *mut crate::src::headers::sqliteInt_h::Parse,
                                                     code,
                                                     zName,
                                                     __pTab_ref.zName,
                                                     zDbTrig,
                                                 ) != 0
-                                                {
-                                                    current_block = 8745723808304665510;
-                                                } else if crate::src::src::auth::sqlite3AuthCheck(
-                                                    
-                                                    pParse as *mut crate::src::headers::sqliteInt_h::Parse,
-                                                    crate::src::headers::sqlite3_h::SQLITE_INSERT,
-                                                    if crate::src::headers::sqliteInt_h::OMIT_TEMPDB == 0
-                                                        && iTabDb == 1 as ::core::ffi::c_int
-                                                    {
-                                                        crate::src::headers::sqliteInt_h::LEGACY_TEMP_SCHEMA_TABLE.as_ptr()
-                                                    } else {
-                                                        crate::src::headers::sqliteInt_h::LEGACY_SCHEMA_TABLE.as_ptr()
-                                                    },
-                                                    ::core::ptr::null::<::core::ffi::c_char>(),
-                                                    zDb,
-                                                ) != 0
+                                                    || crate::src::src::auth::sqlite3AuthCheck(
+                                                        pParse as *mut crate::src::headers::sqliteInt_h::Parse,
+                                                        crate::src::headers::sqlite3_h::SQLITE_INSERT,
+                                                        if crate::src::headers::sqliteInt_h::OMIT_TEMPDB == 0
+                                                            && iTabDb == 1 as ::core::ffi::c_int
+                                                        {
+                                                            crate::src::headers::sqliteInt_h::LEGACY_TEMP_SCHEMA_TABLE.as_ptr()
+                                                        } else {
+                                                            crate::src::headers::sqliteInt_h::LEGACY_SCHEMA_TABLE.as_ptr()
+                                                        },
+                                                        ::core::ptr::null::<::core::ffi::c_char>(),
+                                                        zDb,
+                                                    ) != 0
                                                 {
                                                     current_block = 8745723808304665510;
                                                 } else {
@@ -1310,8 +1305,8 @@ pub unsafe extern "C" fn sqlite3DropTrigger(
     let zDb: *const ::core::ffi::c_char;
     let zName: *const ::core::ffi::c_char;
     let db: *mut crate::src::headers::sqliteInt_h::sqlite3 = (*pParse).db;
-    if ((*db).mallocFailed == 0) {
-        if (crate::src::headers::sqlite3_h::SQLITE_OK == crate::src::src::prepare::sqlite3ReadSchema(
+    if ((*db).mallocFailed == 0)
+        && (crate::src::headers::sqlite3_h::SQLITE_OK == crate::src::src::prepare::sqlite3ReadSchema(
                 pParse as *mut crate::src::headers::sqliteInt_h::Parse,
             ))
         {
@@ -1371,7 +1366,6 @@ pub unsafe extern "C" fn sqlite3DropTrigger(
                 sqlite3DropTriggerPtr(pParse, pTrigger);
             }
         }
-    }
     crate::src::src::build::sqlite3SrcListDelete(
         db as *mut crate::src::headers::sqliteInt_h::sqlite3,
         pName as *mut crate::src::headers::sqliteInt_h::SrcList,

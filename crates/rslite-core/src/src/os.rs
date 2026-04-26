@@ -283,8 +283,7 @@ pub unsafe extern "C" fn sqlite3OsFileControl(
         && op != crate::src::headers::sqlite3_h::SQLITE_FCNTL_LOCK_TIMEOUT
         && op != crate::src::headers::sqlite3_h::SQLITE_FCNTL_CKPT_DONE
         && op != crate::src::headers::sqlite3_h::SQLITE_FCNTL_CKPT_START
-    {
-        if sqlite3_memdebug_vfs_oom_test != 0
+        && sqlite3_memdebug_vfs_oom_test != 0
             && (id.is_null()
                 || crate::src::src::memjournal::sqlite3JournalIsInMemory(
                     id as *mut crate::src::headers::sqlite3_h::sqlite3_file,
@@ -297,7 +296,6 @@ pub unsafe extern "C" fn sqlite3OsFileControl(
             }
             crate::src::src::malloc::sqlite3_free(pTstAlloc);
         }
-    }
     (*(*id).pMethods)
         .xFileControl
         .expect("non-null function pointer")(id, op, pArg)

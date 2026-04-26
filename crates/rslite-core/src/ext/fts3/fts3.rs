@@ -2171,18 +2171,15 @@ unsafe extern "C" fn fts3ScanInteriorNode(
             iChild = iChild.wrapping_add(1);
         }
     }
-    match current_block {
-        18377268871191777778 => {
-            if !piFirst.is_null() {
-                *piFirst = iChild as crate::src::ext::rtree::rtree::I64_0
-                    as crate::src::headers::sqlite3_h::Sqlite3Int64;
-            }
-            if !piLast.is_null() {
-                *piLast = iChild as crate::src::ext::rtree::rtree::I64_0
-                    as crate::src::headers::sqlite3_h::Sqlite3Int64;
-            }
+    if current_block == 18377268871191777778 {
+        if !piFirst.is_null() {
+            *piFirst = iChild as crate::src::ext::rtree::rtree::I64_0
+                as crate::src::headers::sqlite3_h::Sqlite3Int64;
         }
-        _ => {}
+        if !piLast.is_null() {
+            *piLast = iChild as crate::src::ext::rtree::rtree::I64_0
+                as crate::src::headers::sqlite3_h::Sqlite3Int64;
+        }
     }
     crate::src::src::malloc::sqlite3_free(zBuffer as *mut ::core::ffi::c_void);
     rc
@@ -3814,27 +3811,24 @@ unsafe extern "C" fn fts3ColumnMethod(
             current_block_10 = 9242256417102454865;
         }
     }
-    match current_block_10 {
-        9242256417102454865 => {
-            rc = fts3CursorSeek(
-                ::core::ptr::null_mut::<crate::src::headers::vdbeInt_h::sqlite3_context>(),
-                pCsr,
+    if current_block_10 == 9242256417102454865 {
+        rc = fts3CursorSeek(
+            ::core::ptr::null_mut::<crate::src::headers::vdbeInt_h::sqlite3_context>(),
+            pCsr,
+        );
+        if rc == crate::src::headers::sqlite3_h::SQLITE_OK
+            && crate::src::src::vdbeapi::sqlite3_data_count((*pCsr).pStmt)
+                - 1 as ::core::ffi::c_int
+                > iCol
+        {
+            crate::src::src::vdbeapi::sqlite3_result_value(
+                pCtx,
+                crate::src::src::vdbeapi::sqlite3_column_value(
+                    (*pCsr).pStmt,
+                    iCol + 1 as ::core::ffi::c_int,
+                ),
             );
-            if rc == crate::src::headers::sqlite3_h::SQLITE_OK
-                && crate::src::src::vdbeapi::sqlite3_data_count((*pCsr).pStmt)
-                    - 1 as ::core::ffi::c_int
-                    > iCol
-            {
-                crate::src::src::vdbeapi::sqlite3_result_value(
-                    pCtx,
-                    crate::src::src::vdbeapi::sqlite3_column_value(
-                        (*pCsr).pStmt,
-                        iCol + 1 as ::core::ffi::c_int,
-                    ),
-                );
-            }
         }
-        _ => {}
     }
     rc
 }
@@ -4068,35 +4062,23 @@ unsafe extern "C" fn fts3SnippetFunc(
             current_block_11 = 11050875288958768710;
         }
     }
-    match current_block_11 {
-        10414022648205370886 => {
-            iCol = crate::src::src::vdbeapi::sqlite3_value_int(*apVal.offset(4_isize));
-            current_block_11 = 11896608253015855976;
-        }
-        _ => {}
+    if current_block_11 == 10414022648205370886 {
+        iCol = crate::src::src::vdbeapi::sqlite3_value_int(*apVal.offset(4_isize));
+        current_block_11 = 11896608253015855976;
     }
-    match current_block_11 {
-        11896608253015855976 => {
-            zEllipsis = crate::src::src::vdbeapi::sqlite3_value_text(*apVal.offset(3_isize))
-                as *const ::core::ffi::c_char;
-            current_block_11 = 5542415300624813314;
-        }
-        _ => {}
+    if current_block_11 == 11896608253015855976 {
+        zEllipsis = crate::src::src::vdbeapi::sqlite3_value_text(*apVal.offset(3_isize))
+            as *const ::core::ffi::c_char;
+        current_block_11 = 5542415300624813314;
     }
-    match current_block_11 {
-        5542415300624813314 => {
-            zEnd = crate::src::src::vdbeapi::sqlite3_value_text(*apVal.offset(2_isize))
-                as *const ::core::ffi::c_char;
-            current_block_11 = 6920105402610931133;
-        }
-        _ => {}
+    if current_block_11 == 5542415300624813314 {
+        zEnd = crate::src::src::vdbeapi::sqlite3_value_text(*apVal.offset(2_isize))
+            as *const ::core::ffi::c_char;
+        current_block_11 = 6920105402610931133;
     }
-    match current_block_11 {
-        6920105402610931133 => {
-            zStart = crate::src::src::vdbeapi::sqlite3_value_text(*apVal.offset(1_isize))
-                as *const ::core::ffi::c_char;
-        }
-        _ => {}
+    if current_block_11 == 6920105402610931133 {
+        zStart = crate::src::src::vdbeapi::sqlite3_value_text(*apVal.offset(1_isize))
+            as *const ::core::ffi::c_char;
     }
     if zEllipsis.is_null() || zEnd.is_null() || zStart.is_null() {
         crate::src::src::vdbeapi::sqlite3_result_error_nomem(pContext);
@@ -5955,10 +5937,13 @@ unsafe extern "C" fn fts3EvalNextRow(
                 } else {
                     fts3EvalNextRow(pCsr, pLeft, pRc);
                     fts3EvalNextRow(pCsr, pRight, pRc);
-                    while (*pLeft).bEof == 0
-                        && (*pRight).bEof == 0
-                        && *pRc == crate::src::headers::sqlite3_h::SQLITE_OK
-                    {
+                    loop {
+                        if !((*pLeft).bEof == 0
+                            && (*pRight).bEof == 0
+                            && *pRc == crate::src::headers::sqlite3_h::SQLITE_OK)
+                        {
+                            break;
+                        }
                         let iDiff: crate::src::headers::sqlite3_h::Sqlite3Int64 =
                             ((if bDescDoclist != 0 {
                                 -(1 as ::core::ffi::c_int)
@@ -5993,9 +5978,13 @@ unsafe extern "C" fn fts3EvalNextRow(
                         if !(*(*pRight).pPhrase).doclist.aAll.is_null() {
                             let pDl: *mut crate::fts3Int_h::Fts3Doclist =
                                 &raw mut (*(*pRight).pPhrase).doclist;
-                            while *pRc == crate::src::headers::sqlite3_h::SQLITE_OK
-                                && (*pRight).bEof as ::core::ffi::c_int == 0 as ::core::ffi::c_int
-                            {
+                            loop {
+                                if !(*pRc == crate::src::headers::sqlite3_h::SQLITE_OK
+                                    && (*pRight).bEof as ::core::ffi::c_int
+                                        == 0 as ::core::ffi::c_int)
+                                {
+                                    break;
+                                }
                                 ::libc::memset(
                                     (*pDl).pList as *mut ::core::ffi::c_void,
                                     0 as ::core::ffi::c_int,
@@ -6009,9 +5998,13 @@ unsafe extern "C" fn fts3EvalNextRow(
                         {
                             let pDl_0: *mut crate::fts3Int_h::Fts3Doclist =
                                 &raw mut (*(*pLeft).pPhrase).doclist;
-                            while *pRc == crate::src::headers::sqlite3_h::SQLITE_OK
-                                && (*pLeft).bEof as ::core::ffi::c_int == 0 as ::core::ffi::c_int
-                            {
+                            loop {
+                                if !(*pRc == crate::src::headers::sqlite3_h::SQLITE_OK
+                                    && (*pLeft).bEof as ::core::ffi::c_int
+                                        == 0 as ::core::ffi::c_int)
+                                {
+                                    break;
+                                }
                                 ::libc::memset(
                                     (*pDl_0).pList as *mut ::core::ffi::c_void,
                                     0 as ::core::ffi::c_int,
@@ -6087,20 +6080,23 @@ unsafe extern "C" fn fts3EvalNextRow(
                 }
                 fts3EvalNextRow(pCsr, pLeft_1, pRc);
                 if (*pLeft_1).bEof as ::core::ffi::c_int == 0 as ::core::ffi::c_int {
-                    while *pRc == 0
-                        && (*pRight_1).bEof == 0
-                        && (if bDescDoclist != 0 {
-                            -(1 as ::core::ffi::c_int)
-                        } else {
-                            1 as ::core::ffi::c_int
-                        }) * (if (*pLeft_1).iDocid > (*pRight_1).iDocid {
-                            1 as ::core::ffi::c_int
-                        } else if (*pLeft_1).iDocid == (*pRight_1).iDocid {
-                            0 as ::core::ffi::c_int
-                        } else {
-                            -(1 as ::core::ffi::c_int)
-                        }) > 0 as ::core::ffi::c_int
-                    {
+                    loop {
+                        if !(*pRc == 0
+                            && (*pRight_1).bEof == 0
+                            && (if bDescDoclist != 0 {
+                                -(1 as ::core::ffi::c_int)
+                            } else {
+                                1 as ::core::ffi::c_int
+                            }) * (if (*pLeft_1).iDocid > (*pRight_1).iDocid {
+                                1 as ::core::ffi::c_int
+                            } else if (*pLeft_1).iDocid == (*pRight_1).iDocid {
+                                0 as ::core::ffi::c_int
+                            } else {
+                                -(1 as ::core::ffi::c_int)
+                            }) > 0 as ::core::ffi::c_int)
+                        {
+                            break;
+                        }
                         fts3EvalNextRow(pCsr, pRight_1, pRc);
                     }
                 }

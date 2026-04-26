@@ -1412,17 +1412,15 @@ pub mod keywordhash_h {
         let mut j: ::core::ffi::c_int;
         let mut zKW: *const ::core::ffi::c_char;
         i =
-            (*(&raw const crate::src::src::global::sqlite3UpperToLower
+            ((*(&raw const crate::src::src::global::sqlite3UpperToLower
                 as *const ::core::ffi::c_uchar)
                 .offset(*z.offset(0_isize) as ::core::ffi::c_uchar as isize)
                 as ::core::ffi::c_int
-                * 4 as ::core::ffi::c_int
-                ^ *(&raw const crate::src::src::global::sqlite3UpperToLower
+                * 4 as ::core::ffi::c_int) ^ (*(&raw const crate::src::src::global::sqlite3UpperToLower
                     as *const ::core::ffi::c_uchar)
                     .offset(*z.offset((n - 1 as ::core::ffi::c_int) as isize)
                         as ::core::ffi::c_uchar as isize) as ::core::ffi::c_int
-                    * 3 as ::core::ffi::c_int
-                ^ n * 1 as ::core::ffi::c_int)
+                    * 3 as ::core::ffi::c_int) ^ (n * 1 as ::core::ffi::c_int))
                 % 127 as ::core::ffi::c_int;
         i = aKWHash[i as usize] as ::core::ffi::c_int;
         while i > 0 as ::core::ffi::c_int {
@@ -1432,8 +1430,7 @@ pub mod keywordhash_h {
                         as isize,
                 ) as *const ::core::ffi::c_char;
                 if (*z.offset(0_isize) as ::core::ffi::c_int & !(0x20 as ::core::ffi::c_int) == *zKW.offset(0_isize) as ::core::ffi::c_int)
-                {
-                    if (*z.offset(1_isize) as ::core::ffi::c_int
+                    && (*z.offset(1_isize) as ::core::ffi::c_int
                         & !(0x20 as ::core::ffi::c_int) == *zKW.offset(1_isize) as ::core::ffi::c_int)
                     {
                         j = 2 as ::core::ffi::c_int;
@@ -1449,7 +1446,6 @@ pub mod keywordhash_h {
                             break;
                         }
                     }
-                }
             }
             i = aKWNext[i as usize] as ::core::ffi::c_int;
         }

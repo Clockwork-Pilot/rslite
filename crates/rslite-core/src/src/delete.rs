@@ -720,8 +720,7 @@ pub unsafe extern "C" fn sqlite3DeleteFrom(
                 pParse as *mut crate::src::headers::sqliteInt_h::Parse,
                 pTab as *mut crate::src::headers::sqliteInt_h::Table,
             ) == 0)
-            {
-                if (sqlite3IsReadOnly(pParse, pTab, pTrigger) == 0) {
+                && (sqlite3IsReadOnly(pParse, pTab, pTrigger) == 0) {
                     iDb = crate::src::src::prepare::sqlite3SchemaToIndex(
                         db as *mut crate::src::headers::sqliteInt_h::sqlite3,
                         (*pTab).pSchema as *mut crate::src::headers::sqliteInt_h::Schema,
@@ -1263,7 +1262,6 @@ pub unsafe extern "C" fn sqlite3DeleteFrom(
                         }
                     }
                 }
-            }
         }
     }
     crate::src::src::auth::sqlite3AuthContextPop(
@@ -1533,9 +1531,9 @@ pub unsafe extern "C" fn sqlite3GenerateRowIndexDelete(
     i = 0 as ::core::ffi::c_int;
     pIdx = (*pTab).pIndex;
     while !pIdx.is_null() {
-        if !(!aRegIdx.is_null() && *aRegIdx.offset(i as isize) == 0 as ::core::ffi::c_int) {
-            if (pIdx != pPk) {
-                if (iIdxCur + i != iIdxNoSeek) {
+        if !(!aRegIdx.is_null() && *aRegIdx.offset(i as isize) == 0 as ::core::ffi::c_int)
+            && (pIdx != pPk)
+                && (iIdxCur + i != iIdxNoSeek) {
                     r1 = sqlite3GenerateIndexKey(
                         pParse,
                         pIdx,
@@ -1561,8 +1559,6 @@ pub unsafe extern "C" fn sqlite3GenerateRowIndexDelete(
                     sqlite3ResolvePartIdxLabel(pParse, iPartIdxLabel);
                     pPrior = pIdx;
                 }
-            }
-        }
         i += 1;
         pIdx = (*pIdx).pNext;
     }

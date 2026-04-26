@@ -367,19 +367,17 @@ pub unsafe extern "C" fn sqlite3UpsertAnalyzeTarget(
                 let nn: ::core::ffi::c_int;
                 if (*pIdx).onError as ::core::ffi::c_int
                     != crate::src::headers::sqliteInt_h::OE_None
-                {
-                    if ((*pTarget).nExpr == (*pIdx).nKeyCol as ::core::ffi::c_int) {
+                    && ((*pTarget).nExpr == (*pIdx).nKeyCol as ::core::ffi::c_int) {
                         if !(*pIdx).pPartIdxWhere.is_null() {
-                            if (*pUpsert).pUpsertTargetWhere.is_null() {
-                                current_block_46 = 26972500619410423;
-                            } else if crate::src::src::expr::sqlite3ExprCompare(
-                                pParse as *const crate::src::headers::sqliteInt_h::Parse,
-                                (*pUpsert).pUpsertTargetWhere
-                                    as *const crate::src::headers::sqliteInt_h::Expr,
-                                (*pIdx).pPartIdxWhere
-                                    as *const crate::src::headers::sqliteInt_h::Expr,
-                                iCursor,
-                            ) != 0 as ::core::ffi::c_int
+                            if (*pUpsert).pUpsertTargetWhere.is_null()
+                                || crate::src::src::expr::sqlite3ExprCompare(
+                                    pParse as *const crate::src::headers::sqliteInt_h::Parse,
+                                    (*pUpsert).pUpsertTargetWhere
+                                        as *const crate::src::headers::sqliteInt_h::Expr,
+                                    (*pIdx).pPartIdxWhere
+                                        as *const crate::src::headers::sqliteInt_h::Expr,
+                                    iCursor,
+                                ) != 0 as ::core::ffi::c_int
                             {
                                 current_block_46 = 26972500619410423;
                             } else {
@@ -462,7 +460,6 @@ pub unsafe extern "C" fn sqlite3UpsertAnalyzeTarget(
                             }
                         }
                     }
-                }
                 pIdx = (*pIdx).pNext;
             }
             if (*pUpsert).pUpsertIdx.is_null() {

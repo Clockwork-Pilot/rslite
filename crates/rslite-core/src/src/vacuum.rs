@@ -287,8 +287,8 @@ pub unsafe extern "C" fn sqlite3Vacuum(
         pParse as *mut crate::src::headers::sqliteInt_h::Parse,
     );
     let mut iDb: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
-    if !v.is_null() {
-        if ((*pParse).nErr == 0) {
+    if !v.is_null()
+        && ((*pParse).nErr == 0) {
             if !pNm.is_null() {
                 iDb = crate::src::src::build::sqlite3TwoPartName(
                     pParse as *mut crate::src::headers::sqliteInt_h::Parse,
@@ -343,7 +343,6 @@ pub unsafe extern "C" fn sqlite3Vacuum(
                 }
             }
         }
-    }
     crate::src::src::expr::sqlite3ExprDelete(
         (*pParse).db as *mut crate::src::headers::sqliteInt_h::sqlite3,
         pInto as *mut crate::src::headers::sqliteInt_h::Expr,

@@ -1564,8 +1564,7 @@ pub unsafe extern "C" fn sqlite3Insert(
                     pParse as *mut crate::src::headers::sqliteInt_h::Parse,
                     pTab as *mut crate::src::headers::sqliteInt_h::Table,
                 ) == 0)
-                {
-                    if (crate::src::src::delete::sqlite3IsReadOnly(
+                    && (crate::src::src::delete::sqlite3IsReadOnly(
                         pParse as *mut crate::src::headers::sqliteInt_h::Parse,
                         pTab as *mut crate::src::headers::sqliteInt_h::Table,
                         pTrigger as *mut crate::src::headers::sqliteInt_h::Trigger,
@@ -2048,8 +2047,8 @@ pub unsafe extern "C" fn sqlite3Insert(
                                                                                 (*pNx).regData = regData;
                                                                                 (*pNx).iDataCur = iDataCur;
                                                                                 (*pNx).iIdxCur = iIdxCur;
-                                                                                if !(*pNx).pUpsertTarget.is_null() {
-                                                                                    if crate::src::src::upsert::sqlite3UpsertAnalyzeTarget(
+                                                                                if !(*pNx).pUpsertTarget.is_null()
+                                                                                    && crate::src::src::upsert::sqlite3UpsertAnalyzeTarget(
                                                                                         
                                                                                         pParse as *mut crate::src::headers::sqliteInt_h::Parse,
                                                                                         
@@ -2063,7 +2062,6 @@ pub unsafe extern "C" fn sqlite3Insert(
                                                                                         current_block = 10999388377906951673;
                                                                                         break;
                                                                                     }
-                                                                                }
                                                                                 pNx = (*pNx).pNextUpsert;
                                                                                 if pNx.is_null() {
                                                                                     current_block = 919396821984190499;
@@ -2580,7 +2578,6 @@ pub unsafe extern "C" fn sqlite3Insert(
                             }
                         }
                     }
-                }
             }
         }
     }
@@ -2783,8 +2780,8 @@ pub unsafe extern "C" fn sqlite3GenerateConstraintChecks(
                         as *mut crate::src::headers::sqliteInt_h::Column;
                 let isGenerated: ::core::ffi::c_int;
                 onError = (*pCol).notNull() as ::core::ffi::c_int;
-                if (onError != crate::src::headers::sqliteInt_h::OE_None) {
-                    if (i != __pTab_ref.iPKey as ::core::ffi::c_int) {
+                if (onError != crate::src::headers::sqliteInt_h::OE_None)
+                    && (i != __pTab_ref.iPKey as ::core::ffi::c_int) {
                         isGenerated = (*pCol).colFlags as ::core::ffi::c_int
                             & crate::src::headers::sqliteInt_h::COLFLAG_GENERATED;
                         if isGenerated != 0 && b2ndPass == 0 {
@@ -2865,42 +2862,38 @@ pub unsafe extern "C" fn sqlite3GenerateConstraintChecks(
                                             current_block_50 = 7252614138838059896;
                                         }
                                     }
-                                    match current_block_50 {
-                                        2290177392965769716 => {
-                                            let zMsg: *mut ::core::ffi::c_char = crate::src::src::printf::sqlite3MPrintf_args(
-                                                db as *mut crate::src::headers::sqliteInt_h::sqlite3,
-                                                b"%s.%s\0" as *const u8
-                                                    as *const ::core::ffi::c_char,
-                                                &[
-                                                    crate::src::src::printf::PrintfArg::Str(__pTab_ref.zName as *mut ::core::ffi::c_char),
-                                                    crate::src::src::printf::PrintfArg::Str((*pCol).zCnName as *mut ::core::ffi::c_char),
-                                                ],
-                                            );
-                                            crate::src::src::vdbeaux::sqlite3VdbeAddOp3(
-                                                v,
-                                                crate::src::headers::opcodes_h::OP_HaltIfNull,
-                                                crate::src::headers::sqlite3_h::SQLITE_CONSTRAINT_NOTNULL,
-                                                onError,
-                                                iReg,
-                                            );
-                                            crate::src::src::vdbeaux::sqlite3VdbeAppendP4(
-                                                v,
-                                                zMsg as *mut ::core::ffi::c_void,
-                                                crate::src::src::vdbe::P4_DYNAMIC,
-                                            );
-                                            crate::src::src::vdbeaux::sqlite3VdbeChangeP5(
-                                                v,
-                                                crate::src::src::vdbe::P5_ConstraintNotNull
-                                                    as crate::src::fts5::U16_0,
-                                            );
-                                        }
-                                        _ => {}
+                                    if current_block_50 == 2290177392965769716 {
+                                        let zMsg: *mut ::core::ffi::c_char = crate::src::src::printf::sqlite3MPrintf_args(
+                                            db as *mut crate::src::headers::sqliteInt_h::sqlite3,
+                                            b"%s.%s\0" as *const u8
+                                                as *const ::core::ffi::c_char,
+                                            &[
+                                                crate::src::src::printf::PrintfArg::Str(__pTab_ref.zName as *mut ::core::ffi::c_char),
+                                                crate::src::src::printf::PrintfArg::Str((*pCol).zCnName as *mut ::core::ffi::c_char),
+                                            ],
+                                        );
+                                        crate::src::src::vdbeaux::sqlite3VdbeAddOp3(
+                                            v,
+                                            crate::src::headers::opcodes_h::OP_HaltIfNull,
+                                            crate::src::headers::sqlite3_h::SQLITE_CONSTRAINT_NOTNULL,
+                                            onError,
+                                            iReg,
+                                        );
+                                        crate::src::src::vdbeaux::sqlite3VdbeAppendP4(
+                                            v,
+                                            zMsg as *mut ::core::ffi::c_void,
+                                            crate::src::src::vdbe::P4_DYNAMIC,
+                                        );
+                                        crate::src::src::vdbeaux::sqlite3VdbeChangeP5(
+                                            v,
+                                            crate::src::src::vdbe::P5_ConstraintNotNull
+                                                as crate::src::fts5::U16_0,
+                                        );
                                     }
                                 }
                             }
                         }
                     }
-                }
                 i += 1;
             }
             if nGenerated == 0 as ::core::ffi::c_int && nSeenReplace == 0 as ::core::ffi::c_int {
@@ -3686,11 +3679,8 @@ pub unsafe extern "C" fn sqlite3GenerateConstraintChecks(
                             current_block_379 = 10648164479545198704;
                         }
                     }
-                    match current_block_379 {
-                        16070719095729554596 => {
-                            crate::src::src::vdbeaux::sqlite3VdbeGoto(v, ignoreDest);
-                        }
-                        _ => {}
+                    if current_block_379 == 16070719095729554596 {
+                        crate::src::src::vdbeaux::sqlite3VdbeGoto(v, ignoreDest);
                     }
                     crate::src::src::vdbeaux::sqlite3VdbeResolveLabel(v, addrUniqueOk);
                     if regR != regIdx {
@@ -4051,8 +4041,7 @@ unsafe extern "C" fn xferCompatibleIndex(
         }
         if *__pSrc_ref.aiColumn.offset(i as isize) as ::core::ffi::c_int
             == crate::src::headers::sqliteInt_h::XN_EXPR
-        {
-            if crate::src::src::expr::sqlite3ExprCompare(
+            && crate::src::src::expr::sqlite3ExprCompare(
                 ::core::ptr::null::<crate::src::headers::sqliteInt_h::Parse>()
                     as *const crate::src::headers::sqliteInt_h::Parse,
                 (*(&raw mut (*__pSrc_ref.aColExpr).a
@@ -4068,7 +4057,6 @@ unsafe extern "C" fn xferCompatibleIndex(
             {
                 return 0 as ::core::ffi::c_int;
             }
-        }
         if *__pSrc_ref.aSortOrder.offset(i as isize) as ::core::ffi::c_int
             != *__pDest_ref.aSortOrder.offset(i as isize) as ::core::ffi::c_int
         {
@@ -4241,8 +4229,7 @@ unsafe extern "C" fn xferOptimization(
         if __pDestCol_ref.colFlags as ::core::ffi::c_int
             & crate::src::headers::sqliteInt_h::COLFLAG_GENERATED
             != 0 as ::core::ffi::c_int
-        {
-            if crate::src::src::expr::sqlite3ExprCompare(
+            && crate::src::src::expr::sqlite3ExprCompare(
                 ::core::ptr::null::<crate::src::headers::sqliteInt_h::Parse>()
                     as *const crate::src::headers::sqliteInt_h::Parse,
                 crate::src::src::build::sqlite3ColumnExpr(
@@ -4260,7 +4247,6 @@ unsafe extern "C" fn xferOptimization(
             {
                 return 0 as ::core::ffi::c_int;
             }
-        }
         if __pDestCol_ref.affinity as ::core::ffi::c_int
             != __pSrcCol_ref.affinity as ::core::ffi::c_int
         {
