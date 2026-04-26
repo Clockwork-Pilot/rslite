@@ -3941,8 +3941,7 @@ unsafe extern "C" fn multiSelectValues(
 ) -> ::core::ffi::c_int {
     let mut nRow: ::core::ffi::c_int = 1 as ::core::ffi::c_int;
     let rc: ::core::ffi::c_int = 0 as ::core::ffi::c_int;
-    let bShowAll: ::core::ffi::c_int = ((*p).pLimit
-        == ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::Expr>())
+    let bShowAll: ::core::ffi::c_int = (*p).pLimit.is_null()
         as ::core::ffi::c_int;
     loop {
         if !(*p).pWin.is_null() {
@@ -3997,7 +3996,7 @@ unsafe extern "C" fn hasAnchor(
     {
         p = (*p).pPrior;
     }
-    (p != ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::Select>()) as ::core::ffi::c_int
+    !p.is_null() as ::core::ffi::c_int
 }
 
 unsafe extern "C" fn multiSelect(

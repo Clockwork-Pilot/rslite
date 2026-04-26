@@ -1309,7 +1309,7 @@ pub unsafe extern "C" fn sqlite3_deserialize(
 pub unsafe extern "C" fn sqlite3IsMemdb(
     pVfs: *const crate::src::headers::sqlite3_h::sqlite3_vfs,
 ) -> ::core::ffi::c_int {
-    (pVfs == &raw mut memdb_vfs as *const crate::src::headers::sqlite3_h::sqlite3_vfs)
+    std::ptr::eq(pVfs, &raw mut memdb_vfs)
         as ::core::ffi::c_int
 }
 pub unsafe extern "C" fn sqlite3MemdbInit() -> ::core::ffi::c_int {

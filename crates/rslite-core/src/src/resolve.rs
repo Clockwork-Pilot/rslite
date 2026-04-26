@@ -2770,8 +2770,7 @@ unsafe extern "C" fn resolveSelectStep(
             crate::src::headers::sqliteInt_h::WRC_Prune
         };
     }
-    let isCompound: ::core::ffi::c_int = ((*p).pPrior
-        != ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::Select>())
+    let isCompound: ::core::ffi::c_int = !(*p).pPrior.is_null()
         as ::core::ffi::c_int;
     nCompound = 0 as ::core::ffi::c_int;
     let pLeftmost: *mut crate::src::headers::sqliteInt_h::Select = p;

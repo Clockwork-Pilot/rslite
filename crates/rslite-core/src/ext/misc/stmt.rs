@@ -209,7 +209,7 @@ unsafe extern "C" fn stmtEof(
     cur: *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
 ) -> ::core::ffi::c_int {
     let pCur = &*(cur as *mut stmt_cursor);
-    (pCur.pRow == ::core::ptr::null_mut::<StmtRow>()) as ::core::ffi::c_int
+    pCur.pRow.is_null() as ::core::ffi::c_int
 }
 
 unsafe extern "C" fn stmtFilter(

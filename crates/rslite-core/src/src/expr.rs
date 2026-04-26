@@ -2064,8 +2064,7 @@ pub unsafe extern "C" fn sqlite3ExprDeferredDelete(
     pParse: *mut crate::src::headers::sqliteInt_h::Parse,
     pExpr: *mut crate::src::headers::sqliteInt_h::Expr,
 ) -> ::core::ffi::c_int {
-    (::core::ptr::null_mut::<::core::ffi::c_void>()
-        == crate::src::src::prepare::sqlite3ParserAddCleanup(
+    crate::src::src::prepare::sqlite3ParserAddCleanup(
             pParse as *mut crate::src::headers::sqliteInt_h::Parse,
             ::core::mem::transmute(Some(
                 sqlite3ExprDeleteGeneric
@@ -2075,7 +2074,7 @@ pub unsafe extern "C" fn sqlite3ExprDeferredDelete(
                     ) -> (),
             )),
             pExpr as *mut ::core::ffi::c_void,
-        )) as ::core::ffi::c_int
+        ).is_null() as ::core::ffi::c_int
 }
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 

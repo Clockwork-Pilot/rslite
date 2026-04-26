@@ -712,8 +712,7 @@ unsafe extern "C" fn osLocaltime(
             return 1 as ::core::ffi::c_int;
         }
     }
-    let rc: ::core::ffi::c_int = (::libc::localtime_r(t, pTm as *mut ::libc::tm) as *mut ::libc::tm
-        == ::core::ptr::null_mut::<::libc::tm>()) as ::core::ffi::c_int;
+    let rc: ::core::ffi::c_int = (::libc::localtime_r(t, pTm as *mut ::libc::tm) as *mut ::libc::tm).is_null() as ::core::ffi::c_int;
     rc
 }
 
@@ -1879,19 +1878,19 @@ unsafe extern "C" fn strftimeFunc(
     computeYMD_HMS(&raw mut x);
     j = 0 as crate::__stddef_size_t_h::SizeT;
     i = j;
-    while *zFmt.offset(i as isize) != 0 {
+    while *zFmt.add(i) != 0 {
         let cf: ::core::ffi::c_char;
-        if (*zFmt.offset(i as isize) as ::core::ffi::c_int == '%' as i32) {
+        if (*zFmt.add(i) as ::core::ffi::c_int == '%' as i32) {
             if j < i {
                 crate::src::src::printf::sqlite3_str_append(
                     &raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
-                    zFmt.offset(j as isize),
+                    zFmt.add(j),
                     i.wrapping_sub(j) as ::core::ffi::c_int,
                 );
             }
             i = i.wrapping_add(1);
             j = i.wrapping_add(1 as crate::__stddef_size_t_h::SizeT);
-            cf = *zFmt.offset(i as isize);
+            cf = *zFmt.add(i);
             match cf as ::core::ffi::c_int {
                 100 | 101 => {
                     if cf as ::core::ffi::c_int == 'd' as i32 {
@@ -2192,7 +2191,7 @@ unsafe extern "C" fn strftimeFunc(
     if j < i {
         crate::src::src::printf::sqlite3_str_append(
             &raw mut sRes as *mut _ as *mut crate::src::headers::sqliteInt_h::sqlite3_str,
-            zFmt.offset(j as isize),
+            zFmt.add(j),
             i.wrapping_sub(j) as ::core::ffi::c_int,
         );
     }

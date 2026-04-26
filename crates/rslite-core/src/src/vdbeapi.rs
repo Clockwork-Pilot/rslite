@@ -763,10 +763,14 @@ unsafe extern "C" fn invokeValueDestructor(
     pCtx: *mut crate::src::headers::vdbeInt_h::sqlite3_context,
 ) -> ::core::ffi::c_int {
     if xDel.is_some()
-        && (xDel != ::core::mem::transmute::<
+        && (!match (xDel, ::core::mem::transmute::<
                 crate::src::headers::stdlib::IntptrT,
                 crate::src::headers::sqlite3_h::Sqlite3DestructorType,
-            >(-(1 as ::core::ffi::c_int) as crate::src::headers::stdlib::IntptrT))
+            >(-(1 as ::core::ffi::c_int) as crate::src::headers::stdlib::IntptrT)) {
+                (Some(__x), Some(__y)) => ::core::ptr::fn_addr_eq(__x, __y),
+                (None, None) => true,
+                _ => false,
+            })
         {
             xDel.expect("non-null function pointer")(p as *mut ::core::ffi::c_void);
         }
@@ -1417,10 +1421,10 @@ unsafe extern "C" fn valueFromValueList(
     }
     if (*pVal).flags as ::core::ffi::c_int & crate::src::headers::vdbeInt_h::MEM_Dyn
         == 0 as ::core::ffi::c_int
-        || (*pVal).xDel
-            != Some(
-                sqlite3VdbeValueListFree as unsafe extern "C" fn(*mut ::core::ffi::c_void) -> (),
-            )
+        || !(*pVal).xDel.is_some_and(|__f| ::core::ptr::fn_addr_eq(
+            __f,
+            sqlite3VdbeValueListFree as unsafe extern "C" fn(*mut ::core::ffi::c_void) -> (),
+        ))
     {
         return crate::src::headers::sqlite3_h::SQLITE_ERROR;
     } else {
@@ -2150,11 +2154,14 @@ unsafe extern "C" fn bindText(
         }
         crate::src::src::mutex::sqlite3_mutex_leave((*(*p).db).mutex);
     } else if xDel.is_some()
-        && xDel
-            != ::core::mem::transmute::<
-                crate::src::headers::stdlib::IntptrT,
-                crate::src::headers::sqlite3_h::Sqlite3DestructorType,
-            >(-(1 as ::core::ffi::c_int) as crate::src::headers::stdlib::IntptrT)
+        && !match (xDel, ::core::mem::transmute::<
+            crate::src::headers::stdlib::IntptrT,
+            crate::src::headers::sqlite3_h::Sqlite3DestructorType,
+        >(-(1 as ::core::ffi::c_int) as crate::src::headers::stdlib::IntptrT)) {
+            (Some(__x), Some(__y)) => ::core::ptr::fn_addr_eq(__x, __y),
+            (None, None) => true,
+            _ => false,
+        }
     {
         xDel.expect("non-null function pointer")(zData as *mut ::core::ffi::c_void);
     }

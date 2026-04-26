@@ -292,28 +292,28 @@ pub unsafe extern "C" fn sqlite3WalkSelectExpr(
     }
     if !__p_ref.pWinDefn.is_null() {
         let pParse: *mut crate::src::headers::sqliteInt_h::Parse;
-        if (*pWalker).xSelectCallback2
-            == Some(
-                sqlite3WalkWinDefnDummyCallback
-                    as unsafe extern "C" fn(
-                        *mut crate::src::headers::sqliteInt_h::Walker,
-                        *mut crate::src::headers::sqliteInt_h::Select,
-                    ) -> (),
-            )
+        if (*pWalker).xSelectCallback2.is_some_and(|__f| ::core::ptr::fn_addr_eq(
+            __f,
+            sqlite3WalkWinDefnDummyCallback
+                as unsafe extern "C" fn(
+                    *mut crate::src::headers::sqliteInt_h::Walker,
+                    *mut crate::src::headers::sqliteInt_h::Select,
+                ) -> (),
+        ))
             || {
                 pParse = (*pWalker).pParse;
                 !pParse.is_null()
                     && (*pParse).eParseMode as ::core::ffi::c_int
                         >= crate::src::headers::sqliteInt_h::PARSE_MODE_RENAME
             }
-            || (*pWalker).xSelectCallback2
-                == Some(
-                    crate::src::src::select::sqlite3SelectPopWith
-                        as unsafe extern "C" fn(
-                            *mut crate::src::headers::sqliteInt_h::Walker,
-                            *mut crate::src::headers::sqliteInt_h::Select,
-                        ) -> (),
-                )
+            || (*pWalker).xSelectCallback2.is_some_and(|__f| ::core::ptr::fn_addr_eq(
+                __f,
+                crate::src::src::select::sqlite3SelectPopWith
+                    as unsafe extern "C" fn(
+                        *mut crate::src::headers::sqliteInt_h::Walker,
+                        *mut crate::src::headers::sqliteInt_h::Select,
+                    ) -> (),
+            ))
         {
             let rc: ::core::ffi::c_int =
                 walkWindowList(pWalker, __p_ref.pWinDefn, 0 as ::core::ffi::c_int);

@@ -4281,9 +4281,9 @@ unsafe extern "C" fn xferOptimization(
                     pSrc as *mut crate::src::headers::sqliteInt_h::Table,
                     pSrcCol as *mut crate::src::headers::sqliteInt_h::Column,
                 ) as *mut crate::src::headers::sqliteInt_h::Expr;
-            if (pDestExpr == ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::Expr>())
+            if pDestExpr.is_null()
                 as ::core::ffi::c_int
-                != (pSrcExpr == ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::Expr>())
+                != pSrcExpr.is_null()
                     as ::core::ffi::c_int
                 || !pDestExpr.is_null()
                     && ::libc::strcmp((*pDestExpr).u.zToken, (*pSrcExpr).u.zToken)

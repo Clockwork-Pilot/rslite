@@ -398,11 +398,11 @@ pub unsafe extern "C" fn sqlite3VdbeMemZeroTerminateIfAble(
         return;
     }
     if __pMem_ref.flags as ::core::ffi::c_int & crate::src::headers::vdbeInt_h::MEM_Dyn != 0 {
-        if __pMem_ref.xDel
-            == Some(
-                crate::src::src::malloc::sqlite3_free
-                    as unsafe extern "C" fn(*mut ::core::ffi::c_void) -> (),
-            )
+        if __pMem_ref.xDel.is_some_and(|__f| ::core::ptr::fn_addr_eq(
+            __f,
+            crate::src::src::malloc::sqlite3_free
+                as unsafe extern "C" fn(*mut ::core::ffi::c_void) -> (),
+        ))
             && crate::src::src::malloc::sqlite3_msize(__pMem_ref.z as *mut ::core::ffi::c_void)
                 >= (__pMem_ref.n + 1 as ::core::ffi::c_int) as crate::src::ext::rtree::rtree::U64_0
         {
@@ -412,11 +412,11 @@ pub unsafe extern "C" fn sqlite3VdbeMemZeroTerminateIfAble(
                 as crate::src::fts5::U16_0;
             return;
         }
-        if __pMem_ref.xDel
-            == Some(
-                crate::src::src::printf::sqlite3RCStrUnref
-                    as unsafe extern "C" fn(*mut ::core::ffi::c_void) -> (),
-            )
+        if __pMem_ref.xDel.is_some_and(|__f| ::core::ptr::fn_addr_eq(
+            __f,
+            crate::src::src::printf::sqlite3RCStrUnref
+                as unsafe extern "C" fn(*mut ::core::ffi::c_void) -> (),
+        ))
         {
             __pMem_ref.flags = (__pMem_ref.flags as ::core::ffi::c_int
                 | crate::src::headers::vdbeInt_h::MEM_Term)
@@ -1261,20 +1261,26 @@ pub unsafe extern "C" fn sqlite3VdbeMemSetStr(
     }
     if nByte > iLimit as crate::src::ext::rtree::rtree::I64_0 {
         if xDel.is_some()
-            && xDel
-                != ::core::mem::transmute::<
-                    crate::src::headers::stdlib::IntptrT,
-                    crate::src::headers::sqlite3_h::Sqlite3DestructorType,
-                >(-(1 as ::core::ffi::c_int) as crate::src::headers::stdlib::IntptrT)
+            && !match (xDel, ::core::mem::transmute::<
+                crate::src::headers::stdlib::IntptrT,
+                crate::src::headers::sqlite3_h::Sqlite3DestructorType,
+            >(-(1 as ::core::ffi::c_int) as crate::src::headers::stdlib::IntptrT)) {
+                (Some(__x), Some(__y)) => ::core::ptr::fn_addr_eq(__x, __y),
+                (None, None) => true,
+                _ => false,
+            }
         {
-            if xDel
-                == ::core::mem::transmute::<
-                    Option<unsafe extern "C" fn(*mut ::core::ffi::c_void) -> ()>,
-                    crate::src::headers::sqlite3_h::Sqlite3DestructorType,
-                >(Some(
-                    crate::src::src::rowset::sqlite3RowSetClear
-                        as unsafe extern "C" fn(*mut ::core::ffi::c_void) -> (),
-                ))
+            if match (xDel, ::core::mem::transmute::<
+                Option<unsafe extern "C" fn(*mut ::core::ffi::c_void) -> ()>,
+                crate::src::headers::sqlite3_h::Sqlite3DestructorType,
+            >(Some(
+                crate::src::src::rowset::sqlite3RowSetClear
+                    as unsafe extern "C" fn(*mut ::core::ffi::c_void) -> (),
+            ))) {
+                (Some(__x), Some(__y)) => ::core::ptr::fn_addr_eq(__x, __y),
+                (None, None) => true,
+                _ => false,
+            }
             {
                 crate::src::src::malloc::sqlite3DbFree(
                     __pMem_ref.db as *mut crate::src::headers::sqliteInt_h::sqlite3,
@@ -1290,11 +1296,14 @@ pub unsafe extern "C" fn sqlite3VdbeMemSetStr(
             crate::src::headers::sqlite3_h::SQLITE_TOOBIG,
         );
     }
-    if xDel
-        == ::core::mem::transmute::<
-            crate::src::headers::stdlib::IntptrT,
-            crate::src::headers::sqlite3_h::Sqlite3DestructorType,
-        >(-(1 as ::core::ffi::c_int) as crate::src::headers::stdlib::IntptrT)
+    if match (xDel, ::core::mem::transmute::<
+        crate::src::headers::stdlib::IntptrT,
+        crate::src::headers::sqlite3_h::Sqlite3DestructorType,
+    >(-(1 as ::core::ffi::c_int) as crate::src::headers::stdlib::IntptrT)) {
+        (Some(__x), Some(__y)) => ::core::ptr::fn_addr_eq(__x, __y),
+        (None, None) => true,
+        _ => false,
+    }
     {
         let mut nAlloc: crate::src::ext::rtree::rtree::I64_0 = nByte;
         if flags as ::core::ffi::c_int & crate::src::headers::vdbeInt_h::MEM_Term != 0 {
@@ -1319,14 +1328,17 @@ pub unsafe extern "C" fn sqlite3VdbeMemSetStr(
     } else {
         sqlite3VdbeMemRelease(pMem);
         __pMem_ref.z = z as *mut ::core::ffi::c_char;
-        if xDel
-            == ::core::mem::transmute::<
-                Option<unsafe extern "C" fn(*mut ::core::ffi::c_void) -> ()>,
-                crate::src::headers::sqlite3_h::Sqlite3DestructorType,
-            >(Some(
-                crate::src::src::rowset::sqlite3RowSetClear
-                    as unsafe extern "C" fn(*mut ::core::ffi::c_void) -> (),
-            ))
+        if match (xDel, ::core::mem::transmute::<
+            Option<unsafe extern "C" fn(*mut ::core::ffi::c_void) -> ()>,
+            crate::src::headers::sqlite3_h::Sqlite3DestructorType,
+        >(Some(
+            crate::src::src::rowset::sqlite3RowSetClear
+                as unsafe extern "C" fn(*mut ::core::ffi::c_void) -> (),
+        ))) {
+            (Some(__x), Some(__y)) => ::core::ptr::fn_addr_eq(__x, __y),
+            (None, None) => true,
+            _ => false,
+        }
         {
             __pMem_ref.zMalloc = __pMem_ref.z;
             __pMem_ref.szMalloc = crate::src::src::malloc::sqlite3DbMallocSize(
@@ -1506,7 +1518,11 @@ pub unsafe extern "C" fn sqlite3ValueIsOfClass(
             != 0 as ::core::ffi::c_int
         && __pVal_ref.flags as ::core::ffi::c_int & crate::src::headers::vdbeInt_h::MEM_Dyn
             != 0 as ::core::ffi::c_int
-        && __pVal_ref.xDel == xFree
+        && match (__pVal_ref.xDel, xFree) {
+            (Some(__x), Some(__y)) => ::core::ptr::fn_addr_eq(__x, __y),
+            (None, None) => true,
+            _ => false,
+        }
     {
         1 as ::core::ffi::c_int
     } else {

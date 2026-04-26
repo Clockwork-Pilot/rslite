@@ -1,10 +1,7 @@
 #![allow(non_snake_case)]
 #![allow(non_upper_case_globals)]
 #![allow(unsafe_op_in_unsafe_fn)]
-#![allow(clippy::ptr_eq)]
 #![allow(clippy::no_effect)]
-#![allow(clippy::cmp_null)]
-#![allow(clippy::ptr_offset_with_cast)]
 #![allow(clippy::useless_transmute)]
 #![allow(clippy::missing_transmute_annotations)]
 #![allow(clippy::manual_c_str_literals)]
@@ -24,7 +21,6 @@
 #![allow(unused_imports)]
 #![allow(unused_variables)]
 #![allow(unused_must_use)]
-#![allow(unpredictable_function_pointer_comparisons)]
 #![allow(unused_parens)]
 #![allow(improper_ctypes)]
 // Note: crust-core is generated code from C2Rust. Many clippy warnings and

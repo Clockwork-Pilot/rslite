@@ -1360,7 +1360,7 @@ pub unsafe extern "C" fn sqlite3VdbeLinkSubProgram(
 pub unsafe extern "C" fn sqlite3VdbeHasSubProgram(
     pVdbe: *mut crate::src::headers::vdbeInt_h::Vdbe,
 ) -> ::core::ffi::c_int {
-    ((*pVdbe).pProgram != ::core::ptr::null_mut::<crate::src::src::vdbe::SubProgram>())
+    !(*pVdbe).pProgram.is_null()
         as ::core::ffi::c_int
 }
 pub unsafe extern "C" fn sqlite3VdbeChangeToNoop(
@@ -2075,10 +2075,10 @@ pub unsafe extern "C" fn sqlite3VdbeFrameDelete(
 ) {
     let mut i: ::core::ffi::c_int;
     let aMem: *mut crate::src::src::vdbe::Mem =
-        (p as *mut crate::src::ext::rtree::rtree::U8_0).offset(
+        (p as *mut crate::src::ext::rtree::rtree::U8_0).add(
             ((::core::mem::size_of::<crate::src::headers::vdbeInt_h::VdbeFrame>() as usize)
                 .wrapping_add(7_usize)
-                & !(7 as ::core::ffi::c_int) as usize) as isize,
+                & !(7 as ::core::ffi::c_int) as usize),
         ) as *mut crate::src::ext::rtree::rtree::U8_0 as *mut crate::src::src::vdbe::Mem;
     let __p_ref = unsafe { &mut *p };
     let apCsr: *mut *mut crate::src::headers::vdbeInt_h::VdbeCursor =
@@ -3834,7 +3834,7 @@ pub unsafe extern "C" fn sqlite3VdbeAllocUnpackedRecord(
         return ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::UnpackedRecord>();
     }
     (*p).aMem = (p as *mut ::core::ffi::c_char)
-        .offset(::core::mem::size_of::<crate::src::headers::sqliteInt_h::UnpackedRecord>() as isize)
+        .add(::core::mem::size_of::<crate::src::headers::sqliteInt_h::UnpackedRecord>())
         as *mut ::core::ffi::c_char as *mut crate::src::src::vdbe::Mem;
     (*p).pKeyInfo = pKeyInfo;
     (*p).nField = (__pKeyInfo_ref.nKeyField as ::core::ffi::c_int + 1 as ::core::ffi::c_int)

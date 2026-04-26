@@ -3276,7 +3276,7 @@ pub unsafe extern "C" fn sqlite3Pragma(
                                                     crate::src::src::printf::PrintfArg::Str((*pIdx_0).zName as *mut ::core::ffi::c_char),
                                                     crate::src::src::printf::PrintfArg::Int(((*pIdx_0).onError as ::core::ffi::c_int != crate::src::headers::sqliteInt_h::OE_None) as crate::src::ext::rtree::rtree::I64_0),
                                                     crate::src::src::printf::PrintfArg::Str(azOrigin[(*pIdx_0).idxType() as usize] as *mut ::core::ffi::c_char),
-                                                    crate::src::src::printf::PrintfArg::Int(((*pIdx_0).pPartIdxWhere != ::core::ptr::null_mut::<crate::src::headers::sqliteInt_h::Expr>()) as crate::src::ext::rtree::rtree::I64_0),
+                                                    crate::src::src::printf::PrintfArg::Int(!(*pIdx_0).pPartIdxWhere.is_null() as crate::src::ext::rtree::rtree::I64_0),
                                                 ],
                                             );
                                             pIdx_0 = (*pIdx_0).pNext;
@@ -5435,17 +5435,17 @@ pub unsafe extern "C" fn sqlite3Pragma(
                                 }
                                 returnSingleInt(
                                     v,
-                                    (if (*db).xWalCallback
-                                        == Some(
-                                            crate::src::src::main::sqlite3WalDefaultHook
-                                                as unsafe extern "C" fn(
-                                                    *mut ::core::ffi::c_void,
-                                                    *mut crate::src::headers::sqliteInt_h::sqlite3,
-                                                    *const ::core::ffi::c_char,
-                                                    ::core::ffi::c_int,
-                                                )
-                                                    -> ::core::ffi::c_int,
-                                        )
+                                    (if (*db).xWalCallback.is_some_and(|__f| ::core::ptr::fn_addr_eq(
+                                        __f,
+                                        crate::src::src::main::sqlite3WalDefaultHook
+                                            as unsafe extern "C" fn(
+                                                *mut ::core::ffi::c_void,
+                                                *mut crate::src::headers::sqliteInt_h::sqlite3,
+                                                *const ::core::ffi::c_char,
+                                                ::core::ffi::c_int,
+                                            )
+                                                -> ::core::ffi::c_int,
+                                    ))
                                     {
                                         (*db).pWalArg as crate::src::headers::stdlib::IntptrT
                                             as ::core::ffi::c_int
@@ -6266,7 +6266,7 @@ unsafe extern "C" fn pragmaVtabEof(
     pVtabCursor: *mut crate::src::headers::sqlite3_h::sqlite3_vtab_cursor,
 ) -> ::core::ffi::c_int {
     let pCsr = &*(pVtabCursor as *mut PragmaVtabCursor);
-    (pCsr.pPragma == ::core::ptr::null_mut::<crate::src::headers::sqlite3_h::Sqlite3Stmt>())
+    pCsr.pPragma.is_null()
         as ::core::ffi::c_int
 }
 

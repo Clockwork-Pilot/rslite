@@ -1299,7 +1299,7 @@ unsafe extern "C" fn sessionTableInfo(
         return rc;
     }
     nByte = (nThis + 1 as ::core::ffi::c_int) as crate::src::headers::sqlite3_h::Sqlite3Int64;
-    bRowid = (pbRowid != ::core::ptr::null_mut::<::core::ffi::c_int>()) as ::core::ffi::c_int;
+    bRowid = !pbRowid.is_null() as ::core::ffi::c_int;
     while crate::src::headers::sqlite3_h::SQLITE_ROW
         == crate::src::src::vdbeapi::sqlite3_step(pStmt)
     {
@@ -1380,7 +1380,7 @@ unsafe extern "C" fn sessionTableInfo(
             let fresh5 = &mut *azCol.offset(i as isize);
             *fresh5 = pAlloc as *mut ::core::ffi::c_char;
             pAlloc =
-                pAlloc.offset(nName.wrapping_add(1 as crate::__stddef_size_t_h::SizeT) as isize);
+                pAlloc.add(nName.wrapping_add(1 as crate::__stddef_size_t_h::SizeT));
             *abPK.offset(i as isize) = 1 as crate::src::ext::rtree::rtree::U8_0;
             *aiIdx.offset(i as isize) = -(1 as ::core::ffi::c_int);
             i += 1;
@@ -4861,7 +4861,7 @@ unsafe extern "C" fn sessionChangesetReadTblhdr(
         ::core::ptr::copy_nonoverlapping(
             __p_ref.in_0.aData.offset(__p_ref.in_0.iNext as isize)
                 as *mut crate::src::ext::rtree::rtree::U8_0 as *const u8,
-            __p_ref.tblhdr.aBuf.offset(iPK as isize) as *mut crate::src::ext::rtree::rtree::U8_0
+            __p_ref.tblhdr.aBuf.add(iPK) as *mut crate::src::ext::rtree::rtree::U8_0
                 as *mut u8,
             nCopy as usize,
         );
@@ -6101,8 +6101,7 @@ unsafe extern "C" fn sessionSeekToRow(
                 crate::src::src::vdbeapi::sqlite3_bind_int(
                     pSelect,
                     ii + 1 as ::core::ffi::c_int + nCol,
-                    (pVal
-                        == ::core::ptr::null_mut::<crate::src::headers::vdbeInt_h::sqlite3_value>())
+                    pVal.is_null()
                         as ::core::ffi::c_int,
                 );
                 if !pVal.is_null() {

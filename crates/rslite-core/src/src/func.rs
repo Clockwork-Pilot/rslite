@@ -1484,7 +1484,7 @@ pub unsafe extern "C" fn sqlite3_strglob(
     zString: *const ::core::ffi::c_char,
 ) -> ::core::ffi::c_int {
     if zString.is_null() {
-        (zGlobPattern != ::core::ptr::null::<::core::ffi::c_char>()) as ::core::ffi::c_int
+        !zGlobPattern.is_null() as ::core::ffi::c_int
     } else if zGlobPattern.is_null() {
         1 as ::core::ffi::c_int
     } else {
@@ -1503,7 +1503,7 @@ pub unsafe extern "C" fn sqlite3_strlike(
     esc: ::core::ffi::c_uint,
 ) -> ::core::ffi::c_int {
     if zStr.is_null() {
-        (zPattern != ::core::ptr::null::<::core::ffi::c_char>()) as ::core::ffi::c_int
+        !zPattern.is_null() as ::core::ffi::c_int
     } else if zPattern.is_null() {
         1 as ::core::ffi::c_int
     } else {
@@ -3257,9 +3257,9 @@ unsafe extern "C" fn minmaxStep(
         
         let pColl: *mut crate::src::headers::sqliteInt_h::CollSeq =
             sqlite3GetFuncCollSeq(context);
-        let max: ::core::ffi::c_int = (crate::src::src::vdbeapi::sqlite3_user_data(
+        let max: ::core::ffi::c_int = !crate::src::src::vdbeapi::sqlite3_user_data(
             context as *mut crate::src::headers::vdbeInt_h::sqlite3_context,
-        ) != ::core::ptr::null_mut::<::core::ffi::c_void>()) as ::core::ffi::c_int;
+        ).is_null() as ::core::ffi::c_int;
         let cmp: ::core::ffi::c_int = crate::src::src::vdbeaux::sqlite3MemCompare(
             pBest as *const crate::src::headers::vdbeInt_h::sqlite3_value,
             pArg as *const crate::src::headers::vdbeInt_h::sqlite3_value,

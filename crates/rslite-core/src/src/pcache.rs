@@ -779,6 +779,6 @@ pub unsafe extern "C" fn sqlite3PCachePercentDirty(pCache: *mut PCache) -> ::cor
 #[cfg_attr(feature = "test", unsafe(no_mangle))]
 
 pub unsafe extern "C" fn sqlite3PCacheIsDirty(pCache: *mut PCache) -> ::core::ffi::c_int {
-    ((*pCache).pDirty != ::core::ptr::null_mut::<crate::src::src::pcache::PgHdr>())
+    !(*pCache).pDirty.is_null()
         as ::core::ffi::c_int
 }

@@ -885,11 +885,11 @@ unsafe extern "C" fn allocateCursor(
     (*pCx).aOffset = (&raw mut (*pCx).aType as *mut crate::src::ext::rtree::rtree::U32_0)
         .offset(nField as isize) as *mut crate::src::ext::rtree::rtree::U32_0;
     if eCurType as ::core::ffi::c_int == crate::src::headers::vdbeInt_h::CURTYPE_BTREE {
-        (*pCx).uc.pCursor = (*pMem).z.offset(
+        (*pCx).uc.pCursor = (*pMem).z.add(
             (112_usize.wrapping_add(7_usize) & !(7 as ::core::ffi::c_int) as usize)
                 .wrapping_add(((nField + 1 as ::core::ffi::c_int) as usize).wrapping_mul(
                     ::core::mem::size_of::<crate::src::ext::rtree::rtree::U64_0>() as usize,
-                )) as isize,
+                )),
         ) as *mut ::core::ffi::c_char
             as *mut crate::src::headers::btreeInt_h::BtCursor;
         crate::src::src::btree::sqlite3BtreeCursorZero((*pCx).uc.pCursor);
@@ -5926,15 +5926,14 @@ pub unsafe extern "C" fn sqlite3VdbeExec(
                                         (*pFrame_1).token = __pProgram_ref.token;
                                         pEnd = ((pFrame_1
                                             as *mut crate::src::ext::rtree::rtree::U8_0)
-                                            .offset(
+                                            .add(
                                                 ((::core::mem::size_of::<
                                                     crate::src::headers::vdbeInt_h::VdbeFrame,
                                                 >(
                                                 )
                                                     as usize)
                                                     .wrapping_add(7_usize)
-                                                    & !(7 as ::core::ffi::c_int) as usize)
-                                                    as isize,
+                                                    & !(7 as ::core::ffi::c_int) as usize),
                                             )
                                             as *mut crate::src::ext::rtree::rtree::U8_0
                                             as *mut crate::src::src::vdbe::Mem)
@@ -5942,15 +5941,14 @@ pub unsafe extern "C" fn sqlite3VdbeExec(
                                             as *mut crate::src::src::vdbe::Mem;
                                         pMem_0 = (pFrame_1
                                             as *mut crate::src::ext::rtree::rtree::U8_0)
-                                            .offset(
+                                            .add(
                                                 ((::core::mem::size_of::<
                                                     crate::src::headers::vdbeInt_h::VdbeFrame,
                                                 >(
                                                 )
                                                     as usize)
                                                     .wrapping_add(7_usize)
-                                                    & !(7 as ::core::ffi::c_int) as usize)
-                                                    as isize,
+                                                    & !(7 as ::core::ffi::c_int) as usize),
                                             )
                                             as *mut crate::src::ext::rtree::rtree::U8_0
                                             as *mut crate::src::src::vdbe::Mem;
@@ -5977,14 +5975,13 @@ pub unsafe extern "C" fn sqlite3VdbeExec(
                                     __p_ref.nChange = 0 as crate::src::ext::rtree::rtree::I64_0;
                                     __p_ref.pFrame = pFrame_1;
                                     aMem = (pFrame_1 as *mut crate::src::ext::rtree::rtree::U8_0)
-                                        .offset(
+                                        .add(
                                             ((::core::mem::size_of::<
                                                 crate::src::headers::vdbeInt_h::VdbeFrame,
                                             >()
                                                 as usize)
                                                 .wrapping_add(7_usize)
-                                                & !(7 as ::core::ffi::c_int) as usize)
-                                                as isize,
+                                                & !(7 as ::core::ffi::c_int) as usize),
                                         )
                                         as *mut crate::src::ext::rtree::rtree::U8_0
                                         as *mut crate::src::src::vdbe::Mem;
